@@ -127,4 +127,37 @@
   <data name="NwrwDryWeatherFlowDefinitionBuilder_WarningIncorrectNumberOfWaterCapacityPerHourValues" xml:space="preserve">
     <value>Expected 24 values but got {0} values. Skipping import of water use per capita per hour.</value>
   </data>
+  <data name="SobekRRMeteoDataImporter_DisplayName_Rainfall_Runoff_meteo_data" xml:space="preserve">
+	  <value>Rainfall Runoff meteo data</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_GetFilePaths__rks_files_are_not_supported__The_first_event_will_be_imported_as_precipitation_data_" xml:space="preserve">
+	  <value>.rks files are not supported. The first event will be imported as precipitation data.</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_GetSobekRREvaporationMeteoImportData_Number_of_evaporation_stations_does_not_match_the_number_of_precipitation_stations__Not_supported" xml:space="preserve">
+	  <value>Number of evaporation stations does not match the number of precipitation stations! Not supported</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_CanReadEvaporation_Evaporation_has_multiple_stations_while_precipitation_has_not__Not_supported" xml:space="preserve">
+	  <value>Evaporation has multiple stations while precipitation has not! Not supported</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_CanReadEvaporation__0__file_does_not_exist___1_" xml:space="preserve">
+	  <value>{0} file does not exist: {1}</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_AddMeteoData__0__import_failed___1_" xml:space="preserve">
+	  <value>{0} import failed: {1}</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_AddMissingFeatures_Could_not_find_a_catchment_for_the_following_stations__0__" xml:space="preserve">
+	  <value>Could not find a catchment for the following stations {0}.</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_GetBuiFileMeteoImportData__0__import_failed__could_not_read_header_data_from__1__file_" xml:space="preserve">
+	  <value>{0} import failed, could not read header data from {1} file.</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_ImportMeteoData_Importing_precipitation_data___" xml:space="preserve">
+	  <value>Importing precipitation data...</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_AddMeteoData_Meteo_data_with_DataDistributionType__0__is_not_supported" xml:space="preserve">
+	  <value>Meteo data with DataDistributionType {0} is not supported</value>
+  </data>
+  <data name="SobekRRMeteoDataImporter_GetEvaporationMeteoStations_Unsupported_meteo_distribution_type_for_evaporation_" xml:space="preserve">
+	  <value>Unsupported meteo distribution type for evaporation.</value>
+  </data>
 </root>

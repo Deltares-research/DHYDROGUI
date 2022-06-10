@@ -17,12 +17,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             {
                 Components =
                         {
-                            new Variable<double>("Global")
+                            new Variable<double>(MeteoData.GlobalMeteoName)
                                 {
                                     DefaultValue = 0.0
                                 }
                         },
-                Name = "Global"
+                Name = MeteoData.GlobalMeteoName
             };
             data.Time.DefaultValue = new DateTime(2000, 1, 1);
             data.Time.InterpolationType = InterpolationType.Constant;

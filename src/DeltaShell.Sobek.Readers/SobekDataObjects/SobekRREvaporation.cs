@@ -39,7 +39,7 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         /// <summary>
         /// Gets all the dates in the evaporation data.
         /// </summary>
-        public IEnumerable<DateTime> Dates => Data.Keys;
+        public ICollection<DateTime> Dates => Data.Keys;
         
         /// <summary>
         /// Adds a new entry to the evaporation data with the provided date.

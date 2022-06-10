@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -75,6 +75,33 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         public static string Exception_UnsupportedDataDistributionType {
             get {
                 return ResourceManager.GetString("Exception_UnsupportedDataDistributionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global.
+        /// </summary>
+        public static string MeteoDataDistributionType_Global {
+            get {
+                return ResourceManager.GetString("MeteoDataDistributionType_Global", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Per catchment.
+        /// </summary>
+        public static string MeteoDataDistributionType_Per_Catchment {
+            get {
+                return ResourceManager.GetString("MeteoDataDistributionType_Per_Catchment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meteo stations.
+        /// </summary>
+        public static string MeteoDataDistributionType_Per_Station {
+            get {
+                return ResourceManager.GetString("MeteoDataDistributionType_Per_Station", resourceCulture);
             }
         }
         

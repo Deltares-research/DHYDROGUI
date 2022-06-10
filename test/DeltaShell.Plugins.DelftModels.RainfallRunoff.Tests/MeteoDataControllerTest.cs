@@ -51,7 +51,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 {
                     Name = "Test",
                     Precipitation = {DataDistributionType = MeteoDataDistributionType.PerStation},
-                };
+                    Evaporation = { DataDistributionType = MeteoDataDistributionType.PerStation }
+            };
 
             Assert.AreEqual(MeteoDataDistributionType.PerStation, rrModel.Precipitation.DataDistributionType);
             Assert.AreEqual(MeteoDataDistributionType.PerStation, rrModel.Evaporation.DataDistributionType);
@@ -82,6 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 {
                     Name = "Test",
                     Precipitation = {DataDistributionType = MeteoDataDistributionType.PerStation},
+                    Evaporation = { DataDistributionType = MeteoDataDistributionType.PerStation}
                 };
 
             rrModel.MeteoStations.Add("a");
@@ -99,6 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             rrModel.MeteoStations.Add("b");
 
             rrModel.Precipitation.DataDistributionType = MeteoDataDistributionType.PerStation;
+            rrModel.Evaporation.DataDistributionType = MeteoDataDistributionType.PerStation;
 
             Assert.AreEqual(new[] { "a", "b" }, rrModel.Precipitation.Data.Arguments[1].Values.OfType<string>().ToArray());
             Assert.AreEqual(new[] { "a", "b" }, rrModel.Evaporation.Data.Arguments[1].Values.OfType<string>().ToArray());

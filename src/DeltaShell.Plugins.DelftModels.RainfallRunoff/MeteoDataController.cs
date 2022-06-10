@@ -22,16 +22,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private RainfallRunoffModel rainfallRunoffModel;
         private bool isUpdating;
-        private readonly string meteoDataTypePropertyName;
-        private readonly string meteoEditingPropertyName;
 
         public MeteoDataController(RainfallRunoffModel model, ICatchmentModelDataSynchronizer customSynchronizer = null)
         {
             Model = model;
-
-            meteoDataTypePropertyName = nameof(rainfallRunoffModel.Precipitation.DataDistributionType);
-
-            meteoEditingPropertyName = nameof(rainfallRunoffModel.Precipitation.IsEditing);
 
             synchronizer = customSynchronizer ?? new CatchmentModelDataSynchronizer<CatchmentModelData>(model);
             synchronizer.OnAreaAddedOrModified = OnAreaAddedOrModified;
@@ -65,51 +59,83 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         [EditAction]
         private void RainfallRunoffModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == meteoEditingPropertyName)
+            if (!(sender is MeteoData meteoData))
             {
-                if (Equals(sender, Model.Precipitation))
-                {
-                    SynchroniseModelWithMeteoData(Model.Precipitation);
-                    //change evaporation
-                    DoAndPreventReentrancy(
-                        () => Model.Evaporation.DataDistributionType = Model.Precipitation.DataDistributionType);
-                }
-                if (Equals(sender, Model.Evaporation))
-                {
-                    return; //evaporation follows precipitation.
-                }
-                if (Equals(sender, Model.Temperature))
-                {
-                    SynchroniseModelWithMeteoData(Model.Temperature);
-                }
+                return;
             }
-            else if (e.PropertyName == meteoDataTypePropertyName)
+
+            switch (e.PropertyName)
             {
-                if (Equals(sender, Model.Precipitation))
+                case nameof(MeteoData.IsEditing):
                 {
-                    UpdateMeteoDataByType(Model.Precipitation, Model.MeteoStations);
-
-                    //change evaporation
-                    DoAndPreventReentrancy(
-                        () => Model.Evaporation.DataDistributionType = Model.Precipitation.DataDistributionType);
+                    SynchronizeForMeteoDataIsEditing(meteoData);
+                    break;
                 }
-
-                if (Equals(sender, Model.Evaporation))
+                case nameof(MeteoData.DataDistributionType):
                 {
-                    UpdateMeteoDataByType(Model.Evaporation, Model.MeteoStations);
-
-                    //change precipitation
-                    DoAndPreventReentrancy(
-                        () => Model.Precipitation.DataDistributionType = Model.Evaporation.DataDistributionType);
-                }
-
-                if (Equals(sender, Model.Temperature))
-                {
-                    UpdateMeteoDataByType(Model.Temperature, Model.TemperatureStations);
+                    SynchronizeForDataDistributionType(meteoData);
+                    break;
                 }
             }
         }
-        
+
+        private void SynchronizeForMeteoDataIsEditing(MeteoData meteoData)
+        {
+            if (Equals(meteoData, Model.Precipitation))
+            {
+                SynchroniseModelWithMeteoData(Model.Precipitation);
+
+                //change evaporation
+                if (Model.Evaporation.DataDistributionType != MeteoDataDistributionType.Global)
+                {
+                    DoAndPreventReEntry(() => Model.Evaporation.DataDistributionType = Model.Precipitation.DataDistributionType);
+                }
+            }
+            else if (Equals(meteoData, Model.Temperature))
+            {
+                SynchroniseModelWithMeteoData(Model.Temperature);
+            }
+        }
+
+        private void SynchronizeForDataDistributionType(MeteoData meteoData)
+        {
+            var precipitation = Model.Precipitation;
+            var evaporation = Model.Evaporation;
+
+            if (Equals(meteoData, precipitation))
+            {
+                UpdateMeteoDataByType(precipitation, Model.MeteoStations);
+
+                if (evaporation.DataDistributionType == MeteoDataDistributionType.Global)
+                    return;
+
+                //change evaporation
+                if (evaporation.DataDistributionType != precipitation.DataDistributionType)
+                {
+                    DoAndPreventReEntry(() => evaporation.DataDistributionType = precipitation.DataDistributionType);
+                }
+            }
+
+            if (Equals(meteoData, evaporation))
+            {
+                UpdateMeteoDataByType(evaporation, Model.MeteoStations);
+
+                if (evaporation.DataDistributionType == MeteoDataDistributionType.Global)
+                    return;
+
+                //change precipitation
+                if (precipitation.DataDistributionType != evaporation.DataDistributionType)
+                {
+                    DoAndPreventReEntry(() => precipitation.DataDistributionType = evaporation.DataDistributionType);
+                }
+            }
+
+            if (Equals(meteoData, Model.Temperature))
+            {
+                UpdateMeteoDataByType(Model.Temperature, Model.TemperatureStations);
+            }
+        }
+
         private void UpdateMeteoDataByType(MeteoData source, IEnumerable<string> stations)
         {
             if (source.DataDistributionType == MeteoDataDistributionType.PerFeature)
@@ -128,6 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 return;
             }
+
             if (meteoData.DataDistributionType == MeteoDataDistributionType.PerStation)
             {
                 modelIsUpdating = true;
@@ -140,7 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
         
-        private void DoAndPreventReentrancy(Action action)
+        private void DoAndPreventReEntry(Action action)
         {
             if (isUpdating)
                 return;
@@ -182,8 +209,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        private static void AddCatchmentToMeteoDataCoverage(IFeatureCoverage featureCoverage,
-                                                                     Catchment catchment)
+        private static void AddCatchmentToMeteoDataCoverage(IFeatureCoverage featureCoverage, Catchment catchment)
         {
             if (featureCoverage.Features.Contains(catchment))
             {
@@ -211,8 +237,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        private static void RemoveCatchmentFromMeteoDataCoverage(IFeatureCoverage featureCoverage,
-                                                                          Catchment catchment)
+        private static void RemoveCatchmentFromMeteoDataCoverage(IFeatureCoverage featureCoverage, Catchment catchment)
         {
             if (featureCoverage.Features.Contains(catchment))
             {

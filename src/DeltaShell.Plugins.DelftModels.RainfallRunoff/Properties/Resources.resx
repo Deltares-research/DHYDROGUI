@@ -153,4 +153,13 @@
   <data name="PavedDataValidation_Cant_link_to_multiple_boundaries" xml:space="preserve">
     <value>A paved node may not be connected downstream to more then 1 boundary.</value>
   </data>
+  <data name="MeteoDataDistributionType_Global" xml:space="preserve">
+	  <value>Global</value>
+  </data>
+  <data name="MeteoDataDistributionType_Per_Catchment" xml:space="preserve">
+	  <value>Per catchment</value>
+  </data>
+  <data name="MeteoDataDistributionType_Per_Station" xml:space="preserve">
+	  <value>Meteo stations</value>
+  </data>
 </root>

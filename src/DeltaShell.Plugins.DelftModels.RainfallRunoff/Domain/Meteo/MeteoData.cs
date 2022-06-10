@@ -1,35 +1,17 @@
 ﻿using System;
-using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using GeoAPI.Extensions.Coverages;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 {
-    [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
-    public enum MeteoDataDistributionType
-    {
-        [Description("Global")]
-        Global = 0,
-        [Description("Per catchment")]
-        PerFeature = 1,
-        [Description("Meteo stations")]
-        PerStation = 2
-    }
-
-    public enum MeteoDataAggregationType
-    {
-        NonCumulative = 0,
-        Cumulative = 1
-    }
-
     [Entity]
     public class MeteoData : EditableObjectUnique<long>, INameable, ICloneable
     {
+        public const string GlobalMeteoName = "Global";
         private static IMeteoDataDistributed CreateDataDistributed(MeteoDataDistributionType meteoDataDistributionType)
         {
             switch (meteoDataDistributionType)
@@ -124,8 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 
         #region INameable Members
 
-        public
-            string Name { get; set; }
+        public string Name { get; set; }
 
         #endregion
 

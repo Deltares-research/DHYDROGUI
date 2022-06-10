@@ -5,10 +5,13 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers.fnm;
+using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
@@ -17,234 +20,131 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
     public class SobekRRMeteoDataImporter : PartialSobekImporterBase
     {
+        private sealed class MeteoImportData
+        {
+            public MeteoImportData(DateTime[] times, string[] stationNames, IDictionary<DateTime, double[]> values)
+            {
+                Times = times;
+                StationNames = stationNames;
+                Values = values;
+            }
+
+            public DateTime[] Times { get; }
+
+            public string[] StationNames { get; }
+
+            public IDictionary<DateTime, double[]> Values { get; }
+        }
+
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRMeteoDataImporter));
-        private string filePathPrecipitation = "";
-        private string filePathEvaporation = "";
-        private string filePathTemperature = "";
 
-        private MeteoData precipitation;
-        private MeteoData evaporation;
-        private MeteoData temperature;
-        private RainfallRunoffModel rainfallRunoffModel;
-
-        private const string displayName = "Rainfall Runoff meteo data";
-        public override string DisplayName => displayName;
+        public override string DisplayName => Resources.SobekRRMeteoDataImporter_DisplayName_Rainfall_Runoff_meteo_data;
 
         public override SobekImporterCategories Category => SobekImporterCategories.RainfallRunoff;
 
         protected override void PartialImport()
         {
-            rainfallRunoffModel = GetModel<RainfallRunoffModel>();
-            precipitation = rainfallRunoffModel.Precipitation;
-            evaporation = rainfallRunoffModel.Evaporation;
-            temperature = rainfallRunoffModel.Temperature;
-
-
             log.DebugFormat("Importing meteo data...");
 
-            if (!CaseData.IsEmpty)
+            (string precipitation, string evaporation, string temperature) = GetFilePaths();
+            ImportMeteoData(GetModel<IRainfallRunoffModel>(), precipitation, evaporation, temperature);
+        }
+
+        private (string precipitation, string evaporation, string temperature) GetFilePaths()
+        {
+            if (CaseData.IsEmpty)
             {
-                filePathPrecipitation = CaseData.PrecipitationFile?.FullName;
-
-                string rksFile = CaseData.RksFile?.FullName;
-                if (rksFile != null)
-                {
-                    filePathPrecipitation = rksFile;
-                    log.WarnFormat(".rks files are not supported. The first event will be imported as precipitation data.");
-                }
-
-                filePathEvaporation = CaseData.EvaporationFile?.FullName;
-                filePathTemperature = CaseData.TemperatureFile?.FullName;
-                
-                log.DebugFormat("Importing precipitation data...");
-                ReadAndSetPrecipitation();
-                
-                SetModelTimesBasedOnEvent(rainfallRunoffModel, GetFilePath(SobekFileNames.SobekRRIniFileName));
-
-                log.DebugFormat("Importing evaporation data...");
-                ReadAndSetEvaporation();
-
-                if (rainfallRunoffModel.GetAllModelData().OfType<HbvData>().Any())
-                {
-                    log.DebugFormat("Importing temperature data...");
-                    ReadAndSetTemperature();
-                }
+                FnmData fnmData = ReadFnmData(PathSobek);
+                return (GetFilePath(fnmData.BuiFile), GetFilePath(fnmData.VerdampingsFile), GetFilePath(fnmData.TimeSeriesTemperature));
             }
-            else
-            { 
-                FnmData fnmData = ReadFnmData();
 
-                string buiFilePath = GetFilePath(fnmData.BuiFile);
-                if (File.Exists(buiFilePath))
-                {
-                    filePathPrecipitation = buiFilePath;
-                    log.DebugFormat("Importing precipitation data...");
-                    ReadAndSetPrecipitation();
-                }
-                
-                SetModelTimesBasedOnEvent(rainfallRunoffModel, GetFilePath(SobekFileNames.SobekRRIniFileName));
+            string filePathPrecipitation = CaseData.PrecipitationFile?.FullName;
+            string rksFile = CaseData.RksFile?.FullName;
+            
+            if (rksFile != null)
+            {
+                filePathPrecipitation = rksFile;
+                log.WarnFormat(Resources.SobekRRMeteoDataImporter_GetFilePaths__rks_files_are_not_supported__The_first_event_will_be_imported_as_precipitation_data_);
+            }
 
-                string evpFilePath = GetFilePath(fnmData.VerdampingsFile);
-                if (File.Exists(evpFilePath))
-                {
-                    filePathEvaporation = evpFilePath;
-                    log.DebugFormat("Importing precipitation data...");
-                    ReadAndSetEvaporation();
-                }
+            return (filePathPrecipitation, CaseData.EvaporationFile?.FullName, CaseData.TemperatureFile?.FullName);
+        }
 
-                string tmpFilePath = GetFilePath(fnmData.TimeSeriesTemperature);
-                if (rainfallRunoffModel.GetAllModelData().OfType<HbvData>().Any() && 
-                    File.Exists(tmpFilePath))
-                {
-                    filePathTemperature = tmpFilePath;
-                    log.DebugFormat("Importing precipitation data...");
-                    ReadAndSetTemperature();
-                }
+        private static void ImportMeteoData(IRainfallRunoffModel model, string filePathPrecipitation, string filePathEvaporation, string filePathTemperature)
+        {
+            var basinCatchments = model.Basin.Catchments;
+
+            log.DebugFormat("Importing precipitation data...");
+            if (GetBuiFileMeteoImportData(filePathPrecipitation, model.Precipitation, out MeteoImportData precipitationData))
+            {
+                AddMeteoData(model.Precipitation, precipitationData, basinCatchments, model.MeteoStations);
+            }
+
+            log.DebugFormat("Importing evaporation data...");
+            if (GetSobekRREvaporationMeteoImportData(filePathEvaporation, model.Evaporation, model, out MeteoImportData evaporationData))
+            {
+                AddMeteoData(model.Evaporation, evaporationData, basinCatchments, model.MeteoStations);
+            }            
+
+            log.DebugFormat("Importing temperature data...");
+            bool fileCanBeEmpty = !basinCatchments.Any(c => Equals(c.CatchmentType, CatchmentType.Hbv));
+            if (GetBuiFileMeteoImportData(filePathTemperature, model.Temperature, out MeteoImportData temperatureData, fileCanBeEmpty))
+            {
+                AddMeteoData(model.Temperature, temperatureData, basinCatchments, model.TemperatureStations);
             }
         }
 
-        private FnmData ReadFnmData()
+        private static FnmData ReadFnmData(string path)
         {
-            using (FileStream fileStream = File.OpenRead(PathSobek)) 
+            using (FileStream fileStream = File.OpenRead(path)) 
             using (var reader = new StreamReader(fileStream)) 
             { 
                 return FnmDataParser.Parse(reader);
             }
         }
 
-        private static void SetModelTimesBasedOnEvent(RainfallRunoffModel model, string path)
+        private static bool GetBuiFileMeteoImportData(string path, MeteoData meteoData, out MeteoImportData importData, bool fileCanBeEmpty = false)
         {
-            if (!File.Exists(path))
+            importData = null;
+
+            if (fileCanBeEmpty && File.Exists(path) && new FileInfo(path).Length == 0)
             {
-                log.ErrorFormat("Could not find ini file {0}.", path);
-                return;
+                return false;
             }
 
-            SobekRRIniSettings settings = new SobekRRIniSettingsReader().GetSobekRRIniSettings(path);
-
-            if (settings.PeriodFromEvent)
-            {
-                DateTime startTime;
-                DateTime stopTime;
-                SobekMeteoDataImporterHelper.ReadTimersFromMeteo(
-                    model.Precipitation.Data.Arguments[0].GetValues<DateTime>(), settings.StartTime, settings.EndTime,
-                    out startTime, out stopTime);
-                model.StartTime = startTime;
-                model.StopTime = stopTime;
-
-                model.SaveStateStartTime = model.StartTime;
-                model.SaveStateStopTime = model.StopTime;
-            }
-        }
-
-        private void ReadAndSetTemperature()
-        {
             var buiFileReader = new SobekRRBuiFileReader();
-            if (!buiFileReader.ReadBuiHeaderData(filePathTemperature))
+            if (!buiFileReader.ReadBuiHeaderData(path))
             {
-                log.Error("Temperature data import failed, could not read header data from TMP file.");
-                return;
+                log.Error(string.Format(Resources.SobekRRMeteoDataImporter_GetBuiFileMeteoImportData__0__import_failed__could_not_read_header_data_from__1__file_, meteoData?.Name, path));
+                return false;
             }
-
-            var measurements = buiFileReader.ReadMeasurementData(filePathTemperature);
-
-            try
-            {
-                if (buiFileReader.StationNames.Count > 1)
-                {
-                    rainfallRunoffModel.TemperatureStations.AddRange(buiFileReader.StationNames);
-                    temperature.DataDistributionType = MeteoDataDistributionType.PerStation;
-                    temperature.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
-                    if (temperature.Data.Arguments[1].Values.Count == 0) // this can happen during load not during sobek2 import. During load we don't have eventing enabled to speed up the loading.
-                        temperature.Data.Arguments[1].SetValues(buiFileReader.StationNames);
-
-                    foreach (var measurement in measurements)
-                    {
-                        temperature.Data.SetValues(measurement.MeasuredValues,
-                                                     new VariableValueFilter<DateTime>(temperature.Data.Arguments[0],
-                                                                                       measurement.TimeOfMeasurement));
-                    }
-                }
-                else if (buiFileReader.StationNames.Count == 1)
-                {
-                    temperature.DataDistributionType = MeteoDataDistributionType.Global;
-                    temperature.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
-                    foreach (var measurement in measurements)
-                    {
-                        temperature.Data.SetValues(measurement.MeasuredValues,
-                                                     new VariableValueFilter<DateTime>(temperature.Data.Arguments[0],
-                                                                                       measurement.TimeOfMeasurement));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                log.Error("precipitation import failed", e);
-            }
-
+            
+            var measurements = buiFileReader.ReadMeasurementData(path).ToDictionary(m => m.TimeOfMeasurement, m => m.MeasuredValues.ToArray());
+            importData = new MeteoImportData(buiFileReader.MeasurementTimes.ToArray(), buiFileReader.StationNames.ToArray(), measurements);
+            return true;
         }
 
-        private void ReadAndSetPrecipitation()
+        private static bool GetSobekRREvaporationMeteoImportData(string path, MeteoData meteoData, IRainfallRunoffModel model, out MeteoImportData importData)
         {
-            var buiFileReader = new SobekRRBuiFileReader();
+            importData = null;
 
-            if (!buiFileReader.ReadBuiHeaderData(filePathPrecipitation))
+            if (!CanReadEvaporation(path, meteoData, model.Precipitation))
             {
-                log.Error("Precipitation import failed, could not read header data from BUI file.");
-                return;
+                return false;
             }
 
-            var measurements = buiFileReader.ReadMeasurementData(filePathPrecipitation);
-
-            try
+            SobekRREvaporation sobekRREvaporation = ReadSobekRREvaporation(path);
+            if (meteoData.DataDistributionType == MeteoDataDistributionType.Global
+                && sobekRREvaporation.NumberOfLocations > 1)
             {
-                if (buiFileReader.StationNames.Count > 1)
-                {
-                    rainfallRunoffModel.MeteoStations.AddRange(buiFileReader.StationNames);
-                    precipitation.DataDistributionType = MeteoDataDistributionType.PerStation; //via eventing fills the second argument with station names
-                    precipitation.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
-                    if(precipitation.Data.Arguments[1].Values.Count == 0) // this can happen during load not during sobek2 import. During load we don't have eventing enabled to speed up the loading.
-                        precipitation.Data.Arguments[1].SetValues(buiFileReader.StationNames);
-
-                    foreach (var measurement in measurements)
-                    {
-                        precipitation.Data.SetValues(measurement.MeasuredValues,
-                                                     new VariableValueFilter<DateTime>(precipitation.Data.Arguments[0],
-                                                                                       measurement.TimeOfMeasurement));
-                    }
-                }
-                else if (buiFileReader.StationNames.Count == 1)
-                {
-                    precipitation.DataDistributionType = MeteoDataDistributionType.Global;
-                    precipitation.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
-                    foreach (var measurement in measurements)
-                    {
-                        precipitation.Data.SetValues(measurement.MeasuredValues,
-                                                     new VariableValueFilter<DateTime>(precipitation.Data.Arguments[0],
-                                                                                       measurement.TimeOfMeasurement));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                log.Error("precipitation import failed", e);
-            }
-        }
-
-        private void ReadAndSetEvaporation()
-        {
-            var model = GetModel<RainfallRunoffModel>();
-
-            if (!File.Exists(filePathEvaporation))
-            {
-                log.Warn($"Evaporation file does not exist: {filePathEvaporation}");
-                return;
+                meteoData.DataDistributionType = MeteoDataDistributionType.PerStation;
             }
 
-            SobekRREvaporation sobekRREvaporation;
-            using (var stream = new FileStream(filePathEvaporation, FileMode.Open))
+            if (meteoData.DataDistributionType == MeteoDataDistributionType.PerStation
+                && sobekRREvaporation.NumberOfLocations != model.MeteoStations.Count)
             {
-                sobekRREvaporation = SobekRREvaporationReader.Read(stream);
+                log.Error(Resources.SobekRRMeteoDataImporter_GetSobekRREvaporationMeteoImportData_Number_of_evaporation_stations_does_not_match_the_number_of_precipitation_stations__Not_supported);
+                return false;
             }
 
             if (sobekRREvaporation.IsLongTimeAverage)
@@ -252,67 +152,162 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 sobekRREvaporation.ToLongTimeAverage(model.StartTime, model.StopTime);
             }
 
-            var precipitationIsDefinedPerStation = precipitation.DataDistributionType ==
-                                                   MeteoDataDistributionType.PerStation;
-
-            if (sobekRREvaporation.NumberOfLocations == 1)
-            {
-                if (precipitationIsDefinedPerStation)
-                {
-                    SetEvaporationPerStation(sobekRREvaporation);
-                }
-                else
-                {
-                    SetGlobalEvaporation(sobekRREvaporation);
-                }
-            }
-            else
-            {
-                if (!precipitationIsDefinedPerStation)
-                {
-                    log.Error("Evaporation has multiple stations while precipitation has not! Not supported");
-                    SetGlobalEvaporation(sobekRREvaporation);
-                }
-                else if (sobekRREvaporation.NumberOfLocations != rainfallRunoffModel.MeteoStations.Count)
-                {
-                    log.Error("Number of evaporation stations does not match the number of precipitation stations! Not supported");
-                    SetGlobalEvaporation(sobekRREvaporation);
-                }
-                else
-                {
-                    SetEvaporationPerStation(sobekRREvaporation);
-                }
-            }
-            
             if (sobekRREvaporation.IsPeriodic)
             {
-                evaporation.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Periodic;
+                meteoData.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Periodic;
             }
+
+            var meteoStations = GetEvaporationMeteoStations(meteoData, model).ToArray();
+
+            importData = new MeteoImportData(sobekRREvaporation.Dates.ToArray(), meteoStations, sobekRREvaporation.Data);
+            return true;
         }
 
-        private void SetEvaporationPerStation(SobekRREvaporation sobekRREvaporation)
+        private static IEnumerable<string> GetEvaporationMeteoStations(MeteoData meteoData, IRainfallRunoffModel model)
         {
-            evaporation.Data.Arguments[0].Clear();
-            evaporation.Data.Arguments[0].SetValues(sobekRREvaporation.Dates);
-
-            IVariable stationArgument = evaporation.Data.Arguments[1];
-            for (var i = 0; i < sobekRREvaporation.NumberOfLocations; i++)
+            switch (meteoData.DataDistributionType)
             {
-                string stationName = rainfallRunoffModel.MeteoStations[i];
-                IEnumerable<double> evaporationValues = sobekRREvaporation.GetValuesByStationIndex(i);
-
-                evaporation.Data.SetValues(evaporationValues,
-                                           new VariableValueFilter<string>(stationArgument, stationName));
+                case MeteoDataDistributionType.Global:
+                    return new []{ MeteoData.GlobalMeteoName };
+                case MeteoDataDistributionType.PerFeature:
+                    return model.Basin.Catchments.Select(c => c.Name);
+                case MeteoDataDistributionType.PerStation:
+                    return model.MeteoStations;
+                default:
+                    var message = Resources.SobekRRMeteoDataImporter_GetEvaporationMeteoStations_Unsupported_meteo_distribution_type_for_evaporation_;
+                    throw new ArgumentOutOfRangeException(nameof(meteoData), meteoData.DataDistributionType, message);
             }
         }
-        
-        private void SetGlobalEvaporation(SobekRREvaporation sobekRREvaporation)
+
+        private static bool CanReadEvaporation(string path, MeteoData meteoData, MeteoData modelPrecipitation)
         {
-            // just do it global
-            evaporation.DataDistributionType = MeteoDataDistributionType.Global;
-            evaporation.Data.Arguments[0].Clear();
-            evaporation.Data.Arguments[0].SetValues(sobekRREvaporation.Dates);
-            evaporation.Data.SetValues(sobekRREvaporation.GetValuesByStationIndex(0));
+            if (!File.Exists(path))
+            {
+                log.Warn(string.Format(Resources.SobekRRMeteoDataImporter_CanReadEvaporation__0__file_does_not_exist___1_, meteoData?.Name, path));
+                return false;
+            }
+
+            if (modelPrecipitation.DataDistributionType == meteoData.DataDistributionType 
+                || meteoData.DataDistributionType == MeteoDataDistributionType.Global)
+            {
+                return true;
+            }
+
+            log.Error(Resources.SobekRRMeteoDataImporter_CanReadEvaporation_Evaporation_has_multiple_stations_while_precipitation_has_not__Not_supported);
+            return false;
+        }
+
+        private static SobekRREvaporation ReadSobekRREvaporation(string path)
+        {
+            SobekRREvaporation sobekRREvaporation;
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                sobekRREvaporation = SobekRREvaporationReader.Read(stream);
+            }
+
+            return sobekRREvaporation;
+        }
+
+        private static void AddMeteoData(MeteoData meteoData, MeteoImportData importData, IEnumerable<Catchment> basinCatchments, IList<string> stationList)
+        {
+            try
+            {
+                CorrectDataDistributionTypeBasedOnData(meteoData, importData);
+
+                meteoData.Data.Clear();
+                meteoData.Data.Arguments[0].SetValues(importData.Times);
+
+                switch (meteoData.DataDistributionType)
+                {
+                    case MeteoDataDistributionType.Global:
+                        meteoData.Data.Components[0].SetValues(importData.Values.Values.Select(a => a[0]));
+                        return;
+                    case MeteoDataDistributionType.PerFeature:
+                        AddMissingFeatures(meteoData.Data.Arguments[1], importData, basinCatchments);
+                        break;
+                    case MeteoDataDistributionType.PerStation:
+                        AddMissingStations(meteoData.Data.Arguments[1], importData, stationList);
+                        break;
+                    default:
+                        var message = string.Format(Resources.SobekRRMeteoDataImporter_AddMeteoData_Meteo_data_with_DataDistributionType__0__is_not_supported, meteoData.DataDistributionType);
+                        throw new ArgumentOutOfRangeException(nameof(meteoData), message);
+                }
+
+                foreach (var measurement in importData.Values)
+                {
+                    meteoData.Data.SetValues(measurement.Value, new VariableValueFilter<DateTime>(meteoData.Data.Arguments[0], measurement.Key));
+                }
+            }
+            catch (Exception ex) when (ex is ArgumentException || 
+                                       ex is InvalidDataException ||
+                                       ex is IndexOutOfRangeException)
+            {
+                log.Error(string.Format(Resources.SobekRRMeteoDataImporter_AddMeteoData__0__import_failed___1_, meteoData.Name, ex.Message), ex);
+            }
+        }
+
+        private static void CorrectDataDistributionTypeBasedOnData(MeteoData meteoData, MeteoImportData importData)
+        {
+            if (IsGlobalData(importData))
+            {
+                meteoData.DataDistributionType = MeteoDataDistributionType.Global;
+                return;
+            }
+
+            if (meteoData.DataDistributionType != MeteoDataDistributionType.PerFeature)
+            {
+                meteoData.DataDistributionType = MeteoDataDistributionType.PerStation;
+            }
+        }
+
+        private static bool IsGlobalData(MeteoImportData importData)
+        {
+            return importData.StationNames.Length == 1
+                   && importData.StationNames[0].Equals(MeteoData.GlobalMeteoName, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private static void AddMissingStations(IVariable stationVariable, MeteoImportData importData, IList<string> stationList)
+        {
+            if (stationVariable.Values.Count != 0)
+            {
+                return;
+            }
+
+            stationVariable.SetValues(importData.StationNames);
+
+            var stationsToAdd = importData.StationNames.Except(stationList).ToArray();
+            stationList.AddRange(stationsToAdd);
+        }
+
+        private static void AddMissingFeatures(IVariable stationVariable, MeteoImportData importData, IEnumerable<Catchment> basinCatchments)
+        {
+            if (stationVariable.Values.Count != 0)
+            {
+                return;
+            }
+
+            var catchmentLookup = basinCatchments.ToDictionaryWithErrorDetails("Basin catchments", c => c.Name);
+
+            var missingFeatures = new List<string>();
+            var features = new List<Catchment>();
+
+            foreach (var stationName in importData.StationNames)
+            {
+                if (!catchmentLookup.TryGetValue(stationName, out Catchment catchment))
+                {
+                    missingFeatures.Add(stationName);
+                    continue;
+                }
+
+                features.Add(catchment);
+            }
+
+            if (missingFeatures.Any())
+            {
+                throw new InvalidDataException(string.Format(Resources.SobekRRMeteoDataImporter_AddMissingFeatures_Could_not_find_a_catchment_for_the_following_stations__0__, string.Join(",", missingFeatures)));
+            }
+
+            stationVariable.SetValues(features);
         }
     }
 }

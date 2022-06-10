@@ -225,8 +225,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             rrmodel.StopTime = rrmodel.StartTime.AddTicks(rrmodel.TimeStep.Ticks * 50); //50 timesteps
             rrmodel.ModelController = new RainfallRunoffModelController(rrmodel);
-            
-            TestHelper.AssertIsFasterThan(1400, rrmodel.Initialize);
+
+            try
+            {
+                TestHelper.AssertIsFasterThan(4000, () =>
+                {
+                    rrmodel.Initialize(); // validates, exports and initializes model
+                    Assert.AreEqual(ActivityStatus.Initialized, rrmodel.Status, "Model should be initialized");
+                });
+            }
+            finally
+            {
+                rrmodel.Cleanup(); 
+            }
         }
 
         [Test]

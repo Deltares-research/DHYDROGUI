@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             {
                 case MeteoDataDistributionType.Global:
                     evaporationValues = evaporationData.Data.GetValues<double>().ToArray();
-                    writer.AddEvaporationStation("Global", evaporationValues);
+                    writer.AddEvaporationStation(MeteoData.GlobalMeteoName, evaporationValues);
                     return true;
                 case MeteoDataDistributionType.PerFeature:
                     if (!(evaporationData.Data is IFeatureCoverage featureCoverage))

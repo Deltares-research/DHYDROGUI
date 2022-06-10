@@ -6,6 +6,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
@@ -30,6 +31,36 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// Data defined on the basin catchments
         /// </summary>
         IEnumerable<CatchmentModelData> ModelData { get; }
+
+        /// <summary>
+        /// Precipitation data for the model
+        /// </summary>
+        MeteoData Precipitation { get; }
+
+        /// <summary>
+        /// Evaporation data for the model
+        /// </summary>
+        MeteoData Evaporation { get; }
+
+        /// <summary>
+        /// Temperature data for the model
+        /// </summary>
+        MeteoData Temperature { get; }
+
+        /// <summary>
+        /// Defined meteo stations
+        /// </summary>
+        IEventedList<string> MeteoStations { get; }
+
+        /// <summary>
+        /// Defined temperature stations
+        /// </summary>
+        IEventedList<string> TemperatureStations { get; }
+
+        /// <summary>
+        /// End time of the model run
+        /// </summary>
+        DateTime StopTime { get; }
 
         event EventHandler<EventArgs<CatchmentModelData>> ModelDataAdded;
         

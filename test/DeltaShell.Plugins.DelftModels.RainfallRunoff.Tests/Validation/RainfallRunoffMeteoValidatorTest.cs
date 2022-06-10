@@ -33,9 +33,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         public void NoValuesForPerStationMeteo()
         {
             var rrm = new RainfallRunoffModel
-                {
-                    Precipitation = {DataDistributionType = MeteoDataDistributionType.PerStation}
-                };
+            {
+                Precipitation = { DataDistributionType = MeteoDataDistributionType.PerStation },
+                Evaporation = { DataDistributionType = MeteoDataDistributionType.PerStation }
+            };
+
             rrm.MeteoStations.Add("station1");
             rrm.TemperatureStations.Add("station1");
 

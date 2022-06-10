@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         private static List<string> GetMeteoStationNames(MeteoData meteoData, IFunction meteoDataDistributed)
         {
             return meteoData.DataDistributionType == MeteoDataDistributionType.Global
-                       ? new List<string> { "Global" }
+                       ? new List<string> { MeteoData.GlobalMeteoName }
                        : meteoDataDistributed.Arguments[1].Values.Cast<object>().Select(v => v.ToString()).ToList();
         }
 

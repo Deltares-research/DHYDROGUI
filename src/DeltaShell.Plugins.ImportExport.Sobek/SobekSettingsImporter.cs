@@ -106,32 +106,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
         
-        private IEnumerable<DateTime> ReadMeasurementTimesFromBuiFile()
-        {
-            if (CaseData.PrecipitationFile == null)
-            {
-                Log.Error("No precipitation data available.");
-                return new List<DateTime>();
-            }
-            var buiFileReader = new SobekRRBuiFileReader();
-            return buiFileReader.ReadBuiHeaderData(CaseData.PrecipitationFile.FullName) ? buiFileReader.MeasurementTimes : new List<DateTime>();
-        }
-
         private void SetModelParameters()
         {
-            // Simulation
-            if (sobekCaseSettings.PeriodFromEvent)
-            {
-                DateTime startTime;
-                DateTime stopTime;
-                SobekMeteoDataImporterHelper.ReadTimersFromMeteo(ReadMeasurementTimesFromBuiFile().ToList(),
-                                                                 sobekCaseSettings.StartTime,
-                                                                 sobekCaseSettings.StopTime, out startTime,
-                                                                 out stopTime);
-                sobekCaseSettings.StartTime = startTime;
-                sobekCaseSettings.StopTime = stopTime;
-            }
-
             waterFlowFMModel.StartTime = sobekCaseSettings.StartTime;
             waterFlowFMModel.ReferenceTime = sobekCaseSettings.StartTime;
             waterFlowFMModel.StopTime = sobekCaseSettings.StopTime;
