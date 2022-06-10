@@ -18,7 +18,7 @@
       </Code>
     </Task>
   </UsingTask>
-
+  
   <Target Name="TargetSystemTests">
     <!-- Check (system test) -->
     <Message Text="Checking MSI at state : $(Status)" Importance="high"/>
@@ -380,7 +380,8 @@
                           Key=DeltaShell Exe Gui file;
                           KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeFile)"
              ContinueOnError="WarnAndContinue"/>
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
+    <!-- We do not want to check the deltashell version number
+	<MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
@@ -388,7 +389,8 @@
                           Key=$(_CheckDeltaShellGuiExeFile);
                           KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeFile);
                           FileVersion=$(_CheckDeltaShellGuiExeFileVersion)"
-             ContinueOnError="WarnAndContinue"/>
+             ContinueOnError="WarnAndContinue"/> -->
+
 
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigFile>DeltaShell.Gui.exe.config</_CheckDeltaShellGuiExeConfigFile>
