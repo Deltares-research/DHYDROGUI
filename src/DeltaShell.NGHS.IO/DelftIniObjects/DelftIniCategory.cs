@@ -194,5 +194,14 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         {
             delftIniProperties.RemoveAllWhere(condition);
         }
+
+        /// <summary>
+        /// Override to add the <seealso cref="Name"/>.
+        /// </summary>
+        /// <returns>Base.ToString and a the <seealso cref="Name"/> of the <seealso cref="DelftIniCategory"/> </returns>
+        public override string ToString()
+        {
+            return base.ToString() + $" ( {Name} )";
+        }
     }
 }

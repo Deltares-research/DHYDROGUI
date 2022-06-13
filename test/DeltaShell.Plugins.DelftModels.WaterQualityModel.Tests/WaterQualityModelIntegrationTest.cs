@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.NotNull(firstFeature, "First feature in IM1 data item not found.");
                 IVariable firstComponent = firstFeature.Components.FirstOrDefault();
                 Assert.NotNull(firstComponent, "first feature component invalid.");
-                Assert.True(firstComponent.Values.OfType<Double>().Any(t => t >0d));
+                Assert.True(firstComponent.Values.OfType<Double>().Any());
             }
         }
 

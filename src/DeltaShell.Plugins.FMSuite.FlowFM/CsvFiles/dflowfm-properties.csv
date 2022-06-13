@@ -268,7 +268,6 @@ output,WaterlevelClasses,output,Class,Water level classes,String,0.0,,,,,WriteCl
 output,WaterdepthClasses,output,Class,Water depth classes,String,0.0,,,,,WriteClassMapFile,,,,"Water depth classes", m
 output,ClassMapInterval,,,Class map interval,DoubleArray,300,0,,TRUE,,WriteClassMapFile,,,,"Class output interval [Dd HH:MM:SS.ZZZ]"
 output,StatsInterval,output,Others,Statistics output interval,Interval,0,,,FALSE,,,,,,Interval (in s) between simulation statistics output [Dd HH:MM:SS.ZZZ]
-output,Writebalancefile,output,Others,Write water balance file,0|1,0,0,1,FALSE,,,,,,"Write balance file (1: yes, 0: no)"
 output,TimingsInterval,output,Others,Timing statistics output interval,Interval,0,,,FALSE,,,,,,Timings statistics output interval [Dd HH:MM:SS.ZZZ]
 output,Richardsononoutput,output,Others,Write Richardson numbers?,0|1,1,,,FALSE,,,,,,"Write Richardson numbers (1: yes, 0: no)"
 geometry,UseCaching,output,Others,Use caching,0|1,1,,,FALSE,,,,,,"Use caching of flow model geometry input (1: yes, 0: no)"

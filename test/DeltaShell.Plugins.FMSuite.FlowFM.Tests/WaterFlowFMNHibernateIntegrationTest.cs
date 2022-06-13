@@ -26,6 +26,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using DHYDRO.TestModels.DFlowFM;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -341,6 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void GivenWaterFlowFmModel_WhenEnablingMorphologyAndSpatialOperations_ThenModelShoulLoadAndRun()
         {
+            using(var tempDir = new TemporaryDirectory())
             using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -352,31 +354,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 app.SaveProjectAs("spatial_hibernate.dsproj");
 
-                string testDataDirectory = TestHelper.GetTestFilePath(@"MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj_data\zm_dfm");
-                var zipFileName = "zm_dfm.zip";
-                string zipFilePath = Path.Combine(testDataDirectory, zipFileName);
+                string testDataDirectory = DFlowFMModelRepository.CopyTimeVaryingBoundaryConditionModelTo(tempDir.Path);
+                const string mduFileName = "tfl.mdu";
+                WaterFlowFMModel model = ImportModelFromTemporaryDirectory(testDataDirectory, mduFileName);
 
-                TestHelper.PerformActionInTemporaryDirectory(tempDir =>
-                {
-                    FileUtils.CopyDirectory(testDataDirectory, tempDir);
-                    ZipFileUtils.Extract(zipFilePath, tempDir);
+                app.Project.RootFolder.Add(model);
 
-                    var mduFileName = "zm_dfm.mdu";
-                    WaterFlowFMModel model = ImportModelFromTemporaryDirectory(tempDir, mduFileName);
+                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                loadedModel.ClearOutput();
+                Assert.NotNull(loadedModel);
+                Assert.IsTrue(loadedModel.OutputIsEmpty);
 
-                    app.Project.RootFolder.Add(model);
+                app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
+                app.RunActivity(loadedModel);
+                Assert.IsFalse(loadedModel.OutputIsEmpty);
 
-                    var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
-                    loadedModel.ClearOutput();
-                    Assert.NotNull(loadedModel);
-                    Assert.IsTrue(loadedModel.OutputIsEmpty);
-
-                    app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
-                    app.RunActivity(loadedModel);
-                    Assert.IsFalse(loadedModel.OutputIsEmpty);
-
-                    app.CloseProject();
-                });
+                app.CloseProject();
             }
         }
 

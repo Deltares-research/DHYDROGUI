@@ -52,5 +52,14 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         /// The line where this property was read in the file.
         /// </summary>
         public int LineNumber { get; }
+        
+        /// <summary>
+        /// Override to add the <seealso cref="Name"/>.
+        /// </summary>
+        /// <returns>Base.ToString and a the <seealso cref="Name"/> of the <seealso cref="DelftIniProperty"/> </returns>
+        public override string ToString()
+        {
+            return base.ToString() + $" ( {Name} )";
+        }
     }
 }

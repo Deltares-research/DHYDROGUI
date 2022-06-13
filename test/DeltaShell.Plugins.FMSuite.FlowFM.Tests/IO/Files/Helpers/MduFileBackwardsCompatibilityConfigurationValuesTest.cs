@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
     [TestFixture]
     public class MduFileBackwardsCompatibilityConfigurationValuesTest : IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
     {
-        protected override IEnumerable<string> ObsoleteProperties => new HashSet<string> {"hdam"};
+        protected override IEnumerable<string> ObsoleteProperties => new HashSet<string> {"hdam","writebalancefile" };
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyPropertyMapping =>
             new Dictionary<string, string>

@@ -127,7 +127,7 @@ WaqInterval       = 0                   # Interval (in s) between Delwaq file ou
 StatsInterval     = 0                   # Interval (in s) between simulation statistics output.
 TimingsInterval   = 60                  # Timings output interval
 MapOutputTimeVector=
-Writebalancefile  = 0
+
 FullGridOutput    = 0
 HisFile           = 001_his.nc          # *_his.nc History file in NetCDF format.
 MapFile           = 001_map.nc          # *_map.nc Map file in NetCDF format.
