@@ -10,6 +10,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.Extensions;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCrossSections;
 using log4net;
@@ -127,7 +128,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             SetupSummerDikeView();
             
             SetupCrossSectionDataView();
+            tableView.PasteController.SelectPasteReplacer.ReplaceVerifier = CrossSectionDefinition.GenerateReplaceVerifier(ViewModel.MinimalNumberOfTableRows);
+            tableView.PasteController.PasteFinished += PasteControllerOnPasteFinished;
         }
+
+        private void PasteControllerOnPasteFinished(object sender, EventArgs e)
+        {
+            CrossSectionDefinition.FinishPasteHandling();
+        }
+        
 
         private void SubscribeToData()
         {
@@ -209,6 +218,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             crossSectionViewZwSectionsView1.Data = null;
             crossSectionSectionsTable.Data = null;
             summerDikeView.Data = null;
+
+            tableView.PasteController.SelectPasteReplacer.ReplaceVerifier = null;
+            tableView.PasteController.PasteFinished -= PasteControllerOnPasteFinished;
+
             tableView.Data = null;
             tableView.EditableObject = null;
         }
