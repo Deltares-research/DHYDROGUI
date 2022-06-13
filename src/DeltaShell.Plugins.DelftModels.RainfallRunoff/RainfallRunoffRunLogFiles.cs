@@ -5,6 +5,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO.LogFileReading;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using log4net;
 
@@ -125,9 +126,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             var textDocument = new TextDocument(true) { Name = displayName };
 
             var dataItem = new DataItem(textDocument, DataItemRole.Output, dataItemTagName);
-            rainfallRunoffModel.DataItems.Add(dataItem);
+            EventingHelper.DoWithoutEvents(()=>  AddDataItemToModel(dataItem));
 
             return dataItem;
+        }
+
+        private void AddDataItemToModel(IDataItem dataItem)
+        {
+            rainfallRunoffModel.DataItems.Add(dataItem);
+            dataItem.Owner = rainfallRunoffModel;
         }
     }
 }

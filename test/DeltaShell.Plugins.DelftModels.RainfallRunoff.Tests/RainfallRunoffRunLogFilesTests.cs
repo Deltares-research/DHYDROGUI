@@ -208,6 +208,51 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 }
             }
         }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase("3b_bal.out")]
+        [TestCase("sobek_3b.log")]
+        public void ConnectLoggingFiles_DoesNotTriggerPropertyChanged_WhenAddingNewDataItem(string logFileName)
+        {
+            // Arrange
+            var logMock = Substitute.For<ILogFileReader>();
+            const string someData = "someData";
+            logMock.ReadCompleteStream(Arg.Any<Stream>()).Returns(someData); 
+            var rainfallRunoffModelMock = Substitute.For<IRainfallRunoffModel>();
+        
+            var dataItemList =  new EventedList<IDataItem>();
+            rainfallRunoffModelMock.DataItems.Returns(dataItemList);
 
+            int ownerPropertyChangedCount = 0;
+            dataItemList.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName != nameof(DataItem.Owner))
+                {
+                    return;
+                }
+
+                ownerPropertyChangedCount++;
+            };
+
+            var sut = new RainfallRunoffRunLogFiles(logMock,rainfallRunoffModelMock);
+        
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // create 1 files in temp dir to make the code run for parameterized log file
+                tempDir.CreateFile(logFileName);
+        
+                // Act
+                sut.ConnectLoggingFiles(tempDir.Path);
+            }
+        
+            // Assert
+            Assert.AreEqual(1, dataItemList.Count);
+            Assert.Multiple(() =>
+            { 
+                Assert.AreSame(rainfallRunoffModelMock, dataItemList[0].Owner); 
+                Assert.AreEqual(0, ownerPropertyChangedCount, "Do not expect any property changed events for owner property, because this triggers logic in ProjectFileBasedItemRepository. Related to issue FM1D2D-1958.");
+            });
+        }
     }
 }
