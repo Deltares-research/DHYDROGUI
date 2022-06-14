@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (shape == null || timeSeriesData == null)
                 {
-                    throw new NotImplementedException();
+                    return base.GetVariableValues<T>(variable, filters);
                 }
                 
                 UpdateMinMaxCache(timeSeriesData.Cast<double>(), variable);
