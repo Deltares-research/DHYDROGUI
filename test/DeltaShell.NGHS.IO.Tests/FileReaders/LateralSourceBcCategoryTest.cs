@@ -1,10 +1,10 @@
 using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -9,8 +9,8 @@ using DelftTools.Utils.Editing;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.Utils.Extensions;
+using DHYDRO.Common.Logging;
 using log4net;
 using Newtonsoft.Json;
 

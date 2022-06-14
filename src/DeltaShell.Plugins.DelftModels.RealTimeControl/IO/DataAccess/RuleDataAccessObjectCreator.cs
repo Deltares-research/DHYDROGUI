@@ -4,8 +4,8 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.Dimr.RtcXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 {

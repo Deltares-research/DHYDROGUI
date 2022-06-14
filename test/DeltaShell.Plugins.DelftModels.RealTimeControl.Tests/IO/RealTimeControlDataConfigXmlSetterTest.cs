@@ -6,6 +6,7 @@ using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DHYDRO.Common.Logging;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                     }),
                 "Method throws an unexpected exception when parameter 'elements' is null.");
 
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+            Assert.AreEqual(0, logHandler.LogMessages.AllMessages.Count(),
                             AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
@@ -68,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                     null),
                 "Method throws an unexpected exception when parameter 'controlGroups' is null.");
 
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+            Assert.AreEqual(0, logHandler.LogMessages.AllMessages.Count(),
                             AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
@@ -79,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(null, null);
 
             // Then
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+            Assert.AreEqual(0, logHandler.LogMessages.AllMessages.Count(),
                             AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 timeStep);
 
             // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Contains(expectedMessage),
                           AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
             Assert.AreEqual(0, hydraulicRule.TimeLag,
                             "Expected time lag for hydraulic rule was expected to be 0.");
@@ -153,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                     new TimeSpan()),
                 "Method throws an unexpected exception when parameter 'elements' is null");
 
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+            Assert.AreEqual(0, logHandler.LogMessages.AllMessages.Count(),
                             AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
@@ -170,7 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                     timeStep),
                 "Method throws an unexpected exception when parameter 'controlGroups' is null.");
 
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+            Assert.AreEqual(0, logHandler.LogMessages.AllMessages.Count(),
                             AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 

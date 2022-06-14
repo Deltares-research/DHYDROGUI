@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.Builders;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using DHYDRO.Common.Logging;
 using log4net;
 using NetTopologySuite.Geometries;
 

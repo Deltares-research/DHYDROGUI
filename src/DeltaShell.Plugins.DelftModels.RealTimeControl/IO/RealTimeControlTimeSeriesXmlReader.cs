@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DeltaShell.Dimr.RtcXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {

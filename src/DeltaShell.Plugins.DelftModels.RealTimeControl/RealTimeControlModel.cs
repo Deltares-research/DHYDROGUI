@@ -38,6 +38,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
+using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;

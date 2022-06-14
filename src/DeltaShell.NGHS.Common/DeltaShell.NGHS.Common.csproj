@@ -6,6 +6,9 @@
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="DHYDRO.Common" Version="1.0.0.11">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="log4net" Version="2.0.12">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>

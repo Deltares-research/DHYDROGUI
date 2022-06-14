@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DHYDRO.Common.Logging;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -74,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // Then
             AssertValuesAreDefault();
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(filePath)),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Any(m => m.Contains(filePath)),
                           AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
         }
 

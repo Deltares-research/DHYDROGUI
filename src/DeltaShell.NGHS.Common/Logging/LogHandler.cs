@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
+using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.NGHS.Common.Logging
@@ -52,68 +53,76 @@ namespace DeltaShell.NGHS.Common.Logging
 
             this.activityName = activityName;
             this.maxMessages = maxMessages;
-            LogMessagesTable = new LogMessagesList();
+            LogMessages = new LogMessages();
             this.log = log;
         }
 
-        public LogMessagesList LogMessagesTable { get; }
+        /// <inheritdoc/>
+        public ILogMessages LogMessages { get; }
 
+        /// <inheritdoc/>
         public void ReportInfo(string logMessage)
         {
-            LogMessagesTable.Add(logMessage, LogSeverity.Info);
+            LogMessages.Add(logMessage, LogSeverity.Info);
         }
 
+        /// <inheritdoc/>
         public void ReportInfoFormat(string logMessage, params object[] args)
         {
             ReportInfo(string.Format(logMessage, args));
         }
 
+        /// <inheritdoc/>
         public void ReportWarning(string logMessage)
         {
-            LogMessagesTable.Add(logMessage, LogSeverity.Warning);
+            LogMessages.Add(logMessage, LogSeverity.Warning);
         }
 
+        /// <inheritdoc/>
         public void ReportWarningFormat(string logMessage, params object[] args)
         {
             ReportWarning(string.Format(logMessage, args));
         }
 
+        /// <inheritdoc/>
         public void ReportError(string logMessage)
         {
-            LogMessagesTable.Add(logMessage, LogSeverity.Error);
+            LogMessages.Add(logMessage, LogSeverity.Error);
         }
 
+        /// <inheritdoc/>
         public void ReportErrorFormat(string logMessage, params object[] args)
         {
             ReportError(string.Format(logMessage, args));
         }
 
+        /// <inheritdoc/>
         public void LogReport()
         {
-            if (!LogMessagesTable.Any())
+            if (!LogMessages.AllMessages.Any())
             {
                 return;
             }
 
-            string[] errorMessages = LogMessagesTable.ErrorMessages.ToArray();
+            string[] errorMessages = LogMessages.ErrorMessages.ToArray();
             if (errorMessages.Any())
             {
                 log.Error(CreateReport(errorMessages, "errors"));
             }
 
-            string[] warningMessages = LogMessagesTable.WarningMessages.ToArray();
+            string[] warningMessages = LogMessages.WarningMessages.ToArray();
             if (warningMessages.Any())
             {
                 log.Warn(CreateReport(warningMessages, "warnings"));
             }
 
-            string[] infoMessages = LogMessagesTable.InfoMessages.ToArray();
+            string[] infoMessages = LogMessages.InfoMessages.ToArray();
             if (infoMessages.Any())
             {
                 log.Info(CreateReport(infoMessages, "infos"));
             }
 
-            LogMessagesTable.Clear();
+            LogMessages.Clear();
         }
 
         private string CreateReport(IReadOnlyCollection<string> messages, string logSeverity)
@@ -139,72 +148,6 @@ namespace DeltaShell.NGHS.Common.Logging
         private string GetReportHeader(string logSeverity)
         {
             return $"During {activityName} the following {logSeverity} were reported:";
-        }
-    }
-
-    /// <summary>
-    /// Severities of log messages.
-    /// </summary>
-    public enum LogSeverity
-    {
-        Info,
-        Warning,
-        Error
-    }
-
-    /// <inheritdoc/>
-    /// <summary>
-    /// Represent a list of <see cref="T:System.String"/> and <see cref="T:DeltaShell.NGHS.Common.Logging.LogSeverity"/> pairs.
-    /// </summary>
-    /// <seealso cref="T:System.Collections.Generic.List`1"/>
-    public class LogMessagesList : List<Tuple<string, LogSeverity>>
-    {
-        /// <summary>
-        /// Gets all the log messages with severity <see cref="LogSeverity.Info"/>.
-        /// </summary>
-        /// <value>
-        /// The info messages.
-        /// </value>
-        public IEnumerable<string> InfoMessages => GetLogMessagesWithSeverity(LogSeverity.Info);
-
-        /// <summary>
-        /// Gets all the log messages with severity <see cref="LogSeverity.Warning"/>.
-        /// </summary>
-        /// <value>
-        /// The info messages.
-        /// </value>
-        public IEnumerable<string> WarningMessages => GetLogMessagesWithSeverity(LogSeverity.Warning);
-
-        /// <summary>
-        /// Gets all the log messages with severity <see cref="LogSeverity.Error"/>.
-        /// </summary>
-        /// <value>
-        /// The info messages.
-        /// </value>
-        public IEnumerable<string> ErrorMessages => GetLogMessagesWithSeverity(LogSeverity.Error);
-
-        /// <summary>
-        /// Gets all the messages the <see cref="LogMessagesList"/> contains.
-        /// </summary>
-        /// <value>
-        /// The log messages.
-        /// </value>
-        public IEnumerable<string> AllMessages => this.Select(m => m.Item1);
-
-        /// <summary>
-        /// Adds a new pair of <see cref="System.String"/> and <see cref="LogSeverity"/> to the end of the
-        /// <see cref="LogMessagesList"/>.
-        /// </summary>
-        /// <param name="logMessage">The log message</param>
-        /// <param name="logSeverity">The severity of the log message</param>
-        public void Add(string logMessage, LogSeverity logSeverity)
-        {
-            Add(new Tuple<string, LogSeverity>(logMessage, logSeverity));
-        }
-
-        private IEnumerable<string> GetLogMessagesWithSeverity(LogSeverity logSeverity)
-        {
-            return this.Where(p => p.Item2.Equals(logSeverity)).Select(m => m.Item1);
         }
     }
 }

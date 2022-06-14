@@ -13,6 +13,7 @@ using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils;
+using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;

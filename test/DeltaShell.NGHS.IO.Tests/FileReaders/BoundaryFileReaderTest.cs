@@ -4,9 +4,9 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
+using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

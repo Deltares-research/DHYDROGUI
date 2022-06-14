@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Logging;
+using DHYDRO.Common.Logging;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.Common.Tests.Logging
@@ -28,7 +29,11 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             logHandler.ReportInfo(LogMessage);
 
             // Then
-            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Info);
+            Assert.AreEqual(1, logHandler.LogMessages.AllMessages.Count(),
+                            "Exactly 1 log message was expected to be collected by the log handler.");
+            string logMessage = logHandler.LogMessages.InfoMessages.FirstOrDefault(m => m.Equals(LogMessage));
+            Assert.NotNull(logMessage,
+                           $"Expected log message '{LogMessage}' with expected severity '{LogSeverity.Info}' was not added to the list.");
         }
 
         [Test]
@@ -39,7 +44,11 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             logHandler.ReportWarning(LogMessage);
 
             // Then
-            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Warning);
+            Assert.AreEqual(1, logHandler.LogMessages.AllMessages.Count(),
+                            "Exactly 1 log message was expected to be collected by the log handler.");
+            string logMessage = logHandler.LogMessages.WarningMessages.FirstOrDefault(m => m.Equals(LogMessage));
+            Assert.NotNull(logMessage,
+                           $"Expected log message '{LogMessage}' with expected severity '{LogSeverity.Warning}' was not added to the list.");
         }
 
         [Test]
@@ -50,7 +59,11 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             logHandler.ReportError(LogMessage);
 
             // Then
-            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Error);
+            Assert.AreEqual(1, logHandler.LogMessages.AllMessages.Count(),
+                            "Exactly 1 log message was expected to be collected by the log handler.");
+            string logMessage = logHandler.LogMessages.ErrorMessages.FirstOrDefault(m => m.Equals(LogMessage));
+            Assert.NotNull(logMessage,
+                           $"Expected log message '{LogMessage}' with expected severity '{LogSeverity.Error}' was not added to the list.");
         }
 
         [Test]
@@ -61,7 +74,11 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             logHandler.ReportInfoFormat(Format, formatArgs);
 
             // Then
-            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Info);
+            Assert.AreEqual(1, logHandler.LogMessages.AllMessages.Count(),
+                            "Exactly 1 log message was expected to be collected by the log handler.");
+            string logMessage = logHandler.LogMessages.InfoMessages.FirstOrDefault(m => m.Equals(LogMessage));
+            Assert.NotNull(logMessage,
+                           $"Expected log message '{LogMessage}' with expected severity '{LogSeverity.Info}' was not added to the list.");
         }
 
         [Test]
@@ -72,7 +89,11 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             logHandler.ReportWarningFormat(Format, formatArgs);
 
             // Then
-            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Warning);
+            Assert.AreEqual(1, logHandler.LogMessages.AllMessages.Count(),
+                            "Exactly 1 log message was expected to be collected by the log handler.");
+            string logMessage = logHandler.LogMessages.WarningMessages.FirstOrDefault(m => m.Equals(LogMessage));
+            Assert.NotNull(logMessage,
+                           $"Expected log message '{LogMessage}' with expected severity '{LogSeverity.Warning}' was not added to the list.");
         }
 
         [Test]
@@ -83,7 +104,11 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             logHandler.ReportErrorFormat(Format, formatArgs);
 
             // Then
-            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Error);
+            Assert.AreEqual(1, logHandler.LogMessages.AllMessages.Count(),
+                            "Exactly 1 log message was expected to be collected by the log handler.");
+            string logMessage = logHandler.LogMessages.ErrorMessages.FirstOrDefault(m => m.Equals(LogMessage));
+            Assert.NotNull(logMessage,
+                           $"Expected log message '{LogMessage}' with expected severity '{LogSeverity.Error}' was not added to the list.");
         }
 
         [Test]
@@ -134,7 +159,7 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             logHandler.ReportError(errorMessage1);
             logHandler.ReportError(errorMessage2);
 
-            Assert.AreEqual(6, logHandler.LogMessagesTable.Count,
+            Assert.AreEqual(6, logHandler.LogMessages.AllMessages.Count(),
                             "Exactly 6 log messages were expected to be collected by the log handler.");
 
             // When
@@ -145,7 +170,7 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             Assert.That(messages[0], Is.EqualTo(CreateExpectedLogMessage("During some_activity the following errors were reported:", errorMessage1, errorMessage2)));
             Assert.That(messages[1], Is.EqualTo(CreateExpectedLogMessage("During some_activity the following warnings were reported:", warningMessage1, warningMessage2)));
             Assert.That(messages[2], Is.EqualTo(CreateExpectedLogMessage("During some_activity the following infos were reported:", infoMessage1, infoMessage2)));
-            Assert.That(logHandler.LogMessagesTable, Is.Empty);
+            Assert.That(logHandler.LogMessages.AllMessages, Is.Empty);
         }
 
         [Test]
@@ -179,18 +204,6 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             // Assert
             var e = Assert.Throws<ArgumentOutOfRangeException>(Call);
             Assert.That(e.ParamName, Is.EqualTo("maxMessages"));
-        }
-
-        private static void AssertMessageWithCorrectSeverity(ILogHandler logHandler, string message, LogSeverity logSeverity)
-        {
-            Assert.AreEqual(1, logHandler.LogMessagesTable.Count,
-                            "Exactly 1 log message was expected to be collected by the log handler.");
-
-            Tuple<string, LogSeverity> messageSeverityPair = logHandler.LogMessagesTable
-                                                                       .FirstOrDefault(t => t.Item1.Equals(message) && t.Item2.Equals(logSeverity));
-
-            Assert.NotNull(messageSeverityPair,
-                           $"Expected log message '{message}' with expected severity '{logSeverity.ToString()}' was not added to the list.");
         }
 
         private static string CreateExpectedLogMessage(string header, string message1, string message2, string notShownMessage = null)

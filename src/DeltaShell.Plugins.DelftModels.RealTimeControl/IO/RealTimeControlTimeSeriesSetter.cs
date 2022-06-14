@@ -4,10 +4,10 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.Dimr.RtcXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {

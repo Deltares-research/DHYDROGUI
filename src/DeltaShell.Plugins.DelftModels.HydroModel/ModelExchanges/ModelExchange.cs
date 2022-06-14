@@ -2,6 +2,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges
 {

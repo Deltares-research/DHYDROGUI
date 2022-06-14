@@ -4,6 +4,7 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DHYDRO.Common.Logging;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.DoesNotThrow(() => timeSeriesReader.Read(filePath, new IControlGroup[0]),
                                 "Method throws an unexpected exception when the specified file path does not exist");
 
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+            Assert.AreEqual(0, logHandler.LogMessages.AllMessages.Count(),
                             AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
@@ -57,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.DoesNotThrow(() => timeSeriesReader.Read(filePath, null),
                                 "Method throws an unexpected exception when the parameter for control groups is null");
 
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+            Assert.AreEqual(0, logHandler.LogMessages.AllMessages.Count(),
                             AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
