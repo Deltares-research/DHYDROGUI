@@ -187,6 +187,117 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Evaporation.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Evaporation {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Evaporation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meteo.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Meteo {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Meteo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meteo stations.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Meteo_stations {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Meteo_stations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No meteo stations defined.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_No_meteo_stations_defined {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_No_meteo_stations_defined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No temperature stations defined.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_No_temperature_stations_defined {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_No_temperature_stations_defined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not enough values defined.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Not_enough_values_defined {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Not_enough_values_defined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Precipitation.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Precipitation {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Precipitation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Temperature {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Temperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature stations.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Temperature_stations {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Temperature_stations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time series starts ({0}) after start of model ({1}).
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Time_series_starts___0___after_start_of_model___1__ {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Time_series_starts___0___after_start_of_mod" +
+                        "el___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time series stops ({0}) before end of model ({1}).
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_Validate_Time_series_stops___0___before_end_of_model___1__ {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_Validate_Time_series_stops___0___before_end_of_model" +
+                        "___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time step of time series ({0}) should be a multiple of the computation time step {1}.
+        /// </summary>
+        public static string RainfallRunoffMeteoValidator_ValidateMeteoData_Time_step_of_time_series___0___should_be_a_multiple_of_the_computation_time_step__1_ {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoValidator_ValidateMeteoData_Time_step_of_time_series___0___sho" +
+                        "uld_be_a_multiple_of_the_computation_time_step__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not delete &apos;{0}&apos;. The file may be locked by another program..
         /// </summary>
         public static string RainfallRunoffOutputFiles_Could_not_delete_file {

@@ -153,6 +153,42 @@
   <data name="PavedDataValidation_Cant_link_to_multiple_boundaries" xml:space="preserve">
     <value>A paved node may not be connected downstream to more then 1 boundary.</value>
   </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Precipitation" xml:space="preserve">
+    <value>Precipitation</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Evaporation" xml:space="preserve">
+    <value>Evaporation</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Meteo_stations" xml:space="preserve">
+    <value>Meteo stations</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Temperature" xml:space="preserve">
+    <value>Temperature</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Temperature_stations" xml:space="preserve">
+    <value>Temperature stations</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Meteo" xml:space="preserve">
+    <value>Meteo</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_No_meteo_stations_defined" xml:space="preserve">
+    <value>No meteo stations defined</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_No_temperature_stations_defined" xml:space="preserve">
+    <value>No temperature stations defined</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Not_enough_values_defined" xml:space="preserve">
+    <value>Not enough values defined</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Time_series_starts___0___after_start_of_model___1__" xml:space="preserve">
+    <value>Time series starts ({0}) after start of model ({1})</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_Validate_Time_series_stops___0___before_end_of_model___1__" xml:space="preserve">
+    <value>Time series stops ({0}) before end of model ({1})</value>
+  </data>
+  <data name="RainfallRunoffMeteoValidator_ValidateMeteoData_Time_step_of_time_series___0___should_be_a_multiple_of_the_computation_time_step__1_" xml:space="preserve">
+    <value>Time step of time series ({0}) should be a multiple of the computation time step {1}</value>
+  </data>
   <data name="MeteoDataDistributionType_Global" xml:space="preserve">
 	  <value>Global</value>
   </data>

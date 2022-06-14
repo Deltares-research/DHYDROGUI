@@ -4,6 +4,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 
@@ -11,19 +12,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 {
     public static class MeteoDataModelController
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (MeteoDataModelController));
+        private static readonly ILog log = LogManager.GetLogger(typeof(MeteoDataModelController));
 
         public static void AddMeteoData(IRRModelHybridFileWriter writer, MeteoData evaporationData, DateTime startDate, DateTime endDate, TimeSpan timeStepModel)
         {
             writer.SetMeteoDataStartTimeAndInterval(RRModelEngineHelper.DateToInt(startDate),
                                                     RRModelEngineHelper.TimeToInt(startDate),
-                                                    (int) timeStepModel.TotalSeconds);
+                                                    (int)timeStepModel.TotalSeconds);
 
             if (!AddEvaporationData(writer, evaporationData, startDate, endDate))
             {
                 log.ErrorFormat("It's not possible to set the evaporation data. Check the validation report.");
             }
-            
+
         }
 
         private static bool AddEvaporationData(IRRModelHybridFileWriter writer, MeteoData evaporationData, DateTime startDate, DateTime endDate)
@@ -70,27 +71,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                     throw new NotSupportedException("Unknown evaporation data type");
             }
         }
-        
-        private static bool ValidateTimeRangeOfMeteoData(MeteoData meteoData, DateTime modelStartDateTime, DateTime modelEndDateTime)
+
+        private static bool ValidateTimeRangeOfMeteoData(MeteoData meteoData,
+                                                         DateTime modelStartDateTime,
+                                                         DateTime modelEndDateTime)
         {
-            var timeArgument = (IVariable<DateTime>) meteoData.Data.Arguments.FirstOrDefault(a => a.ValueType == typeof (DateTime));
+            var timeArgument = (IVariable<DateTime>)meteoData.Data.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
 
-            if (timeArgument == null || timeArgument.Values.Count < 2)
-            {
-                return false;
-            }
-
-            DateTime lastTime = timeArgument.Values[timeArgument.Values.Count - 1];
-            TimeSpan meteoTimestep = lastTime.Subtract(timeArgument.Values[timeArgument.Values.Count - 2]);
-            DateTime meteoEnd = lastTime.Add(meteoTimestep);
-
-            if (timeArgument.ExtrapolationType == ExtrapolationType.None &&
-                (timeArgument.MinValue > modelStartDateTime || meteoEnd < modelEndDateTime))
-            {
-                return false;
-            }
-
-            return true;
+            return timeArgument != null &&
+                   timeArgument.HasCorrectNumberValues(modelStartDateTime, modelEndDateTime) &&
+                   (timeArgument.ExtrapolationType != ExtrapolationType.None ||
+                    timeArgument.HasCorrectStartingTime(modelStartDateTime) &&
+                    timeArgument.HasCorrectStopTime(modelEndDateTime));
         }
     }
 }
