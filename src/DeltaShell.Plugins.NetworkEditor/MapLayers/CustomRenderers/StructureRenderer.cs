@@ -180,11 +180,17 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             var vertices = new List<Coordinate>();
 
             var pointFeature = (IPointFeature)feature;
-            var type = pointFeature.ParentPointFeature.NetworkFeatureType;
-            var numberOfFeatures = pointFeature.ParentPointFeature.GetPointFeatures().Count();
-            int upwardTranslationFactor;
-            int downwardTranslationFactor;
-            PointFeatureRenderingHelper.DetermineTranslationFactorForStructures(type, numberOfFeatures, out upwardTranslationFactor, out downwardTranslationFactor);
+
+            int upwardTranslationFactor = -1;
+            int downwardTranslationFactor = 1;
+
+            if (pointFeature.ParentPointFeature != null)
+            {
+                var type = pointFeature.ParentPointFeature.NetworkFeatureType;
+                var numberOfFeatures = pointFeature.ParentPointFeature.GetPointFeatures().Count();
+
+                PointFeatureRenderingHelper.DetermineTranslationFactorForStructures(type, numberOfFeatures, out upwardTranslationFactor, out downwardTranslationFactor);
+            }
 
             var halfHeight = (range.Y - org.Y) / 2;
             vertices.Add(new Coordinate(d, anchor.Y + upwardTranslationFactor * halfHeight));

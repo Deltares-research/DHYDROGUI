@@ -85,7 +85,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             var geometry = ((IGeometry)structure.Geometry.Clone());
 
-            TargetFeature = new T { Name = structure.Name, Geometry = geometry };
+            TargetFeature = new T
+            {
+                Name = structure.Name,
+                Geometry = geometry
+            };
         }
 
         public override void Add(IFeature feature)

@@ -86,5 +86,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(10, pump.Geometry.Coordinates[0].X);
             Assert.AreEqual(0, pump.Geometry.Coordinates[0].Y);
         }
+
+        [Test]
+        public void Start_SetsCorrectTargetFeature()
+        {
+            // Setup
+            var structureInteractor = new StructureInteractor<Pump>(new VectorLayer { Map = mapControl.Map }, pump,
+                                                                    new VectorStyle { Symbol = new Bitmap(16, 16) }, null);
+
+            // Call
+            structureInteractor.Start();
+
+            // Assert
+            Assert.That(structureInteractor.TargetFeature, Is.Not.SameAs(pump));
+            Assert.That(structureInteractor.TargetFeature, Is.InstanceOf<Pump>());
+            Assert.That(((IStructure1D)structureInteractor.TargetFeature).Name, Is.EqualTo(pump.Name));
+            Assert.That(structureInteractor.TargetFeature.Geometry, Is.Not.SameAs(pump.Geometry));
+            Assert.That(structureInteractor.TargetFeature.Geometry, Is.EqualTo(pump.Geometry));
+        }
     }
 }
