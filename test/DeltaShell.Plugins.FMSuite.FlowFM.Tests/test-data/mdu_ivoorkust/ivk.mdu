@@ -189,7 +189,6 @@ RstInterval       = 0                   # Interval (s) between map file outputs
 S1incinterval     =
 WaqInterval       = 0                   # Interval (in s) between Delwaq file outputs
 StatsInterval     =                     # Interval (in s) between simulation statistics output.
-Writebalancefile  = 0
 TimingsInterval   =
 MapFormat         = 4
 Wrihis_balance    = 1

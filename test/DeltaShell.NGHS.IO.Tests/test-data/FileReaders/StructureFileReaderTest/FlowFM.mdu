@@ -220,6 +220,5 @@ FullGridOutput    = 0
 EulerVelocities   = 0
 WaqInterval       = 0
 StatsInterval     =
-Writebalancefile  = 0
 TimingsInterval   =
 Richardsononoutput= 1

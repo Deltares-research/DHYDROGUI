@@ -121,7 +121,6 @@ WaqInterval       = 300
 StatsInterval     =
 TimingsInterval   =
 MapOutputTimeVector=
-Writebalancefile  = 0
 FullGridOutput    = 0
 
 [trachytopes]

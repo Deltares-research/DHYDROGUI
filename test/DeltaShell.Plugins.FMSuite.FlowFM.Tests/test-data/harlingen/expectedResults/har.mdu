@@ -192,7 +192,6 @@ RstInterval       = 0                   # Interval (s) between map file outputs
 S1incinterval     =
 WaqInterval       = 0                   # Interval (in s) between Delwaq file outputs
 StatsInterval     =                     # Interval (in s) between simulation statistics output.
-Writebalancefile  = 0
 TimingsInterval   = 60                  # Timings output interval
 MapFormat         = 1                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot
 Wrihis_balance    = 1

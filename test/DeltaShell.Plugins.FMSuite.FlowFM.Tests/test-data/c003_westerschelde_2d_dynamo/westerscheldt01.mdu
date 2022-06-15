@@ -179,7 +179,6 @@ RstInterval       = 86400
 S1incinterval     =
 WaqInterval       =
 StatsInterval     =
-Writebalancefile  = 0
 TimingsInterval   =
 MapFormat         = 1
 Wrihis_balance    = 1

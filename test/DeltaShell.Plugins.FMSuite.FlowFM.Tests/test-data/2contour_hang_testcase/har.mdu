@@ -109,7 +109,6 @@ RstInterval       = 0
 S1incinterval     = 0
 WaqInterval       = 0
 StatsInterval     = 0
-Writebalancefile  = 0
 TimingsInterval   = 60
 
 [GUIOnly]

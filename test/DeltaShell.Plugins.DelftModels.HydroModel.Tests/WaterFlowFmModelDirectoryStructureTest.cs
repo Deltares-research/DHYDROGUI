@@ -1795,7 +1795,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             model.ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value = true;
             model.ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStartTime).Value = true;
             model.ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStopTime).Value = true;
-            model.ModelDefinition.GetModelProperty("Writebalancefile").Value = true;
             model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value =
                 new TimeSpan(0, 0, 10, 0);
         }

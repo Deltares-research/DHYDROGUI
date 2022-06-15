@@ -357,6 +357,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
+                var runoffBoundary = new RunoffBoundary() { Name = "WWTP_boundary", Basin = model.Basin};
+                model.BoundaryData.Add(new RunoffBoundaryData(runoffBoundary) {Series = new RainfallRunoffBoundaryData() {IsConstant = true, IsTimeSeries = false, Value = 123.4} });
                 
                 model.OutputSettings.GetEngineParameter(QuantityType.FlowIn, ElementSet.WWTPElmSet).IsEnabled = true;
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.WWTPElmSet).IsEnabled = true;
@@ -378,6 +380,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
                 var wwtp = new WasteWaterTreatmentPlant();
                 model.Basin.WasteWaterTreatmentPlants.Add(wwtp);
+                runoffBoundary.LinkTo(wwtp);
 
                 catchment.LinkTo(wwtp);
                 catchment2.LinkTo(wwtp);

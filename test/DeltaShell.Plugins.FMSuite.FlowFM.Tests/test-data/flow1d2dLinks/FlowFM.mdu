@@ -171,7 +171,6 @@ RstInterval       = 86400
 S1incinterval     =
 WaqInterval       = 0
 StatsInterval     =
-Writebalancefile  = 0
 TimingsInterval   =
 MapFormat         = 1                   # For 1d2d coupling we should always write mapformat output in NetCDF format
 Wrihis_balance    = 1

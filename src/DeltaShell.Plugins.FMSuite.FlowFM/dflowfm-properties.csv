@@ -328,7 +328,6 @@ output,ClassMapInterval,,,Class map interval,DoubleArray,0,0,,TRUE,,WriteClassMa
 output,VelocityMagnitudeClasses,output,Class,Class map's list of class values for velocity magnitudes,String,0,,,,,WriteClassMapFile,,,,Water level classes, m,,
 output,VelocityDirectionClassesInterval,output,Class,Class map's step size of class values for velocity direction,String,30,,,,,WriteClassMapFile,,,,Water depth classes, m,,
 output,StatsInterval,output,Others,Statistics output interval,Interval,0,,,FALSE,,,,,,Interval (in s) between simulation statistics output,,,
-output,Writebalancefile,output,Others,Write water balance file,0|1,0,0,1,FALSE,,,,,,"Write balance file (1: yes, 0: no)",,,
 output,TimingsInterval,output,Others,Timing statistics output interval,Interval,0,,,FALSE,,,,,,Timings statistics output interval,,,
 output,Richardsononoutput,output,Others,Write Richardson numbers?,0|1,1,,,FALSE,,,,,,"Write Richardson numbers (1: yes, 0: no)",,,
 output,NcFormat,output,Others,Select Ncformat:classic|NetCDF4+HDF5,3|4,3,3,4,FALSE,,,,,,"Format for all NetCDF output files (3: classic, 4: NetCDF4+HDF5)",,,

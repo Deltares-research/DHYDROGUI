@@ -11,8 +11,8 @@ NetFile          = transport1d_net.nc                                           
 BathymetryFile   =                                                                                                                                                                                                                                                                #
 LandBoundaryFile =                                                                                                                                                                                                                                                                #
 WaterLevIni      = 0.                  # Initial water level
-BotLevUni        = 3.                  # Uniform bottom level, (only if Botlevtype>=3, used at missing z values in netfile
-BotLevType       = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+BedLevUni        = 3.                  # Uniform bottom level, (only if BedLevType>=3, used at missing z values in netfile
+BedLevType       = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
                                        # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
                                        # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
                                        # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link

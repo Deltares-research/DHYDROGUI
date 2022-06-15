@@ -1010,7 +1010,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         {
                             mduPropertyName = "BedLevType";
                         }
-                        if (mduPropertyLowerCase.Equals("hdam"))
+                        if (mduPropertyLowerCase.Equals("hdam") || mduPropertyLowerCase.Equals("writebalancefile"))
                         {
                             line = GetNextLine();
                             continue;

@@ -13,8 +13,8 @@ LandBoundaryFile =                     # Only for plotting
 ThinDamFile      =                     # *_thd.pli, Polyline(s) for tracing thin dams.
 FixedWeirFile    =                     # *._fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
 WaterLevIni      = 0.                  # Initial water level
-BotLevUni        = -5.                 # Uniform bottom level, (only if Botlevtype>=3, used at missing z values in netfile
-BotLevType       = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+BedLevUni        = -5.                 # Uniform bottom level, (only if BedLevType>=3, used at missing z values in netfile
+BedLevType       = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
                                        # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
                                        # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
                                        # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
@@ -28,7 +28,6 @@ CFLWaveFrac      = 0.                  # Wave velocity fraction, total courant v
 AdvecType        = 0                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
 Limtyphu         = 0                   # Limiter type for waterdepth in continuity eq., 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
 Limtypsa         = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
-Hkad             = 0.                  # Threshold for minimum bottomlevel step at which to apply energy conservation factor i.c. flow contraction
 
 [physics]
 UnifFrictCoef    = 60.                 # Uniform friction coefficient, 0=no friction
