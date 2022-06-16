@@ -746,8 +746,8 @@
 
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigSetting>fullVersion</_CheckDeltaShellGuiExeConfigSetting>
-      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' != '' ">2022.04.$(BUILD_NUMBER)</_CheckDeltaShellGuiExeConfigExpectedValue>
-      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' == '' ">2022.04</_CheckDeltaShellGuiExeConfigExpectedValue>
+      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">2022.04.$(BUILD_NUMBER)</_CheckDeltaShellGuiExeConfigExpectedValue>
+      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">2022.04</_CheckDeltaShellGuiExeConfigExpectedValue>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"
