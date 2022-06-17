@@ -172,8 +172,12 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
         <Directory Id="DeltaresDir" Name="Deltares">
-          <?ifdef env.BUILD_NUMBER?>
-          <Directory Id="INSTALLDIR" Name="!(loc.FullProductName) ($(env.BUILD_NUMBER))"/>
+          <?if $(var.Configuration) != "Release"?>
+            <?ifdef env.BUILD_NUMBER?>
+              <Directory Id="INSTALLDIR" Name="!(loc.FullProductName) ($(env.BUILD_NUMBER))"/>
+            <?else?>
+              <Directory Id="INSTALLDIR" Name="!(loc.FullProductName)"/>
+            <?endif?>
           <?else?>
           <Directory Id="INSTALLDIR" Name="!(loc.FullProductName)"/>
           <?endif?>
@@ -200,13 +204,22 @@
     <DirectoryRef Id="TARGETDIR">
       <Component Id="UninstallShortcutComponent" Guid="$(var.UninstallShortcutComponentGUID)">
         <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="InstalledUninstallerShortcut" Type="integer" Value="1" />
-        <?ifdef env.BUILD_NUMBER?>
-        <Shortcut Id="UninstallProduct"
-                  Name="Uninstall !(loc.FullProductName) ($(env.BUILD_NUMBER))"
-                  Target="[System64Folder]msiexec.exe"
-                  Arguments="/x [ProductCode]"
-                  Directory="ProgramGroupMenuDir"
-                  Description="Uninstalls !(loc.FullProductName) ($(env.BUILD_NUMBER))"/>
+        <?if $(var.Configuration) != "Release"?>
+          <?ifdef env.BUILD_NUMBER?>
+          <Shortcut Id="UninstallProduct"
+                    Name="Uninstall !(loc.FullProductName) ($(env.BUILD_NUMBER))"
+                    Target="[System64Folder]msiexec.exe"
+                    Arguments="/x [ProductCode]"
+                    Directory="ProgramGroupMenuDir"
+                    Description="Uninstalls !(loc.FullProductName) ($(env.BUILD_NUMBER))"/>
+          <?else?>
+          <Shortcut Id="UninstallProduct"
+                    Name="Uninstall !(loc.FullProductName)"
+                    Target="[System64Folder]msiexec.exe"
+                    Arguments="/x [ProductCode]"
+                    Directory="ProgramGroupMenuDir"
+                    Description="Uninstalls !(loc.FullProductName)"/>
+          <?endif?>
         <?else?>
         <Shortcut Id="UninstallProduct"
                   Name="Uninstall !(loc.FullProductName)"
@@ -216,8 +229,6 @@
                   Description="Uninstalls !(loc.FullProductName)"/>
         <?endif?>
       </Component>
-
-
       <!-- Add shortcuts in the start menu here -->
       <Directory Id="ProgramMenuFolder" Name="Programs">
         <Directory Id="ProgramGroupMenuDir" Name="Deltares !(loc.ProductName)">

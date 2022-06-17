@@ -39,8 +39,8 @@
     </PropertyGroup>
 
     <PropertyGroup>
-      <_CheckDeltaShellFolder Condition=" '$(BUILD_NUMBER)' == '' ">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName)\bin</_CheckDeltaShellFolder>
-      <_CheckDeltaShellFolder Condition=" '$(BUILD_NUMBER)' != '' ">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName) ($(BUILD_NUMBER))\bin</_CheckDeltaShellFolder>
+      <_CheckDeltaShellFolder Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName)\bin</_CheckDeltaShellFolder>
+      <_CheckDeltaShellFolder Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName) ($(BUILD_NUMBER))\bin</_CheckDeltaShellFolder>
     </PropertyGroup>
 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
@@ -60,8 +60,8 @@
     <Message Text="If DeltaShell Folder does not exist, do not check for files and file versions in that folder." Importance="high" Condition="'$(ConditionState)' == 'true'" />
 
     <PropertyGroup>
-      <_CheckPluginsFolder Condition=" '$(BUILD_NUMBER)' == '' ">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName)\Plugins</_CheckPluginsFolder>
-      <_CheckPluginsFolder Condition=" '$(BUILD_NUMBER)' != '' ">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName) ($(BUILD_NUMBER))\Plugins</_CheckPluginsFolder>
+      <_CheckPluginsFolder Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName)\Plugins</_CheckPluginsFolder>
+      <_CheckPluginsFolder Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName) ($(BUILD_NUMBER))\Plugins</_CheckPluginsFolder>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
@@ -796,11 +796,11 @@
     <Message Text="Checking shortcuts" Importance="high"/>
     <PropertyGroup>
       <_CheckDeltaShellStartMenuFolderShortCut>$(ProgramData)\Microsoft\Windows\Start Menu\Programs\Deltares $(ProductName)</_CheckDeltaShellStartMenuFolderShortCut>
-      <_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut Condition=" '$(BUILD_NUMBER)' == '' ">$(_CheckDeltaShellStartMenuFolderShortCut)\$(ProductName).lnk</_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut>
-      <_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut Condition=" '$(BUILD_NUMBER)' != '' ">$(_CheckDeltaShellStartMenuFolderShortCut)\$(ProductName) ($(BUILD_NUMBER)).lnk</_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut>
+      <_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">$(_CheckDeltaShellStartMenuFolderShortCut)\$(ProductName).lnk</_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut>
+      <_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">$(_CheckDeltaShellStartMenuFolderShortCut)\$(ProductName) ($(BUILD_NUMBER)).lnk</_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut>
       <_CheckDeltaShellStartMenuFolderDeltaShellExeShortCutName>DeltaShell Start Menu Folder DeltaShell Exe ShortCut</_CheckDeltaShellStartMenuFolderDeltaShellExeShortCutName>
-      <_CheckDeltaShellDesktopShortCut Condition=" '$(BUILD_NUMBER)' == '' ">$(ALLUSERSPROFILE)\Desktop\$(ProductName).lnk</_CheckDeltaShellDesktopShortCut>
-      <_CheckDeltaShellDesktopShortCut Condition=" '$(BUILD_NUMBER)' != '' ">$(ALLUSERSPROFILE)\Desktop\$(ProductName) ($(BUILD_NUMBER)).lnk</_CheckDeltaShellDesktopShortCut>
+      <_CheckDeltaShellDesktopShortCut Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">$(ALLUSERSPROFILE)\Desktop\$(ProductName).lnk</_CheckDeltaShellDesktopShortCut>
+      <_CheckDeltaShellDesktopShortCut Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">$(ALLUSERSPROFILE)\Desktop\$(ProductName) ($(BUILD_NUMBER)).lnk</_CheckDeltaShellDesktopShortCut>
       <_CheckDeltaShellDesktopShortCutName>Desktop DeltaShell Exe ShortCut</_CheckDeltaShellDesktopShortCutName>
     </PropertyGroup>
 
@@ -828,8 +828,8 @@
              ContinueOnError="WarnAndContinue"/>
     
     <PropertyGroup>
-      <_CheckDeltaresStartMenuFolderUninstallProductShortCut Condition=" '$(BUILD_NUMBER)' == '' ">$(_CheckDeltaShellStartMenuFolderShortCut)\Uninstall $(ProductName).lnk</_CheckDeltaresStartMenuFolderUninstallProductShortCut>
-      <_CheckDeltaresStartMenuFolderUninstallProductShortCut Condition=" '$(BUILD_NUMBER)' != '' ">$(_CheckDeltaShellStartMenuFolderShortCut)\Uninstall $(ProductName) ($(BUILD_NUMBER)).lnk</_CheckDeltaresStartMenuFolderUninstallProductShortCut>
+      <_CheckDeltaresStartMenuFolderUninstallProductShortCut Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">$(_CheckDeltaShellStartMenuFolderShortCut)\Uninstall $(ProductName).lnk</_CheckDeltaresStartMenuFolderUninstallProductShortCut>
+      <_CheckDeltaresStartMenuFolderUninstallProductShortCut Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">$(_CheckDeltaShellStartMenuFolderShortCut)\Uninstall $(ProductName) ($(BUILD_NUMBER)).lnk</_CheckDeltaresStartMenuFolderUninstallProductShortCut>
       <_CheckDeltaresStartMenuFolderUninstallProductShortCutName>$(ProductName) Start Menu Folder Uninstall $(ProductName) ShortCut</_CheckDeltaresStartMenuFolderUninstallProductShortCutName>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputShortcutCheck" Properties="File=Product_wxs;ShortCutName=$(_CheckDeltaresStartMenuFolderUninstallProductShortCutName);ShortCut=$(_CheckDeltaresStartMenuFolderUninstallProductShortCut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
@@ -948,8 +948,8 @@
       <_Check_DeltaShellRegistryKey8Name>Path</_Check_DeltaShellRegistryKey8Name>
       <_Check_DeltaShellRegistryKey8>$([MSBuild]::GetRegistryValueFromView('$(_DeltaShellRegistryKey7)', '$(_Check_DeltaShellRegistryKey8Name)', null, RegistryView.Registry64, RegistryView.Registry32))</_Check_DeltaShellRegistryKey8>
       <!--<_Check_DeltaShellRegistryKey8>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\DeltaShell.Gui.exe@$(_Check_DeltaShellRegistryKey8Name))</_Check_DeltaShellRegistryKey8>-->
-      <_Check_DeltaShellRegistryKey8ExpectedValue Condition=" '$(BUILD_NUMBER)' == '' ">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName)\bin\</_Check_DeltaShellRegistryKey8ExpectedValue>
-      <_Check_DeltaShellRegistryKey8ExpectedValue Condition=" '$(BUILD_NUMBER)' != '' ">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName) ($(BUILD_NUMBER))\bin\</_Check_DeltaShellRegistryKey8ExpectedValue>
+      <_Check_DeltaShellRegistryKey8ExpectedValue Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName)\bin\</_Check_DeltaShellRegistryKey8ExpectedValue>
+      <_Check_DeltaShellRegistryKey8ExpectedValue Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(ProductName) ($(BUILD_NUMBER))\bin\</_Check_DeltaShellRegistryKey8ExpectedValue>
 
       <_Check_DeltaShellRegistryKey10Name>Class root projectfile</_Check_DeltaShellRegistryKey10Name>
       <_Check_DeltaShellRegistryKey10>$(registry:HKEY_CLASSES_ROOT\DeltaShell.dsproj)</_Check_DeltaShellRegistryKey10>

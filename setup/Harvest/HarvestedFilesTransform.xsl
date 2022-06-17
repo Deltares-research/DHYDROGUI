@@ -63,6 +63,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
       <xsl:comment>Added by Peelen transform</xsl:comment>
+      <xsl:processing-instruction name="if">$(var.Configuration) != "Release"</xsl:processing-instruction>
       <xsl:processing-instruction name="ifdef">env.BUILD_NUMBER</xsl:processing-instruction>
       <Shortcut
   			Id="ProgramMenuDeltaShellExeShortcut"
@@ -98,7 +99,24 @@
         WorkingDirectory="LocalAppDataFolder"
       />
       <xsl:processing-instruction name="endif"/>
-    
+      <xsl:processing-instruction name="else"/>
+      <Shortcut
+        Id="ProgramMenuDeltaShellExeShortcut"
+        Icon="icon.ico"
+        Name="!(loc.FullProductName)"
+        Directory="ProgramGroupMenuDir"
+        Advertise="yes">
+        <xsl:attribute name="WorkingDirectory">ProductDir</xsl:attribute>
+      </Shortcut>
+      <Shortcut
+        Id="DesktopDeltaShellExeShortcut"
+        Icon="icon.ico"
+        Name="!(loc.FullProductName)"
+        Directory="DesktopFolder"
+        Advertise="yes"
+        WorkingDirectory="LocalAppDataFolder"
+      />
+      <xsl:processing-instruction name="endif"/>
       <!-- Capabilities keys for Vista/7 "Set Program Access and Defaults" -->
       <RegistryValue Root="HKLM" Key="SOFTWARE\[Manufacturer]\DeltaShell\Capabilities" Name="ApplicationDescription" Value="DeltaShell" Type="string" />
       <RegistryValue Root="HKLM" Key="SOFTWARE\[Manufacturer]\DeltaShell\Capabilities" Name="ApplicationIcon" Value="[BINDIR]DeltaShell.Gui.exe,0" Type="string" />
