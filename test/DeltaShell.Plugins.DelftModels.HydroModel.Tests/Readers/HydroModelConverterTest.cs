@@ -13,6 +13,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DHYDRO.Common.Logging;
+using GeoAPI.Extensions.Feature;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
@@ -419,6 +420,94 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return(XmlExtension).Repeat.Any();
 
             return dimrFileImporter;
+        }
+
+        [Test]
+        public void GivenHydroModelConverter_Convert_ShouldBeRecreatingLinksWithoutClearingOutput()
+        {
+            //Arrange
+            var model1 = Substitute.For<IDimrModel>();
+            var model2 = Substitute.For<IDimrModel>();
+            
+            var coupling1 = Substitute.For<IDimrCoupling>();
+            var coupling2 = Substitute.For<IDimrCoupling>();
+
+            var hydroObject1 = Substitute.For<IHydroObject>();
+            var hydroObject2 = Substitute.For<IHydroObject>();
+
+            hydroObject1.CanLinkTo(hydroObject2).Returns(true);
+
+            model1.DimrCoupling.Returns(coupling1);
+            model2.DimrCoupling.Returns(coupling2);
+
+            coupling1.GetLinkHydroObjectsByItemString("m1_feature").Returns(new []{ hydroObject1 });
+            coupling2.GetLinkHydroObjectsByItemString("m2_feature").Returns(new []{ hydroObject2 });
+
+            var dimrModelImporter1 = Substitute.For<IDimrModelFileImporter>();
+            var dimrModelImporter2 = Substitute.For<IDimrModelFileImporter>();
+
+            dimrModelImporter1.Name.Returns("Model 1 importer");
+            dimrModelImporter1.MasterFileExtension.Returns("ini");
+
+            dimrModelImporter2.Name.Returns("Model 1 importer");
+            dimrModelImporter2.MasterFileExtension.Returns("txt");
+            
+            dimrModelImporter1.ImportItem(Arg.Any<string>()).Returns(model1);
+            dimrModelImporter2.ImportItem(Arg.Any<string>()).Returns(model2);
+
+            string dimrPath = Path.Combine("FileReader", "dimr.xml");
+
+            var dimrXml = new dimrXML
+            {
+                component = new[]
+                {
+                    new dimrComponentXML
+                    {
+                        name = "Model1",
+                        workingDir = ".",
+                        inputFile = "temp.ini"
+                    },
+                    new dimrComponentXML
+                    {
+                        name = "Model2",
+                        workingDir = ".",
+                        inputFile = "temp.txt"
+                    }
+                },
+                coupler = new []
+                {
+                    new dimrCouplerXML
+                    {
+                        sourceComponent = "Model1",
+                        targetComponent = "Model2",
+                        name = "test",
+                        item = new []
+                        {
+                            new dimrCoupledItemXML
+                            {
+                                sourceName = "m1_feature",
+                                targetName= "m2_feature"
+                            }
+                        }
+                    }
+                }
+            };
+
+            var importers = new List<IDimrModelFileImporter> { dimrModelImporter1, dimrModelImporter2 };
+
+            // Act
+            HydroModel hydroModel = hydroModelConverter.Convert(dimrXml, dimrPath, importers);
+
+
+            // Assert
+            hydroObject1.Received(1).LinkTo(hydroObject2);
+            var susp = model1.Received(1).SuspendClearOutputOnInputChange;
+            model1.SuspendClearOutputOnInputChange = true;
+            model1.SuspendClearOutputOnInputChange = false;
+
+            susp = model2.Received(1).SuspendClearOutputOnInputChange;
+            model2.SuspendClearOutputOnInputChange = true;
+            model2.SuspendClearOutputOnInputChange = false;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -21,6 +22,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
     /// <seealso cref="IDimrModelFileImporter"/>
     public class RainfallRunoffModelImporter : ModelFileImporterBase, IDimrModelFileImporter
     {
+        private readonly Func<IRainfallRunoffModel> createNewModelDelegate;
+
+        /// <summary>
+        /// Creates a new <see cref="RainfallRunoffModelImporter"/> with an optional new model delegate
+        /// </summary>
+        /// <param name="createNewModelDelegate">Optional delegate for creating an new <see cref="IRainfallRunoffModel"/>.
+        /// (default will be an <see cref="RainfallRunoffModel"/>)</param>
+        public RainfallRunoffModelImporter(Func<IRainfallRunoffModel> createNewModelDelegate = null)
+        {
+            this.createNewModelDelegate = createNewModelDelegate ?? (()=> new RainfallRunoffModel());
+        }
+
         public override string Name => "Rainfall Runoff Model importer";
 
         public override string Category => ProductCategories.OneDTwoDModelImportCategory;
@@ -54,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 
         protected override object OnImportItem(string path, object target = null)
         {
-            var importedRRModel = new RainfallRunoffModel();
+            var importedRRModel = createNewModelDelegate();
             
             IFileImporter importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
             if (importer == null)
@@ -63,6 +76,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
             }
 
             importer?.ImportItem(path, importedRRModel);
+
+            importedRRModel.ConnectOutput(Path.GetDirectoryName(path));
 
             switch (target)
             {

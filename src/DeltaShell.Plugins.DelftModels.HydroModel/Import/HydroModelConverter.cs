@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Editing;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DHYDRO.Common.Logging;
 using log4net;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DeltaShell.NGHS.Common.Extensions;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -54,24 +55,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             string rootFolder = Path.GetDirectoryName(path);
             var hydroModel = new HydroModel();
 
-            hydroModel.BeginEdit(new DefaultEditAction("Importing full Dimr model"));
-            var suspendClearOutput = false;
-            try
+            using (hydroModel.InEditMode("Importing full Dimr model"))
             {
-                suspendClearOutput = hydroModel.SuspendClearOutputOnInputChange;
-                hydroModel.SuspendClearOutputOnInputChange = true;
-                AddModels(hydroModel, fileImporters, dimrObject, rootFolder);
-
-                List<IDimrModel> subModels = hydroModel.Activities.OfType<IDimrModel>().ToList();
-                if (dimrObject.coupler != null)
+                hydroModel.DoWithPropertySet(nameof(hydroModel.SuspendClearOutputOnInputChange), true, () =>
                 {
+                    AddModels(hydroModel, fileImporters, dimrObject, rootFolder);
+
+                    if (dimrObject.coupler == null)
+                    {
+                        return;
+                    }
+
+                    List<IDimrModel> subModels = hydroModel.Activities.OfType<IDimrModel>().ToList();
                     CoupleSubModels(hydroModel, dimrObject, subModels);
-                }
-            }
-            finally
-            {
-                hydroModel.EndEdit();
-                hydroModel.SuspendClearOutputOnInputChange = suspendClearOutput;
+                });
             }
 
             return hydroModel;
@@ -241,13 +238,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     continue;
                 }
 
-                CoupleModelsUsingDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item, hydroModel.Region.Links);
+                DoWithSuspendOutputChecks(new []{sourceModel, targetModel}, () =>
+                {
+                    CoupleModelsUsingDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item, hydroModel.Region.Links);
+                });
             }
 
             foreach (IControllingModel controllingModel in subModels.OfType<IControllingModel>())
             {
                 controllingModel.CleanUpModelAfterModelCoupling();
             }
+        }
+
+        private static void DoWithSuspendOutputChecks(IEnumerable<IModel> models, Action action)
+        {
+            var properties = new[]
+            {
+                nameof(IModel.SuspendClearOutputOnInputChange),
+                nameof(IModel.SuspendMarkOutputOutOfSyncOnInputChange)
+            };
+
+            var resultAction = action;
+            foreach (IModel model in models)
+            {
+                foreach (var property in properties)
+                {
+                    Action tempAction = resultAction;
+                    resultAction = () => model.DoWithPropertySet(property, true, () => tempAction());
+                }
+            }
+
+            resultAction();
         }
 
         private void CoupleModelsUsingDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, IEnumerable<dimrCoupledItemXML> dimrCouplerXml, IEnumerable<HydroLink> regionLinks)

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
 using DelftTools.Shell.Core;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.IO;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
@@ -68,7 +70,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
                 throw new ArgumentException(Resources.RealTimeControlModelImporter_OnImportItem_Target_null_expected);
             }
 
-            return RealTimeControlModelXmlReader.Read(path);
+            var realTimeControlModel = RealTimeControlModelXmlReader.Read(path);
+            var outputPath = Path.Combine(path, DirectoryNameConstants.OutputDirectoryName);
+            
+            if (Directory.Exists(outputPath))
+            {
+                realTimeControlModel.ConnectOutput(outputPath);
+            }
+
+            return realTimeControlModel;
         }
     }
 }

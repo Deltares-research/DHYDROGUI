@@ -2061,20 +2061,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
-            BeginEdit(new DefaultEditAction(DelftTools.Hydro.Properties.Resources.Reconnect_output_files_edit_action));
 
-            ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
-            ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
-            ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
-            ReconnectFouFile(outputDirectory.FouFilePath, switchTo);
-            ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
-            ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
-            ReconnectRestartFiles(outputDirectory.RestartFilePaths);
-            ReportProgressText();
+            using (this.InEditMode(DelftTools.Hydro.Properties.Resources.Reconnect_output_files_edit_action))
+            {
+                ReadDiaFile(outputDirectoryPath);
 
-            OutputIsEmpty = false;
+                ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
+                ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
+                ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
+                ReconnectFouFile(outputDirectory.FouFilePath, switchTo);
+                ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
+                ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
+                ReconnectRestartFiles(outputDirectory.RestartFilePaths);
+                ReportProgressText();
 
-            EndEdit();
+                OutputIsEmpty = false;
+            }
         }
 
         private void ReconnectMapFile(string mapFilePath, bool switchTo)
@@ -2876,7 +2878,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public virtual void ConnectOutput(string outputPath)
         {
             currentOutputDirectoryPath = outputPath;
-            ReadDiaFile(outputPath); 
             ReconnectOutputFiles(outputPath);
             ClearWaqOutputDirProperty();
         }
