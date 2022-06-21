@@ -68,11 +68,11 @@
     <ReadMsiPropertyValue MsiFile="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)$(OutputName).msi" MsiProperty="ProductName" ContinueOnError="WarnAndContinue">
       <Output TaskParameter="MsiPropertyValue" PropertyName="_ProductName" />
     </ReadMsiPropertyValue >
-    <Message Text="My product name : $(_ProductName)" Condition=" '$(BUILD_NUMBER)' == '' "/>
-    <Message Text="My product name : $(_ProductName) ($(BUILD_NUMBER))" Condition=" '$(BUILD_NUMBER)' != '' "/>
+    <Message Text="My product name : $(_ProductName)" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Message Text="My product name : $(_ProductName) ($(BUILD_NUMBER))" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
 
-    <Message Text="##teamcity[testSuiteStarted name='$(_ProductName)']" Importance="high" Condition=" '$(BUILD_NUMBER)' == '' "/>
-    <Message Text="##teamcity[testSuiteStarted name='$(_ProductName) ($(BUILD_NUMBER))']" Importance="high" Condition=" '$(BUILD_NUMBER)' != '' "/>
+    <Message Text="##teamcity[testSuiteStarted name='$(_ProductName)']" Importance="high" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Message Text="##teamcity[testSuiteStarted name='$(_ProductName) ($(BUILD_NUMBER))']" Importance="high" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
 
     <RemoveDir Directories="$(OutputPath)$(MyCultureOutputFolder)install"/>
     <MakeDir Directories="$(OutputPath)$(MyCultureOutputFolder)install"/>
@@ -85,8 +85,8 @@
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetSystemTests" Properties="Status=Pre-Install;ProductName=$(_ProductName);ConditionState=true;CheckingFor=removed;ProductCode=$(ProductCode)" />
     <Message Text="##teamcity[testSuiteFinished name='Pre-Install']" Importance="high"/>
     
-    <Exec Command="msiexec /l*vx install.log /norestart /quiet ADDLOCAL=ALL INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName)&quot; /i &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' == '' "/>
-    <Exec Command="msiexec /l*vx install.log /norestart /quiet ADDLOCAL=ALL INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName) ($(BUILD_NUMBER))&quot; /i &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' != '' "/>
+    <Exec Command="msiexec /l*vx install.log /norestart /quiet ADDLOCAL=ALL INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName)&quot; /i &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Exec Command="msiexec /l*vx install.log /norestart /quiet ADDLOCAL=ALL INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName) ($(BUILD_NUMBER))&quot; /i &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
 
     <Message Text="##teamcity[testSuiteStarted name='Post-Install']" Importance="high"/>
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetSystemTests" Properties="Status=Post-Install;ProductName=$(_ProductName);ConditionState=false;CheckingFor=available;ProductCode=$(ProductCode)" />
@@ -104,8 +104,8 @@
 
     <!-- uninstall MSI -->
     <Message Text="Uninstalling MSI from the local directory ..." Importance="high"/>
-    <Exec Command="msiexec /l*vx uninstall.log /norestart /quiet INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName)&quot; /x &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' == '' "/>
-    <Exec Command="msiexec /l*vx uninstall.log /norestart /quiet INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName) ($(BUILD_NUMBER))&quot; /x &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' != '' "/>
+    <Exec Command="msiexec /l*vx uninstall.log /norestart /quiet INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName)&quot; /x &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Exec Command="msiexec /l*vx uninstall.log /norestart /quiet INSTALLDIR=&quot;$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)install\$(_ProductName) ($(BUILD_NUMBER))&quot; /x &quot;$(OutputName).msi&quot;" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)$(MyCultureOutputFolder)" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
     
     <Message Text="##teamcity[testSuiteStarted name='After-Uninstall']" Importance="high"/>
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetSystemTests" Properties="Status=After-Uninstall;ProductName=$(_ProductName);ConditionState=true;CheckingFor=removed;ProductCode=$(ProductCode)" />
@@ -114,8 +114,8 @@
 
     <RemoveDir Directories="$(OutputPath)$(MyCultureOutputFolder)install"/>
 
-    <Message Text="##teamcity[testSuiteFinished name='$(_ProductName)']" Importance="high" Condition=" '$(BUILD_NUMBER)' == '' "/>
-    <Message Text="##teamcity[testSuiteFinished name='$(_ProductName) ($(BUILD_NUMBER))']" Importance="high" Condition=" '$(BUILD_NUMBER)' != '' "/>
+    <Message Text="##teamcity[testSuiteFinished name='$(_ProductName)']" Importance="high" Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'"/>
+    <Message Text="##teamcity[testSuiteFinished name='$(_ProductName) ($(BUILD_NUMBER))']" Importance="high" Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'"/>
   </Target>
 
   
