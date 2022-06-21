@@ -71,20 +71,25 @@ def parse_args():
 
     return args
     
+
 def get_as_html_file(data: List[str]):
-    header = ["<!DOCTYPE html>",
-            "<html lang=\"en-us\">",            
+    header = [
+        "<!DOCTYPE html>",
+        '<html lang="en-us">',
             "<head>",
             "\t<title>Version information</title>",            
             "</head>",
             "",
             "<body>",
-            "<pre>"]
+        "<pre>" "\n<!-- fileInfo -->\n",
+    ]
             
     footer = [
-        "</>",
+        "\n<!-- fileInfo -->\n", 
+        "<pre/>", 
         "</body>",
-        "</html>"]
+        "</html>"
+    ]
 
     file_content = header + data + footer
     
