@@ -3,7 +3,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1485" PrivateAssets="all" />
-		<PackageReference Include="GeoAPI.Core" Version="1.7.5" />
+		<PackageReference Include="GeoAPI.Core" Version="1.7.5" IncludeAssets="compile" PrivateAssets="all"/>
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="RhinoMocks">
 			<Version>3.6.1</Version>
