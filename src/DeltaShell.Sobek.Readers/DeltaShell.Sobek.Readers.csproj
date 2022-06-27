@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1485">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1519">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -30,35 +30,35 @@
 
 	<ItemGroup>
 		<Reference Include="DelftTools.Functions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Core">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Units">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Units.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Utils">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="NetTopologySuite">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="NetTopologySuite.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Nini">

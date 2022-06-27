@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1485" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1519" PrivateAssets="all" />
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="NSubstitute" Version="4.2.2" />
 		<PackageReference Include="System.ValueTuple" Version="4.5.0" />
@@ -16,13 +16,13 @@
 		<Reference Include="System" />
 		<Reference Include="System.Core" />
 		<Reference Include="DelftTools.Utils" Private="False">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
 		</Reference>
 		<Reference Include="GeoAPI.Extensions" Private="False" IncludeAssets="compile" PrivateAssets="all">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
 		</Reference>
 		<Reference Include="QuickGraph" Private="False" IncludeAssets="compile" PrivateAssets="all">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\QuickGraph.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

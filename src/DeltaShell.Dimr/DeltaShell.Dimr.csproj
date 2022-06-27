@@ -13,7 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1485">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1519">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -38,16 +38,16 @@
 
 	<ItemGroup>
 		<Reference Include="BasicModelInterface" Private="False">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\BasicModelInterface.dll</HintPath>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Core" Private="False">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 		</Reference>
 		<Reference Include="DelftTools.Utils" Private="False">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
 		</Reference>
 		<Reference Include="ProtoBufRemote" Private="False">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\ProtoBufRemote.dll</HintPath>
 		</Reference>
 		<Reference Include="System" />
 		<Reference Include="System.Core" />

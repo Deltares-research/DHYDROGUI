@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1485" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1519" PrivateAssets="all" />
 		<PackageReference Include="GeoAPI.Core" Version="1.7.5" IncludeAssets="compile" PrivateAssets="all"/>
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="RhinoMocks">
@@ -18,61 +18,61 @@
 
 	<ItemGroup>
 		<Reference Include="BruTile">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\BruTile.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\BruTile.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Controls">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Controls.Swf">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Core" Private="false">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Utils">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.IntegrationTestUtils">
-			<HintPath>$(PkgDeltaShell_TestProject)\lib\net40\DeltaShell.IntegrationTestUtils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_TestProject)\lib\net48\DeltaShell.IntegrationTestUtils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.Data.NHibernate">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI.CoordinateSystems">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="PresentationCore" />
 		<Reference Include="PresentationFramework" />
 		<Reference Include="SharpMap">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SharpMap.Api">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Api.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SharpMap.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="System" />

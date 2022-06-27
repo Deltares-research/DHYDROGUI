@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Source.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1485">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1519">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -28,10 +28,10 @@
 
 	<ItemGroup>
 		<Reference Include="DelftTools.Utils" Private="false">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Core" Private="false">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 		</Reference>
 		<Reference Include="mscorlib" />
 		<Reference Include="System" />

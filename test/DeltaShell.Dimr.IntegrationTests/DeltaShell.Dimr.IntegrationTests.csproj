@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1485" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1519" PrivateAssets="all" />
 		<PackageReference Include="NUnit" Version="3.13.3" />
 	</ItemGroup>
 
@@ -12,11 +12,11 @@
 
 	<ItemGroup>
 		<Reference Include="BasicModelInterface">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\BasicModelInterface.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Core">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="System" />

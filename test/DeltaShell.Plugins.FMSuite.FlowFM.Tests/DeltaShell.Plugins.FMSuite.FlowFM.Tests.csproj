@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1485" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1519" PrivateAssets="all" />
 		<PackageReference Include="DHYDRO.Common" Version="1.0.0.11" IncludeAssets="compile" PrivateAssets="all"/>
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="NSubstitute">
@@ -39,119 +39,119 @@
 
 	<ItemGroup>
 		<Reference Include="BasicModelInterface">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\BasicModelInterface.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Controls">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Controls.Swf">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Functions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Core">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Gui.Swf">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Units">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Units.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Utils">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Core">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Core.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Gui.exe</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.CommonTools">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.CommonTools.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.Data.NHibernate">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.NetCDF">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.ProjectExplorer">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.Scripting">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.Scripting.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting.Gui\DeltaShell.Plugins.Scripting.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Scripting.Gui\DeltaShell.Plugins.Scripting.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.SharpMapGis">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.Toolbox">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Toolbox\DeltaShell.Plugins.Toolbox.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Toolbox\DeltaShell.Plugins.Toolbox.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.Toolbox.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Toolbox.Gui\DeltaShell.Plugins.Toolbox.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Toolbox.Gui\DeltaShell.Plugins.Toolbox.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI.CoordinateSystems">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Microsoft.Dynamic">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Microsoft.Scripting">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Scripting.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Scripting\Microsoft.Scripting.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="NetTopologySuite">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="NetTopologySuite.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Nini">
@@ -161,27 +161,27 @@
 		<Reference Include="PresentationCore" />
 		<Reference Include="PresentationFramework" />
 		<Reference Include="QuickGraph">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\QuickGraph.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SharpMap">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SharpMap.Api">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Api.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SharpMap.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SharpMap.UI">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.UI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SharpMapTestUtils">
-			<HintPath>$(PkgDeltaShell_TestProject)\lib\net40\SharpMapTestUtils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_TestProject)\lib\net48\SharpMapTestUtils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="System" />

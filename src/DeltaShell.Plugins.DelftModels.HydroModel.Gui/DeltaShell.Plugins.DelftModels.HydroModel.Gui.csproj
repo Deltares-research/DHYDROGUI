@@ -13,7 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1485" IncludeAssets="compile" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1519" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="Mono.Addins" Version="1.3.8" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="log4net" Version="2.0.12">
 			<IncludeAssets>compile</IncludeAssets>
@@ -37,77 +37,77 @@
 
 	<ItemGroup>
 		<Reference Include="DelftTools.Controls">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Controls.Swf">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Controls.Wpf">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Functions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Core">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Shell.Gui.Swf">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Units">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Units.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Utils">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.CommonTools.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI.CoordinateSystems">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="GeoAPI.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="NetronGraphLib">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetronGraphLib.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetronGraphLib.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="NetTopologySuite.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="PresentationCore" />
 		<Reference Include="PresentationFramework" />
 		<Reference Include="SharpMap">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SharpMap.Api">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Api.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="System" />
@@ -118,7 +118,7 @@
 		<Reference Include="WindowsBase" />
 		<Reference Include="WindowsFormsIntegration" />
 		<Reference Include="Xceed.Wpf.Toolkit">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\Xceed.Wpf.Toolkit.dll</HintPath>
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\Xceed.Wpf.Toolkit.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 	</ItemGroup>
