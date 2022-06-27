@@ -22,66 +22,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
     public static class NetworkSideViewHelper
     {
-        private enum ValueLocation
-        {
-            AbovePipe,
-            InsidePipe,
-            BelowPipe
-        }
-
-        private class PipeWaterLevelData
-        {
-            private double pipeBottomLevel;
-
-            public IPipe Pipe { get; set; }
-
-            public double RelativeOffset { get; set; }
-
-            public ValueLocation ValueLocation { get; set; }
-
-            public INetworkSegment Segment { get; set; }
-
-            public double PipeBottomLevel
-            {
-                get { return pipeBottomLevel; }
-                set
-                {
-                    pipeBottomLevel = value;
-                    
-                    if (Pipe != null)
-                    {
-                        PipeTopLevel = pipeBottomLevel + Pipe.CrossSection.Definition.HighestPoint;
-                    }
-                }
-            }
-
-            public double PipeTopLevel { get; private set; }
-
-            public double ValueInPipe { get; private set; }
-
-            public double Value { get; set; }
-            
-            public void SetValueInPipe(double value)
-            {
-                if (value > PipeTopLevel)
-                {
-                    ValueLocation = ValueLocation.AbovePipe;
-                    ValueInPipe = PipeTopLevel;
-                    return;
-                }
-
-                if (value < PipeBottomLevel)
-                {
-                    ValueLocation = ValueLocation.BelowPipe;
-                    ValueInPipe = pipeBottomLevel;
-                    return;
-                }
-
-                ValueLocation = ValueLocation.InsidePipe;
-                ValueInPipe = value;
-            }
-        }
-
         public static bool GetReversed(Route route, IStructure1D structure)
         {
             INetworkSegment segment = RouteHelper.GetSegmentForNetworkLocation(route,
@@ -109,14 +49,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             max += fakeRange;
         }
 
-        public static ILineChartSeries GetLineSeries(IFunction function, IVariable xArgument, IVariable yComponent, FunctionBindingList functionBindingList, Color penColor)
+        public static ILineChartSeries GetLineSeries(IFunction function, 
+                                                     IVariable xArgument, 
+                                                     IVariable yComponent, 
+                                                     FunctionBindingList functionBindingList, 
+                                                     Color penColor)
         {
-            var lineSeries = ChartSeriesFactory.CreateLineSeries();
+            ILineChartSeries lineSeries = ChartSeriesFactory.CreateLineSeries();
 
             lineSeries.DataSource = functionBindingList;
 
             // Set chart series data members and title
-            lineSeries.Title = String.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
+            lineSeries.Title = $"{function.Name} [{function.Components[0].Unit.Symbol}]";
             lineSeries.XValuesDataMember = xArgument.DisplayName; // x, double (offset along the route)
             lineSeries.YValuesDataMember = yComponent.DisplayName; // y, double (value)
             lineSeries.Color = penColor;
@@ -128,15 +72,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return lineSeries;
         }
 
-        public static IPointChartSeries GetPointSeries(IFunction function, IVariable xArgument, IVariable yComponent, FunctionBindingList functionBindingList, 
-            Color fillColor, PointerStyles pointerStyles, int pointerSize)
+        public static IPointChartSeries GetPointSeries(IFunction function,
+                                                       IVariable xArgument,
+                                                       IVariable yComponent,
+                                                       FunctionBindingList functionBindingList,
+                                                       Color fillColor,
+                                                       PointerStyles pointerStyles,
+                                                       int pointerSize)
         {
-            var pointSeries = ChartSeriesFactory.CreatePointSeries();
+            IPointChartSeries pointSeries = ChartSeriesFactory.CreatePointSeries();
 
             pointSeries.DataSource = functionBindingList;
             pointSeries.NoDataValues.Add(function.Components[0].NoDataValues.Count > 0 ? (double) function.Components[0].NoDataValues[0] : double.NaN);
             // Set chart series data members and title
-            pointSeries.Title = String.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
+            pointSeries.Title = $"{function.Name} [{function.Components[0].Unit.Symbol}]";
             pointSeries.XValuesDataMember = xArgument.DisplayName; // x, double (offset along the route)
             pointSeries.YValuesDataMember = yComponent.DisplayName; // y, double (value)
             pointSeries.Color = fillColor;
@@ -149,16 +98,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return pointSeries;
         }
 
-        public static IAreaChartSeries GetAreaSeries(IFunction function, IVariable xArgument, IVariable yComponent, FunctionBindingList functionBindingList, Color fillColor)
+        public static IAreaChartSeries GetAreaSeries(IFunction function, 
+                                                     IVariable xArgument, 
+                                                     IVariable yComponent, 
+                                                     FunctionBindingList functionBindingList, 
+                                                     Color fillColor)
         {
-            var areaSeries = ChartSeriesFactory.CreateAreaSeries();
+            IAreaChartSeries areaSeries = ChartSeriesFactory.CreateAreaSeries();
 
             // Set the data source
             
             areaSeries.DataSource = functionBindingList;
 
             // Set chart series data members and title
-            areaSeries.Title = String.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
+            areaSeries.Title = $"{function.Name} [{function.Components[0].Unit.Symbol}]";
             areaSeries.XValuesDataMember = xArgument.DisplayName; // x, double (offset along the route)
             areaSeries.YValuesDataMember = yComponent.DisplayName; // y, double (value)
             areaSeries.Color = fillColor;
@@ -178,50 +131,56 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return areaSeries;
         }
 
-        public static void ThrowWhenFunctionIsInvalid(IFunction function)
+        private static void ThrowWhenFunctionIsInvalid(IFunction function)
         {
             if (function == null)
-                throw new ArgumentException("Couldnt create the view because one of the functions is null / empty");
+            {
+                throw new ArgumentException("Couldn't create the view because one of the functions is null / empty");
+            }
 
             if (function.Arguments.Count == 0)
-                throw new ArgumentException("Couldnt create view because one of the functions doesnt contain arguments");
+            {
+                throw new ArgumentException("Couldn't create view because one of the functions doesnt contain arguments");
+            }
 
             if (function.Components.Count == 0)
-                throw new ArgumentException("Couldnt create view because one of the functions doesnt contain components");
+            {
+                throw new ArgumentException("Couldn't create view because one of the functions doesnt contain components");
+            }
         }
 
-        public static void ThrowWhenFunctionVariableNamesAreInvalid(string argName, string compName)
+        private static void ThrowWhenFunctionVariableNamesAreInvalid(string argName, string compName)
         {
-            if (String.IsNullOrEmpty(argName) || argName.Trim() == "")
-                throw new ArgumentException(
-                    "Couldn't create view because one of the functions doesnt contain a valid argument name");
+            if (string.IsNullOrEmpty(argName) || argName.Trim() == "")
+            {
+                throw new ArgumentException("Couldn't create view because one of the functions doesnt contain a valid argument name");
+            }
 
-            if (String.IsNullOrEmpty(compName) || compName.Trim() == "")
-                throw new ArgumentException(
-                    "Couldn't create view because one of the functions doesnt contain a valid component name");
+            if (string.IsNullOrEmpty(compName) || compName.Trim() == "")
+            {
+                throw new ArgumentException("Couldn't create view because one of the functions doesnt contain a valid component name");
+            }
 
             if (argName == compName)
-                throw new ArgumentException(
-                    "Couldn't create view because one of the functions component name is the same as the argument name which is not allowed");
+            {
+                throw new ArgumentException("Couldn't create view because one of the functions component name is the same as the argument name which is not allowed");
+            }
         }
 
         public static void ValidateFunction(IFunction function)
         {
             ThrowWhenFunctionIsInvalid(function);
 
-            var xArgument = function.GetFirstArgumentVariableOfType<double>();
+            IVariable xArgument = function.GetFirstArgumentVariableOfType<double>();
             if (xArgument == null)
             {
-                throw new ArgumentException(
-                    String.Format("Couldn't create view because function {0} does not have a argument of type double.",function.Name));
+                throw new ArgumentException($"Couldn't create view because {nameof(function)} {function.Name} does not have a argument of type double.");
             }
-
             
-            var yComponent = function.GetFirstComponentVariableOfType<double>();
+            IVariable yComponent = function.GetFirstComponentVariableOfType<double>();
             if (yComponent == null)
             {
-                throw new ArgumentException(
-                    String.Format("Couldn't create view because function {0} does not have a component of type double.",function.Name));
+                throw new ArgumentException($"Couldn't create view because {nameof(function)} {function.Name} does not have a component of type double.");
             }
 
             ThrowWhenFunctionVariableNamesAreInvalid(xArgument.Name, yComponent.Name);
@@ -233,21 +192,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             for (int i = 1; i < route.Segments.Values.Count; i++)
             {
-                var previousSegment = route.Segments.Values[i - 1];
-                var currentSegment = route.Segments.Values[i];
+                INetworkSegment previousSegment = route.Segments.Values[i - 1];
+                INetworkSegment currentSegment = route.Segments.Values[i];
 
                 currentChainage += previousSegment.Length;
 
                 if (previousSegment.Branch == currentSegment.Branch)
                     continue;
 
-                var previousNode = previousSegment.DirectionIsPositive
-                    ? previousSegment.Branch.Target
-                    : previousSegment.Branch.Source;
+                INode previousNode = previousSegment.DirectionIsPositive
+                                         ? previousSegment.Branch.Target
+                                         : previousSegment.Branch.Source;
 
-                var currentNode = currentSegment.DirectionIsPositive
-                    ? currentSegment.Branch.Source
-                    : currentSegment.Branch.Target;
+                INode currentNode = currentSegment.DirectionIsPositive
+                                        ? currentSegment.Branch.Source
+                                        : currentSegment.Branch.Target;
 
                 if (currentNode == previousNode && currentNode is T typedNode)
                 {
@@ -259,7 +218,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public static IEnumerable<IFunction> GetPipeSideViewFunctions(Route route)
         {
             if (route == null)
+            {
                 yield break;
+            }
 
             var xValues = new List<double>();
             var yValuesTop = new List<double>();
@@ -270,7 +231,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             for (int i = 0; i < route.Segments.Values.Count; i++)
             {
-                var segment = route.Segments.Values[i];
+                INetworkSegment segment = route.Segments.Values[i];
 
                 if (!(segment.Branch is ISewerConnection connection))
                     continue;
@@ -283,9 +244,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
                 previousPipe = connection;
 
-                var levelSource = segment.DirectionIsPositive ? connection.LevelSource : connection.LevelTarget;
-                var levelTarget = segment.DirectionIsPositive ? connection.LevelTarget : connection.LevelSource;
-                var pipeLength = connection.Length;
+                double levelSource;
+                double levelTarget;
+
+                if (connection is IPipe)
+                {
+                    levelSource = segment.DirectionIsPositive ? connection.LevelSource : connection.LevelTarget;
+                    levelTarget = segment.DirectionIsPositive ? connection.LevelTarget : connection.LevelSource;
+                }
+                else
+                {
+                    levelSource = segment.DirectionIsPositive ? connection.SourceCompartment.BottomLevel : connection.TargetCompartment.BottomLevel;
+                    levelTarget = segment.DirectionIsPositive ? connection.TargetCompartment.BottomLevel : connection.SourceCompartment.BottomLevel;
+                }
+                
+                double pipeLength = connection.Length;
 
                 if (i == 0)
                 {
@@ -303,7 +276,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                         : pipeLength - segment.EndChainage;
                 }
 
-                var crossSectionHeight = connection is Pipe pipe ? (pipe.CrossSection?.Definition).HighestPoint : 0;
+                double crossSectionHeight = connection is Pipe pipe ? (pipe.CrossSection?.Definition).HighestPoint : 0;
 
                 xValues.Add(currentChainage);
                 yValuesTop.Add(levelSource + crossSectionHeight);
@@ -325,66 +298,49 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             var xValues = new List<double>();
             var yValues = new List<double>();
 
-            var relativeOffsets = waterLevelInSideView.Arguments[0].GetValues<double>();
-            var values = waterLevelInSideView.Components[0].GetValues<double>();
+            IMultiDimensionalArray<double> relativeOffsets = waterLevelInSideView.Arguments[0].GetValues<double>();
+            IMultiDimensionalArray<double> values = waterLevelInSideView.Components[0].GetValues<double>();
             
-            PipeWaterLevelData previousData = null;
+            SewerConnectionWaterLevelData previousData = null;
 
             for (int i = 0; i < relativeOffsets.Count; i++)
             {
-                var relativeOffset = relativeOffsets[i];
-                var value = values[i];
+                double relativeOffset = relativeOffsets[i];
+                double value = values[i];
 
-                var segmentChainage = GetBranchChainageFromRelativeLength(route, relativeOffset);
-                var segment = segmentChainage?.Item1;
-                var chainage = segmentChainage?.Item2;
+                Tuple<INetworkSegment, double> segmentChainage = GetBranchChainageFromRelativeLength(route, relativeOffset);
+                INetworkSegment segment = segmentChainage?.Item1;
+                double? chainage = segmentChainage?.Item2;
 
-                if (segment == null || !(segment.Branch is IPipe pipe))
+                if (segment == null || !(segment.Branch is ISewerConnection sewerConnection))
                     continue;
 
-                var currentData = new PipeWaterLevelData
-                {
-                    Pipe = pipe,
-                    Value = value,
-                    RelativeOffset = relativeOffset,
-                    Segment = segment,
-                    PipeBottomLevel = GetLevelAtChainage(chainage.Value, pipe)
-                };
-
-                currentData.SetValueInPipe(value);
+                double bottomLevelAtChainage = GetLevelAtChainage(chainage.Value, sewerConnection);
+                var currentData = new SewerConnectionWaterLevelData(segment, bottomLevelAtChainage, value, relativeOffset);
 
                 if (previousData != null)
                 {
-                    if (previousData.Pipe != currentData.Pipe)
+                    if (previousData.SewerConnection != currentData.SewerConnection)
                     {
-                        var pipeBottomLevel = previousData.Segment.DirectionIsPositive
-                            ? previousData.Pipe.LevelTarget
-                            : previousData.Pipe.LevelSource;
+                        double pipeBottomLevel = previousData.BranchSegment.DirectionIsPositive
+                                                     ? previousData.SewerConnection.LevelTarget
+                                                     : previousData.SewerConnection.LevelSource;
 
-                        var dataEndPreviousPipe = new PipeWaterLevelData
-                        {
-                            Pipe = previousData.Pipe,
-                            Value = currentData.Value,
-                            Segment = previousData.Segment,
-                            RelativeOffset = currentData.RelativeOffset,
-                            PipeBottomLevel = pipeBottomLevel
-                        };
+                        var dataEndPreviousPipe = new SewerConnectionWaterLevelData(previousData.BranchSegment, pipeBottomLevel, currentData.WaterLevel, currentData.RelativeOffset);
 
-                        dataEndPreviousPipe.SetValueInPipe(currentData.Value);
-
-                        foreach (var coordinate in GetIntersectingCoordinates(previousData, dataEndPreviousPipe).OrderBy(c => c.X))
+                        foreach (Coordinate coordinate in GetIntersectingCoordinates(previousData, dataEndPreviousPipe).OrderBy(c => c.X))
                         {
                             xValues.Add(coordinate.X);
                             yValues.Add(coordinate.Y);
                         }
 
                         xValues.Add(dataEndPreviousPipe.RelativeOffset);
-                        yValues.Add(dataEndPreviousPipe.ValueInPipe);
+                        yValues.Add(dataEndPreviousPipe.WaterLevelInSewerConnection);
 
                         previousData = dataEndPreviousPipe;
                     }
                     
-                    var coordinatesToAdd = GetIntersectingCoordinates(previousData, currentData).Where(c => c != null);
+                    IEnumerable<Coordinate> coordinatesToAdd = GetIntersectingCoordinates(previousData, currentData).Where(c => c != null);
 
                     foreach (var coordinate in coordinatesToAdd.OrderBy(c => c.X))
                     {
@@ -394,7 +350,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 }
 
                 xValues.Add(currentData.RelativeOffset);
-                yValues.Add(currentData.ValueInPipe);
+                yValues.Add(currentData.WaterLevelInSewerConnection);
 
                 previousData = currentData;
             }
@@ -405,18 +361,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         internal static Tuple<INetworkSegment, double> GetBranchChainageFromRelativeLength(Route route, double relativeOffset)
         {
             var currentLength = 0.0;
-            var segments = route.Segments.Values;
+            IMultiDimensionalArray<INetworkSegment> segments = route.Segments.Values;
 
             for (int i = 0; i < segments.Count; i++)
             {
-                var segment = segments[i];
+                INetworkSegment segment = segments[i];
 
-                var startSegment = currentLength;
-                var endSegment = currentLength + segment.Length;
+                double startSegment = currentLength;
+                double endSegment = currentLength + segment.Length;
 
-                var onBeginSegment = Math.Abs(relativeOffset - startSegment) < 1e-8;
-                var onEndSegment = Math.Abs(relativeOffset - endSegment) < 1e-8;
-                var isOnSegment = relativeOffset >= startSegment && relativeOffset <= endSegment;
+                bool onBeginSegment = Math.Abs(relativeOffset - startSegment) < 1e-8;
+                bool onEndSegment = Math.Abs(relativeOffset - endSegment) < 1e-8;
+                bool isOnSegment = relativeOffset >= startSegment && relativeOffset <= endSegment;
 
                 if (!isOnSegment)
                 {
@@ -440,10 +396,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     segment = segments[i + 1];
                 }
 
-                var segmentOffset = relativeOffset - currentLength;
-                var chainage = segment.DirectionIsPositive
-                    ? segment.Chainage + segmentOffset
-                    : segment.Chainage - segmentOffset;
+                double segmentOffset = relativeOffset - currentLength;
+                double chainage = segment.DirectionIsPositive
+                                      ? segment.Chainage + segmentOffset
+                                      : segment.Chainage - segmentOffset;
 
                 return new Tuple<INetworkSegment, double>(segment, chainage);
 
@@ -452,59 +408,61 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return null;
         }
 
-        private static IEnumerable<Coordinate> GetIntersectingCoordinates(PipeWaterLevelData previousData, PipeWaterLevelData currentData)
+        private static IEnumerable<Coordinate> GetIntersectingCoordinates(SewerConnectionWaterLevelData previousData, SewerConnectionWaterLevelData currentData)
         {
-            var previousLocation = previousData.ValueLocation;
-            var location = currentData.ValueLocation;
+            ValueLocation previousLocation = previousData.ValueLocation;
+            ValueLocation location = currentData.ValueLocation;
 
             var crossedTop = false;
             var crossedBottom = false;
 
             switch (previousLocation)
             {
-                case ValueLocation.AbovePipe when location != ValueLocation.AbovePipe:
+                case ValueLocation.AboveSewerConnection when location != ValueLocation.AboveSewerConnection:
                     crossedTop = true;
-                    crossedBottom = location == ValueLocation.BelowPipe;
+                    crossedBottom = location == ValueLocation.BelowSewerConnection;
                     break;
-                case ValueLocation.InsidePipe when location != ValueLocation.InsidePipe:
-                    crossedTop = location == ValueLocation.AbovePipe;
-                    crossedBottom = location == ValueLocation.BelowPipe;
+                case ValueLocation.InsideSewerConnection when location != ValueLocation.InsideSewerConnection:
+                    crossedTop = location == ValueLocation.AboveSewerConnection;
+                    crossedBottom = location == ValueLocation.BelowSewerConnection;
                     break;
-                case ValueLocation.BelowPipe when location != ValueLocation.BelowPipe:
-                    crossedTop = location == ValueLocation.AbovePipe;
+                case ValueLocation.BelowSewerConnection when location != ValueLocation.BelowSewerConnection:
+                    crossedTop = location == ValueLocation.AboveSewerConnection;
                     crossedBottom = true;
                     break;
             }
 
-            if (crossedTop || crossedBottom)
+            if (!crossedTop && !crossedBottom)
             {
-                var topLine = new LineString(new[]
-                {
-                    new Coordinate(previousData.RelativeOffset, previousData.PipeTopLevel),
-                    new Coordinate(currentData.RelativeOffset, currentData.PipeTopLevel),
-                });
+                yield break;
+            }
 
-                var bottomLine = new LineString(new[]
-                {
-                    new Coordinate(previousData.RelativeOffset, previousData.PipeBottomLevel),
-                    new Coordinate(currentData.RelativeOffset, currentData.PipeBottomLevel),
-                });
+            var topLine = new LineString(new[]
+            {
+                new Coordinate(previousData.RelativeOffset, previousData.SewerConnectionTopLevel),
+                new Coordinate(currentData.RelativeOffset, currentData.SewerConnectionTopLevel),
+            });
 
-                var valueLine = new LineString(new[]
-                {
-                    new Coordinate(previousData.RelativeOffset, previousData.Value),
-                    new Coordinate(currentData.RelativeOffset, currentData.Value),
-                });
+            var bottomLine = new LineString(new[]
+            {
+                new Coordinate(previousData.RelativeOffset, previousData.SewerConnectionBottomLevel),
+                new Coordinate(currentData.RelativeOffset, currentData.SewerConnectionBottomLevel),
+            });
 
-                if (crossedTop)
-                {
-                    yield return topLine.Intersection(valueLine).Coordinate;
-                }
+            var valueLine = new LineString(new[]
+            {
+                new Coordinate(previousData.RelativeOffset, previousData.WaterLevel),
+                new Coordinate(currentData.RelativeOffset, currentData.WaterLevel),
+            });
 
-                if (crossedBottom)
-                {
-                    yield return bottomLine.Intersection(valueLine).Coordinate;
-                }
+            if (crossedTop)
+            {
+                yield return topLine.Intersection(valueLine).Coordinate;
+            }
+
+            if (crossedBottom)
+            {
+                yield return bottomLine.Intersection(valueLine).Coordinate;
             }
         }
 
@@ -514,7 +472,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             INetworkLocation[] existingLocations = coverage.Locations.Values.ToArray();
             
-            foreach (var pipe in route.Network.Branches.OfType<IPipe>())
+            foreach (IPipe pipe in route.Network.Branches.OfType<IPipe>())
             {
                 if (pipe.Source is IManhole)
                 {
@@ -529,14 +487,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 }
             }
 
-            var startLocationRoute = route.Locations.Values[0];
-            var endLocationRoute = route.Locations.Values.Last();
+            INetworkLocation startLocationRoute = route.Locations.Values[0];
+            INetworkLocation endLocationRoute = route.Locations.Values.Last();
 
             if (startLocationRoute.Branch is IPipe startLocationRoutePipe)
+            {
                 coverage[startLocationRoute] = GetSurfaceLevelAtChainage(startLocationRoute.Chainage, startLocationRoutePipe);
+            }
 
             if (endLocationRoute.Branch is IPipe endLocationRoutePipe)
+            {
                 coverage[endLocationRoute] = GetSurfaceLevelAtChainage(endLocationRoute.Chainage, endLocationRoutePipe);
+            }
         }
 
         private static void SetLocationValue(IFunction coverage, INetworkLocation newLocation, IEnumerable<INetworkLocation> existingLocations, double newValue)
@@ -571,10 +533,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private static double GetPipeLevelAtChainage(ISewerConnection connection, double chainage, double sourceLevel, double targetLevel)
         {
-            var heightDiff = sourceLevel - targetLevel;
-            var ratio = heightDiff / connection.Length;
+            double heightDiff = sourceLevel - targetLevel;
+            double ratio = heightDiff / connection.Length;
 
-            var newPipeLength = connection.Length - chainage;
+            double newPipeLength = connection.Length - chainage;
             return (ratio * newPipeLength) + Math.Min(sourceLevel, targetLevel);
         }
 

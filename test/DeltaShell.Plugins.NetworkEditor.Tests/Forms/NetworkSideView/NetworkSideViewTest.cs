@@ -416,11 +416,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         [Category(TestCategory.WindowsForms)]
         public void SideViewRespondsToTimeSerieNavigatorAndAdjustsCrestLevel()
         {
-            var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();                        
-            var viewData = NetworkSideViewTestHelper.CreateDefaultViewDataWithWeir(network);
+            HydroNetwork network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
+            NetworkSideViewDataController viewData = NetworkSideViewTestHelper.CreateDefaultViewDataWithWeir(network);
 
             // next set the filter
-            var waterLevel = viewData.WaterLevelNetworkCoverage;
+            INetworkCoverage waterLevel = viewData.WaterLevelNetworkCoverage;
 
             // set up the min and max values of the axes
             /*viewData.ZMinValue = 0;

@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         {
             var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, coverage);
 
-            var waterLevelFunction = viewData.WaterLevelSideViewFunction;
+            var waterLevelFunction = viewData.CreateWaterLevelSideViewFunction();
             var bedLevelFunction = viewData.ProfileSideViewFunctions.FirstOrDefault(pf => pf.Name == "bed level");
         }
 

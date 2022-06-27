@@ -23,18 +23,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private readonly IList<IChartViewTool> addedTools = new List<IChartViewTool>();
         private Dictionary<string, bool> seriesActiveCache = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
 
-        private NetworkSideViewDataController networkSideViewDataController;
-
         public NetworkSideViewChartSeriesController(ChartView chartView)
         {
             this.chartView = chartView;
         }
 
-        public NetworkSideViewDataController NetworkSideViewDataController
-        {
-            get { return networkSideViewDataController;}
-            set { networkSideViewDataController = value; }
-        }
+        public NetworkSideViewDataController NetworkSideViewDataController { get; set; }
 
         private IChart Chart
         {
@@ -56,33 +50,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             CleanSeriesAndTools();
 
             // create chart data
-            var bedLevelChartDatas = CreateBedLevelChartData().ToArray();
-            var waterLevelChartData = CreateWaterLevelChartData();
-            var renderedCoveragesChartDatas = CreateRenderedCoverageChartData();
+            SideViewChartData[] bedLevelChartDatas = CreateBedLevelChartData().ToArray();
+            SideViewChartData waterLevelChartData = CreateWaterLevelChartData();
+            IEnumerable<SideViewChartData> renderedCoveragesChartDatas = CreateRenderedCoverageChartData();
 
-            var allSewerConnections = Route.Segments.Values.All(s => s.Branch is ISewerConnection);
-            var pipeChartData = allSewerConnections
-                                    ? CreatePipeChartData().ToArray()
-                                    : new SideViewChartData[0];
+            bool allSewerConnections = Route.Segments.Values.All(s => s.Branch is ISewerConnection);
+            SideViewChartData[] pipeChartData = allSewerConnections
+                                                    ? CreatePipeChartData().ToArray()
+                                                    : Array.Empty<SideViewChartData>();
 
-            var waterLevelInPipeChartData = allSewerConnections
-                                                ? CreateWaterLevelInPipeChartData()
-                                                : null;
-            var maxWaterLevelChartData = CreateMaxWaterLevelChartData();
+            SideViewChartData waterLevelInPipeChartData = allSewerConnections
+                                                              ? CreateWaterLevelInPipeChartData()
+                                                              : null;
+            SideViewChartData maxWaterLevelChartData = CreateMaxWaterLevelChartData();
 
             var lookup = new Dictionary<SideViewChartData, IChartSeries>();
-            var all = bedLevelChartDatas
-                                            .Plus(waterLevelChartData)
-                                            .Plus(maxWaterLevelChartData)
-                                            .Concat(pipeChartData)
-                                            .Plus(waterLevelInPipeChartData)
-                                            .Concat(renderedCoveragesChartDatas);
+            IEnumerable<SideViewChartData> all = bedLevelChartDatas
+                                                 .Plus(waterLevelChartData)
+                                                 .Plus(maxWaterLevelChartData)
+                                                 .Concat(pipeChartData)
+                                                 .Plus(waterLevelInPipeChartData)
+                                                 .Concat(renderedCoveragesChartDatas);
 
-            foreach (var chartData in all)
+            foreach (SideViewChartData chartData in all)
             {
                 if (chartData == null) continue;
 
-                var chartSeries = CreateSeries(chartData);
+                IChartSeries chartSeries = CreateSeries(chartData);
                 
                 Chart.Series.Add(chartSeries);
                 createdChartData.Add(chartData);
@@ -112,7 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             var pipeSeries = pipeChartData.Select(cd => lookup[cd]).ToArray();
             addedTools.Add(chartView.NewSeriesBandTool(pipeSeries[0], pipeSeries[1], NetworkSideViewStyles.PipeColor));
 
-            if (waterLevelInPipeChartData != null && lookup.TryGetValue(waterLevelInPipeChartData, out var waterLevelInPipeSeries))
+            if (waterLevelInPipeChartData != null && lookup.TryGetValue(waterLevelInPipeChartData, out IChartSeries waterLevelInPipeSeries))
             {
                 addedTools.Add(chartView.NewSeriesBandTool(waterLevelInPipeSeries, pipeSeries[1], Color.FromArgb(72, NetworkSideViewStyles.WaterLevelColor)));
             }
@@ -132,10 +126,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private SideViewChartData CreateWaterLevelInPipeChartData()
         {
-            var waterLevelInSideView = networkSideViewDataController.WaterLevelSideViewFunction;
+            IFunction waterLevelInSideView = NetworkSideViewDataController.CreateWaterLevelSideViewFunction();
 
             if (waterLevelInSideView == null) return null;
-            var waterLevelInPipeFunction = NetworkSideViewHelper.GetWaterLevelInPipeFunction(Route, waterLevelInSideView);
+            IFunction waterLevelInPipeFunction = NetworkSideViewHelper.GetWaterLevelInPipeFunction(Route, waterLevelInSideView);
             
             return CreateLineChartDataForFunction(waterLevelInPipeFunction, NetworkSideViewStyles.WaterLevelColor, (ls) =>
             {
@@ -145,11 +139,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private IEnumerable<SideViewChartData> CreatePipeChartData()
         {
-            var functions = networkSideViewDataController?.PipeSideViewFunctions;
+            IEnumerable<IFunction> functions = NetworkSideViewDataController?.PipeSideViewFunctions;
             if (functions == null)
                 yield break;
 
-            foreach (var function in functions)
+            foreach (IFunction function in functions)
             {
                 yield return CreateLineChartDataForFunction(function, Color.Black, (ls) =>
                 {
@@ -161,7 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private IEnumerable<SideViewChartData> CreateRenderedCoverageChartData()
         {
-            foreach (var sideViewFunction in networkSideViewDataController.RenderedNetworkSideViewFunctions)
+            foreach (IFunction sideViewFunction in NetworkSideViewDataController.RenderedNetworkSideViewFunctions)
             {
                 yield return CreateLineChartDataForFunction(sideViewFunction, ColorHelper.GetIndexedColor(chartView.Chart.Series.Count), lcs =>
                 {
@@ -170,7 +164,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 });
             }
             
-            foreach (var coverage in networkSideViewDataController.RenderedFeatureViewFunctions)
+            foreach (IFunction coverage in NetworkSideViewDataController.RenderedFeatureViewFunctions)
             {
                 yield return CreatePointChartDataForFunction(coverage, ColorHelper.GetIndexedColor(chartView.Chart.Series.Count));
             }
@@ -178,7 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private SideViewChartData CreateWaterLevelChartData()
         {
-            var waterLevelSideViewFunction = networkSideViewDataController.WaterLevelSideViewFunction;
+            IFunction waterLevelSideViewFunction = NetworkSideViewDataController.CreateWaterLevelSideViewFunction();
             
             return waterLevelSideViewFunction != null
                        ? CreateLineChartDataForFunction(waterLevelSideViewFunction, NetworkSideViewStyles.WaterLevelColor, (lcs) =>
@@ -192,8 +186,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private SideViewChartData CreateMaxWaterLevelChartData()
         {
-            return networkSideViewDataController.MaxWaterLevelFunction != null
-                       ? CreateLineChartDataForFunction(networkSideViewDataController.MaxWaterLevelFunction, NetworkSideViewStyles.MaxWaterLevelColor, (lcs) =>
+            return NetworkSideViewDataController.MaxWaterLevelFunction != null
+                       ? CreateLineChartDataForFunction(NetworkSideViewDataController.MaxWaterLevelFunction, NetworkSideViewStyles.MaxWaterLevelColor, (lcs) =>
                        {
                            lcs.Visible = false;
                            lcs.Color = NetworkSideViewStyles.MaxWaterLevelColor;
@@ -205,24 +199,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private IEnumerable<SideViewChartData> CreateBedLevelChartData()
         {
-            var profileFunctions = networkSideViewDataController.ProfileSideViewFunctions.ToDictionary(f => f.Name, StringComparer.CurrentCultureIgnoreCase);
+            Dictionary<string, IFunction> profileFunctions = 
+                NetworkSideViewDataController.ProfileSideViewFunctions
+                                             .ToDictionary(f => f.Name, StringComparer.CurrentCultureIgnoreCase);
 
-            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.BedLevelCoverageName, out var bottomLevelSideViewFunction))
+            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.BedLevelCoverageName, out IFunction bottomLevelSideViewFunction))
             {
                 yield return CreateAreaChartDataForFunction(bottomLevelSideViewFunction, Color.FromArgb(72, Color.YellowGreen), (acs) => acs.LineVisible = false);
             }
 
-            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.LowestEmbankmentCoverageName, out var lowestEmbankmentSideViewFunction))
+            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.LowestEmbankmentCoverageName, out IFunction lowestEmbankmentSideViewFunction))
             {
                 yield return CreateLineChartDataForFunction(lowestEmbankmentSideViewFunction, Color.SaddleBrown, (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; });
             }
 
-            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.LeftEmbankmentCoverageName, out var leftEmbankmentSideViewFunction))
+            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.LeftEmbankmentCoverageName, out IFunction leftEmbankmentSideViewFunction))
             {
                 yield return CreateLineChartDataForFunction(leftEmbankmentSideViewFunction, Color.Goldenrod, (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; });
             }
 
-            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.RightEmbankmentCoverageName, out var rightEmbankmentSideViewFunction))
+            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.RightEmbankmentCoverageName, out IFunction rightEmbankmentSideViewFunction))
             {
                 yield return CreateLineChartDataForFunction(rightEmbankmentSideViewFunction, Color.RosyBrown, (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; });
             }
@@ -254,10 +250,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private static IChartSeries CreateSeries(SideViewChartData sideViewChartData)
         {
-            var function = sideViewChartData.Function;
+            IFunction function = sideViewChartData.Function;
             NetworkSideViewHelper.ValidateFunction(function);
-            var xArgument = function.GetFirstArgumentVariableOfType<double>();
-            var yComponent = function.GetFirstComponentVariableOfType<double>();
+            IVariable xArgument = function.GetFirstArgumentVariableOfType<double>();
+            IVariable yComponent = function.GetFirstComponentVariableOfType<double>();
 
             IChartSeries chartSeries = null;
             switch (sideViewChartData.Style)
@@ -293,7 +289,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public void Dispose()
         {
             // dispose function binding lists:
-            foreach (var chartData in createdChartData)
+            foreach (SideViewChartData chartData in createdChartData)
             {
                 chartData.Dispose();
             }

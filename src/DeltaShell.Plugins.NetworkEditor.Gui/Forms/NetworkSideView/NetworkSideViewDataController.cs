@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.DelftTools.Utils.Tuples;
 using DelftTools.Functions.Filters;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
@@ -16,7 +13,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Threading;
-using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -48,6 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private NetworkSideViewCoverageManager networkSideViewCoverageManager;
         private static readonly IUnit waterLevelUnit = new Unit("Water level", "m AD");
         private List<DelftTools.Utils.Tuple<double, double>> maxWaterLevelValues;
+        private readonly SideViewFunctionCreator sideViewFunctionCreator;
 
         public NetworkSideViewDataController(Route route, NetworkSideViewCoverageManager coverageManager, ModelNameForCoverageDelegate modelNameForCoverageDelegate = null)
         {
@@ -64,8 +61,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             NetworkRoute = route;
             NetworkSideViewCoverageManager = coverageManager;
-            
+
             BuildProfileNetworkCoverages();
+
+            sideViewFunctionCreator = new SideViewFunctionCreator(route, createdRoutes, ActiveStructures, waterLevelUnit);
         }
 
         public void OnSideViewHandleCreated()
@@ -291,6 +290,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
+        public IFunction CreateWaterLevelSideViewFunction()
+        {
+            return sideViewFunctionCreator.CreateWaterLevelSideViewFunction(waterLevelNetworkCoverage);
+        }
+
+        public IFunction CreateRouteFunctionFromNetworkCoverage(INetworkCoverage coverage, IUnit yUnit)
+        {
+            return sideViewFunctionCreator.CreateRouteFunctionFromNetworkCoverage(coverage, yUnit);
+        }
+
+        public IFunction CreateRouteFunctionFromFeatureCoverage(IFeatureCoverage coverage, IUnit yUnit)
+        {
+            return sideViewFunctionCreator.CreateRouteFunctionFromFeatureCoverage(coverage, yUnit);
+        }
+
         /// <summary>
         /// Returns the <see cref="IManhole"/>s in the route with there chainage relative to the route
         /// </summary>
@@ -512,157 +526,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 return CreateMaxLevelFunction((INetworkCoverage) waterLevelNetworkCoverage?.Parent);
             }
         }
-
-        public IFunction CreateRouteFunctionFromNetworkCoverage(INetworkCoverage coverage, IUnit yUnit)
-        {
-            if (coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
-                // Last condition: if time-dependent, but no times available, do not create function. 
-                return null;
-
-            var locIndex = coverage.Locations.GetValues().ToIndexDictionary();
-            var locationsInRoute = RouteHelper.GetLocationsInRoute(coverage, NetworkRoute).Select(l =>
-                                              {
-                                                  var found = locIndex.TryGetValue(l, out var currentLocIndex);
-                                                  return new
-                                                  {
-                                                      loc = l,
-                                                      index = found ? currentLocIndex : -1,
-                                                      chainage = RouteHelper.GetRouteChainage(NetworkRoute, l)
-                                                  };
-                                              })
-                                              .OrderBy(l => l.chainage)
-                                              .ToList();
-
-            var chainagesValues = locationsInRoute.Select(l => l.chainage).ToArray();
-
-            var values = coverage.GetValues<double>();
-            var yValues = locationsInRoute.Select(l => l.index != -1
-                                                       ? values[l.index]
-                                                       : coverage.Evaluate(l.loc))
-                                      .ToArray();
-
-            var chainages = new Variable<double>("Chainage");
-            chainages.Unit = new Unit("Chainage", "m");
-            FunctionHelper.SetValuesRaw(chainages, (IList)chainagesValues);
-            
-            var yVar = new Variable<double>(yUnit.Name);
-            yVar.Unit = yUnit;
-            FunctionHelper.SetValuesRaw<double>(yVar, yValues);
-
-            IFunction function = new Function();
-            function.Arguments.Add(chainages);
-            function.Components.Add(yVar);
-            function.Name = yUnit.Name;
-
-            if (function.Name != null && createdRoutes.ContainsKey(function.Name))
-            {
-                //prevent memory leaking
-                createdRoutes[function.Name].Components = null;
-                createdRoutes[function.Name].Arguments = null;
-                createdRoutes[function.Name].Store = null;
-                createdRoutes[function.Name].Parent = null;
-                createdRoutes[function.Name] = function;
-            }
-            
-            return function; 
-        }
-
-        public IFunction CreateRouteFunctionFromFeatureCoverage(IFeatureCoverage coverage, IUnit yUnit)
-        {
-            if (coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
-                // Last condition: if time-dependent, but no times available, do not create function. 
-                return null;
-
-            IList<IBranchFeature> filteredFeatures = coverage.Features.OfType<IBranchFeature>().Where(f => RouteHelper.GetRouteChainage(NetworkRoute, f) > -1).ToList();
-
-            var chainagesValues = filteredFeatures.Select(f => RouteHelper.GetRouteChainage(NetworkRoute, f));
-            var chainages = new Variable<double>("Chainage");
-            chainages.Unit = new Unit("Chainage", "m");
-            FunctionHelper.SetValuesRaw<double>(chainages, chainagesValues);
-
-            var yValues = filteredFeatures.Select(coverage.Evaluate<double>);
-            var yVar = new Variable<double>(yUnit.Name);
-            yVar.Unit = yUnit;
-            FunctionHelper.SetValuesRaw<double>(yVar, yValues);
-
-            IFunction function = new Function();
-            function.Arguments.Add(chainages);
-            function.Components.Add(yVar);
-            function.Name = yUnit.Name;
-            return function; 
-        }
-
-        public IFunction WaterLevelSideViewFunction
-        {
-            get
-            {
-                if (WaterLevelNetworkCoverageHasNoValues())
-                {
-                    return null;
-                }
-                var function = CreateRouteFunctionFromNetworkCoverage(WaterLevelNetworkCoverage, waterLevelUnit);
-
-                if (function == null)
-                {
-                    return null;
-                }
-                
-                // Adapt the values in the function to show more realistic waterlevels close to structures. 
-                // Basically, around each structure, two additional data points are added, with the waterlevel set to the closest waterlevel on that side of the structure. 
-                // This has no effect when grid points are added close the structures (which is good practice), but if this is not the case, the sideview will be more realistic. 
-                var chainages = function.Arguments[0].GetValues<double>().ToArray();
-                var waterlevels = function.Components[0].GetValues<double>().ToArray();
-
-                // Move old values to sorted dictionary
-                var dict = new SortedDictionary<double, double>();
-                for (int i = 0; i < chainages.Count(); i++)
-                {
-                    dict[chainages[i]] = waterlevels[i];
-                }
-
-                // Add the extra data points in the vicinity of the structures. 
-                IList<double> structureRouteChainages = ActiveStructures.Select(struc => RouteHelper.GetRouteChainage(NetworkRoute, struc)).ToList();
-                foreach (double structureChainage in structureRouteChainages)
-                {
-                    double chainage = structureChainage - 0.001;
-                    var waterlevel = dict[dict.Select(x => x.Key).Where(x => x <= chainage).Max()];
-                    dict[chainage] = waterlevel;
-
-                    chainage = structureChainage + 0.001;
-                    waterlevel = dict[dict.Select(x => x.Key).Where(x => x >= chainage).Min()];
-                    dict[chainage] = waterlevel;
-                }
-
-                function.Arguments[0].Clear();
-                function.Components[0].Clear();
-                function.Arguments[0].SetValues(dict.Keys);
-                function.Components[0].SetValues(dict.Values);
-                    
-                return function; 
-            }
-        }
-
-        private bool WaterLevelNetworkCoverageHasNoValues()
-        {
-            if (waterLevelNetworkCoverage?.Locations?.Values == null
-                || !waterLevelNetworkCoverage.Locations.Values.Any())
-            {
-                return true;
-            }
-
-            var firstNetworkLocationOfWaterLevelNetworkCoverage = new VariableValueFilter<INetworkLocation>(waterLevelNetworkCoverage.Locations, waterLevelNetworkCoverage.Locations.Values[0]);
-
-            // check on first timestep of first network location if there is a value
-            return WaterLevelNetworkCoverage.GetValues(firstNetworkLocationOfWaterLevelNetworkCoverage).Count == 0;
-        }
-
+        
         public IList<INetworkCoverage> ProfileNetworkCoverages { get; private set; }
 
         public IEnumerable<IFunction> ProfileSideViewFunctions
         {
             get
             {
-                return ProfileNetworkCoverages.Select(cov => CreateRouteFunctionFromNetworkCoverage(cov, new Unit(cov.Name, "m AD"))); 
+                return ProfileNetworkCoverages.Select(cov => sideViewFunctionCreator.CreateRouteFunctionFromNetworkCoverage(cov, new Unit(cov.Name, "m AD"))); 
             }
         }
 
@@ -680,7 +551,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return renderedNetworkCoverages.Where(IsValidCoverage).Select(cov => CreateRouteFunctionFromNetworkCoverage(cov, new Unit(cov.Components[0].Name, cov.Components[0].Unit.Symbol)));
+                return renderedNetworkCoverages.Where(IsValidCoverage).Select(cov => sideViewFunctionCreator.CreateRouteFunctionFromNetworkCoverage(cov, new Unit(cov.Components[0].Name, cov.Components[0].Unit.Symbol)));
             }
         }
 
@@ -693,7 +564,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return RenderedFeatureCoverages.Where(IsValidCoverage).Select(cov => CreateRouteFunctionFromFeatureCoverage(cov, new Unit(cov.Components[0].Name, cov.Components[0].Unit.Symbol)));
+                return RenderedFeatureCoverages.Where(IsValidCoverage).Select(cov => sideViewFunctionCreator.CreateRouteFunctionFromFeatureCoverage(cov, new Unit(cov.Components[0].Name, cov.Components[0].Unit.Symbol)));
             }
         }
 
@@ -1012,5 +883,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void FirePropertyChanged(object sender, PropertyChangedEventArgs args) => 
             PropertyChanged?.Invoke(sender, args);
+        
+        
     }
 }

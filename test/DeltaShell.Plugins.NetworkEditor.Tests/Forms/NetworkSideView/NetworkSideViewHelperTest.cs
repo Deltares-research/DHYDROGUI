@@ -1,4 +1,8 @@
 ﻿using System.Linq;
+using DelftTools.Controls.Swf.Charting;
+using DelftTools.Controls.Swf.Charting.Series;
+using DelftTools.Functions;
+using DelftTools.Functions.Binding;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
@@ -12,6 +16,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
+using Color = System.Drawing.Color;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {
@@ -240,6 +245,241 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             Assert.That(networkCoverage.Locations.Values[0], Is.Not.SameAs(startRouteLocation));
             Assert.That(networkCoverage.Locations.Values[1], Is.EqualTo(endRouteLocation));
             Assert.That(networkCoverage.Locations.Values[1], Is.Not.SameAs(endRouteLocation));
+        }
+
+        [Test]
+        public void UpdateMinMaxToEnsureVerticalResolution_MinAndMaxHaveTheSameNonZeroValue_UpdatesMinAndMax()
+        {
+            // Setup
+            const double fakeRangeConstant = 0.10;
+            double min = 1.23;
+            double max = min;
+            double fakeRange = fakeRangeConstant * min;
+            double expectedMinValue = min - fakeRange;
+            double expectedMaxValue = max + fakeRange;
+            
+            // Call
+            NetworkSideViewHelper.UpdateMinMaxToEnsureVerticalResolution(ref min, ref max);
+            
+            // Assert
+            Assert.That(min, Is.EqualTo(expectedMinValue));
+            Assert.That(max, Is.EqualTo(expectedMaxValue));
+        }
+        
+        [Test]
+        public void UpdateMinMaxToEnsureVerticalResolution_MinAndMaxHaveDifferentValues_DoesNotChangeMinOrMax()
+        {
+            // Setup
+            const double minValue = 1.23;
+            const double maxValue = 4.56;
+            double min = minValue;
+            double max = maxValue;
+            
+            // Call
+            NetworkSideViewHelper.UpdateMinMaxToEnsureVerticalResolution(ref min, ref max);
+            
+            // Assert
+            Assert.That(min, Is.EqualTo(minValue));
+            Assert.That(max, Is.EqualTo(maxValue));
+        }
+        
+        [Test]
+        public void UpdateMinMaxToEnsureVerticalResolution_MinAndMaxZero_SetsRangeTo5()
+        {
+            // Setup
+            const double fakeRange = 5;
+            double min = 0;
+            double max = 0;
+
+            double expectedMin = min - fakeRange;
+            double expectedMax = max + fakeRange;
+
+            // Call
+            NetworkSideViewHelper.UpdateMinMaxToEnsureVerticalResolution(ref min, ref max);
+            
+            // Assert
+            Assert.That(min, Is.EqualTo(expectedMin));
+            Assert.That(max, Is.EqualTo(expectedMax));
+        }
+
+        [Test]
+        public void GetReversed_RouteHasNoSegment_ReturnsFalse()
+        {
+            // Setup
+            Pipe pipe = CreatePipe();
+            
+            var structure = Substitute.For<IStructure1D>();
+            structure.Branch.Returns(pipe);
+            structure.Chainage.Returns(123);
+
+            var route = new Route();
+
+            // Precondition
+            Assert.That(route.Segments.Values, Is.Empty);
+
+            // Call
+            bool result = NetworkSideViewHelper.GetReversed(route, structure);
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+        
+        [Test]
+        public void GetReversed_RouteSegmentEndChainageSmallerThanChainage_ReturnsTrue()
+        {
+            // Setup
+            const double structureChainage = 100;
+            const double segmentEndChainage = structureChainage - 50;
+            const double segmentChainage = structureChainage + 50;
+            
+            Pipe pipe = CreatePipe();
+            
+            var segment = Substitute.For<INetworkSegment>();
+            segment.EndChainage.Returns(segmentEndChainage);
+            segment.Chainage.Returns(segmentChainage);
+            segment.Branch.Returns(pipe);
+            INetworkSegment[] segments = { segment };
+
+            var structure = Substitute.For<IStructure1D>();
+            structure.Branch.Returns(pipe);
+            structure.Chainage.Returns(structureChainage);
+
+            var route = new Route();
+            route.Segments.SetValues(segments);
+
+            // Call
+            bool result = NetworkSideViewHelper.GetReversed(route, structure);
+
+            // Assert
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void GetReversed_RouteSegmentEndChainageLargerThanChainage_ReturnsFalse()
+        {
+            // Setup
+            const double structureChainage = 100;
+            const double segmentEndChainage = structureChainage + 50;
+            const double segmentChainage = structureChainage - 50;
+            
+            Pipe pipe = CreatePipe();
+            
+            var segment = Substitute.For<INetworkSegment>();
+            segment.EndChainage.Returns(segmentEndChainage);
+            segment.Chainage.Returns(segmentChainage);
+            segment.Branch.Returns(pipe);
+            INetworkSegment[] segments = { segment };
+
+            var structure = Substitute.For<IStructure1D>();
+            structure.Branch.Returns(pipe);
+            structure.Chainage.Returns(structureChainage);
+
+            var route = new Route();
+            route.Segments.SetValues(segments);
+
+            // Call
+            bool result = NetworkSideViewHelper.GetReversed(route, structure);
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void GetLineSeries_ReturnsCorrectLineSeries()
+        {
+            // Setup
+            var function = Substitute.For<IFunction>();
+            function.Name.Returns("Function Name");
+
+            var xVariable = Substitute.For<IVariable>();
+            xVariable.DisplayName.Returns("x DisplayName");
+
+            var yComponent = Substitute.For<IVariable>();
+            yComponent.DisplayName.Returns("y DisplayName");
+
+            var functionBindingList = new FunctionBindingList(function);
+            Color penColor = Color.Aqua;
+
+            // Call
+            ILineChartSeries lineSeries = NetworkSideViewHelper.GetLineSeries(function, xVariable, yComponent, 
+                                                                              functionBindingList, penColor);
+
+            // Assert
+            Assert.That(lineSeries, Is.Not.Null);
+            
+            Assert.That(lineSeries.DataSource, Is.EqualTo(functionBindingList));
+            Assert.That(lineSeries.XValuesDataMember, Is.EqualTo(xVariable.DisplayName));
+            Assert.That(lineSeries.YValuesDataMember, Is.EqualTo(yComponent.DisplayName));
+            Assert.That(lineSeries.Color, Is.EqualTo(penColor));
+            Assert.That(lineSeries.PointerStyle, Is.EqualTo(PointerStyles.Nothing));
+            Assert.That(lineSeries.UpdateASynchronously, Is.True);
+        }
+        
+        [Test]
+        public void GetPointSeries_ReturnsCorrectPointSeries()
+        {
+            // Setup
+            var function = Substitute.For<IFunction>();
+            function.Name.Returns("Function Name");
+
+            var xVariable = Substitute.For<IVariable>();
+            xVariable.DisplayName.Returns("x DisplayName");
+
+            var yComponent = Substitute.For<IVariable>();
+            yComponent.DisplayName.Returns("y DisplayName");
+
+            var functionBindingList = new FunctionBindingList(function);
+            Color fillColor = Color.Aqua;
+            const PointerStyles randomPointerStyle = PointerStyles.Hexagon;
+            const int randomPointerSize = 123;
+
+            // Call
+            IPointChartSeries pointSeries = NetworkSideViewHelper.GetPointSeries(function, xVariable, yComponent, 
+                                                                                functionBindingList, fillColor, randomPointerStyle, 
+                                                                                randomPointerSize);
+
+            // Assert
+            Assert.That(pointSeries, Is.Not.Null);
+            
+            Assert.That(pointSeries.DataSource, Is.EqualTo(functionBindingList));
+            Assert.That(pointSeries.XValuesDataMember, Is.EqualTo(xVariable.DisplayName));
+            Assert.That(pointSeries.YValuesDataMember, Is.EqualTo(yComponent.DisplayName));
+            Assert.That(pointSeries.Color, Is.EqualTo(fillColor));
+            Assert.That(pointSeries.LineColor, Is.EqualTo(Color.Black));
+            Assert.That(pointSeries.Style, Is.EqualTo(randomPointerStyle));
+            Assert.That(pointSeries.Size, Is.EqualTo(randomPointerSize));
+        }
+        
+        [Test]
+        public void GetAreaSeries_ReturnsCorrectAreaSeries()
+        {
+            // Setup
+            var function = Substitute.For<IFunction>();
+            function.Name.Returns("Function Name");
+
+            var xVariable = Substitute.For<IVariable>();
+            xVariable.DisplayName.Returns("x DisplayName");
+
+            var yComponent = Substitute.For<IVariable>();
+            yComponent.DisplayName.Returns("y DisplayName");
+
+            var functionBindingList = new FunctionBindingList(function);
+            Color fillColor = Color.Aqua;
+
+            // Call
+            IAreaChartSeries areaSeries = NetworkSideViewHelper.GetAreaSeries(function, xVariable, yComponent, 
+                                                                               functionBindingList, fillColor);
+
+            // Assert
+            Assert.That(areaSeries, Is.Not.Null);
+            
+            Assert.That(areaSeries.DataSource, Is.EqualTo(functionBindingList));
+            Assert.That(areaSeries.XValuesDataMember, Is.EqualTo(xVariable.DisplayName));
+            Assert.That(areaSeries.YValuesDataMember, Is.EqualTo(yComponent.DisplayName));
+            Assert.That(areaSeries.Color, Is.EqualTo(fillColor));
+            Assert.That(areaSeries.LineColor, Is.EqualTo(TeeChartHelper.DarkenColor(fillColor, 60)));
+            Assert.That(areaSeries.PointerStyle, Is.EqualTo(PointerStyles.Nothing));
+            Assert.That(areaSeries.UpdateASynchronously, Is.True);
         }
 
         private static Pipe CreatePipe()
