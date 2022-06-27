@@ -8,37 +8,37 @@
   
   <ItemGroup>
     <Reference Include="DelftTools.Controls">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Swf">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Wpf">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="SharpMap.Api">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Api.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -50,7 +50,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.1485">
+    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.1519">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="log4net" Version="2.0.12">

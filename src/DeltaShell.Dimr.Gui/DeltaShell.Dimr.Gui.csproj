@@ -8,35 +8,35 @@
   
   <ItemGroup>
     <Reference Include="BasicModelInterface">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ControlzEx">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\ControlzEx.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\ControlzEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Fluent">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\Fluent.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\Fluent.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp">
@@ -44,11 +44,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Xaml" />
@@ -63,7 +63,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1485" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1519" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="log4net" Version="2.0.12">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
