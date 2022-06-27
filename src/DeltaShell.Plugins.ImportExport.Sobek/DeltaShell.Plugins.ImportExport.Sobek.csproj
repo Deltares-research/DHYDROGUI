@@ -12,7 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1519" IncludeAssets="compile" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1537" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="DHYDRO.Common" Version="1.0.0.11">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
