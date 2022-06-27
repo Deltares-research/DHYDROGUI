@@ -4,12 +4,11 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common;
-using GeoAPI.Extensions.Feature;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests
@@ -46,13 +45,23 @@ namespace DeltaShell.NGHS.IO.Tests
         [Test]
         public void TestCleanPersistentDirectories_CompositeModel()
         {
-            var compositeModel = new TestCompositeActivity {Name = "CompositeModel"};
-            compositeModel.Activities.AddRange(new List<IActivity>
+            var testActivity1 = Substitute.For<IActivity, IHydroModel>();
+            testActivity1.Name.Returns("SubModel1");
+            var testActivity2 = Substitute.For<IActivity, IHydroModel>();
+            testActivity2.Name.Returns("SubModel2");
+            var testActivity3 = Substitute.For<IActivity, IHydroModel>();
+            testActivity3.Name.Returns("SubModel3");
+
+            var activities = new EventedList<IActivity>
             {
-                new TestActivity {Name = "SubModel1"},
-                new TestActivity {Name = "SubModel2"},
-                new TestActivity {Name = "SubModel3"}
-            });
+                testActivity1,
+                testActivity2,
+                testActivity3
+            };
+
+            var compositeModel = Substitute.For<ICompositeActivity>();
+            compositeModel.Name.Returns("CompositeModel");
+            compositeModel.Activities.Returns(activities);
 
             DoInTemperaryDirectory((string testDir) =>
             {
@@ -63,7 +72,7 @@ namespace DeltaShell.NGHS.IO.Tests
                 string compositeModelDir = Path.Combine(projectDataDirectoryInfo.FullName, compositeModel.Name);
                 FileUtils.CreateDirectoryIfNotExists(compositeModelDir);
 
-                CreateStandardDirectoriesForActivity(projectDataDirectoryInfo.FullName, compositeModel);
+                CreateStandardDirectoriesForCompositeActivityAndActivities(projectDataDirectoryInfo.FullName, compositeModel);
                 RecursivelyAddNoiseToDirectories(projectDataDirectoryInfo);
 
                 // Call
@@ -77,7 +86,8 @@ namespace DeltaShell.NGHS.IO.Tests
         [Test]
         public void TestTestCleanPersistentDirectories_StandAloneModel()
         {
-            var standaloneModel = new TestActivity {Name = "StandaloneModel"};
+            var standaloneModel = Substitute.For<IHydroModel>();
+            standaloneModel.Name.Returns("StandaloneModel");
 
             DoInTemperaryDirectory((string testDir) =>
             {
@@ -88,7 +98,7 @@ namespace DeltaShell.NGHS.IO.Tests
                 string standaloneModelDir = Path.Combine(projectDataDirectoryInfo.FullName, standaloneModel.Name);
                 FileUtils.CreateDirectoryIfNotExists(standaloneModelDir);
 
-                CreateStandardDirectoriesForActivity(projectDataDirectoryInfo.FullName, standaloneModel);
+                CreateStandardDirectoryForActivity(projectDataDirectoryInfo.FullName, standaloneModel);
                 RecursivelyAddNoiseToDirectories(projectDataDirectoryInfo);
 
                 // Call
@@ -113,26 +123,22 @@ namespace DeltaShell.NGHS.IO.Tests
             }
         }
 
-        private static void CreateStandardDirectoriesForActivity(string rootDir, IActivity activity)
+        private static void CreateStandardDirectoriesForCompositeActivityAndActivities(string rootDir, ICompositeActivity compositeActivity)
         {
-            var compositeActivity = activity as ICompositeActivity;
-            if (compositeActivity != null)
-            {
-                string compositeActivityDirectory = Path.Combine(rootDir, compositeActivity.Name);
-                FileUtils.CreateDirectoryIfNotExists(compositeActivityDirectory);
+            string compositeActivityDirectory = Path.Combine(rootDir, compositeActivity.Name);
+            FileUtils.CreateDirectoryIfNotExists(compositeActivityDirectory);
 
-                foreach (IActivity subActivity in compositeActivity.Activities)
-                {
-                    CreateStandardDirectoriesForActivity(compositeActivityDirectory, subActivity);
-                }
-            }
-            else
+            foreach (IActivity subActivity in compositeActivity.Activities)
             {
-                string activityDirectory = Path.Combine(rootDir, activity.Name);
-                FileUtils.CreateDirectoryIfNotExists(activityDirectory);
-                FileUtils.CreateDirectoryIfNotExists(Path.Combine(activityDirectory, "input"));
-                FileUtils.CreateDirectoryIfNotExists(Path.Combine(activityDirectory, "output"));
+                CreateStandardDirectoryForActivity(compositeActivityDirectory, subActivity);
             }
+        }
+        private static void CreateStandardDirectoryForActivity(string rootDir, IActivity activity)
+        {
+            string activityDirectory = Path.Combine(rootDir, activity.Name);
+            FileUtils.CreateDirectoryIfNotExists(activityDirectory);
+            FileUtils.CreateDirectoryIfNotExists(Path.Combine(activityDirectory, "input"));
+            FileUtils.CreateDirectoryIfNotExists(Path.Combine(activityDirectory, "output"));
         }
 
         private static void RecursivelyAddNoiseToDirectories(DirectoryInfo rootDirectoryInfo)
@@ -209,168 +215,6 @@ namespace DeltaShell.NGHS.IO.Tests
             }
 
             return true;
-        }
-
-        private class TestCompositeActivity : CompositeActivity, IHydroModel
-        {
-            #region CompositeActivity implementation
-
-            protected override void OnInitialize() {}
-
-            protected override void OnExecute() {}
-
-            #endregion
-
-            #region IHydroModel implementation
-
-            public bool CanRename(IDataItem item)
-            {
-                return false;
-            }
-
-            public bool CanRemove(IDataItem item)
-            {
-                return false;
-            }
-
-            public bool CanCopy(IDataItem item)
-            {
-                return false;
-            }
-
-            public bool IsDataItemActive(IDataItem dataItem)
-            {
-                return false;
-            }
-
-            public bool IsDataItemValid(IDataItem dataItem)
-            {
-                return false;
-            }
-
-            public bool IsLinkAllowed(IDataItem source, IDataItem target)
-            {
-                return false;
-            }
-
-            public IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
-            {
-                return Enumerable.Empty<IFeature>();
-            }
-
-            public IEnumerable<IDataItem> GetChildDataItems(IFeature location)
-            {
-                return Enumerable.Empty<IDataItem>();
-            }
-
-            public void UpdateLink(object data) {}
-
-            public IDataItem GetDataItemByValue(object value)
-            {
-                return null;
-            }
-
-            public void ClearOutput(bool forceClean = false) {}
-            
-            public void MarkOutputOutOfSync() {}
-
-            public IEventedList<IDataItem> DataItems { get; set; }
-            public IEnumerable<IDataItem> AllDataItems { get; }
-            public string KernelVersions { get; }
-            public object Owner { get; set; }
-            public bool IsCopyable { get; }
-            public bool OutputOutOfSync { get; set; }
-            public bool SuspendClearOutputOnInputChange { get; set; }
-            public bool SuspendMarkOutputOutOfSyncOnInputChange { get; set; }
-            public bool CanRun { get; }
-            public IHydroRegion Region { get; }
-
-            #endregion
-        }
-
-        private class TestActivity : Activity, IHydroModel
-        {
-            #region Activity implementation
-
-            protected override void OnInitialize() {}
-
-            protected override void OnExecute() {}
-
-            protected override void OnCancel() {}
-
-            protected override void OnCleanUp() {}
-
-            protected override void OnFinish() {}
-
-            #endregion
-
-            #region IHydroModel implementation
-
-            public bool CanRename(IDataItem item)
-            {
-                return false;
-            }
-
-            public bool CanRemove(IDataItem item)
-            {
-                return false;
-            }
-
-            public bool CanCopy(IDataItem item)
-            {
-                return false;
-            }
-
-            public bool ReadOnly { get; set; }
-
-            public bool IsDataItemActive(IDataItem dataItem)
-            {
-                return false;
-            }
-
-            public bool IsDataItemValid(IDataItem dataItem)
-            {
-                return false;
-            }
-
-            public bool IsLinkAllowed(IDataItem source, IDataItem target)
-            {
-                return false;
-            }
-
-            public IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
-            {
-                return Enumerable.Empty<IFeature>();
-            }
-
-            public IEnumerable<IDataItem> GetChildDataItems(IFeature location)
-            {
-                return Enumerable.Empty<IDataItem>();
-            }
-
-            public void UpdateLink(object data) {}
-
-            public IDataItem GetDataItemByValue(object value)
-            {
-                return null;
-            }
-
-            public void ClearOutput(bool forceClean = false) {}
-            
-            public void MarkOutputOutOfSync() {}
-
-            public IEventedList<IDataItem> DataItems { get; set; }
-            public IEnumerable<IDataItem> AllDataItems { get; }
-            public string KernelVersions { get; }
-            public object Owner { get; set; }
-            public bool IsCopyable { get; }
-            public bool OutputOutOfSync { get; set; }
-            public bool SuspendClearOutputOnInputChange { get; set; }
-            public bool SuspendMarkOutputOutOfSyncOnInputChange { get; set; }
-            public bool CanRun { get; }
-            public IHydroRegion Region { get; }
-
-            #endregion
         }
     }
 }

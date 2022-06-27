@@ -30,31 +30,34 @@ namespace DeltaShell.NGHS.Common
             return files.Concat(directories).ToArray();
         }
 
+        public static void CleanPersistentDirectories(DirectoryInfo persistedDataDirectory, ICompositeActivity compositeActivity)
+        {
+            if (!persistedDataDirectory.Exists)
+            {
+                return;
+            }
+            
+            string hydroModelDirectory = Path.Combine(persistedDataDirectory.FullName, compositeActivity.Name);
+            List<string> childModelNames = compositeActivity.Activities.OfType<IModel>().Select(a => a.Name).ToList();
+
+            CleanPersistentDirectoryForCompositeModel(new DirectoryInfo(hydroModelDirectory), childModelNames);
+
+            foreach (string childModelName in childModelNames)
+            {
+                var modelDirectoryInfo = new DirectoryInfo(Path.Combine(hydroModelDirectory, childModelName));
+                CleanPersistentDirectoryForStandAloneModel(modelDirectoryInfo);
+            }
+        }
+        
         public static void CleanPersistentDirectories(DirectoryInfo persistedDataDirectory, IModel model)
         {
             if (!persistedDataDirectory.Exists)
             {
                 return;
             }
-
-            if (model is ICompositeActivity compositeActivity)
-            {
-                string hydroModelDirectory = Path.Combine(persistedDataDirectory.FullName, compositeActivity.Name);
-                List<string> childModelNames = compositeActivity.Activities.OfType<IModel>().Select(a => a.Name).ToList();
-
-                CleanPersistentDirectoryForCompositeModel(new DirectoryInfo(hydroModelDirectory), childModelNames);
-
-                foreach (string childModelName in childModelNames)
-                {
-                    var modelDirectoryInfo = new DirectoryInfo(Path.Combine(hydroModelDirectory, childModelName));
-                    CleanPersistentDirectoryForStandAloneModel(modelDirectoryInfo);
-                }
-            }
-            else
-            {
-                var modelDirectoryInfo = new DirectoryInfo(Path.Combine(persistedDataDirectory.FullName, model.Name));
-                CleanPersistentDirectoryForStandAloneModel(modelDirectoryInfo);
-            }
+            
+            var modelDirectoryInfo = new DirectoryInfo(Path.Combine(persistedDataDirectory.FullName, model.Name));
+            CleanPersistentDirectoryForStandAloneModel(modelDirectoryInfo);
         }
 
         private static void CleanPersistentDirectoryForCompositeModel(DirectoryInfo compositeModelDirectoryInfo, IEnumerable<string> childModelNames)
