@@ -175,6 +175,9 @@ namespace DelftTools.Hydro
             // cleanup duplicate locations over branches (on nodes)
             CleanupLocationsAtNodes(locationsToAdd, network.Nodes);
 
+            // sort the locations before adding (required for FM to run, see issue UNST-6184)
+            locationsToAdd.Sort();
+
             double[] fixedPointsMask = FixedPointsMask(discretization, locationsToAdd);
             discretization.ResetValues(locationsToAdd, fixedPointsMask);
         }

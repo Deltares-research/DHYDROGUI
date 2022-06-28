@@ -132,6 +132,55 @@ namespace DelftTools.Hydro.Tests
             Assert.AreEqual(new NetworkLocation(connection4, connection4.Length), discretization.Locations.Values[4]);
         }
 
+
+        [Test]
+        public void GivenDiscretizationExtensions_UpdateNetworkLocations_ShouldGiveOrderedLocationsList()
+        {
+            //Arrange
+            var network = new HydroNetwork();
+            var node1 = new HydroNode("Node1");
+            var node2 = new HydroNode("Node2");
+            var node3 = new HydroNode("Node2");
+
+            var channel1 = new Channel("Channel1", node1, node2, length: 100);
+            var channel2 = new Channel("Channel2", node3, node2, length: 100);
+
+            network.Nodes.AddRange(new[] { node1, node2 });
+            network.Branches.AddRange(new[] { channel1, channel2 });
+
+            var discretization = new Discretization { Network = network };
+            var currentLocations = new[]
+            {
+                new NetworkLocation(channel1, 0),
+                new NetworkLocation(channel1, 100),
+                new NetworkLocation(channel1, 50)
+            };
+
+            discretization.Locations.AddValues(currentLocations);
+
+            // Act
+            var newLocations = new[]
+            {
+                new NetworkLocation(channel2, 100),
+                new NetworkLocation(channel2, 0),
+                new NetworkLocation(channel2, 50)
+            };
+
+            discretization.UpdateNetworkLocations(newLocations);
+
+            // Assert
+            Assert.Multiple(() => {
+                var locations = discretization.Locations.AllValues.ToList();
+                Assert.AreEqual(currentLocations[0], locations[0]);
+                Assert.AreEqual(currentLocations[2], locations[1]);
+                Assert.AreEqual(currentLocations[1], locations[2]);
+
+                Assert.AreEqual(newLocations[1], locations[3]);
+                Assert.AreEqual(newLocations[2], locations[4]);
+                Assert.AreEqual(newLocations[0], locations[5]);
+            });
+        }
+
         #endregion
 
         [Test]

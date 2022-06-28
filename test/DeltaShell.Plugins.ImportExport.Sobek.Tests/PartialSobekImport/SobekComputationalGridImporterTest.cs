@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                 importer.Import();
 
                 Assert.IsNotNull(waterFlowFmModel.NetworkDiscretization);
-                Assert.AreEqual(6647, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
+                Assert.AreEqual(6646, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
             });
         }
 
