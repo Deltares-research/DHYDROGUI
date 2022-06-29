@@ -15,6 +15,7 @@
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="PostSharp" Version="6.10.5">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -85,9 +86,6 @@
 		<Reference Include="NetTopologySuite.Extensions">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
 			<Private>False</Private>
-		</Reference>
-		<Reference Include="Newtonsoft.Json.Net35">
-			<HintPath>lib\Newtonsoft.Json.Net35.dll</HintPath>
 		</Reference>
 		<Reference Include="QuickGraph">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\QuickGraph.dll</HintPath>
