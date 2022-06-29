@@ -229,8 +229,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
-                string modelDirPath = DFlowFMModelRepository.CopyWesternscheldtModelTo(tempDir.Path);
-                string mduFilePath = GetMduFilePath(modelDirPath);
+                DFlowFMModelRepository.f012_inout
+                                      .c032_alloutrealistic
+                                      .CopyTo(new DirectoryInfo(tempDir.Path));
+                string mduFilePath = GetMduFilePath(tempDir.Path);
                 string outputDir = GenerateOutput(mduFilePath);
 
                 var model = new WaterFlowFMModel();

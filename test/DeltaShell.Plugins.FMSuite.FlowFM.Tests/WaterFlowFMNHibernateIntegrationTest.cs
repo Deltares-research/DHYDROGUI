@@ -354,9 +354,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 app.SaveProjectAs("spatial_hibernate.dsproj");
 
-                string testDataDirectory = DFlowFMModelRepository.CopyTimeVaryingBoundaryConditionModelTo(tempDir.Path);
+                DFlowFMModelRepository.f005_boundary_conditions
+                                      .c011_waterlevel_tim_varying
+                                      .CopyTo(new DirectoryInfo(tempDir.Path));
                 const string mduFileName = "tfl.mdu";
-                WaterFlowFMModel model = ImportModelFromTemporaryDirectory(testDataDirectory, mduFileName);
+                WaterFlowFMModel model = ImportModelFromTemporaryDirectory(tempDir.Path, mduFileName);
 
                 app.Project.RootFolder.Add(model);
 

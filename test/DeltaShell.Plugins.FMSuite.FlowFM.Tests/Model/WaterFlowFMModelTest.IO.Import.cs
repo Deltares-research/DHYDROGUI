@@ -103,8 +103,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             using (var tempDir = new TemporaryDirectory())
             {
-                string modelDir = DFlowFMModelRepository.CopyTimeVaryingBoundaryConditionModelTo(tempDir.Path);
-                string mduFilePath = Path.Combine(modelDir, "tfl.mdu");
+                DFlowFMModelRepository.f005_boundary_conditions
+                                      .c011_waterlevel_tim_varying
+                                      .CopyTo(new DirectoryInfo(tempDir.Path));
+                string mduFilePath = Path.Combine(tempDir.Path, "tfl.mdu");
                 var model = Substitute.ForPartsOf<WaterFlowFMModel>();
 
                 // Call
