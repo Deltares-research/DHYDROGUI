@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1538" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1545" PrivateAssets="all" />
 		<PackageReference Include="DHYDRO.Common" Version="1.0.0.11" IncludeAssets="compile" PrivateAssets="all"/>
 		<PackageReference Include="MeshKernelNET" Version="1.0.0.56-Beta" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="NUnit" Version="3.13.3" />
