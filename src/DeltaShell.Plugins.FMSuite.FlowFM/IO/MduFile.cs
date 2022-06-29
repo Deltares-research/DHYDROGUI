@@ -99,16 +99,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             { KnownProperties.ObsCrsFile, "CrsFile" },
         };
 
-        public MduFile()
+        public MduFile(IFlexibleMeshModelApi api  =  null)
         {
             if (FMDllVersion != null)
                 return; // do it once
-
-            var api = FlexibleMeshModelApiFactory.CreateNew();
-            if (api == null)
+            
+            if (api == null)//not injected in constructor
             {
-                Log.ErrorFormat("Failed to initialise FlexibleMeshModelApi");
-                return;
+                api = FlexibleMeshModelApiFactory.CreateNew();
+                if (api == null) //not created by factory
+                {
+                    Log.ErrorFormat("Failed to initialise FlexibleMeshModelApi");
+                    return;
+                }
             }
 
             using (api)
@@ -120,9 +123,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 catch (Exception ex)
                 {
                     var exception = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                    Log.ErrorFormat("Error retrieving FM Dll version: {0}", exception);
+                    Log.DebugFormat(Resources.MduFile_MduFile_Error_retrieving_FM_Dll_version___0_, exception);
 
-                    FMDllVersion = "Unknown";
+                    FMDllVersion = Resources.MduFile_MduFile_Unknown_DFlowFMDll_version;
                 }
             }
 
