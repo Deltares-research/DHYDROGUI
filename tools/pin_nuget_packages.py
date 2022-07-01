@@ -26,7 +26,8 @@ NUGET_PACKAGES = [
     ("RGFGRID", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Rgfgrid"),
     ("DIDO", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Dido"),
     ("PLCT.Libs", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Plct"),
-    ("Substances.Libs", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Substances")
+    ("Substances.Libs", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Substances"),
+    ("DeltaShell.Framework", "DeltaShellFramework_DeltaShellFrameworkGit_NuGet_DeltaShellFrameworkSigned")
 ]
 
 
