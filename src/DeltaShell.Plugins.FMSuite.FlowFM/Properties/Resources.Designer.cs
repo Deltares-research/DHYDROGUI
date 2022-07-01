@@ -648,6 +648,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error retrieving FM Dll version: {0}.
+        /// </summary>
+        public static string MduFile_MduFile_Error_retrieving_FM_Dll_version___0_ {
+            get {
+                return ResourceManager.GetString("MduFile_MduFile_Error_retrieving_FM_Dll_version___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string MduFile_MduFile_Unknown {
+            get {
+                return ResourceManager.GetString("MduFile_MduFile_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Based on the Bridge Pillar file {0}, there are not enough column(s) defined for {1}. The last {2} column(s) have been generated using default values.
         /// </summary>
         public static string MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values {

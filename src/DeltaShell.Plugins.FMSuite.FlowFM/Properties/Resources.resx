@@ -694,4 +694,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="GroupablePointCloudImporter_Setting_group_names__0_____1_" xml:space="preserve">
     <value>Setting group names {0} / {1}</value>
   </data>
+  <data name="MduFile_MduFile_Error_retrieving_FM_Dll_version___0_" xml:space="preserve">
+    <value>Error retrieving FM Dll version: {0}</value>
+  </data>
+  <data name="MduFile_MduFile_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
 </root>

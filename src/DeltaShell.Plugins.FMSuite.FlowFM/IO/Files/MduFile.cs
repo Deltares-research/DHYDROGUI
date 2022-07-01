@@ -95,18 +95,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;
 
-        public MduFile()
+        public MduFile(IFlexibleMeshModelApi api = null)
         {
             if (FMDllVersion != null)
-            {
                 return; // do it once
-            }
 
-            IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew();
-            if (api == null)
+            if (api == null) //not injected in constructor
             {
-                Log.ErrorFormat("Failed to initialise FlexibleMeshModelApi");
-                return;
+                api = FlexibleMeshModelApiFactory.CreateNew();
+                if (api == null) //not created by factory
+                {
+                    Log.ErrorFormat("Failed to initialise FlexibleMeshModelApi");
+                    return;
+                }
             }
 
             using (api)
@@ -117,14 +118,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
                 catch (Exception ex)
                 {
-                    string exception = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                    Log.ErrorFormat("Error retrieving FM Dll version: {0}", exception);
+                    var exception = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                    Log.DebugFormat(Resources.MduFile_MduFile_Error_retrieving_FM_Dll_version___0_, exception);
 
-                    FMDllVersion = "Unknown";
+                    FMDllVersion = Resources.MduFile_MduFile_Unknown;
                 }
             }
 
-            Assembly waterFlowFMAssembly = typeof(WaterFlowFMModel).Assembly;
+            var waterFlowFMAssembly = typeof(WaterFlowFMModel).Assembly;
             FMSuiteFlowModelVersion = waterFlowFMAssembly.GetName().Version.ToString();
         }
 
