@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         public static void UpdateDataColumns(this ModelFeatureCoordinateData<FixedWeir> data, string fixedWeirScheme)
         {
             FixedWeirSchemes scheme;
-            if (!Enum.TryParse(fixedWeirScheme, true, out scheme)) return; // Todo : error ??
+            if (!Enum.TryParse(fixedWeirScheme, true, out scheme)) return;
 
             var expectedColumns = GetExpectedColumns(scheme).ToList();
 

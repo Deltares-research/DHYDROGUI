@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             object result = typeof(Structure2DType).GetEnumValueFromDescription(type);
             if (result != null)
             {
-                Structure2DType = (Structure2DType)result; // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
+                Structure2DType = (Structure2DType)result;
             }
             else
             {

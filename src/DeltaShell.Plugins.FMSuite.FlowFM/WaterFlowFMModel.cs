@@ -984,7 +984,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     {
                         yield return new DataItem
                         {
-                            Name = location + " - " + engineParameter.Name, //todo: clean this up
+                            Name = location + " - " + engineParameter.Name,
                             Role = engineParameter.Role,
                             ValueType = typeof(double),
                             Parent = networkDataItem,
@@ -2396,7 +2396,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Tag = quantity,
                 Role = isInputSender ? DataItemRole.Input : DataItemRole.Output,
                 ValueType = typeof(double),
-                ValueConverter = new WaterFlowFMFeatureValueConverter(this, feature, quantity, String.Empty) // TODO: insert unit
+                ValueConverter = new WaterFlowFMFeatureValueConverter(this, feature, quantity, String.Empty)
             }).OfType<IDataItem>().ToList();
         }
 
@@ -2447,7 +2447,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (Area.ObservationPoints.Contains(location))
             {
-                //TODO: add temperature and tracers
                 yield return "water_level";
                 if (UseSalinity)
                 {

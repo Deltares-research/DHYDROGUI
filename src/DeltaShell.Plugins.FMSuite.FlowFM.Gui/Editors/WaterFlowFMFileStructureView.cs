@@ -80,7 +80,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //TODO: pick up imports, etc. for refreshes
             if ((Equals(sender, Model) && e.PropertyName == nameof(Model.Name)) ||
                 (Model.Boundaries.Contains(sender) &&
                  e.PropertyName == nameof(Feature2D.Name)) ||

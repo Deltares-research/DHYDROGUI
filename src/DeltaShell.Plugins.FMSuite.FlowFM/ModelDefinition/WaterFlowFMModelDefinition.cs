@@ -37,7 +37,6 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
-    // TODO: Make this an [Entity]. Needs refactoring.
     public class WaterFlowFMModelDefinition
     {
         public const string BathymetryDataItemName = "Bed Level";

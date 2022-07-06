@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                   (branch.Source.OutgoingBranches == null ? 0 : branch.Source.OutgoingBranches.Count);
                 if (targetCount > 2 || sourceCount > 2)
                 {
-                    continue; // TODO: allow this situation
+                    continue;
                 }
 
                 var connectedBranchesSameDirection =

@@ -122,8 +122,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 var coordinateComparison2D = new CoordinateComparison2D();
                 var geometryCoordinates = feature.Geometry.Coordinates.ToList();
 
-
-                // todo increase performance (Hashset ??)
                 var pointerList = new List<int>(previousGeometry.Coordinates.Length);
                 foreach (var previousGeometryCoordinate in previousGeometry.Coordinates)
                 {

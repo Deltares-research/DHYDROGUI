@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string FixedWeirExtension = "_fxw.pliz";
         public const string BridgePillarExtension = ".pliz";
         public const string FixedWeirAlternativeExtension = "_fxw.pli";
-        public const string StructuresExtension = "_structures.ini"; // TODO: Might not want to require a specific extension
+        public const string StructuresExtension = "_structures.ini";
         public const string ObsExtension = "_obs.xyn";
         public const string ObsCrossExtension = "_crs.pli";
         public const string ObsCrossAlternativeExtension = "_crs.pliz";
@@ -369,7 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var hasModel1dBoundaryConditions = boundaryConditions1D != null && boundaryConditions1D.Any();
             var hasLateralSourcesData = lateralSourcesData != null && lateralSourcesData.Any();
-            // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
+
             var hasEmbankments = hydroArea.Embankments.Any();
             modelDefinition.Embankments = hydroArea.Embankments;
 

@@ -45,8 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return filename + "." + PliFile<Feature2D>.Extension;
         }
 
-        // TODO: add support for 3D-layers and astro-/harmonic corrections.
-
         public static ExtForceFileItem WriteBoundaryData(string filePath, FlowBoundaryCondition boundaryCondition,
                                                          DateTime modelReferenceDate, int bcIndex,
                                                          ExtForceFileItem existingExtForceFileItem = null,
@@ -241,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (filePath == null)
                 {
-                    yield break; //TODO: emit warning.
+                    yield break;
                 }
 
                 yield return new[] { quantity, filePath };
@@ -296,8 +294,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             PreviousPaths.Add(item.FileName);
         }
-
-        // TODO: add support for 3D and harmonic/astro corrections.
 
         public static IEnumerable<HarmonicComponent> ToHarmonicComponents(IFunction function)
         {

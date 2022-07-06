@@ -231,8 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AdditionalDataCheck = lateralSource => FlowModels.Any(fm => fm.LateralSourcesData.Any(d => ReferenceEquals(d.Feature, lateralSource))),
                 GetViewData = lateralSource => FlowModels.SelectMany(fm => fm.LateralSourcesData).FirstOrDefault(d => ReferenceEquals(d.Feature, lateralSource))
             };
-
-            // Todo : think about a weir that is shared between 2 FM models -> Show a dialog to choose model ??
+            
             yield return new ViewInfo<FixedWeir, IModelFeatureCoordinateData, ModelFeatureCoordinateDataView>
             {
                 Description = "Data for feature",
@@ -1234,8 +1233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return mapView;
 
             var compositeView = activeView as ICompositeView;
-
-            //todo: recursion
+            
             return compositeView != null ? compositeView.ChildViews.OfType<MapView>().FirstOrDefault() : null;
         }
 

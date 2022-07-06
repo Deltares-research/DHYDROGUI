@@ -67,9 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         Log.WarnFormat("Category [{0}] not supported for structures and is skipped.", category.Name);
                     continue;
                 }
-
-                // TODO: Check for potentially other required properties:
-                // Read required 'type' property:
+                
                 var structureTypeProperty =
                     category.Properties.FirstOrDefault(p => p.Name == KnownStructureProperties.Type);
                 if (structureTypeProperty == null)

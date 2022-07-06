@@ -219,10 +219,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             // The where clause is used for optimisation: only embankments whose envelope intersects with the polygon are considered. 
-            // TODO kan weg?? 
-            // The last clause (Area<0.001) is used for channels that are entirely horizontal or vertical (these envelopes with an area
-            // equal to 0.0 cannot intersect any polygon, so have to be taken into account in the FindGridBoundingPolygon routine).
-
             var embankments =
                 GetEmbankments()
                     .Where(b => b.Geometry.Intersects(userPolygon)).Select(f => (Feature2D) f.Clone())
@@ -243,8 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             var closedUserCoordinates = new CoordinateList(coordinates);
             closedUserCoordinates.CloseRing();
-
-            // todo: add check if polygon intersects itself
+            
             return new Polygon(new LinearRing(closedUserCoordinates.ToCoordinateArray()));
             }
 

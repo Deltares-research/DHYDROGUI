@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 if (clonedProperty.PropertyDefinition.DataType == typeof(string))
                 {
                     // string are not cloned correctly (the clone contains a reference to the source string)
-                    // so do it here (todo: check for better solution)
+                    // so do it here
                     clonedProperty.SetValueAsString(String.Copy(clonedProperty.GetValueAsString()));
                 }
                 if (propertyToClear.ToLowerInvariant() == KnownProperties.TrtRou.ToLowerInvariant())

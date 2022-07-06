@@ -289,7 +289,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             for (var i = 0; i < rowCount; ++i)
             {
                 var j = 0;
-                // TODO: Agree on formatting conventions: for times, use min. since reftime
                 WriteLine(string.Join(" ", block.Quantities.Select(q => q.Values[i].PadRight(columnWidths[j++]))).TrimEnd());
             }
         }

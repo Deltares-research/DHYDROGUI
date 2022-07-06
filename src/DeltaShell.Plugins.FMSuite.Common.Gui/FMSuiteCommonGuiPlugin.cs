@@ -136,8 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 
         public override IMenuItem GetContextMenu(object sender, object data)
         {
-            //TODO: method is a mess clean up.
-
             IFunction function;
             bool activeViewIsMapView =
                 Gui != null && Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Count() == 1;

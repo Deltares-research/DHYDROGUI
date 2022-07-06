@@ -329,8 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 }
             }
         }
-
-        //TODO: move the vertical profile, depends upon support point.
+        
         public VerticalInterpolationType VerticalInterpolationType
         {
             get { return verticalInterpolationType; }

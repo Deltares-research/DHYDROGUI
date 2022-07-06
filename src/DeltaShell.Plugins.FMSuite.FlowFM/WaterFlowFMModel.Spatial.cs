@@ -615,7 +615,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (vertexCoverage!=null && vertexCoverage.Name == WaterFlowFMModelDefinition.BathymetryDataItemName &&
                 !vertexCoverage.GetValues<double>().Any())
             {
-                // TODO: this method does not take bathymetry as an UnstructuredGridCellCoverage into account! (DELFT3DFM-1355)
                 vertexCoverage.LoadBathymetry(newGrid, bathymetryNoDataValue);
                 return;
             }
@@ -918,7 +917,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var vertexCoverage = coverage as UnstructuredGridVertexCoverage;
             if (vertexCoverage != null && vertexCoverage.Name == WaterFlowFMModelDefinition.BathymetryDataItemName)
             {
-                // TODO: this method does not take bathymetry as an UnstructuredGridCellCoverage into account! (DELFT3DFM-1355)
                 if (!vertexCoverage.GetValues<double>().Any())
                 {
                     vertexCoverage.LoadBathymetry(coverage.Grid, bathymetryNoDataValue);

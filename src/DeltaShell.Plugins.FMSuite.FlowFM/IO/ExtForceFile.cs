@@ -22,7 +22,6 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    //TODO: this has become a complete mess (The helper class too). Refactor.
     public class ExtForceFile : FMSuiteFileBase
     {
         private readonly ILog log = LogManager.GetLogger(typeof (ExtForceFile));

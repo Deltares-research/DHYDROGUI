@@ -70,7 +70,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 modelDefinition.UseMorphologySediment = true;
             }
-            // TODO: Remove this please!
             // This is a bloody awful HACK, because we do not want to adapt the MapFormat to the kernels
             modelDefinition.SetMapFormatPropertyValue();
         }

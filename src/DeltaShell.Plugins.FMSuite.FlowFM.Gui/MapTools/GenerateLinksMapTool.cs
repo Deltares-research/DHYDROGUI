@@ -221,8 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             var closedUserCoordinates = new CoordinateList(coordinates);
             closedUserCoordinates.CloseRing();
-
-            // todo: add check if polygon intersects itself
+            
             return new Polygon(new LinearRing(closedUserCoordinates.ToCoordinateArray()));
         }
 

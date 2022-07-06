@@ -38,7 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var lineFields = line.Split(',');
                     if (lineFields.Length < NumberOfColumnsBeforeDescription)
                     {
-                        // todo: report
                         continue;
                     }
 

@@ -49,8 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public IList<string> Values;
     }
-
-    // TODO: this class is a mess, needs refactoring
+    
     public class BcFileFlowBoundaryDataBuilder
     {
         public const string ConcentrationAtBound = "sedfracbnd";
@@ -231,8 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 InsertBoundaryData(bcSets, bcBlockData, thatcherHarlemanTimeLag);
             }
         }
-
-        // TODO: This method needs to be split up and re-worked - over 400 lines ffs! 
+        
         public bool InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets, BcBlockData data, string thatcherHarlemanTimeLag = null)
         {
             if (data == null)
@@ -560,8 +558,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             boundaryCondition.PointDepthLayerDefinitions[verticalProfileIndex] =
                                 verticalProfileDefinition;
                         }
-
-                        // TODO: move this code to vertical profile (see TOOLS-21777)
+                        
                         boundaryCondition.VerticalInterpolationType = verticalInterpolationType;
 
                         var existingData = boundaryCondition.GetDataAtPoint(dataPoint);
@@ -894,7 +891,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             if (data.TimeInterpolationType.ToLower().Contains("block"))
             {
-                //TODO: implement this correctly
                 interpolationType = InterpolationType.Constant;
                 return true;
             }

@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         void IFileBased.Delete()
         {
-            // todo: delete mdu & stuff
+            //Currently no action, implementation will be based on decision of issue [FM1D2D-2112].
         }
 
         private void ReadFromMdu(string mduFilePath, ImportProgressChangedDelegate progressChanged = null)

@@ -8,9 +8,6 @@ using BasicModelInterface;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
-    /// <summary>
-    /// TODO: We use this class only until the BMI package (i.e. the dynamic BasicModelInterfaceLibrary) is working properly...
-    /// </summary>
     public class FlexibleMeshBasicModelInterface : IBasicModelInterface
     {
         private string originalCurrentDirectory;

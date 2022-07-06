@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         }
 
         [PropertyOrder(3)]
-        [DynamicReadOnly] // TODO: make this property invisible if readonly
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Model1DLateralDataProperties_InterpolationTypeQt_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Model1DLateralDataProperties_InterpolationTypeQt_Description")]
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             }
         }
 
-        [PropertyOrder(4)] // TODO: make this property invisible if not relevant
+        [PropertyOrder(4)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Model1DBoundaryNodeDataProperties_InterpolationTypeQh_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description")]
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         }
 
         [PropertyOrder(5)]
-        [DynamicReadOnly] // TODO: make this property invisible if readonly
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Model1DLateralDataProperties_ExtrapolationTypeQt_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Model1DLateralDataProperties_ExtrapolationTypeQt_Description")]
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             set { data.Data.Arguments[0].ExtrapolationType = value; }
         }
 
-        [PropertyOrder(6)] // TODO: make this property invisible if not relevant
+        [PropertyOrder(6)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Model1DBoundaryNodeDataProperties_ExtrapolationTypeQh_Description")]

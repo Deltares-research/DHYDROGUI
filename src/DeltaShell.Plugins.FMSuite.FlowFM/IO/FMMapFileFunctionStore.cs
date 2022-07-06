@@ -459,7 +459,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private UnstructuredGridCoverage CreateUnstructuredGridCoverage(string location, string coverageLongName, int number = -1)
         {
-            // TODO : Suffix should not be the sediment index but the actual name of the sediment - this is not currently available in the map file
             string suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
             string coverageName = coverageLongName + suffix;
             switch (location)
@@ -651,7 +650,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             for (var index = 0; index < numberOfSedLayers; index++)
             {
-                // TODO : Replace index with values (i.e. sediment names) - this is not currently available in the map file
                 var sedCoverage = CreateUnstructuredGridCoverage(data.Location, data.CoverageLongName, index);
                 if (sedCoverage != null)
                 {

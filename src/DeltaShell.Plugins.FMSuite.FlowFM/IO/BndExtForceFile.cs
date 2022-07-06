@@ -369,8 +369,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        // TODO: migrate sources & sinks to new format
-
         public IList<DelftIniCategory> WriteBndExtForceFileSubFiles(string modelDefinitionModelName, IList<BoundaryConditionSet> boundaryConditionSets, DateTime refDate)
         {
             WritePolyLines(boundaryConditionSets);
