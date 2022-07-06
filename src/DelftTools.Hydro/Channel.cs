@@ -102,8 +102,7 @@ namespace DelftTools.Hydro
         public override object Clone()
         {
             Channel clone = (Channel) base.Clone();
-
-            // TODO: remove structures from BranchFeatures if they are part of CompositeBranchStructure, clone child structures in CompositeBranchStructure and then remove this foreach!
+            
             foreach (var compositeBranchStructure in Structures.OfType<ICompositeBranchStructure>())
             {
                 var compositeBranchStructureClone = (ICompositeBranchStructure)clone.BranchFeatures[BranchFeatures.IndexOf(compositeBranchStructure)];

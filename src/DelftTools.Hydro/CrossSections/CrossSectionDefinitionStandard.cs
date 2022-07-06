@@ -116,7 +116,6 @@ namespace DelftTools.Hydro.CrossSections
             {
                 case CrossSectionStandardShapeType.Rectangle:
                     return CrossSectionStandardShapeRectangle.CreateDefault();
-                // TODO: Re-enable once Enclosed branches are supported
                 case CrossSectionStandardShapeType.Circle: 
                     return CrossSectionStandardShapeCircle.CreateDefault();
                 case CrossSectionStandardShapeType.Arch:
@@ -125,7 +124,6 @@ namespace DelftTools.Hydro.CrossSections
                     return CrossSectionStandardShapeUShape.CreateDefault();
                 case CrossSectionStandardShapeType.Cunette:
                     return CrossSectionStandardShapeCunette.CreateDefault();
-                // TODO: Re-enable once Enclosed branches are supported
                 case CrossSectionStandardShapeType.Egg: 
                     return CrossSectionStandardShapeEgg.CreateDefault();
                 case CrossSectionStandardShapeType.InvertedEgg: 

@@ -13,7 +13,6 @@ namespace DelftTools.Hydro
     [Entity(FireOnCollectionChange=false)]
     public abstract class BranchStructure : BranchFeatureHydroObject, IStructure1D
     {
-        // TODO: check if we need composite structure here, maybe better via Owner, so that child structures will exist only in composite structures
         private ICompositeBranchStructure parentStructure;
 
         [Aggregation]
@@ -59,8 +58,7 @@ namespace DelftTools.Hydro
             OffsetY = ((BranchStructure)source).OffsetY;
             LongName = ((BranchStructure)source).LongName;
         }
-
-        //TODO: get this out..this is not something a branchstructure has to do.
+        
         public static void AddStructureToNetwork(IBranchFeature branchFeature, IBranch branch)
         {
             branchFeature.Branch = branch;

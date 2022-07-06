@@ -28,8 +28,7 @@ namespace DelftTools.Hydro
             Links = new EventedList<HydroLink>();
             
             CatchmentTypes = new EventedList<CatchmentType>();
-
-            // TODO: inject by a specific model plugin and not here!
+            
             CatchmentTypes.Add((CatchmentType)CatchmentType.Paved.Clone());
             CatchmentTypes.Add((CatchmentType)CatchmentType.Unpaved.Clone());
             CatchmentTypes.Add((CatchmentType)CatchmentType.GreenHouse.Clone());

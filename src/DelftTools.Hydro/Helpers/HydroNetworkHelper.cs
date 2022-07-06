@@ -21,9 +21,7 @@ namespace DelftTools.Hydro.Helpers
 {
     /// <summary>
     /// Utility class to work with networks
-    /// todo: move calculation grid generation to DiscretizationHelper?
     /// </summary>
-    // TODO: split into NetworkHelper and HydroNetworkHelper?
     public class HydroNetworkHelper
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
@@ -253,7 +251,6 @@ namespace DelftTools.Hydro.Helpers
         /// <summary>
         /// Generates calculation grid cells for a branch, When the grid is generated at cross sections and at fixed 
         /// length each subbranch between two cross sections processed separately to prevent too small grid cells.
-        /// todo add support for structures etc.
         /// </summary>
         /// <param name="discretization"></param>
         /// <param name="branch"></param>

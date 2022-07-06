@@ -22,9 +22,6 @@ using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DelftTools.Hydro.Roughness
 {
-    // TODO : rename to CrossSectionSectionTypeRoughness
-    // TODO : make sure all instances are UNSUBSCRIBED from network when model is removed!
-    // TODO : move out the action handlers so this class is less burdened (too big already)
     [Entity]
     public class RoughnessSection : Unique<long>, ICloneable, ICopyFrom, INameable, IItemContainer, IEditableObject
     {
@@ -156,7 +153,6 @@ namespace DelftTools.Hydro.Roughness
         }
 
         // flags are required since RoughnessFunctionOfQ and RoughnessFunctionOfH mapped to properties which require that network is already loaded, this is not the case with lazy
-        // TODO: the whole class should be refactored, defining roughness should not be that complicated
         private IDictionary<IBranch, IFunction> FunctionOfQPerBranch
         {
             get
@@ -820,7 +816,6 @@ namespace DelftTools.Hydro.Roughness
             var coverageLocations = RoughnessNetworkCoverage.Locations.Values;
             //replace is a bit special because we don't know WHAT got replaced. so we do a look of of any missing value 
             //and assume that is the one that got replace
-            //TODO : fix for F(H)
 
             foreach (var branch in FunctionOfQPerBranch.Keys)
             {

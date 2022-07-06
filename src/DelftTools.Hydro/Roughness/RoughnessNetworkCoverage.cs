@@ -17,10 +17,6 @@ namespace DelftTools.Hydro.Roughness
     /// <summary>
     /// Custom network coverage to store roughness and roughness type
     /// extra limitation is only roughness type supported per branch
-    /// 
-    /// TODO, HACK: what a mess!
-    /// 
-    /// TODO ; Extra functionality is added for second component evaluation. This should be moved NetworkCoverage level (but big change)
     /// </summary>
     public class RoughnessNetworkCoverage : NetworkCoverage
     {

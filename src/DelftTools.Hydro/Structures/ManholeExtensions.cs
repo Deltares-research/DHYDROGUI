@@ -71,8 +71,7 @@ namespace DelftTools.Hydro.Structures
         /// An <see cref="IEnumerable{IPipe}"/> with the outgoing pipes.
         /// </returns>
         public static IEnumerable<IPipe> OutgoingPipes(this IManhole manhole) => manhole.OutgoingBranches.OfType<IPipe>();
-
-        // TODO: Move to a good location
+        
         public static bool IndexInRange(this ICollection shapes, int index) => index >= 0 && index < shapes.Count;
     }
 }

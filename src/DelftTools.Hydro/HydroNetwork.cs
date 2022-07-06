@@ -252,7 +252,7 @@ namespace DelftTools.Hydro
 
                 // always use filter to Interface or multiple data editor will fail on Cast<T>; reason unclear; too much smart linqing
 
-                Structures = BranchFeatures.OfType<IStructure1D>(); // TODO: join with node features (manholes)
+                Structures = BranchFeatures.OfType<IStructure1D>();
                 CompositeBranchStructures = BranchFeatures.OfType<ICompositeBranchStructure>();
 
                 CrossSections = BranchFeatures.OfType<ICrossSection>();

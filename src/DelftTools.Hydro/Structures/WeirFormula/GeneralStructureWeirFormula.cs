@@ -6,7 +6,6 @@ using DelftTools.Utils.Data;
 
 namespace DelftTools.Hydro.Structures.WeirFormula
 {
-    //TODO : change the names to match the sobek instead of the VIEW..
     [Entity(FireOnCollectionChange=false)]
     public class GeneralStructureWeirFormula : Unique<long>, IGatedWeirFormula
     {

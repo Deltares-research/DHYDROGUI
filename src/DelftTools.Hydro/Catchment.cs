@@ -127,7 +127,7 @@ namespace DelftTools.Hydro
                     Basin = Basin,
                     Description = Description,
                     Links = new EventedList<HydroLink>(Links),
-                    CatchmentType = CatchmentType // hopefully it is static for now, TODO: extend when dynamic catchment types are added
+                    CatchmentType = CatchmentType
                 };
             
             return clone;

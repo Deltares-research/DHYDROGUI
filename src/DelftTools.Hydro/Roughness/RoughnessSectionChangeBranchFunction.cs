@@ -5,7 +5,6 @@ namespace DelftTools.Hydro.Roughness
 {
     public class RoughnessSectionChangeBranchFunction : EditActionBase
     {
-        //TODO: Changing branch function clears all values in a non-undoable way. Should we cache it in the action so that we can revert the data-loss?
         public RoughnessSectionChangeBranchFunction(IBranch branch, RoughnessSection roughnessSection, RoughnessFunction from, RoughnessFunction to)
             : base("Branch roughness dependency type changed")
         {

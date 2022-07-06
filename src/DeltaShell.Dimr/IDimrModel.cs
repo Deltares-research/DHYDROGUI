@@ -73,8 +73,7 @@ namespace DeltaShell.Dimr
         /// Gets or sets the status of the <see cref="IDimrModel"/>.
         /// </summary>
         new ActivityStatus Status { get; set; }
-
-        // TODO: temporary, need to remove when models can no longer run without Dimr
+        
         bool RunsInIntegratedModel { get; set; }
 
         /// <summary>

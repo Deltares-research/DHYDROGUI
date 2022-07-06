@@ -14,7 +14,6 @@ namespace DelftTools.Hydro.Structures
     ///<summary>
     /// <see cref="Pump"/> Implements a 1D pump.
     /// Both the Sobek Pump (type 9) and River Pump (type 3) are implemented by this class.
-    /// todo: add support for reduction table = combine with implementation triggers
     ///</summary>
     [Entity(FireOnCollectionChange=false)]
     [TypeConverter(typeof(ExpandableObjectConverter))]

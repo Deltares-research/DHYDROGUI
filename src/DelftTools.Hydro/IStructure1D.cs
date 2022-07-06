@@ -6,7 +6,7 @@ namespace DelftTools.Hydro
     /// <summary>
     /// Hydro structure.
     /// </summary>
-    public interface IStructure1D : IStructure, IHydroNetworkFeature, IBranchFeature, IPointFeature //TODO : get this inheritance out
+    public interface IStructure1D : IStructure, IHydroNetworkFeature, IBranchFeature, IPointFeature
     {
         ICompositeBranchStructure ParentStructure { get; set; }
 

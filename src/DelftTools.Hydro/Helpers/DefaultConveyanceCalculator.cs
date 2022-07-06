@@ -26,7 +26,6 @@ namespace DelftTools.Hydro.Helpers
             // set an extra 'top' on the polygon
             // Since we will only use intersections at valid z values these will be filtered out.
             // extra value at start
-            // TODO: isn't it just a requirement from NTS that polygons must be closed?
             for (var i = 0; i < zValuesOrdered.Length; i++)
             {
                 vertices.Add(new Coordinate(y[i], zValuesOrdered[i]));
@@ -88,7 +87,7 @@ namespace DelftTools.Hydro.Helpers
                     // use Manning's equation to compute conveyance
                     conveyance = area * chezy * Math.Sqrt(hydraulicRadius);
                 }
-                storageWidth = width; // TODO: migrate to storage area
+                storageWidth = width;
 
                 // flowArea, flowWidth, perimeter, hydraulicRadius, totalWidth, conveyancePos, conveyanceNeg
                 result[zValuesOrdered[i]] = new[] { conveyance, area,  (width-storageWidth), wettedPerimeter, hydraulicRadius, width, conveyance };

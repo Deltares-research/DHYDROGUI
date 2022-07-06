@@ -38,7 +38,6 @@ namespace DelftTools.Hydro.Structures
         /// <param name="allowTimeVaryingData">Whether to allow time-varying data</param>
         public Weir(string name, bool allowTimeVaryingData = false)
         {
-            // todo: move initialization to demo model only
             WeirFormula = new SimpleWeirFormula
             {
                 CorrectionCoefficient = 1.0

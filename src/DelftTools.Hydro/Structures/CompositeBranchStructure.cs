@@ -47,7 +47,6 @@ namespace DelftTools.Hydro.Structures
         /// All structures in the StructureFeature
         /// </summary>
         /// Do not bubble Property changed event because structures are also member of branchFeatures in branch
-        /// TODO: make it a composition, structures must be only part of the composite structure isn't it?
         [Aggregation]
         public virtual IEventedList<IStructure1D> Structures
         {

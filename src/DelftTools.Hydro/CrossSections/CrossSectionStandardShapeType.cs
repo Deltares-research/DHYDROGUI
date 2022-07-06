@@ -9,12 +9,8 @@
         
         Arch,
 
-/*        AsymetricalTrapzium, TODO: Needs validation resolution*/
-
         Cunette,
-
         
-
         Elliptical,
 
         SteelCunette,

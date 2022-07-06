@@ -100,7 +100,7 @@ namespace DelftTools.Hydro.Structures
             breachLocationY = point.Y;
         }
 
-        #region Implementation of IStructure // TODO: Implement this if necessary (first check if required)
+        #region Implementation of IStructure
 
         public IHydroRegion Region { get; }
         public IEventedList<HydroLink> Links { get; set; }

@@ -281,7 +281,7 @@ namespace DelftTools.Hydro.CrossSections
         }
 
         /// <summary>
-        /// TODO: get this under test. this method is called by HydroNetwork when te names of a CS-type changes. 
+        /// This method is called by HydroNetwork when te names of a CS-type changes. 
         /// For example if main is renamed to mains this should result in removing a section.
         /// </summary>
         public virtual void RemoveInvalidSections()
