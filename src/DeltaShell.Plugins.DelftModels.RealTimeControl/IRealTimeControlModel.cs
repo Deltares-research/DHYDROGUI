@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         ICoordinateSystem CoordinateSystem { get; set; }
 
-        IEnumerable<IModel> ControlledModels { get; } // TODO: rename to ControlledModels once RTC model will not be ICompositeModel
+        IEnumerable<IModel> ControlledModels { get; }
         
         DateTime SaveStateStartTime { get; set; }
         TimeSpan SaveStateTimeStep { get; set; }

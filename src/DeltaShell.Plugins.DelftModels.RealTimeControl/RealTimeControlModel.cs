@@ -587,7 +587,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void OwnerModelsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            //todo: test aggregation of list
             if (!(e.GetRemovedOrAddedItem() is IModel model) || model is RealTimeControlModel)
             {
                 return;

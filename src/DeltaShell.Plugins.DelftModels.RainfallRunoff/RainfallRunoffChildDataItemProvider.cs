@@ -23,13 +23,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public IEnumerable<IDataItem> GetChildDataItems(IFeature location)
         {
             yield break;
-
-            if (!(location is ILateralSource) && !(location is IHydroNode))
-            {
-                yield break;
-            }
-
-            throw new NotImplementedException("todo");
         }
     }
 }

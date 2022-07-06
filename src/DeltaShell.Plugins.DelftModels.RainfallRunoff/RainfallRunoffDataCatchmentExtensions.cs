@@ -32,7 +32,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         internal static bool IsModelDataCompatible(this Catchment catchment, CatchmentModelData modelData)
         {
-            //todo: implement this nicely, for now: 1-on-1 matches only
             var desiredModelData = CreateDefaultModelData(catchment);
             if (desiredModelData == null)
             {

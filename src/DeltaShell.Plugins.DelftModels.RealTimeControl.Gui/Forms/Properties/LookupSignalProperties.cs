@@ -85,12 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
                 data.Function = value;
             }
         }
-
-        /// <summary>
-        /// Update the column name for better user readability
-        /// add an extra [i] to avoid duplicate names: crestlevel may set crestlevel
-        /// todo refactor UpdateFunctionArgumentName and UpdateFunctionComponentName
-        /// </summary>
+        
         private void UpdateFunctionArgumentName()
         {
             if (data.Inputs.Count == 1)

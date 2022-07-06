@@ -186,8 +186,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             flowModel = null;
             rtcModel = null;
-
-            // TODO: Make this work upon abstractions
+            
             foreach (var model in Models)
             {
                 if (model.GetEntityType().Name.Equals("WaterFlowFMModel"))

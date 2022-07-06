@@ -93,9 +93,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         protected override string ReadReferenceDateFromFile(string timeVariableName)
         {
-            // Note: This override is only here while the RTC kernel does not create a file with a valid reference date!
-            // TODO: this whole override should be removed once the RTC kernel correctly writes a reference date 
-            // TODO: also consider updating the test-data with the new valid file!
             var result = new DateTime(1970, 1, 1);
             return result.ToString(DateTimeFormatInfo.InvariantInfo.FullDateTimePattern, CultureInfo.InvariantCulture);
         }

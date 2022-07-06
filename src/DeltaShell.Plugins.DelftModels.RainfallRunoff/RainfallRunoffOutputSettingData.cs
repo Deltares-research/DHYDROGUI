@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 
                 {RainfallRunoffModelParameterNames.UnpavedGroundwaterLevel,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Groundw.Level   [m]"} },
                 {RainfallRunoffModelParameterNames.UnpavedGwOutflow ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Groundw.outfl.[m3/s]"} },
-                {RainfallRunoffModelParameterNames.UnpavedStorageCoeff ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Storage coeff."} }, // TODO: Not in His file
+                {RainfallRunoffModelParameterNames.UnpavedStorageCoeff ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Storage coeff."} },
                 {RainfallRunoffModelParameterNames.UnpavedSurfaceRunoff,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Surf. Runoff  [m3/s]"} },
                 {RainfallRunoffModelParameterNames.UnpavedRainfall ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Rainfall     [m3/s]"} },
                 {RainfallRunoffModelParameterNames.UnpavedEvaporationActual ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Actual Evap. [m3/s]"} },
@@ -276,8 +276,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 {RainfallRunoffModelParameterNames.UnpavedStorageLandm3 ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Storage Land   [m3]"} },
                 {RainfallRunoffModelParameterNames.UnpavedGroundwaterLevelThreshold,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "GW>Threshold [hour]"} },
                 {RainfallRunoffModelParameterNames.UnpavedGroundwaterLevelSurface ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "GWLevel-Surface[m]"} },
-                {RainfallRunoffModelParameterNames.UnpavedUnsaturatedZone ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Unsat.Zone    [mm]"} }, // TODO: Not in His file
-                {RainfallRunoffModelParameterNames.UnpavedUnsaturatedZoneVolume ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Vol.Unsat.Zone[m3]"} }, // TODO: Not in His file
+                {RainfallRunoffModelParameterNames.UnpavedUnsaturatedZone ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Unsat.Zone    [mm]"} },
+                {RainfallRunoffModelParameterNames.UnpavedUnsaturatedZoneVolume ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Vol.Unsat.Zone[m3]"} },
 
                 #endregion
 
@@ -292,8 +292,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 #endregion
 
                 #region OpenWater
-                
-                // TODO: SOBEK3-784
 
                 {RainfallRunoffModelParameterNames.OpenWaterRainfall,new HisFileParameter {HisFileName = OpenWaterHisFileName, ParameterName = "Rainfall    [m3/s]"} },
                 {RainfallRunoffModelParameterNames.OpenWaterEvaporation,new HisFileParameter {HisFileName = OpenWaterHisFileName, ParameterName = "Evaporation [m3/s]"} },
@@ -497,7 +495,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             { engineParameters = value; }
         }
         
-        public virtual TimeSpan OutputTimeStep { get; set; } //todo: move this to parameter in model
+        public virtual TimeSpan OutputTimeStep { get; set; }
 
         [NoNotifyPropertyChange]
         public virtual EngineParameter BoundaryDischarge

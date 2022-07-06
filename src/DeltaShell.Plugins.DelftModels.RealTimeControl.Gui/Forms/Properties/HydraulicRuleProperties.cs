@@ -51,12 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             get => (InterpolationHydraulicType) data.Interpolation;
             set => data.Interpolation = (InterpolationType) value;
         }
-
-        /// <summary>
-        /// Update the column name for better user readability
-        /// add an extra [i] to avoid dupliclate names: crestlevel may set crestlevel
-        /// todo refactor UpdateFunctionArgumentName and UpdateFunctionComponentName
-        /// </summary>
+        
         private void UpdateFunctionArgumentName()
         {
             IInput ruleInput = data.Inputs.FirstOrDefault();
@@ -82,11 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
                 target.Name = value;
             }
         }
-
-        /// <summary>
-        /// Update the column name for better user readability
-        /// add an extra [o] to avoid dupliclate names: crestlevel may set crestlevel
-        /// </summary>
+        
         private void UpdateFunctionComponentName()
         {
             if (data.Outputs.Count == 1)

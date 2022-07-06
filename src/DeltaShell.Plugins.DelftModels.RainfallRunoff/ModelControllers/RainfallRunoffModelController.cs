@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
                     //grab from flow (only if linked simultaneous)
                     if (currentTime == model.StartTime) //flow hasn't ran yet
-                        return 0.0; //todo: get some more accurate value here?
+                        return 0.0;
                     return model.InputWaterLevel.Evaluate(currentTime, catchment);
                 }
             }

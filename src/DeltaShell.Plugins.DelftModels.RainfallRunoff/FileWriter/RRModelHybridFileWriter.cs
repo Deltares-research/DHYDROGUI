@@ -201,8 +201,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             SwitchToInvariantCulture();
 
-            //todo: outputtimestep
-            
             iniFile += $"TimestepSize={timeStep}\r\n" + 
                        $"StartTime='{startDateTime.Year:00}/{startDateTime.Month:00}/{startDateTime.Day:00};{startDateTime.Hour:00}:{startDateTime.Minute:00}:{startDateTime.Second:00}'\r\n" + 
                        $"EndTime='{endDateTime.Year:00}/{endDateTime.Month:00}/{endDateTime.Day:00};{endDateTime.Hour:00}:{endDateTime.Minute:00}:{endDateTime.Second:00}'\r\n";
@@ -287,36 +285,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             
             openWaterData.Add($"OWRR id '{id}' ar {area} ms '{meteoId}'{GetAreaAdjustmentFactorString(areaAdjustmentFactor)} owrr");
 
-            /*
-            TODO: Openwater catchments are not fully / incorrectly implemented, see issue: SOBEK3-784
-            TODO: Openwater seepage definitions should also be implemented (see other catchments for examples)
-            TODO: Openwater tables target levels should also be implemented
-
-            Implementation of openWaterData.Add(...), from Documentation: 
-             
-                OPWA id '1' ml 0.0 rl 0.0 al 2 na 6 ar 10000. 110000. 120000. 130000 14000. 150000.
-                lv -1. -0.8 -0.6 -0.4 -0.2 0. bl -2.0 tl 0 -0.9 sp 'seep_1' ms 'meteostat1' is 75.0 opwa
-             
-            With:
-               + id  -   node identification
-               + al  -   area-level relation (only used by model edit) 1= constantarea, 2=interpolation, 3=lineair
-               + na  -   number of area/level combinations. Default 6. NOT READ.
-               + ar  -   6 values of area (in m2)
-               + lv  -   6 corresponding values of level (m NAP) in increasing order
-               + ml  -   maximum allowable level (m NAP)
-               + rl  -   reference level (m NAP)
-               + bl  -   bottom level (m NAP) Default 1 meter below lowest value from area-level relation.
-               + sp  -   seepage definition.
-               + ms  -   identification of the meteostation
-               + is  -   initial salt concentration (mg/l)
-               + tl  -   target level; constant or reference to a table.
-                         tl 0 -0.9 = initial groundwater level as a constant, with value -0.9 m NAP.
-                         tl 1 'Tlv-Table' = target open water levels as a table, with table id Tlv-Table.      
-
-            TODO: Many of these properties do not yet exist for OpenWaterCatchments in DeltaShell
-
-            */
-
             RestoreCulture();
 
             return openWaterData.Count;
@@ -335,8 +303,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var op_id = id + "_op";
 
             sacramentoData.Add($"SACR id '{id}' ar {area} ms '{meteoId}' ca '{ca_id}' uh '{uh_id}' op '{op_id}' sacr");
-
-            // TODO: add checks on arrays
 
             sacramentoData.Add(
                 $"OPAR id '{op_id}' zperc {parameters[0]} rexp {parameters[1]} pfree {parameters[2]} rserv {parameters[3]} pctim {parameters[4]} adimp {parameters[5]} sarva {parameters[6]} side {parameters[7]} ssout {parameters[8]} pm {parameters[9]} pt1 {parameters[10]} pt2 {parameters[11]} opar");
@@ -367,8 +333,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             sacramentoData.Add(
                 $"HBV id '{id}' ar {area} sl {surfaceLevel} snow '{snow_id}' soil '{soil_id}' flow '{flow_id}' hini '{hini_id}' ts '{tempId}' ms '{meteoId}' {GetAreaAdjustmentFactorString(areaAdjustmentFactor)} hbv");
-
-            // TODO: add checks on arrays
 
             sacramentoData.Add($"SNOW id '{snow_id}' nm '{snow_id}' mc {snowParameters[0]} sft {snowParameters[1]} smt {snowParameters[2]} tac {snowParameters[3]} fe {snowParameters[4]} fwf {snowParameters[5]} snow");
 
@@ -484,7 +448,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                 case NodeType.Hbv:
                     return "'19' nt 63 ObID '3B_HBV'";
             }
-            throw new NotImplementedException("Unknown node type: todo");
+            throw new NotSupportedException("Unknown node type");
+
         }
 
         public void SetPavedVariablePumpCapacities(int iref, int[] dates, int[] times, double[] mixedCapacity, double[] dwfCapacity)

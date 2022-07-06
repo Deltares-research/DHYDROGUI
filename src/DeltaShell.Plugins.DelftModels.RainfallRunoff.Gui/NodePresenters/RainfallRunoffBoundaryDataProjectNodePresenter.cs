@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
     {
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, RainfallRunoffBoundaryData nodeData)
         {
-            //todo?
+            
         }
     }
 }

@@ -38,14 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                 return;
             }
 
-            if (runoffs.Count == 0)
-            {
-                // TODO: check if this validation still is correct after the fix for FM1D2D-1629
-                // issues.Add(new ValidationIssue(conceptData.Catchment, ValidationSeverity.Error,
-                //                                string.Format("No runoff target has been defined (concept: {0}); an implicit boundary will be used.",conceptData.GetType().Name),
-                //                                conceptData.Catchment.Basin));
-            }
-            else if (runoff != null && !RainfallRunoffValidationHelper.IsConsideredAsBoundary(runoff.Target))
+            if (runoff != null && !RainfallRunoffValidationHelper.IsConsideredAsBoundary(runoff.Target))
             {
                 issues.Add(new ValidationIssue(conceptData.Catchment, ValidationSeverity.Error,
                                                string.Format(

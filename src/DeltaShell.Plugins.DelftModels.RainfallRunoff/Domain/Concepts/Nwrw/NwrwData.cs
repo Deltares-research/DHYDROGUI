@@ -72,8 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 catchment.Name = n;
                 return catchment;
             }).ToArray();
-
-            //todo disable eventing add catchmentData here
+            
             rrModel.Basin.Catchments.AddRange(catchments);
 
             var nwrwDataLookup = rrModel.GetAllModelData()

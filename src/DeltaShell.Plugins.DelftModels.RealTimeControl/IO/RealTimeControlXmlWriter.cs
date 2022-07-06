@@ -490,7 +490,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         ///         <enumeration value="Discharge"/>
         ///     </restriction>
         /// </simpleType>
-        /// todo: quantityId is enum this is blocker for rtc / waterflow integration
         /// </summary>
         /// <param name="timeDependentModel"></param>
         /// <param name="root"></param>

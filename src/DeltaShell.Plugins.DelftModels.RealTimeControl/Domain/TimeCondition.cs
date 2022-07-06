@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override string GetDescription()
         {
-            return ""; //todo: show compact notion of time range?
+            return "";
         }
 
         public override object Clone()

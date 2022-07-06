@@ -8,8 +8,6 @@ using DeltaShell.Plugins.CommonTools.Gui.Forms;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
 {
-    //todo: move this class to framework if more people want to use it
-
     public class TextDocumentPropertyGridEditor : UITypeEditor
     {
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)

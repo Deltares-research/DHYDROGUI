@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    public class Record : IXml
+    public class Record
     {
         public Record()
         {

@@ -995,7 +995,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 return false;
 
             var simtaneousActivities = owner.GetActivitiesRunningSimultaneous(this);
-            return simtaneousActivities.Any(); //todo?
+            return simtaneousActivities.Any();
         }
         #region Implementation of IDimrModel
 

@@ -54,8 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
             yield return model.GetDataItemByValue(model.Evaporation);
             yield return model.GetDataItemByValue(model.Temperature);
         }
-
-        //todo: split this
+        
         private IEnumerable GetInitialConditions(RainfallRunoffModel model)
         {
             yield return
