@@ -19,10 +19,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap add {
+        public static System.Drawing.Bitmap add {
             get {
                 object obj = ResourceManager.GetObject("add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow_return {
+        public static System.Drawing.Bitmap arrow_return {
             get {
                 object obj = ResourceManager.GetObject("arrow_return", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -83,7 +83,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Evaporation {
+        public static System.Drawing.Bitmap Delete {
+            get {
+                object obj = ResourceManager.GetObject("Delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Evaporation {
             get {
                 object obj = ResourceManager.GetObject("Evaporation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -93,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap generate_data {
+        public static System.Drawing.Bitmap generate_data {
             get {
                 object obj = ResourceManager.GetObject("generate_data", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -103,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap greenhouse {
+        public static System.Drawing.Bitmap greenhouse {
             get {
                 object obj = ResourceManager.GetObject("greenhouse", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -113,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap greenhouse_disabled {
+        public static System.Drawing.Bitmap greenhouse_disabled {
             get {
                 object obj = ResourceManager.GetObject("greenhouse_disabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -123,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap hbv {
+        public static System.Drawing.Bitmap hbv {
             get {
                 object obj = ResourceManager.GetObject("hbv", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -131,9 +141,28 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Converting from {0} {1} back to a {2} is not supported..
+        /// </summary>
+        public static string MeteoDataDistributionTypeConverter_ConvertBack_Converting_from__0___1__back_to_a__2__is_not_supported_ {
+            get {
+                return ResourceManager.GetString("MeteoDataDistributionTypeConverter_ConvertBack_Converting_from__0___1__back_to_a_" +
+                        "_2__is_not_supported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error: no time series found.
+        /// </summary>
+        public static string MeteoEditorViewModel_OnGenerateTimeSeries_Unknown_error__no_time_series_found {
+            get {
+                return ResourceManager.GetString("MeteoEditorViewModel_OnGenerateTimeSeries_Unknown_error__no_time_series_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap NotInUseConcept {
+        public static System.Drawing.Bitmap NotInUseConcept {
             get {
                 object obj = ResourceManager.GetObject("NotInUseConcept", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -143,7 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap nwrw {
+        public static System.Drawing.Bitmap nwrw {
             get {
                 object obj = ResourceManager.GetObject("nwrw", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -153,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Constant volume [L/day].
         /// </summary>
-        internal static string NwrwDryWeatherFlowDefinitionView_ConstantVolumeColumnCaption {
+        public static string NwrwDryWeatherFlowDefinitionView_ConstantVolumeColumnCaption {
             get {
                 return ResourceManager.GetString("NwrwDryWeatherFlowDefinitionView_ConstantVolumeColumnCaption", resourceCulture);
             }
@@ -162,7 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Daily volume [L/day].
         /// </summary>
-        internal static string NwrwDryWeatherFlowDefinitionView_DailyVolumeColumnCaption {
+        public static string NwrwDryWeatherFlowDefinitionView_DailyVolumeColumnCaption {
             get {
                 return ResourceManager.GetString("NwrwDryWeatherFlowDefinitionView_DailyVolumeColumnCaption", resourceCulture);
             }
@@ -171,7 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap openwater {
+        public static System.Drawing.Bitmap openwater {
             get {
                 object obj = ResourceManager.GetObject("openwater", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -181,7 +210,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap openwater_disabled {
+        public static System.Drawing.Bitmap openwater_disabled {
             get {
                 object obj = ResourceManager.GetObject("openwater_disabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -191,7 +220,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap paved {
+        public static System.Drawing.Bitmap paved {
             get {
                 object obj = ResourceManager.GetObject("paved", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -201,7 +230,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap paved_disabled {
+        public static System.Drawing.Bitmap paved_disabled {
             get {
                 object obj = ResourceManager.GetObject("paved_disabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -211,7 +240,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Precipitation {
+        public static System.Drawing.Bitmap Precipitation {
             get {
                 object obj = ResourceManager.GetObject("Precipitation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -221,7 +250,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Choose Time Step....
         /// </summary>
-        internal static string RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Choose_Time_Step___ {
+        public static string RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Choose_Time_Step___ {
             get {
                 return ResourceManager.GetString("RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Choose_Ti" +
                         "me_Step___", resourceCulture);
@@ -231,7 +260,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use Last Time Step.
         /// </summary>
-        internal static string RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Use_Last_Time_Step {
+        public static string RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Use_Last_Time_Step {
             get {
                 return ResourceManager.GetString("RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Use_Last_" +
                         "Time_Step", resourceCulture);
@@ -241,7 +270,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use Previous Output as Initial Condition.
         /// </summary>
-        internal static string RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Use_Previous_Output_as_Initial_Condition {
+        public static string RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Use_Previous_Output_as_Initial_Condition {
             get {
                 return ResourceManager.GetString("RainfallRunoffModelProjectNodePresenter_CreateInitialConditionsMenuItem_Use_Previ" +
                         "ous_Output_as_Initial_Condition", resourceCulture);
@@ -251,7 +280,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Open Last Working Directory....
         /// </summary>
-        internal static string RainfallRunoffModelProjectNodePresenter_CreateOpenWorkDirMenuItem_Open_Last_Working_Directory___ {
+        public static string RainfallRunoffModelProjectNodePresenter_CreateOpenWorkDirMenuItem_Open_Last_Working_Directory___ {
             get {
                 return ResourceManager.GetString("RainfallRunoffModelProjectNodePresenter_CreateOpenWorkDirMenuItem_Open_Last_Worki" +
                         "ng_Directory___", resourceCulture);
@@ -261,7 +290,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Validate....
         /// </summary>
-        internal static string RainfallRunoffModelProjectNodePresenter_CreateValidationMenuItem_Validate___ {
+        public static string RainfallRunoffModelProjectNodePresenter_CreateValidationMenuItem_Validate___ {
             get {
                 return ResourceManager.GetString("RainfallRunoffModelProjectNodePresenter_CreateValidationMenuItem_Validate___", resourceCulture);
             }
@@ -270,7 +299,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot open working directory.
         /// </summary>
-        internal static string RainfallRunoffModelProjectNodePresenter_WorkingDirClicked_Cannot_open_working_directory {
+        public static string RainfallRunoffModelProjectNodePresenter_WorkingDirClicked_Cannot_open_working_directory {
             get {
                 return ResourceManager.GetString("RainfallRunoffModelProjectNodePresenter_WorkingDirClicked_Cannot_open_working_dir" +
                         "ectory", resourceCulture);
@@ -280,7 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Working directory not created yet. Model must run first..
         /// </summary>
-        internal static string RainfallRunoffModelProjectNodePresenter_WorkingDirClicked_Working_directory_not_created_yet__Model_must_run_first_ {
+        public static string RainfallRunoffModelProjectNodePresenter_WorkingDirClicked_Working_directory_not_created_yet__Model_must_run_first_ {
             get {
                 return ResourceManager.GetString("RainfallRunoffModelProjectNodePresenter_WorkingDirClicked_Working_directory_not_c" +
                         "reated_yet__Model_must_run_first_", resourceCulture);
@@ -288,9 +317,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Meteorological data viewer.
+        /// </summary>
+        public static string RainfallRunoffViewInfoBuilder_BuildViewInfoObjects_Meteorological_data_viewer {
+            get {
+                return ResourceManager.GetString("RainfallRunoffViewInfoBuilder_BuildViewInfoObjects_Meteorological_data_viewer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sacramento {
+        public static System.Drawing.Bitmap sacramento {
             get {
                 object obj = ResourceManager.GetObject("sacramento", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -300,7 +338,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap thermometer {
+        public static System.Drawing.Bitmap thermometer {
             get {
                 object obj = ResourceManager.GetObject("thermometer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -310,7 +348,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap unpaved {
+        public static System.Drawing.Bitmap tube {
+            get {
+                object obj = ResourceManager.GetObject("tube", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap unpaved {
             get {
                 object obj = ResourceManager.GetObject("unpaved", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -320,7 +368,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap unpaved_disabled {
+        public static System.Drawing.Bitmap unpaved_disabled {
             get {
                 object obj = ResourceManager.GetObject("unpaved_disabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -330,7 +378,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap validation {
+        public static System.Drawing.Bitmap validation {
             get {
                 object obj = ResourceManager.GetObject("validation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -340,7 +388,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap workingdirectory {
+        public static System.Drawing.Bitmap warning {
+            get {
+                object obj = ResourceManager.GetObject("warning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap workingdirectory {
             get {
                 object obj = ResourceManager.GetObject("workingdirectory", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));

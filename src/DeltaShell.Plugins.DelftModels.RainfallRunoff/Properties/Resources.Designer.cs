@@ -79,6 +79,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Meteo data distribution DataDistributionType unknown.
+        /// </summary>
+        public static string MeteoData_CreateDataDistributed_Meteo_data_distribution_DataDistributionType_unknown {
+            get {
+                return ResourceManager.GetString("MeteoData_CreateDataDistributed_Meteo_data_distribution_DataDistributionType_unkn" +
+                        "own", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Global.
         /// </summary>
         public static string MeteoDataDistributionType_Global {
@@ -102,6 +112,33 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         public static string MeteoDataDistributionType_Per_Station {
             get {
                 return ResourceManager.GetString("MeteoDataDistributionType_Per_Station", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guideline Sewer systems.
+        /// </summary>
+        public static string MeteoDataSource_GuidelineSewerSystems {
+            get {
+                return ResourceManager.GetString("MeteoDataSource_GuidelineSewerSystems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Long term average.
+        /// </summary>
+        public static string MeteoDataSource_LongTermAverage {
+            get {
+                return ResourceManager.GetString("MeteoDataSource_LongTermAverage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User-defined.
+        /// </summary>
+        public static string MeteoDataSource_UserDefined {
+            get {
+                return ResourceManager.GetString("MeteoDataSource_UserDefined", resourceCulture);
             }
         }
         
@@ -303,6 +340,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         public static string RainfallRunoffOutputFiles_Could_not_delete_file {
             get {
                 return ResourceManager.GetString("RainfallRunoffOutputFiles_Could_not_delete_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not a valid time-dependent function.
+        /// </summary>
+        public static string TimeDependentFunctionSplitter_SplitIntoFunctionsPerArgumentValue_Not_a_valid_time_dependent_function {
+            get {
+                return ResourceManager.GetString("TimeDependentFunctionSplitter_SplitIntoFunctionsPerArgumentValue_Not_a_valid_time" +
+                        "_dependent_function", resourceCulture);
             }
         }
     }

@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1577" IncludeAssets="compile" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1577" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="Mono.Addins" Version="1.3.8" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="log4net" Version="2.0.12">
 			<IncludeAssets>compile</IncludeAssets>
@@ -25,6 +26,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
 
@@ -36,6 +38,10 @@
 		<Reference Include="DelftTools.Controls.Swf">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
 			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Controls.Wpf">
+		  <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+		  <Private>False</Private>
 		</Reference>
 		<Reference Include="DelftTools.Functions">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
@@ -105,5 +111,6 @@
 		<Reference Include="System.Xaml" />
 		<Reference Include="System.Xml" />
 		<Reference Include="WindowsBase" />
+		<Reference Include="WindowsFormsIntegration" />
 	</ItemGroup>
 </Project>

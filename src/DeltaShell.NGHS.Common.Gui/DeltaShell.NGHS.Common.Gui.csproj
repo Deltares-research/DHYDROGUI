@@ -47,6 +47,10 @@
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="DelftTools.Functions">
+		  <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="DelftTools.Shell.Core">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 			<Private>False</Private>
@@ -61,6 +65,10 @@
     </Reference>
     <Reference Include="DelftTools.Utils">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DeltaShell.Plugins.CommonTools.Gui">
+		  <HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">

@@ -4,30 +4,45 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Utils;
+using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
-    public static class TimeDependentFunctionSplitter
+    /// <summary>
+    /// <see cref="TimeDependentFunctionSplitter"/> implements <see cref="ITimeDependentFunctionSplitter"/>
+    /// to split the appropriate <see cref="Domain.Meteo.IMeteoData.Data"/>.
+    /// </summary>
+    public class TimeDependentFunctionSplitter : ITimeDependentFunctionSplitter
     {
-        public static ICollection<IFunction> SplitIntoFunctionsPerArgumentValue(IFunction function)
+        public ICollection<IFunction> SplitIntoFunctionsPerArgumentValue(IFunction function)
         {
-            if (function == null || function.Arguments.Count < 2 || function.Arguments[0].ValueType != typeof(DateTime))
+            Ensure.NotNull(function, nameof(function));
+
+            if (function.Arguments.Count < 2 || function.Arguments[0].ValueType != typeof(DateTime))
             {
-                throw new ArgumentException("Not a valid time dependent function");
+                throw new ArgumentException(Resources.TimeDependentFunctionSplitter_SplitIntoFunctionsPerArgumentValue_Not_a_valid_time_dependent_function);
             }
 
             return function.Arguments[1].Values.OfType<object>().
-                Select(i => ExtractSeriesForArgumentValue(function, i)).
+                Select(i => ExtractSeriesForArgumentValueCore(function, i)).
                 ToList();
         }
 
-        internal static IFunction ExtractSeriesForArgumentValue(IFunction function, object argumentValue)
+        public IFunction ExtractSeriesForArgumentValue(IFunction function, object argumentValue)
         {
-            IFunction func = function.Filter(new IVariableFilter[]
-                {
-                    new VariableValueFilter<object>(function.Arguments[1], argumentValue),
-                    new VariableReduceFilter(function.Arguments[1])
-                });
+            Ensure.NotNull(function, nameof(function));
+            Ensure.NotNull(argumentValue, nameof(argumentValue));
+
+            return ExtractSeriesForArgumentValueCore(function, argumentValue);
+        }
+
+        private static IFunction ExtractSeriesForArgumentValueCore(IFunction function, object argumentValue)
+        {
+
+            IFunction func = function.Filter(
+                new VariableValueFilter<object>(function.Arguments[1], argumentValue), 
+                new VariableReduceFilter(function.Arguments[1]));
 
             switch (argumentValue)
             {

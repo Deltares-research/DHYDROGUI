@@ -153,6 +153,15 @@
   <data name="PavedDataValidation_Cant_link_to_multiple_boundaries" xml:space="preserve">
     <value>A paved node may not be connected downstream to more then 1 boundary.</value>
   </data>
+  <data name="MeteoDataSource_GuidelineSewerSystems" xml:space="preserve">
+    <value>Guideline Sewer systems</value>
+  </data>
+  <data name="MeteoDataSource_LongTermAverage" xml:space="preserve">
+    <value>Long term average</value>
+  </data>
+  <data name="MeteoDataSource_UserDefined" xml:space="preserve">
+    <value>User-defined</value>
+  </data>
   <data name="RainfallRunoffMeteoValidator_Validate_Precipitation" xml:space="preserve">
     <value>Precipitation</value>
   </data>
@@ -197,5 +206,11 @@
   </data>
   <data name="MeteoDataDistributionType_Per_Station" xml:space="preserve">
 	  <value>Meteo stations</value>
+  </data>
+  <data name="MeteoData_CreateDataDistributed_Meteo_data_distribution_DataDistributionType_unknown" xml:space="preserve">
+    <value>Meteo data distribution DataDistributionType unknown</value>
+  </data>
+  <data name="TimeDependentFunctionSplitter_SplitIntoFunctionsPerArgumentValue_Not_a_valid_time_dependent_function" xml:space="preserve">
+    <value>Not a valid time-dependent function</value>
   </data>
 </root>

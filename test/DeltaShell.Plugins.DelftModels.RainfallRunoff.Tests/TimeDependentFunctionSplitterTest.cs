@@ -16,9 +16,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         private Catchment catchment2;
         private Catchment catchment3;
 
+        private TimeDependentFunctionSplitter Splitter { get; set; }
+
         [SetUp]
         public void SetUp()
         {
+            Splitter = new TimeDependentFunctionSplitter();
+
             featureCoverage = new FeatureCoverage("TimeDepFeatCov") { IsTimeDependent = true };
             featureCoverage.Arguments.Add(new Variable<IFeature>("Catchment"));
             featureCoverage.Components.Add(new Variable<double>("Value"));
@@ -49,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         public void ExtractSeries()
         {
-            var timeSeries = TimeDependentFunctionSplitter.ExtractSeriesForArgumentValue(featureCoverage, catchment1);
+            var timeSeries = Splitter.ExtractSeriesForArgumentValue(featureCoverage, catchment1);
             Assert.AreEqual(1, timeSeries.Arguments.Count);
             Assert.AreEqual(typeof (DateTime), timeSeries.Arguments[0].ValueType);
             Assert.AreEqual(4, timeSeries.Components[0].Values.Count);
@@ -57,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         public void SplitIntoFunctions()
         {
-            var seriesPerFeature = TimeDependentFunctionSplitter.SplitIntoFunctionsPerArgumentValue(featureCoverage);
+            var seriesPerFeature = Splitter.SplitIntoFunctionsPerArgumentValue(featureCoverage);
             Assert.AreEqual(3, seriesPerFeature.Count());
 
             foreach (var timeSeries in seriesPerFeature)

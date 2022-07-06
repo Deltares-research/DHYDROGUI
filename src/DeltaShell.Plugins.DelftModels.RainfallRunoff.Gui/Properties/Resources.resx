@@ -205,4 +205,22 @@
   <data name="NwrwDryWeatherFlowDefinitionView_DailyVolumeColumnCaption" xml:space="preserve">
     <value>Daily volume [L/day]</value>
   </data>
+  <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tube" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\paint-tube.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MeteoEditorViewModel_OnGenerateTimeSeries_Unknown_error__no_time_series_found" xml:space="preserve">
+    <value>Unknown error: no time series found</value>
+  </data>
+  <data name="RainfallRunoffViewInfoBuilder_BuildViewInfoObjects_Meteorological_data_viewer" xml:space="preserve">
+    <value>Meteorological data viewer</value>
+  </data>
+  <data name="MeteoDataDistributionTypeConverter_ConvertBack_Converting_from__0___1__back_to_a__2__is_not_supported_" xml:space="preserve">
+    <value>Converting from {0} {1} back to a {2} is not supported.</value>
+  </data>
 </root>

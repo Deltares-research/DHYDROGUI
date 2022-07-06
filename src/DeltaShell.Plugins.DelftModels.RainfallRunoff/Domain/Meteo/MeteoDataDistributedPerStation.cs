@@ -4,16 +4,35 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
+using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 {
+    /// <summary>
+    /// <see cref="MeteoDataDistributedPerStation"/> defines the data of a <see cref="IMeteoData"/>
+    /// where the values are distributed per station.
+    /// </summary>
     [Entity]
-    class MeteoDataDistributedPerStation : Unique<long>, IMeteoDataDistributed
+    internal class MeteoDataDistributedPerStation : Unique<long>, IMeteoDataDistributed
     {
+        private readonly ITimeDependentFunctionSplitter functionSplitter;
         private Function data;
 
-        public MeteoDataDistributedPerStation()
+        /// <summary>
+        /// Construct a new <see cref="MeteoDataDistributedPerStation"/>.
+        /// </summary>
+        /// <param name="functionSplitter">
+        /// The function splitter used to split a <see cref="IFunction"/> in its underlying functions
+        /// per station.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="functionSplitter"/> is <c>null</c>.
+        /// </exception>
+        public MeteoDataDistributedPerStation(ITimeDependentFunctionSplitter functionSplitter)
         {
+            Ensure.NotNull(functionSplitter, nameof(functionSplitter));
+            this.functionSplitter = functionSplitter;
+
             data = new Function("Per station");
 
             data.Arguments.Add(new Variable<DateTime>("Time")
@@ -34,18 +53,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 
         public IFunction Data
         {
-            get { return data; }
-            set { data = value as Function; }
+            get => data;
+            set => data = value as Function;
         }
 
         public IFunction GetTimeSeries(object item)
         {
-           return TimeDependentFunctionSplitter.ExtractSeriesForArgumentValue(Data, item as string);
+           return functionSplitter.ExtractSeriesForArgumentValue(Data, item as string);
         }
 
         public object Clone()
         {
-            return new MeteoDataDistributedPerStation {Data = (IFunction) Data.Clone()};
+            return new MeteoDataDistributedPerStation(functionSplitter) {Data = (IFunction) Data.Clone()};
         }
     }
 }

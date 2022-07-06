@@ -1,15 +1,15 @@
 ﻿using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 {
     [Entity]
-    public class MeteoData : EditableObjectUnique<long>, INameable, ICloneable
+    public class MeteoData : EditableObjectUnique<long>, IMeteoData
     {
         public const string GlobalMeteoName = "Global";
         private static IMeteoDataDistributed CreateDataDistributed(MeteoDataDistributionType meteoDataDistributionType)
@@ -19,11 +19,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
                 case MeteoDataDistributionType.Global:
                     return new MeteoDataDistributedGlobal();
                 case MeteoDataDistributionType.PerFeature:
-                    return new MeteoDataDistributedPerFeature();
+                    return new MeteoDataDistributedPerFeature(new TimeDependentFunctionSplitter());
                 case MeteoDataDistributionType.PerStation:
-                    return new MeteoDataDistributedPerStation();
+                    return new MeteoDataDistributedPerStation(new TimeDependentFunctionSplitter());
                 default:
-                    throw new ArgumentException("Meteo data distribution DataDistributionType unknown");
+                    throw new ArgumentException(Resources.MeteoData_CreateDataDistributed_Meteo_data_distribution_DataDistributionType_unknown);
             }
         }
 

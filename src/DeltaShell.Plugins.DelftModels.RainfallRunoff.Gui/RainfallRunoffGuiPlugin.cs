@@ -19,27 +19,19 @@ using Mono.Addins;
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {
     [Extension(typeof(IPlugin))]
-    public class RainfallRunoffGuiPlugin : GuiPlugin
+    public class RainfallRunoffGuiPlugin : GuiPlugin, IRainfallRunoffGuiPlugin
     {
-        public override string Name
-        {
-            get { return "Rainfall runoff model (UI)"; }
-        }
+        public override string Name => 
+            "Rainfall runoff model (UI)";
 
-        public override string DisplayName
-        {
-            get { return "D-Rainfall Runoff Plugin (UI)"; }
-        }
+        public override string DisplayName => 
+            "D-Rainfall Runoff Plugin (UI)";
 
-        public override string Description
-        {
-            get { return RainfallRunoff.Properties.Resources.RainfallRunoffApplicationPlugin_Description; }
-        }
+        public override string Description => 
+            RainfallRunoff.Properties.Resources.RainfallRunoffApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
-        }
+        public override string Version => 
+            GetType().Assembly.GetName().Version.ToString();
 
         public override string FileFormatVersion => "3.5.0.0";
 
@@ -77,10 +69,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             return RainfallRunoffViewInfoBuilder.BuildViewInfoObjects(this);
         }         
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return new RainfallRunoffMapLayerProvider(); }
-        }
+        public override IMapLayerProvider MapLayerProvider => 
+            new RainfallRunoffMapLayerProvider();
 
         public override IMenuItem GetContextMenu(object sender, object data)
         {
