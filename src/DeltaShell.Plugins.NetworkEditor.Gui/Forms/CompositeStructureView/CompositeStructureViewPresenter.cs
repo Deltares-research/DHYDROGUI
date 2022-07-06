@@ -10,8 +10,6 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 {
-    /// TODO : remove this. too much architecture for the problem at hand.Look at LayerPropertiesEditor/ThemeEditorController for a more nice 
-    /// example of separation of view / controller
     public sealed class CompositeStructureViewPresenter : ICanvasEditor, IDisposable
     {
         private CompositeStructureViewDataController _sideViewDataController;
@@ -143,9 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// <summary>
         /// Selects the object in the contained views of the composite view
         /// </summary>
-        /// <param name="invoker">The object / caller requesting the selection change</param>
         /// <param name="structure">The structure which becomes the new selected object</param>
-        /// TODO: code smell, generic setter (invoker) used in a very specific presenter, make it SetStructure or even set property Setructure in a CompositeStructureView directly
         public void SelectObjectInViews(IStructure1D structure)
         {
             if (View != null)

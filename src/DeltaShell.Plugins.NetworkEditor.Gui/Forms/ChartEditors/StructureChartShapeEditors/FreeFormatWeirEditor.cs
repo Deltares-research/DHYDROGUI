@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         }
 
         ///// <summary>
-        ///// Hack: Updates the internal envelope after a move operation. Todo recreate geometry at end move operation
+        ///// Hack: Updates the internal envelope after a move operation.
         ///// </summary>
         ///// <param name="geometry"></param>
         private static void UpdateEnvelopeInternal(IGeometry geometry)

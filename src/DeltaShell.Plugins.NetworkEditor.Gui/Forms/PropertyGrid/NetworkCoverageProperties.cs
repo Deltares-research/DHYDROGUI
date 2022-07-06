@@ -12,7 +12,6 @@ using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
-    // TODO: why do we have NetworkCoverageProperties in HydroNetworkEditor plugin?
     [ResourcesDisplayName(typeof(Resources), "NetworkCoverageProperties_DisplayName")]
     public class NetworkCoverageProperties : ObjectProperties<INetworkCoverage>
     {

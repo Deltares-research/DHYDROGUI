@@ -3,7 +3,6 @@ using System.Windows.Input;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
-    // TODO: Remove when upgrading to Framework version 1.3
     public class RelayCommand : ICommand
     {
         #region Fields

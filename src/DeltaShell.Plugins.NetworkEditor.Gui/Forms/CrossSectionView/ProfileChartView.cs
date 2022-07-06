@@ -397,7 +397,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             profileSeries.Title = name;
             profileSeries.XValuesDataMember = "X";
             profileSeries.YValuesDataMember = "Y";
-            profileSeries.DataSource = profile.OfType<ICoordinate>().ToList(); /* TODO: ICoordinate should be replaced for Coordinate, check issue SOBEK3-666 */
+            profileSeries.DataSource = profile.OfType<ICoordinate>().ToList();
             profileSeries.PointerColor = lineColor;
             profileSeries.PointerSize = 5;
             profileSeries.Color = lineColor;
@@ -463,7 +463,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             //yz-values, storage and historyTool series
             foreach (var series in ChartView.Chart.Series)
             {
-                var lst = series.DataSource as IEnumerable<ICoordinate>; /* TODO: ICoordinate should be replaced for Coordinate, check issue SOBEK3-666 */
+                var lst = series.DataSource as IEnumerable<ICoordinate>;
                 if (lst != null && lst.Any())
                 {
                     minX = Math.Min(lst.Select(c => c.X).Min(), minX);

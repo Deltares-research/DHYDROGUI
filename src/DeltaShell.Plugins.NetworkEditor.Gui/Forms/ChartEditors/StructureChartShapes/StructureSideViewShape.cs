@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         /// <summary>
         /// Style initialization. Called at constructor. 
-        /// TODO: Make it virtual??
         /// </summary>
         protected abstract void CreateStyles();
 

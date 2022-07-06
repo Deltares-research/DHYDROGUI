@@ -294,8 +294,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         private void btnShowConveyance_Click(object sender, EventArgs e)
         {
             if (getConveyanceCalculators == null) return;
-
-            // TODO: show the user a list with all available conv. calculators instead of selecting the first
+            
             var calculator = getConveyanceCalculators(CrossSection).FirstOrDefault();
             if (calculator == null) return;
 

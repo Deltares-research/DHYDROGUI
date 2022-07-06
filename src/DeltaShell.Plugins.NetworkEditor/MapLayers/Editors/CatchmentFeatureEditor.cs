@@ -39,7 +39,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             }
             catch (Exception)
             {
-                //todo: at some point we want to call CancelEdit, but we need to test that etc
                 editAction.Name += " (failed)";
                 throw;
             }

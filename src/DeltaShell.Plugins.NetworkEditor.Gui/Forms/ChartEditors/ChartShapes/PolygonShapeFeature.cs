@@ -17,7 +17,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public override bool Contains(double x, double y)
         {
-            // todo: fix invalid geometry
             try
             {
                 return Geometry.Contains(GeometryFactory.CreatePoint(x, y));

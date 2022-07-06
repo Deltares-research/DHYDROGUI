@@ -92,7 +92,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         /// <summary>
         /// Gets tracker at position x, y. Internally Trackers are represented as IPoint. For the RectangleSeriesShapeFeature
         /// the Trackers are in fact horizontal/vertical line.
-        /// todo ? change Trackers from IPoint to IGeometry
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>

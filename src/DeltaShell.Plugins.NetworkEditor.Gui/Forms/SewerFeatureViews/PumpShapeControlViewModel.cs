@@ -45,7 +45,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         
         public void Update()
         {
-            // TODO: Sometimes only the pressure or suction side is present, make sure to be able to handle with this.
             SetRanges();
             
             double suctionMid;

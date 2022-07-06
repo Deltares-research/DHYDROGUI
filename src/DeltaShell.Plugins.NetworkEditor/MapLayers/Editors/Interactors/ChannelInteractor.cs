@@ -31,7 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
         {
-            // HACK, TODO: remove this hack, ugly delegate to create related interactors is used in IRelatedFeatureInteractor
             return HydroNetworkFeatureEditor.GetFeatureRelationInteractor(feature);
         }
 
@@ -50,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             base.Delete();
 
-            // delete links to nodes which are deleted due to deleted branch - TODO: this must happen via related feature interactors / rules
+            // delete links to nodes which are deleted due to deleted branch
             if (!Network.Nodes.Contains(sourceNode))
             {
                 sourceNode.Links.ToArray().ForEach(HydroRegion.RemoveLink);

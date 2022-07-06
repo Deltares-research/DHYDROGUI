@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         {
             get
             {
-                // TODO: use better tool lookup algorithm here, assume that multiple networks are edited, lookup for network being edited
                 return MapView.MapControl.GetToolByName(HydroRegionEditorMapTool.AddChannelScribleToolName);
             }
         }

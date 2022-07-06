@@ -45,7 +45,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 {
                     var crossSectionDefinition = ((ICrossSection)branchFeature).Definition;
                     // this is a hack; a cross sections highest or lowest point may not be valid when newly added;
-                    // todo fix in networkeditor
                     double low = crossSectionDefinition.LowestPoint;
                     double high = crossSectionDefinition.HighestPoint;
                     localMinMaxValues.AddRange(new[] {low, high});

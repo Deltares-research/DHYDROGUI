@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                                                        };
 
             tableViewSections.RowSelect = true;
-            tableViewSections.FocusedRowChanged += TableViewSectionsFocusedRowChanged; //todo: use selectedrowchanged (not fired correctly now)
+            tableViewSections.FocusedRowChanged += TableViewSectionsFocusedRowChanged;
         }
 
         void TableViewSectionsFocusedRowChanged(object sender, EventArgs e)
@@ -152,8 +152,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private DelftTools.Utils.Tuple<string, bool> TableViewEditorValidator(TableViewCell arg1, object arg2)
         {
-            //TODO: Evaluate correctness of below code
-
             if (arg1.RowIndex < 0)
             {
                 // we are apparanetly editing a newly added line; The recoprd has been added to the Data collection 

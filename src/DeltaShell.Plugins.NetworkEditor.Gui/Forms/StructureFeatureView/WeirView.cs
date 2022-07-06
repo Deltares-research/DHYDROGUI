@@ -140,9 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             ((INotifyPropertyChanged)data).PropertyChanged -= WeirPropertyChanged;
         }
-
-        //TODO: get this in a weirviewcontroller? has pro's (Testabilility) and cons (view gets more complex,more players involved)
-        //if view gets too complex move towards controller.
+        
         private void WeirPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (handlingPropertyChanged) return;

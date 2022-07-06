@@ -182,7 +182,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             this.crossSectionSectionTypes = crossSectionSectionTypes;
 
             Subscribe();
-            //TODO: react to changes in the list
             UpdateViewModelFromCrossSection();
         }
         

@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             {
                 var channel = Channel.CreateDefault(network);
 
-                // HACK: add geometry manually, TODO: probably it should happen automatically in topology rule, and also for nodes
+                // HACK: add geometry manually
                 channel.Geometry =
                     new WKTReader().Read(String.Format("LINESTRING({0} 0,{0} 100)", network.Branches.Count*100));
 
@@ -667,8 +667,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 SelectedNetwork.DefaultCrossSectionDefinition = definition;
             }
         }
-
-        //todo: move this to validation quick-fix someday
+        
         private void PlaceOnEmptyBranchesToolStripMenuItemClick(object sender, EventArgs e)
         {
             var definition = treeView.SelectedNode.Tag as ICrossSectionDefinition;

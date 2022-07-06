@@ -26,8 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             set
             {
                 data = (ZWSectionsViewModel) value;
-
-                //TODO: null check etc?
+                
                 if (data ==null)
                 {
                     //bind to null gives exception

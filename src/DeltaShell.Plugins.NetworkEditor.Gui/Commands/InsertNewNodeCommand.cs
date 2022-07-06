@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         }
         protected override void OnExecute(params object[] arguments)
         {
-            MapView.MapControl.ActivateTool(CurrentTool);  // TODO: use better tool lookup algoritm here
+            MapView.MapControl.ActivateTool(CurrentTool);  
         }
         public override bool Checked
         {

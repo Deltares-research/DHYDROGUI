@@ -5,7 +5,6 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 {
-    // TODO: rename to IShape or IChartShape!
     public interface IShapeFeature
     {
         IGeometry Geometry { get; set; }

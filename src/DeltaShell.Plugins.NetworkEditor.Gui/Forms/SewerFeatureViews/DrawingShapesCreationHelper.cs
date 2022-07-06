@@ -26,7 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public static IEnumerable<IDrawingShape> OrderShapes(this IList<IDrawingShape> shapes)
         {
-            // TODO this can be done in a more elegant way.
             var connectionShapes = shapes.OfType<InternalConnectionShape>().ToList();
             var compartmentShapes = shapes.OfType<CompartmentShape>().ToList();
 

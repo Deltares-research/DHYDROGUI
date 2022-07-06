@@ -989,8 +989,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return;
             }
 
-            // TODO: this looks very dirty, can we find a better way to manage these dependencies?
-
             // Update the network in the network layers of all relevant maps after changing a network coverage network
             var networkCoverage = sender as INetworkCoverage;
             if (networkCoverage != null && e.PropertyName == "Network")
@@ -1194,7 +1192,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var map = mapView.Map;
 
                 // add network as a layer
-                // TODO: move to (Netowork)CoverageView this part should temporary stay here, before we will make network coverage independent from hydro network editor
                 if (coverageView.Coverage is INetworkCoverage)
                 {
                     var networkCoverage = (INetworkCoverage)coverageView.Coverage;
@@ -1370,7 +1367,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (crossSection == null) return;
             
-            // todo add condition to test for network?
             var crossSectionViews = Gui.DocumentViews.OfType<CrossSectionView>();
 
             foreach (var view in crossSectionViews.Where(v=>!v.Locked))

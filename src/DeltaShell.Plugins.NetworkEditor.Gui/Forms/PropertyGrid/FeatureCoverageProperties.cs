@@ -9,7 +9,6 @@ using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
-    // TODO: why do we have FeatureCoverageProperties in HydroNetworkEditor plugin?
     [ResourcesDisplayName(typeof(Resources), "FeatureCoverageProperties_DisplayName")]
     public class FeatureCoverageProperties : ObjectProperties<IFeatureCoverage>
     {

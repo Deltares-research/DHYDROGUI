@@ -26,9 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
         /// Initializes the network interactor if a network layer is part of the map. This method
         /// is called when a mapview gains or looses focus.
         /// </summary>
-        /// <param name="project"></param>
         /// <param name="mapControl"></param>
-        /// TODO, HACK: project argument must be removed!
         public static HydroRegionEditorMapTool AddHydroRegionEditorMapTool(IMapControl mapControl)
         {
             if (mapControl == null) return null;

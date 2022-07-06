@@ -29,7 +29,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
     /// Support for ICloneable added to draw the custom features during drag operations
     /// note: custom rendering in progress:
     ///  - color for cross section types hard codes; should be based on style -> map legend?
-    ///  - todo is implement option to draw fixed symbol or minimum length for certain zoom levels.
     /// </summary>
     public class CrossSectionRenderer : BranchFeatureRenderer
     {
@@ -56,7 +55,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         /// <returns></returns>
         public override bool Render(IFeature feature, Graphics g, ILayer layer)
         {
-            // TODO can be MoveToolFeature; should be removed.
             if (!(feature is ICrossSection))
             {
                 return false; 

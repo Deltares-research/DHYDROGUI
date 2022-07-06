@@ -84,8 +84,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     structureView1.Data = null;
                 }
 
-                // TODO: subscribe to the CompositeStructure.CollectionChange here!
-
                 if (data != null && data.Network != null)
                 {
                     ((INotifyCollectionChanged)Data.Network).CollectionChanged -= NetworkCollectionChanged;
@@ -158,7 +156,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         /// <summary>
         /// Update CompositeStructureView for changes in the composite structure
-        /// todo: move all this logic to presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -171,7 +168,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             var structure = (IStructure1D) e.GetRemovedOrAddedItem();
             if (structure.Network != null && structure.Network.IsEditing)
             {
-                return;//TODO: wait for finish and refresh
+                return;
             }
                 
             if (structure.ParentStructure != Data)
@@ -361,7 +358,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         /// <summary>
         /// Draw the text horizontal for light aligned tabs.
-        /// Todo: probably much better solution is to use list or a more advanced tab than the standard in winforms.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

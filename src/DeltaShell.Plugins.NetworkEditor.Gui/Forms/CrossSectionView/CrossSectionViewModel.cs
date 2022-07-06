@@ -158,7 +158,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         public void ShareDefinition()
         {
             crossSection.ShareDefinitionAndChangeToProxy();
-            //TODO: this should bubble from CS change..
             FirePropertyChanged(nameof(UseLocalDefinition));
             FirePropertyChanged(nameof(UseSharedDefinition));
         }

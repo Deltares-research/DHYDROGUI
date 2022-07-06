@@ -48,10 +48,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             Coverage = null;
         }
     }
-
-    /// <summary>
-    /// Todo: extend for FeatureCoverage
-    /// </summary>
+    
     public partial class CoverageAnalysisView : UserControl, ICompositeView
     {
         private Project data;

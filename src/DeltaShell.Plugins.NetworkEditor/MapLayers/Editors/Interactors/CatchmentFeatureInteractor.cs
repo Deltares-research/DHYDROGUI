@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             return true;
         }
         
-        public override void Add(IFeature feature) // TODO: not used?!?
+        public override void Add(IFeature feature)
         {
             base.Add(feature);
             if (!(feature is Catchment))
@@ -90,7 +90,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         private static Polygon GetBoundingPolygon(IGeometry catchmentGeometry)
         {
-            //todo..use concave (!) hull algorithm?
             var boundaryCoordinates = catchmentGeometry.Coordinates;
             return new Polygon(new LinearRing(boundaryCoordinates));
         }

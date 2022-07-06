@@ -72,7 +72,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         /// The new geometry for the parent feature. In fact feature == newGeometry.Geometry
         /// <param name="trackerIndices"></param>
         /// The indices that are the source of the operation.
-        /// TODO: Further Optimization. Currently t
         public override void StoreRelatedFeatures(IFeature feature, IGeometry newGeometry, IList<int> trackerIndices)
         {
             //since crosss section calculates it's geomtry based on definition + branch we only have to update the offset here.

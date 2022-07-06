@@ -501,7 +501,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private void UpdateChartTitles()
         {
             chartView.Chart.BottomAxis.Title = string.Format("Chainage [{0}] along route", NetworkRoute.Components[0].Unit.Symbol);
-            // todo: add support for other coverages, eg. velocity and 2nd axis.
+
             var bedLevelCoverage =
                 DataController.ProfileNetworkCoverages.FirstOrDefault(nc => nc.Name == "Bed level");
             if (bedLevelCoverage != null)
@@ -669,8 +669,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     return;
                 }
             }
-
-            //TODO: get a list going with types and properties.. try to keep it refactor proof.
+            
             if (sender is NetworkSideViewDataController)
             {
                 if (e.PropertyName.Equals(nameof(NetworkSideViewDataController.WaterLevelNetworkCoverage)))

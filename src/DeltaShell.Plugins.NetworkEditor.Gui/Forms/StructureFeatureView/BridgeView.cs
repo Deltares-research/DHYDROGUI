@@ -117,7 +117,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 if (bridge.TabulatedCrossSectionDefinition == null)
                 {
-                    //todo think about this.... new cs zw?
                     return;
                 }
                 if (tableViewTabulatedData.EditableObject != null && tableViewTabulatedData.EditableObject.Equals(bridge.TabulatedCrossSectionDefinition))
@@ -132,7 +131,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 if (bridge.YZCrossSectionDefinition == null)
                 {
-                    //todo think about this.... new cs yz?
                     return;
                 }
                 if (tableViewTabulatedData.EditableObject != null && (bridge.TabulatedCrossSectionDefinition != null && tableViewTabulatedData.EditableObject.Equals(bridge.TabulatedCrossSectionDefinition)))
@@ -184,7 +182,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private static string GetFrictionDescription(BridgeFrictionType value)
         {
-            // TODO: Refactor: Add Description Attributes to BridgeFrictionType, and return description text here
             switch (value)
             {
                 case BridgeFrictionType.Chezy:

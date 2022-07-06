@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
     {
         public IShapeFeatureEditor ShapeFeatureEditor
         {
-            // todo remove from ShapeModifyTool
             get
             {
                 return ShapeModifyTool.ShapeFeatureEditor;

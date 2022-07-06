@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
     public static class HydroNetworkEditorMapToolHelper
     {
-        // todo move to user settings
         private static double CGDMinimumCellLength = 0.5;
         private static bool CGDGridAtStructure = true;
         private static double CGDStructureDistance = 10.0;

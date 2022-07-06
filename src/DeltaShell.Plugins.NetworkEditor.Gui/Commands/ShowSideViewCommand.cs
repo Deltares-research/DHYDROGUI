@@ -9,7 +9,6 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
-    /// TODO: get this class under test.
     public class ShowSideViewCommand : NetworkEditorCommand,IGuiCommand
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ShowSideViewCommand));

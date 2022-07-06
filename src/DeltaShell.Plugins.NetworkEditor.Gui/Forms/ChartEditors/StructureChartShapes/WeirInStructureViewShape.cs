@@ -12,8 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     {
         private static readonly StructureShapeStyleProvider StructureShapeStyleProvider =
             new StructureShapeStyleProvider();
-
-        //TODO: return the correct shape for shape changes etc
+        
         private readonly IChart chart;
         private readonly IWeir weir;
 

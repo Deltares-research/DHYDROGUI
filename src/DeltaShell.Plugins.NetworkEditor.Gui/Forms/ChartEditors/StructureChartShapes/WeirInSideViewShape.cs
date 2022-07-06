@@ -70,8 +70,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 };
                 return gatedWeirShape;
             }
-            // todo add support for sharp crested
-            // Broad crested == user defined ? as current default
 
             var crestShape = CrestShape.Sharp;
             if (Structure.WeirFormula is RiverWeirFormula)

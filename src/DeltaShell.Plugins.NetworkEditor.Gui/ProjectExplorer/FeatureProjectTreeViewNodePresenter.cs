@@ -11,7 +11,6 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
 {
-    // TODO: Merge with FMTreeViewNodePresenterBase into utility base class...
     internal class FeatureProjectTreeViewNodePresenter<T> : TreeViewNodePresenterBaseForPluginGui<IEventedList<T>>
         where T : IFeature
     {

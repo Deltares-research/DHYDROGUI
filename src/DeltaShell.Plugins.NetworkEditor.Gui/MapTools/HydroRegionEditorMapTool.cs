@@ -39,7 +39,6 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
-    //class is swiss army knife..todo identify separate responsibilities and split it
     public class HydroRegionEditorMapTool : MapTool, IHydroNetworkEditorMapTool
     {
         public const string AddPointCrossSectionToolName = "add point cross-section";
@@ -87,8 +86,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
 
         private static readonly ILog log = LogManager.GetLogger(typeof (HydroRegionEditorMapTool));
-
-        // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
+        
         private readonly List<IMapTool> mapTools = new List<IMapTool>();
 
         private Coordinate contextMenuWorldPosition;
@@ -120,7 +118,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private bool FeatureTypeLayerFilter<T>(ILayer layer)
         {
-            // TODO: extend this filter to take only selected HydroRegionLayer into account
             if (layer.DataSource == null || layer is LabelLayer)
             {
                 return false;
@@ -148,8 +145,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         
         private void AddNetworkEditorTools()
         {
-            // TODO: extend to multiple regions!
-
             // HydroNetwork
             var newLineTool = new NewLineTool(FeatureTypeLayerFilter<Channel>, AddChannelToolName)
                                   {
@@ -273,8 +268,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             var newLinkTool = new AddHydroLinkMapTool(FeatureTypeLayerFilter<HydroLink>);
             AddMapTool(newLinkTool);
-
-            // TODO: merge the tools below into the hydro network editor map tool?! (context menus only)
+            
             var importBranchesMapTool = new ImportBranchesFromSelectionMapTool(FeatureTypeLayerFilter<Channel>)
                                             {
                                                 Name = "import branches"
@@ -394,7 +388,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 {
                     RemoveNetworkEditorTools();
 
-                    if (map != null) // TODO: this is DANGEROUS, remember Map instead of MapControl!
+                    if (map != null)
                     {
                         map.CollectionChanged -= LayersCollectionChanged;
                     }
@@ -612,7 +606,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                      SegmentGenerationMethod.RouteBetweenLocations)
             {
                 // Create a different style for each added coverage layer to prevent all layers look the same
-                // todo: move this to sharpmap?
                 ShapeType shapeType = VectorRenderingHelper.GetIndexedShapeType(count);
                 Brush brush = new SolidBrush(ColorHelper.GetIndexedColor(255, count));
                 networkCoverageGroupLayer.LocationLayer.Style.Shape = shapeType;
@@ -658,8 +651,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             if (networkCoverageGroupLayer.LocationLayer.DataSource != null)
                 networkCoverageGroupLayer.LocationLayer.DataSource.AddNewFeatureFromGeometryDelegate = null;
         }
-
-        // TODO: currently interactor is always active, should be removed after "Edit Network ..." menu or toolbar will be added to activate interactor for a selected network
 
         public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
         {

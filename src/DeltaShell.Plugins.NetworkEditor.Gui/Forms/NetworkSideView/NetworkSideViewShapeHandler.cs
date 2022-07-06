@@ -92,7 +92,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void UpdateShapeSelection(IFeature feature)
         {
-            //TODO: clean up refactor etc..this code is repeated all over.
             if (feature == null)
             {
                 shapeModifyTool.SelectionChanged -= ShapeModifyToolSelectionChanged;

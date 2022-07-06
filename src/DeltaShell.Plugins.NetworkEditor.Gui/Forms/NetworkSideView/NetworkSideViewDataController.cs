@@ -145,7 +145,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     AllNetworkCoverages.Add(FilterWithTime(networkCoverage, null));
                     break;
                 case IFeatureCoverage featureCoverage:
-                    //todo: validate!!
                     AllFeatureCoverages.Add(FilterWithTime(featureCoverage, null));
                     break;
             }

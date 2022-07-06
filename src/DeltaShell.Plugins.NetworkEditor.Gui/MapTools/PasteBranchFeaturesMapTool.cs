@@ -153,8 +153,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             var targetLayer = Map.GetAllVisibleLayers(true).OfType<VectorLayer>().FirstOrDefault(l => l.DataSource.FeatureType == BranchFeature.GetEntityType());
             if (targetLayer == null) return;
-
-            // TODO: this is really a very dangerous way to add features, review all these NewPoint / NewLine tools added by HydroNetworkEditorMapTool
+            
             IMapTool pasteBranchFeatureClipBoardTool = MapControl.Tools.FirstOrDefault(tool => tool.Layers.Count() == 1 && tool.Layers.Contains(targetLayer));
 
             if (pasteBranchFeatureClipBoardTool == null) return;
