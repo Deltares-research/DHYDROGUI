@@ -207,8 +207,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                 yield return weir;
             }
         }
-
-        //TODO: get this stuff in a common interface 
+        
         private void SetGeneralProperties(SobekStructureDefinition structure, Weir weir)
         {
             var sobekWeir= structure.Definition as SobekWeir;

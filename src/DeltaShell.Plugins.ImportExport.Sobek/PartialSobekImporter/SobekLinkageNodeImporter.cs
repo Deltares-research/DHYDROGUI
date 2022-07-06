@@ -62,7 +62,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             // the branch they connect to.
             for (var i = 0; i < linkageNodes.Count; i++)
             {
-                // TODO: don't set ID here 
                 if (!channels.ContainsKey(linkageNodes[i].BranchID))
                 {
                     Log.ErrorFormat("Unable to process: linkage node {0} links to not existing channel {1}",

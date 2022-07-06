@@ -142,7 +142,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             switch (sobekControllerParameter)
             {
                 case SobekControllerParameter.BottomLevel2DGridCell:
-                    // todo do not throw exception
                     throw new ArgumentException("Unsupported type", "measurementLocationParameter");
                 case SobekControllerParameter.CrestLevel:
                     return QuantityType.CrestLevel;

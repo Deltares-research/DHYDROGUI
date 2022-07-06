@@ -106,7 +106,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     x += segmentLength * Math.Sin(curvingPoint.Angle * Math.PI / 180);
                     y += segmentLength * Math.Cos(curvingPoint.Angle * Math.PI / 180);
                     // add new curvepoint if is not the last or if does not overlaps.
-                    // todo: remove all overlapping points?
                     if ((i < (branchGeometry.CurvingPoints.Count - 1)) ||
                         (Math.Abs(x - lastCoordinate.X) > 1.0e-6) || (Math.Abs(y - lastCoordinate.Y) > 1.0e-6))
                     {

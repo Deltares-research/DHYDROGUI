@@ -48,7 +48,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             
 
             // No capacity data available then return a empty pump list
-            // TODO: Find out what to do here? Logging / exception both? For now just log it an return an empty pump list
             if (sobekPump.CapacityTable.Rows.Count == 0)
             {
                 Log.Warn("Couldn't import the pump structure");

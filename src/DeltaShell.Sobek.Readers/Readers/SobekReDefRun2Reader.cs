@@ -55,8 +55,7 @@ namespace DeltaShell.Sobek.Readers.Readers
         private SobekCaseSettings ParseSobekCaseSettings(string record)
         {
             settingsToAdapt = new SobekCaseSettings();
-           
-            // todo add other field that can be used in DeltaShell
+            
             var pattern = RegularExpression.GetScientific("g_") + "|" +
                              RegularExpression.GetScientific("xr");
 

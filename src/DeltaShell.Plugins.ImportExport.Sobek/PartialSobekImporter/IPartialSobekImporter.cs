@@ -2,7 +2,7 @@
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
-    public interface IPartialSobekImporter // TODO: lots of funcitonality overlaps with IFileImporter, merge / redesign IFileImporter 
+    public interface IPartialSobekImporter
     {
         /// <summary>
         /// Path to the SOBEK case or network file

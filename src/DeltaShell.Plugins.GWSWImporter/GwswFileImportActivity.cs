@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             try
             {
                 importedCsv =
-                    csvImporter.ImportCsv(path, mappingData); // TODO Sil -> Invalid cast exception from this method
+                    csvImporter.ImportCsv(path, mappingData);
             }
             catch (Exception e)
             {

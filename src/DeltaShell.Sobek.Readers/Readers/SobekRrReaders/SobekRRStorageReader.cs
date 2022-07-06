@@ -127,9 +127,6 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                 sobekRRStorage.MaxRoofStorage = Convert.ToDouble(matches[0].Groups[label].Value, CultureInfo.InvariantCulture);
             }
 
-            // TODO: manual says 'NOT READ. Default value zero used.' but the value seems to be filled when exporting
-            // from Sobek. Use it for now...
-
             // initial roof storage (mm)
             label = "ik";
             pattern = RegularExpression.GetScientific(label);

@@ -66,9 +66,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                             if ( (readLine =  reader.ReadLine()) == null) break;
                             taggedItem.Append(readLine + Environment.NewLine);
                         }
-
-                        // TODO: optimize it, actually there is no need to parse BEGIN/END internally when tags are used 
-                        // actual parse, returns object of type T
+                        
                         var match = Parse(taggedItem.ToString()).ToList();
                         if (match.Any())
                         {

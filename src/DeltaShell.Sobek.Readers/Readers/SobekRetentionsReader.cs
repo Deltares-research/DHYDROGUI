@@ -291,8 +291,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                 return dataTable;
             }
         }
-
-        // TODO: DRY, remove this or DataTableHelper.SetTableToFunction
+        
         private static void SetTableToFunction(DataTable dataTable, IFunction function)
         {
             var values = new SortedDictionary<object, object>();

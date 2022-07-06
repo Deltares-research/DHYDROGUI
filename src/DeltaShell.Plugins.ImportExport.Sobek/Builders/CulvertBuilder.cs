@@ -56,7 +56,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
             culvert.GateInitialOpening = sobekCulvert.ValveInitialOpeningLevel;
             
-            //TODO get the crosssection in here. See bridgebuilder
             if (sobekCulvert.CrossSectionId != null && sobekCrossSectionDefinitions.ContainsKey(sobekCulvert.CrossSectionId))
             {
                 SobekCrossSectionDefinition sobekCrossSectionDefinition = sobekCrossSectionDefinitions[sobekCulvert.CrossSectionId];

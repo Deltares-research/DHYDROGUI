@@ -30,7 +30,7 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         /// dc lt 0 = constant value 
         /// 
         /// </summary>
-        public bool IsConstantDischarge { get; set; } // todo make enum 
+        public bool IsConstantDischarge { get; set; }
         public double ConstantDischarge { get; set; }
 
         public DataTable FlowTimeTable { get; set; }

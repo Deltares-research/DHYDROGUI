@@ -20,7 +20,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="function"></param>
-        // TODO: DRY, remove this or DataTableSobekRetentionsReader.SetTableToFunction
         public static void SetTableToFunction(DataTable dataTable, IFunction function)
         {
             var values = new SortedDictionary<object, object>();

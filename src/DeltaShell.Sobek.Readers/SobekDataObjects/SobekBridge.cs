@@ -7,9 +7,7 @@
         FixedBed = 4,
         SoilBed = 5
     }
-    /// <summary>
-    /// Todo add support for groundlayer
-    /// </summary>
+
     public class SobekBridge : ISobekStructureDefinition
     {
         /// <summary>
