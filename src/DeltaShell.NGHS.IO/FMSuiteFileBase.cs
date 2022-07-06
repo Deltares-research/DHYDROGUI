@@ -1,8 +1,5 @@
 namespace DeltaShell.NGHS.IO
 {
-    // TODO YAGNI: storing comment blocks with unique keys is too ambitious, just queue them and let inheritants make a dictionary, 
-    // TODO: remove the extforcefile logic from this class
-    
     public class FMSuiteFileBase : NGHSFileBase
     {
         private const string ExtForcesFileQuantBlockStarter = "QUANTITY=";

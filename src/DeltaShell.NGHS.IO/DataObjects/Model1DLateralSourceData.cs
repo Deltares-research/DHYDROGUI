@@ -162,10 +162,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
             
         }
-
-        /// <summary>
-        /// TODO: replace SourceDataDataItem with attribute
-        /// </summary>
+        
         public IDataItem SeriesDataItem
         {
             get { return seriesDataItem; }
@@ -444,7 +441,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
             SaltMassTimeSeries.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
             SaltMassTimeSeries.Components.Add(new Variable<double>("discharge", new Unit("kg/s", "kg/s")));
             SaltMassTimeSeries.Name = "Salt discharge load time series";
-            //TODO: create standard name
+
             SaltMassTimeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = "salt_discharge";
 
             SaltLateralDischargeType = SaltLateralDischargeType.Default;
@@ -464,7 +461,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             TemperatureTimeSeries.Components.Add(new Variable<double>("Temperature", new Unit("degreesCelcius", "°C")));
             TemperatureTimeSeries.Name = "Temperature time series";
             
-            //TODO: create standard name
             TemperatureTimeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = "water_temperature";
 
             TemperatureLateralDischargeType = TemperatureLateralDischargeType.Constant;

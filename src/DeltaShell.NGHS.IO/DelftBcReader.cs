@@ -39,8 +39,7 @@ namespace DeltaShell.NGHS.IO
                             Comment = fields[2],
                             LineNumber = LineNumber
                         };
-
-                        // TODO: use const strings (currently in WFM1D.IO BoundaryRegion.cs - these will need to be moved, we should look at this again when we begin working on the readers)
+                        
                         if (property.Name == "quantity") 
                         {
                             currentCategory.Table.Add(new DelftBcQuantityData(property));

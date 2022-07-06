@@ -199,7 +199,7 @@ namespace DeltaShell.NGHS.IO
 
         private static DateTime? GetDateTime(double value, DateTime? reference)
         {
-            if (value > 189912312359.0d) // TODO: remove magic number... ?
+            if (value > 189912312359.0d)
             {
                 // parse as absolute time
                 var remainder = (long)value;

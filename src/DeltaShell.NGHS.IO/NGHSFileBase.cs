@@ -208,7 +208,7 @@ namespace DeltaShell.NGHS.IO
         protected virtual void CreateCommonBlock()
         {
             var contentIdentifier = CreateContentIdentifier(CurrentLine);
-            if (!commentBlocks.ContainsKey(contentIdentifier)) //TODO: A key does not have to be unique in the whole file!
+            if (!commentBlocks.ContainsKey(contentIdentifier))
             {
                 commentBlocks.Add(contentIdentifier, currentCommentBlock);
             }

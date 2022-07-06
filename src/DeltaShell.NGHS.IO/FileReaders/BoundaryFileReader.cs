@@ -16,8 +16,6 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
-    // TODO: currently this class cannot handle Salt entries in the BcFile
-
     // Note: In this class we do not create new BoundaryConditions, these are created when adding a node to the network
     //       Instead we retrieve the BoundaryCondition (based on feature name) and update the properties
     //       The same is true of LateralSources
@@ -183,7 +181,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
         private static void ReadBoundaryCondition(Model1DBoundaryNodeData boundaryCondition, IDelftBcCategory boundaryCategory)
         {
-            // TODO: the following 2 lines should be removed when we implement salt in the reader, currently we temporarily ignore Salt Boundaries
             var saltBoundaryQuantity = boundaryCategory.Table.Where(bcq => bcq.Quantity.Value == BoundaryRegion.QuantityStrings.WaterSalinity);
             if (saltBoundaryQuantity.Any()) return;
 
@@ -249,10 +246,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
         private static void SetCategoryValuesToFeatureData<Targ>(IFeatureData featureData, IDelftBcCategory category, Func<IDelftBcQuantityData, IEnumerable<Targ>> parseArgumentValues, Func<IDelftBcQuantityData, IEnumerable<double>> parseFunctionValues)
         {
-            // TODO: we should move the parsing of argument and function values outside of this function.
-            // Doing this by index limits the writing as you expect certain order when reading.
-            // Map it by the expected name of the quantity and the table name. 
-
             var argumentValues = parseArgumentValues(category.Table[0]);
             if (argumentValues == null)
             {

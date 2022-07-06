@@ -48,8 +48,7 @@ namespace DeltaShell.NGHS.Common.Gui.WPF.SettingsView
             if (property.HasCustomControl)
                 return fe.FindResource("propertyCustomTemplate") as DataTemplate;
 
-            /* There were not any custom controls, so go ahead with the regular templates*/
-            /*Todo: make a switch or create a dictionary for this. */
+            // There were not any custom controls, so go ahead with the regular templates
             var type = property.ValueType;
             if (type == typeof(string)
                 || type == typeof(double)

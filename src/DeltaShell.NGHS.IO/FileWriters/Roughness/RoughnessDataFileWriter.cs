@@ -124,7 +124,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             var roughnessType =
                 FrictionTypeConverter.ConvertFrictionType(
                     roughnessSection.EvaluateRoughnessType(new NetworkLocation(branch,
-                        0))); // TODO are we sure about this? 0 can be not set in UI
+                        0)));
             branchProperties.AddProperty(RoughnessDataRegion.RoughnessType.Key, roughnessType.GetDisplayName(),
                 RoughnessDataRegion.RoughnessType.Description);
 

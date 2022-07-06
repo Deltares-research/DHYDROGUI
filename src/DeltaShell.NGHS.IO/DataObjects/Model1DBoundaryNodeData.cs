@@ -687,8 +687,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
             TemperatureTimeSeries.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
             TemperatureTimeSeries.Components.Add(new Variable<double>("Temperature", new Unit("degreesCelcius", Resources.degreeCelcius)));
             TemperatureTimeSeries.Name = "Temperature time series";
-
-            //TODO: create standard name
+            
             TemperatureTimeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = "water_temperature";
 
             TemperatureConditionType = TemperatureBoundaryConditionType.Constant;

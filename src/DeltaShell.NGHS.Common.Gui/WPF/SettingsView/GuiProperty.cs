@@ -63,10 +63,6 @@ namespace DeltaShell.NGHS.Common.Gui.WPF.SettingsView
 
                 if (description.HasMinValue || description.HasMaxValue)
                 {
-                    /*ToDo: investigate why properties with doubles do not validate with Error method.
-                     For instance, MaxCourant, value = -5, minValue=0 does not return Validates in the Error getter.
-                     If possible, remove this code and just make a 'return Error;'
-                     */
                     if (Value is int)
                     {
                         return CheckValueWithinBoundaries(Convert.ToDouble((int)Value));
@@ -95,7 +91,6 @@ namespace DeltaShell.NGHS.Common.Gui.WPF.SettingsView
 
         /// <summary>
         /// Gets or sets the custom control.
-        /// ToDo: This should be removed once all custom controls are migrated into WPF.
         /// </summary>
         /// <value>
         /// The custom control.
