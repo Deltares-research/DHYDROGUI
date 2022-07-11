@@ -73,6 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         private bool showingSyncMessage;
         private IGui gui;
         private WaterQualityRibbon ribbon;
+        private BloomInfo bloomInfo;
 
         [ExcludeFromCodeCoverage]
         public override string Name => "Water quality model (UI)";
@@ -156,15 +157,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
         public override IRibbonCommandHandler RibbonCommandHandler => ribbon ?? (ribbon = new WaterQualityRibbon());
 
-        public BloomInfo BloomInfo { get; private set; }
-
-        public override void Activate()
+        // lazy load and read the spe file to exclude the algae parameters
+        public BloomInfo BloomInfo
         {
-            base.Activate();
-
-            // read the spe file to exclude the algae parameters
-            BloomInfo = BloomSpeFileReader.Read(Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(),
-                                                             "bloom.spe"));
+            get
+            {
+                return bloomInfo ?? (bloomInfo = BloomSpeFileReader.Read(Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(), "bloom.spe")));
+            }
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
