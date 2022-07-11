@@ -159,11 +159,49 @@ namespace DHYDRO.Common.Tests.IO.BackwardCompatibility
             Assert.That(exception.ParamName, Is.EqualTo("propertyName"));
         }
 
+        [Test]
+        [TestCaseSource(nameof(IsUnsupportedPropertyValue_ArgNullCases))]
+        public void IsUnsupportedPropertyValue_ArgNull_ThrowArgumentNullException(string category, string property, string value, string expParamName)
+        {
+            // Setup
+            var config = new TestConfigurationValues();
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
+
+            // Call
+            void Call() => backwardsCompatibilityHelper.IsUnsupportedPropertyValue(category, property, value);
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo(expParamName));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(IsUnsupportedPropertyValueCases))]
+        public void IsUnsupportedPropertyValue_ArgNull_ThrowArgumentNullException(string category, string property, string value, bool expResult)
+        {
+            // Setup
+            var config = new TestConfigurationValues
+            {
+                UnsupportedPropertyValues = new[]
+                {
+                    new DelftIniPropertyInfo("some_category", "some_property", "some_value")
+                }
+            };
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
+
+            // Call
+            bool result = backwardsCompatibilityHelper.IsUnsupportedPropertyValue(category, property, value);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expResult));
+        }
+
         private sealed class TestConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
         {
             public ISet<string> ObsoleteProperties { get; set; }
             public IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; set; }
             public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; set; }
+            public IEnumerable<DelftIniPropertyInfo> UnsupportedPropertyValues { get; set; }
         }
 
         private static IEnumerable<TestCaseData> GetUpdatedPropertyNameData()
@@ -235,6 +273,25 @@ namespace DHYDRO.Common.Tests.IO.BackwardCompatibility
             yield return new TestCaseData(configWithPropertyName,
                                           "pRoPeRtYnAmE",
                                           true);
+        }
+
+        private static IEnumerable<TestCaseData> IsUnsupportedPropertyValue_ArgNullCases()
+        {
+            yield return ToData(null, "some_property", "some_value", "category");
+            yield return ToData("some_category", null, "some_value", "property");
+            yield return ToData("some_category", "some_property", null, "value");
+
+            TestCaseData ToData(string category, string property, string value, string expParamName)
+                => new TestCaseData(category, property, value, expParamName).SetName(expParamName);
+        }
+
+        private static IEnumerable<TestCaseData> IsUnsupportedPropertyValueCases()
+        {
+            yield return new TestCaseData("some_category", "some_property", "some_value", true);
+            yield return new TestCaseData("Some_Category", "Some_Property", "Some_Value", true);
+            yield return new TestCaseData("some_other_category", "some_property", "some_value", false);
+            yield return new TestCaseData("some_category", "some_other_property", "some_value", false);
+            yield return new TestCaseData("some_category", "some_property", "some_other_value", false);
         }
     }
 }

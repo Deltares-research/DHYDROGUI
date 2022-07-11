@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DHYDRO.Common.Guards;
 using DHYDRO.Common.Logging;
 using DHYDRO.Common.Properties;
 
@@ -11,6 +13,7 @@ namespace DHYDRO.Common.IO.BackwardCompatibility
     /// </summary>
     public class DelftIniBackwardsCompatibilityHelper
     {
+        private const StringComparison caseInsensitiveComparison = StringComparison.InvariantCultureIgnoreCase;
         private readonly IDelftIniBackwardsCompatibilityConfigurationValues configurationValues;
 
         /// <summary>
@@ -22,7 +25,8 @@ namespace DHYDRO.Common.IO.BackwardCompatibility
         /// </exception>
         public DelftIniBackwardsCompatibilityHelper(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues)
         {
-            this.configurationValues = configurationValues ?? throw new ArgumentNullException(nameof(configurationValues));
+            Ensure.NotNull(configurationValues, nameof(configurationValues));
+            this.configurationValues = configurationValues;
         }
 
         /// <summary>
@@ -40,12 +44,32 @@ namespace DHYDRO.Common.IO.BackwardCompatibility
         /// </remarks>
         public bool IsObsoletePropertyName(string propertyName)
         {
-            if (propertyName == null)
-            {
-                throw new ArgumentNullException(nameof(propertyName));
-            }
+            Ensure.NotNull(propertyName, nameof(propertyName));
 
             return configurationValues.ObsoleteProperties.Contains(propertyName.ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Determines whether the provided property has an unsupported value.
+        /// </summary>
+        /// <param name="category"> The category name. </param>
+        /// <param name="property"> The property name. </param>
+        /// <param name="value"> The property value. </param>
+        /// <returns> Whether or not the property value is unsupported. </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any argument is <c>null</c>.
+        /// </exception>
+        /// <remarks>
+        /// All arguments are compared with a case-insensitive comparison.
+        /// </remarks>
+        public bool IsUnsupportedPropertyValue(string category, string property, string value)
+        {
+            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(property, nameof(property));
+            Ensure.NotNull(value, nameof(value));
+
+            return configurationValues.UnsupportedPropertyValues
+                                      .Any(v => IsUnsupportedPropertyValue(v, category, property, value));
         }
 
         /// <summary>
@@ -65,10 +89,7 @@ namespace DHYDRO.Common.IO.BackwardCompatibility
         /// </remarks>
         public string GetUpdatedPropertyName(string propertyName, ILogHandler logHandler = null)
         {
-            if (propertyName == null)
-            {
-                throw new ArgumentNullException(nameof(propertyName));
-            }
+            Ensure.NotNull(propertyName, nameof(propertyName));
 
             return GetUpdatedName(propertyName, configurationValues.LegacyPropertyMapping, logHandler);
         }
@@ -90,10 +111,7 @@ namespace DHYDRO.Common.IO.BackwardCompatibility
         /// </remarks>
         public string GetUpdatedCategoryName(string categoryName, ILogHandler logHandler = null)
         {
-            if (categoryName == null)
-            {
-                throw new ArgumentNullException(nameof(categoryName));
-            }
+            Ensure.NotNull(categoryName, nameof(categoryName));
 
             return GetUpdatedName(categoryName, configurationValues.LegacyCategoryMapping, logHandler);
         }
@@ -115,6 +133,16 @@ namespace DHYDRO.Common.IO.BackwardCompatibility
                                             mappedName);
 
             return mappedName;
+        }
+
+        private static bool IsUnsupportedPropertyValue(DelftIniPropertyInfo propertyInfo,
+                                                       string category,
+                                                       string property,
+                                                       string value)
+        {
+            return propertyInfo.Category.Equals(category, caseInsensitiveComparison) &&
+                   propertyInfo.Property.Equals(property, caseInsensitiveComparison) &&
+                   propertyInfo.Value.Equals(value, caseInsensitiveComparison);
         }
     }
 }
