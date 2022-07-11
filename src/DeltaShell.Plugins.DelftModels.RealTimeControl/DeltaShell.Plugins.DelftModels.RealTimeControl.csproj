@@ -8,20 +8,20 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="Mono.Addins" Version="1.3.8" IncludeAssets="compile" PrivateAssets="all" />
-		<PackageReference Include="FParsec" Version="1.0.3">
+		<PackageReference Include="FParsec" Version="1.1.1">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="FParsec-Pipes" Version="1.1.1">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="FSharp.Core" Version="4.7.0">
+		<PackageReference Include="FSharp.Core" Version="6.0.5">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="log4net" Version="2.0.12">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="MathematicalExpressionParser.Core" Version="2.0.0">
+		<PackageReference Include="MathematicalExpressionParser.Core" Version="2.1.0.12">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="PostSharp" Version="6.10.5">
