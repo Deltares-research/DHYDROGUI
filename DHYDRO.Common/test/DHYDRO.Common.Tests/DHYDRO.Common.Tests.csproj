@@ -16,7 +16,7 @@
         <Copyright>Copyright © Deltares 2022</Copyright>
         <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
         <Product>$(AssemblyName)</Product>
-        <DHYDROFileVersion>1.0.0</DHYDROFileVersion>
+        <DHYDROFileVersion>1.1.0</DHYDROFileVersion>
         <Version>$(DHYDROFileVersion).$(BuildNumber)</Version>
         <FileVersion>$(Version)</FileVersion>
         <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
