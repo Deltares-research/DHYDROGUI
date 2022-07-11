@@ -44,5 +44,10 @@ namespace DHYDRO.Common.IO.BackwardCompatibility
         /// FORALL p IN LegacyCategoryMapping.Keys: p == p.ToLower()
         /// </remarks>
         IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; }
+
+        /// <summary>
+        /// Gets the delft INI property infos for unsupported property values.
+        /// </summary>
+        IEnumerable<DelftIniPropertyInfo> UnsupportedPropertyValues { get; }
     }
 }
