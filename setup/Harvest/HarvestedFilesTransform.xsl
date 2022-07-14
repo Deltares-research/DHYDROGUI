@@ -31,16 +31,21 @@
   
    <!-- Create searches for the files to remove. -->
   <xsl:key name="pdb-file-search" match="wix:Component[contains(wix:File/@Source, '.pdb')]" use="@Id" />
+  <xsl:key name="pspdb-file-search" match="wix:Component[contains(wix:File/@Source, '.pspdb')]" use="@Id" />
   <xsl:key name="pssym-file-search" match="wix:Component[contains(wix:File/@Source, '.pssym')]" use="@Id" />
   
   
   <!-- Remove Components referencing those directories & files. -->
   <xsl:template match="wix:Component[key('pdb-file-search', @File)]" />
+  <xsl:template match="wix:Component[key('pspdb-file-search', @File)]" />
   <xsl:template match="wix:Component[key('pssym-file-search', @File)]" />
 
   <!--Remove ComponentRefs referencing those directories & files.-->    
   <xsl:template match="wix:Component[key('pdb-file-search', @Id)]" />
   <xsl:template match="wix:ComponentRef[key('pdb-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('pspdb-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('pspdb-file-search', @Id)]" />
 
   <xsl:template match="wix:Component[key('pssym-file-search', @Id)]" />
   <xsl:template match="wix:ComponentRef[key('pssym-file-search', @Id)]" />

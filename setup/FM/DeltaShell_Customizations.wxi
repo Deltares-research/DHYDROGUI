@@ -111,7 +111,7 @@
     <?ifdef plugin_utilityshortcuts ?>
       <DirectoryRef Id="ProgramGroupMenuDir">
         <Component Id="UtilitiesMenuShortcuts" Guid="$(var.UtilitiesMenuShortcutsGUID)">
-          <Condition>(INSTALLER_VARIANT != "fmo")</Condition> <!-- NO UTILITIES WHEN INSTALLING OPEN --> 
+          <Condition><![CDATA[(INSTALLER_VARIANT <> "fmo")]]></Condition> <!-- NO UTILITIES WHEN INSTALLING OPEN --> 
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedUtilitiesShortcutFolder" Type="integer" Value="1"/>
           <?include $(var.plugin_utilityshortcuts)?>
         </Component>

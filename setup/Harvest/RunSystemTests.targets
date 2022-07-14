@@ -74,11 +74,174 @@
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TargetPluginsFilesAndFoldersSystemTests"
              Properties=" _CheckPluginsFolder=$(_CheckPluginsFolder);"
-             Condition="'$(ConditionState)' == 'false'"
+             Condition="'$(ConditionState)' == 'false' AND '$(MyCultureOutputFolder)' != 'fmo\' "
+             ContinueOnError="WarnAndContinue"/>
+	<MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TargetPluginsFilesAndFoldersForOpenSystemTests"
+             Properties=" _CheckPluginsFolder=$(_CheckPluginsFolder);"
+             Condition="'$(ConditionState)' == 'false' AND '$(MyCultureOutputFolder)' == 'fmo\' "
              ContinueOnError="WarnAndContinue"/>
     <Message Text="If Plugins Folder does not exist, do not check for files and file versions in that folder." Importance="high" Condition="'$(ConditionState)' == 'true'" />
 
   </Target>
+
+<Target Name="TargetPluginsFilesAndFoldersForOpenSystemTests" DependsOnTargets="TargetSetVersioningForSystemTest">
+    <!--We know Plugins folder exist, check for specific files and file versions in the Plugins folder-->
+    <PropertyGroup>
+      <_Package>PluginFiles</_Package>
+      <_File>HarvestedPluginFiles_wxs</_File>
+      <_VersionsFile>FM_Properties</_VersionsFile>
+    </PropertyGroup>
+
+	
+    <PropertyGroup>
+      <_CheckKernelsFolder>$(_CheckPluginsFolder)\DeltaShell.Dimr\kernels\x64</_CheckKernelsFolder>
+      <_OpenCondition Condition="Exists('$(_CheckKernelsFolder)')">true</_OpenCondition>
+      <_OpenCondition Condition="!Exists('$(_CheckKernelsFolder)')">false</_OpenCondition>	
+    </PropertyGroup>
+	<MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=Kernels folder;
+                          KeyValue=$(_CheckKernelsFolder);
+						  Condition=$(_OpenCondition)"
+             ContinueOnError="WarnAndContinue"/>
+
+    
+
+    
+    <PropertyGroup>
+      <_CheckGridGeomStatefulFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor\Lib</_CheckGridGeomStatefulFolder>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=GridGeomStateful folder;
+                          KeyValue=$(_CheckGridGeomStatefulFolder)"
+             ContinueOnError="WarnAndContinue"/>
+    
+    <PropertyGroup>
+      <_CheckRgfGridFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.FMSuite.Common.Gui\plugins-qt\x64\bin</_CheckRgfGridFolder>
+	    <_OpenCondition Condition="Exists('$(_CheckRgfGridFolder)')">true</_OpenCondition>
+      <_OpenCondition Condition="!Exists('$(_CheckRgfGridFolder)')">false</_OpenCondition>	
+    </PropertyGroup>
+	
+	
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=RgfGrid folder;
+                          KeyValue=$(_CheckRgfGridFolder);
+						  Condition=$(_OpenCondition)"
+             ContinueOnError="WarnAndContinue"/>
+    
+        <PropertyGroup>
+      <_CheckNGHS_IOFolder>$(_CheckPluginsFolder)\DeltaShell.NGHS.IO</_CheckNGHS_IOFolder>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=DeltaShell NGHS IO folder;
+                          KeyValue=$(_CheckNGHS_IOFolder)"
+             ContinueOnError="WarnAndContinue"/>
+
+    <PropertyGroup>
+      <_CheckNGHS_IO_NetCDFDllFile>io_netcdf.dll</_CheckNGHS_IO_NetCDFDllFile>
+      <_CheckNGHS_Deltares_UgridDllFile>Deltares.UGrid.dll</_CheckNGHS_Deltares_UgridDllFile>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Properties=" Package=$(_Package);
+                          File=$(_VersionsFile);
+                          TestTypeName=fileversion;
+                          Key=$(_CheckNGHS_IO_NetCDFDllFile);
+                          KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_IO_NetCDFDllFile);
+                          FileVersion=$(_CheckNGHS_IO_NetCDFDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Properties=" Package=$(_Package);
+                          File=$(_VersionsFile);
+                          TestTypeName=fileversion;
+                          Key=$(_CheckNGHS_IO_NetCDFDllFile);
+                          KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_Deltares_UgridDllFile);
+                          FileVersion=$(_CheckNGHS_Deltares_UgridDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>
+
+    <PropertyGroup>
+      <_CheckMeshKernelApiFolder>$(_CheckNGHS_IOFolder)\win-x64\native</_CheckMeshKernelApiFolder>
+      <_CheckMeshKernelApiExpFile>MeshKernelApi.exp</_CheckMeshKernelApiExpFile>
+      <_CheckMeshKernelApiLibFile>MeshKernelApi.lib</_CheckMeshKernelApiLibFile>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi folder;
+                          KeyValue=$(_CheckMeshKernelApiFolder)"
+             ContinueOnError="WarnAndContinue"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi exp file;
+                          KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiExpFile)"
+             ContinueOnError="WarnAndContinue"/>
+    
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi lib file;
+                          KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiLibFile)"
+             ContinueOnError="WarnAndContinue"/>
+    
+    <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for these files too in the _CheckGridGeomStatefulFolder -->
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi exp file;
+                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiExpFile)"
+             ContinueOnError="WarnAndContinue"/>
+
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=MeshKernelApi lib file;
+                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiLibFile)"
+             ContinueOnError="WarnAndContinue"/>
+
+    <PropertyGroup>
+      <_CheckMeshKernelApiDllFile>MeshKernelApi.dll</_CheckMeshKernelApiDllFile>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Properties=" Package=$(_Package);
+                          File=$(_VersionsFile);
+                          TestTypeName=fileversion;
+                          Key=$(_CheckMeshKernelApiDllFile);
+                          KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiDllFile);
+                          FileVersion=$(_CheckMeshKernelApiDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>
+    
+    <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for this file too in the _CheckGridGeomStatefulFolder -->
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithComparison"
+             Properties=" Package=$(_Package);
+                          File=$(_VersionsFile);
+                          TestTypeName=fileversion;
+                          Key=$(_CheckMeshKernelApiDllFile);
+                          KeyValue=$(_CheckGridGeomStatefulFolder)\$(_CheckMeshKernelApiDllFile);
+                          FileVersion=$(_CheckGridEditorMeshKernelApiDllFileVersion)"
+             ContinueOnError="WarnAndContinue"/>
+  </Target>
+
 
   <Target Name="TargetPluginsFilesAndFoldersSystemTests" DependsOnTargets="TargetSetVersioningForSystemTest">
     <!--We know Plugins folder exist, check for specific files and file versions in the Plugins folder-->
@@ -567,10 +730,10 @@
       Query="/configuration/userSettings/DeltaShell.Gui.Properties.Settings/setting[@name='showSplashScreen']/value"
       />	  
     <Message Importance="high" 
-			Text="Start $(_CheckDeltaShellGuiExeFile), run/execute a command line script and exit with timeout of 10sec (without changing the key for licensecheck)"
+			Text="Start $(_CheckDeltaShellGuiExeFile), run/execute a command line script and exit with timeout of 25sec (without changing the key for licensecheck)"
 			Condition=" '$(BUILD_NUMBER)' != '' "/>
 			
-    <Exec 	Command="$(_CheckDeltaShellGuiExeFile) -c &quot;from DeltaShell.Gui import DeltaShellGui;print('$(_ValueToCheck)');Gui.Exit();&quot;" 
+    <Exec 	Command="$(_CheckDeltaShellGuiExeFile) -c &quot;print('$(_ValueToCheck)');Gui.Exit();&quot;" 
 			Timeout="25000" 
 			ContinueOnError="ErrorAndContinue" 
 			WorkingDirectory="$(_CheckDeltaShellFolder)" 
@@ -598,6 +761,11 @@
 						 ExpectedValue=false"
             ContinueOnError="WarnAndContinue"
 			Condition=" '$(BUILD_NUMBER)' != '' "/>
+	
+	<Message Importance="high" 
+			Text="Failed DeltaShell exe run action because : $(AllLines)"
+			Condition=" '$(BUILD_NUMBER)' != '' AND $(AllLines.Contains($(ErrorText)))"/>
+	
     <!-- <Error 	Condition="$(AllLines.Contains($(ErrorText)))"  -->
 			<!-- Text="Execution returned with an error."  -->
 			<!-- ContinueOnError="ErrorAndContinue" /> -->
@@ -633,7 +801,7 @@
 			ContinueOnError="ErrorAndContinue"/>
     <Message Importance="high" 
 			Text="Start $(_CheckDeltaShellGuiExeFile), run/execute a command line script and exit with timeout of 10sec (with changing the key for licensecheck to false)"/>
-	<Exec 	Command="$(_CheckDeltaShellGuiExeFile) -c &quot;from DeltaShell.Gui import DeltaShellGui;print('All is fine');Gui.Exit();&quot;" 
+	<Exec 	Command="$(_CheckDeltaShellGuiExeFile) -c &quot;print('$(_ValueToCheck)');Gui.Exit();&quot;" 
 			Timeout="25000" 
 			ContinueOnError="ErrorAndContinue" 
 			WorkingDirectory="$(_CheckDeltaShellFolder)" 
@@ -654,6 +822,11 @@
 						 TestTypeName=Functioning;
 						 ExpectedValue=false"
             ContinueOnError="WarnAndContinue"/>
+			
+	<Message Importance="high" 
+			Text="Failed DeltaShell exe run action 2 because : $(AllLines)"
+			Condition=" '$(BUILD_NUMBER)' != '' AND $(AllLines.Contains($(ErrorText)))"/>
+
     <!-- <Error Condition="$(AllLines.Contains($(ErrorText)))" Text="Execution returned with an error." ContinueOnError="ErrorAndContinue" /> -->
 	<CreateProperty Value="true"
                     Condition="'@(FileContents2->Count())' &lt; 3" ContinueOnError="ErrorAndContinue">
@@ -892,13 +1065,21 @@
       <_CheckDeltaresRgfGridShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\RGFGrid.lnk</_CheckDeltaresRgfGridShortcut>
       <_CheckDeltaresRgfGridShortcutName>$(ProductName) Start Menu Folder RGFGrid ShortCut</_CheckDeltaresRgfGridShortcutName>
     </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputShortcutCheck" Properties="File=UtilityShortcuts_wxi;ShortCutName=$(_CheckDeltaresRgfGridShortcutName);ShortCut=$(_CheckDeltaresRgfGridShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)" 
+             Targets="TeamcityTemplateOutputShortcutCheck" 
+             Properties="File=UtilityShortcuts_wxi;ShortCutName=$(_CheckDeltaresRgfGridShortcutName);ShortCut=$(_CheckDeltaresRgfGridShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+             Condition="'$(MyCultureOutputFolder)' != 'fmo\'"
+             ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
       <_CheckDeltaresDimrScriptFolderShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\DimrScripts.lnk</_CheckDeltaresDimrScriptFolderShortcut>
       <_CheckDeltaresDimrScriptFolderShortcutName>$(ProductName) Start Menu Folder DimrScripts ShortCut</_CheckDeltaresDimrScriptFolderShortcutName>
     </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputShortcutCheck" Properties="File=UtilityShortcuts_wxi;ShortCutName=$(_CheckDeltaresDimrScriptFolderShortcutName);ShortCut=$(_CheckDeltaresDimrScriptFolderShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)" 
+             Targets="TeamcityTemplateOutputShortcutCheck" 
+             Properties="File=UtilityShortcuts_wxi;ShortCutName=$(_CheckDeltaresDimrScriptFolderShortcutName);ShortCut=$(_CheckDeltaresDimrScriptFolderShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+             Condition="'$(MyCultureOutputFolder)' != 'fmo\'"
+             ContinueOnError="WarnAndContinue"/>
   </Target>
 
   <Target Name="TargetRegistrySystemTests">
@@ -1089,7 +1270,11 @@
       <_CheckRegKeyinstalledUtilitiesShortcutFolderKey>installedUtilitiesShortcutFolder</_CheckRegKeyinstalledUtilitiesShortcutFolderKey>
       <_CheckRegKeyinstalledUtilitiesShortcutFolder>$([MSBuild]::GetRegistryValueFromView('$(_BaseRegistryKey)', '$(_CheckRegKeyinstalledUtilitiesShortcutFolderKey)', null, RegistryView.Registry64, RegistryView.Registry32))</_CheckRegKeyinstalledUtilitiesShortcutFolder>
     </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputRegistryCheck" Properties="RegistryKey=$(_CheckRegKeyinstalledUtilitiesShortcutFolderKey);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_CheckRegKeyinstalledUtilitiesShortcutFolder);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
+    <MsBuild 	Projects="$(MSBuildProjectFullPath)" 
+				Targets="TeamcityTemplateOutputRegistryCheck" 
+				Properties="RegistryKey=$(_CheckRegKeyinstalledUtilitiesShortcutFolderKey);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_CheckRegKeyinstalledUtilitiesShortcutFolder);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+				Condition="'$(MyCultureOutputFolder)' != 'fmo\'"             
+				ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
       <_File>Extras_wxi</_File>

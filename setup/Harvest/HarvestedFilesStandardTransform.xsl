@@ -45,10 +45,11 @@
   
   <!-- Create searches for the directories to remove. -->
   <xsl:key name="dimr-folder-search" match="wix:Directory[@Name = 'kernels']" use="descendant::wix:Component/@Id" />
-  <xsl:key name="RGFGridLibDir-folder-search" match="wix:Directory[@Id = 'RGFGridLibDir']" use="descendant::wix:Component/@Id" />
-
+  <xsl:key name="RGFGridLibDir-folder-search" match="wix:Directory[contains(wix:Component/wix:File/@Source, 'rgfgrid.cmd') and @Name='x64']" use="descendant::wix:Component/@Id" />
+  
   <!-- Create searches for the files to remove. -->
   <xsl:key name="pdb-file-search" match="wix:Component[contains(wix:File/@Source, '.pdb')]" use="@Id" />
+  <xsl:key name="pspdb-file-search" match="wix:Component[contains(wix:File/@Source, '.pspdb')]" use="@Id" />
   <xsl:key name="pssym-file-search" match="wix:Component[contains(wix:File/@Source, '.pssym')]" use="@Id" />
   
   <!-- When adding text to wxs no indenting is done, this line will nicely indent the new lines-->
@@ -58,25 +59,29 @@
   <xsl:template match="wix:Component[key('dimr-folder-search', @Id)]" >
     <xsl:copy>
       <xsl:apply-templates select="@*" />
-      <Condition><![CDATA[(INSTALLER_VARIANT != "fmo")]]></Condition>
+      <Condition><![CDATA[(INSTALLER_VARIANT <> "fmo")]]></Condition>
       <xsl:apply-templates select="*" />
     </xsl:copy>
   </xsl:template>
   <xsl:template match="wix:Component[key('RGFGridLibDir-folder-search', @Id)]" >
     <xsl:copy>
       <xsl:apply-templates select="@*" />
-      <Condition><![CDATA[(INSTALLER_VARIANT != "fmo")]]></Condition>
+      <Condition><![CDATA[(INSTALLER_VARIANT <> "fmo")]]></Condition>
       <xsl:apply-templates select="*" />
     </xsl:copy>
   </xsl:template>
   
   <!-- Remove Components referencing those directories & files. -->
   <xsl:template match="wix:Component[key('pdb-file-search', @File)]" />
+  <xsl:template match="wix:Component[key('pspdb-file-search', @File)]" />
   <xsl:template match="wix:Component[key('pssym-file-search', @File)]" />
 
   <!--Remove ComponentRefs referencing those directories & files.-->
   <xsl:template match="wix:Component[key('pdb-file-search', @Id)]" />
   <xsl:template match="wix:ComponentRef[key('pdb-file-search', @Id)]" />
+
+  <xsl:template match="wix:Component[key('pspdb-file-search', @Id)]" />
+  <xsl:template match="wix:ComponentRef[key('pspdb-file-search', @Id)]" />
 
   <xsl:template match="wix:Component[key('pssym-file-search', @Id)]" />
   <xsl:template match="wix:ComponentRef[key('pssym-file-search', @Id)]" />
