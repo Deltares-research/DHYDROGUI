@@ -186,7 +186,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<IPump, PumpProperties>();
             yield return new PropertyInfo<IBridge, BridgeProperties>();
             yield return new PropertyInfo<ICulvert, CulvertProperties>();
-            yield return new PropertyInfo<IExtraResistance, ExtraResistanceProperties>();
             yield return new PropertyInfo<LateralSource, LateralSourceProperties>();
             yield return new PropertyInfo<ObservationPoint, ObservationPointProperties>();
             yield return new PropertyInfo<WasteWaterTreatmentPlant, WasteWaterTreatmentPlantProperties>();
@@ -246,11 +245,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 GetCompositeViewData = o => o.ParentStructure,
             };
             yield return new ViewInfo<ICulvert, CulvertViewWpf>
-            {
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
-            };
-            yield return new ViewInfo<IExtraResistance, ExtraResistanceView>
             {
                 CompositeViewType = typeof(CompositeStructureView),
                 GetCompositeViewData = o => o.ParentStructure,

@@ -339,9 +339,6 @@
   <data name="RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly" xml:space="preserve">
     <value>Could not read content section {0} properly</value>
   </data>
-  <data name="RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_" xml:space="preserve">
-    <value>Could not read file {0} properly, it doesn't exist.</value>
-  </data>
   <data name="RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
     <value>Could not read file {0} properly, it seems empty</value>
   </data>
@@ -446,5 +443,14 @@
   </data>
   <data name="RetentionFileWriter_GenerateSpatialDataDefinition_Retention_does_not_have_a_valid_Branch_property" xml:space="preserve">
 	  <value>Retention does not have a valid Branch property</value>
+  </data>
+  <data name="Property_0_contains_unsupported_value_1_2_at_line_number_3_will_be_skipped" xml:space="preserve">
+    <value>Property {0} contains unsupported value '{1}': {2} at line number {3} will be skipped.</value>
+  </data>
+  <data name="Could_not_read_file_0_properly_it_doesnt_exist" xml:space="preserve">
+    <value>Could not read file {0} properly, it doesn't exist.</value>
+  </data>
+  <data name="Could_not_read_file_0_properly_it_seems_empty" xml:space="preserve">
+    <value>Could not read file {0} properly, it seems empty</value>
   </data>
 </root>

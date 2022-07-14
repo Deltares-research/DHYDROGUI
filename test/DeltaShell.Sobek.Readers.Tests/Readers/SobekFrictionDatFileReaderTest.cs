@@ -10,6 +10,7 @@ using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Sobek.Readers.Tests.Readers
@@ -100,66 +101,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             //    Assert.AreEqual(1, engelundBedFriction.RhoAir, 1e-8);
             //    Assert.AreEqual(0.474, engelundBedFriction.Sigma1, 1e-8);
             //    Assert.AreEqual(0.55, engelundBedFriction.Sigma2, 1e-8);
-        }
-
-        [Test]
-        public void ReadExtraResistance()
-        {
-            string source =
-                @"XRST id 'ER_16' nm 'ExtraResistance' ty 0 rt rs 'Extra Resistance Table' PDIN 0 0 '' pdin CLTT 'Water Level' 'Extra Resistance' cltt CLID '(null)' '(null)' clid " +
-                Environment.NewLine +
-                @"TBLE " + Environment.NewLine +
-                @"0 0.000001 <" + Environment.NewLine +
-                @"5 0.000001 <" + Environment.NewLine +
-                @"10 0.000001 <" + Environment.NewLine +
-                @"15 0.000001 <" + Environment.NewLine +
-                @"20 0.000001 <" + Environment.NewLine +
-                @"tble ty 0 xrst" + Environment.NewLine;
-            var sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(source);
-
-            Assert.AreEqual(1, sobekFriction.SobekExtraFrictionList.Count);
-            SobekExtraResistance sobekExtraResistance = sobekFriction.SobekExtraFrictionList[0];
-            Assert.AreEqual("ER_16", sobekExtraResistance.Id);
-            Assert.AreEqual("ExtraResistance", sobekExtraResistance.Name);
-            Assert.AreEqual(5, sobekExtraResistance.Table.Rows.Count);
-            Assert.AreEqual(0, (double)sobekExtraResistance.Table.Rows[0][0], 1.0e-9);
-            Assert.AreEqual(0.000001, (double)sobekExtraResistance.Table.Rows[0][1], 1.0e-9);
-            Assert.AreEqual(20, (double)sobekExtraResistance.Table.Rows[4][0], 1.0e-9);
-            Assert.AreEqual(0.000001, (double)sobekExtraResistance.Table.Rows[4][1], 1.0e-9);
-        }
-
-        [Test]
-        public void ReadExtraResistances()
-        {
-            string source =
-                @"XRST id '5' nm '' ty 0 rt rs" + Environment.NewLine +
-                @"TBLE" + Environment.NewLine +
-                @" 0 2 < " + Environment.NewLine +
-                @" 50 2 < " + Environment.NewLine +
-                @"tble xrst" + Environment.NewLine +
-                @"XRST id '6' nm '' ty 0 rt rs" + Environment.NewLine +
-                @"TBLE" + Environment.NewLine +
-                @" 1 .000001 < " + Environment.NewLine +
-                @" 5 .000001 < " + Environment.NewLine +
-                @" 10 .000001 < " + Environment.NewLine +
-                @" 15 .000001 < " + Environment.NewLine +
-                @"tble xrst";
-            var sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(source);
-
-            Assert.AreEqual(2, sobekFriction.SobekExtraFrictionList.Count);
-            SobekExtraResistance sobekExtraResistance1 = sobekFriction.SobekExtraFrictionList[0];
-            Assert.AreEqual("5", sobekExtraResistance1.Id);
-            Assert.AreEqual("", sobekExtraResistance1.Name);
-            Assert.AreEqual(2, sobekExtraResistance1.Table.Rows.Count);
-            Assert.AreEqual(50, (double)sobekExtraResistance1.Table.Rows[1][0], 1.0e-9);
-            Assert.AreEqual(2, (double)sobekExtraResistance1.Table.Rows[1][1], 1.0e-9);
-
-            SobekExtraResistance sobekExtraResistance2 = sobekFriction.SobekExtraFrictionList[1];
-            Assert.AreEqual("6", sobekExtraResistance2.Id);
-            Assert.AreEqual("", sobekExtraResistance2.Name);
-            Assert.AreEqual(4, sobekExtraResistance2.Table.Rows.Count);
-            Assert.AreEqual(15, (double)sobekExtraResistance2.Table.Rows[3][0], 1.0e-9);
-            Assert.AreEqual(0.000001, (double)sobekExtraResistance2.Table.Rows[3][1], 1.0e-9);
         }
 
         [Test]
@@ -580,6 +521,26 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual("1", sobekBedFriction.Id);
             Assert.AreEqual("1", sobekBedFriction.BranchId);
             Assert.AreEqual(SobekBedFrictionType.Mannning /*1*/, sobekBedFriction.MainFriction.FrictionType);
+        }
+
+        [Test]
+        public void GetSobekFriction_ForUnsupportedExtraResistance_LogsWarning()
+        {
+            // Setup
+            string text = string.Join(Environment.NewLine,
+                                      "XRST id '5' nm '' ty 0 rt rs",
+                                      "TBLE",
+                                      "0 .1 <",
+                                      "1 5 <",
+                                      "tble xrst");
+
+            // Call
+            void Call() => SobekFrictionDatFileReader.GetSobekFriction(text);
+
+            // Assert
+            string[] warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
+            Assert.That(warnings, Has.Length.EqualTo(1));
+            Assert.That(warnings[0], Is.EqualTo("The extra resistance functionality is not supported, skipping this item with id: 5"));
         }
     }
 }

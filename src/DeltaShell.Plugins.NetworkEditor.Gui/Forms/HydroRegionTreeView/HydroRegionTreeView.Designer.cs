@@ -44,7 +44,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.buttonMenuBranchAddPump = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchCulvert = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchAddBridge = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
-            this.buttonMenuBranchAddExtraResistance = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchAddLateralSource = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchAddObservationPoint = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -269,7 +268,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.buttonMenuBranchAddPump,
             this.buttonMenuBranchCulvert,
             this.buttonMenuBranchAddBridge,
-            this.buttonMenuBranchAddExtraResistance,
             this.buttonMenuBranchAddLateralSource,
             this.buttonMenuBranchAddObservationPoint,
             this.toolStripSeparator2,
@@ -367,14 +365,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.buttonMenuBranchAddBridge.Size = new System.Drawing.Size(196, 22);
             this.buttonMenuBranchAddBridge.Text = "Add &Bridge";
             this.buttonMenuBranchAddBridge.Click += new System.EventHandler(this.handleButtonAddBridge_Click);
-            // 
-            // buttonMenuBranchAddExtraResistance
-            // 
-            this.buttonMenuBranchAddExtraResistance.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.ExtraResistanceSmall;
-            this.buttonMenuBranchAddExtraResistance.Name = "buttonMenuBranchAddExtraResistance";
-            this.buttonMenuBranchAddExtraResistance.Size = new System.Drawing.Size(196, 22);
-            this.buttonMenuBranchAddExtraResistance.Text = "Add Extra &Resistance";
-            this.buttonMenuBranchAddExtraResistance.Click += new System.EventHandler(this.handleButtonAddExtraResistance_Click);
             // 
             // buttonMenuBranchAddLateralSource
             // 
@@ -500,7 +490,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private ClonableToolStripMenuItem buttonMenuBranchZoomTo;
         private ClonableToolStripMenuItem buttonMenuFeaturePasteInto;
         private ClonableToolStripMenuItem addSectionTypeToolStripMenuItem;
-        private ClonableToolStripMenuItem buttonMenuBranchAddExtraResistance;
         private ClonableToolStripMenuItem buttonMenuBranchAddObservationPoint;
         private ClonableToolStripMenuItem addSharedCrossSectionDefinitionToolStripMenuItem;
         private ClonableToolStripMenuItem zWTabulatedToolStripMenuItem;

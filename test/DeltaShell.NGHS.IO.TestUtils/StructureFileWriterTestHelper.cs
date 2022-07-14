@@ -494,29 +494,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
             bridge.IsPillar = false;
         }
 
-        public static void AddExtraResistance(this IBranch branch, long id, string name, double chainage, double[] levels, double[] ksi)
-        {
-            IExtraResistance extraResistance = new ExtraResistance
-            {
-                Branch = branch,
-                Name = id.ToString(),
-                LongName = name,
-                Chainage = chainage
-            };
-
-            var argument = new Variable<double>();
-            argument.Values.AddRange(levels);
-            extraResistance.FrictionTable.Arguments.Clear();
-            extraResistance.FrictionTable.Arguments.Add(argument);
-
-            var component = new Variable<double>();
-            component.Values.AddRange(ksi);
-            extraResistance.FrictionTable.Components.Clear();
-            extraResistance.FrictionTable.Components.Add(component);
-
-            branch.AddStructure(extraResistance);
-        }
-
         #endregion Structure Creation Helpers
 
         public static void WriteCrossSectionsToIni(IEnumerable<IStructure1D> structures)

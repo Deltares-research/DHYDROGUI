@@ -37,7 +37,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             Assert.AreEqual(1, network.Bridges.Count());
             Assert.AreEqual(2, network.Culverts.Count());
             Assert.AreEqual(6, network.Weirs.Count());
-            Assert.AreEqual(0, network.ExtraResistances.Count());
             Assert.AreEqual(1, network.Pumps.Count());
         }
     }

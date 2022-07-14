@@ -153,9 +153,6 @@
   <data name="CulvertProperties_DisplayName" xml:space="preserve">
     <value>#Duiker</value>
   </data>
-  <data name="ExtraResistanceProperties_DisplayName" xml:space="preserve">
-    <value>#Extra weerstand</value>
-  </data>
   <data name="FeatureCoverageProperties_DisplayName" xml:space="preserve">
     <value>#Functie ruimtelijke gegevens</value>
   </data>

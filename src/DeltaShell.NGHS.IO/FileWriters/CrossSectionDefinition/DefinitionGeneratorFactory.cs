@@ -151,8 +151,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     return new DefinitionGeneratorStructureBridgeStandard();
                 case StructureType.BridgePillar:
                     return new DefinitionGeneratorStructureBridgePillar();
-                case StructureType.ExtraResistance:
-                    return new DefinitionGeneratorStructureExtraResistance();
                 default:
                     return null;
             }

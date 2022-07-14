@@ -41,7 +41,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             Pump,
             Bridge,
             Culvert,
-            ExtraResistance,
             Unknown
         }
 
@@ -119,10 +118,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             if (structure is ICulvert)
             {
                 return StructureType.Culvert;
-            }
-            if (structure is IExtraResistance)
-            {
-                return StructureType.ExtraResistance;
             }
             return StructureType.Unknown;
         }
@@ -487,9 +482,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     case StructureType.Culvert:
                         AddCulvert((ICulvert) structure);
                         break;
-                    case StructureType.ExtraResistance:
-                        AddExtraResistanceShape((IExtraResistance)structure);
-                        break;
                 }
             }
         }
@@ -510,13 +502,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             var pumpShape = new PumpInStructureViewShape(chart, pump, false);
             AddStructureAndShape(pump, pumpShape);
-        }
-
-        private void AddExtraResistanceShape(IExtraResistance extraResistance)
-        {
-            var extraResistanceShape = new ExtraResistanceInStructureViewShape(chart, extraResistance);
-            AddStructureAndShape(extraResistance, extraResistanceShape);
-            
         }
 
         private void AddStructureAndShape(IStructure1D structure, IShapeFeature shape)
@@ -554,7 +539,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     
                 case StructureType.Bridge: return GetBoundingRectBridge((IBridge)structure);
                 case StructureType.Culvert: return GetBoundingRectCulver((ICulvert)structure);
-                case StructureType.ExtraResistance: return GetBoundingRectExtraResistance((IExtraResistance)structure);
                 default:
                     throw new NotImplementedException("Unsupported type");
             }
@@ -633,22 +617,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
             return GeometryFactory.CreateEnvelope(pump.OffsetY, pump.OffsetY + width, minY, maxY);
         }
-
-        private Envelope GetBoundingRectExtraResistance(IExtraResistance extraResistance)
-        {
-            //used in min max for axis
-            double minY = 10;
-            double maxY = 10;
-            double width = chartView.ChartCoordinateService.ToWorldWidth(ExtraResistanceSmallIcon.Width);
-            return GeometryFactory.CreateEnvelope(extraResistance.OffsetY, extraResistance.OffsetY + width, minY, maxY);
-        }
         #endregion
 
         #region Public properties
 
         private IStructureViewData structureViewData;
         private static readonly Bitmap PumpSmallIcon = Properties.Resources.PumpSmall;
-        private static readonly Bitmap ExtraResistanceSmallIcon = Properties.Resources.ExtraResistanceSmall;
 
         public object Data
         {

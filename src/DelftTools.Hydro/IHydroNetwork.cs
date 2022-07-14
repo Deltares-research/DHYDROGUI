@@ -49,9 +49,7 @@ namespace DelftTools.Hydro
         IEnumerable<IRetention> Retentions { get; }
         
         IEnumerable<IObservationPoint> ObservationPoints { get; }
-        
-        IEnumerable<IExtraResistance> ExtraResistances { get; }
-        
+
         IEventedList<CrossSectionSectionType> CrossSectionSectionTypes { get; }
         
         IEventedList<ICrossSectionDefinition> SharedCrossSectionDefinitions { get; }

@@ -49,7 +49,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 default:
                     throw new NotImplementedException();
             }
-            throw new NotImplementedException();
         }
     }
 }

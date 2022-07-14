@@ -62,7 +62,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string AddOrificeToolName = "add orifice";
         public const string AddCulvertToolName = "add culvert";
         public const string AddBridgeToolName = "add bridge";
-        public const string AddExtraResistanceToolName = "add new extra resistance";
         public const string AddNetworkLocationToolName = "add new network location";
         public const string AddInterpolatedCrossSectionToolName = "add interpolated cross-section";
 
@@ -109,7 +108,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static readonly Cursor AddNewOrificeCursor = MapCursors.CreateArrowOverlayCuror(Resources.Gate);
         private static readonly Cursor NewCulvertToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.CulvertSmall);
         private static readonly Cursor NewBridgeToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.BridgeSmall);
-        private static readonly Cursor NewExtraResistanceToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.ExtraResistanceSmall);
         private static readonly Cursor NewWwtpToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.wwtp);
         private static readonly Cursor NewRunoffBoundaryToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.runoff);
         private static readonly Cursor AddInterpolatedCrossSectionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.AddInterpolatedCrossSection);
@@ -237,9 +235,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             var newBridgeTool = new NewPointFeatureTool<Bridge>(AddBridgeToolName) { Cursor = NewBridgeToolCursor };
             AddMapTool(newBridgeTool);
-
-            var newExtraResistanceTool = new NewPointFeatureTool<ExtraResistance>(AddExtraResistanceToolName) { Cursor = NewExtraResistanceToolCursor };
-            AddMapTool(newExtraResistanceTool);
 
             var outletCompartmentContextMenuMapTool = new OutletCompartmentContextMenuMapTool();
             AddMapTool(outletCompartmentContextMenuMapTool);

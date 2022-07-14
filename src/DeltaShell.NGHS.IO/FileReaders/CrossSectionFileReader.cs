@@ -12,6 +12,7 @@ using DeltaShell.NGHS.IO.FileReaders.Location.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using GeoAPI.Extensions.Networks;
@@ -212,11 +213,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
         private static DelftIniCategory[] GetCrossSectionDefinitionCategories(string csdFilename)
         {
             if (!File.Exists(csdFilename))
-                throw new FileReadingException($"Could not read file {csdFilename} properly, it doesn't exist.");
+                throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, csdFilename));
 
             var csDefinitionCategories = new DelftIniReader().ReadDelftIniFile(csdFilename);
             if (csDefinitionCategories.Count == 0)
-                throw new FileReadingException($"Could not read file {csdFilename} properly, it seems empty");
+                throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, csdFilename));
 
             return csDefinitionCategories.Where(category =>
                                                     string.Equals(category.Name, DefinitionPropertySettings.Header,

@@ -163,9 +163,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                 case ObservationPoint _:
                     featureInteractor = new BranchFeatureInteractor<ObservationPoint>(layer, feature, vectorStyle, Network);
                     break;
-                case IExtraResistance _:
-                    featureInteractor = new StructureInteractor<ExtraResistance>(layer, feature, vectorStyle, Network);
-                    break;
             }
 
             if (featureInteractor is INetworkFeatureInteractor)

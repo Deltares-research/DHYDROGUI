@@ -5,6 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.Utils;
+using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
@@ -69,21 +70,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE)
             {
                 // SobekRe XRST records in deffrc.3 in 2.12 in friction.dat (already imported)
-                var extraFrictionFile = GetFilePath(SobekFileNames.SobekExtraFrictionFileName);
-                if (!File.Exists(extraFrictionFile))
-                {
-                    log.WarnFormat("Extra friction file [{0}] not found; skipping...", extraFrictionFile);
+                string extraFrictionFile = GetFilePath(SobekFileNames.SobekExtraFrictionFileName);
 
-                }
-                else
+                if (File.Exists(extraFrictionFile))
                 {
-                    var extraFrictions = new SobekReExtraFrictionDatFileReader().Read(extraFrictionFile);
-                    var extraResistances = HydroNetwork.ExtraResistances.ToDictionary(er => er.Name, er => er);
-
-                    foreach (var extraFriction in extraFrictions)
-                    {
-                        FindAndReplaceOrAddExtraFrictionToNetwork(extraFriction, branches, extraResistances);
-                    }
+                    log.WarnFormat(Resources.Extra_friction_file_0_found_but_is_not_supported, extraFrictionFile);
                 }
             }
         }
@@ -143,40 +134,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return false;
             }
             return true;
-        }
-
-        private void FindAndReplaceOrAddExtraFrictionToNetwork(SobekReExtraResistance extraFriction, Dictionary<string, IBranch> branches, Dictionary<string, IExtraResistance> extraResistances)
-        {
-            var branch = branches[extraFriction.BranchId];
-            var offset = extraFriction.Chainage;
-            var geometry = GeometryHelper.GetPointGeometry(branch, offset);
-
-            if (extraResistances.ContainsKey(extraFriction.Id))
-            {
-                var extraResistance = extraResistances[extraFriction.Id];
-                extraResistance.LongName = extraFriction.Name;
-                extraResistance.FrictionTable.Clear();
-                FunctionHelper.AddDataTableRowsToFunction(extraFriction.Table, extraResistance.FrictionTable);
-                if (extraResistance.Branch != branch)
-                {
-                    extraResistance.Branch.BranchFeatures.Remove(extraResistance);
-                    extraResistance.Branch = branch;
-                    branch.BranchFeatures.Add(extraResistance);
-                }
-            }
-            else
-            {
-                var compositeStructure = Builders.ChannelStructureBuilder.CreateCompositeStructureAndAddItToTheBranch(branch, offset, geometry);
-                compositeStructure.Name = extraFriction.Id + " [compound]"; // to prevent duplicates with substructure
-                
-                var extraResistance = new ExtraResistance
-                {
-                    Name = extraFriction.Id,
-                    LongName = extraFriction.Name,
-                };
-                FunctionHelper.AddDataTableRowsToFunction(extraFriction.Table, extraResistance.FrictionTable);
-                HydroNetworkHelper.AddStructureToComposite(compositeStructure, extraResistance);
-            }
         }
     }
 }

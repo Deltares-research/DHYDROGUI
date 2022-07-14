@@ -30,7 +30,6 @@ namespace DelftTools.Hydro.Validators
                         ValidateCrossSections(target),
                         ValidateRetentions(target),
                         StructuresValidator.Validate(target),
-                        ExtraResistanceValidator.Validate(target.Structures.Where(s => s is IExtraResistance)),
                     });
                 }
                 if (target.Compartments.Any() && target.Pipes.Any() && target.Manholes.Any())
@@ -187,7 +186,6 @@ namespace DelftTools.Hydro.Validators
                                         ValidationHelper.ValidateDuplicateNames(network.Culverts.Cast<INameable>(), "culverts", network),
                                         ValidationHelper.ValidateDuplicateNames(network.CrossSections.Cast<INameable>(), "cross sections", network),
                                         ValidationHelper.ValidateDuplicateNames(crossSectionDefinitions.Cast<INameable>(), "cross section definitions", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.ExtraResistances.Cast<INameable>(), "extra resistances", network),
                                         ValidationHelper.ValidateDuplicateNames(network.HydroNodes.Cast<INameable>(), "nodes", network),
                                         ValidationHelper.ValidateDuplicateNames(network.LateralSources.Cast<INameable>(), "lateral sources", network),
                                         ValidationHelper.ValidateDuplicateNames(network.ObservationPoints.Cast<INameable>(), "observation points", network),
@@ -203,7 +201,6 @@ namespace DelftTools.Hydro.Validators
                                         ValidationHelper.ValidateNoEmptyNames(network.Culverts.Cast<INameable>(), "culvert", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.CrossSections.Cast<INameable>(), "cross section", network),
                                         ValidationHelper.ValidateNoEmptyNames(crossSectionDefinitions.Cast<INameable>(), "cross section definition", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.ExtraResistances.Cast<INameable>(), "extra resistance", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.HydroNodes.Cast<INameable>(), "node", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.LateralSources.Cast<INameable>(), "lateral source", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.ObservationPoints.Cast<INameable>(), "observation point", network),

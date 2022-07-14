@@ -61,8 +61,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                                                        branch, 
                                                        structuresFilePath, 
                                                        referenceDateTime);
-                case StructureType.ExtraResistance:
-                    return new ExtraResistanceDefinitionParser(structureType, category, branch, structuresFilename);
                 case StructureType.Pump:
                     return new PumpDefinitionParser(new TimFile(),
                                                     structureType, 

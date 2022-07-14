@@ -61,6 +61,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extra friction file &apos;{0}&apos; found, but is not supported; skipping....
+        /// </summary>
+        public static string Extra_friction_file_0_found_but_is_not_supported {
+            get {
+                return ResourceManager.GetString("Extra_friction_file_0_found_but_is_not_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected 24 values but got {0} values. Skipping import of water use per capita per hour..
         /// </summary>
         public static string NwrwDryWeatherFlowDefinitionBuilder_WarningIncorrectNumberOfWaterCapacityPerHourValues {

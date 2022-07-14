@@ -432,8 +432,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         RemoveTracerFromSourcesAndSink(tracerBoundaryCondition.TracerName);
                         break;
                     case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException("Renaming of Tracers is not yet supported");
-                        break;
+                        throw new NotSupportedException("Renaming of Tracers is not yet supported");
+
                     case NotifyCollectionChangedAction.Reset:
                         SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
                         return;

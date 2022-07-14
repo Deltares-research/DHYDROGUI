@@ -86,5 +86,14 @@ namespace DeltaShell.Sobek.Readers.Properties {
                 return ResourceManager.GetString("SobekRRPavedReader_Warning_UnsupportedDischargeTarget", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The extra resistance functionality is not supported, skipping this item with id: {0}.
+        /// </summary>
+        public static string The_extra_resistance_functionality_is_not_supported_skipping_this_item_with_id_0 {
+            get {
+                return ResourceManager.GetString("The_extra_resistance_functionality_is_not_supported_skipping_this_item_with_id_0", resourceCulture);
+            }
+        }
     }
 }

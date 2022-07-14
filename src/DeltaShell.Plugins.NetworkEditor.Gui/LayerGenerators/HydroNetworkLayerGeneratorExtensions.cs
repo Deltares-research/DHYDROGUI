@@ -68,12 +68,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
                     return CreateNetworkVectorLayer<Culvert>(culverts, "Culverts", hydroNetwork, refreshForChangedItem: o => o is Channel channel && channel.Culverts.Any());
                 case IEnumerable<IBridge> bridges:
                     return CreateNetworkVectorLayer<Bridge>(bridges, "Bridges", hydroNetwork, refreshForChangedItem: o => o is Channel channel && channel.Bridges.Any());
-                case IEnumerable<IExtraResistance> extraResistances:
-                    return CreateNetworkVectorLayer<ExtraResistance>(extraResistances, "Extra Resistances", hydroNetwork,
-                                                                     refreshForChangedItem: o =>
-                                                                         o is Channel channel &&
-                                                                         channel.BranchFeatures
-                                                                                .OfType<ExtraResistance>().Any());
                 case IEnumerable<ICompositeBranchStructure> compositeBranchStructures:
                     return CreateNetworkVectorLayer<CompositeBranchStructure>(compositeBranchStructures,
                                                                               "Compound Structures",
@@ -125,8 +119,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
             }
 
             if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) ||
-                type == typeof(Bridge) || type == typeof(ExtraResistance)
-                || type == typeof(OutletCompartment) || type == typeof(IOrifice))
+                type == typeof(Bridge) || type == typeof(OutletCompartment) || type == typeof(IOrifice))
             {
                 return new List<IFeatureRenderer> { new StructureRenderer() };
             }
@@ -181,11 +174,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
             if (type == typeof(Bridge))
             {
                 return l => Bridge.CreateDefault();
-            }
-
-            if (type == typeof(ExtraResistance))
-            {
-                return l => ExtraResistance.CreateDefault();
             }
 
             if (type == typeof(CrossSection))
@@ -244,8 +232,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
             }
 
             if (type == typeof(Culvert) ||
-                type == typeof(Bridge) ||
-                type == typeof(ExtraResistance))
+                type == typeof(Bridge))
             {
                 yield return new StructureSnapRule
                 {

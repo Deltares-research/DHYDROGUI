@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
@@ -21,7 +22,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         
         public static void ReadFileObservationPointLocations(string filename, IHydroNetwork network)
         {
-            if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
+            if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
             var categories = new DelftIniReader().ReadDelftIniFile(filename);
             if (categories.Count == 0) return;
             
@@ -63,9 +64,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 
         public static void ReadFileLateralDischargeLocations(string filename, IHydroNetwork network)
         {
-            if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
+            if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
             var categories = new DelftIniReader().ReadDelftIniFile(filename);
-            if (categories.Count == 0) throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty", filename));
+            if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 

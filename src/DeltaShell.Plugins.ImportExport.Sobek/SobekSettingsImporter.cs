@@ -40,7 +40,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             else
             {
                 ImportSobekReSettings();
-                SetSobekReSettingsToFeatures();
             }
 
             ImportCaseSettingsFile();
@@ -87,14 +86,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             catch (Exception exception)
             {
                 Log.ErrorFormat("Error reading case settings {0}; reason {1}", path, exception.Message);
-            }
-        }
-
-        private void SetSobekReSettingsToFeatures()
-        {
-            foreach (var extraResistance in HydroNetwork.ExtraResistances)
-            {
-                extraResistance.ExtraResistanceType = 0;
             }
         }
 

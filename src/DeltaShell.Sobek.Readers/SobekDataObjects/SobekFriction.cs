@@ -26,12 +26,6 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         }
     }
 
-    public class SobekReExtraResistance : SobekExtraResistance
-    {
-        public string BranchId { get; set; }
-        public double Chainage { get; set; }
-    }
-
     public class SobekFriction
     {
         public SobekFriction()

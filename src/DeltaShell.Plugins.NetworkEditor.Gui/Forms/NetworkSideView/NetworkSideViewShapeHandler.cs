@@ -145,9 +145,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                         case ICulvert culvert:
                             shape = GetCulvertShape(culvert, iconLocationY);
                             break;
-                        case IExtraResistance resistance:
-                            shape = GetExtraResistanceShape(resistance, iconLocationY);
-                            break;
                     }
                 }
 
@@ -187,12 +184,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             bool reversed = NetworkSideViewHelper.GetReversed(route, pump);
             //pump levels etc.
             return new PumpInSideViewShape(chart, offset, iconLocationY, pump, reversed);
-        }
-
-        private ExtraResistanceInSideViewShape GetExtraResistanceShape(IExtraResistance extraResistance, double iconLocationY)
-        {
-            double offset = RouteHelper.GetRouteChainage(NetworkRoute, extraResistance);
-            return new ExtraResistanceInSideViewShape(chart, offset, iconLocationY, extraResistance);
         }
 
         private void AddStructureAndShape(IStructure1D structure, IShapeFeature symbolShapeFeature)

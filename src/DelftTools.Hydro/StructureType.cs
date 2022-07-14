@@ -11,8 +11,6 @@ namespace DelftTools.Hydro
         /* Culverts */
         Culvert,
         InvertedSiphon,
-        /* End Culverts */
-        ExtraResistance,
         Gate,
         Pump,
         /* Weirs */

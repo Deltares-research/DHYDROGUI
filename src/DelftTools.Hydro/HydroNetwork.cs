@@ -262,7 +262,6 @@ namespace DelftTools.Hydro
                 Gates = BranchFeatures.OfType<IGate>();
                 Culverts = BranchFeatures.OfType<ICulvert>();
                 Bridges = BranchFeatures.OfType<IBridge>();
-                ExtraResistances = BranchFeatures.OfType<IExtraResistance>();
                 LateralSources = BranchFeatures.OfType<ILateralSource>();
                 Retentions = BranchFeatures.OfType<IRetention>();
                 ObservationPoints = BranchFeatures.OfType<IObservationPoint>();
@@ -301,7 +300,6 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<IGate> Gates { get; protected set; }
         public virtual IEnumerable<ICulvert> Culverts { get; protected set; }
         public virtual IEnumerable<IBridge> Bridges { get; protected set; }
-        public virtual IEnumerable<IExtraResistance> ExtraResistances { get; protected set; }
         public virtual IEnumerable<ILateralSource> LateralSources { get; protected set; }
         public virtual IEnumerable<IRetention> Retentions { get; protected set; }
         public virtual IEnumerable<IObservationPoint> ObservationPoints { get; protected set; }
@@ -466,7 +464,6 @@ namespace DelftTools.Hydro
                 [typeof(ILateralSource)] = CreateDictionaryForBranchFeatures(nameof(LateralSources), LateralSources),
                 [typeof(IRetention)] = CreateDictionaryForBranchFeatures(nameof(Retentions), Retentions),
                 [typeof(IObservationPoint)] = CreateDictionaryForBranchFeatures(nameof(ObservationPoints), ObservationPoints),
-                [typeof(IExtraResistance)] = CreateDictionaryForBranchFeatures(nameof(ExtraResistances), ExtraResistances),
                 [typeof(ICompositeBranchStructure)] = CreateDictionaryForBranchFeatures(nameof(CompositeBranchStructures), CompositeBranchStructures),
             };
         }

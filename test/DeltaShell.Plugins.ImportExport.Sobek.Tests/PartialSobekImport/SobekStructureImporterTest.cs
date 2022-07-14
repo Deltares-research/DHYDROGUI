@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(46, hydroNetwork.Structures.Count());
+            Assert.AreEqual(36, hydroNetwork.Structures.Count());
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(46, hydroNetwork.Structures.Count());
+            Assert.AreEqual(36, hydroNetwork.Structures.Count());
 
             var firstStructure = hydroNetwork.Structures.Where(s => s.ParentStructure != null).First();
             var longName = firstStructure.LongName;
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(46, hydroNetwork.Structures.Count());
+            Assert.AreEqual(36, hydroNetwork.Structures.Count());
             Assert.AreEqual(longName, firstStructure.LongName);
         }
 
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(46, hydroNetwork.Structures.Count());
+            Assert.AreEqual(36, hydroNetwork.Structures.Count());
 
             var firstStructure = hydroNetwork.Structures.Where(s => s.ParentStructure != null).First();
             var orgBranch = firstStructure.Branch;
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(46, hydroNetwork.Structures.Count());
+            Assert.AreEqual(36, hydroNetwork.Structures.Count());
             Assert.AreSame(orgBranch, firstStructure.Branch);
             Assert.AreEqual(nFeatures, branch.BranchFeatures.Count());
         }

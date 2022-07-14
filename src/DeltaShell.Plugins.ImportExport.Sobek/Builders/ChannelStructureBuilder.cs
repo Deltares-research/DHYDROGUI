@@ -163,122 +163,98 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                 bool hasMappingInStructDat = CheckIfLocationHasStructureMapping(location.ID);
                 if (!hasMappingInStructDat)
                 {
-                    // Locations of extra resistances in sobek are stored in network.st but there is no related 
-                    // data io either strcut.dat of strcut.def. The extra resistance is stored in friction.dat
-                    HandleStructureNotInStructDat(location, existingStructures);
+                    continue;
                 }
-                else
+
+                if (!CheckIfLocationToDefinitionMappingIsValid(location.ID))
                 {
-                    if (!CheckIfLocationToDefinitionMappingIsValid(location.ID))
+                    continue;
+                }
+                if (location.BranchID.Trim() == "-1")
+                {
+                    // structure not linked to branch but part of compound structure
+                    continue;
+                }
+                if (!channels.ContainsKey(location.BranchID))
+                {
+                    log.ErrorFormat("Can not add structure {0} to branch; carrier id {1} not found.",
+                                    location.ID, location.BranchID);
+                    continue;
+                }
+                var branch = channels[location.BranchID];
+                var offset = branch is ISewerConnection sewerConnection && sewerConnection.IsInternalConnection() ? 0  : location.Offset;
+
+                if (offset > branch.Length)
+                {
+                    log.ErrorFormat("The chainage of structure '{0} - {1}' is out of the branch length. The chainage has been set from {2} to {3}.", location.ID, location.Name, offset, branch.Length);
+                    offset = branch.Length;
+                }
+
+                IGeometry geometry = GeometryHelper.GetPointGeometry(branch, offset);
+
+                ICompositeBranchStructure compositeStructure = CreateCompositeStructureAndAddItToTheBranch(branch,
+                                                                                                           offset, geometry);
+
+                compositeStructure.Name = location.ID + " [compound]"; // to prevent duplicates with substructure
+                compositeStructure.LongName = location.Name;
+
+                // definition found, add to the network
+                if (location.IsCompound)
+                {
+                    var compound = compoundMapping[location.ID];
+                    foreach (var structure in compound.Structures)
                     {
-                        continue;
-                    }
-                    if (location.BranchID.Trim() == "-1")
-                    {
-                        // structure not linked to branch but part of compound structure
-                        continue;
-                    }
-                    if (!channels.ContainsKey(location.BranchID))
-                    {
-                        log.ErrorFormat("Can not add structure {0} to branch; carrier id {1} not found.",
-                                        location.ID, location.BranchID);
-                        continue;
-                    }
-                    var branch = channels[location.BranchID];
-                    var offset = branch is ISewerConnection sewerConnection && sewerConnection.IsInternalConnection() ? 0  : location.Offset;
+                        var definitionMapping = mappings[structure];
 
-                    if (offset > branch.Length)
-                    {
-                        log.ErrorFormat("The chainage of structure '{0} - {1}' is out of the branch length. The chainage has been set from {2} to {3}.", location.ID, location.Name, offset, branch.Length);
-                        offset = branch.Length;
-                    }
-
-                    IGeometry geometry = GeometryHelper.GetPointGeometry(branch, offset);
-
-                    ICompositeBranchStructure compositeStructure = CreateCompositeStructureAndAddItToTheBranch(branch,
-                                                                           offset, geometry);
-
-                    compositeStructure.Name = location.ID + " [compound]"; // to prevent duplicates with substructure
-                    compositeStructure.LongName = location.Name;
-
-                    // definition found, add to the network
-                    if (location.IsCompound)
-                    {
-                        var compound = compoundMapping[location.ID];
-                        foreach (var structure in compound.Structures)
-                        {
-                            var definitionMapping = mappings[structure];
-
-                            // Sobek 2.12: Structures in a compound are not written to SobekNetworkStructuresFileName (NETWORK.ST)
-                            // For ALL structures in a compound, names are written to SobekStructureDatFileName (STRUCT.DAT)
-                            // Therefore name of definitionMapping is never empty for a structure in a compound
-
-                            // Sobek RE: In SobekStructureDatFileName (DEFSTR.2) no names are written
-                            // Therefore name of definitionMapping is always empty
-                            // Use the names from SobekNetworkStructuresFileName (DEFSTR.1) ie the name of the sublocation
-
-                            string structureName = "";
-                            if (definitionMapping.Name == "")
-                            {
-                                var subLocation = locations.Where(lc => lc.ID == structure && !lc.IsCompound).FirstOrDefault(); 
-                                // Note that in Sobek RE a compound structure can have the same ID as a structure that is not a compound
-                                // Therefore searching by just ID is not enough
-                                if (subLocation != null)
-                                {
-                                    structureName = subLocation.Name;
-                                }
-                            }
-                            else
-                            {
-                                structureName = definitionMapping.Name;
-                            }
-
-                            ProcesStruct(location, branch, definitionMapping, compositeStructure, existingStructures, structureName);
-                        }
-                    }
-                    else
-                    {
-                        var definitionMapping = mappings[location.ID];
-
-                        // Sobek 2.12: For some structures like a River Weir the name is not written to SobekStructureDatFileName (STRUCT.DAT)
-                        // Structures in a compound are not written to SobekNetworkStructuresFileName (NETWORK.ST)
-                        // Use the name of the location when it is not a structure in a compound
+                        // Sobek 2.12: Structures in a compound are not written to SobekNetworkStructuresFileName (NETWORK.ST)
+                        // For ALL structures in a compound, names are written to SobekStructureDatFileName (STRUCT.DAT)
+                        // Therefore name of definitionMapping is never empty for a structure in a compound
 
                         // Sobek RE: In SobekStructureDatFileName (DEFSTR.2) no names are written
-                        // ALL structures are written to SobekNetworkStructuresFileName (DEFSTR.1)
-                        // Always use the name of the location
+                        // Therefore name of definitionMapping is always empty
+                        // Use the names from SobekNetworkStructuresFileName (DEFSTR.1) ie the name of the sublocation
 
-                        string structureName = location.Name;
+                        string structureName = "";
+                        if (definitionMapping.Name == "")
+                        {
+                            var subLocation = locations.Where(lc => lc.ID == structure && !lc.IsCompound).FirstOrDefault(); 
+                            // Note that in Sobek RE a compound structure can have the same ID as a structure that is not a compound
+                            // Therefore searching by just ID is not enough
+                            if (subLocation != null)
+                            {
+                                structureName = subLocation.Name;
+                            }
+                        }
+                        else
+                        {
+                            structureName = definitionMapping.Name;
+                        }
 
                         ProcesStruct(location, branch, definitionMapping, compositeStructure, existingStructures, structureName);
                     }
-
-                    if (!compositeStructure.Structures.Any())
-                    {
-                        // no structures could be generated and the component structure should be removed again from the branch
-                        branch.BranchFeatures.Remove(compositeStructure);
-                    }
                 }
-            }
-        }
+                else
+                {
+                    var definitionMapping = mappings[location.ID];
 
-        private void HandleStructureNotInStructDat(SobekStructureLocation location, IEnumerable<IStructure1D> existingStructures)
-        {
-            if (sobekExtraFriction.ContainsKey(location.ID))
-            {
+                    // Sobek 2.12: For some structures like a River Weir the name is not written to SobekStructureDatFileName (STRUCT.DAT)
+                    // Structures in a compound are not written to SobekNetworkStructuresFileName (NETWORK.ST)
+                    // Use the name of the location when it is not a structure in a compound
 
-                SobekExtraResistance sobekExtraResistance = sobekExtraFriction[location.ID];
-                var channel = channels[location.BranchID];
-                IGeometry geometry = GeometryHelper.GetPointGeometry(channel, location.Offset);
-                ICompositeBranchStructure compositeStructure = CreateCompositeStructureAndAddItToTheBranch(channel,
-                                                                                                           location.Offset, geometry);
-                var extraResistance = new ExtraResistance
-                                          {
-                                              Name = location.ID,
-                                          };
-                FunctionHelper.AddDataTableRowsToFunction(sobekExtraResistance.Table, extraResistance.FrictionTable);
+                    // Sobek RE: In SobekStructureDatFileName (DEFSTR.2) no names are written
+                    // ALL structures are written to SobekNetworkStructuresFileName (DEFSTR.1)
+                    // Always use the name of the location
 
-                AddOrReplaceStructure(extraResistance, compositeStructure, existingStructures);
+                    string structureName = location.Name;
+
+                    ProcesStruct(location, branch, definitionMapping, compositeStructure, existingStructures, structureName);
+                }
+
+                if (!compositeStructure.Structures.Any())
+                {
+                    // no structures could be generated and the component structure should be removed again from the branch
+                    branch.BranchFeatures.Remove(compositeStructure);
+                }
             }
         }
 

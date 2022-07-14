@@ -102,7 +102,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
         [Test]
         [TestCase(StructureType.Bridge, typeof(BridgeDefinitionParser))]
         [TestCase(StructureType.Culvert, typeof(CulvertDefinitionParser))]
-        [TestCase(StructureType.ExtraResistance, typeof(ExtraResistanceDefinitionParser))]
         [TestCase(StructureType.Pump, typeof(PumpDefinitionParser))]
         [TestCase(StructureType.Bridge, typeof(BridgeDefinitionParser))]
         [TestCase(StructureType.Weir, typeof(WeirDefinitionParser))]

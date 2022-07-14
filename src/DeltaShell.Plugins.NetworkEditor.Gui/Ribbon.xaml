@@ -225,12 +225,6 @@
                                      Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\BridgeSmall.png"
                                      SizeDefinition="Small,Small,Small"
                                      ToolTip="Add Bridge" />
-                <fluent:ToggleButton x:Name="ButtonAddNewExtraResistance"
-                                     Click="ButtonAddNewExtraResistance_Click"
-                                     Header="Add Extra Resistance"
-                                     Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\ExtraResistanceSmall.png"
-                                     SizeDefinition="Small,Small,Small"
-                                     ToolTip="Add Extra Resistance" />
                 <fluent:ToggleButton x:Name="ButtonAddNewLateralSource"
                                      Click="ButtonAddNewLateralSource_Click"
                                      Header="Add Lateral Source"

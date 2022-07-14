@@ -21,7 +21,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             public const string InvertedSiphon = "invertedSiphon";
             public const string Bridge = "bridge";
             public const string BridgePillar = "bridgePillar";
-            public const string ExtraResistanceStructure = "extraresistance";
             public const string CompoundStructure = "compound";
         }
         

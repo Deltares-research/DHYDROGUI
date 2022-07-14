@@ -134,6 +134,24 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
+        /// </summary>
+        public static string Could_not_read_file_0_properly_it_doesnt_exist {
+            get {
+                return ResourceManager.GetString("Could_not_read_file_0_properly_it_doesnt_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it seems empty.
+        /// </summary>
+        public static string Could_not_read_file_0_properly_it_seems_empty {
+            get {
+                return ResourceManager.GetString("Could_not_read_file_0_properly_it_seems_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The provided geometry type &apos;{0}&apos; is not supported..
         /// </summary>
         public static string CulvertDefinitionParser_Unsupported_culvert_geometry_type {
@@ -229,6 +247,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string NodeFile_The_category_does_not_contain_property {
             get {
                 return ResourceManager.GetString("NodeFile_The_category_does_not_contain_property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property {0} contains unsupported value &apos;{1}&apos;: {2} at line number {3} will be skipped..
+        /// </summary>
+        public static string Property_0_contains_unsupported_value_1_2_at_line_number_3_will_be_skipped {
+            get {
+                return ResourceManager.GetString("Property_0_contains_unsupported_value_1_2_at_line_number_3_will_be_skipped", resourceCulture);
             }
         }
         
@@ -354,16 +381,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly {
             get {
                 return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
-        /// </summary>
-        public static string RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_ {
-            get {
-                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exi" +
-                        "st_", resourceCulture);
             }
         }
         

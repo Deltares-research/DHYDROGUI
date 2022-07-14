@@ -7,10 +7,12 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.BackwardCompatibility;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders
@@ -18,7 +20,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
     public static class StructureFileReader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(StructureFileReader));
-        
+        private static readonly DelftIniBackwardsCompatibilityHelper backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new StructureFileBackwardsCompatibilityConfigurationValues());
+
         public static void ReadFile(string structureFilename, 
                                     ICrossSectionDefinition[] crossSectionDefinitions, 
                                     IHydroNetwork network,
@@ -27,8 +30,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var fileReadingExceptions = new List<FileReadingException>();
 
             var structuresCategories = ReadStructureDelftIniCategories(structureFilename);
-            if (structuresCategories.Count == 0)
-                throw new FileReadingException($"Could not read file {structureFilename} properly, it seems empty");
 
             IList<IStructure1D> structures = GetAllStructuresFromCategories(structuresCategories, 
                                                                             crossSectionDefinitions, 
@@ -93,13 +94,41 @@ namespace DeltaShell.NGHS.IO.FileReaders
         private static IList<DelftIniCategory> ReadStructureDelftIniCategories(string structureFilename)
         {
             if (!File.Exists(structureFilename))
-                throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", structureFilename));
+                throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, structureFilename));
 
             var structuresCategories = new DelftIniReader().ReadDelftIniFile(structureFilename);
             if (structuresCategories.Count == 0)
-                throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", structureFilename));
+                throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, structureFilename));
 
-            return structuresCategories;
+            return ApplyBackwardCompatibility(structuresCategories).ToList();
+        }
+     
+        private static IEnumerable<DelftIniCategory> ApplyBackwardCompatibility(IEnumerable<DelftIniCategory> categories)
+        {
+            foreach (DelftIniCategory category in categories)
+            {
+                DelftIniProperty[] propertiesWithUnsupportedValue = GetPropertiesWithUnsupportedValues(category).ToArray();
+                if (!propertiesWithUnsupportedValue.Any())
+                {
+                    yield return category;
+                }
+
+                foreach (DelftIniProperty property in propertiesWithUnsupportedValue)
+                {
+                    log.WarnFormat(Resources.Property_0_contains_unsupported_value_1_2_at_line_number_3_will_be_skipped, 
+                                   property.Name, 
+                                   property.Value, 
+                                   category.Name, 
+                                   category.LineNumber);
+                }
+            }
+        }
+
+        private static IEnumerable<DelftIniProperty> GetPropertiesWithUnsupportedValues(IDelftIniCategory category)
+        {
+            return category.Properties.Where(p => backwardsCompatibilityHelper.IsUnsupportedPropertyValue(category.Name,
+                                                                                                          p.Name,
+                                                                                                          p.Value));
         }
 
         private static IList<IStructure1D> GetAllStructuresFromCategories(IList<DelftIniCategory> structuresCategories, 

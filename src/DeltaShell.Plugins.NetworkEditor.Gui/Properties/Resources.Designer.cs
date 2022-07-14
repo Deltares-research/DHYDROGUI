@@ -478,25 +478,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extra resistance.
-        /// </summary>
-        public static string ExtraResistanceProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("ExtraResistanceProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap ExtraResistanceSmall {
-            get {
-                object obj = ResourceManager.GetObject("ExtraResistanceSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap favorite {

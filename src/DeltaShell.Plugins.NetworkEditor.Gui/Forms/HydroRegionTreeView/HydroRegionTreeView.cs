@@ -101,7 +101,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                                              new CulvertTreeViewNodePresenter(guiPlugin),
                                              new WeirTreeViewNodePresenter(guiPlugin),
                                              new BridgeTreeViewNodePresenter(guiPlugin),
-                                             new ExtraRestanceTreeViewNodePresenter(guiPlugin),
                                              new CatchmentsTreeViewNodePresenter(guiPlugin),
                                              new CatchmentTreeViewNodePresenter(guiPlugin),
                                              new WasteWaterTreatmentPlantsTreeViewNodePresenter(guiPlugin),
@@ -439,15 +438,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             if (channel != null)
             {
                 AddBranchFeatureToBranch(Culvert.CreateDefault(channel));
-            }
-        }
-
-        private void handleButtonAddExtraResistance_Click(object sender, EventArgs e)
-        {
-            var channel = treeView.SelectedNode.Tag as IChannel;
-            if (channel != null)
-            {
-                AddBranchFeatureToBranch(ExtraResistance.CreateDefault(channel));
             }
         }
 

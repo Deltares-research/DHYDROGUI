@@ -329,11 +329,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
                                       StopSuction = -7,
                                       StartSuction = -1
                                   });
-            AddExtraStructure(new ExtraResistance
-            {
-                Network = HydroNetwork,
-                Geometry = new Point(5, 0),
-            });
+
             AddExtraStructure(new Pump
                                   {
                                       Network = HydroNetwork,

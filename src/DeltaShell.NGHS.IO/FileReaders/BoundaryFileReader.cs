@@ -10,6 +10,7 @@ using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils.Extensions;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Feature;
@@ -23,9 +24,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
     {
         public static void ReadFile(string filename, IEnumerable<Model1DBoundaryNodeData> boundaryConditions)
         {
-            if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
+            if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
             var categories = new DelftBcReader().ReadDelftBcFile(filename);
-            if (categories.Count == 0) throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty", filename));
+            if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 

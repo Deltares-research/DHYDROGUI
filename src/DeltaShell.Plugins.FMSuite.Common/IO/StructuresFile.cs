@@ -222,12 +222,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 properties.Add(ConstructProperty(KnownStructureProperties.Capacity, pump.Capacity, structureType));
             }
 
-            if (false)
-            {
-                AddControlDirectionRelatedProperties(pump, properties, structureType);
-                AddReductionTableRelatedProperties(pump, properties, structureType);
-            }
-
             return properties;
         }
 
@@ -467,51 +461,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var formula = (SimpleWeirFormula)((IWeir)structure).WeirFormula;
             properties.Add(ConstructProperty(StructureRegion.CorrectionCoeff.Key, formula.CorrectionCoefficient, structureType));
             return properties;
-        }
-
-        private void AddReductionTableRelatedProperties(IPump pump, List<DelftIniProperty> properties, string structureType)
-        {
-            if (pump.ReductionTable.Arguments[0].Values.Count == 0)
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.NrOfReductionFactors, 0, structureType));
-            }
-            else if (pump.ReductionTable.Arguments[0].Values.Count == 1)
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.NrOfReductionFactors, 1, structureType));
-                properties.Add(ConstructProperty(KnownStructureProperties.ReductionFactor, (double)pump.ReductionTable.Components[0].DefaultValue, structureType));
-            }
-            else
-            {
-                var count = pump.ReductionTable.Arguments[0].Values.Count;
-                properties.Add(ConstructProperty(KnownStructureProperties.NrOfReductionFactors, count, structureType));
-                var headValues = pump.ReductionTable.Arguments[0].Values.OfType<double>().ToArray();
-                var reductionValues = pump.ReductionTable.Components[0].Values.OfType<double>().ToArray();
-
-                properties.Add(ConstructProperty(KnownStructureProperties.Head, headValues, structureType));
-                properties.Add(ConstructProperty(KnownStructureProperties.ReductionFactor, reductionValues, structureType));
-            }
-        }
-
-        private void AddControlDirectionRelatedProperties(IPump pump, ICollection<DelftIniProperty> properties, string structureType)
-        {
-            switch (pump.ControlDirection)
-            {
-                case PumpControlDirection.DeliverySideControl:
-                    properties.Add(ConstructProperty(KnownStructureProperties.StartDeliverySide, pump.StartDelivery, structureType));
-                    properties.Add(ConstructProperty(KnownStructureProperties.StopDeliverySide, pump.StopDelivery, structureType));
-                    break;
-                case PumpControlDirection.SuctionAndDeliverySideControl:
-                    properties.Add(ConstructProperty(KnownStructureProperties.StartDeliverySide, pump.StartDelivery, structureType));
-                    properties.Add(ConstructProperty(KnownStructureProperties.StopDeliverySide, pump.StopDelivery, structureType));
-
-                    properties.Add(ConstructProperty(KnownStructureProperties.StartSuctionSide, pump.StartSuction, structureType));
-                    properties.Add(ConstructProperty(KnownStructureProperties.StopSuctionSide, pump.StopSuction, structureType));
-                    break;
-                case PumpControlDirection.SuctionSideControl:
-                    properties.Add(ConstructProperty(KnownStructureProperties.StartSuctionSide, pump.StartSuction, structureType));
-                    properties.Add(ConstructProperty(KnownStructureProperties.StopSuctionSide, pump.StopSuction, structureType));
-                    break;
-            }
         }
 
         private static string DetermineType(IStructure structure)

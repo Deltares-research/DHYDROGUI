@@ -63,7 +63,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge
             originalNetwork.CrossSectionSectionTypes.ForEach(csst => lookup.Add(csst.Name));
             originalNetwork.CrossSections.ForEach(cs => lookup.Add(cs.Name));
             originalNetwork.Culverts.ForEach(c => lookup.Add(c.Name));
-            originalNetwork.ExtraResistances.ForEach(er => lookup.Add(er.Name));
             originalNetwork.Gates.ForEach(g => lookup.Add(g.Name));
             originalNetwork.LateralSources.ForEach(ls => lookup.Add(ls.Name));
             originalNetwork.Links.ForEach(l => lookup.Add(l.Name));
@@ -91,7 +90,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge
             newModelNetwork.CompositeBranchStructures.ForEach(cbs => CheckIfItemIsUnique(cbs.Name, "composite structure"));
             newModelNetwork.CrossSections.ForEach(cs => CheckIfItemIsUnique(cs.Name, "cross-section"));
             newModelNetwork.Culverts.ForEach(c => CheckIfItemIsUnique(c.Name, "culvert"));
-            newModelNetwork.ExtraResistances.ForEach(er => CheckIfItemIsUnique(er.Name, "extra resistance"));
             newModelNetwork.Gates.ForEach(g => CheckIfItemIsUnique(g.Name, "gate"));
             newModelNetwork.LateralSources.ForEach(ls => CheckIfItemIsUnique(ls.Name, "lateral source"));
             newModelNetwork.Links.ForEach(l => CheckIfItemIsUnique(l.Name, "link"));

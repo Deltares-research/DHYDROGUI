@@ -135,14 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelMerge
                 channel.BranchFeatures.Add(new Culvert() {Name = nameToDuplicate});
                 network.Branches.Add(channel);
             }), $"{nameToDuplicate} (culvert)").SetName("Duplicate Culvert");
-            
-            yield return new TestCaseData(new Action<IHydroNetwork, string>((network, name) =>
-            {
-                var channel = new Channel();
-                channel.BranchFeatures.Add(new ExtraResistance() {Name = nameToDuplicate});
-                network.Branches.Add(channel);
-            }), $"{nameToDuplicate} (extra resistance)").SetName("Duplicate ExtraResistance");
-            
+
             yield return new TestCaseData(new Action<IHydroNetwork, string>((network, name) =>
             {
                 var channel = new Channel();

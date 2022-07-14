@@ -118,11 +118,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return CreatePointStyle(Properties.Resources.BridgeSmall);
             }
 
-            if (networkObjects is IEnumerable<IExtraResistance>)
-            {
-                return CreatePointStyle(Properties.Resources.ExtraResistanceSmall);
-            }
-
             if (networkObjects is IEnumerable<ICompositeBranchStructure>)
             {
                 return new VectorStyle

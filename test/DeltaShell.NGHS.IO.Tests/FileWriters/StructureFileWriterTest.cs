@@ -205,13 +205,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.BRIDGE_PILLAR_FORM_FACTOR);
 */
 
-            branch.AddExtraResistance(
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_ID,
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_NAME,
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_CHAINAGE,
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_LEVELS.ToArray(),
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_KSI.ToArray());
-				
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
             string errorMessage;
@@ -1093,54 +1086,5 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.FormFactor.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_FORM_FACTOR.ToString(StructureRegion.FormFactor.Format, CultureInfo.InvariantCulture), idProperty.Value);
         }
-
-        [Test]
-        public void TestStructureFileWriterGivesExpectedResults_ExtraResistance()
-        {
-            var branch = network.Branches.First();
-            Assert.NotNull(branch, "No branched added to the network");
-
-            branch.AddExtraResistance(
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_ID,
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_NAME,
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_CHAINAGE,
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_LEVELS.ToArray(),
-                StructureFileWriterTestHelper.EXTRA_RESISTANCE_KSI.ToArray());
-
-            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
-
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
-
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
-
-            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(8, content.Properties.Count);
-
-            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_ID.ToString(), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_NAME, idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
-            Assert.AreEqual(branch.Name, idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
-            Assert.AreEqual(StructureRegion.StructureTypeName.ExtraResistanceStructure, idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.NumValues.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_LEVELS.Count.ToString(), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Levels.Key);
-            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.EXTRA_RESISTANCE_LEVELS.Select(v => v.ToString(StructureRegion.Levels.Format, CultureInfo.InvariantCulture))), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Ksi.Key);
-            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.EXTRA_RESISTANCE_KSI.Select(v => v.ToString(StructureRegion.Ksi.Format, CultureInfo.InvariantCulture))), idProperty.Value);
-        }
-
     }
 }

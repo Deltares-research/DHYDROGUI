@@ -61,7 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelMerge
             Assert.That(mergedNetwork.Bridges.Count(), Is.EqualTo(2));
             Assert.That(mergedNetwork.CompositeBranchStructures.Count(), Is.EqualTo(2));
             Assert.That(mergedNetwork.Culverts.Count(), Is.EqualTo(2));
-            Assert.That(mergedNetwork.ExtraResistances.Count(), Is.EqualTo(2));
             Assert.That(mergedNetwork.Gates.Count(), Is.EqualTo(2));
             Assert.That(mergedNetwork.LateralSources.Count(), Is.EqualTo(2));
             Assert.That(mergedNetwork.ObservationPoints.Count(), Is.EqualTo(2));
@@ -85,7 +84,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelMerge
             branch.BranchFeatures.Add(new Bridge($"{namePrefix}Bridge"));
             branch.BranchFeatures.Add(new CompositeBranchStructure(){Name = $"{namePrefix}CompositeBranchStructure"});
             branch.BranchFeatures.Add(new Culvert(){Name = $"{namePrefix}Culvert"});
-            branch.BranchFeatures.Add(new ExtraResistance(){Name = $"{namePrefix}ExtraResistance"});
             branch.BranchFeatures.Add(new Gate(){Name = $"{namePrefix}Gate"});
             branch.BranchFeatures.Add(new LateralSource(){Name = $"{namePrefix}LateralSource"});
             branch.BranchFeatures.Add(new ObservationPoint(){Name = $"{namePrefix}ObservationPoint"});

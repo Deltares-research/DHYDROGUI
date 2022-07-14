@@ -232,7 +232,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         network.CompositeBranchStructures,
                         network.CrossSections,
                         network.Culverts,
-                        network.ExtraResistances,
                         network.Gates,
                         network.LateralSources,
                         network.Compartments,
@@ -258,7 +257,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         network.Orifices,
                         network.Weirs,
                         network.Pumps,
-                        network.ExtraResistances,
                         network.Culverts,
                         network.Gates,
 
@@ -297,7 +295,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetHydroNetworkLayerCreator<IWeir>();
             yield return GetHydroNetworkLayerCreator<ICulvert>();
             yield return GetHydroNetworkLayerCreator<IBridge>();
-            yield return GetHydroNetworkLayerCreator<IExtraResistance>();
             yield return GetHydroNetworkLayerCreator<ICompositeBranchStructure>();
             yield return GetHydroNetworkLayerCreator<ICrossSection>();
 

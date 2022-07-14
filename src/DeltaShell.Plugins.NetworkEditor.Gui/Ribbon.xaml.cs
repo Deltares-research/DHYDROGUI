@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewOrificeCommand = new AddNewOrificeCommand();
         private ICommand addNewCulvertCommand = new AddNewCulvertCommand();
         private ICommand addNewBridgeCommand = new AddNewBridgeCommand();
-        private ICommand addNewExtraResistanceCommand = new AddNewExtraResistanceCommand();
         private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
@@ -111,7 +110,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewOrificeCommand;
                 yield return addNewCulvertCommand;
                 yield return addNewBridgeCommand;
-                yield return addNewExtraResistanceCommand;
                 yield return addNewLateralSourceCommand;
                 yield return addNewRetentionCommand;
                 yield return addNewObservationPointCommand;
@@ -185,7 +183,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewOrifice.SetState(addNewOrificeCommand, showNetworkTools);
             ButtonAddNewCulvert.SetState(addNewCulvertCommand, showNetworkTools);
             ButtonAddNewBridge.SetState(addNewBridgeCommand, showNetworkTools);
-            ButtonAddNewExtraResistance.SetState(addNewExtraResistanceCommand, showNetworkTools);
             ButtonAddNewLateralSource.SetState(addNewLateralSourceCommand, showNetworkTools);
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
@@ -426,12 +423,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewBridge_Click(object sender, RoutedEventArgs e)
         {
             addNewBridgeCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewExtraResistance_Click(object sender, RoutedEventArgs e)
-        {
-            addNewExtraResistanceCommand.Execute();
             ValidateItems();
         }
 

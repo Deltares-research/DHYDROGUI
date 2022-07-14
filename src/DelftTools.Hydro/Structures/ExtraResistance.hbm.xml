@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <subclass name="DelftTools.Hydro.Structures.ExtraResistance, DelftTools.Hydro" discriminator-value="branch_structure_ExtraResistance"  extends="DelftTools.Hydro.IStructure1D, DelftTools.Hydro">
-    <many-to-one name="FrictionTable" class="DelftTools.Functions.Function, DelftTools.Functions" column="function_id" cascade="save-update" />
-  </subclass>
-</hibernate-mapping>

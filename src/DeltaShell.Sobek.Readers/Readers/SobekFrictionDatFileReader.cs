@@ -8,6 +8,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.Sobek.Readers.Properties;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -252,41 +253,30 @@ namespace DeltaShell.Sobek.Readers.Readers
             var matchesExtraFriction = regexExtraFriction.Matches(text);
             if (matchesExtraFriction.Count > 0)
             {
-                ParseSobekExtraFriction(matchesExtraFriction, sobekFriction);
+                LogWarningForUnsupportedExtraResistances(matchesExtraFriction);
             }                           
 
             return sobekFriction;
         }
 
-        // XRST id 'ER_16' nm 'ExtraResistance' ty 0 rt rs 'Extra Resistance Table' PDIN 0 0 '' pdin CLTT 
-        //                       'Water Level'  'Extra Resistance' cltt CLID '(null)' '(null)' clid 
-        // TBLE 
-        // 0 0.000001 <
-        // 5 0.000001 <
-        // 10 0.000001 <
-        // 15 0.000001 <
-        // 20 0.000001 <
-        // tble ty 0 xrst
-        // For SobekRE see SobekREExtraFrictionDatFileReader
-        private static void ParseSobekExtraFriction(MatchCollection extraFrictionCollection, SobekFriction sobekFriction)
+        private static void LogWarningForUnsupportedExtraResistances(MatchCollection extraFrictionCollection)
         {
             foreach (Match extraFrictionMatch in extraFrictionCollection)
             {
-                var sobekExtraResistance = new SobekExtraResistance();
-                var matches = regexSobekExtraFriction.Matches(extraFrictionMatch.Value);
-                string table = "";
+                MatchCollection matches = regexSobekExtraFriction.Matches(extraFrictionMatch.Value);
                 foreach (Match match in matches)
                 {
-                    sobekExtraResistance.Id = RegularExpression.ParseString(match, "id", sobekExtraResistance.Id);
-                    sobekExtraResistance.Name = RegularExpression.ParseString(match, "nm", sobekExtraResistance.Name);
-
-                    table = RegularExpression.ParseString(match, "table", "");
-                    if (table.Length > 0)
-                    {
-                        SobekDataTableReader.GetTable(table, (DataTable) sobekExtraResistance.Table);
-                    }
+                    LogWarningForUnsupportedExtraResistance(match);
                 }
-                sobekFriction.SobekExtraFrictionList.Add(sobekExtraResistance);
+            }
+        }
+
+        private static void LogWarningForUnsupportedExtraResistance(Match match)
+        {
+            string id = RegularExpression.ParseString(match, "id", null);
+            if (id != null)
+            {
+                Log.WarnFormat(Resources.The_extra_resistance_functionality_is_not_supported_skipping_this_item_with_id_0, id);
             }
         }
 

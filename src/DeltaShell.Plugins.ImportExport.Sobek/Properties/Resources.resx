@@ -160,4 +160,7 @@
   <data name="SobekRRMeteoDataImporter_GetEvaporationMeteoStations_Unsupported_meteo_distribution_type_for_evaporation_" xml:space="preserve">
 	  <value>Unsupported meteo distribution type for evaporation.</value>
   </data>
+  <data name="Extra_friction_file_0_found_but_is_not_supported" xml:space="preserve">
+    <value>Extra friction file '{0}' found, but is not supported; skipping...</value>
+  </data>
 </root>

@@ -212,10 +212,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             {
                 return GetEnumerableList(Network.ObservationPoints.OfType<ObservationPoint>(), (INotifyCollectionChange)Network);
             }
-            if (FeatureType == typeof(ExtraResistance))
-            {
-                return GetEnumerableList(Network.ExtraResistances.OfType<ExtraResistance>(), (INotifyCollectionChange)Network);
-            }
             throw new InvalidOperationException("Should never get here");
         }
 

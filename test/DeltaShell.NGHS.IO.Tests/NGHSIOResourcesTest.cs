@@ -31,7 +31,7 @@ namespace DeltaShell.NGHS.IO.Tests
                 TryRetreivingMessage(Resources
                     .RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly);
                 TryRetreivingMessage(Resources
-                    .RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_);
+                    .Could_not_read_file_0_properly_it_doesnt_exist);
                 TryRetreivingMessage(Resources
                     .RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadFile_Could_not_set_roughness_data_in_model);

@@ -323,23 +323,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.IsTrue(longNames.All(n => branchLongNames.Contains(n)), "Grensms3b_A , Grensms3b_B ...to M should exist");
         }
 
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void ReadNetworkWithExtraResistanceRe()
-        {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
-            var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
-
-            Assert.AreEqual(5, network.ExtraResistances.Count());
-            IExtraResistance extraResistance = network.ExtraResistances.Where(er => er.Name == "5580754").FirstOrDefault();
-            Assert.AreEqual("vak3_4", extraResistance.LongName);
-            Assert.AreEqual("001_A", extraResistance.Branch.Name);
-            Assert.AreEqual(1325, extraResistance.Chainage, 1.0e-6);
-            Assert.AreEqual(5, extraResistance.FrictionTable.Arguments[0].Values.Count);
-            Assert.AreEqual(0.0, (double) extraResistance.FrictionTable[50.21], 1.0e-6);
-        }
-
         /// <summary>
         /// Tests if the name of the strcuture is correctly imported from the structure.dat file
         /// </summary>
@@ -359,27 +342,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.IsInstanceOfType(typeof(Weir), weir);*/
             IStructure1D bridge = network.Structures.Where(s => s.Name == "65").First(); // bridge == def id
             Assert.IsInstanceOf<Bridge>(bridge);
-        }
-
-        /// <summary>
-        /// Tests if the name of the strcuture is correctly imported from the structure.dat file
-        /// </summary>
-        [Test]
-        public void ReadExtraResistances()
-        {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\TestXRST.lit\4\network.tp";
-            var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
-
-            IEnumerable<IStructure1D> extraResistances = network.Structures.Where(s => s is IExtraResistance);
-            Assert.AreEqual(1, extraResistances.Count());
-            var extraResistance = (ExtraResistance) extraResistances.FirstOrDefault();
-            Assert.AreEqual(5, extraResistance.FrictionTable.Arguments[0].Values.Count);
-            Assert.AreEqual(0.000001, (double) extraResistance.FrictionTable[0.0], 1.0e-6);
-            Assert.AreEqual(2.000001, (double) extraResistance.FrictionTable[5.0], 1.0e-6);
-            Assert.AreEqual(0.000001, (double) extraResistance.FrictionTable[10.0], 1.0e-6);
-            Assert.AreEqual(4.000001, (double) extraResistance.FrictionTable[15.0], 1.0e-6);
-            Assert.AreEqual(0.000001, (double) extraResistance.FrictionTable[20.0], 1.0e-6);
         }
 
         [Test]
