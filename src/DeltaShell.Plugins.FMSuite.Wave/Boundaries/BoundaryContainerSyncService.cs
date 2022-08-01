@@ -52,25 +52,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
         private void OnOuterDomainChanging(object sender, PropertyChangingEventArgs e)
         {
-            if (!(sender is WaveModel model &&
+            if (!(sender is WaveModel waveModel &&
                   e?.PropertyName == nameof(WaveModel.OuterDomain)))
             {
                 return;
             }
 
-            ((INotifyPropertyChange) model.OuterDomain).PropertyChanged -= OnOuterGridChanged;
+            ((INotifyPropertyChange) waveModel.OuterDomain).PropertyChanged -= OnOuterGridChanged;
         }
 
         private void OnOuterDomainChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is WaveModel model &&
+            if (!(sender is WaveModel waveModel &&
                   e?.PropertyName == nameof(WaveModel.OuterDomain)))
             {
                 return;
             }
 
-            ((INotifyPropertyChange) model.OuterDomain).PropertyChanged += OnOuterGridChanged;
-            HandleGridChanged(model.OuterDomain.Grid);
+            ((INotifyPropertyChange) waveModel.OuterDomain).PropertyChanged += OnOuterGridChanged;
+            HandleGridChanged(waveModel.OuterDomain.Grid);
         }
 
         private void HandleGridChanged(IDiscreteGridPointCoverage outerDomainGrid)
