@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -164,34 +165,42 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             ValidateXml(xml);
         }
 
-        private static void ValidateXml(XDocument xmlDocument, bool expectedToFail = false, Action<string> assertFailMessage = null)
+        /// <summary>
+        /// Validate the <paramref name="xmlDocument"/> with its schema
+        /// </summary>
+        /// <param name="xmlDocument">Document to check</param>
+        private static void ValidateXml(XDocument xmlDocument)
         {
-            if (assertFailMessage == null)
+            if (!CheckIfSchemasCanBeReached(xmlDocument, out var errorMessages))
             {
-                assertFailMessage = (s) => Assert.Fail("Couldn't validate dimr xml!!" + Environment.NewLine + s);
+                Assert.Fail($"Could not reach all namespaces{Environment.NewLine}{string.Join(Environment.NewLine, errorMessages)}");
             }
+            
+            var temporaryFilePath = "mytest.xml";
 
-            var settings = new XmlReaderSettings();
-            settings.ValidationType = ValidationType.Schema;
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
-
-            settings.ValidationEventHandler +=
-                new ValidationEventHandler(
-                    (s, e) =>
-                    {
-                        if (!expectedToFail)
-                        {
-                            assertFailMessage(e.Message);
-                        }
-                    });
             try
             {
-                FileUtils.DeleteIfExists("mytest.xml");
-                xmlDocument.Save("mytest.xml");
+                FileUtils.DeleteIfExists(temporaryFilePath);
+                xmlDocument.Save(temporaryFilePath);
+
+                // setup settings for schema checking
+                var settings = new XmlReaderSettings
+                {
+                    ValidationType = ValidationType.Schema,
+                    ValidationFlags = XmlSchemaValidationFlags.ProcessIdentityConstraints
+                                      | XmlSchemaValidationFlags.AllowXmlAttributes
+                                      | XmlSchemaValidationFlags.ProcessInlineSchema
+                                      | XmlSchemaValidationFlags.ProcessSchemaLocation
+                                      | XmlSchemaValidationFlags.ReportValidationWarnings
+                };
+
+                settings.ValidationEventHandler += (s, e) =>
+                {
+                    Assert.Fail("Xsd validation failed: " + Environment.NewLine + e.Message);
+                };
+
                 // Create the XmlReader object.
-                using (var xmlReader = XmlReader.Create("mytest.xml", settings))
+                using (var xmlReader = XmlReader.Create(temporaryFilePath, settings))
                 {
                     // Parse the file. 
                     while (xmlReader.Read()) {}
@@ -199,7 +208,68 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
             finally
             {
-                FileUtils.DeleteIfExists("mytest.xml");
+                FileUtils.DeleteIfExists(temporaryFilePath);
+            }
+        }
+
+        /// <summary>
+        /// Searches for namespace location attributes (schemaLocation) in <paramref name="xmlDocument"/> and checks
+        /// if the referenced location can be reached
+        /// </summary>
+        /// <param name="xmlDocument">Document to search</param>
+        /// <param name="errorMessages">If result is false, the error messages will be added to this parameter</param>
+        /// <returns>true if all schemas can be reached</returns>
+        private static bool CheckIfSchemasCanBeReached(XDocument xmlDocument, out ICollection<string> errorMessages)
+        {
+            errorMessages = new List<string>();
+            var schemaLocationAttributes = xmlDocument.Root?.Attributes()
+                                                     .Where(a => a.Name.LocalName == "schemaLocation")
+                                                     ?? Enumerable.Empty<XAttribute>();
+
+            foreach (var schemaLocationAttribute in schemaLocationAttributes)
+            {
+                var locationParts = schemaLocationAttribute.Value.Split();
+                if (locationParts.Length != 2)
+                {
+                    continue;
+                }
+
+                var namespaceName = locationParts[0];
+                var location = locationParts[1];
+
+                if (CanReachLocation(location))
+                {
+                    continue;
+                }
+
+                errorMessages.Add($"Could not reach location for namespace {namespaceName} at {location}");
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if <paramref name="location"/> can be reached
+        /// </summary>
+        /// <param name="location">Web address to check</param>
+        /// <returns>True if the response status code is <see cref="HttpStatusCode.OK"/></returns>
+        private static bool CanReachLocation(string location)
+        {
+            var request = WebRequest.Create(location);
+            request.Timeout = 5000;
+            request.Method = "HEAD";
+
+            try
+            {
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    return response.StatusCode == HttpStatusCode.OK;
+                }
+            }
+            catch (WebException)
+            {
+                return false;
             }
         }
 
