@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security;
 using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.NGHS.IO.FunctionStores
 {
     public static class MapHisFileReader
     {
+        private const int maximumParameterNameLength = 20;
+        private const int maximumLocationNameLength = 20;
+
         /// <summary>
-        /// Reads the meta data of the provided <param name="filePath"/>
+        /// Reads the meta data of the provided <param name="filePath"/> (could be null)
         /// </summary>
         /// <param name="filePath">Path to the output map or his file</param>
+        /// <exception cref="IOException">If reading from <paramref name="filePath"/> fails</exception>
         public static MapHisFileMetaData ReadMetaData(string filePath)
         {
             var isMapFile = filePath != null && Path.GetExtension(filePath).ToLower() == ".map";
@@ -20,19 +25,30 @@ namespace DeltaShell.NGHS.IO.FunctionStores
         }
 
         /// <summary>
-        /// Gets the segmentValues for <param name="parameterName"/> and <param name="timeStepIndex"/>
+        /// Gets the segmentValues for <param name="parameterName"/> and <param name="timeStepIndex"/> (could be null)
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="mapFileMeta">Metadata for the map file (use <see cref="ReadMetaData"/> to get it initially)</param>
-        /// <param name="timeStepIndex">Timestep index (zero based)</param>
+        /// <param name="timeStepIndex">Time step index (zero based)</param>
         /// <param name="parameterName">Substances name</param>
         /// <param name="locationIndex">Filter on this segment index (default -1 - no filtering)</param>
         /// <returns>Values for the chosen <param name="timeStepIndex"/> and <param name="parameterName"/> </returns>
+        /// <exception cref="IOException">If reading from <paramref name="filePath"/> fails</exception>
         public static List<double> GetTimeStepData(string filePath, MapHisFileMetaData mapFileMeta, int timeStepIndex, string parameterName, int locationIndex = -1)
         {
             return DoWithMapFileBinaryReader(filePath, binaryReader => ReadTimeStepData(binaryReader, mapFileMeta, timeStepIndex, parameterName, locationIndex));
         }
 
+        /// <summary>
+        /// Gets the data for all the time steps (<paramref name="mapFileMeta"/> <see cref="MapHisFileMetaData.Times"/>) at a
+        /// single location for the provided <paramref name="parameterName"/> (could be null)
+        /// </summary>
+        /// <param name="filePath">Path to the map/his file</param>
+        /// <param name="mapFileMeta">Meta data for the file</param>
+        /// <param name="parameterName">Name of the parameter to get data for</param>
+        /// <param name="locationIndex">Index of the location (in <see cref="MapHisFileMetaData.Locations"/>)</param>
+        /// <returns>Values for provided parameter at provided location</returns>
+        /// <exception cref="IOException">If reading from <paramref name="filePath"/> fails</exception>
         public static List<double> GetTimeSeriesData(string filePath, MapHisFileMetaData mapFileMeta, string parameterName, int locationIndex)
         {
             return DoWithMapFileBinaryReader(filePath, binaryReader => ReadTimeSeriesData(binaryReader, mapFileMeta, parameterName, locationIndex));
@@ -40,12 +56,13 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         private static List<double> ReadTimeSeriesData(BinaryReader reader, MapHisFileMetaData mapHisFileMetaData, string parameterName, int locationIndex)
         {
-            if (!mapHisFileMetaData.Parameters.Contains(parameterName))
+            string parameterToSearch = GetTruncatedName(parameterName, maximumParameterNameLength);
+            if (!mapHisFileMetaData.Parameters.Contains(parameterToSearch))
                 return null;
 
             var data = new List<double>();
 
-            var substanceIndex = mapHisFileMetaData.Parameters.IndexOf(parameterName);
+            var substanceIndex = mapHisFileMetaData.Parameters.IndexOf(parameterToSearch);
 
             var timeStepDataBlockSize = GetTimeStepDataBlockSize(mapHisFileMetaData);
             var substanceByteOffset = substanceIndex * 4;
@@ -66,14 +83,15 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         private static List<double> ReadTimeStepData(BinaryReader reader, MapHisFileMetaData mapHisFileMetaData, int timeStepIndex, string parameterName, int locationIndex)
         {
-            if (!mapHisFileMetaData.Parameters.Contains(parameterName))
+            string parameterToSearch = GetTruncatedName(parameterName, maximumParameterNameLength);
+            if (!mapHisFileMetaData.Parameters.Contains(parameterToSearch))
                 return null;
 
             var data = new List<double>();
 
-            var substanceIndex = mapHisFileMetaData.Parameters.IndexOf(parameterName);
+            var substanceIndex = mapHisFileMetaData.Parameters.IndexOf(parameterToSearch);
 
-            // size of 1 timestep and all substances
+            // size of 1 time step and all substances
             var timeStepDataBlockSize = GetTimeStepDataBlockSize(mapHisFileMetaData);
             var timeStepOffset = timeStepDataBlockSize * timeStepIndex;
 
@@ -102,6 +120,17 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             return data;
         }
 
+        /// <summary>
+        /// Truncates the <paramref name="name"/> to the maximum allowed length (<paramref name="maximumLength"/>)
+        /// </summary>
+        /// <param name="name">Original parameter name (name to truncate)</param>
+        /// <param name="maximumLength">Maximum length to truncate to</param>
+        /// <returns>Truncated parameter name</returns>
+        private static string GetTruncatedName(string name, int maximumLength)
+        {
+            return name.Substring(0, Math.Min(name.Length, maximumLength));
+        }
+
         private static MapHisFileMetaData ReadMapHisFileMetaData(BinaryReader reader, bool mapFile = false)
         {
             reader.BaseStream.Position = 0;
@@ -124,7 +153,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             // Read all parameter names
             for (var i = 0; i < mapHisFileMetaData.NumberOfParameters; i++)
             {
-                mapHisFileMetaData.Parameters.Add(new string(reader.ReadChars(20)).Trim(' '));
+                mapHisFileMetaData.Parameters.Add(new string(reader.ReadChars(maximumParameterNameLength)).Trim(' '));
             }
 
             if (!mapFile)
@@ -132,8 +161,8 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                 mapHisFileMetaData.Locations = new List<string>();
                 for (int i = 0; i < mapHisFileMetaData.NumberOfLocations; i++)
                 {
-                    reader.ReadInt32(); // loc nummer: not needed
-                    mapHisFileMetaData.Locations.Add(new string(reader.ReadChars(20)).Trim());
+                    reader.ReadInt32(); // loc number: not needed
+                    mapHisFileMetaData.Locations.Add(new string(reader.ReadChars(maximumLocationNameLength)).Trim());
                 }
                 if (!mapHisFileMetaData.Locations.AllUnique())
                 {
@@ -182,7 +211,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         private static int GetTimeStepDataBlockSize(MapHisFileMetaData mapFileMetaData)
         {
-            // timestep size + (number of segments * number of substances * float size)
+            // time step size + (number of segments * number of substances * float size)
             return 4 + ( mapFileMetaData.NumberOfParameters * mapFileMetaData.NumberOfLocations * 4 );
         }
 
@@ -200,12 +229,17 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                 reader = new BinaryReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
                 return readerFunction(reader);
             }
+            catch (Exception ex) when (ex is IOException || 
+                                       ex is UnauthorizedAccessException ||
+                                       ex is SecurityException ||
+                                       ex is NotSupportedException ||
+                                       ex is ArgumentOutOfRangeException)
+            {
+                throw new IOException($"Could not read file {filePath}", ex);
+            }
             finally
             {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
+                reader?.Close();
             }
         }
 
