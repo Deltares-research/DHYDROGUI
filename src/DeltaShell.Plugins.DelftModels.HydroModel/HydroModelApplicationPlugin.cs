@@ -94,8 +94,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
                     CreateModel = owner =>
                     {
-                        var hydroModel = HydroModel.BuildModel(modelGroup);
+                        HydroModel hydroModel = new HydroModelBuilder().BuildModel(modelGroup);
                         hydroModel.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
+                        hydroModel.TimeStep = new TimeSpan(0, 5, 0);
                         return hydroModel;
                     }
                 };
@@ -125,30 +126,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 Description = "Creates a new Integrated Hydro model with RHU D-HYDRO models",
                 ExecuteTemplateOpenView = (project, settings) =>
                 {
-                    var model = new HydroModelBuilder().BuildModel(ModelGroup.RHUModels);
+                    var hydroModel = new HydroModelBuilder().BuildModel(ModelGroup.RHUModels);
                     if (settings is HydroModelProjectTemplateSettings modelSettings)
                     {
-                        model.Name = modelSettings.ModelName;
-                        model.CoordinateSystem = modelSettings.CoordinateSystem;
+                        hydroModel.Name = modelSettings.ModelName;
+                        hydroModel.CoordinateSystem = modelSettings.CoordinateSystem;
                         if (!modelSettings.UseRR)
                         {
-                            model.Models.OfType<IHydroModel>().Where(hm => hm is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DRR)).ForEach(m => model.Region.SubRegions.RemoveAllWhere(r => m.Region.AllRegions.Any(sr => sr.GetType().Implements(r.GetType()))));
-                            model.Activities.RemoveAllWhere(a =>a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DRR));
+                            hydroModel.Models.OfType<IHydroModel>().Where(hm => hm is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DRR)).ForEach(m => hydroModel.Region.SubRegions.RemoveAllWhere(r => m.Region.AllRegions.Any(sr => sr.GetType().Implements(r.GetType()))));
+                            hydroModel.Activities.RemoveAllWhere(a =>a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DRR));
                         }
                         if (!modelSettings.UseFlowFM)
                         {
-                            model.Models.OfType<IHydroModel>().Where(hm => hm is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFlowFM)).ForEach(m => model.Region.SubRegions.RemoveAllWhere(r => m.Region.AllRegions.Any(sr => sr.GetType().Implements(r.GetType()))));
-                            model.Activities.RemoveAllWhere(a => a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFlowFM));
+                            hydroModel.Models.OfType<IHydroModel>().Where(hm => hm is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFlowFM)).ForEach(m => hydroModel.Region.SubRegions.RemoveAllWhere(r => m.Region.AllRegions.Any(sr => sr.GetType().Implements(r.GetType()))));
+                            hydroModel.Activities.RemoveAllWhere(a => a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFlowFM));
                         }
 
                         if (!modelSettings.UseRTC || !modelSettings.UseFlowFM && !modelSettings.UseRR)
                         {
-                            model.Activities.RemoveAllWhere(a => a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFBC));
+                            hydroModel.Activities.RemoveAllWhere(a => a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFBC));
                         }
                     }
 
-                    project.RootFolder.Items.Add(model);
-                    return model;
+                    hydroModel.TimeStep = new TimeSpan(0, 5, 0);
+                    project.RootFolder.Items.Add(hydroModel);
+                    return hydroModel;
                 }
             };
             yield return new ProjectTemplate
