@@ -733,25 +733,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static Model1DLateralSourceData CreateLateralSourceData(LateralSource lateralSource)
         {
             var lateralSourceData = new Model1DLateralSourceData {Feature = lateralSource};
-            if (lateralSource.Branch is IPipe pipe)
+            if (lateralSource.Branch is ISewerConnection sewerConnection)
             {
-                lateralSourceData.Compartment = GetCompartment(pipe, lateralSource.Chainage);
+                lateralSourceData.Compartment = GetCompartment(sewerConnection, lateralSource.Chainage);
             }
 
             return lateralSourceData;
         }
 
-        private static ICompartment GetCompartment(ISewerConnection pipe, double chainage)
+        private static ICompartment GetCompartment(ISewerConnection sewerConnection, double chainage)
         {
             const double t = 0.000001;
             if (Math.Abs(chainage - 0) < t)
             {
-                return pipe.SourceCompartment;
+                return sewerConnection.SourceCompartment;
             }
 
-            if (Math.Abs(chainage - pipe.Length) < t)
+            if (Math.Abs(chainage - sewerConnection.Length) < t)
             {
-                return pipe.TargetCompartment;
+                return sewerConnection.TargetCompartment;
             }
 
             return null;

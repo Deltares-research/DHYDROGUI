@@ -4,7 +4,10 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Category = NUnit.Framework.CategoryAttribute;
@@ -117,6 +120,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var discretizationLocations = discretization.Locations.Values;
             Assert.That(discretizationLocations.Count(l => l.Branch.Equals(sewerConnection)), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AddingLateralSourceToManholeDownstreamOfSewerConnection_ShouldCreateLateralSourcesDataWithCorrectManholeSet()
+        {
+            // Setup
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var upstreamManhole = new Manhole("upstream manhole");
+                upstreamManhole.Compartments.Add(new Compartment("upstream compartment"));
+
+                var downstreamManhole = new Manhole("downstream manhole");
+                var downStreamCompartment = new Compartment("downstream compartment");
+                downstreamManhole.Compartments.Add(downStreamCompartment);
+
+                var sewerConnection = new SewerConnection("sewerconnection");
+                sewerConnection.Source = upstreamManhole;
+                sewerConnection.Target = downstreamManhole;
+
+                fmModel.Network.Nodes.Add(upstreamManhole);
+                fmModel.Network.Nodes.Add(downstreamManhole);
+                fmModel.Network.Branches.Add(sewerConnection);
+
+                var lateralSource = new LateralSource { Name = "lateralSource1" };
+
+                // Call
+                NetworkHelper.AddBranchFeatureToBranch(lateralSource, sewerConnection, sewerConnection.Length);
+
+                // Assert
+                Assert.That(fmModel.LateralSourcesData.Count, Is.EqualTo(1));
+
+                Model1DLateralSourceData lateralSourcesData = fmModel.LateralSourcesData.First();
+                Assert.That(lateralSourcesData.Compartment, Is.EqualTo(downStreamCompartment));
+                Assert.That(lateralSourcesData.Feature, Is.EqualTo(lateralSource));
+            }
         }
     }
 }
