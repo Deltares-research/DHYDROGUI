@@ -453,4 +453,31 @@
   <data name="Could_not_read_file_0_properly_it_seems_empty" xml:space="preserve">
     <value>Could not read file {0} properly, it seems empty</value>
   </data>
+  <data name="HydroUGridExtensions_Negative_chainage_of_network_location" xml:space="preserve">
+    <value>The chainage of a network location on branch '{0}' is negative. Location will be skipped."</value>
+  </data>
+  <data name="HydroUGridExtensions_Chainage_of_network_location_too_large" xml:space="preserve">
+    <value>The chainage ({0}) of a network location on branch '{1}' is beyond the length of the branch ({2}). Location will be corrected to branch length.</value>
+  </data>
+  <data name="HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName" xml:space="preserve">
+    <value>the creation of the mesh 1d geometry</value>
+  </data>
+  <data name="HydroUGridExtensions_Cannot_find_start_edge_node_of_section" xml:space="preserve">
+    <value>Cannot find start edge node of section {0} on branch {1} at chainage {2}. Creating one on start node of branch {3} (probably because of wrong rounding during load).</value>
+  </data>
+  <data name="HydroUGridExtensions_Cannot_find_end_edge_node_of_section" xml:space="preserve">
+    <value>Cannot find end edge node of section {0} on branch {1} at chainage {2}. Creating one on end node of branch{3} (probably because of wrong rounding during load).</value>
+  </data>
+  <data name="HydroUGridExtensions_NetworkCompartmentNamesContext" xml:space="preserve">
+    <value>network compartment names</value>
+  </data>
+  <data name="HydroUGridExtensions_NetworkNodesContext" xml:space="preserve">
+    <value>network nodes</value>
+  </data>
+  <data name="HydroUGridExtensions_CompartmentIdContext" xml:space="preserve">
+    <value>compartment ids</value>
+  </data>
+  <data name="HydroUGridExtensions_ManholeNamesContext" xml:space="preserve">
+    <value>manhole names</value>
+  </data>
 </root>

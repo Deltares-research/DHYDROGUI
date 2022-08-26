@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -10,17 +11,33 @@ namespace DeltaShell.NGHS.IO.Grid
         public const string BranchGuiFileName = "branches.gui";
         public const string StorageNodeFileName = "nodeFile.ini";
 
-        public static IList<BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
+        /// <summary>
+        /// Reads the branch properties from the given NetCDF file.
+        /// </summary>
+        /// <param name="netFilePath">Path to the NetCDF file to read from.</param>
+        /// <returns>The read branch properties. Returns an empty collection if the branch file does not exist.</returns>
+        public static IEnumerable<BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
         {
-            var brancheTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
-            var propertiesPerBranch = File.Exists(brancheTypeFilePath) ? BranchFile.Read(brancheTypeFilePath, netFilePath) : null;
+            string branchTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
+            IEnumerable<BranchProperties> propertiesPerBranch = File.Exists(branchTypeFilePath)
+                                                                    ? BranchFile.Read(branchTypeFilePath, netFilePath)
+                                                                    : Enumerable.Empty<BranchProperties>();
+
             return propertiesPerBranch;
         }
 
-        public static IList<CompartmentProperties> ReadPropertiesPerNodeFromFile(string netFilePath)
+        /// <summary>
+        /// Reads the compartment properties from the given NetCDF file.
+        /// </summary>
+        /// <param name="netFilePath">Path to the NetCDF file to read from.</param>
+        /// <returns>The read compartment properties. Returns an empty collection if the node file does not exist.</returns>
+        public static IEnumerable<CompartmentProperties> ReadPropertiesPerNodeFromFile(string netFilePath)
         {
-            var nodeTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, StorageNodeFileName);
-            var propertiesPerNode = File.Exists(nodeTypeFilePath) ? NodeFile.Read(nodeTypeFilePath) : null;
+            string nodeTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, StorageNodeFileName);
+            IEnumerable<CompartmentProperties> propertiesPerNode = File.Exists(nodeTypeFilePath)
+                                                                       ? NodeFile.Read(nodeTypeFilePath)
+                                                                       : Enumerable.Empty<CompartmentProperties>();
+
             return propertiesPerNode;
         }
     }

@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using Deltares.UGrid.Api;
@@ -263,13 +264,18 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="compartmentPropertiesList">List of <see cref="BranchProperties"/> to use when constructing branches</param>
         /// <param name="branchPropertiesList">List of <see cref="CompartmentProperties"/> to use when constructing compartments</param>
         /// <param name="forceCustomLengths">Force all branches in the network to have custom lengths and use the lengths that are read from file</param>
-        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
-        /// returned from a native function</exception>
-        public static void ReadNetworkAndDiscretisation(string path, IDiscretization discretization,
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="compartmentPropertiesList"/> or <paramref name="branchPropertiesList"/> is <c>null</c>.</exception>
+        /// <exception cref="IoNetCdfNativeError">Thrown when an error code is returned from a native function.</exception>
+        public static void ReadNetworkAndDiscretisation(string path, 
+                                                        IDiscretization discretization,
                                                         IHydroNetwork network,
-                                                        IList<CompartmentProperties> compartmentPropertiesList = null,
-                                                        IList<BranchProperties> branchPropertiesList = null, bool forceCustomLengths = false)
+                                                        IEnumerable<CompartmentProperties> compartmentPropertiesList,
+                                                        IEnumerable<BranchProperties> branchPropertiesList, 
+                                                        bool forceCustomLengths = false)
         {
+            Ensure.NotNull(compartmentPropertiesList, nameof(compartmentPropertiesList));
+            Ensure.NotNull(branchPropertiesList, nameof(branchPropertiesList));
+            
             var errorMessage = $"Could not load network and computational grid from {path}";
             if (network == null || !IsValidPath(path))
             {
@@ -623,8 +629,10 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        private static void ReadNetwork(IUGridApi api, IHydroNetwork network, IList<CompartmentProperties> compartmentPropertiesList,
-                                        IList<BranchProperties> branchPropertiesList, bool forceCustomLengths = false)
+        private static void ReadNetwork(IUGridApi api, IHydroNetwork network, 
+                                        IEnumerable<CompartmentProperties> compartmentPropertiesList,
+                                        IEnumerable<BranchProperties> branchPropertiesList, 
+                                        bool forceCustomLengths = false)
         {
             var networkIds = api.GetNetworkIds();
             if (networkIds.Length == 0)

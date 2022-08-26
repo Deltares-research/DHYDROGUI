@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using DelftTools.Utils.Guards;
 using log4net;
 using log4net.Core;
 
@@ -12,52 +13,79 @@ namespace DeltaShell.NGHS.Utils
         private static readonly ILog log = LogManager.GetLogger(typeof(ToDictionaryExtensions));
 
         /// <summary>
-        /// Performs a ToDictionary, but catches non-unique key exceptions and prints the keys that are not unique
+        /// Performs a ToDictionary, but if there are non-unique keys it throws an <see cref="ArgumentException"/>
+        /// with the keys that are not unique and their index.
         /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        /// <typeparam name="TValue"></typeparam>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
+        /// <typeparam name="TKey">Type of the key</typeparam>
+        /// <typeparam name="TValue">Type of the value</typeparam>
+        /// <typeparam name="TSource">Type of the source</typeparam>
+        /// <param name="source">Source to query</param>
         /// <param name="context">The context of the operation. For example a file path or other information useful for the user to fix the problem.</param>
-        /// <param name="keySelector"></param>
-        /// <param name="valueSelector"></param>
-        /// <returns></returns>
-        public static Dictionary<TKey, TValue> ToDictionaryWithErrorDetails<TKey, TValue, T>(
-            this IEnumerable<T> source,
+        /// <param name="keySelector">Function for selecting a key</param>
+        /// <param name="valueSelector">Function for selecting value</param>
+        /// <returns>Dictionary of <typeparamref name="TKey"/> and <typeparamref name="TValue"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">Thrown when there are duplicates found with the <paramref name="keySelector"/>.</exception>
+        public static Dictionary<TKey, TValue> ToDictionaryWithErrorDetails<TKey, TValue, TSource>(
+            this IEnumerable<TSource> source,
             string context,
-            Func<T, TKey> keySelector,
-            Func<T, TValue> valueSelector)
+            Func<TSource, TKey> keySelector,
+            Func<TSource, TValue> valueSelector)
         {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(context, nameof(context));
+            Ensure.NotNull(keySelector, nameof(keySelector));
+            Ensure.NotNull(valueSelector, nameof(valueSelector));
+
             try
             {
                 return source.ToDictionary(keySelector, valueSelector);
             }
             catch (ArgumentException)
             {
-                var sourceKeys = source.Select(keySelector).ToList();
-                var nonUniqueKeys = sourceKeys.ToList();
-                var distinctKeys = nonUniqueKeys.Distinct().ToList();
-                distinctKeys.ForEach(id => nonUniqueKeys.Remove(id));
+                IEnumerable<string> nonUniqueDescriptions = GetNonUniqueDescriptors(source, keySelector);
+                string message = GenerateErrorMessage(context, nonUniqueDescriptions);
 
-                var numNonUnique = nonUniqueKeys.Count;
-                nonUniqueKeys = nonUniqueKeys.Distinct().ToList();
-                var nonUniqueEntries = string.Join(", ", nonUniqueKeys);
-
-                var indexOfFirstNonUniqueEntry = sourceKeys.IndexOf(nonUniqueKeys.First()) + 1; //make it 1-based
-
-                var message =
-                    string.Format("The following entries were not unique: '{0}', first encountered at the {1} entry (total non-unique: {2}), in: {3}.",
-                                  nonUniqueEntries,
-                                  ToOrdinalSuffixString(indexOfFirstNonUniqueEntry),
-                                  numNonUnique,
-                                  context);
                 throw new ArgumentException(message);
             }
         }
 
-        public static Dictionary<TKey, T> ToDictionaryWithErrorDetails<TKey, T>(this IEnumerable<T> source, string context, Func<T, TKey> keySelector)
+        /// <summary>
+        /// Performs a ToDictionary, but if there are non-unique keys it throws an <see cref="ArgumentException"/>
+        /// with the keys that are not unique and there index
+        /// </summary>
+        /// <typeparam name="TKey">Type of the key</typeparam>
+        /// <typeparam name="TSource">Type of the source</typeparam>
+        /// <param name="source">Source to query</param>
+        /// <param name="context">The context of the operation. For example a file path or other information useful for the user to fix the problem.</param>
+        /// <param name="keySelector">Function for selecting a key</param>
+        /// <returns>Dictionary of <typeparamref name="TKey"/> and <typeparamref name="TSource"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">Thrown when there are duplicates found with the <paramref name="keySelector"/>.</exception>
+        public static Dictionary<TKey, TSource> ToDictionaryWithErrorDetails<TKey, TSource>(this IEnumerable<TSource> source, string context, Func<TSource, TKey> keySelector)
         {
             return ToDictionaryWithErrorDetails(source, context, keySelector, x => x);
+        }
+
+        private static IEnumerable<string> GetNonUniqueDescriptors<TKey, TSource>(
+            IEnumerable<TSource> source, 
+            Func<TSource, TKey> keySelector)
+        {
+            return source
+                   .Select((item, index) => new
+                   {
+                       item,
+                       index
+                   })
+                   .GroupBy(i => keySelector(i.item))
+                   .Where(g => g.Count() > 1)
+                   .Select(g => $"{g.Key} at indices ({string.Join(", ", g.Select(i => i.index))})");
+        }
+        
+        private static string GenerateErrorMessage(string context, IEnumerable<string> nonUniqueDescriptions)
+        {
+            return $@"The following entries were not unique in {context}: {Environment.NewLine}" +
+                   $"{string.Join(Environment.NewLine, nonUniqueDescriptions)}";
         }
 
         /// <summary>
@@ -114,28 +142,6 @@ namespace DeltaShell.NGHS.Utils
         {
 
             return ToDictionaryWithDuplicateLogging(source, context, keySelector, x => x, logLevel);
-        }
-
-        private static string ToOrdinalSuffixString(int number)
-        {
-            string suffix;
-            switch (number)
-            {
-                case 1:
-                    suffix = "st";
-                    break;
-                case 2:
-                    suffix = "nd";
-                    break;
-                case 3:
-                    suffix = "rd";
-                    break;
-                default:
-                    suffix = "th";
-                    break;
-            }
-
-            return $"{number}{suffix}";
         }
     }
 }

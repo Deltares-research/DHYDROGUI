@@ -7,11 +7,14 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
+using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NSubstitute;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -318,7 +321,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             
             var readNetwork = new HydroNetwork();
             var readMesh1d = new Discretization();
-            UGridFileHelper.ReadNetworkAndDiscretisation(path, readMesh1d, readNetwork);
+            UGridFileHelper.ReadNetworkAndDiscretisation(path, readMesh1d, readNetwork, Enumerable.Empty<CompartmentProperties>(), Enumerable.Empty<BranchProperties>());
 
             // Assert
             var networkBranch = network.Branches[0];
@@ -345,7 +348,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             }
 
             // Act
-            UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, network);
+            UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, network, Enumerable.Empty<CompartmentProperties>(), Enumerable.Empty<BranchProperties>());
 
             // Assert
             Assert.NotNull(network.CoordinateSystem);
@@ -353,6 +356,31 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var branch = network.Branches[0];
             Assert.False(double.IsNaN(branch.GeodeticLength));
             Assert.AreNotEqual(branch.Geometry.Length, branch.GeodeticLength);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ReadNetworkAndDiscretisationArgumentNullCases))]
+        public void ReadNetworkAndDiscretisation_ArgumentNullCases_ThrowsArgumentNullException(
+            IEnumerable<CompartmentProperties> compartmentPropertiesList,
+            IEnumerable<BranchProperties> branchPropertiesList,
+            string parameterName)
+        {
+            // Setup
+            var path = string.Empty;
+            var discretization = Substitute.For<IDiscretization>();
+            var network = Substitute.For<IHydroNetwork>();
+
+            // Call
+            void Action() => UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, network, compartmentPropertiesList, branchPropertiesList);
+            
+            // Assert
+            Assert.That(Action, Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(parameterName));
+        }
+
+        private static IEnumerable<TestCaseData> ReadNetworkAndDiscretisationArgumentNullCases()
+        {
+            yield return new TestCaseData(null, Enumerable.Empty<BranchProperties>(), "compartmentPropertiesList").SetName("CompartmentProperties null");
+            yield return new TestCaseData(Enumerable.Empty<CompartmentProperties>(), null, "branchPropertiesList").SetName("BranchProperties null");
         }
     }
 }

@@ -10,6 +10,7 @@ using DelftTools.Hydro.Link1d2d;
 using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -142,8 +143,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 if (!UGridFileHelper.IsUGridFile(netCdfFile.Path)) return;
 
-                var branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
-                var compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
+                IEnumerable<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
+                IEnumerable<CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
                 
                 network = new HydroNetwork();
                 discretization = new Discretization();

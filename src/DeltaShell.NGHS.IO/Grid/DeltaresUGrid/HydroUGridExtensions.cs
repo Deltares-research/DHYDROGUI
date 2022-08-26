@@ -8,10 +8,12 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Coverages;
@@ -206,13 +208,14 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 double chainage = Math.Abs(networkBranch.Length - meshGeometryBranchChainage) < 0.00001 ? networkBranch.Length : meshGeometryBranchChainage;
                 if (chainage < 0)
                 {
-                    Log.Error($"The chainage of a network location on branch '{networkBranch.Name}' is negative. Location will be skipped.");
+                    Log.ErrorFormat(Resources.HydroUGridExtensions_Negative_chainage_of_network_location, networkBranch.Name);
                     continue;
                 }
 
                 if (chainage > networkBranch.Length)
                 {
-                    Log.Error($"The chainage ({meshGeometryBranchChainage}) of a network location on branch '{networkBranch.Name}' is beyond the length of the branch ({networkBranch.Length}). Location will be corrected to branch length.");
+                    Log.ErrorFormat(Resources.HydroUGridExtensions_Chainage_of_network_location_too_large, 
+                                    meshGeometryBranchChainage, networkBranch.Name, networkBranch.Length);
                     chainage = networkBranch.Length;
                 }
                 
@@ -228,6 +231,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 };
             }
         }
+
         /// <summary>
         /// Sets the <paramref name="meshGeometry"/> to the <paramref name="discretization"/>
         /// </summary>
@@ -236,7 +240,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="network">Network that the <paramref name="meshGeometry"/> is based on</param>
         public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates = true)
         {
-            var logHandler = new LogHandler("the creation of the mesh 1d geometry", typeof(HydroUGridExtensions), 100);
+            var logHandler = new LogHandler(Resources.HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName, typeof(HydroUGridExtensions), 100);
             discretization.Network = network;
             
             IEnumerable<INetworkLocation> networkLocations = GetNetworkLocations(meshGeometry, network, canUseXYForMesh1DNodeCoordinates);
@@ -269,7 +273,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="discretization">Discretization to base the mesh on</param>
         public static Disposable1DMeshGeometry CreateDisposable1DMeshGeometry(this IDiscretization discretization)
         {
-            var logHandler = new LogHandler("the creation of the mesh 1d geometry", typeof(HydroUGridExtensions), 100);
+            var logHandler = new LogHandler(Resources.HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName, typeof(HydroUGridExtensions), 100);
             var locations = discretization.Locations.Values.ToArray();
 
             var segments = discretization.Segments.Values.ToList();
@@ -380,7 +384,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[0] = locationIdLookup[firstLocation];
                 else
                 {
-                    logHandler.ReportWarning($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}. Creating one on start node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
+                    logHandler.ReportWarning(
+                        string.Format(Resources.HydroUGridExtensions_Cannot_find_start_edge_node_of_section, 
+                                      segment.SegmentNumber, segment.Branch.Name, segment.Chainage, segment.Branch.Name));
                     indices[0] = -1;
                     doNotWriteTheseSegments.Add(segment);
                 }
@@ -394,7 +400,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[1] = locationIdLookup[firstLocation];
                 else
                 {
-                    logHandler.ReportWarning($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}. Creating one on end node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
+                    logHandler.ReportWarning(
+                        string.Format(Resources.HydroUGridExtensions_Cannot_find_end_edge_node_of_section, 
+                                      segment.SegmentNumber, segment.Branch.Name, segment.EndChainage, segment.Branch.Name));
                     indices[1] = -1;
                     doNotWriteTheseSegments.Add(segment);
                 }
@@ -413,14 +421,50 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="networkGeometry"><see cref="DisposableNetworkGeometry"/> containing the network data</param>
         /// <param name="branchProperties">Additional branch properties</param>
         /// <param name="compartmentProperties">Additional compartment properties</param>
-        /// <param name="forceCustomLengths">Force all branches in the network to have custom lengths and use the lengths that are read from file</param>s
-        public static void SetNetworkGeometry(this IHydroNetwork network, DisposableNetworkGeometry networkGeometry, IEnumerable<BranchProperties> branchProperties = null, ICollection<CompartmentProperties> compartmentProperties = null, bool forceCustomLengths = false)
+        /// <param name="forceCustomLengths">Force all branches in the network to have custom lengths and use the lengths that are read from file</param>
+        /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">Thrown when the node or compartment names are not unique.</exception>
+        public static void SetNetworkGeometry(this IHydroNetwork network,
+                                              DisposableNetworkGeometry networkGeometry,
+                                              IEnumerable<BranchProperties> branchProperties,
+                                              IEnumerable<CompartmentProperties> compartmentProperties,
+                                              bool forceCustomLengths = false)
         {
-            var nodes = CreateNetworkNodes(network, networkGeometry, compartmentProperties);
-            var branches = CreateBranches(networkGeometry, nodes, branchProperties, forceCustomLengths);
+            Ensure.NotNull(network, nameof(network));
+            Ensure.NotNull(networkGeometry, nameof(networkGeometry));
+            Ensure.NotNull(branchProperties, nameof(branchProperties));
+            Ensure.NotNull(compartmentProperties, nameof(compartmentProperties));
+
+            INode[] nodes = CreateNetworkNodes(network, networkGeometry, compartmentProperties);
+
+            IReadOnlyDictionary<string, INode> nodeLookup = CreateNodeLookup(nodes);
+            IReadOnlyDictionary<string, ICompartment> compartmentLookup = CreateCompartmentLookup(nodes);
+
+            IEnumerable<IBranch> branches = CreateBranches(networkGeometry, branchProperties, forceCustomLengths, nodeLookup, compartmentLookup);
 
             network.Nodes.AddRange(nodes.Distinct());
             network.Branches.AddRange(branches);
+        }
+
+        private static IReadOnlyDictionary<string, ICompartment> CreateCompartmentLookup(IEnumerable<INode> nodes)
+        {
+            return nodes
+                   .OfType<IManhole>()
+                   .SelectMany(m => m.Compartments)
+                   .ToDictionaryWithErrorDetails(Resources.HydroUGridExtensions_NetworkCompartmentNamesContext, c => c.Name);
+        }
+
+        private static IReadOnlyDictionary<string, INode> CreateNodeLookup(IEnumerable<INode> nodes)
+        {
+            return nodes
+                   .SelectMany(n => GetNodeLookupNames(n)
+                                   .Select(name => new
+                                   {
+                                       key = name,
+                                       node = n
+                                   })).ToDictionaryWithErrorDetails(Resources.HydroUGridExtensions_NetworkNodesContext,
+                                                                    n => n.key,
+                                                                    n => n.node);
         }
 
         /// <summary>
@@ -578,18 +622,13 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         }
 
-        private static IBranch[] CreateBranches(DisposableNetworkGeometry networkGeometry, INode[] nodes, IEnumerable<BranchProperties> branchProperties, bool forceCustomLengths)
+        private static IEnumerable<IBranch> CreateBranches(DisposableNetworkGeometry networkGeometry, 
+                                                           IEnumerable<BranchProperties> branchProperties, 
+                                                           bool forceCustomLengths, 
+                                                           IReadOnlyDictionary<string, INode> nodeLookup, 
+                                                           IReadOnlyDictionary<string, ICompartment> compartmentLookup)
         {
-            var nodeLookup = nodes
-                             .SelectMany(n => GetNodeLookupNames(n)
-                                             .Select(name => new {key = name, node = n}))
-                             .ToDictionary(n => n.key, m => m.node);
-
             var propertiesLookup = branchProperties?.ToDictionary(p => p.Name) ?? new Dictionary<string, BranchProperties>();
-            var compartments = nodes
-                               .OfType<IManhole>()
-                               .SelectMany(m => m.Compartments)
-                               .ToDictionary(c => c.Name);
 
             var branches = new List<IBranch>();
 
@@ -598,13 +637,13 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             for (int i = 0; i < networkGeometry.BranchIds.Length; i++)
             {
                 propertiesLookup.TryGetValue(networkGeometry.BranchIds[i], out var properties);
-                branches.Add(CreateBranchByIndex(networkGeometry, i, properties, nodeLookup, compartments, ref geometryOffset, forceCustomLengths));
+                branches.Add(CreateBranchByIndex(networkGeometry, i, properties, nodeLookup, compartmentLookup, ref geometryOffset, forceCustomLengths));
             }
             
             return branches.ToArray();
         }
 
-        private static IBranch CreateBranchByIndex(DisposableNetworkGeometry networkGeometry, int branchIndex, BranchProperties branchProperties, Dictionary<string, INode> nodeLookup, Dictionary<string, ICompartment> compartments, ref int geometryOffset, bool forceCustomLengths)
+        private static IBranch CreateBranchByIndex(DisposableNetworkGeometry networkGeometry, int branchIndex, BranchProperties branchProperties, IReadOnlyDictionary<string, INode> nodeLookup, IReadOnlyDictionary<string, ICompartment> compartments, ref int geometryOffset, bool forceCustomLengths)
         {
             var toNodeId = networkGeometry.NodeIds[networkGeometry.NodesTo[branchIndex]];
             var fromNodeId = networkGeometry.NodeIds[networkGeometry.NodesFrom[branchIndex]];
@@ -718,88 +757,146 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return branch;
         }
 
-        private static INode[] CreateNetworkNodes(IHydroNetwork network, DisposableNetworkGeometry networkGeometry, ICollection<CompartmentProperties> compartmentProperties = null)
+        private static INode[] CreateNetworkNodes(IHydroNetwork network, 
+                                                  DisposableNetworkGeometry networkGeometry, 
+                                                  IEnumerable<CompartmentProperties> compartmentProperties = null)
         {
-            var propertiesLookup = compartmentProperties?.ToDictionary(p => p.CompartmentId) ??
-                                   new Dictionary<string, CompartmentProperties>();
-
-            var manHoleLookup = network.Manholes.ToDictionary(m => m.Name);
-            var nodeCount = networkGeometry.NodesX.Length;
-
+            Dictionary<string, CompartmentProperties> compartmentPropertiesLookup = CreateCompartmentPropertiesLookup(compartmentProperties);
+            Dictionary<string, IManhole> manHoleLookup = CreateManholeLookup(network);
+            
             var nodes = new List<INode>();
             var manholesToFix = new List<IManhole>();
-            for (int i = 0; i < nodeCount; i++)
+
+            int nodeCount = networkGeometry.NodesX.Length;
+            for (var i = 0; i < nodeCount; i++)
             {
                 INode node;
 
-                var nodeName = networkGeometry.NodeIds[i];
-                var isCompartment = propertiesLookup.ContainsKey(nodeName);
+                string nodeName = networkGeometry.NodeIds[i];
+                bool isCompartment = compartmentPropertiesLookup.ContainsKey(nodeName);
 
                 if (isCompartment)
                 {
-                    var properties = propertiesLookup[nodeName];
-                    var manholeWidth = Math.Sqrt(properties.Area);
+                    CompartmentProperties properties = compartmentPropertiesLookup[nodeName];
+                    Compartment compartment = CreateCompartment(nodeName, properties);
 
-                    var compartment = new Compartment(nodeName)
+                    if (CompartmentIsInExistingManhole(manHoleLookup, properties.ManholeId))
                     {
-                        BottomLevel = properties.BedLevel,
-                        SurfaceLevel = properties.StreetLevel,
-                        FloodableArea = properties.StreetStorageArea,
-                        ManholeLength = manholeWidth,
-                        ManholeWidth = manholeWidth,
-                        Shape = properties.CompartmentShape,
-                        CompartmentStorageType = properties.CompartmentStorageType
-                    };
-                    if (properties.UseTable)
-                    {
-                        compartment.UseTable = true;
-                        compartment.Storage.Arguments[0].InterpolationType = properties.Interpolation;
-                        compartment.Storage.Arguments[0].SetValues(properties.Levels);
-                        compartment.Storage.Components[0].SetValues(properties.StorageAreas);
-                    }
+                        IManhole existingManhole = manHoleLookup[properties.ManholeId];
 
-                    if (manHoleLookup.TryGetValue(properties.ManholeId, out var existingManhole))
-                    {
                         existingManhole.Compartments.Add(compartment);
                         manholesToFix.Add(existingManhole);
+
                         continue;
                     }
 
-                    node = new Manhole(properties.ManholeId)
-                    {
-                        Compartments = new EventedList<ICompartment> { compartment },
-                        Geometry = new Point(networkGeometry.NodesX[i], networkGeometry.NodesY[i])
-                    };
-
+                    node = CreateManhole(networkGeometry, i, properties, compartment);
                     manHoleLookup[node.Name] = (IManhole)node;
                 }
                 else
                 {
-                    node = new HydroNode
-                    {
-                        Name = nodeName == "" ? null : nodeName,
-                        Geometry = new Point(networkGeometry.NodesX[i], networkGeometry.NodesY[i])
-                    };
+                    node = CreateHydroNode(networkGeometry, i, nodeName);
                 }
 
-                ((IHydroNetworkFeature)node).LongName = networkGeometry.NodeLongNames[i] != ""
-                    ? networkGeometry.NodeLongNames[i]
-                    : null;
-                
+                ((IHydroNetworkFeature)node).LongName = GetNodeLongName(networkGeometry, i);
+
                 node.Network = network;
 
                 nodes.Add(node);
             }
-
-            // fix manhole geometry
-            foreach (var manhole in manholesToFix)
+            
+            foreach (IManhole manhole in manholesToFix)
             {
-                var firstCompartmentLocation = manhole.Geometry.Coordinate;
-                var offset = (manhole.Compartments.Count - 1) / 2.0;
-                manhole.Geometry = new Point(firstCompartmentLocation.X + offset, firstCompartmentLocation.Y);
+                FixManholeGeometry(manhole);
             }
 
             return nodes.ToArray();
+        }
+
+        private static Dictionary<string, CompartmentProperties> CreateCompartmentPropertiesLookup(IEnumerable<CompartmentProperties> compartmentProperties)
+        {
+            Dictionary<string, CompartmentProperties> lookup = compartmentProperties?
+                .ToDictionaryWithErrorDetails(Resources.HydroUGridExtensions_CompartmentIdContext, p => p.CompartmentId);
+
+            return lookup ?? new Dictionary<string, CompartmentProperties>();
+        }
+        
+        private static Dictionary<string, IManhole> CreateManholeLookup(IHydroNetwork network)
+        {
+            return network.Manholes.ToDictionaryWithErrorDetails(Resources.HydroUGridExtensions_ManholeNamesContext, m => m.Name);
+        }
+        
+        private static Compartment CreateCompartment(string nodeName, CompartmentProperties properties)
+        {
+            double manholeWidth = Math.Sqrt(properties.Area);
+            
+            var compartment = new Compartment(nodeName)
+            {
+                BottomLevel = properties.BedLevel,
+                SurfaceLevel = properties.StreetLevel,
+                FloodableArea = properties.StreetStorageArea,
+                ManholeLength = manholeWidth,
+                ManholeWidth = manholeWidth,
+                Shape = properties.CompartmentShape,
+                CompartmentStorageType = properties.CompartmentStorageType
+            };
+            
+            if (properties.UseTable)
+            {
+                AddTablePropertiesToCompartment(compartment, properties);
+            }
+
+            return compartment;
+        }
+        
+        private static void AddTablePropertiesToCompartment(ICompartment compartment, CompartmentProperties properties)
+        {
+            compartment.UseTable = true;
+            compartment.Storage.Arguments[0].InterpolationType = properties.Interpolation;
+            compartment.Storage.Arguments[0].SetValues(properties.Levels);
+            compartment.Storage.Components[0].SetValues(properties.StorageAreas);
+        }
+
+        private static bool CompartmentIsInExistingManhole(
+            IReadOnlyDictionary<string, IManhole> manHoleLookup, 
+            string manholeId)
+        {
+            return manHoleLookup.ContainsKey(manholeId);
+        }
+        
+        private static Manhole CreateManhole(DisposableNetworkGeometry networkGeometry, 
+                                             int nodeIndex, 
+                                             CompartmentProperties properties, 
+                                             ICompartment compartment)
+        {
+            return new Manhole(properties.ManholeId)
+            {
+                Compartments = new EventedList<ICompartment> { compartment },
+                Geometry = new Point(networkGeometry.NodesX[nodeIndex], networkGeometry.NodesY[nodeIndex])
+            };
+        }
+
+        private static HydroNode CreateHydroNode(DisposableNetworkGeometry networkGeometry, int nodeIndex, string nodeName)
+        {
+            return new HydroNode
+            {
+                Name = nodeName == "" ? null : nodeName,
+                Geometry = new Point(networkGeometry.NodesX[nodeIndex], networkGeometry.NodesY[nodeIndex])
+            };
+        }
+
+        private static string GetNodeLongName(DisposableNetworkGeometry networkGeometry, int nodeIndex)
+        {
+            return networkGeometry.NodeLongNames[nodeIndex] != ""
+                       ? networkGeometry.NodeLongNames[nodeIndex]
+                       : null;
+        }
+
+        private static void FixManholeGeometry(IManhole manhole)
+        {
+            Coordinate firstCompartmentLocation = manhole.Geometry.Coordinate;
+            double offset = (manhole.Compartments.Count - 1) / 2.0;
+            manhole.Geometry = new Point(firstCompartmentLocation.X + offset, firstCompartmentLocation.Y);
         }
 
         #endregion

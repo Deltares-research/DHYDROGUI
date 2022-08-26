@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
@@ -17,6 +18,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -112,6 +114,40 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual(grid.Cells.Count, meshGeometry.FaceY.Length);
             Assert.AreEqual(grid.Cells.Count * 4, meshGeometry.FaceNodes.Length);
             Assert.AreEqual(4, meshGeometry.MaxNumberOfFaceNodes);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(SetNetworkGeometryArgumentNullCases))]
+        public void SetNetworkGeometry_ArgumentNull_ThrowsArgumentNullException(
+            IHydroNetwork network,
+            DisposableNetworkGeometry networkGeometry,
+            IEnumerable<BranchProperties> branchProperties,
+            IEnumerable<CompartmentProperties> compartmentProperties,
+            string parameterName)
+        {
+            // Call
+            void Action() => network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
+            
+            // Assert
+            Assert.That(Action, Throws.ArgumentNullException
+                                      .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(parameterName));
+        }
+
+        private static IEnumerable<TestCaseData> SetNetworkGeometryArgumentNullCases()
+        {
+            var network = Substitute.For<IHydroNetwork>();
+            var networkGeometry = new DisposableNetworkGeometry();
+            var branchProperties = Substitute.For<IEnumerable<BranchProperties>>();
+            var compartmentProperties = Substitute.For<IEnumerable<CompartmentProperties>>();
+
+            yield return new TestCaseData(null, networkGeometry, branchProperties, compartmentProperties, "network")
+                .SetName("Network null");
+            yield return new TestCaseData(network, null, branchProperties, compartmentProperties, "networkGeometry")
+                .SetName("NetworkGeometry null");
+            yield return new TestCaseData(network, networkGeometry, null, compartmentProperties, "branchProperties")
+                .SetName("BranchProperties null");
+            yield return new TestCaseData(network, networkGeometry, branchProperties, null, "compartmentProperties")
+                .SetName("CompartmentProperties null");
         }
 
         [Test]
@@ -222,6 +258,124 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual(100, pipe1.Geometry.Coordinates[0].Y);
             Assert.AreEqual(200, pipe1.Geometry.Coordinates[1].X);
             Assert.AreEqual(50, pipe1.Geometry.Coordinates[1].Y);
+        }
+
+        [Test]
+        public void SetNetworkGeometry_NetworkGeometryWithDuplicateCompartmentIds_ThrowsArgumentException()
+        {
+            // Setup
+            var networkGeometry = new DisposableNetworkGeometry
+            {
+                NetworkName = "TestNetwork",
+                NodesX = new double[] { 0, 100, 50, 100, 200, 199.5, 200.5, 300 },
+                NodesY = new double[] { 100, 100, 50, 0, 100, 50, 50, 50 },
+                NodeIds = new [] { "node1", "node2", "node3", "node4", "compartment1", "compartment2", "compartment3", "compartment4" },
+                NodeLongNames = new[] { "node1 long", "node2 long", "node1 (duplicate) long", "node2 (duplicate) long", "manhole1 long", "manhole2 long", "manhole2 long", "manhole3 long" },
+                
+                BranchIds = new[] { "branch1", "branch2", "branch3", "pipe1", "connection", "pipe2" },
+                BranchLongNames = new[] { "branch1 long", "branch2 long", "branch3 long", "pipe1 long", "connection long", "pipe2 long" },
+                BranchLengths = new double[] {100,100,100,50,1,100},
+                BranchOrder = new[] {1,2,3,4,0,5},
+                BranchTypes = new[] {1,1,1,2,2,2},
+                
+                BranchGeometryNodesCount = new[] {2,2,2,2,2,2,2},
+
+                //                               branch1   branch2   branch3   pipe1      connection    pipe2
+                BranchGeometryX = new double[] {   0, 50,  100, 50,  50,   0,  200, 200,  200, 200.5,   200.5, 300 },
+                BranchGeometryY = new double[] { 100, 50,  100, 50,  50, 100,  100,  50,   50,    50,      50,  50 },
+                
+                NodesFrom = new int[] { 0, 1, 2, 4, 5, 6},
+                NodesTo = new int[]   { 2, 2, 3, 5, 6, 7}
+            };
+
+            // add some compartment properties with duplicate compartmentIds
+            var compartmentProperties = new List<CompartmentProperties>
+            {
+                new CompartmentProperties{ CompartmentId = "compartment1", ManholeId = "manhole1"},
+                new CompartmentProperties{ CompartmentId = "compartment2", ManholeId = "manhole2"},
+                new CompartmentProperties{ CompartmentId = "compartment1", ManholeId = "manhole2"},
+                new CompartmentProperties{ CompartmentId = "compartment1", ManholeId = "manhole3"},
+            };
+
+            var branchProperties = new List<BranchProperties>
+            {
+                new BranchProperties{Name = "pipe1", BranchType = BranchFile.BranchType.Pipe },
+                new BranchProperties{Name = "pipe2", BranchType = BranchFile.BranchType.Pipe },
+                new BranchProperties{Name = "connection", BranchType = BranchFile.BranchType.SewerConnection },
+            };
+
+            if (Map.CoordinateSystemFactory == null)
+            {
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
+            var rdCoordinateSystem = Map.CoordinateSystemFactory.CreateFromEPSG(28992);
+            var network = new HydroNetwork{CoordinateSystem = rdCoordinateSystem };
+
+            // Call
+            void Call() => network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
+            
+            // Assert
+            var expectedMessage = $"The following entries were not unique in compartment ids: {Environment.NewLine}compartment1 at indices (0, 2, 3)";
+            Assert.That(Call, Throws.ArgumentException.With.Message.EqualTo(expectedMessage));
+        }
+        
+        [Test]
+        public void SetNetworkGeometry_NetworkGeometryWithDuplicateNodeIds_ThrowsArgumentException()
+        {
+            // Setup
+            var networkGeometry = new DisposableNetworkGeometry
+            {
+                NetworkName = "TestNetwork",
+                NodesX = new double[] { 0, 100, 50, 100, 200, 199.5, 200.5, 300 },
+                NodesY = new double[] { 100, 100, 50, 0, 100, 50, 50, 50 },
+                // add duplicate nodeIds
+                NodeIds = new [] { "node1", "node2", "node2", "node2", "compartment1", "compartment2", "compartment3", "compartment4" },
+                NodeLongNames = new[] { "node1 long", "node2 long", "node1 (duplicate) long", "node2 (duplicate) long", "manhole1 long", "manhole2 long", "manhole2 long", "manhole3 long" },
+                
+                BranchIds = new[] { "branch1", "branch2", "branch3", "pipe1", "connection", "pipe2" },
+                BranchLongNames = new[] { "branch1 long", "branch2 long", "branch3 long", "pipe1 long", "connection long", "pipe2 long" },
+                BranchLengths = new double[] {100,100,100,50,1,100},
+                BranchOrder = new[] {1,2,3,4,0,5},
+                BranchTypes = new[] {1,1,1,2,2,2},
+                
+                BranchGeometryNodesCount = new[] {2,2,2,2,2,2,2},
+
+                //                               branch1   branch2   branch3   pipe1      connection    pipe2
+                BranchGeometryX = new double[] {   0, 50,  100, 50,  50,   0,  200, 200,  200, 200.5,   200.5, 300 },
+                BranchGeometryY = new double[] { 100, 50,  100, 50,  50, 100,  100,  50,   50,    50,      50,  50 },
+                
+                NodesFrom = new int[] { 0, 1, 2, 4, 5, 6},
+                NodesTo = new int[]   { 2, 2, 3, 5, 6, 7}
+            };
+            
+            var compartmentProperties = new List<CompartmentProperties>
+            {
+                new CompartmentProperties{ CompartmentId = "compartment1", ManholeId = "manhole1"},
+                new CompartmentProperties{ CompartmentId = "compartment2", ManholeId = "manhole2"},
+                new CompartmentProperties{ CompartmentId = "compartment3", ManholeId = "manhole2"},
+                new CompartmentProperties{ CompartmentId = "compartment4", ManholeId = "manhole3"},
+            };
+
+            var branchProperties = new List<BranchProperties>
+            {
+                new BranchProperties{Name = "pipe1", BranchType = BranchFile.BranchType.Pipe },
+                new BranchProperties{Name = "pipe2", BranchType = BranchFile.BranchType.Pipe },
+                new BranchProperties{Name = "connection", BranchType = BranchFile.BranchType.SewerConnection },
+            };
+
+            if (Map.CoordinateSystemFactory == null)
+            {
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
+            var rdCoordinateSystem = Map.CoordinateSystemFactory.CreateFromEPSG(28992);
+            var network = new HydroNetwork{CoordinateSystem = rdCoordinateSystem };
+
+            // Call
+            void Call() => network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
+            
+            // Assert
+            var expectedMessage = $"The following entries were not unique in network nodes: {Environment.NewLine}node2 at indices (1, 2, 3)";
+            Assert.That(Call, Throws.ArgumentException.With.Message.EqualTo(expectedMessage));
         }
 
         [Test]

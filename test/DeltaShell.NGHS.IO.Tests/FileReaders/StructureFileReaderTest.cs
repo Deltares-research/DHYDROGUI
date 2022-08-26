@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
@@ -25,7 +26,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             IHydroNetwork network = new HydroNetwork();
             IDiscretization discretization = new Discretization();
-            UGridFileHelper.ReadNetworkAndDiscretisation(networkFilePath, discretization, network, null, null);
+            UGridFileHelper.ReadNetworkAndDiscretisation(networkFilePath, 
+                                                         discretization, 
+                                                         network, 
+                                                         Enumerable.Empty<CompartmentProperties>(), 
+                                                         Enumerable.Empty<BranchProperties>());
             var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath,crossSectionDefinitionFilePath, network, null);
 
             // Act

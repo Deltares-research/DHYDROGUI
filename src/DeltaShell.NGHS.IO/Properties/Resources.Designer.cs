@@ -197,6 +197,87 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot find end edge node of section {0} on branch {1} at chainage {2}. Creating one on end node of branch{3} (probably because of wrong rounding during load)..
+        /// </summary>
+        public static string HydroUGridExtensions_Cannot_find_end_edge_node_of_section {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_Cannot_find_end_edge_node_of_section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot find start edge node of section {0} on branch {1} at chainage {2}. Creating one on start node of branch {3} (probably because of wrong rounding during load)..
+        /// </summary>
+        public static string HydroUGridExtensions_Cannot_find_start_edge_node_of_section {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_Cannot_find_start_edge_node_of_section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The chainage ({0}) of a network location on branch &apos;{1}&apos; is beyond the length of the branch ({2}). Location will be corrected to branch length..
+        /// </summary>
+        public static string HydroUGridExtensions_Chainage_of_network_location_too_large {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_Chainage_of_network_location_too_large", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to compartment ids.
+        /// </summary>
+        public static string HydroUGridExtensions_CompartmentIdContext {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_CompartmentIdContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to manhole names.
+        /// </summary>
+        public static string HydroUGridExtensions_ManholeNamesContext {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_ManholeNamesContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the creation of the mesh 1d geometry.
+        /// </summary>
+        public static string HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The chainage of a network location on branch &apos;{0}&apos; is negative. Location will be skipped.&quot;.
+        /// </summary>
+        public static string HydroUGridExtensions_Negative_chainage_of_network_location {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_Negative_chainage_of_network_location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to network compartment names.
+        /// </summary>
+        public static string HydroUGridExtensions_NetworkCompartmentNamesContext {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_NetworkCompartmentNamesContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to network nodes.
+        /// </summary>
+        public static string HydroUGridExtensions_NetworkNodesContext {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_NetworkNodesContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; does not contain a value in the file for category &apos;{1}&apos; on line {2}.
         /// </summary>
         public static string IniProperty_EmptyValue {

@@ -11,6 +11,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -78,8 +79,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 if (!UGridFileHelper.IsUGridFile(netCdfFile.Path)) return;
 
-                var branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
-                var compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
+                IEnumerable<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
+                IEnumerable<CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
                 outputNetwork.Nodes.Clear();
                 outputNetwork.Branches.Clear();
                 outputDiscretization.Clear();

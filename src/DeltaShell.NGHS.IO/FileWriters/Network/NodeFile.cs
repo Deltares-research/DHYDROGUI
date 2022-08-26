@@ -79,7 +79,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             return string.Format(CultureInfo.InvariantCulture, format, value);
         }
 
-        public static List<CompartmentProperties> Read(string filePath)
+        public static IList<CompartmentProperties> Read(string filePath)
         {
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
 

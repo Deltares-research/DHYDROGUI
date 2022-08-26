@@ -7,6 +7,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
@@ -51,7 +52,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             var hydroNetwork = new HydroNetwork();
             var discretization = new Discretization { Network = hydroNetwork };
-            UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, hydroNetwork, null, null, true);
+            UGridFileHelper.ReadNetworkAndDiscretisation(path, 
+                                                         discretization, 
+                                                         hydroNetwork, 
+                                                         Enumerable.Empty<CompartmentProperties>(), 
+                                                         Enumerable.Empty<BranchProperties>(), 
+                                                         true);
 
             string[] variables1D = GetMeshDependentVariables(path, MeshType.Mesh1d);
             string[] variables2D = GetMeshDependentVariables(path, MeshType.Mesh2d);

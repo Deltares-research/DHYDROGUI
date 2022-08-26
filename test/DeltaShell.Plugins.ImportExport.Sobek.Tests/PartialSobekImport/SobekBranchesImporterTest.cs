@@ -69,8 +69,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             }
             catch (ArgumentException e)
             {
-                var messageBegin = "The following entries were not unique: '13', first encountered at the 13th entry (total non-unique: 1), in";
-                var messageEnd = @"\network4\NETWORK.CP.";
+                var messageBegin = "The following entries were not unique in";
+                var messageEnd = $@"\network4\NETWORK.CP: {Environment.NewLine}13 at indices (12, 13)";
                 Assert.IsTrue(e.Message.StartsWith(messageBegin), "begin");
                 Assert.IsTrue(e.Message.EndsWith(messageEnd), "end");
                 return;

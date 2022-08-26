@@ -10,6 +10,7 @@ using DelftTools.Hydro.Link1d2d;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -98,7 +99,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             Network = new HydroNetwork();
             Discretization = new Discretization { Network = Network };
 
-            UGridFileHelper.ReadNetworkAndDiscretisation(netCdfFile.Path, Discretization, Network, null, null, true);
+            UGridFileHelper.ReadNetworkAndDiscretisation(netCdfFile.Path,
+                                                         Discretization,
+                                                         Network,
+                                                         Enumerable.Empty<CompartmentProperties>(),
+                                                         Enumerable.Empty<BranchProperties>(),
+                                                         true);
             
             GenerateGeometriesForLinks();
 
