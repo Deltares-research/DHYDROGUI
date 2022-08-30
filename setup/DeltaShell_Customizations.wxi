@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  
+  <?define ShowStartUpScreen="true"?>
+  <?define CheckOriginOfProject="true"?>
+  <!--<?define StartNamesCompatibleProducts=""?>-->
+  <?define supportEmail="software.support@deltares.nl"?>
+  <?define supportPhone="+31883358188"?>
+  
+  <!-- optional splash screen -->
+  <?define mainWindowTitle="$(var.ProductName)"?>
+  <?define splashScreenLogoImageFilePath="splash_screen.jpg"?>
+
+  <?ifdef $(var.RWS)?>
+    <?define splashScreenCompany="Rijkswaterstaat"?>
+  <?else?>
+    <?define splashScreenCompany="Deltares"?>
+  <?endif?>
+
+  <?ifdef $(var.RWS)?>
+    <?define splashScreenLicense="NGHS project"?>
+  <?else?>
+    <?define splashScreenLicense="Valid until 3 nov 2022"?>
+  <?endif?>
+
+  <?define checkForRegistration="true"?>
+
+  <?ifdef $(var.RWS)?>
+    <?define Delft3DPackageName="D-HYDRO"?>
+    <?define registrationFeature="D-HYDRO"?>
+    <?define registrationVersion="1.5"?>
+    <?define splashScreenCopyright="© Deltares"?>
+  <?else?>
+    <?define splashScreenCopyright="© Deltares"?>
+    <?ifdef $(var.NOWAQ)?>
+      <?define Delft3DPackageName="Delft3D FM HM"?>
+      <?define registrationFeature="Delft3D_FM_Hyd-Mor"?>
+      <?define registrationVersion="1.5"?>
+    <?else?>
+      <?define Delft3DPackageName="Delft3D FM HMWQ"?>
+      <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
+      <?define registrationVersion="1.5"?>
+    <?endif?>
+  <?endif?>
+
+  <?define licensefilepath="$(var.ProjectDir)$(var.Delft3DPackageName)_Resources\"?>
+  <?define setupbanner="$(var.ProjectDir)\$(var.Delft3DPackageName)_Resources\setup_banner.jpg"?>
+  <?define setupstartuppath="$(var.ProjectDir)\$(var.Delft3DPackageName)_Resources\"?>
+
+  <!--<?define ManualFileName="MyManual"?>-->
+  <?define plugin_wixUIDeltares="FM_WixUI_Deltares"?>
+
+  <Fragment>
+    <Property Id="SetDeltaShellCustomizations" Hidden="yes"/>
+    <?ifdef EnableDHydroDelft3DFMVersionNaming?>
+      <WixVariable Id="ApplicationName" Value="$(var.DHydroApplicationName)"/>
+      <WixVariable Id="FullProductNameVersion" Value="$(var.DHydroFullVersion)"/>
+    <?else?>
+      <WixVariable Id="ApplicationName" Value="$(var.ProductName)"/>
+      <WixVariable Id="FullProductNameVersion" Value="$(var.FullProductNameVersion)"/>
+    <?endif?>
+
+    <?ifdef ShowStartUpScreen?>
+      <?if $(var.ShowStartUpScreen)=true?>
+        <!--<?warning "Set XML values for ShowStartUpScreen?"?>-->
+
+        <CustomActionRef Id="PropertyShowStartUpScreenAssignTrue" />
+        <WixVariable Id="ShowStartUpScreen" Value="$(var.ShowStartUpScreen)"/>
+        <Property Id="SHOWSTARTUPSCREEN"  Secure="yes" Value="1" />
+        <?ifdef CheckOriginOfProject?>
+          <WixVariable Id="CheckOriginOfProject" Value="$(var.CheckOriginOfProject)"/>
+        <?endif?>
+        <?ifdef StartNamesCompatibleProducts?>
+          <WixVariable Id="StartNamesCompatibleProducts" Value="$(var.StartNamesCompatibleProducts)"/>
+        <?endif?>
+        <?ifdef RealNumberFormat?>
+          <WixVariable Id="RealNumberFormat" Value="$(var.RealNumberFormat)"/>
+        <?endif?>
+      <?endif?>
+    <?endif?>
+
+    <?ifdef supportEmail?>
+      <CustomActionRef Id="PropertySetSupportEmailAssignValue" />
+      <WixVariable Id="SupportEmail" Value="$(var.supportEmail)"/>
+      <Property Id="SetSupportEmailValue"  Value="1" />
+    <?endif?>
+    
+    <?ifdef supportPhone?>
+      <CustomActionRef Id="PropertySetSupportPhoneAssignValue" />
+      <WixVariable Id="SupportPhone" Value="$(var.supportPhone)"/>
+      <Property Id="SetSupportPhoneValue"  Value="1" />
+    <?endif?>
+
+    <?ifdef mainWindowTitle?>
+      <CustomActionRef Id="PropertySetMainWindowTitleAssignValue" />
+      <WixVariable Id="MainWindowTitle" Value="$(var.mainWindowTitle)"/>
+      <Property Id="SetMainWindowTitleValue"  Value="1" />
+    <?endif?>
+
+    <?ifdef splashScreenLogoImageFilePath?>
+      <CustomActionRef Id="PropertySetSplashScreenLogoImageFilePathAssignValue" />
+      <WixVariable Id="SplashScreenLogoImageFilePath" Value="$(var.splashScreenLogoImageFilePath)"/>
+      <Property Id="SetSplashScreenLogoImageFilePathValue"  Value="1" />
+    <?endif?>
+
+    <?ifdef splashScreenCompany?>
+      <CustomActionRef Id="PropertySetSplashScreenCompanyAssignValue" />
+      <WixVariable Id="SplashScreenCompany" Value="$(var.splashScreenCompany)"/>
+      <Property Id="SetSplashScreenCompanyValue"  Value="1" />
+    <?endif?>
+
+    <?ifdef splashScreenLicense?>
+      <CustomActionRef Id="PropertySetSplashScreenLicenseAssignValue" />
+      <WixVariable Id="SplashScreenLicense" Value="$(var.splashScreenCompany)"/>
+      <Property Id="SetSplashScreenLicenseValue"  Value="1" />
+    <?endif?>
+
+    <?ifdef splashScreenCopyright?>
+      <CustomActionRef Id="PropertySetSplashScreenCopyrightAssignValue" />
+      <WixVariable Id="SplashScreenCopyright" Value="$(var.splashScreenCopyright)"/>
+      <Property Id="SetSplashScreenCopyrightValue"  Value="1" />
+    <?endif?>
+
+    <?ifdef checkForRegistration?>
+      <?if $(var.checkForRegistration)=true?>
+        <CustomActionRef Id="PropertySetCheckForRegistrationAssignValue" />
+        <WixVariable Id="CheckForRegistration" Value="$(var.checkForRegistration)"/>
+        <Property Id="SetCheckForRegistrationValue" Value="1" />
+      <?endif?>
+    <?endif?>
+
+    <?ifdef registrationFeature?>
+      <CustomActionRef Id="PropertySetRegistrationFeatureAssignValue" />
+      <WixVariable Id="RegistrationFeature" Value="$(var.registrationFeature)"/>
+      <Property Id="SetRegistrationFeatureValue" Value="1" />
+    <?endif?>
+
+    <?ifdef registrationVersion?>
+      <CustomActionRef Id="PropertySetRegistrationVersionAssignValue" />
+      <WixVariable Id="RegistrationVersion" Value="$(var.registrationVersion)"/>
+      <Property Id="SetRegistrationVersionValue" Value="1" />
+    <?endif?>
+
+    <?ifdef ManualFileName?>
+      <CustomActionRef Id="PropertySetManualFileNameAssignValue" />
+      <WixVariable Id="ManualFileName" Value="$(var.ManualFileName)"/>
+      <Property Id="SetManualFileNameValue"  Value="1" />
+    <?endif?>
+
+    <WixVariable Id="FullProductName" Value="$(var.FullProductName)"/>
+    <!--<WixVariable Id="deltashell_output_folder" Value="$(var.deltashell_output_folder)"/>-->
+    <WixVariable Id="licensefilepath" Value="$(var.licensefilepath)" />
+
+    <?ifdef pluginicon?>
+      <Icon Id="icon.ico" SourceFile="$(var.pluginicon)"/>
+    <?endif?>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="BINDIR">
+      <!-- optional extra files to include in the bin folder in the main feature -->
+      <?ifdef customizationwxi?>
+      <?include $(var.customizationwxi)?>
+      <?endif?>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="PluginsFolder">
+      <?ifdef pluginswxi?>
+        <?include $(var.pluginswxi)?>
+      <?endif?>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <Property Id="SetDeltaShellUI" Hidden="yes"/>
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.setupbanner)" />
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.licensefilepath)" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.setupstartuppath)setup_start.jpg" />
+    <Binary Id="StartUpImage" SourceFile="$(var.setupstartuppath)!(loc.StartUpImage)" />
+
+    <?ifdef plugin_wixUIDeltares?>
+    <UIRef Id="$(var.plugin_wixUIDeltares)"/>
+    <?else?>
+    <PropertyRef Id="UseDefaultDeltaresUI"/>
+    <?endif?>
+
+    <UI>
+      <!-- These dialog references are needed for CloseApplication above to work correctly -->
+      <DialogRef Id="FilesInUseDeltares" />
+      <DialogRef Id="MsiRMFilesInUseDeltares" />
+    </UI>
+
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="BINDIR">
+      <!--Manuals-->
+      <?ifdef manualswxi?>
+      <Component Id="plugin_manuals_component" Guid="{EE4307FE-95D1-4240-8F14-EF0F19736414}">
+        <?include $(var.manualswxi)?>
+      </Component>
+      <?endif?>
+    </DirectoryRef>
+
+    <?ifdef plugin_manualshortcuts?>
+      <DirectoryRef Id="ProgramGroupMenuDir">
+        <Component Id="ManualsMenuShortcut" Guid="{0989A2D6-E2D1-4281-ADDE-E8B36D6459A0}">
+          <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedManualsShortcutFolder" Type="integer" Value="1" KeyPath="yes" />
+          <?include $(var.plugin_manualshortcuts)?>
+        </Component>
+      </DirectoryRef>
+    <?endif?>
+  </Fragment>
+
+  <Fragment>
+    <!--DS Manual-->
+    <?ifndef noDeltaShellFrameworkManual?>
+      <DirectoryRef Id="BINDIR">
+        <Component Id="Delta_Shell_User_Manual" Guid="{3E60F2A5-74C1-443E-A9F0-DD86EBED1C2E}">
+          <File Source="$(var.ProjectDir)..\Framework\DeltaShell\Manuals\Delta_Shell_User_Manual.pdf" Id="Delta_Shell_User_Manual"/>
+        </Component>
+      </DirectoryRef>
+
+      <DirectoryRef Id="ProgramGroupMenuDir">
+        <Component Id="ManualsMenuDSUMShortcut" Guid="{C3E70B0B-837B-4A5F-9F61-E55D11090A76}">
+          <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDSUMManualShortcutFolder" Type="integer" Value="1" KeyPath="yes" />
+          <Shortcut Id="DeltaShell_User_Manual_Shortcut" Name="DeltaShell User Manual" Target="[BINDIR]Delta_Shell_User_Manual.pdf" WorkingDirectory="BINDIR"/>
+        </Component>
+      </DirectoryRef>
+    <?endif?>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="BINDIR">
+      <!--additional files to include in the bin folder in the main feature -->
+      <?ifdef additionalfiles ?>
+        <Component Id="additional_files_component" Guid="{7FFE3EDA-5E4F-43B1-B0C0-F6127DF81693}">
+          <?include $(var.additionalfiles)?>
+        </Component>
+      <?endif?>
+    </DirectoryRef>
+    <?ifdef plugin_utilityshortcuts ?>
+      <DirectoryRef Id="ProgramGroupMenuDir">
+        <Component Id="UtilitiesMenuShortcuts" Guid="26B368A8-1178-4B10-A751-31819007A9DA">
+          <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedUtilitiesShortcutFolder" Type="integer" Value="1" KeyPath="yes" />
+          <?include $(var.plugin_utilityshortcuts)?>
+        </Component>
+      </DirectoryRef>
+    <?endif?>
+    </Fragment>
+
+  <Fragment>
+    <?ifdef windowlayoutpath?>
+      <DirectoryRef Id="BINDIR">
+        <Component Id="WindowLayout_normalID_Component" Guid="{DB578CD2-BB16-4AC0-9B6C-46A86B33128B}">
+          <File Id="WindowLayout_normalID" Name="WindowLayout_normal.xml" Source="$(var.windowlayoutpath)!(loc.WindowLayoutFile)"/>
+        </Component>
+      </DirectoryRef>
+    <?endif?>
+  </Fragment>
+
+  <Fragment>
+    <?ifdef programassociations?>
+      <?include $(var.programassociations)?>
+    <?endif?>
+  </Fragment>
+
+  
+
+</Include>

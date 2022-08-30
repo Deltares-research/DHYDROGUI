@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="rws" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="INSTALLER_VARIANT">rws</String>
+  
+  <String Id="ApplicationName">D-HYDRO Suite</String>
+  <String Id="DistributionName">HMWQ</String>
+  
+  <String Id="HelpLink">https://www.deltares.nl/nl/software/d-hydro-suite/</String>
+
+  <String Id="Delft3DPackageName">D-HYDRO</String>
+
+  <String Id="RegistrationFeature">D-HYDRO_Hyd-Mor_And_Waq</String>
+  <String Id="RegistrationVersion">2022</String>
+
+  <String Id="SplashScreenCompany">Rijkswaterstaat</String>
+  <String Id="SplashScreenLicense">NGHS project</String>
+  
+  <String Id="LicenseRtf" Overridable="yes">D-HYDRO_Resources\License.rtf</String>
+
+  <String Id="SupportEmail" Overridable="yes">1D2D-beta.support@deltares.nl</String>
+  <String Id="SplashScreenLogoImageFilePath" Overridable="yes">splash_screen.jpg</String>
+  <String Id="ManualFileName" Overridable="yes">Delta_Shell_User_Manual.pdf</String>
+  <String Id="PluginFeatureDescription">The hydrodynamic module D-Flow Flexible Mesh (D-Flow FM) which is part of the D-HYDRO Suite.</String>
+</WixLocalization>

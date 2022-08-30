@@ -34,36 +34,12 @@
     <Exec Command="build\doxygen\bin\doxygen.exe Nghs.doxygen" />
   </Target>   
    
-  <Target Name="MsiSobek" DependsOnTargets="BuildRelease">
-    <MSBuild Projects="setup\Sobek\Sobek.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
-  </Target>
-  
-  <!-- unsigned international version for testing purposes --> 
+  <!-- unsigned installers for testing purposes -->
   <Target Name="MsiFM" DependsOnTargets="BuildDebug">
-    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Debug;SolutionDir=$(SolutionDir);"/>
-    <MSBuild Projects="setup\FM\FM_Without_Waq.wixproj" Targets="Rebuild" Properties="Configuration=Debug;SolutionDir=$(SolutionDir);"/>
+    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Debug;SolutionDir=$(SolutionDir);"/>    
   </Target>
 
-  <!-- unsigned installer for testing purposes -->
-  <Target Name="MsiDhydro" DependsOnTargets="BuildDebug">
-    <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Debug;SolutionDir=$(SolutionDir);"/>
-  </Target>
-  
-  <Target Name="MsiFM_ReleaseOnly" DependsOnTargets="BuildRelease">
-    <MSBuild Projects="setup\FM\FM_Open.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
-    <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
-  </Target>
-
-  <Target Name="MsiFM_ReleaseOnly_Delft3DFMSuite_NoSourcesBuild">
-    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
-    <MSBuild Projects="setup\FM\FM_Without_Waq.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
-  </Target>
-
-  <Target Name="MsiFM_ReleaseOnly_DHYDROSuite_NoSourcesBuild">
-    <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
-  </Target>
-
-  <Target Name="MsiFM_ReleaseOnly_Delft3DFMOpen_NoSourcesBuild">
-    <MSBuild Projects="setup\FM\FM_Open.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
-  </Target>
+  <Target Name="MsiFM_ReleaseOnly_NoSourcesBuild">
+    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>    
+  </Target>  
 </Project>

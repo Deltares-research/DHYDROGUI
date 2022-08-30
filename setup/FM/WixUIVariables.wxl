@@ -13,7 +13,9 @@
 
   <String Id="LicenseRtf" Overridable="yes">License.rtf</String>
   <String Id="WindowLayoutFile" Overridable="yes">WindowLayout_normal.en-US.xml</String>
-  <String Id="StartUpImage" Overridable="yes">setup_start.jpg</String>
+  <String Id="StartUpImage" Overridable="yes">setup_start.jpg</String> <!--Setting in Product.wxs-->
+
+  
   
   <!-- for long title names use 125 else e.g. morphan 88.-->
   <String Id="TitleXPosition" Overridable="yes">88</String>
@@ -23,6 +25,10 @@
   <String Id='DescriptionBeforeLogosX' Overridable='yes'>40</String>
   <!--Set Width to 220 when only Deltares logo is displayed, set to 136 when also Rijkswaterstaat logo is displayed-->
   <String Id='DescriptionBeforeLogosWidth' Overridable='yes'>220</String>
+
+  <UI Dialog="ExitDialogDeltares" Control="OptionalCheckBox" X="10" Y="243" Height="17" Width="170" />
+  <UI Dialog="ExitDialogDeltares" Control="Title" Y="186"/>
+
 
   <String Id='Advanced_Font_FaceName' Overridable='yes'>Arial</String>
   <String Id='Advanced_Font_Title_Size' Overridable='yes'>10</String>
@@ -52,5 +58,12 @@
   <String Id="OutOfRbDiskDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Disk space required for the installation exceeds available disk space.</String>
   <String Id="SetupTypeDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Choose the setup type that best suits your needs</String>
   <String Id="LicenseAgreementDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Please read the following license agreement carefully</String>
-
+  <String Id="FullProductName" Overridable="yes">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
+  <String Id="PublicReleaseVersion">2022.04</String>
+  <String Id="ReleaseVersion">4.10.0</String> <!--Need to discuss with the team-->
+  <String Id="ProductName">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
+  <String Id="SupportPhone">+31 (0)88 335 8100</String>
+  <String Id="DeltaShellFeatureName">DeltaShell</String>
+  <String Id="DeltaShellFeatureDescription">The framework enables to develop a range of modeling suites, each distinguished by the components and — most significantly — the (numerical) modules, which are plugged in.</String>
+  <String Id="PluginFeatureName">!(loc.DistributionName) components</String>
 </WixLocalization>

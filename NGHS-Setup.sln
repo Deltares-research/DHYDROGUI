@@ -1,42 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1267
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Waq", "Waq", "{479B2D3E-0946-48D5-974C-079D283737FA}"
-	ProjectSection(SolutionItems) = preProject
-		setup\Waq\DIDO.wxi = setup\Waq\DIDO.wxi
-		setup\Waq\PLCT.wxi = setup\Waq\PLCT.wxi
-		setup\Waq\WaqDimrKernels.xsl = setup\Waq\WaqDimrKernels.xsl
-		setup\Waq\Manuals\WaqManuals.wxi = setup\Waq\Manuals\WaqManuals.wxi
-		setup\Waq\Manuals\WaqManualShortcuts.wxi = setup\Waq\Manuals\WaqManualShortcuts.wxi
-		setup\Waq\Localization\WaqNames.wxl = setup\Waq\Localization\WaqNames.wxl
-		setup\Waq\WaqPlugin_FeatureContent.wxi = setup\Waq\WaqPlugin_FeatureContent.wxi
-		setup\Waq\WaqPlugin_UtilityShortcuts.wxi = setup\Waq\WaqPlugin_UtilityShortcuts.wxi
-		setup\Waq\WaqProperties.targets = setup\Waq\WaqProperties.targets
-		setup\Waq\WaterQualityModelGuiPlugin.wxi = setup\Waq\WaterQualityModelGuiPlugin.wxi
-		setup\Waq\WaterQualityModelPlugin.wxi = setup\Waq\WaterQualityModelPlugin.wxi
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DelftTools.Hydro", "DelftTools.Hydro", "{B077D58E-B640-41F6-96C5-7F223ABA8041}"
-	ProjectSection(SolutionItems) = preProject
-		setup\DelftTools.Hydro\DelftTools.Hydro.wxi = setup\DelftTools.Hydro\DelftTools.Hydro.wxi
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{3A1F15F0-0842-4614-B6CA-EC0C2B6A1D2A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DeltaShell", "DeltaShell", "{0D2B73EC-A331-432C-AD12-2ED5EDD7DBCA}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DeltaShell", "setup\Framework\DeltaShell\DeltaShell.wixproj", "{58AE50FB-48FD-49B6-9BC0-6FD21EEC15BD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FM", "FM", "{7C4ACDEE-FBDF-4C9B-8201-089C35CCFB13}"
-EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "FM", "setup\FM\FM.wixproj", "{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "FM_RWS", "setup\FM\FM_RWS.wixproj", "{5725D793-35B5-48A1-BB6A-2291DF6C2980}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "FM_Without_Waq", "setup\FM\FM_Without_Waq.wixproj", "{526694A4-FEE1-41AB-8F54-D3F3DC5F192D}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "FM_Open", "setup\FM\FM_Open.wixproj", "{2481F918-8B09-42CC-AC8B-B81E78A2AAA9}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DefaultDeltaresDialogs", "setup\Framework\DefaultDeltaresDialogs\DefaultDeltaresDialogs.wixproj", "{211886F5-CF84-4A3A-ABFC-2758337943EA}"
 EndProject
@@ -46,26 +12,10 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{58AE50FB-48FD-49B6-9BC0-6FD21EEC15BD}.Debug|x64.ActiveCfg = Debug|x64
-		{58AE50FB-48FD-49B6-9BC0-6FD21EEC15BD}.Debug|x64.Build.0 = Debug|x64
-		{58AE50FB-48FD-49B6-9BC0-6FD21EEC15BD}.Release|x64.ActiveCfg = Release|x64
-		{58AE50FB-48FD-49B6-9BC0-6FD21EEC15BD}.Release|x64.Build.0 = Release|x64
 		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|x64.ActiveCfg = Debug|x64
 		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|x64.Build.0 = Debug|x64
 		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Release|x64.ActiveCfg = Release|x64
 		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Release|x64.Build.0 = Release|x64
-		{5725D793-35B5-48A1-BB6A-2291DF6C2980}.Debug|x64.ActiveCfg = Debug|x64
-		{5725D793-35B5-48A1-BB6A-2291DF6C2980}.Debug|x64.Build.0 = Debug|x64
-		{5725D793-35B5-48A1-BB6A-2291DF6C2980}.Release|x64.ActiveCfg = Release|x64
-		{5725D793-35B5-48A1-BB6A-2291DF6C2980}.Release|x64.Build.0 = Release|x64
-		{526694A4-FEE1-41AB-8F54-D3F3DC5F192D}.Debug|x64.ActiveCfg = Debug|x64
-		{526694A4-FEE1-41AB-8F54-D3F3DC5F192D}.Debug|x64.Build.0 = Debug|x64
-		{526694A4-FEE1-41AB-8F54-D3F3DC5F192D}.Release|x64.ActiveCfg = Release|x64
-		{526694A4-FEE1-41AB-8F54-D3F3DC5F192D}.Release|x64.Build.0 = Release|x64
-		{2481F918-8B09-42CC-AC8B-B81E78A2AAA9}.Debug|x64.ActiveCfg = Debug|x64
-		{2481F918-8B09-42CC-AC8B-B81E78A2AAA9}.Debug|x64.Build.0 = Debug|x64
-		{2481F918-8B09-42CC-AC8B-B81E78A2AAA9}.Release|x64.ActiveCfg = Release|x64
-		{2481F918-8B09-42CC-AC8B-B81E78A2AAA9}.Release|x64.Build.0 = Release|x64
 		{211886F5-CF84-4A3A-ABFC-2758337943EA}.Debug|x64.ActiveCfg = Debug|x64
 		{211886F5-CF84-4A3A-ABFC-2758337943EA}.Debug|x64.Build.0 = Debug|x64
 		{211886F5-CF84-4A3A-ABFC-2758337943EA}.Release|x64.ActiveCfg = Release|x64
@@ -73,15 +23,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{0D2B73EC-A331-432C-AD12-2ED5EDD7DBCA} = {3A1F15F0-0842-4614-B6CA-EC0C2B6A1D2A}
-		{58AE50FB-48FD-49B6-9BC0-6FD21EEC15BD} = {0D2B73EC-A331-432C-AD12-2ED5EDD7DBCA}
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F} = {7C4ACDEE-FBDF-4C9B-8201-089C35CCFB13}
-		{5725D793-35B5-48A1-BB6A-2291DF6C2980} = {7C4ACDEE-FBDF-4C9B-8201-089C35CCFB13}
-		{526694A4-FEE1-41AB-8F54-D3F3DC5F192D} = {7C4ACDEE-FBDF-4C9B-8201-089C35CCFB13}
-		{2481F918-8B09-42CC-AC8B-B81E78A2AAA9} = {7C4ACDEE-FBDF-4C9B-8201-089C35CCFB13}
-		{211886F5-CF84-4A3A-ABFC-2758337943EA} = {3A1F15F0-0842-4614-B6CA-EC0C2B6A1D2A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6DB99E3C-AF3B-4D4C-A635-CDCD73A8C724}

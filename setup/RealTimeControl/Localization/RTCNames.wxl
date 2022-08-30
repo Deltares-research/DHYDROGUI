@@ -3,4 +3,5 @@
   <String Id="RTCFeatureName">D-Real Time Control</String>
   <String Id="RTCFeatureDescription">Allows to simulate Real-Time Control for models, such as D-Flow 1D.</String>
   <String Id="RTCUserManualName">D-Real Time Control User Manual</String>
+  <String Id="RTCReferenceManualName">RTC-Tools Technical Reference Manual</String>
 </WixLocalization>

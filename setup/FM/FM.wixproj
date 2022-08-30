@@ -6,97 +6,84 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <PublicReleaseVersion>2022.04</PublicReleaseVersion>
     <ReleaseVersion>4.10.0</ReleaseVersion>
-    <ApplicationName>Delft3D FM Suite</ApplicationName>
-    <DistributionName>HMWQ</DistributionName>
-    <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
-    <Delft3DPackageName>Delft3D FM HMWQ</Delft3DPackageName>
-    <RegistrationFeature>Delft3D_FM_Hyd-Mor_And_Waq</RegistrationFeature>
-    <RegistrationVersion>2022</RegistrationVersion>
-    <SplashScreenCompany>Deltares</SplashScreenCompany>
-    <SplashScreenLicense>Valid until 30 oct 2022</SplashScreenLicense>
+    <!-- Distribution Specific settings -->
     <ProjectGuid>{1dd62dbb-f7d3-40be-8063-b7b80cec8b9f}</ProjectGuid>
+    <MyProductCode>{$([System.Guid]::NewGuid())}</MyProductCode>
+    <MyExtras>{$([System.Guid]::NewGuid())}</MyExtras>
+    <MyWaqPluginComponents>{$([System.Guid]::NewGuid())}</MyWaqPluginComponents>
+    <MyPluginComponents>{$([System.Guid]::NewGuid())}</MyPluginComponents>
+    <MyAdditionalFilesComponents>{$([System.Guid]::NewGuid())}</MyAdditionalFilesComponents>
+    <UtilitiesMenuShortcutsGUID>{$([System.Guid]::NewGuid())}</UtilitiesMenuShortcutsGUID>
+    <WaqUtilitiesMenuShortcutsGUID>{$([System.Guid]::NewGuid())}</WaqUtilitiesMenuShortcutsGUID>
+    <ManualsMenuDSTRMShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuDSTRMShortcutGUID>
+    <ManualsMenuDSUMShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuDSUMShortcutGUID>
+    <ManualsMenuShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuShortcutGUID>
+    <WaqManualsMenuShortcutGUID>{$([System.Guid]::NewGuid())}</WaqManualsMenuShortcutGUID>
+    <ProgramGroupMenuDir_ComponentGUID>{$([System.Guid]::NewGuid())}</ProgramGroupMenuDir_ComponentGUID>
+    <UninstallShortcutComponentGUID>{$([System.Guid]::NewGuid())}</UninstallShortcutComponentGUID>
+    <DeltaShellGuiExeConfigGUID>{$([System.Guid]::NewGuid())}</DeltaShellGuiExeConfigGUID>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Package</OutputType>
+    <CabinetCachePath>$(OutputPath)cabcache\</CabinetCachePath>
+    <ReuseCabinetCache>True</ReuseCabinetCache>
+    <SuppressValidation>True</SuppressValidation>
+    <RunWixToolsOutOfProc Condition=" '$(PROCESSOR_ARCHITECTURE)'!='x86' ">true</RunWixToolsOutOfProc>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' == '' "></FormattedBuildNumber>
+    <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' == '' ">
+    </FormattedBuildNumber>
     <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' != '' "> ($(BUILD_NUMBER))</FormattedBuildNumber>
     <OutputName>$(ProductName)$(FormattedBuildNumber)</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;</DefineConstants>
     <SuppressIces>ICE57</SuppressIces>
+    <OutputName>Installer</OutputName>
+    <!-- $(BUILD_NUMBER) is an TC environment variable: https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties -->
+    <Cultures Condition="'$(BUILD_NUMBER)' != '' ">fm,en-US;rws,en-US;fmo,en-US;fmwaq,en-US</Cultures>
+    <Cultures Condition="'$(BUILD_NUMBER)' == '' ">fm,en-US</Cultures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputName>$(ProductName)</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
     <SuppressIces>ICE57</SuppressIces>
+    <OutputName>Installer</OutputName>
+    <Cultures Condition="'$(BUILD_NUMBER)' != '' ">fm,en-US;rws,en-US;fmo,en-US;fmnowaq,en-US</Cultures>
+    <Cultures Condition="'$(BUILD_NUMBER)' == '' ">fm,en-US</Cultures>
   </PropertyGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);PublicReleaseVersion=$(PublicReleaseVersion);ProductName=$(ProductName);ApplicationName=$(ApplicationName);Delft3DPackageName=$(Delft3DPackageName);registrationFeature=$(RegistrationFeature);registrationVersion=$(RegistrationVersion);splashScreenLicense=$(SplashScreenLicense);splashScreenCompany=$(SplashScreenCompany);DistributionName=$(DistributionName)</DefineConstants>
+    <DefineConstants>$(DefineConstants);MyProductCode=$(MyProductCode);MyExtras=$(MyExtras);MyPluginComponents=$(MyPluginComponents);MyWaqPluginComponents=$(MyWaqPluginComponents);MyAdditionalFilesComponents=$(MyAdditionalFilesComponents);WaqUtilitiesMenuShortcutsGUID=$(WaqUtilitiesMenuShortcutsGUID);UtilitiesMenuShortcutsGUID=$(UtilitiesMenuShortcutsGUID);ManualsMenuDSTRMShortcutGUID=$(ManualsMenuDSTRMShortcutGUID);ManualsMenuDSUMShortcutGUID=$(ManualsMenuDSUMShortcutGUID);ManualsMenuShortcutGUID=$(ManualsMenuShortcutGUID);WaqManualsMenuShortcutGUID=$(WaqManualsMenuShortcutGUID);ProgramGroupMenuDir_ComponentGUID=$(ProgramGroupMenuDir_ComponentGUID);UninstallShortcutComponentGUID=$(UninstallShortcutComponentGUID);DeltaShellGuiExeConfigGUID=$(DeltaShellGuiExeConfigGUID);</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\Dimr\Dimr.wxi">
-      <Link>Dimr.wxi</Link>
-    </Content>
-    <Content Include="..\Dimr\DimrDefines.wxi">
-      <Link>DimrDefines.wxi</Link>
-    </Content>
     <Content Include="..\Dimr\Manuals\DIMRManuals.wxi">
       <Link>Manuals\DIMRManuals.wxi</Link>
     </Content>
     <Content Include="..\Dimr\Manuals\DIMRManualShortcuts.wxi">
       <Link>Manuals\DIMRManualShortcuts.wxi</Link>
     </Content>
-    <Content Include="..\HydroModel\HydroModelPlugin.wxi">
-      <Link>HydroModelPlugin.wxi</Link>
+    <Content Include="..\DotNetFramework4Check.wxi">
+      <Link>DotNetFramework4Check.wxi</Link>
     </Content>
-    <Content Include="..\HydroModel\HydroModel_FeatureContent.wxi">
-      <Link>HydroModel_FeatureContent.wxi</Link>
+    <Content Include="..\OSVersionCheck.wxi">
+      <Link>OSVersionCheck.wxi</Link>
     </Content>
-    <Content Include="..\NetworkEditor\NetworkEditorPlugin.wxi">
-      <Link>NetworkEditorPlugin.wxi</Link>
+    <Content Include="..\RealTimeControl\Manuals\RTCManuals.wxi">
+      <Link>Manuals\RTCManuals.wxi</Link>
     </Content>
-    <Content Include="..\NGHS.IO\NGHS.IO.wxi">
-      <Link>NGHS.IO.wxi</Link>
+    <Content Include="..\RealTimeControl\Manuals\RTCManualShortcuts.wxi">
+      <Link>Manuals\RTCManualShortcuts.wxi</Link>
     </Content>
-    <Content Include="..\RealTimeControl\RealTimeControlPlugin.wxi">
-      <Link>RealTimeControlPlugin.wxi</Link>
+    <Content Include="..\Waq\DIDO.wxi">
+      <Link>Manuals\DIDO.wxi</Link>
     </Content>
-    <Content Include="..\RealTimeControl\RealTimeControl_FeatureContent.wxi">
-      <Link>RealTimeControl_FeatureContent.wxi</Link>
+    <Content Include="..\Waq\Manuals\WaqManuals.wxi">
+      <Link>Manuals\WaqManuals.wxi</Link>
     </Content>
-    <Content Include="..\Scripts\FMScripts.wxi">
-      <Link>Scripts\FMScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\RealTimeControlScripts.wxi">
-      <Link>Scripts\RealTimeControlScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\WaterQualityScripts.wxi">
-      <Link>Scripts\WaterQualityScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Waq\WaqDefines.wxi">
-      <Link>WaqDefines.wxi</Link>
-    </Content>
-    <Content Include="..\Waq\WaqPlugin_FeatureContent.wxi">
-      <Link>WaqPlugin_FeatureContent.wxi</Link>
-    </Content>
-    <Content Include="..\Waq\WaterQualityModelGuiPlugin.wxi">
-      <Link>WaterQualityModelGuiPlugin.wxi</Link>
-    </Content>
-    <Content Include="..\Waq\WaterQualityModelPlugin.wxi">
-      <Link>WaterQualityModelPlugin.wxi</Link>
-    </Content>
-    <Content Include="..\Wave\WavePlugin.wxi">
-      <Link>WavePlugin.wxi</Link>
-    </Content>
-    <Content Include="..\Wave\WavePlugin_FeatureContent.wxi">
-      <Link>WavePlugin_FeatureContent.wxi</Link>
+    <Content Include="..\Waq\Manuals\WaqManualShortcuts.wxi">
+      <Link>Manuals\WaqManualShortcuts.wxi</Link>
     </Content>
     <Content Include="Delft3D FM HMWQ_Manuals\D-Flow_FM_Technical_Reference_Manual.pdf" />
     <Content Include="Delft3D FM HMWQ_Manuals\D-Flow_FM_User_Manual.pdf" />
@@ -106,11 +93,14 @@
     <Content Include="Delft3D FM HMWQ_Resources\setup_banner.jpg" />
     <Content Include="Delft3D FM HMWQ_Resources\setup_start.jpg" />
     <Content Include="Delft3D FM HMWQ_Resources\splash_screen.jpg" />
+    <Content Include="DeltaShell_Customizations.wxi" />
+    <Content Include="DeltaShell_FeatureContent.wxi" />
     <Content Include="Extras.wxi" />
     <Content Include="Features.wxi" />
     <Content Include="FMPlugin.wxi" />
     <Content Include="FMPlugin_FeatureContent.wxi" />
     <Content Include="FMSuiteCommonPlugin.wxi" />
+    <Content Include="GuiConfigXml.wxi" />
     <Content Include="Manuals.wxi" />
     <Content Include="ManualShortcuts.wxi" />
     <Content Include="Manuals\FMManuals.wxi" />
@@ -122,23 +112,9 @@
     <Content Include="RGFGridDefines.wxi" />
     <Content Include="RGFGrid_x64.wxi" />
     <Content Include="UtilityShortcuts.wxi" />
+    <Content Include="WaqPlugin_UtilityShortcuts.wxi" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Dimr\DimrLibs.wxs">
-      <Link>DimrLibs.wxs</Link>
-    </Compile>
-    <Compile Include="..\Waq\DidoLibs.wxs">
-      <Link>DidoLibs.wxs</Link>
-    </Compile>
-    <Compile Include="..\Waq\PLCTLibs.wxs">
-      <Link>PLCTLibs.wxs</Link>
-    </Compile>
-    <Compile Include="..\Waq\SubstancesFiles.wxs">
-      <Link>SubstancesFiles.wxs</Link>
-    </Compile>
-    <Compile Include="RGFGridLibs.wxs">
-      <Link>RGFGridLibs.wxs</Link>
-    </Compile>
     <Compile Include="WixUI\FM_SetupTypeDialog.wxs" />
     <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
     <Compile Include="Product.wxs" />
@@ -160,7 +136,6 @@
   <ItemGroup>
     <Folder Include="Delft3D FM HMWQ_Manuals\" />
     <Folder Include="Delft3D FM HMWQ_Resources\" />
-    <Folder Include="Scripts" />
     <Folder Include="WixUI" />
     <Folder Include="Manuals\" />
     <Folder Include="Localization" />
@@ -179,11 +154,41 @@
     <EmbeddedResource Include="..\Wave\Localization\WaveNames.wxl">
       <Link>Localization\WaveNames.wxl</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="Localization\fm.wxl" />
+    <EmbeddedResource Include="Localization\fmwaq.wxl" />
     <EmbeddedResource Include="Localization\FMNames.wxl" />
+    <EmbeddedResource Include="Localization\open.wxl" />
+    <EmbeddedResource Include="Localization\rws.wxl" />
     <EmbeddedResource Include="WixUIVariables.wxl" />
   </ItemGroup>
+  <Import Project="..\FM\FM.properties" />
+  <Import Project="..\Harvest\CreateZipFromMSI.targets" />
+  <Import Project="..\Harvest\GenerateHTMLBaseFile.targets" />
+  <Import Project="..\Harvest\RunSystemTests.targets" />
+  <Import Project="..\Harvest\RenameMSI.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Framework\DefaultDeltaresDialogs\DefaultDeltaresDialogs.wixproj">
+    <Folder Include="Harvested\" />
+    <Compile Include="..\HarvestedDeltaShellFiles.wxs">
+      <Link>Harvested\HarvestedDeltaShellFiles</Link>
+    </Compile>
+    <Content Include="..\Harvest\HarvestDefines.wxi">
+      <Link>Harvested\HarvestDefines.wxi</Link>
+    </Content>
+    <Content Include="..\Harvest\HarvestedFilesTransform.xsl">
+      <Link>Harvested\HarvestedFilesTransform.xsl</Link>
+    </Content>
+    <Compile Include="..\HarvestedPluginsFiles.wxs">
+      <Link>Harvested\HarvestedPluginsFiles</Link>
+    </Compile>
+    <Content Include="..\Harvest\HarvestedFilesStandardTransform.xsl">
+      <Link>Harvested\HarvestedFilesStandardTransform.xsl</Link>
+    </Content>
+    <Content Include="..\Harvest\Harvest.targets">
+      <Link>Harvested\Harvest.targets</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DefaultDeltaresDialogs\DefaultDeltaresDialogs.wixproj">
       <Name>DefaultDeltaresDialogs</Name>
       <Project>{211886f5-cf84-4a3a-abfc-2758337943ea}</Project>
       <Private>True</Private>
@@ -192,20 +197,11 @@
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
-  <Import Project="FMProperties.targets" />
-  <Import Project="..\Dimr\HarvestDimrLibs.targets" />
-  <Import Project="..\Waq\HarvestPLCTLibs.targets" />
-  <Import Project="..\Waq\HarvestDidoLibs.targets" />
-  <Import Project="..\Waq\HarvestSubstancesFiles.targets" />
-  <Import Project="HarvestRGFGridLibs.targets" />
+  <Import Project="..\Harvest\Harvest.targets" />
   <PropertyGroup>
     <BuildDependsOn>
-      HarvestDimrLibsTarget;
-      HarvestPLCTLibsTarget;
-      HarvestRGFGridLibsTarget;
-      HarvestDidoLibsTarget;
-      HarvestSubstancesFilesTarget;
+      HarvestDeltaShellFilesTarget;
+      HarvestPluginsFilesTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
   </PropertyGroup>

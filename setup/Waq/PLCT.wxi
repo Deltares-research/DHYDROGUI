@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <Directory Name="plct" Id="plct_folder">
-    <Component Id="plctIni" Guid="*">
-      <File Source="$(var.waq_plugin_bin)plct\plct_eco.ini"/>
-    </Component>
-    <Directory Id="PLCTLibDir" Name="bin"/><!--Harvested files from PLCT-->
-  </Directory>
-</Include>

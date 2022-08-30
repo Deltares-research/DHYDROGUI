@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Add this one via $(var.additionalfiles)-->
-<Include>
-  <File Id="DelftTools.Hydro.dll" Source='$(var.deltashell_gui_bin)DelftTools.Hydro.dll' />
-  <File Id="DeltaShell.NGHS.Common.dll" Source='$(var.deltashell_gui_bin)DeltaShell.NGHS.Common.dll' />
-  <File Id="DeltaShell.NGHS.Common.Gui.dll" Source='$(var.deltashell_gui_bin)DeltaShell.NGHS.Common.Gui.dll' />
-</Include>

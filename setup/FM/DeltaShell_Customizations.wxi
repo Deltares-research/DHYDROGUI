@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <Fragment Id="SetTheFMIcon">
+    <Property Id="SetDeltaShellCustomizations" Hidden="yes"/>
+    <?ifdef pluginicon?>
+      <Icon Id="icon.ico" SourceFile="$(var.pluginicon)"/>
+    <?endif?>
+  </Fragment>
+  
+  <Fragment Id="OptionalExtraOrAdditionalFilesToIncludeInTheBinFolderInTheMainFeature">
+    <DirectoryRef Id="BINDIR">
+      <!-- optional extra files to include in the bin folder in the main feature -->
+      <?ifdef customizationwxi?>
+        <?include $(var.customizationwxi)?>
+      <?endif?>
+      <?ifdef windowlayoutpath?>
+        <Component Id="WindowLayout_normalID_Component" Guid="*">
+          <File Id="WindowLayout_normalID" Name="WindowLayout_normal.xml" Source="$(var.windowlayoutpath)!(loc.WindowLayoutFile)"/>
+        </Component>
+      <?endif?>
+      <!--additional files to include in the bin folder in the main feature -->
+      <?ifdef additionalfiles ?>
+        <Component Id="additional_files_component" Guid="$(var.MyAdditionalFilesComponents)">
+          <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedAdditionalFiles" Type="integer" Value="1"/>
+          <?include $(var.additionalfiles)?>
+        </Component>
+      <?endif?>
+      <Component Id="LicenseIDComponent" Guid="*">
+        <File Id="LicenseID" Name="License.rtf" Source="!(loc.LicenseRtf)"/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment Id="IncludeNotHarvestedPluginsOnTheDefaultLocationFromAnOtherLocation">
+    <DirectoryRef Id="HarvestedPluginsFilesDir">
+      <?ifdef pluginswxi?>
+        <?include $(var.pluginswxi)?>
+      <?endif?>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment Id="IncludeIfWantedThePluginManualsAndShortCutsToTheStartMenu">
+    <DirectoryRef Id="BINDIR">
+      <!--Manuals-->
+      <?ifdef manualswxi?>
+      <Component Id="plugin_manuals_component" Guid="$(var.MyPluginComponents)">
+        <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedPluginManuals" Type="integer" Value="1"/>
+        <?include $(var.manualswxi)?>
+      </Component>
+      <Component Id="waq_plugin_manuals_component" Guid="$(var.MyWaqPluginComponents)">
+        <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedWaqPluginManuals" Type="integer" Value="1"/>
+        <Condition>(INSTALLER_VARIANT = "fmwaq")</Condition>
+        <?include ..\Waq\Manuals\WaqManuals.wxi?>
+      </Component>
+
+      <?endif?>
+    </DirectoryRef>
+
+    <?ifdef manualswxi?>
+    <?include ..\Waq\Dido.wxi?>
+    <?endif?>
+
+    <?ifdef plugin_manualshortcuts?>
+      <DirectoryRef Id="ProgramGroupMenuDir">
+        <Component Id="ManualsMenuShortcut" Guid="$(var.ManualsMenuShortcutGUID)">
+          <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedManualsShortcutFolder" Type="integer" Value="1"/>
+          <?include $(var.plugin_manualshortcuts)?>
+        </Component>
+        <Component Id="WaqManualsMenuShortcut" Guid="$(var.WaqManualsMenuShortcutGUID)">
+          <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedWaqManualsShortcutFolder" Type="integer" Value="1"/>
+          <Condition>(INSTALLER_VARIANT = "fmwaq")</Condition>
+          <?include ..\Waq\Manuals\WaqManualShortcuts.wxi?>
+        </Component>
+      </DirectoryRef>
+    <?endif?>
+  </Fragment>
+ 
+  <Fragment Id="SetDeltaresUINeededForOurFMPackage">
+    <Property Id="SetDeltaShellUI" Hidden="yes"/>
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)" />
+    <Binary Id="StartUpImage" SourceFile="$(var.ProjectDir)!(loc.Delft3DPackageName)_Resources\!(loc.StartUpImage)" />
+    <Binary Id="UIBannerBmp" SourceFile="$(var.ProjectDir)!(loc.Delft3DPackageName)_Resources\setup_banner.jpg" />
+    <Binary Id="UIDialogBmp" SourceFile="$(var.ProjectDir)!(loc.Delft3DPackageName)_Resources\setup_start.jpg" />
+    
+    <?ifdef plugin_wixUIDeltares?>
+    <UIRef Id="$(var.plugin_wixUIDeltares)"/>
+    <?else?>
+    <PropertyRef Id="UseDefaultDeltaresUI"/>
+    <?endif?>
+
+    <UI>
+      <!-- These dialog references are needed for CloseApplication above to work correctly -->
+      <DialogRef Id="FilesInUseDeltares" />
+      <DialogRef Id="MsiRMFilesInUseDeltares" />
+    </UI>
+
+  </Fragment>
+
+  <Fragment Id="IncludeIfWantedTheDeltaShellUsermanualAndShortCutToTheStartMenu">
+    <!--DS Manual-->
+    <?ifndef noDeltaShellFrameworkManual?>
+      <DirectoryRef Id="BINDIR">
+        <Component Id="Delta_Shell_User_Manual" Guid="*">
+          <File Source="$(var.ProjectDir)..\DeltaShell\!(loc.Delft3DPackageName)_Manuals\Delta_Shell_User_Manual.pdf" Id="Delta_Shell_User_Manual"/>
+        </Component>
+        <Component Id="Delta_Shell_Technical_Reference_Manual" Guid="*">
+          <File Source="$(var.ProjectDir)..\DeltaShell\!(loc.Delft3DPackageName)_Manuals\Delta_Shell_Technical_Reference_Manual.pdf" Id="Delta_Shell_Technical_Reference_Manual"/>
+        </Component>
+      </DirectoryRef>
+
+      <DirectoryRef Id="ProgramGroupMenuDir">
+        <Component Id="ManualsMenuDSUMShortcut" Guid="$(var.ManualsMenuDSUMShortcutGUID)">
+          <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDSUMManualShortcutFolder" Type="integer" Value="1"/>
+          <Shortcut Id="DeltaShell_User_Manual_Shortcut" Name="DeltaShell User Manual" Target="[BINDIR]Delta_Shell_User_Manual.pdf" WorkingDirectory="BINDIR"/>
+        </Component>
+        <Component Id="ManualsMenuDSTRMShortcut" Guid="$(var.ManualsMenuDSTRMShortcutGUID)">
+          <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDSTRMManualShortcutFolder" Type="integer" Value="1"/>
+          <Shortcut Id="DeltaShell_Technical_Reference_Manual_Shortcut" Name="DeltaShell Technical Reference Manual" Target="[BINDIR]Delta_Shell_Technical_Reference_Manual.pdf" WorkingDirectory="BINDIR"/>
+        </Component>
+      </DirectoryRef>
+    <?endif?>
+  </Fragment>
+
+  <Fragment Id="AddKernelUtilityShortcutsToTheStartMenu">
+    <?ifdef plugin_utilityshortcuts ?>
+      <DirectoryRef Id="ProgramGroupMenuDir">
+        <Component Id="UtilitiesMenuShortcuts" Guid="$(var.UtilitiesMenuShortcutsGUID)">
+          <Condition><![CDATA[(INSTALLER_VARIANT <> "fmo")]]></Condition> <!-- NO UTILITIES WHEN INSTALLING OPEN --> 
+          <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedUtilitiesShortcutFolder" Type="integer" Value="1"/>
+          <?include $(var.plugin_utilityshortcuts)?>
+        </Component>
+        <Component Id="WaqUtilitiesMenuShortcuts" Guid="$(var.WaqUtilitiesMenuShortcutsGUID)">
+          <Condition><![CDATA[(INSTALLER_VARIANT = "fmwaq")]]></Condition> <!-- WAQ UTILITIES WHEN INSTALLING WAQ --> 
+          <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedWaqUtilitiesShortcutFolder" Type="integer" Value="1"/>
+          <?include ..\Waq\WaqPlugin_UtilityShortcuts.wxi?>
+        </Component>
+      </DirectoryRef>
+    <?endif?>
+  </Fragment>
+  
+  <Fragment Id="IncludeAndAssociateCustom">
+    <?ifdef programassociations?>
+      <?include $(var.programassociations)?>
+    <?endif?>
+  </Fragment>
+
+  <Fragment Id="IncludeDotNetFrameworkCheck">
+    <Property Id="CheckForDotnetVersion" Hidden="yes"/>
+    <!--check for dotnet version-->
+    <?include ..\DotNetFramework4Check.wxi?>
+  </Fragment>
+
+  <Fragment Id="IncludeOSVersionCheck">
+    <Property Id="CheckForOSVersion" Hidden="yes"/>
+    <!--check for version of operating system-->
+    <?include ..\OSVersionCheck.wxi?>
+  </Fragment>
+  
+  <Fragment Id="OurLaunchConditionsCheck">
+    <Property Id="CheckOurLaunchConditions" Hidden="yes"/>
+    <!-- Launch conditions -->
+    <Condition Message="An administrator must approve or install [ProductName]."> Privileged </Condition>
+    <!--<Condition Message="The same or a later version of [ProductName] is already installed."> NOT NEWERVERSIONDETECTED </Condition>-->
+  </Fragment>
+
+  <Fragment Id="ConfigDefaultDeltaresUI">
+    <Property Id="UseDefaultDeltaresUI" Hidden="yes"/>
+    <SetProperty Id="ApplicationFolderName" Value="[FullProductName]" After="CostInitialize"/>
+    <Property Id="DeltaresWixAppFolder" Value="WixPerMachineFolder"/>
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder"/>
+    <Property Id="DELTARES_WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+    <UIRef Id="WixUI_Deltares"/>
+  </Fragment>
+
+  <Fragment Id="SetInstallerProperties">
+    <Property Id="SetInstallerProperties" Hidden="yes"/>
+    <?if $(var.Configuration) != "Release"?>
+      <?ifdef env.BUILD_NUMBER ?>
+        <Property Id="FullProductName" Value="!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName) ($(env.BUILD_NUMBER))"/>
+        <Property Id="FullProductNameVersion" Value="!(loc.PublicReleaseVersion).$(env.BUILD_NUMBER)"/>
+        <Property Id ='ReleaseVersion' Value='!(loc.ReleaseVersion).$(env.BUILD_NUMBER)'/>
+      <?else?>
+        <Property Id="FullProductName" Value="!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)"/>
+        <Property Id="FullProductNameVersion" Value="!(loc.PublicReleaseVersion)"/>
+        <Property Id ='ReleaseVersion' Value='!(loc.ReleaseVersion)'/>
+      <?endif?>
+    <?else?>
+      <Property Id="FullProductName" Value="!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)"/>
+      <Property Id="FullProductNameVersion" Value="!(loc.PublicReleaseVersion)"/>
+      <Property Id ='ReleaseVersion' Value='!(loc.ReleaseVersion)'/>
+    <?endif?>
+    <Property Id ='INSTALLER_VARIANT' Value='!(loc.INSTALLER_VARIANT)'/>
+    <Property Id ='DeltaresProductName' Value='!(loc.ProductName)'/>
+    <Property Id ='PublicReleaseVersion' Value='!(loc.PublicReleaseVersion)'/>
+    <MediaTemplate EmbedCab="yes" MaximumUncompressedMediaSize="10"  CompressionLevel="high" />
+    <PropertyRef Id="SetDeltaShellCustomizations"/>
+
+    <!-- Major upgrade -->
+    <!-- NOT IMPLEMENTED! -->
+    <!--<Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion Minimum="!(bind.property.PublicReleaseVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
+      <UpgradeVersion Minimum="0.0" IncludeMinimum="yes" Maximum="!(bind.property.PublicReleaseVersion)" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
+    </Upgrade>-->
+    <PropertyRef Id="CheckForDotnetVersion"/>
+    <PropertyRef Id="CheckForOSVersion"/>
+    <PropertyRef Id="CheckOurLaunchConditions"/>
+
+    <!-- uninstall group shows specific icon. It is the id of the icon -->
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <Property Id="ARPHELPLINK" Value="!(loc.HelpLink)" />
+
+    <Property Id ='LanguageName' Value='!(loc.LanguageName)'/>
+  </Fragment>
+</Include>

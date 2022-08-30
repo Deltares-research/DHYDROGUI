@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <Directory Id='Dido_root' Name='plugins-qt'>
-    <Directory Id="DidoLibDir" Name="x64"><!--Harvested files from Dido-->
+  <DirectoryRef Id="DidoLibDir"><!--Harvested files from Dido-->
     <Directory Name="manuals" Id="dido_manuals_folder">
       <Component Id="dido_manuals" Guid="F1763953-8333-42A6-9346-68707AA0ABCE">
-        <File Source="$(var.ProjectDir)\..\Waq\$(var.Delft3DPackageName)_Manuals\D-Water_Quality_DIDO_User_Manual.pdf" Id="fil87656EE3494047F8B7CB9C1D6D3BB9B6"/>
+        <Condition>(INSTALLER_VARIANT = "fmwaq")</Condition>
+        <File Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_DIDO_User_Manual.pdf" Id="fil87656EE3494047F8B7CB9C1D6D3BB9B6"/>
       </Component>
     </Directory>
-  </Directory>
-  </Directory>
+  </DirectoryRef>
 </Include>
