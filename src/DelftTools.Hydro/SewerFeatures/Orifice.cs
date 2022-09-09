@@ -56,8 +56,7 @@ namespace DelftTools.Hydro.SewerFeatures
             targetFormula.MaxFlowPos = sourceFormula.MaxFlowPos;
         }
 
-        public override StructureType GetStructureType() => 
-            StructureType.Orifice;
+        public override StructureType GetStructureType() => StructureType.Orifice;
 
         public override IEnumerable<SteerableProperty> RetrieveSteerableProperties()
         {

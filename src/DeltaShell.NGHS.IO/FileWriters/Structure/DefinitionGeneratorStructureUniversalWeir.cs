@@ -41,7 +41,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCrestLevel(IWeir weir)
         {
-            if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries) 
+            if (weir.IsUsingTimeSeriesForCrestLevel()) 
                 IniCategory.AddProperty(StructureRegion.CrestLevel, 
                                          StructureTimFileNameGenerator.Generate(weir, weir.CrestLevelTimeSeries));
             else 

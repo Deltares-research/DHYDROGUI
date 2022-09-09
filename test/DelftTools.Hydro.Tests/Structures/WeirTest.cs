@@ -201,14 +201,6 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void SpecifiyCrestLevelOnWeirIsFalseForGeneralStructure()
-        {
-            
-            var weir = new Weir { WeirFormula = new GeneralStructureWeirFormula()};
-            Assert.IsTrue(weir.SpecifyCrestLevelOnWeir);// Since FM1D2D-1015
-        }
-
-        [Test]
         public void CrestLevelAndCrestWidthAreDefinedInFormulaForGeneralStructureWeir()
         {
             double bedLevelStructureCentre = 5.0;
@@ -259,6 +251,83 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.That(steerableProperties.Count, Is.EqualTo(1));
             SteerableProperty property = steerableProperties.First();
             Assert.That(property.TimeSeries.Name, Is.EqualTo("Crest level"));
+        }
+
+        [Test]
+        public void SettingWeirFormulaToFreeFormWeir_EnsuresThatNoTimeSeriesIsUsedForCrestLevel()
+        {
+            // Setup
+            const bool allowTimeVaryingData = true;
+            var weir = new Weir(allowTimeVaryingData) { UseCrestLevelTimeSeries = true };
+            
+            // Precondition
+            Assert.That(weir.UseCrestLevelTimeSeries, Is.True);
+
+            // Call
+            weir.WeirFormula = new FreeFormWeirFormula();
+
+            // Assert
+            Assert.That(weir.UseCrestLevelTimeSeries, Is.False);
+        }
+
+        [Test]
+        public void RetrieveSteerableProperties_FreeFormWeirFormula_ReturnsZeroSteerableProperties()
+        {
+            // Setup
+            const bool allowTimeVaryingData = true;
+            var weir = new Weir(allowTimeVaryingData) { WeirFormula = new FreeFormWeirFormula() };
+
+            // Call
+            IEnumerable<SteerableProperty> steerableProperties = weir.RetrieveSteerableProperties();
+
+            // Assert
+            Assert.That(steerableProperties, Is.Empty);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(IsUsingTimeSeriesForCrestLevelTestCases))]
+        public void IsUsingTimeSeriesForCrestLevel_ReturnsCorrectValue(
+            bool canBeTimedependent,
+            bool useCrestLevelTimeSeries,
+            IWeirFormula weirFormula,
+            bool expectedResult)
+        {
+            // Setup
+            var weir = new Weir(canBeTimedependent)
+            {
+                WeirFormula = weirFormula,
+                UseCrestLevelTimeSeries = useCrestLevelTimeSeries
+            };
+
+            // Call
+            bool isUsingTimeSeriesForCrestLevel = weir.IsUsingTimeSeriesForCrestLevel();
+
+            // Assert
+            Assert.That(isUsingTimeSeriesForCrestLevel, Is.EqualTo(expectedResult));
+        }
+
+        private static IEnumerable<TestCaseData> IsUsingTimeSeriesForCrestLevelTestCases()
+        {
+            var freeFormWeirFormula = new FreeFormWeirFormula();
+            var simpleWeirFormula = new SimpleWeirFormula();
+            var generalStructureWeirFormula = new GeneralStructureWeirFormula();
+            var gatedWeirFormula = new GatedWeirFormula();
+
+            yield return new TestCaseData(true, true, freeFormWeirFormula, false);
+            yield return new TestCaseData(true, false, freeFormWeirFormula, false);
+            yield return new TestCaseData(false, false, freeFormWeirFormula, false);
+            
+            yield return new TestCaseData(true, true, simpleWeirFormula, true);
+            yield return new TestCaseData(true, false, simpleWeirFormula, false);
+            yield return new TestCaseData(false, false, simpleWeirFormula, false);
+            
+            yield return new TestCaseData(true, true, generalStructureWeirFormula, true);
+            yield return new TestCaseData(true, false, generalStructureWeirFormula, false);
+            yield return new TestCaseData(false, false, generalStructureWeirFormula, false);
+            
+            yield return new TestCaseData(true, true, gatedWeirFormula, true);
+            yield return new TestCaseData(true, false, gatedWeirFormula, false);
+            yield return new TestCaseData(false, false, gatedWeirFormula, false);
         }
     }
 }

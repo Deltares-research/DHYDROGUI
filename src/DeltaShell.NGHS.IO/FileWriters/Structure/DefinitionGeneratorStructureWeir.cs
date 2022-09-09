@@ -37,7 +37,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCrestLevel(IWeir weir)
         {
-            if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+            if (weir.IsUsingTimeSeriesForCrestLevel())
             {
                 // Note: the generation of tim files is the responsibility of the StructureFile
                 //       not the DefinitionGeneratorStructureWeir.

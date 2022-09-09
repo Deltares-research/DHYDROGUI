@@ -460,7 +460,6 @@
             // 
             this.textBoxCrestLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCrestLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceWeir, "CrestLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
-            this.textBoxCrestLevel.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceWeir, "SpecifyCrestLevelOnWeir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textBoxCrestLevel.Location = new System.Drawing.Point(153, 27);
             this.textBoxCrestLevel.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxCrestLevel.Name = "textBoxCrestLevel";
@@ -472,7 +471,6 @@
             // 
             this.textBoxCrestWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCrestWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceWeir, "CrestWidth", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
-            this.textBoxCrestWidth.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceWeir, "SpecifyCrestWidthOnWeir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.textBoxCrestWidth.Location = new System.Drawing.Point(153, 51);
             this.textBoxCrestWidth.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxCrestWidth.Name = "textBoxCrestWidth";

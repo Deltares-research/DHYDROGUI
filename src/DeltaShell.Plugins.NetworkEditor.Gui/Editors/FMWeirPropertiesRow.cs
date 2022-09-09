@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         {
             get
             {
-                if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+                if (weir.IsUsingTimeSeriesForCrestLevel())
                 {
                     return CrestLevelTimeSeriesString;
                 }
@@ -58,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
             }
             set
             {
-                if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+                if (weir.IsUsingTimeSeriesForCrestLevel())
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest level.");
                 }

@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void ConfigureTimeDependentControls()
         {
-            if (data != null && data.CanBeTimedependent)
+            if (data != null && data.CanBeTimedependent && data.RetrieveSteerableProperties().Any())
             {
                 TimeDependentLabel.Visible = true;
                 CrestLevelTimeDependentCheckBox.Visible = true;
@@ -181,6 +181,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             if (nameof(weir.WeirFormula) == e.PropertyName)
             {
                 RenderFormulaControls();
+                ConfigureTimeDependentControls();
             }
             if (weir.CanBeTimedependent && nameof(weir.UseCrestLevelTimeSeries) == e.PropertyName)
             {

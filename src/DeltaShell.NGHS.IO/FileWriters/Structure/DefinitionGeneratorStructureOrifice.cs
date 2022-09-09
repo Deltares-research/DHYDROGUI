@@ -39,7 +39,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCrestLevel(IOrifice orifice)
         {
-            if (orifice.CanBeTimedependent && orifice.UseCrestLevelTimeSeries)
+            if (orifice.IsUsingTimeSeriesForCrestLevel())
             {
                 // Note: the generation of tim files is the responsibility of the StructureFile
                 //       not the DefinitionGeneratorStructureWeir.

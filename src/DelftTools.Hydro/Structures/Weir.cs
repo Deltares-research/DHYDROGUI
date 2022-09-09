@@ -16,10 +16,10 @@ namespace DelftTools.Hydro.Structures
     /// <see cref="Weir"/> defines the weir structure which can be placed on branches.
     /// </summary>
     [Entity(FireOnCollectionChange=false)]
-    public class Weir : BranchStructure, IWeir, IHasSteerableProperties
+    public class Weir : BranchStructure, IWeir
     {
         private double crestWidth;
-        
+
         /// <summary>
         /// Creates a new <see cref="Weir"/> without time-varying data and a default name.
         /// </summary>
@@ -98,6 +98,7 @@ namespace DelftTools.Hydro.Structures
 
         // Should be immutable, however due to the CopyFrom behaviour it cannot be.
         private SteerableProperty crestLevel;
+        private IWeirFormula weirFormula;
 
         [FeatureAttribute(Order = 7)]
         [DisplayName("Crest level")]
@@ -153,8 +154,25 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        public virtual IWeirFormula WeirFormula { get; set; }
-        
+        [EditAction]
+        private void OnWeirFormulaChanged()
+        {
+            if (WeirFormula is FreeFormWeirFormula)
+            {
+                UseCrestLevelTimeSeries = false;
+            }
+        }
+
+        public virtual IWeirFormula WeirFormula
+        {
+            get => weirFormula;
+            set
+            {
+                weirFormula = value;
+                OnWeirFormulaChanged();
+            } 
+        }
+
         [ReadOnly(true)]
         [DisplayName("Formula")]
         [FeatureAttribute(Order = 5)]
@@ -241,14 +259,13 @@ namespace DelftTools.Hydro.Structures
                        ? (allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive)
                        : (allowNegativeFlow ? FlowDirection.Negative : FlowDirection.None);
         }
-
-        public virtual bool SpecifyCrestLevelOnWeir => 
-            true; //used to be disabled for GeneralStructureWeirFormula
-
-        public virtual bool SpecifyCrestWidthOnWeir => 
-            !(WeirFormula is FreeFormWeirFormula); //used to be disabled for GeneralStructureWeirFormula
-
+        
         public virtual bool UseVelocityHeight { get; set; }
+
+        public virtual bool IsUsingTimeSeriesForCrestLevel()
+        {
+            return CanBeTimedependent && UseCrestLevelTimeSeries && RetrieveSteerableProperties().Any();
+        }
 
         public override StructureType GetStructureType()
         {
@@ -270,7 +287,18 @@ namespace DelftTools.Hydro.Structures
                     return StructureType.Unknown;
             }
         }
-
+        
+        public virtual IEnumerable<SteerableProperty> RetrieveSteerableProperties()
+        {
+            if (WeirFormula is FreeFormWeirFormula _)
+            {
+                yield break;
+            }
+            
+            yield return crestLevel;
+        }
+        
+        #region ISewerFeature Members
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             ISewerConnection sewerConnection = null;
@@ -341,10 +369,6 @@ namespace DelftTools.Hydro.Structures
         {
             // No-op
         }
-
-        public virtual IEnumerable<SteerableProperty> RetrieveSteerableProperties()
-        {
-            yield return crestLevel;
-        }
+        #endregion
     }
 }

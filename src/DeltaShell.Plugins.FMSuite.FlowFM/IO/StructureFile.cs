@@ -282,8 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             && pump.CapacityTimeSeries != null;
 
         private static bool HasCrestLevelTimeSeries(this IWeir weir) =>
-            weir.CanBeTimedependent
-            && weir.UseCrestLevelTimeSeries
+            weir.IsUsingTimeSeriesForCrestLevel()
             && weir.CrestLevelTimeSeries != null;
 
         private static string GenerateTimeSeriesFileName(string mduFilePath, IStructure structure, ITimeSeries timeSeries) =>

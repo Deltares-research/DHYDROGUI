@@ -442,7 +442,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var weir = (IWeir)structure;
             var properties = new List<DelftIniProperty>();
 
-            if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+            if (weir.IsUsingTimeSeriesForCrestLevel())
             {
                 var timeFilePath = ConstructTimeFilePath(weir, StructureRegion.CrestLevel.Key);
                 properties.Add(ConstructProperty(StructureRegion.CrestLevel.Key, timeFilePath, structureType));

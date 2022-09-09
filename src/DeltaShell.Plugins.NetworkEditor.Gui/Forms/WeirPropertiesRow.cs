@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             get
             {
-                if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+                if (weir.IsUsingTimeSeriesForCrestLevel())
                 {
                     return CrestLevelTimeSeriesString;
                 }
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
             set
             {
-                if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+                if (weir.IsUsingTimeSeriesForCrestLevel())
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest level.");
                 }
@@ -369,11 +369,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             if (weir == null) return false;
             if (propertyName == nameof(CrestLevel))
             {
-                return weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries;
+                return weir.IsUsingTimeSeriesForCrestLevel();
             }
             if (propertyName == nameof(CrestWidth))
             {
-                return weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries || weir.GetStructureType() == StructureType.UniversalWeir;
+                return weir.IsUsingTimeSeriesForCrestLevel() || weir.GetStructureType() == StructureType.UniversalWeir;
             }
             if (propertyName == nameof(FlowDirection) || propertyName == nameof(SDischargeCoefficient) /*|| propertyName == nameof(SLateralContraction)*/)
             {

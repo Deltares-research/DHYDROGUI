@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Gui;
@@ -30,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             get
             {
-                if (data.CanBeTimedependent && data.UseCrestLevelTimeSeries)
+                if (data.IsUsingTimeSeriesForCrestLevel())
                 {
                     return "Time series";
                 }

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures.SteerableProperties;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -19,7 +20,7 @@ namespace DelftTools.Hydro.Structures
     /// <see cref="IWeir"/> defines a one-dimensional weir/structure
     /// which can be placed on a <see cref="GeoAPI.Extensions.Networks.IBranch"/>.
     /// </summary>
-    public interface IWeir : IStructure1D, ISewerFeature
+    public interface IWeir : IStructure1D, ISewerFeature, IHasSteerableProperties
     {
         /// <summary>
         /// Indicates if time dependent parameters can be used.
@@ -78,19 +79,14 @@ namespace DelftTools.Hydro.Structures
         FlowDirection FlowDirection { get; set; }
 
         /// <summary>
-        /// Determines whether controls should let the user set the crest level. 
-        /// </summary>
-        bool SpecifyCrestLevelOnWeir { get; }
-
-        /// <summary>
-        /// Determines whether controls should let the user set the crest width. 
-        /// </summary>
-        bool SpecifyCrestWidthOnWeir { get; }
-
-
-        /// <summary>
         /// Flag indicates whether the velocity height is to be calculated or not.
         /// </summary>
         bool UseVelocityHeight { get; set; }
+
+        /// <summary>
+        /// Determine whether or not a time series is being used for the crest level.
+        /// </summary>
+        /// <returns>Returns <c>true</c> if currently using a time series for the crest level. <c>False</c> otherwise.</returns>
+        bool IsUsingTimeSeriesForCrestLevel();
     }
 }

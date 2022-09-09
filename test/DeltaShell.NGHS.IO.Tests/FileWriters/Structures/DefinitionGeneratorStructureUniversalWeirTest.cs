@@ -35,8 +35,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         private static IEnumerable<TestCaseData> CreateStructureRegionData()
         {
             yield return CreateCreateStructureRegionTestData(
-                    CreateWeir(true), "Weir_crest_level.tim")
-                .SetName("With TimeSeries");
+                    CreateWeir(true), "0.000")
+                .SetName("FreeformWeir should not use TimeSeries for crest level even if useCrestLevelTimeSeries is true");
             yield return CreateCreateStructureRegionTestData(
                     CreateWeir(false), "0.000")
                 .SetName("Without TimeSeries");
