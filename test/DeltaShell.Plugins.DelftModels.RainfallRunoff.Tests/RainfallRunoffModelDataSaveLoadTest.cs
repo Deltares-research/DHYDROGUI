@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         private const string ORIGINAL_CATCHMENT_NAME = "MyFirstCatchment";
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadGreenHouseData()
         {
             string path = null;
@@ -100,6 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadHbvData()
         {
             string path = null;
@@ -149,6 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadMeteorogicalDataPerStation()
         {
             string path = null;
@@ -356,6 +359,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadUnpavedSimple()
         {
             string path = null;
@@ -401,6 +405,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadUnpavedData()
         {
             string path = null;
@@ -502,6 +507,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
         
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadSacramentoData()
         {
             string path = null;
@@ -611,6 +617,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadPavedData()
         {
             string path = null;
@@ -740,6 +747,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
         
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadModel()
         {
             string path = null;
@@ -814,6 +822,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadCatchment()
         {
             var catchment = new Catchment
@@ -855,6 +864,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadDefaultGeometryCatchment()
         {
             // add catchment
@@ -882,6 +892,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadHydroLink()
         {
             var catchment = new Catchment()
@@ -915,6 +926,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadWasteWaterTreatmentPlant()
         {
             var wwtp = new WasteWaterTreatmentPlant { Name = "testName", Description = "testDescr", Geometry = new Point(55, 33) };
