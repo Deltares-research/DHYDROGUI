@@ -5,15 +5,9 @@
 		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1706" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
 		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1706" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="NUnit" Version="3.13.3" />
-		<PackageReference Include="NSubstitute">
-			<Version>4.2.2</Version>
-		</PackageReference>
-		<PackageReference Include="RhinoMocks">
-			<Version>3.6.1</Version>
-		</PackageReference>
-		<PackageReference Include="SharpTestsEx">
-			<Version>1.2.1</Version>
-		</PackageReference>
+		<PackageReference Include="NSubstitute" Version="4.2.2" />
+		<PackageReference Include="RhinoMocks" Version="3.6.1" />
+		<PackageReference Include="SharpTestsEx" Version="1.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -28,10 +22,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-			<HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
 		<Reference Include="DelftTools.Controls">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.dll</HintPath>
 			<Private>False</Private>
@@ -117,26 +107,11 @@
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="NSubstitute, Version=4.2.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca">
-			<HintPath>..\..\packages\NSubstitute.4.2.2\lib\net46\NSubstitute.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
-		<Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-			<HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-		</Reference>
-		<Reference Include="PostSharp, Version=6.10.5.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-			<HintPath>..\..\packages\PostSharp.Redist.6.10.5\lib\net45\PostSharp.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
 		<Reference Include="PresentationCore" />
 		<Reference Include="PresentationFramework" />
 		<Reference Include="QuickGraph">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\QuickGraph.dll</HintPath>
 			<Private>False</Private>
-		</Reference>
-		<Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-			<HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
-			<Private>True</Private>
 		</Reference>
 		<Reference Include="SharpMap">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.dll</HintPath>
@@ -154,19 +129,11 @@
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.UI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="SharpTestsEx, Version=1.2.1.0, Culture=neutral, PublicKeyToken=8c60d8070630b1c1, processorArchitecture=MSIL">
-			<HintPath>..\..\packages\SharpTestsEx.1.2.1\lib\SharpTestsEx.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
 		<Reference Include="System" />
 		<Reference Include="System.Configuration" />
 		<Reference Include="System.Core" />
 		<Reference Include="System.Data" />
 		<Reference Include="System.Drawing" />
-		<Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-			<HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
 		<Reference Include="System.Windows.Forms" />
 		<Reference Include="System.Xaml" />
 		<Reference Include="System.Xml" />
