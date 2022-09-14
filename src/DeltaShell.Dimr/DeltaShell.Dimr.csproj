@@ -46,6 +46,9 @@
 		<Reference Include="DelftTools.Utils" Private="False">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
 		</Reference>
+		<Reference Include="GeoAPI.Extensions" Private="False">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+		</Reference>
 		<Reference Include="ProtoBufRemote" Private="False">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\ProtoBufRemote.dll</HintPath>
 		</Reference>
