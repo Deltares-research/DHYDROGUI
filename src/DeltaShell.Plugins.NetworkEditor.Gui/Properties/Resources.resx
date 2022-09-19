@@ -602,12 +602,6 @@
   <data name="RoughnessModelProperties_Categories_ModelSettings" xml:space="preserve">
     <value>Model settings</value>
   </data>
-  <data name="RoughnessModelProperties_UseReverseRoughnessInCalculation_Description" xml:space="preserve">
-    <value>Determines whether or not specified reverse roughness data should be factored into the calculation.</value>
-  </data>
-  <data name="RoughnessModelProperties_UseReverseRoughnessInCalculation_DisplayName" xml:space="preserve">
-    <value>Use reverse roughness in calculation</value>
-  </data>
   <data name="RoughnessModelProperties_UseReverseRoughness_Description" xml:space="preserve">
     <value>Determines whether or not it should be possible to specify reverse roughness data.</value>
   </data>

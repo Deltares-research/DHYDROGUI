@@ -322,7 +322,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public IEventedList<ChannelInitialConditionDefinition> ChannelInitialConditionDefinitions { get; private set; }
 
         public bool UseReverseRoughness { get; set; }
-        public bool UseReverseRoughnessInCalculation { get; set; }
         public IEventedList<RoughnessSection> RoughnessSections { get; private set; }
 
         /// <summary>
@@ -589,7 +588,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 AddRoughnessSection(new ReverseRoughnessSection(roughnessSection)
                 {
-                    UseNormalRoughness = !UseReverseRoughnessInCalculation
+                    UseNormalRoughness = true
                 });
             }
         }

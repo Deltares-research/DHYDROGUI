@@ -8,7 +8,6 @@ namespace DelftTools.Hydro.Roughness
     {
         IEventedList<RoughnessSection> RoughnessSections { get; }
         bool UseReverseRoughness { get; set; }
-        bool UseReverseRoughnessInCalculation { get; set; }
     }
 
     public interface IModelWithNetwork : IModel

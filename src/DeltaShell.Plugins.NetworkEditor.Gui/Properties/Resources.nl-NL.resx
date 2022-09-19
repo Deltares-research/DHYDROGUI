@@ -252,12 +252,6 @@
   <data name="RoughnessModelProperties_ModelParameters_DisplayName" xml:space="preserve">
     <value>#Model parameters</value>
   </data>
-  <data name="RoughnessModelProperties_UseReverseRoughnessInCalculation_Description" xml:space="preserve">
-    <value>#Hiermee bepaalt u of of niet wordt opgegeven, omgekeerde ruwheid gegevens moeten worden verwerkt in de berekening.</value>
-  </data>
-  <data name="RoughnessModelProperties_UseReverseRoughnessInCalculation_DisplayName" xml:space="preserve">
-    <value>#Gebruik omgekeerde ruwheid in berekening</value>
-  </data>
   <data name="RoughnessModelProperties_UseReverseRoughness_Description" xml:space="preserve">
     <value>#Hiermee bepaalt u of of niet moet het mogelijk zijn om op te geven omgekeerde ruwheid gegevens.</value>
   </data>

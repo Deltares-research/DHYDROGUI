@@ -1339,24 +1339,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Determines whether or not specified reverse roughness data should be factored into the calculation..
-        /// </summary>
-        public static string RoughnessModelProperties_UseReverseRoughnessInCalculation_Description {
-            get {
-                return ResourceManager.GetString("RoughnessModelProperties_UseReverseRoughnessInCalculation_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use reverse roughness in calculation.
-        /// </summary>
-        public static string RoughnessModelProperties_UseReverseRoughnessInCalculation_DisplayName {
-            get {
-                return ResourceManager.GetString("RoughnessModelProperties_UseReverseRoughnessInCalculation_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The default roughness value..
         /// </summary>
         public static string RoughnessSectionProperties_DefaultRoughness_Description {
