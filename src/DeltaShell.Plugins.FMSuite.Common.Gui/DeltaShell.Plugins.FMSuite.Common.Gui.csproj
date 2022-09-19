@@ -11,7 +11,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1706" GeneratePathProperty="true">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1709" GeneratePathProperty="true">
 			<IncludeAssets>compile;build</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
