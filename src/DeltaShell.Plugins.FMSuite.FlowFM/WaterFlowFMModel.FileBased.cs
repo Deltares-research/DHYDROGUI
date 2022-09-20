@@ -15,9 +15,11 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -31,16 +33,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         string IFileBased.Path
         {
-            get { return filePath; }
+            get => filePath;
             set
             {
                 if (filePath == value)
+                {
                     return;
+                }
 
                 filePath = value;
 
                 if (filePath == null)
+                {
                     return;
+                }
 
                 if (filePath.StartsWith("$") && MduFilePath != null)
                 {
@@ -51,17 +57,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         IEnumerable<string> IFileBased.Paths
         {
-            get { yield return ((IFileBased)this).Path; }
+            get
+            {
+                yield return ((IFileBased)this).Path;
+            }
         }
 
-        public bool IsFileCritical { get { return true; } }
+        public bool IsFileCritical => true;
 
-        bool IFileBased.IsOpen
-        {
-            get { return isOpen; }
-        }
+        bool IFileBased.IsOpen => isOpen;
 
-        public bool CopyFromWorkingDirectory { get; } = false;
+        public bool CopyFromWorkingDirectory => false;
 
         void IFileBased.CreateNew(string path)
         {
@@ -84,11 +90,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         void IFileBased.CopyTo(string destinationPath)
         {
-            var mduPath = GetMduPathFromDeltaShellPath(destinationPath);
+            string mduPath = GetMduPathFromDeltaShellPath(destinationPath);
 
-            var dirName = Path.GetDirectoryName(mduPath);
+            string dirName = Path.GetDirectoryName(mduPath);
             if (!Directory.Exists(dirName))
+            {
                 Directory.CreateDirectory(dirName);
+            }
+
             RenameSubFilesIfApplicable();
             ExportTo(mduPath, false);
         }
@@ -122,6 +131,128 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             //Currently no action, implementation will be based on decision of issue [FM1D2D-2112].
         }
 
+        internal virtual bool ExportTo(string mduPath, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true)
+        {
+            string dirName = Path.GetDirectoryName(mduPath);
+            if (!Directory.Exists(dirName))
+            {
+                Directory.CreateDirectory(dirName);
+            }
+
+            CopyRestartFile(dirName);
+
+            if (switchTo)
+            {
+                RenameSubFilesIfApplicable();
+            }
+
+            if (writeExtForcings)
+            {
+                List<string> spatVarSedPropNames =
+                    SedimentFractions.Where(sf => sf.CurrentSedimentType != null).SelectMany(
+                        sf =>
+                            sf.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
+                              .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList();
+                spatVarSedPropNames.AddRange(SedimentFractions.Where(sf => sf.CurrentFormulaType != null).SelectMany(
+                                                 sf =>
+                                                     sf.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
+                                                       .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList());
+                ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames);
+                ModelDefinition.Bathymetry = Bathymetry;
+            }
+
+            if (!IsEditing)
+            {
+                InitializeAreaDataColumns();
+            }
+
+            SetOutputDirProperty();
+            CacheFile.Export(mduPath);
+
+            if (switchTo)
+            {
+                ReloadGrid();
+                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering, UseMorSed ? this : null);
+            }
+            else
+            {
+                string workNetFile = MduFileHelper.GetSubfilePath(mduPath, ModelDefinition.GetModelProperty(KnownProperties.NetFile));
+                WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation,
+                             BedLevelZValues);
+                UnstructuredGrid newGrid = UGridFileHelper.ReadUnstructuredGrid(workNetFile); //may throw...
+                if (newGrid != null)
+                {
+                    bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(workNetFile, BedLevelLocation);
+                }
+
+                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering, UseMorSed ? this : null, workNetFilePath: workNetFile);
+            }
+
+            if (!IsEditing)
+            {
+                RestoreAreaDataColumns();
+            }
+
+            if (switchTo)
+            {
+                MduFilePath = mduPath;
+                CacheFile.UpdatePathToMduLocation(mduPath);
+                SaveOutput();
+            }
+
+            return true;
+        }
+
+        internal void ImportSpatialOperationsAfterLoading()
+        {
+            foreach (KeyValuePair<string, IList<ISpatialOperation>> spatialOperation in ModelDefinition.SpatialOperations)
+            {
+                string dataItemName = spatialOperation.Key;
+                IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
+                IDataItem dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
+
+                // when only one operation is found and it has the same name as when you would generate it from saving,
+                // it will not override the operations found in the database. Assuming that we are loading a dsproj file.
+                // Goes wrong when you change the file name of the quantity and you only have one quantity.
+                if (spatialOperationList.Count != 1 || !(spatialOperationList[0] is ImportSamplesOperation) ||
+                    dataItem == null || dataItem.ValueConverter != null || !(dataItem.Value is UnstructuredGridCoverage))
+                {
+                    continue;
+                }
+
+                IEnumerable<double> valuesToSet;
+                var coverage = (UnstructuredGridCoverage)dataItem.Value;
+                if (spatialOperationList[0] is ImportRasterSamplesOperationImportData samplesOperation)
+                {
+                    List<IPointValue> rasterFile = RasterFile.ReadPointValues(samplesOperation.FilePath).ToList();
+
+                    int componentValueCount = coverage.Arguments.Aggregate(0,
+                                                                           (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
+
+                    valuesToSet = rasterFile.Count != componentValueCount
+                                      ? new InterpolateOperation().InterpolateToGrid(rasterFile, coverage, coverage.Grid)
+                                      : rasterFile.Select(p => p.Value);
+                }
+                else
+                {
+                    var importSamplesOperation = (ImportSamplesOperation)spatialOperationList[0];
+                    List<IPointValue> xyzFile = XyzFile.Read(importSamplesOperation.FilePath).ToList();
+
+                    int componentValueCount = coverage.Arguments.Aggregate(0,
+                                                                           (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
+
+                    valuesToSet = xyzFile.Count != componentValueCount
+                                      ? new InterpolateOperation().InterpolateToGrid(xyzFile, coverage, coverage.Grid)
+                                      : xyzFile.Select(p => p.Value);
+                }
+
+                if (valuesToSet.Any())
+                {
+                    coverage.SetValues(valuesToSet);
+                }
+            }
+        }
+
         private void ReadFromMdu(string mduFilePath, ImportProgressChangedDelegate progressChanged = null)
         {
             ImportProgressChanged = progressChanged;
@@ -133,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             LoadLinks();
 
             FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
-            var modelDataItems = AddSpatialDataItems();
+            IEventedList<IDataItem> modelDataItems = AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating(modelDataItems);
 
             AddSewerRoughnessIfNecessary();
@@ -158,8 +289,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             SynchronizeModelDefinitions();
 
             // import SedimentFractions (these are not part of the model definition, however they are needed for SourcesAndSinks and TracerDefinitions)
-            var mduFileDir = Path.GetDirectoryName(mduFilePath);
-            var sedimentFileProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile));
+            string mduFileDir = Path.GetDirectoryName(mduFilePath);
+            WaterFlowFMProperty sedimentFileProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile));
             if (mduFileDir != null && sedimentFileProperty != null && UseMorSed && File.Exists(Path.Combine(mduFileDir, sedimentFileProperty.Value.ToString())))
             {
                 SedimentFile.LoadSediments(SedFilePath, this);
@@ -180,8 +311,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             // read depth layer definition
             DepthLayerDefinition = ModelDefinition.Kmx == 0
-                ? new DepthLayerDefinition(DepthLayerType.Single)
-                : new DepthLayerDefinition(ModelDefinition.Kmx);
+                                       ? new DepthLayerDefinition(DepthLayerType.Single)
+                                       : new DepthLayerDefinition(ModelDefinition.Kmx);
 
             // find all names for tracer definitions
             AssembleTracerDefinitions();
@@ -193,9 +324,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 var componentSettings = new Dictionary<string, bool>()
                 {
-                    {SourceAndSink.SalinityVariableName, UseSalinity},
-                    {SourceAndSink.TemperatureVariableName, UseTemperature},
-                    {SourceAndSink.SecondaryFlowVariableName, UseSecondaryFlow }
+                    { SourceAndSink.SalinityVariableName, UseSalinity },
+                    { SourceAndSink.TemperatureVariableName, UseTemperature },
+                    { SourceAndSink.SecondaryFlowVariableName, UseSecondaryFlow }
                 };
 
                 sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, UseMorSed));
@@ -209,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void LoadModelFromMdu(string mduFilePath)
         {
             MduFilePath = mduFilePath;
-            var mduFileDir = Path.GetDirectoryName(mduFilePath);
+            string mduFileDir = Path.GetDirectoryName(mduFilePath);
             Name = Path.GetFileNameWithoutExtension(mduFilePath);
             ModelDefinition = new WaterFlowFMModelDefinition(mduFileDir, Name);
 
@@ -224,8 +355,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 CacheFile.UpdatePathToMduLocation(mduFilePath);
             }
 
-            var netFileProperty = ModelDefinition.GetModelProperty(KnownProperties.NetFile);
-            if (String.IsNullOrEmpty(netFileProperty.GetValueAsString()))
+            WaterFlowFMProperty netFileProperty = ModelDefinition.GetModelProperty(KnownProperties.NetFile);
+            if (string.IsNullOrEmpty(netFileProperty.GetValueAsString()))
             {
                 netFileProperty.Value = Name + NetFile.FullExtension;
             }
@@ -236,69 +367,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
         }
 
-        internal virtual bool ExportTo(string mduPath, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true)
-        {
-            var dirName = Path.GetDirectoryName(mduPath);
-            if (!Directory.Exists(dirName))
-                Directory.CreateDirectory(dirName);
-
-            CopyRestartFile(dirName);
-
-            if (switchTo)
-            {
-                RenameSubFilesIfApplicable();
-            }
-
-            if (writeExtForcings)
-            {
-                var spatVarSedPropNames =
-                    SedimentFractions.Where(sf => sf.CurrentSedimentType != null).SelectMany(
-                        sf =>
-                            sf.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
-                                .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList();
-                spatVarSedPropNames.AddRange(SedimentFractions.Where(sf => sf.CurrentFormulaType != null).SelectMany(
-                        sf =>
-                            sf.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
-                                .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList());
-                ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames);
-                ModelDefinition.Bathymetry = Bathymetry;
-            }
-
-            if (!IsEditing)
-                InitializeAreaDataColumns();
-            SetOutputDirProperty();
-            CacheFile.Export(mduPath);
-
-            if (switchTo)
-            {
-                ReloadGrid();
-                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
-            }
-            else
-            {
-                var workNetFile = MduFileHelper.GetSubfilePath(mduPath, ModelDefinition.GetModelProperty(KnownProperties.NetFile));
-                WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation,
-                    BedLevelZValues);
-                var newGrid = UGridFileHelper.ReadUnstructuredGrid(workNetFile); //may throw...
-                if (newGrid != null)
-                {
-                    bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(workNetFile, BedLevelLocation);
-                }
-                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null, workNetFilePath: workNetFile);
-            }
-
-            if (!IsEditing)
-                RestoreAreaDataColumns();
-
-            if (switchTo)
-            {
-                MduFilePath = mduPath;
-                CacheFile.UpdatePathToMduLocation(mduPath);
-                SaveOutput();
-            }
-            return true;
-        }
-        
         private void OnSave()
         {
             const string postfixExplicitWorkingDirectory = "_output";
@@ -310,6 +378,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 previousModelDir = RecursivelyGetModelDirectoryPathFromMduFile();
                 previousExplicitWorkingDirectory = previousModelDir + postfixExplicitWorkingDirectory;
             }
+
             if (ExportTo(MduSavePath))
             {
                 /*Make sure the ModelDirectory gets updated when saving*/
@@ -335,7 +404,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 MduFilePath = mduPath;
 
-                if (MduFile == null) return;
+                if (MduFile == null)
+                {
+                    return;
+                }
+
                 mduFile.Path = mduPath;
                 SwitchFileBasedItems();
             }
@@ -343,15 +416,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SwitchFileBasedItems()
         {
-            foreach (var windField in WindFields.OfType<IFileBased>())
+            foreach (IFileBased windField in WindFields.OfType<IFileBased>())
             {
-                var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(windField.Path));
+                string newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(windField.Path));
                 windField.SwitchTo(newPath);
             }
 
-            foreach (var notUsedExtForceFileItem in UnsupportedFileBasedExtForceFileItems)
+            foreach (IUnsupportedFileBasedExtForceFileItem notUsedExtForceFileItem in UnsupportedFileBasedExtForceFileItems)
             {
-                var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(notUsedExtForceFileItem.Path));
+                string newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(notUsedExtForceFileItem.Path));
                 notUsedExtForceFileItem.SwitchTo(newPath);
             }
         }
@@ -373,15 +446,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void UpdateDataItemsNotCreatedInPreviousVersion()
         {
             var initialWaterQuantityNameType = (InitialConditionQuantity)(int)ModelDefinition
-                .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
-            var waterQuantityName =
+                                                                              .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
+            string waterQuantityName =
                 initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel
                     ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
                     : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
 
             UpdateNewDataItem(waterQuantityName, InitialWaterLevel);
             UpdateNewDataItem(WaterFlowFMModelDefinition.InfiltrationDataItemName, Infiltration);
-
         }
 
         private void UpdateNewDataItem(string quantityName, UnstructuredGridCoverage coverage)
@@ -393,76 +465,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             AddOrRenameDataItem(coverage, quantityName);
             UpdateSpatialDataAfterGridSet(grid, false, false, false);
-            ImportSpatialOperationsAfterCreating(new EventedList<IDataItem> {GetDataItemByValue(coverage)});
+            ImportSpatialOperationsAfterCreating(new EventedList<IDataItem> { GetDataItemByValue(coverage) });
         }
 
-        internal void ImportSpatialOperationsAfterLoading()
-        {
-            foreach (var spatialOperation in ModelDefinition.SpatialOperations)
-            {
-                var dataItemName = spatialOperation.Key;
-                var spatialOperationList = spatialOperation.Value;
-                var dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
-
-                // when only one operation is found and it has the same name as when you would generate it from saving,
-                // it will not override the operations found in the database. Assuming that we are loading a dsproj file.
-                // Goes wrong when you change the file name of the quantity and you only have one quantity.
-                if (spatialOperationList.Count != 1 || !(spatialOperationList[0] is ImportSamplesOperation) ||
-                    dataItem == null || dataItem.ValueConverter != null || !(dataItem.Value is UnstructuredGridCoverage))
-                    continue;
-                IEnumerable<double> valuesToSet;
-                var coverage = (UnstructuredGridCoverage)dataItem.Value;
-                if (spatialOperationList[0] is ImportRasterSamplesOperationImportData samplesOperation)
-                {
-                    var rasterFile = RasterFile.ReadPointValues(samplesOperation.FilePath).ToList();
-
-                    var componentValueCount = coverage.Arguments.Aggregate(0,
-                        (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
-
-                    valuesToSet = rasterFile.Count != componentValueCount
-                        ? new InterpolateOperation().InterpolateToGrid(rasterFile, coverage, coverage.Grid)
-                        : rasterFile.Select(p => p.Value);
-                }
-                else
-                {
-                    var importSamplesOperation = (ImportSamplesOperation)spatialOperationList[0];
-                    var xyzFile = XyzFile.Read(importSamplesOperation.FilePath).ToList();
-
-                    var componentValueCount = coverage.Arguments.Aggregate(0,
-                        (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
-
-                    valuesToSet = xyzFile.Count != componentValueCount
-                        ? new InterpolateOperation().InterpolateToGrid(xyzFile, coverage, coverage.Grid)
-                        : xyzFile.Select(p => p.Value);
-                }
-
-                if (valuesToSet.Any())
-                    coverage.SetValues(valuesToSet);
-            }
-        }
-        
         private void RestoreAreaDataColumns()
         {
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
         }
-        
+
         private void RenameSubFilesIfApplicable()
         {
-            foreach (var subFile in SubFiles)
+            foreach (KeyValuePair<WaterFlowFMProperty, string> subFile in SubFiles)
             {
-                var waterFlowFMProperty = subFile.Key;
+                WaterFlowFMProperty waterFlowFMProperty = subFile.Key;
 
-                if (waterFlowFMProperty.GetValueAsString().Equals(subFile.Value)) continue;
+                if (waterFlowFMProperty.GetValueAsString().Equals(subFile.Value))
+                {
+                    continue;
+                }
 
                 if (waterFlowFMProperty.Equals(ModelDefinition.GetModelProperty(KnownProperties.NetFile)))
                 {
-                    var oldPath = NetFilePath;
+                    string oldPath = NetFilePath;
                     waterFlowFMProperty.SetValueAsString(subFile.Value);
-                    var newPath = NetFilePath;
+                    string newPath = NetFilePath;
 
                     if (!File.Exists(oldPath) ||
-                        String.Equals(Path.GetFullPath(oldPath), Path.GetFullPath(newPath),
-                                      StringComparison.CurrentCultureIgnoreCase)) continue;
+                        string.Equals(Path.GetFullPath(oldPath), Path.GetFullPath(newPath),
+                                      StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        continue;
+                    }
 
                     File.Copy(oldPath, newPath, true);
                     File.Delete(oldPath);

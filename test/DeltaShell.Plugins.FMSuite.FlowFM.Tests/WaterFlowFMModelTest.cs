@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -14,7 +15,6 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -39,6 +39,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
@@ -131,32 +132,128 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(1, count);
         }
 
-        [Test]
-        public void PropertyChanged()
+        private static int GetValueOfDirtyCounter(WaterFlowFMModel model)
         {
-            var project = new Project();
-            var model = new WaterFlowFMModel();
-
-            var model1DBoundaryNodeData = new Model1DBoundaryNodeData();
-            model.BoundaryConditions1D.Add(model1DBoundaryNodeData);
-            project.RootFolder.Add(model);
-/*
-
-            var dataItem = new DataItem{
-                Value = model1DBoundaryNodeData,
-                ValueType = typeof(Model1DBoundaryNodeData),
-                Hidden = true};
-            model.BoundaryConditions1DDataItemSet.DataItems.Add(dataItem);*/
-
-            project.PropertyChanged += (sender, args) =>
-            {
-                Console.WriteLine($"Sender {sender}, Arg {args}");
-            };
-
-            model1DBoundaryNodeData.DataType = Model1DBoundaryNodeDataType.FlowConstant;
-
+            return (int)typeof(WaterFlowFMModel).GetField("dirtyCounter", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(model);
         }
 
+        [Test]
+        public void Model_Increases_DirtyCounterForNHibernate_After_BoundaryData_Changed()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                var model1DBoundaryNodeData = new Model1DBoundaryNodeData();
+                model.BoundaryConditions1D.Add(model1DBoundaryNodeData);
+
+                int start =  GetValueOfDirtyCounter(model);
+
+                //Action
+                model1DBoundaryNodeData.DataType = Model1DBoundaryNodeDataType.FlowConstant;
+
+                //Check test result
+                int current =  GetValueOfDirtyCounter(model);
+                Assert.Greater(current, start, "No update of the dirty counter");
+            }
+        }
+        
+        [Test]
+        public void Model_Increases_DirtyCounterForNHibernate_After_RoughnessData_Changed()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                RoughnessSection roughnessSection = model.RoughnessSections.First(r => r.Name.Equals("Main"));
+                int start =  GetValueOfDirtyCounter(model);
+
+                //Action
+                roughnessSection.SetDefaultRoughnessValue(123.456);
+
+                //Check test result
+                int current =  GetValueOfDirtyCounter(model);
+                Assert.Greater(current, start, "No update of the dirty counter");
+            }
+        }
+        
+        [Test]
+        public void Model_Increases_DirtyCounterForNHibernate_After_AreaItem_Changed()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                var weir2D = new Weir2D();
+                model.Area.Weirs.Add(weir2D); 
+           
+                int start =  GetValueOfDirtyCounter(model);
+
+                //Action
+                weir2D.CrestLevel = 345.678;
+
+                //Check test result
+                int current =  GetValueOfDirtyCounter(model);
+                Assert.Greater(current, start, "No update of the dirty counter");
+            }
+
+        }
+        
+        [Test]
+        public void Model_Increases_DirtyCounterForNHibernate_After_Network_Changed()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                var weir = new Weir
+                {
+                    Geometry = new Point(5, 0),
+                    OffsetY = 100,
+                    CrestWidth = 1,
+                    CrestLevel = 1
+                };
+
+                //setup network with the weir
+                var network = new HydroNetwork();
+                var node1 = new HydroNode
+                {
+                    Name = "Node1",
+                    Network = network
+                };
+                var node2 = new HydroNode
+                {
+                    Name = "Node2",
+                    Network = network
+                };
+                node1.Geometry = new Point(0.0, 0.0);
+                node2.Geometry = new Point(100.0, 0.0);
+                network.Nodes.Add(node1);
+                network.Nodes.Add(node2);
+                var branch = new Channel("branch1", node1, node2)
+                {
+                    Geometry = new LineString(new[]
+                    {
+                        node1.Geometry.Coordinate,
+                        node2.Geometry.Coordinate
+                    })
+                };
+                network.Branches.Add(branch);
+                var compositeBranchStructure = new CompositeBranchStructure
+                {
+                    Network = network,
+                    Geometry = new Point(5, 0),
+                    Chainage = 5
+                };
+                NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch, compositeBranchStructure.Chainage);
+                HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
+
+                model.Network = network;
+            
+                int start =  GetValueOfDirtyCounter(model);
+
+                //Action
+                weir.CrestLevel += 1.0;
+
+                //Check test result
+                int current =  GetValueOfDirtyCounter(model);
+                Assert.Greater(current, start, "No update of the dirty counter");
+            }
+
+        }
+        
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         [NUnit.Framework.Category(TestCategory.Slow)]

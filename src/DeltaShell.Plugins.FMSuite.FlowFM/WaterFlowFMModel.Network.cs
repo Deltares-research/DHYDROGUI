@@ -61,7 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 
                 // refresh data
                 RefreshNetworkRelatedData();
-
             }
         }
 
@@ -76,6 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             fmRegion?.SubRegions?.Add(network);
             network.Parent = hydroNetworkParent;
             if (NetworkDiscretization != null) NetworkDiscretization.Network = network;
+            
             UpdateRoughnessSections();
         }
 
@@ -315,13 +315,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (sender != networkDiscretization || networkDiscretization.IsEditing || e.PropertyName != nameof(IEditableObject.IsEditing)) return;
             RefreshMappings();
         }
-        
+
         public IEventedList<ChannelFrictionDefinition> ChannelFrictionDefinitions { get; private set; }
+
         public IEventedList<PipeFrictionDefinition> PipeFrictionDefinitions { get; private set; }
 
         public IEventedList<ChannelInitialConditionDefinition> ChannelInitialConditionDefinitions { get; private set; }
 
-        public bool UseReverseRoughness { get; set; }
+        public bool UseReverseRoughness{ get; set; }
+
         public IEventedList<RoughnessSection> RoughnessSections { get; private set; }
 
         /// <summary>
@@ -501,7 +503,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UpdateRoughnessSections();
         }
 
-        
         /// <summary>
         /// Gets the boundary conditions for this model
         /// </summary>

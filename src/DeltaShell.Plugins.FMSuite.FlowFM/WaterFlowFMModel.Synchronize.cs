@@ -235,8 +235,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnFMModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is WaterFlowFMModel)) return;
             MarkDirty();
+            
+            if (!(sender is WaterFlowFMModel)) return;
+            
             if (e.PropertyName == nameof(Name) && fmRegion.Name != Name)
             {
                 fmRegion.Name = Name;
@@ -246,6 +248,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     OnClearOutput();
                 }
             }
+        }
+        
+        private void OnFMModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            MarkDirty();
         }
 
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

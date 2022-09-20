@@ -155,6 +155,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             RenameSubFilesIfApplicable();
 
             UpdateRoughnessSections();
+            
+            ((INotifyCollectionChanged) this).CollectionChanged += OnFMModelCollectionChanged;
+            ((INotifyPropertyChanged) this).PropertyChanged += OnFMModelPropertyChanged;
         }
 
         ~WaterFlowFMModel()
@@ -200,10 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
             ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
-            ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
-            ((INotifyPropertyChanged) this).PropertyChanged += OnFMModelPropertyChanged;
         }
-
         private void InitializeModelProperties()
         {
             SedimentModelDataItem = new SedimentModelDataItem();
@@ -1686,11 +1686,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        private int dirtyCounter; //tells NHibernate we need to be saved
         private void MarkDirty()
         {
             unchecked { dirtyCounter++; } //unchecked is default, but its here to declare intent
         }
-        private int dirtyCounter; //tells NHibernate we need to be saved
+        
         private FMMapFileFunctionStore outputMapFileStore;
         private IEventedList<string> tracerDefinitions;
         private bool isLoading;
@@ -3287,6 +3288,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (disposing)
             {
+                ((INotifyCollectionChanged) this).CollectionChanged -= OnFMModelCollectionChanged;
+                ((INotifyPropertyChanged) this).PropertyChanged -= OnFMModelPropertyChanged;
+                
                 var points2DFeatures = Area?.LeveeBreaches?.Where(f2d =>
                                                                       f2d.Attributes != null &&
                                                                       f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE));
