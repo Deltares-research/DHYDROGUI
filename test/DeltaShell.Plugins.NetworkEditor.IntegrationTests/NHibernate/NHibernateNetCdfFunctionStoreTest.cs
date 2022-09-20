@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             var store = new NetCdfFunctionStore();
             store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
 
-            var function = FunctionHelper.CreateSimpleFunction(store);
+            var function = FunctionTestHelper.CreateSimpleFunction(store);
 
             // make sure we have some values in our function
             var f1 = function.Components[0];
