@@ -138,6 +138,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Area.Parent = hydroAreaParent;
             Network.Parent = hydroNetworkParent;
 
+            ((INotifyCollectionChanged) this).CollectionChanged += OnFMModelCollectionChanged;
+            ((INotifyPropertyChanged) this).PropertyChanged += OnFMModelPropertyChanged;
+
             if (!string.IsNullOrEmpty(mduFilePath))
             {
                 ReadFromMdu(mduFilePath, progressChanged);
@@ -155,9 +158,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             RenameSubFilesIfApplicable();
 
             UpdateRoughnessSections();
-            
-            ((INotifyCollectionChanged) this).CollectionChanged += OnFMModelCollectionChanged;
-            ((INotifyPropertyChanged) this).PropertyChanged += OnFMModelPropertyChanged;
         }
 
         ~WaterFlowFMModel()
