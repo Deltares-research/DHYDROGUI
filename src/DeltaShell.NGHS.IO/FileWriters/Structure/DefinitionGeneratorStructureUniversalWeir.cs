@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
@@ -11,8 +12,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     /// <see cref="DefinitionGeneratorStructureUniversalWeir"/> generates the <see cref="DelftIniCategory"/> corresponding with a
     /// <see cref="Weir"/> with a <see cref="FreeFormWeirFormula"/> in the structures.ini file.
     /// </summary>
-    public class DefinitionGeneratorStructureUniversalWeir : DefinitionGeneratorStructure
+    public class DefinitionGeneratorStructureUniversalWeir : DefinitionGeneratorTimeSeriesStructure
     {
+        public DefinitionGeneratorStructureUniversalWeir(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
         
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
@@ -41,11 +43,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCrestLevel(IWeir weir)
         {
-            if (weir.IsUsingTimeSeriesForCrestLevel()) 
-                IniCategory.AddProperty(StructureRegion.CrestLevel, 
-                                         StructureTimFileNameGenerator.Generate(weir, weir.CrestLevelTimeSeries));
-            else 
-                IniCategory.AddProperty(StructureRegion.CrestLevel, weir.CrestLevel);
+            AddProperty(weir.IsUsingTimeSeriesForCrestLevel(),
+                        StructureRegion.CrestLevel,
+                        weir.CrestLevel);
         }
 
         private void AddZValues(FreeFormWeirFormula formula) => 

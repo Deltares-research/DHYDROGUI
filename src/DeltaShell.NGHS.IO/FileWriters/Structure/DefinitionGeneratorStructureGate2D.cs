@@ -5,7 +5,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructureGate2D : DefinitionGeneratorStructure2D
+    public class DefinitionGeneratorStructureGate2D : DefinitionGeneratorTimeSeriesStructure2D
     {
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
@@ -52,7 +52,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (gate.UseOpeningWidthTimeSeries)
             {
-                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateOpeningWidth.Key}.tim";
+                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateOpeningWidth.Key}{FileSuffices.TimFile}";
                 IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, timeSeriesFileName, StructureRegion.GateOpeningWidth.Description);
             }
             else

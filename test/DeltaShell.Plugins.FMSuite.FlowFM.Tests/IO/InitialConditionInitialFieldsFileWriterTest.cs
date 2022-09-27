@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;

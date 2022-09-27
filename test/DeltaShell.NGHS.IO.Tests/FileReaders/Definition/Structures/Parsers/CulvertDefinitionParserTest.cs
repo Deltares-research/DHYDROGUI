@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
@@ -24,28 +25,28 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
         private static IEnumerable<TestCaseData> ConstructorParameterNullData()
         {
-            ITimFileReader timFileReader = Substitute.For<ITimFileReader>();
+            ITimeSeriesFileReader specificTimeSeriesFileReader = Substitute.For<ITimeSeriesFileReader>();
             IDelftIniCategory category = Substitute.For<IDelftIniCategory>();
             ICrossSectionDefinition[] crossSectionDefinitions = {};
             var branch = Substitute.For<IBranch>();
 
-            yield return new TestCaseData(null, category, crossSectionDefinitions, branch, structuresFilename, "timFileReader");
-            yield return new TestCaseData(timFileReader, null, crossSectionDefinitions, branch, structuresFilename, "category");
-            yield return new TestCaseData(timFileReader, category, null, branch, structuresFilename, "crossSectionDefinitions");
-            yield return new TestCaseData(timFileReader, category, crossSectionDefinitions, null, structuresFilename, "branch");
-            yield return new TestCaseData(timFileReader, category, crossSectionDefinitions, branch, null, "structuresFilename");
+            yield return new TestCaseData(null, category, crossSectionDefinitions, branch, structuresFilename, "fileReader");
+            yield return new TestCaseData(specificTimeSeriesFileReader, null, crossSectionDefinitions, branch, structuresFilename, "category");
+            yield return new TestCaseData(specificTimeSeriesFileReader, category, null, branch, structuresFilename, "crossSectionDefinitions");
+            yield return new TestCaseData(specificTimeSeriesFileReader, category, crossSectionDefinitions, null, structuresFilename, "branch");
+            yield return new TestCaseData(specificTimeSeriesFileReader, category, crossSectionDefinitions, branch, null, "structuresFilename");
         }
 
         [Test]
         [TestCaseSource(nameof(ConstructorParameterNullData))]
-        public void Constructor_ParameterNull_ThrowsArgumentNullException(ITimFileReader timFileReader,
+        public void Constructor_ParameterNull_ThrowsArgumentNullException(ITimeSeriesFileReader specificTimeFileReader,
                                                                           IDelftIniCategory category,
                                                                           ICollection<ICrossSectionDefinition> crossSectionDefinitions,
                                                                           IBranch branch, 
                                                                           string structuresFilePath,
                                                                           string expectedParameterName)
         {
-            void Call() => new CulvertDefinitionParser(timFileReader,
+            void Call() => new CulvertDefinitionParser(specificTimeFileReader,
                                                        structureType, 
                                                        category, 
                                                        crossSectionDefinitions, 
@@ -65,7 +66,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var branch = new Channel();
 
             // Call
-            var parser = new CulvertDefinitionParser(Substitute.For<ITimFileReader>(),
+            var parser = new CulvertDefinitionParser(Substitute.For<ITimeSeriesFileReader>(),
                                                      structureType, 
                                                      category, 
                                                      crossSectionDefinitions, 
@@ -100,8 +101,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
             category.AddProperty(StructureRegion.IniValveOpen.Key, valveOpeningHeightTimeSeries);
 
-            var reader = Substitute.For<ITimFileReader>();
-
+            var reader = Substitute.For<ITimeSeriesFileReader>();
+            reader.IsTimeSeriesProperty("").ReturnsForAnyArgs(true);
 
             var parser = new CulvertDefinitionParser(reader,
                                                      structureType, 
@@ -115,7 +116,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             IStructure1D _ = parser.ParseStructure();
 
             // Assert
-            reader.Received(1).Read(valveOpeningHeightTimeSeries, Arg.Any<TimeSeries>(), referenceDateTime);
+            reader.Received(1).Read(Arg.Any<string>(),valveOpeningHeightTimeSeries, Arg.Any<IStructureTimeSeries>(), referenceDateTime);
         }
 
         [Test]
@@ -185,8 +186,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.RelativeOpening.Key, string.Join(", ", relativeOpening));
             category.AddProperty(StructureRegion.LossCoefficient.Key, string.Join(", ", lossCoefficient));
             category.AddProperty(StructureRegion.SubType.Key, subType);
+            
+            var fileReaderSubstitute = Substitute.For<ITimeSeriesFileReader>();
 
-            var parser = new CulvertDefinitionParser(Substitute.For<ITimFileReader>(),
+            var parser = new CulvertDefinitionParser(fileReaderSubstitute,
                                                      structureType, 
                                                      category, 
                                                      crossSectionDefinitions, 
@@ -243,7 +246,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
             category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
 
-            var parser = new CulvertDefinitionParser(Substitute.For<ITimFileReader>(),
+            var parser = new CulvertDefinitionParser(Substitute.For<ITimeSeriesFileReader>(),
                                                      structureType, 
                                                      category, 
                                                      crossSectionDefinitions, 
@@ -297,7 +300,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
             category.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
 
-            var parser = new CulvertDefinitionParser(Substitute.For<ITimFileReader>(), 
+            var parser = new CulvertDefinitionParser(Substitute.For<ITimeSeriesFileReader>(), 
                                                      structureType, 
                                                      category, 
                                                      crossSectionDefinitions, 

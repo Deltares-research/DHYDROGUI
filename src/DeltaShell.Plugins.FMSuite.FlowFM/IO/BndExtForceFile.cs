@@ -12,6 +12,7 @@ using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.Boundary;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -809,7 +810,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var useSalt = (bool) modelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value;
             bool useTemperature = (HeatFluxModelType) modelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None;
             var logHandler = new LogHandler("reading the lateral sources");
-            var lateralSourceParser = new BndExtForceLateralSourceParser(FilePath, network, useSalt, useTemperature, new BoundaryFileReader());
+            var lateralSourceParser = new BndExtForceLateralSourceParser(FilePath, network, useSalt, useTemperature, new BoundaryFileReader(), logHandler);
 
             foreach (var delftIniCategory in bndBlocks)
             {

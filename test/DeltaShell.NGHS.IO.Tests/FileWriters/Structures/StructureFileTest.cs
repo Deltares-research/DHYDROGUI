@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -23,6 +18,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     [TestFixture]
     public class StructureFileTest
     {
+        private const string expectedStructureFileName = "FlowFM_structures.bc";
         private const string expectedCategoryName = "Structure";
         private static readonly DateTime referenceTime = new DateTime(2018, 8, 25);
 
@@ -45,7 +41,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             const string expectedType = "pump";
             const double expectedCapacity = 25.08;
 
-            Pump2D pump2D = CreateDefaultPump2D();
+            Pump2D pump2D = StructureFileTestHelper.CreateDefaultPump2D();
             pump2D.Capacity = expectedCapacity;
 
             Area.Pumps.Add(pump2D);
@@ -69,12 +65,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         [Test]
         public void GivenAnHydroAreaWithPump2DThatHasATimeSeriesForCapacity_WhenGeneratingStructures_ThenThePumpCategoryHasTheCorrectCapacityValue()
         {
-            Pump2D pump2D = CreateDefaultPump2D();
+            Pump2D pump2D = StructureFileTestHelper.CreateDefaultPump2D();
             pump2D.UseCapacityTimeSeries = true;
+            
+            string expected2DStructureFileName = $"{pump2D.Name}_{StructureRegion.Capacity.Key}.tim";
 
             const string expectedType = "pump";
-            var expectedCapacityString = $"{pump2D.Name}_{StructureRegion.Capacity.Key}.tim";
-            
+
             Area.Pumps.Add(pump2D);
 
             // Action
@@ -88,18 +85,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
 
             CheckCommon2DDelftIniProperties(structureCategory, pump2D.Name, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacityString);
+            CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expected2DStructureFileName);
         }
-
-        private static Pump2D CreateDefaultPump2D() =>
-            new Pump2D(nameof(Pump2D), true)
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(2, 2)
-                })
-            };
 
         [Test]
         public void GivenAnHydroAreaWithWeirThatHasATimeSeriesForCrestLevel_WhenGeneratingStructures_ThenWeirIsBeingWrittenToFileWithTimeSeriesFileNameInIniFile()
@@ -108,13 +95,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             const double expectedCrestWidth = 2.58;
             const double expectedCorrectionCoeff = 0.34;
 
-            Weir2D weir2D = CreateDefaultWeir2D();
+            Weir2D weir2D = StructureFileTestHelper.CreateDefaultWeir2D();
             weir2D.CrestWidth = expectedCrestWidth;
             weir2D.WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = expectedCorrectionCoeff };
             weir2D.UseCrestLevelTimeSeries = true;
             Area.Weirs.Add(weir2D);
-
-            var expectedCrestLevelString = $"{weir2D.Name}_crest_level.tim";
+            
+            var expected2DStructureFileName = $"{weir2D.Name}_crest_level.tim";
 
             IEnumerable<DelftIniCategory> categories = 
                 StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
@@ -126,7 +113,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
 
             CheckCommon2DDelftIniProperties(structureCategory, weir2D.Name, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevelString);
+            CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expected2DStructureFileName);
             CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
             CheckKeyValuePair(structureCategory, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoeff);
         }
@@ -139,7 +126,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             const double expectedCrestWidth = 2.58;
             const double expectedCorrectionCoef = 0.34;
 
-            Weir2D weir2D = CreateDefaultWeir2D();
+            Weir2D weir2D = StructureFileTestHelper.CreateDefaultWeir2D();
             weir2D.CrestLevel = expectedCrestLevel;
             weir2D.CrestWidth = expectedCrestWidth;
             weir2D.WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = expectedCorrectionCoef };
@@ -167,7 +154,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             const double expectedCrestLevel = 1.12;
             const double expectedCrestWidth = 2.58;
 
-            Weir2D weir2D = CreateDefaultWeir2D();
+            Weir2D weir2D = StructureFileTestHelper.CreateDefaultWeir2D();
             weir2D.CrestLevel = expectedCrestLevel;
             weir2D.CrestWidth = expectedCrestWidth;
             weir2D.WeirFormula = new GeneralStructureWeirFormula();
@@ -186,16 +173,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             CheckCommon2DDelftIniProperties(structureCategory, weir2D.Name, expectedType);
         }
 
-        private static Weir2D CreateDefaultWeir2D() =>
-            new Weir2D(nameof(Weir2D), true)
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(2, 2)
-                })
-            };
-
         [Test]
         public void GivenAnHydroAreaWithGate_WhenGeneratingStructures_ThenGateIsBeingCorrectlyWrittenToIniFile()
         {
@@ -206,7 +183,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             const double expectedOpeningWidth = 5.11;
             const string expectedHorizontalOpeningDirection = "fromRight";
 
-            Gate2D gate2D = CreateDefaultGate2D();
+            Gate2D gate2D = StructureFileTestHelper.CreateDefaultGate2D();
             gate2D.SillLevel = expectedSillLevel;
             gate2D.SillWidth = expectedSillWidth;
             gate2D.LowerEdgeLevel = expectedLowerEdgeLevel;
@@ -235,11 +212,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         [Test]
         public void GivenAnHydroAreaWithGateThatHasSillLevelTimeSeries_WhenGeneratingStructures_ThenGateIsBeingCorrectlyWrittenToIniFile()
         {
-            Gate2D gate2D = CreateDefaultGate2D();
+            Gate2D gate2D = StructureFileTestHelper.CreateDefaultGate2D();
             gate2D.UseSillLevelTimeSeries = true;
-
-            var timFileName = $"{gate2D.Name}_crestLevel.tim";
             
+            var expected2DStructureFileName = $"{gate2D.Name}_crestLevel.tim";
+
             Area.Gates.Add(gate2D);
 
             IEnumerable<DelftIniCategory> categories = 
@@ -247,16 +224,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                              .ToArray();
 
             DelftIniCategory structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateCrestLevel.Key, timFileName);
+            CheckKeyValuePair(structureCategory, StructureRegion.GateCrestLevel.Key, expected2DStructureFileName);
         }
 
         [Test]
         public void GivenAnHydroAreaWithGateThatHasLowerEdgeLevelTimeSeries_WhenGeneratingStructures_ThenGateIsBeingCorrectlyWrittenToIniFile()
         {
-            Gate2D gate2D = CreateDefaultGate2D();
+            Gate2D gate2D = StructureFileTestHelper.CreateDefaultGate2D();
             gate2D.UseLowerEdgeLevelTimeSeries = true;
-
-            var timFileName = $"{gate2D.Name}_{StructureRegion.GateLowerEdgeLevel.Key}.tim";
+            
+            var expected2DStructureFileName = $"{gate2D.Name}_{StructureRegion.GateLowerEdgeLevel.Key}.tim";
 
             Area.Gates.Add(gate2D);
 
@@ -265,16 +242,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                              .ToArray();
 
             DelftIniCategory structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateLowerEdgeLevel.Key, timFileName);
+            CheckKeyValuePair(structureCategory, StructureRegion.GateLowerEdgeLevel.Key, expected2DStructureFileName);
         }
 
         [Test]
         public void GivenAnHydroAreaWithGateThatHasOpeningWidthTimeSeries_WhenGeneratingStructures_ThenGateIsBeingCorrectlyWrittenToIniFile()
         {
             const string gateName = nameof(Gate2D);
-            var timFileName = $"{gateName}_{StructureRegion.GateOpeningWidth.Key}.tim";
+            var expected2DStructureFileName = $"{gateName}_{StructureRegion.GateOpeningWidth.Key}.tim";
 
-            Gate2D gate2D = CreateDefaultGate2D();
+            Gate2D gate2D = StructureFileTestHelper.CreateDefaultGate2D();
             gate2D.UseOpeningWidthTimeSeries = true;
             Area.Gates.Add(gate2D);
 
@@ -283,29 +260,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                              .ToArray();
 
             DelftIniCategory structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateOpeningWidth.Key, timFileName);
+            CheckKeyValuePair(structureCategory, StructureRegion.GateOpeningWidth.Key, expected2DStructureFileName);
         }
-
-        private static Gate2D CreateDefaultGate2D() =>
-            new Gate2D(nameof(Gate2D))
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(2, 2)
-                })
-            };
-
-        private static LeveeBreach CreateDefaultLeveeBreach() =>
-            new LeveeBreach
-            {
-                Name = nameof(LeveeBreach),
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(2, 2)
-                }),
-            };
 
         [Test]
         public void GivenAnHydroAreaWithLeveeBreach_WhenGeneratingStructures_ThenLeveeBreachIsBeingCorrectlyWrittenToIniFile()
@@ -315,7 +271,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             const int expectedStartTimeBreachGrowth = 7200;
             const string expectedBreachGrowthActivated = "0";
 
-            LeveeBreach leveeBreach = CreateDefaultLeveeBreach();
+            LeveeBreach leveeBreach = StructureFileTestHelper.CreateDefaultLeveeBreach();
             leveeBreach.BreachLocationX = expectedBreachLocationX;
             leveeBreach.BreachLocationY = expectedBreachLocationY;
             leveeBreach.SetBaseLeveeBreachSettings(referenceTime.AddHours(2.0), false);
@@ -349,7 +305,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             const double expectedSettingsValue = 1.09;
             const int expectedTimeToReachMinimumCrestLevel = 3600;
 
-            LeveeBreach leveeBreach = CreateDefaultLeveeBreach();
+            LeveeBreach leveeBreach = StructureFileTestHelper.CreateDefaultLeveeBreach();
             leveeBreach.BreachLocationX = expectedBreachLocationX;
             leveeBreach.BreachLocationY = expectedBreachLocationY;
             leveeBreach.LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002;
@@ -397,11 +353,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         {
             const int expectedAlgorithmValue = (int)LeveeBreachGrowthFormula.UserDefinedBreach;
 
-            LeveeBreach leveeBreach = CreateDefaultLeveeBreach();
+            LeveeBreach leveeBreach = StructureFileTestHelper.CreateDefaultLeveeBreach();
             leveeBreach.LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach;
             leveeBreach.SetBaseLeveeBreachSettings(referenceTime.AddHours(2.0), true);
-
-            var timeSeriesFileName = $"{leveeBreach.Name}.tim";
+            
+            string expected2DStructureFileName = $"{leveeBreach.Name}.tim";
 
             Area.LeveeBreaches.Add(leveeBreach);
 
@@ -415,7 +371,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.That(structureCategory.Properties.Count, Is.EqualTo(11));
 
             CheckKeyValuePair(structureCategory, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
-            CheckKeyValuePair(structureCategory, StructureRegion.TimeFileName.Key, timeSeriesFileName);
+            CheckKeyValuePair(structureCategory, StructureRegion.TimeFileName.Key, expected2DStructureFileName);
         }
 
         private static void AssertCorrectProperty(IDelftIniCategory category, string key, string value)
@@ -559,289 +515,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.That(compositeCategory.Properties.Count, Is.EqualTo(2));
             AssertCorrectProperty(compositeCategory, StructureRegion.NumberOfCompoundStructures.Key, "1");
             AssertCorrectProperty(compositeCategory, StructureRegion.StructureIds.Key, weir.Name);
-        }
-
-        private static IEnumerable<TestCaseData> TimeSeriesData()
-        {
-            TestCaseData GenerateTestData(IStructure structure, 
-                                          string fileName,
-                                          Action<IHydroNetwork, HydroArea, IStructure> configureAction,
-                                          bool expectedResult,
-                                          string propertyName,
-                                          bool? hasTimeSeries=null)
-            {
-                var testName = $"{structure.Name}.Use{propertyName}: {hasTimeSeries ?? expectedResult}";
-
-                return new TestCaseData(structure, fileName, configureAction, expectedResult)
-                    .SetName(testName);
-            }
-
-            // Structure2D
-            void ConfigurePump2D(IHydroNetwork network, HydroArea area, IStructure pump) =>
-                area.Pumps.Add((Pump2D)pump);
-
-            Pump2D pump2DWithTimeSeries = CreateDefaultPump2D();
-            pump2DWithTimeSeries.UseCapacityTimeSeries = true;
-
-            var pumpTimFileName = $"{pump2DWithTimeSeries.Name}_{StructureRegion.Capacity.Key}.tim";
-            yield return GenerateTestData(pump2DWithTimeSeries, 
-                                          pumpTimFileName, 
-                                          ConfigurePump2D, 
-                                          true, 
-                                          nameof(Pump2D.Capacity));
-
-            Pump2D pump2DWithoutTimeSeries = CreateDefaultPump2D();
-            pump2DWithoutTimeSeries.UseCapacityTimeSeries = false;
-
-            yield return GenerateTestData(pump2DWithoutTimeSeries, 
-                                          pumpTimFileName, 
-                                          ConfigurePump2D, 
-                                          false,
-                                          nameof(Pump2D.Capacity));
-
-            void ConfigureWeir2D(IHydroNetwork network, HydroArea area, IStructure weir) =>
-                area.Weirs.Add((Weir2D)weir);
-
-            Weir2D weir2DWithTimeSeries = CreateDefaultWeir2D();
-            weir2DWithTimeSeries.CrestWidth = 3.0;
-            weir2DWithTimeSeries.WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = 2.0 };
-            weir2DWithTimeSeries.UseCrestLevelTimeSeries = true;
-
-            var weirTimFileName = $"{weir2DWithTimeSeries.Name}_crest_level.tim";
-            yield return GenerateTestData(weir2DWithTimeSeries, 
-                                          weirTimFileName, 
-                                          ConfigureWeir2D, 
-                                          true,
-                                          nameof(Weir2D.CrestLevel));
-
-            Weir2D weir2DWithoutTimeSeries = CreateDefaultWeir2D();
-            weir2DWithoutTimeSeries.CrestWidth = 3.0;
-            weir2DWithoutTimeSeries.WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = 2.0 };
-            weir2DWithoutTimeSeries.UseCrestLevelTimeSeries = false;
-
-            yield return GenerateTestData(weir2DWithoutTimeSeries, 
-                                          weirTimFileName, 
-                                          ConfigureWeir2D, 
-                                          false,
-                                          nameof(Weir2D.CrestLevel));
-
-            void ConfigureGate2D(IHydroNetwork network, HydroArea area, IStructure gate) =>
-                area.Gates.Add((Gate2D)gate);
-
-            Gate2D gate2DWithCrestLevelTimeSeries = CreateDefaultGate2D();
-            gate2DWithCrestLevelTimeSeries.UseSillLevelTimeSeries = true;
-            var gateCrestLevelTimFileName = $"{gate2DWithCrestLevelTimeSeries}_{KnownStructureProperties.GateCrestLevel}.tim";
-            yield return GenerateTestData(gate2DWithCrestLevelTimeSeries, 
-                                          gateCrestLevelTimFileName, 
-                                          ConfigureGate2D, 
-                                          false,
-                                          nameof(Gate2D.SillLevel), 
-                                          true);
-
-            Gate2D gate2DWithoutCrestLevelTimeSeries = CreateDefaultGate2D();
-            gate2DWithoutCrestLevelTimeSeries.UseSillLevelTimeSeries = false;
-            yield return GenerateTestData(gate2DWithoutCrestLevelTimeSeries, 
-                                          gateCrestLevelTimFileName, 
-                                          ConfigureGate2D, false,
-                                          nameof(Gate2D.SillLevel));
-
-            Gate2D gate2DWithLowerEdgeLevelTimeSeries = CreateDefaultGate2D();
-            gate2DWithLowerEdgeLevelTimeSeries.UseSillLevelTimeSeries = true;
-            var gateLowerEdgeLevelTimFileName = $"{gate2DWithCrestLevelTimeSeries}_{KnownStructureProperties.GateLowerEdgeLevel}.tim";
-            yield return GenerateTestData(gate2DWithLowerEdgeLevelTimeSeries, 
-                                          gateLowerEdgeLevelTimFileName, 
-                                          ConfigureGate2D, 
-                                          false,
-                                          nameof(Gate2D.LowerEdgeLevel), 
-                                          true);
-
-            Gate2D gate2DWithoutLowerEdgeLevelTimeSeries = CreateDefaultGate2D();
-            gate2DWithoutLowerEdgeLevelTimeSeries.UseSillLevelTimeSeries = false;
-            yield return GenerateTestData(gate2DWithoutLowerEdgeLevelTimeSeries, 
-                                          gateLowerEdgeLevelTimFileName, 
-                                          ConfigureGate2D, 
-                                          false,
-                                          nameof(Gate2D.LowerEdgeLevel));
-
-            Gate2D gate2DWithGateOpeningWidthTimeSeries = CreateDefaultGate2D();
-            gate2DWithGateOpeningWidthTimeSeries.UseSillLevelTimeSeries = true;
-            var gateOpeningWidthTimFileName = $"{gate2DWithCrestLevelTimeSeries}_{KnownStructureProperties.GateLowerEdgeLevel}.tim";
-            yield return GenerateTestData(gate2DWithGateOpeningWidthTimeSeries, 
-                                          gateOpeningWidthTimFileName, 
-                                          ConfigureGate2D, 
-                                          false,
-                                          nameof(Gate2D.OpeningWidth), 
-                                          true);
-
-            Gate2D gate2DWithoutGateOpeningWidthTimeSeries = CreateDefaultGate2D();
-            gate2DWithoutGateOpeningWidthTimeSeries.UseSillLevelTimeSeries = false;
-            yield return GenerateTestData(gate2DWithoutGateOpeningWidthTimeSeries, 
-                                          gateOpeningWidthTimFileName, 
-                                          ConfigureGate2D, 
-                                          false,
-                                          nameof(Gate2D.OpeningWidth));
-
-            void ConfigureLeveeBreach(IHydroNetwork network, HydroArea area, IStructure leveeBreach) =>
-                area.LeveeBreaches.Add((LeveeBreach)leveeBreach);
-
-            LeveeBreach leveeBreachUserDefinedFormula = CreateDefaultLeveeBreach();
-            leveeBreachUserDefinedFormula.LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach;
-            leveeBreachUserDefinedFormula.SetBaseLeveeBreachSettings(referenceTime.AddHours(2.0), true);
-
-            var settings = leveeBreachUserDefinedFormula.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
-            settings?.ManualBreachGrowthSettings.Add(new BreachGrowthSetting
-            {
-                Width = 2.0,
-                Height = 3.0,
-                TimeSpan = new TimeSpan(0, 1, 0, 0)
-            });
-
-            var leveeBreachTimeSeriesFileName = $"{leveeBreachUserDefinedFormula.Name}.tim";
-            yield return GenerateTestData(leveeBreachUserDefinedFormula,
-                                          leveeBreachTimeSeriesFileName,
-                                          ConfigureLeveeBreach,
-                                          true,
-                                          $"{nameof(LeveeBreach.LeveeBreachFormula)}.{nameof(LeveeBreachGrowthFormula.UserDefinedBreach)}");
-
-            // Structure1D
-            void ConfigureStructure1D(IHydroNetwork network, HydroArea area, IStructure structure)
-            {
-                IStructure1D[] structures = { (IStructure1D)structure };
-                network.Structures.Returns(structures);
-            }
-
-            var weir1DWithTimeSeries = new Weir(nameof(Weir), true) { 
-                CrestWidth = 3.0,
-                WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = 2.0 },
-                UseCrestLevelTimeSeries = true
-            };
-
-            var weir1DTimFileName = $"{weir1DWithTimeSeries.Name}_crest_level.tim";
-            yield return GenerateTestData(weir1DWithTimeSeries, 
-                                          weir1DTimFileName, 
-                                          ConfigureStructure1D, 
-                                          true,
-                                          nameof(Weir.CrestLevel));
-
-            var weir1DWithoutTimeSeries = new Weir(nameof(Weir), true) { 
-                CrestWidth = 3.0,
-                WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = 2.0 },
-                UseCrestLevelTimeSeries = false
-            };
-
-            yield return GenerateTestData(weir1DWithoutTimeSeries, 
-                                          weir1DTimFileName, 
-                                          ConfigureStructure1D, 
-                                          false,
-                                          nameof(Weir.CrestLevel));
-
-            var pump1DWithTimeSeries = new Pump(nameof(Pump), true) { 
-                UseCapacityTimeSeries = true
-            };
-
-            var pump1DTimFileName = $"{pump1DWithTimeSeries.Name}_capacity.tim";
-            yield return GenerateTestData(pump1DWithTimeSeries, 
-                                          pump1DTimFileName, 
-                                          ConfigureStructure1D, 
-                                          true,
-                                          nameof(Pump.Capacity));
-
-            var pump1DWithoutTimeSeries = new Pump(nameof(Pump), true) { 
-                UseCapacityTimeSeries = false
-            };
-
-            yield return GenerateTestData(pump1DWithoutTimeSeries, 
-                                          pump1DTimFileName, 
-                                          ConfigureStructure1D, 
-                                          false,
-                                          nameof(Pump.Capacity));
-
-            var orifice1DWithTimeSeries = new Orifice(nameof(Orifice), true) { 
-                CrestWidth = 3.0,
-                WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = 2.0 },
-                UseCrestLevelTimeSeries = true
-            };
-
-            var orifice1DTimFileName = $"{orifice1DWithTimeSeries.Name}_crest_level.tim";
-            yield return GenerateTestData(orifice1DWithTimeSeries, 
-                                          orifice1DTimFileName, 
-                                          ConfigureStructure1D, 
-                                          true,
-                                          nameof(Orifice.CrestLevel));
-
-            var orifice1DWithoutTimeSeries = new Orifice(nameof(Orifice), true) { 
-                CrestWidth = 3.0,
-                WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = 2.0 },
-                UseCrestLevelTimeSeries = false
-            };
-
-            yield return GenerateTestData(orifice1DWithoutTimeSeries, 
-                                          orifice1DTimFileName, 
-                                          ConfigureStructure1D, 
-                                          false,
-                                          nameof(Orifice.CrestLevel));
-
-            var orifice1DWithLowerEdgeLevelTimeSeries = new Orifice(nameof(Orifice), true);
-            ((GatedWeirFormula) orifice1DWithLowerEdgeLevelTimeSeries.WeirFormula).UseLowerEdgeLevelTimeSeries = true;
-
-            var orifice1DLowerEdgeLevelTimFileName = $"{orifice1DWithTimeSeries.Name}_gate_opening.tim";
-            yield return GenerateTestData(orifice1DWithLowerEdgeLevelTimeSeries,
-                                          orifice1DLowerEdgeLevelTimFileName,
-                                          ConfigureStructure1D,
-                                          true,
-                                          nameof(GatedWeirFormula.LowerEdgeLevel));
-
-            var orifice1DWithoutLowerEdgeLevelTimeSeries = new Orifice(nameof(Orifice), true);
-            ((GatedWeirFormula) orifice1DWithoutLowerEdgeLevelTimeSeries.WeirFormula).UseLowerEdgeLevelTimeSeries = false;
-
-            yield return GenerateTestData(orifice1DWithoutLowerEdgeLevelTimeSeries, 
-                                          orifice1DLowerEdgeLevelTimFileName, 
-                                          ConfigureStructure1D, 
-                                          false,
-                                          nameof(GatedWeirFormula.LowerEdgeLevel));
-
-            var culvert1DWithTimeSeries = new Culvert(nameof(Culvert))
-            {
-                UseGateInitialOpeningTimeSeries = true,
-            };
-
-            var culvert1DTimFileName = $"{culvert1DWithTimeSeries.Name}_valve_opening_height.tim";
-            yield return GenerateTestData(culvert1DWithTimeSeries,
-                                          culvert1DTimFileName,
-                                          ConfigureStructure1D,
-                                          true,
-                                          nameof(Culvert.GateInitialOpening));
-
-            var culvert1DWithoutTimeSeries = new Culvert(nameof(Culvert))
-            {
-                UseGateInitialOpeningTimeSeries = false,
-            };
-            yield return GenerateTestData(culvert1DWithoutTimeSeries,
-                                          culvert1DTimFileName,
-                                          ConfigureStructure1D,
-                                          false,
-                                          nameof(Culvert.GateInitialOpening));
-
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [TestCaseSource(nameof(TimeSeriesData))]
-        public void WriteStructureTimFiles_ProvidedStructure_ExpectedResults(IStructure structure, 
-                                                                             string timFileName, 
-                                                                             Action<IHydroNetwork, HydroArea, IStructure> configureStructure, 
-                                                                             bool expectedResult)
-        {
-            using (var tempDir = new TemporaryDirectory())
-            {
-                string mduFilePath = Path.Combine(tempDir.Path, "FlowFM.mdu");
-                string expectedTimFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFilePath, 
-                                                                                          timFileName);
-                configureStructure(Network, Area, structure);
-
-                StructureFile.WriteStructureTimFiles(Regions, mduFilePath, referenceTime);
-                Assert.That(File.Exists(expectedTimFilePath), Is.EqualTo(expectedResult));
-            }
         }
 
         private static void CheckCommon2DDelftIniProperties(IDelftIniCategory structureCategory, string structureName, string expectedType)

@@ -1,7 +1,9 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
@@ -25,7 +27,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 BendLossCoefficient = 7.89
             };
 
-            var generator = new DefinitionGeneratorStructureInvertedSiphon();
+            var generator = new DefinitionGeneratorStructureInvertedSiphon(Substitute.For<IStructureFileNameGenerator>());
 
             // Call
             DelftIniCategory category = generator.CreateStructureRegion(culvert);

@@ -10,8 +10,11 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using GeoAPI.Geometries;
@@ -376,7 +379,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
                     e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
-                    e is FormatException)
+                    e is FormatException || e is FileReadingException)
                 {
                     Log.WarnFormat("Failed to convert .ini structure definition '{0}' to actual structure: {1}.",
                                     structure.Name, e.Message);
@@ -432,7 +435,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
         {
-            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure();
+            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new StructureBcFileNameGenerator());
             var generalStructureCategory = structureGenerator.CreateStructureRegion(structure);
             return generalStructureCategory.Properties;
         }

@@ -6,6 +6,7 @@ using DeltaShell.NGHS.IO.FileReaders.Definition;
 using DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
@@ -130,23 +131,23 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             switch (structureType)
             {
                 case StructureType.Pump:
-                    return new DefinitionGeneratorStructurePump();
+                    return new DefinitionGeneratorStructurePump(new StructureBcFileNameGenerator());
                 case StructureType.Weir:
-                    return new DefinitionGeneratorStructureWeir();
+                    return new DefinitionGeneratorStructureWeir(new StructureBcFileNameGenerator());
                 case StructureType.UniversalWeir:
-                    return new DefinitionGeneratorStructureUniversalWeir();
+                    return new DefinitionGeneratorStructureUniversalWeir(new StructureBcFileNameGenerator());
                 case StructureType.RiverWeir:
                     return new DefinitionGeneratorStructureRiverWeir();
                 case StructureType.AdvancedWeir:
                     return new DefinitionGeneratorStructureAdvancedWeir();
                 case StructureType.Orifice:
-                    return new DefinitionGeneratorStructureOrifice();
+                    return new DefinitionGeneratorStructureOrifice(new StructureBcFileNameGenerator());
                 case StructureType.GeneralStructure:
-                    return new DefinitionGeneratorStructureGeneralStructure();
+                    return new DefinitionGeneratorStructureGeneralStructure(new StructureBcFileNameGenerator());
                 case StructureType.Culvert:
-                    return new DefinitionGeneratorStructureCulvert();
+                    return new DefinitionGeneratorStructureCulvert(new StructureBcFileNameGenerator());
                 case StructureType.InvertedSiphon:
-                    return new DefinitionGeneratorStructureInvertedSiphon();
+                    return new DefinitionGeneratorStructureInvertedSiphon(new StructureBcFileNameGenerator());
                 case StructureType.Bridge:
                     return new DefinitionGeneratorStructureBridgeStandard();
                 case StructureType.BridgePillar:

@@ -3,6 +3,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
@@ -25,19 +27,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// <param name="weir">The weir to add the parsed weir formula to.</param>
         /// <param name="structuresFilePath">The path to the structures file.</param>
         /// <param name="referenceDateTime">The reference date time.</param>
-        /// <param name="timFileReader">Optional tim file reader.</param>
+        /// <param name="FileReader">Optional file reader.</param>
         /// <returns>The parsed weir formula.</returns>
         /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">Thrown when the gate opening direction could not be parsed.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the type of weir formula is unknown.</exception>
         /// <remarks>
-        /// If no tim file reader is provided a <see cref="TimFile"/> will be created if necessary.
+        /// If no file reader is provided a <see cref="TimFile"/> will be created if necessary.
         /// </remarks>
         public static IWeirFormula ReadFormulaFromDefinition(IDelftIniCategory category, 
                                                              Weir weir, 
                                                              string structuresFilePath, 
                                                              DateTime referenceDateTime,
-                                                             ITimFileReader timFileReader = null)
+                                                             ITimeSeriesFileReader fileReader = null)
         {
             Ensure.NotNull(category, nameof(category));
             Ensure.NotNull(weir, nameof(weir));
@@ -111,7 +113,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                         UseMaxFlowNeg = category.ReadProperty<bool>(StructureRegion.UseLimitFlowNeg.Key, true),
                         MaxFlowNeg = category.ReadProperty<double>(StructureRegion.LimitFlowNeg.Key, true),
                     };
-                    SetOrificeLowerEdgeLevel(gatedWeirFormula, category, weir, structuresFilePath, referenceDateTime, timFileReader);
+                    SetOrificeLowerEdgeLevel(gatedWeirFormula, category, weir, structuresFilePath, referenceDateTime, fileReader);
 
                     return gatedWeirFormula;
                 case StructureType.GeneralStructure:
@@ -176,17 +178,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                                                      IWeir weir,
                                                      string structuresFilePath,
                                                      DateTime referenceDateTime,
-                                                     ITimFileReader timFileReader)
+                                                     ITimeSeriesFileReader fileReader)
         {
             var lowerEdgeLevelValue = category.ReadProperty<string>(StructureRegion.GateLowerEdgeLevel.Key);
 
-            if (lowerEdgeLevelValue != null && lowerEdgeLevelValue.EndsWith(FileSuffices.TimFile))
+            if (lowerEdgeLevelValue != null && fileReader != null && fileReader.IsTimeSeriesProperty(lowerEdgeLevelValue))
             {
                 ReadOrificeLowerEdgeLevelTimeSeries(gatedWeirFormula,
                                                     lowerEdgeLevelValue,
                                                     structuresFilePath,
                                                     referenceDateTime, 
-                                                    timFileReader);
+                                                    fileReader, 
+                                                    weir);
             }
             else
             {
@@ -199,16 +202,15 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                                                                 string relativeLowerEdgeLevelPath, 
                                                                 string structuresFilePath, 
                                                                 DateTime referenceDateTime,
-                                                                ITimFileReader reader)
+                                                                ITimeSeriesFileReader reader,
+                                                                IWeir orifice)
         {
             string filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, relativeLowerEdgeLevelPath);
             weirFormula.UseLowerEdgeLevelTimeSeries = true;
 
-            reader = reader ?? new TimFile();
-
             try
             {
-                reader.Read(filePath, weirFormula.LowerEdgeLevelTimeSeries, referenceDateTime);
+                reader.Read(relativeLowerEdgeLevelPath, filePath, new StructureTimeSeries(orifice, weirFormula.LowerEdgeLevelTimeSeries), referenceDateTime);
             }
             catch (FileReadingException e)
             {

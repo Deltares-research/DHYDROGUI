@@ -1,7 +1,7 @@
 ﻿using System;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 

@@ -11,6 +11,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     public class DefinitionGeneratorStructureUniversalWeirTest :
         DefinitionGeneratorStructureBaseTestFixture<DefinitionGeneratorStructureUniversalWeir>
     {
+        protected override DefinitionGeneratorStructureUniversalWeir CreateGenerator()
+        {
+            return new DefinitionGeneratorStructureUniversalWeir(StructureFileNameGeneratorSubstitute);
+        }
+        
         protected override string TStructureDefinitionType => "universalWeir";
 
         private const string expectedBranchName = "branch-name";

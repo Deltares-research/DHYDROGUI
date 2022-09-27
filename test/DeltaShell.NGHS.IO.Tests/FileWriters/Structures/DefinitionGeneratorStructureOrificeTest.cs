@@ -12,6 +12,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     public class DefinitionGeneratorStructureOrificeTest : 
         DefinitionGeneratorStructureBaseTestFixture<DefinitionGeneratorStructureOrifice>
     {
+        protected override DefinitionGeneratorStructureOrifice CreateGenerator()
+        {
+            return new DefinitionGeneratorStructureOrifice(StructureFileNameGeneratorSubstitute);
+        }
+        
         protected override string TStructureDefinitionType => "orifice";
 
         private const string expectedBranchName = "branch-name";
@@ -44,8 +49,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         {
             const string constantCrestLevel = "1.000";
             const string constantLowerEdgeLevel = "2.000";
-            const string timeSeriesCrestLevel = "Orifice_crest_level.tim";
-            const string timeSeriesLowerEdgeLevel = "Orifice_gate_opening.tim";
+            const string timeSeriesCrestLevel = ExpectedStructureFileName;
+            const string timeSeriesLowerEdgeLevel = ExpectedStructureFileName;
 
             yield return CreateCreateStructureRegionTestData(
                     CreateOrifice(true, true), 

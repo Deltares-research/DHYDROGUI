@@ -134,6 +134,64 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provided table on line {0} does not contain any values..
+        /// </summary>
+        public static string BcCategoryParser_Table_on_line__0___does_not_contain_any_values {
+            get {
+                return ResourceManager.GetString("BcCategoryParser_Table_on_line__0___does_not_contain_any_values", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot parse &apos;{0}&apos; to a date time, see category on line {1}..
+        /// </summary>
+        public static string BcCategoryParser_TryGetReferenceTime_Cannot_parse___0___to_a_date_time__see_category_on_line__1__ {
+            get {
+                return ResourceManager.GetString("BcCategoryParser_TryGetReferenceTime_Cannot_parse___0___to_a_date_time__see_categ" +
+                        "ory_on_line__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot interpret &apos;{0}&apos;, see category on line {1}..
+        /// </summary>
+        public static string BcCategoryParser_TryParseDateTimes_Cannot_interpret___0____see_category_on_line__1__ {
+            get {
+                return ResourceManager.GetString("BcCategoryParser_TryParseDateTimes_Cannot_interpret___0____see_category_on_line__" +
+                        "1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot parse &apos;{0}&apos; to a double, see category on line {1}..
+        /// </summary>
+        public static string BcCategoryParser_TryParseDouble_Cannot_parse___0___to_a_double__see_category_on_line__1__ {
+            get {
+                return ResourceManager.GetString("BcCategoryParser_TryParseDouble_Cannot_parse___0___to_a_double__see_category_on_l" +
+                        "ine__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to reading structures from .bc file.
+        /// </summary>
+        public static string BcSpecificTimeSeriesReader_logHandler_reading_structures_from__bc_file {
+            get {
+                return ResourceManager.GetString("BcSpecificTimeSeriesReader_logHandler_reading_structures_from__bc_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No structure found with name: {0} and quantity: {1} in file: {2}.
+        /// </summary>
+        public static string BcSpecificTimeSeriesReader_Read_No_structure_found_with_name__0__quantity__1__in_file__2_ {
+            get {
+                return ResourceManager.GetString("BcSpecificTimeSeriesReader_Read_No_structure_found_with_name__0__quantity__1__in_" +
+                        "file__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
         /// </summary>
         public static string Could_not_read_file_0_properly_it_doesnt_exist {
@@ -630,6 +688,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string StructureParserProvider_No_parser_available {
             get {
                 return ResourceManager.GetString("StructureParserProvider_No_parser_available", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No readers in {0}.
+        /// </summary>
+        public static string TimeSeriesFileReader_TimeSeriesFileReader_No_readers_in__0_ {
+            get {
+                return ResourceManager.GetString("TimeSeriesFileReader_TimeSeriesFileReader_No_readers_in__0_", resourceCulture);
             }
         }
         

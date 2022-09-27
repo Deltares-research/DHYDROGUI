@@ -1,10 +1,10 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
 
-namespace DeltaShell.NGHS.IO.FileWriters.Structure
+namespace DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator
 {
     /// <summary>
     /// <see cref="StructureTimFileNameGenerator"/> generates names for tim files

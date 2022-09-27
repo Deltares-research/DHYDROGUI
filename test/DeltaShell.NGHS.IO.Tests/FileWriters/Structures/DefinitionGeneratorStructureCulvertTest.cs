@@ -10,6 +10,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     public class DefinitionGeneratorStructureCulvertTest : 
         DefinitionGeneratorStructureBaseTestFixture<DefinitionGeneratorStructureCulvert>
     {
+        protected override DefinitionGeneratorStructureCulvert CreateGenerator()
+        {
+            return new DefinitionGeneratorStructureCulvert(StructureFileNameGeneratorSubstitute);
+        }
+
         protected override string TStructureDefinitionType => "culvert";
 
 
@@ -35,7 +40,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         private static IEnumerable<TestCaseData> CreateStructureRegionData()
         {
             yield return CreateCreateStructureRegionTestData(
-                    CreateCulvert(true), "Culvert_valve_opening_height.tim")
+                    CreateCulvert(true), ExpectedStructureFileName)
                 .SetName("With TimeSeries");
             yield return CreateCreateStructureRegionTestData(
                     CreateCulvert(false), "1.000")

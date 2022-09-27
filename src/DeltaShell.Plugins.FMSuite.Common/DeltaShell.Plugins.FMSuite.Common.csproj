@@ -10,6 +10,10 @@
 			<IncludeAssets>compile;build</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="DHYDRO.Common" Version="1.0.0.47">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="log4net" Version="2.0.12">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
@@ -25,6 +29,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all"/>
 		<ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>

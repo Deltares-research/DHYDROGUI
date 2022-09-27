@@ -4,6 +4,7 @@ using System.Drawing;
 using DelftTools.Shell.Core;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.Boundary;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {

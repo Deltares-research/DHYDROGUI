@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 using NSubstitute;
@@ -8,8 +9,11 @@ using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 {
-    public abstract class DefinitionGeneratorStructureBaseTestFixture<TGenerator> where TGenerator : IDefinitionGeneratorStructure, new()
+    public abstract class DefinitionGeneratorStructureBaseTestFixture<TGenerator> where TGenerator : IDefinitionGeneratorStructure
     {
+        protected abstract TGenerator CreateGenerator();
+        protected IStructureFileNameGenerator StructureFileNameGeneratorSubstitute;
+        protected const string ExpectedStructureFileName = "FlowFM_structures.bc";
         protected static void AssertCorrectProperty(IDelftIniCategory category, string key, string value)
         {
             DelftIniProperty property = category.Properties.FirstOrDefault(p => p.Name == key);
@@ -52,7 +56,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         [SetUp]
         public void SetUp()
         {
-            Generator = new TGenerator();
+            StructureFileNameGeneratorSubstitute = Substitute.For<IStructureFileNameGenerator>();
+            StructureFileNameGeneratorSubstitute.Generate().Returns(ExpectedStructureFileName);
+            Generator = CreateGenerator();
         }
 
         [Test]

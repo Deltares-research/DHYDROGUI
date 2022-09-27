@@ -7,9 +7,11 @@ using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.Networks;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
@@ -46,7 +48,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
                                                                       crossSectionDefinitions,
                                                                       branch,
                                                                       filePath,
-                                                                      referenceDateTime);
+                                                                      referenceDateTime,
+                                                                      Substitute.For<ITimeSeriesFileReader>());
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParam));
@@ -67,7 +70,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
                                                                                  crossSectionDefinitions, 
                                                                                  branch, 
                                                                                  structuresFilename, 
-                                                                                 referenceDateTime);
+                                                                                 referenceDateTime,
+                                                                                 Substitute.For<ITimeSeriesFileReader>());
             
             // Assert
             string expectedMessage = string.Format(Resources.StructureParserProvider_No_parser_available, unknownType, Environment.NewLine);
@@ -90,7 +94,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
                                                                                  crossSectionDefinitions, 
                                                                                  branch, 
                                                                                  structuresFilename, 
-                                                                                 referenceDateTime);
+                                                                                 referenceDateTime,
+                                                                                 Substitute.For<ITimeSeriesFileReader>());
             
             // Assert
             string expectedMessage = string.Format(Resources.StructureParserProvider_No_parser_available, structureWithoutParser, Environment.NewLine);
@@ -122,7 +127,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
                                                                                  crossSectionDefinitions,
                                                                                  branch, 
                                                                                  structuresFilename, 
-                                                                                 referenceDateTime);
+                                                                                 referenceDateTime,
+                                                                                 Substitute.For<ITimeSeriesFileReader>());
 
             // Assert
             Assert.That(parser, Is.InstanceOf(expectedType));

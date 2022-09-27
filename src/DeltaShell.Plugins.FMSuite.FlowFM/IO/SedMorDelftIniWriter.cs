@@ -1,5 +1,6 @@
 ﻿using System;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO

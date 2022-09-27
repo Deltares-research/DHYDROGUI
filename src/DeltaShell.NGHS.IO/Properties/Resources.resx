@@ -480,4 +480,25 @@
   <data name="HydroUGridExtensions_ManholeNamesContext" xml:space="preserve">
     <value>manhole names</value>
   </data>
+  <data name="BcCategoryParser_TryParseDateTimes_Cannot_interpret___0____see_category_on_line__1__" xml:space="preserve">
+    <value>Cannot interpret '{0}', see category on line {1}.</value>
+  </data>
+  <data name="BcCategoryParser_TryGetReferenceTime_Cannot_parse___0___to_a_date_time__see_category_on_line__1__" xml:space="preserve">
+    <value>Cannot parse '{0}' to a date time, see category on line {1}.</value>
+  </data>
+  <data name="BcCategoryParser_TryParseDouble_Cannot_parse___0___to_a_double__see_category_on_line__1__" xml:space="preserve">
+    <value>Cannot parse '{0}' to a double, see category on line {1}.</value>
+  </data>
+  <data name="TimeSeriesFileReader_TimeSeriesFileReader_No_readers_in__0_" xml:space="preserve">
+    <value>No readers in {0}</value>
+  </data>
+  <data name="BcCategoryParser_Table_on_line__0___does_not_contain_any_values" xml:space="preserve">
+    <value>The provided table on line {0} does not contain any values.</value>
+  </data>
+  <data name="BcSpecificTimeSeriesReader_logHandler_reading_structures_from__bc_file" xml:space="preserve">
+    <value>reading structures from .bc file</value>
+  </data>
+  <data name="BcSpecificTimeSeriesReader_Read_No_structure_found_with_name__0__quantity__1__in_file__2_" xml:space="preserve">
+    <value>No structure found with name: {0} and quantity: {1} in file: {2}</value>
+  </data>
 </root>

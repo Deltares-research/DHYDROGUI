@@ -3,21 +3,35 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders
 {
     [TestFixture]
     public class LateralSourceBcCategoryTest
     {
+        private IDelftBcCategory delftBcCategorySubstitute;
+        private ILogHandler logHandlerSubstitute;
+        private IBcCategoryParser bcCategoryParser;
+        
+        [SetUp]
+        public void SetUp()
+        {
+            delftBcCategorySubstitute = Substitute.For<IDelftBcCategory>();
+            logHandlerSubstitute = Substitute.For<ILogHandler>();
+            bcCategoryParser = new BcCategoryParser(logHandlerSubstitute);
+        }
+        
         [Test]
         public void Constructor_CategoryNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new LateralSourceBcCategory(null);
+            void Call() => new LateralSourceBcCategory(null, bcCategoryParser);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -25,10 +39,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
+        public void Constructor_CategoryParserNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new LateralSourceBcCategory(delftBcCategorySubstitute, null);
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("categoryParser"));
+        }
+
+        [Test]
         public void Constructor_NotLateralCategory_ThrowsArgumentException()
         {
             // Call
-            void Call() => new LateralSourceBcCategory(new DelftBcCategory("some_name"));
+            void Call() => new LateralSourceBcCategory(new DelftBcCategory("some_name"), bcCategoryParser);
 
             // Assert
             var e = Assert.Throws<ArgumentException>(Call);
@@ -47,7 +72,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23));
 
             // Call
-            var category = new LateralSourceBcCategory(bcCategory);
+            var category = new LateralSourceBcCategory(bcCategory, bcCategoryParser);
 
             // Assert
             Assert.That(category.Name, Is.EqualTo("lateral_source_name"));
@@ -69,7 +94,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
             // Call
-            var category = new LateralSourceBcCategory(bcCategory);
+            var category = new LateralSourceBcCategory(bcCategory, bcCategoryParser);
 
             // Assert
             Assert.That(category.Name, Is.EqualTo("lateral_source_name"));
@@ -108,7 +133,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
             // Call
-            var category = new LateralSourceBcCategory(bcCategory);
+            var category = new LateralSourceBcCategory(bcCategory, bcCategoryParser);
 
             // Assert
             Assert.That(category.Name, Is.EqualTo("lateral_source_name"));
@@ -147,7 +172,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
             // Call
-            var category = new LateralSourceBcCategory(bcCategory);
+            var category = new LateralSourceBcCategory(bcCategory, bcCategoryParser);
 
             // Assert
             Assert.That(category.Name, Is.EqualTo("lateral_source_name"));
@@ -186,7 +211,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
             // Call
-            var category = new LateralSourceBcCategory(bcCategory);
+            var category = new LateralSourceBcCategory(bcCategory, bcCategoryParser);
 
             // Assert
             Assert.That(category.Name, Is.EqualTo("lateral_source_name"));
@@ -228,7 +253,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var logHandler = Substitute.For<ILogHandler>();
 
             // Call
-            var category = new LateralSourceBcCategory(bcCategory, logHandler);
+            var category = new LateralSourceBcCategory(bcCategory, new BcCategoryParser(logHandler));
 
             // Assert
             logHandler.Received(1).ReportError(expError);

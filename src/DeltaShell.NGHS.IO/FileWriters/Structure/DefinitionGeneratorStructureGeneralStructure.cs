@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
@@ -12,8 +13,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     /// <see cref="DefinitionGeneratorStructureUniversalWeir"/> generates the <see cref="DelftIniCategory"/> corresponding with a
     /// <see cref="Weir"/> with a <see cref="GeneralStructureWeirFormula"/> in the structures.ini file.
     /// </summary>
-    public class DefinitionGeneratorStructureGeneralStructure : DefinitionGeneratorStructure
+    public class DefinitionGeneratorStructureGeneralStructure : DefinitionGeneratorTimeSeriesStructure
     {
+        public DefinitionGeneratorStructureGeneralStructure(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
+        
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
@@ -82,21 +85,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCrestLevel(IWeir weir, GeneralStructureWeirFormula formula)
         {
-            if (weir.IsUsingTimeSeriesForCrestLevel())
-            {
-                // Note: the generation of tim files is the responsibility of the StructureFile
-                //       not the DefinitionGeneratorStructureWeir.
-                IniCategory.AddProperty(StructureRegion.CrestLevel.Key,
-                                        StructureTimFileNameGenerator.Generate(weir, weir.CrestLevelTimeSeries), 
-                                        StructureRegion.CrestLevel.Description);
-            }
-            else
-            {
-                IniCategory.AddProperty(StructureRegion.CrestLevel.Key, 
-                                        formula.BedLevelStructureCentre, 
-                                        StructureRegion.CrestLevel.Description, 
-                                        StructureRegion.CrestLevel.Format);
-            }
+            AddProperty(weir.IsUsingTimeSeriesForCrestLevel(),
+                        StructureRegion.CrestLevel.Key, 
+                        formula.BedLevelStructureCentre, 
+                        StructureRegion.CrestLevel.Description, 
+                        StructureRegion.CrestLevel.Format);
         }
     }
 }

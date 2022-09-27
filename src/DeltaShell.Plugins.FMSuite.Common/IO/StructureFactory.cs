@@ -10,8 +10,12 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using GeoAPI.Geometries;
 using log4net;
@@ -23,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     public static class StructureFactory
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructureFactory));
-
+        
         private static readonly Dictionary<Structure2DType, Func<Structure2D, string, DateTime, IStructure>> CreateStructureType = new Dictionary<Structure2DType, Func<Structure2D, string, DateTime, IStructure>>
         {
             {Structure2DType.Pump, CreatePumpCore},
@@ -93,27 +97,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path, DateTime refDate, IStructure1D structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
+        private static void SetTimeSeriesProperty(Structure2D structure2D, 
+                                                  DateTime refDate, 
+                                                  IStructure1D structure, 
+                                                  ITimeSeries timeSeries, 
+                                                  TimeSeriesStructurePropertyStringData propertyStringData)
         {
-            ModelProperty property = structure2D.GetProperty(propertyName);
-            if (property != null)
+            ModelProperty property = structure2D.GetProperty(propertyStringData.PropertyName);
+            if (property == null)
             {
-                var steerable = (Steerable)property.Value;
-                switch (steerable.Mode)
-                {
-                    case SteerableMode.ConstantValue:
-                        TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, false);
-                        TypeUtils.SetPropertyValue(structure, constantValueProperty, steerable.ConstantValue);
-                        break;
-                    case SteerableMode.TimeSeries:
-                        TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, true);
-                        var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
-                        var reader = new TimFile();
-                        reader.Read(filePath, timeSeries, refDate);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                return;
+            }
+
+            var steerable = (Steerable)property.Value;
+            switch (steerable.Mode)
+            {
+                case SteerableMode.ConstantValue:
+                    TypeUtils.SetPropertyValue(structure, propertyStringData.UseTimeSeriesProperty, false);
+                    TypeUtils.SetPropertyValue(structure, propertyStringData.ConstantValueProperty, steerable.ConstantValue);
+                    break;
+                case SteerableMode.TimeSeries:
+                    TypeUtils.SetPropertyValue(structure, propertyStringData.UseTimeSeriesProperty, true);
+                    var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(propertyStringData.Path, steerable.TimeSeriesFilename);
+                    var reader = new TimFile();
+                    reader.Read(filePath, timeSeries, refDate);
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -359,9 +369,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
                 ? 0.0
                 : DataTypeValueParser.FromString<double>(crestWidthString);
-            SetTimeSeriesProperty(structure2D, StructureRegion.CrestLevel.Key, path, refDate, weir,
-                nameof(weir.UseCrestLevelTimeSeries),
-                nameof(weir.CrestLevel), weir.CrestLevelTimeSeries);
+            
+            var Weir2DStringData = new TimeSeriesStructurePropertyStringData(StructureRegion.CrestLevel.Key,
+                                                                             path,
+                                                                             nameof(weir.UseCrestLevelTimeSeries),
+                                                                             nameof(weir.CrestLevel),
+                                                                             structure2D.Name);
+            
+            SetTimeSeriesProperty(structure2D, refDate, weir, weir.CrestLevelTimeSeries, Weir2DStringData);
             var useVelocityHeightProperty = structure2D.GetProperty(StructureRegion.UseVelocityHeight.Key);
             if (useVelocityHeightProperty != null)
             {
@@ -553,31 +568,62 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     throw new ArgumentException("Could not parse horizontal_opening_direction of type: " + displayName);
             }
 
-            SetTimeSeriesProperty(structure2D,
-                StructureRegion.GateCrestLevel.Key,
-                path, refDate,
-                gate,
-                nameof(gate.UseSillLevelTimeSeries),
-                nameof(gate.SillLevel),
-                gate.SillLevelTimeSeries);
-
-            SetTimeSeriesProperty(structure2D,
-                StructureRegion.GateLowerEdgeLevel.Key,
-                path, refDate,
-                gate,
-                nameof(gate.UseLowerEdgeLevelTimeSeries),
-                nameof(gate.LowerEdgeLevel),
-                gate.LowerEdgeLevelTimeSeries);
-
-            SetTimeSeriesProperty(structure2D,
-                StructureRegion.GateOpeningWidth.Key,
-                path, refDate,
-                gate,
-                nameof(gate.UseOpeningWidthTimeSeries),
-                nameof(gate.OpeningWidth),
-                gate.OpeningWidthTimeSeries);
+            SetGateTimeSeriesProperties(structure2D, path, refDate, gate);
 
             return gate;
+        }
+
+        private static void SetGateTimeSeriesProperties(Structure2D structure2D, string path, DateTime refDate, Gate2D gate)
+        {
+            var gateSillLevelStringData = new TimeSeriesStructurePropertyStringData(StructureRegion.GateCrestLevel.Key,
+                                                                                    path,
+                                                                                    nameof(gate.UseSillLevelTimeSeries),
+                                                                                    nameof(gate.SillLevel),
+                                                                                    GetGateStructureName(structure2D.Name, StructureRegion.GateCrestLevel.Key));
+            SetTimeSeriesProperty(structure2D, refDate, gate, gate.SillLevelTimeSeries, gateSillLevelStringData);
+
+            var gateLowerEdgeLevelStringData = new TimeSeriesStructurePropertyStringData(StructureRegion.GateLowerEdgeLevel.Key,
+                                                                                         path,
+                                                                                         nameof(gate.UseLowerEdgeLevelTimeSeries),
+                                                                                         nameof(gate.LowerEdgeLevel),
+                                                                                         GetGateStructureName(structure2D.Name, StructureRegion.GateLowerEdgeLevel.Key));
+
+            SetTimeSeriesProperty(structure2D, refDate, gate, gate.LowerEdgeLevelTimeSeries, gateLowerEdgeLevelStringData);
+
+            var gateOpeningWidthStringData = new TimeSeriesStructurePropertyStringData(StructureRegion.GateOpeningWidth.Key,
+                                                                                       path,
+                                                                                       nameof(gate.UseOpeningWidthTimeSeries),
+                                                                                       nameof(gate.OpeningWidth),
+                                                                                       GetGateStructureName(structure2D.Name, StructureRegion.GateOpeningWidth.Key));
+
+            SetTimeSeriesProperty(structure2D, refDate, gate, gate.OpeningWidthTimeSeries, gateOpeningWidthStringData);
+        }
+
+        private static string GetGateStructureName(string structure2DName, string key)
+        {
+            return $"{structure2DName}_{key}";
+        }
+
+        private sealed class TimeSeriesStructurePropertyStringData
+        {
+            public string PropertyName { get; }
+            public string Path { get; }
+            public string UseTimeSeriesProperty { get; }
+            public string ConstantValueProperty { get; }
+            public string StructureName { get; }
+            
+            public TimeSeriesStructurePropertyStringData(string propertyName, 
+                                                         string path, 
+                                                         string useTimeSeriesProperty, 
+                                                         string constantValueProperty, 
+                                                         string structureName)
+            {
+                PropertyName = propertyName;
+                Path = path;
+                UseTimeSeriesProperty = useTimeSeriesProperty;
+                ConstantValueProperty = constantValueProperty;
+                StructureName = structureName;
+            }
         }
 
         #endregion

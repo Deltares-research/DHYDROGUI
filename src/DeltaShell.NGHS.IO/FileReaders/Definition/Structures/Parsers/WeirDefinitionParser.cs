@@ -4,6 +4,8 @@ using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
@@ -18,7 +20,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WeirDefinitionParser));
 
-        private readonly ITimFileReader timFileReader;
+        private readonly ITimeSeriesFileReader fileReader;
         private readonly string structuresFilePath;
         private readonly DateTime referenceDateTime;
 
@@ -27,7 +29,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// <summary>
         /// Initializes a new <see cref="WeirDefinitionParser"/>.
         /// </summary>
-        /// <param name="timFileReader">The tim file reader</param>
+        /// <param name="fileReader">The file reader</param>
         /// <param name="structureType">The structure type.</param>
         /// <param name="category">The <see cref="IDelftIniCategory"/> to parse a structure from.</param>
         /// <param name="branch">The branch to import the bridge on.</param>
@@ -37,7 +39,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// <exception cref="InvalidEnumArgumentException">
         /// Thrown when an invalid <paramref name="structureType"/> is provided.
         /// </exception>
-        public WeirDefinitionParser(ITimFileReader timFileReader,
+        public WeirDefinitionParser(ITimeSeriesFileReader fileReader,
                                     StructureType structureType,
                                     IDelftIniCategory category,
                                     IBranch branch,
@@ -45,9 +47,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                                     DateTime referenceDateTime)
             : base(structureType, category, branch, Path.GetFileName(structuresFilePath))
         {
-            Ensure.NotNull(timFileReader, nameof(timFileReader));
+            Ensure.NotNull(fileReader, nameof(fileReader));
 
-            this.timFileReader = timFileReader;
+            this.fileReader = fileReader;
             this.structuresFilePath = structuresFilePath;
             this.referenceDateTime = referenceDateTime;
         }
@@ -74,7 +76,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                                                                            weir, 
                                                                            structuresFilePath, 
                                                                            referenceDateTime,
-                                                                           timFileReader);
+                                                                           fileReader);
             return weir;
         }
 
@@ -82,7 +84,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         {
             var crestLevelValue = Category.ReadProperty<string>(StructureRegion.CrestLevel.Key);
 
-            if (crestLevelValue.EndsWith(FileSuffices.TimFile))
+            if (fileReader.IsTimeSeriesProperty(crestLevelValue))
                 ReadCrestLevelTimeSeries(weir, crestLevelValue);
             else
                 weir.CrestLevel = Category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
@@ -95,7 +97,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 
             try
             {
-                timFileReader.Read(filePath, weir.CrestLevelTimeSeries, referenceDateTime);
+                fileReader.Read(relativeCrestLevelPath, filePath, new StructureTimeSeries(weir, weir.CrestLevelTimeSeries), referenceDateTime);
             }
             catch (FileReadingException e)
             {

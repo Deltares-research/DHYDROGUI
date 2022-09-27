@@ -2,6 +2,7 @@
 using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.Helpers;
 using NUnit.Framework;

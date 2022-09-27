@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;

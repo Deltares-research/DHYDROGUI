@@ -9,8 +9,12 @@ using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.SteerableProperties;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
+using DeltaShell.NGHS.IO.FileWriters.TimeSeriesWriters;
 using DeltaShell.NGHS.IO.Helpers;
 
 using WriteTimeSeriesAction = System.Action<string, System.DateTime, object>;
@@ -27,6 +31,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static readonly Dictionary<Type, WriteTimeSeriesAction> writeTimeSeriesActions =
             new Dictionary<Type, WriteTimeSeriesAction>();
 
+        private static readonly IStructureFileNameGenerator structureBcFileNameGenerator = new StructureBcFileNameGenerator();
+        private static readonly ITimeSeriesFileWriter bcTimeSeriesFileWriter = new BcTimeSeriesWriter(new DelftBcWriter(), new StructureBoundaryGenerator());
+        private static readonly TimFile timTimeSeriesFileWriter = new TimFile();
         static StructureFile()
         {
             RegisterWriteTimeSeriesAction<IPump>(WritePumpTimeSeriesFile);
@@ -66,9 +73,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <param name="regions">The regions which should be inspected for time series.</param>
         /// <param name="mduFilePath">The path to the .mdu file.</param>
         /// <param name="referenceTime">The reference time.</param>
-        public static void WriteStructureTimFiles(IEnumerable<IHydroRegion> regions,
-                                                  string mduFilePath,
-                                                  DateTime referenceTime)
+        public static void WriteStructureFiles(IEnumerable<IHydroRegion> regions,
+                                               string mduFilePath,
+                                               DateTime referenceTime)
         {
             IHydroRegion[] regionsArray = regions.ToArray();
             WriteStructure1DTimeSeries(regionsArray, mduFilePath, referenceTime);
@@ -96,20 +103,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             IHydroNetwork network = regions.OfType<IHydroNetwork>().FirstOrDefault();
             if (network is null) return;
 
-            IEnumerable<ValueTuple<IStructure1D, TimeSeries>> ToProperties(IHasSteerableProperties structure) =>
+            IEnumerable<IStructureTimeSeries> ToProperties(IHasSteerableProperties structure) =>
                 structure.RetrieveSteerableProperties()
                          .Where(p => p.CurrentDriver == SteerablePropertyDriver.TimeSeries)
-                         .Select(p => ((IStructure1D)structure, p.TimeSeries));
+                         .Select(p => new StructureTimeSeries((IStructure1D)structure, p.TimeSeries));
 
-            IEnumerable<ValueTuple<IStructure1D, TimeSeries>> timeSeries =
+            IEnumerable<IStructureTimeSeries> timeSeries =
                     network.GetStructures().OfType<IHasSteerableProperties>()
                                            .SelectMany(ToProperties);
 
-            foreach ((IStructure1D structure, TimeSeries ts) in timeSeries)
-            {
-                string timFilePath = GenerateTimeSeriesFileName(mduFilePath, structure, ts);
-                new TimFile().Write(timFilePath, ts, referenceTime);
-            }
+            string filePath = GenerateTimeSeriesBcFileName(mduFilePath);
+            bcTimeSeriesFileWriter.Write(filePath, timeSeries, referenceTime);
         }
 
         private static void WriteStructure2DTimeSeries(IEnumerable<IHydroRegion> regions,
@@ -228,8 +232,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (pump != null && pump.HasCapacityTimeSeries())
             {
-                string timFilePath = GenerateTimeSeriesFileName(mduFilePath, pump, pump.CapacityTimeSeries);
-                new TimFile().Write(timFilePath, pump.CapacityTimeSeries, referenceDateTime);
+                string timFilePath = GenerateTimeSeriesTimFileName(mduFilePath, pump, pump.CapacityTimeSeries);
+                timTimeSeriesFileWriter.Write(timFilePath, pump.CapacityTimeSeries, referenceDateTime);
             }
         }
 
@@ -237,8 +241,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (weir != null && weir.HasCrestLevelTimeSeries())
             {
-                string timFilePath = GenerateTimeSeriesFileName(mduFilePath, weir, weir.CrestLevelTimeSeries);
-                new TimFile().Write(timFilePath, weir.CrestLevelTimeSeries, referenceDateTime);
+                string timFilePath = GenerateTimeSeriesTimFileName(mduFilePath, weir, weir.CrestLevelTimeSeries);
+                timTimeSeriesFileWriter.Write(timFilePath, weir.CrestLevelTimeSeries, referenceDateTime);
             }
         }
 
@@ -246,18 +250,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (gate.UseSillLevelTimeSeries)
             {
-                string timFilePath = GenerateTimeSeriesFileName(mduFilePath, gate, gate.SillLevelTimeSeries);
-                new TimFile().Write(timFilePath, gate.SillLevelTimeSeries, referenceDateTime);
+                string timFilePath = GenerateTimeSeriesTimFileName(mduFilePath, gate, gate.SillLevelTimeSeries);
+                timTimeSeriesFileWriter.Write(timFilePath,  gate.SillLevelTimeSeries, referenceDateTime);
             }
             if (gate.UseLowerEdgeLevelTimeSeries)
             {
-                string timFilePath = GenerateTimeSeriesFileName(mduFilePath, gate, gate.LowerEdgeLevelTimeSeries);
-                new TimFile().Write(timFilePath, gate.LowerEdgeLevelTimeSeries, referenceDateTime);
+                string timFilePath = GenerateTimeSeriesTimFileName(mduFilePath, gate, gate.LowerEdgeLevelTimeSeries);
+                timTimeSeriesFileWriter.Write(timFilePath,  gate.LowerEdgeLevelTimeSeries, referenceDateTime);
             }
             if (gate.UseOpeningWidthTimeSeries)
             {
-                string timFilePath = GenerateTimeSeriesFileName(mduFilePath, gate, gate.OpeningWidthTimeSeries);
-                new TimFile().Write(timFilePath, gate.OpeningWidthTimeSeries, referenceDateTime);
+                string timFilePath = GenerateTimeSeriesTimFileName(mduFilePath, gate, gate.OpeningWidthTimeSeries);
+                timTimeSeriesFileWriter.Write(timFilePath,  gate.OpeningWidthTimeSeries, referenceDateTime);
             }
         }
 
@@ -270,10 +274,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             TimeSeries timeSeries = leveeBreachSettings.CreateTimeSeriesFromTable();
             string[] commentLines = { "Time entries are defined in minutes, relative to the breach growth start" };
 
-
             string timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFilePath,
                                                                               $"{leveeBreach.Name}.tim");
-            new TimFile().Write(timFilePath, timeSeries, leveeBreachSettings.StartTimeBreachGrowth, commentLines);
+
+            timTimeSeriesFileWriter.Write(timFilePath,  timeSeries, leveeBreachSettings.StartTimeBreachGrowth, commentLines);
         }
 
         private static bool HasCapacityTimeSeries(this IPump pump) =>
@@ -285,7 +289,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             weir.IsUsingTimeSeriesForCrestLevel()
             && weir.CrestLevelTimeSeries != null;
 
-        private static string GenerateTimeSeriesFileName(string mduFilePath, IStructure structure, ITimeSeries timeSeries) =>
+        private static string GenerateTimeSeriesBcFileName(string mduFilePath) =>
+            NGHSFileBase.GetOtherFilePathInSameDirectory(
+                mduFilePath,
+                structureBcFileNameGenerator.Generate());
+
+        private static string GenerateTimeSeriesTimFileName(string mduFilePath, IStructure structure, ITimeSeries timeSeries) =>
             NGHSFileBase.GetOtherFilePathInSameDirectory(
                 mduFilePath,
                 StructureTimFileNameGenerator.Generate(structure, timeSeries));

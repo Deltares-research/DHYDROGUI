@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.Boundary;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Networks;
 

@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                               regions, 
                                               referenceTime,
                                               StructureFile.GenerateStructureCategoriesFromFmModel);
-                StructureFile.WriteStructureTimFiles(regions, targetMduFilePath, referenceTime);
+                StructureFile.WriteStructureFiles(regions, targetMduFilePath, referenceTime);
 
                 modelDefinition.Properties.Remove(targetMduFilePathProperty);
             }

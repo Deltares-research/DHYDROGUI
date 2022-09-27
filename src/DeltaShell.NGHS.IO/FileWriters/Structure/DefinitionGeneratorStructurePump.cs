@@ -6,17 +6,20 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructurePump : DefinitionGeneratorStructure
+    public class DefinitionGeneratorStructurePump : DefinitionGeneratorTimeSeriesStructure
     {
         private const int DEFAULT_NRSTAGES = 1;
         private const int DEFAULT_REDUCTION_FACTOR_LEVELS = 0;
         private const double DEFAULT_HEAD = 0.0;
         private const double DEFAULT_REDUCTION_FACTOR = 1.0;
-
+        
+        public DefinitionGeneratorStructurePump(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
+        
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
@@ -77,19 +80,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCapacity(IPump pump)
         {
-            if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
-            {
-                IniCategory.AddProperty(StructureRegion.Capacity.Key,
-                                        StructureTimFileNameGenerator.Generate(pump, pump.CapacityTimeSeries), 
-                                        StructureRegion.Capacity.Description);
-            }
-            else
-            {
-                IniCategory.AddProperty(StructureRegion.Capacity.Key,
-                                        pump.Capacity,
-                                        StructureRegion.Capacity.Description,
-                                        StructureRegion.Capacity.Format);
-            }
+            AddProperty(pump.CanBeTimedependent && pump.UseCapacityTimeSeries,
+                        StructureRegion.Capacity.Key,
+                        pump.Capacity,
+                        StructureRegion.Capacity.Description,
+                        StructureRegion.Capacity.Format);
         }
 
         private void AddSuctionSideLevels(IPump pump)

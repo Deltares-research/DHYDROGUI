@@ -1,6 +1,7 @@
 ﻿using System;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileReaders;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

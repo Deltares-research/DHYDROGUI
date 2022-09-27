@@ -4,6 +4,8 @@ using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
@@ -18,14 +20,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(PumpDefinitionParser));
 
-        private readonly ITimFileReader timFileReader;
+        private readonly ITimeSeriesFileReader fileReader;
         private readonly string structuresFilePath;
         private readonly DateTime referenceDateTime;
 
         /// <summary>
         /// Initializes a new <see cref="PumpDefinitionParser"/>.
         /// </summary>
-        /// <param name="timFileReader">The tim file reader</param>
+        /// <param name="fileReader">The file reader</param>
         /// <param name="structureType">The structure type.</param>
         /// <param name="category">The <see cref="IDelftIniCategory"/> to parse a structure from.</param>
         /// <param name="branch">The branch to import the bridge on.</param>
@@ -35,7 +37,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// <exception cref="InvalidEnumArgumentException">
         /// Thrown when an invalid <paramref name="structureType"/> is provided.
         /// </exception>
-        public PumpDefinitionParser(ITimFileReader timFileReader,
+        public PumpDefinitionParser(ITimeSeriesFileReader fileReader,
                                     StructureType structureType,
                                     IDelftIniCategory category,
                                     IBranch branch,
@@ -43,8 +45,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                                     DateTime referenceDateTime)
             : base(structureType, category, branch, Path.GetFileName(structuresFilePath))
         {
-            Ensure.NotNull(timFileReader, nameof(timFileReader));
-            this.timFileReader = timFileReader;
+            Ensure.NotNull(fileReader, nameof(fileReader));
+            this.fileReader = fileReader;
 
             this.structuresFilePath = structuresFilePath;
             this.referenceDateTime = referenceDateTime;
@@ -86,7 +88,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         {
             var capacityValue = Category.ReadProperty<string>(StructureRegion.Capacity.Key);
 
-            if (capacityValue.EndsWith(FileSuffices.TimFile))
+            if (fileReader.IsTimeSeriesProperty(capacityValue))
             {
                 ReadCapacityTimeSeries(pump, capacityValue);
             }
@@ -103,7 +105,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 
             try
             {
-                timFileReader.Read(filePath, pump.CapacityTimeSeries, referenceDateTime);
+                fileReader.Read(relativeGateInitialOpeningPath, filePath, new StructureTimeSeries(pump, pump.CapacityTimeSeries), referenceDateTime);
             }
             catch (FileReadingException e)
             {

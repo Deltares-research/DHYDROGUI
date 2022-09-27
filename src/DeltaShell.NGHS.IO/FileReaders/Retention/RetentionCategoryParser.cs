@@ -11,7 +11,7 @@ using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
-namespace DeltaShell.NGHS.IO.FileReaders
+namespace DeltaShell.NGHS.IO.FileReaders.Retention
 {
     /// <summary>
     /// Class containing parsing logic for retention categories
@@ -58,7 +58,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
         private static bool ReadRetention(IDelftIniCategory category, IReadOnlyDictionary<string, IBranch> branchLookUp, IReadOnlyDictionary<string, INode> nodeLookUp, out IRetention retention)
         {
-            retention = new Retention
+            retention = new DelftTools.Hydro.Retention
             {
                 Name = category.ReadProperty<string>(RetentionRegion.Id.Key),
                 LongName = category.ReadProperty<string>(RetentionRegion.Name.Key)

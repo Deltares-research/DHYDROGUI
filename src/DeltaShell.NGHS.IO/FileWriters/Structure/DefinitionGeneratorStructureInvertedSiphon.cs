@@ -1,11 +1,14 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureInvertedSiphon : DefinitionGeneratorStructureCulvert
     {
+        public DefinitionGeneratorStructureInvertedSiphon(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
+        
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Culvert);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;

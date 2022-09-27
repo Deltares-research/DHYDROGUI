@@ -11,6 +11,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// The line where this property was read in the file.
         /// </summary>
         int LineNumber { get; set; }
+
         IList<string> Values { get; set; }
     }
 }

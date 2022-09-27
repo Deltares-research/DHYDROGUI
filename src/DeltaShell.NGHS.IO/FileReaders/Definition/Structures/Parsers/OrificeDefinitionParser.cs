@@ -2,6 +2,7 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 
@@ -18,7 +19,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// <summary>
         /// Initializes a new <see cref="OrificeDefinitionParser"/>.
         /// </summary>
-        /// <param name="timFileReader">The tim file reader</param>
+        /// <param name="fileReader">The file reader</param>
         /// <param name="structureType">The structure type.</param>
         /// <param name="category">The <see cref="IDelftIniCategory"/> to parse a structure from.</param>
         /// <param name="branch">The branch to import the bridge on.</param>
@@ -28,13 +29,13 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
         /// Thrown when an invalid <paramref name="structureType"/> is provided.
         /// </exception>
-        public OrificeDefinitionParser(ITimFileReader timFileReader,
+        public OrificeDefinitionParser(ITimeSeriesFileReader fileReader,
                                        StructureType structureType,
                                        IDelftIniCategory category,
                                        IBranch branch,
                                        string structuresFilePath,
                                        DateTime referenceDateTime) :
-            base(timFileReader, 
+            base(fileReader, 
                  structureType, 
                  category, 
                  branch, 

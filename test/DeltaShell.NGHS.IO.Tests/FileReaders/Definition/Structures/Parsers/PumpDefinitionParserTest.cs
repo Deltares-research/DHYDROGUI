@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
@@ -21,12 +22,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
         private static IEnumerable<TestCaseData> ConstructorArgumentNullData()
         {
-            var timFileReader = Substitute.For<ITimFileReader>();
+            var timFileReader = Substitute.For<ITimeSeriesFileReader>();
             var category = Substitute.For<IDelftIniCategory>();
             var branch = Substitute.For<IBranch>();
 
 
-            yield return new TestCaseData(null, category, branch, structuresFilename, "timFileReader");
+            yield return new TestCaseData(null, category, branch, structuresFilename, "fileReader");
             yield return new TestCaseData(timFileReader, null, branch, structuresFilename, "category");
             yield return new TestCaseData(timFileReader, category, null, structuresFilename, "branch");
             yield return new TestCaseData(timFileReader, category, branch, null, "structuresFilename");
@@ -34,7 +35,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
         [Test]
         [TestCaseSource(nameof(ConstructorArgumentNullData))]
-        public void Constructor_ArgumentNull_ThrowsArgumentNullException(ITimFileReader timFileReader,
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(ITimeSeriesFileReader timFileReader,
                                                                          IDelftIniCategory category,
                                                                          IBranch branch, 
                                                                          string structuresFilePath,
@@ -59,7 +60,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var branch = new Channel();
 
             // Call
-            var parser = new PumpDefinitionParser(Substitute.For<ITimFileReader>(),
+            var parser = new PumpDefinitionParser(Substitute.For<ITimeSeriesFileReader>(),
                                                   structureType, 
                                                   category, 
                                                   branch, 
@@ -106,8 +107,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.ReductionFactorLevels.Key, numberReductionLevels);
             category.AddProperty(StructureRegion.Head.Key, string.Join(", ", headValues));
             category.AddProperty(StructureRegion.ReductionFactor.Key, string.Join(", ", reductionFactorValues));
+            
+            var fileReaderSubstitute = Substitute.For<ITimeSeriesFileReader>();
 
-            var parser = new PumpDefinitionParser(Substitute.For<ITimFileReader>(),
+            var parser = new PumpDefinitionParser(fileReaderSubstitute,
                                                   structureType, 
                                                   category, 
                                                   branch, 
@@ -142,6 +145,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         {
             // Setup
             const string capacityTimeSeriesName = "capacity.tim";
+            const string name = "Pump";
 
             const int numberReductionLevels = 3;
             double[] headValues = { 1, 2, 3 };
@@ -151,7 +155,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
             category.AddProperty(StructureRegion.Id.Key, "Pump");
-            category.AddProperty(StructureRegion.Name.Key, "Pump");
+            category.AddProperty(StructureRegion.Name.Key, name);
             category.AddProperty(StructureRegion.Orientation.Key, "positive");
             category.AddProperty(StructureRegion.Direction.Key, "both");
             category.AddProperty(StructureRegion.Capacity.Key, capacityTimeSeriesName);
@@ -164,7 +168,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.Head.Key, string.Join(", ", headValues));
             category.AddProperty(StructureRegion.ReductionFactor.Key, string.Join(", ", reductionFactorValues));
 
-            var reader = Substitute.For<ITimFileReader>();
+            var reader = Substitute.For<ITimeSeriesFileReader>();
+            reader.IsTimeSeriesProperty("").ReturnsForAnyArgs(true);
 
             var parser = new PumpDefinitionParser(reader,
                                                   structureType, 
@@ -177,7 +182,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             IStructure1D _ = parser.ParseStructure();
 
             // Assert
-            reader.Received(1).Read(capacityTimeSeriesName, Arg.Any<TimeSeries>(), referenceDateTime);
+            reader.Received(1).Read(Arg.Any<string>(),capacityTimeSeriesName, Arg.Any<IStructureTimeSeries>(), referenceDateTime);
         }
     }
 }

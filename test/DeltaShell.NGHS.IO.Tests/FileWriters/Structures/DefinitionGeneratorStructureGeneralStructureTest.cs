@@ -11,6 +11,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     public class DefinitionGeneratorStructureGeneralStructureTest :
         DefinitionGeneratorStructureBaseTestFixture<DefinitionGeneratorStructureGeneralStructure>
     {
+        protected override DefinitionGeneratorStructureGeneralStructure CreateGenerator()
+        {
+            return new DefinitionGeneratorStructureGeneralStructure(StructureFileNameGeneratorSubstitute);
+        }
+        
         protected override string TStructureDefinitionType => "generalstructure";
 
         private const string expectedBranchName = "branch-name";
@@ -35,7 +40,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         private static IEnumerable<TestCaseData> CreateStructureRegionData()
         {
             yield return CreateCreateStructureRegionTestData(
-                    CreateWeir(true), "Weir_crest_level.tim")
+                    CreateWeir(true), ExpectedStructureFileName)
                 .SetName("With TimeSeries");
             yield return CreateCreateStructureRegionTestData(
                     CreateWeir(false), "0.000")

@@ -102,7 +102,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (!category.Name.EqualsCaseInsensitive(BndExtForceFile.LateralHeaderKey))
             {
-                throw new ArgumentException("The category is not a lateral category.", paramName);
+                throw new ArgumentException($"{nameof(category)} should have header {BndExtForceFile.LateralHeaderKey}" +
+                                            $" for laterals.", paramName);
             }
         }
 

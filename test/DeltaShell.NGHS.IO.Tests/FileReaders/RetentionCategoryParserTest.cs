@@ -3,7 +3,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.Retention;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;

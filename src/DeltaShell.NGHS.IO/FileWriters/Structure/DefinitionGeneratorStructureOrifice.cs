@@ -2,12 +2,15 @@
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructureOrifice : DefinitionGeneratorStructure
+    public class DefinitionGeneratorStructureOrifice : DefinitionGeneratorTimeSeriesStructure
     {
+        public DefinitionGeneratorStructureOrifice(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
+        
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
@@ -39,21 +42,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCrestLevel(IOrifice orifice)
         {
-            if (orifice.IsUsingTimeSeriesForCrestLevel())
-            {
-                // Note: the generation of tim files is the responsibility of the StructureFile
-                //       not the DefinitionGeneratorStructureWeir.
-                IniCategory.AddProperty(StructureRegion.CrestLevel.Key,
-                                        StructureTimFileNameGenerator.Generate(orifice, orifice.CrestLevelTimeSeries), 
-                                        StructureRegion.CrestLevel.Description);
-            }
-            else
-            { 
-                IniCategory.AddProperty(StructureRegion.CrestLevel.Key, 
-                                        orifice.CrestLevel, 
-                                        StructureRegion.CrestLevel.Description, 
-                                        StructureRegion.CrestLevel.Format);
-            }
+            AddProperty(orifice.IsUsingTimeSeriesForCrestLevel(),
+                        StructureRegion.CrestLevel.Key,
+                        orifice.CrestLevel,
+                        StructureRegion.CrestLevel.Description,
+                        StructureRegion.CrestLevel.Format);
         }
 
         private void AddCrestWidth(IOrifice orifice) => 
@@ -64,19 +57,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddGateLowerEdgeLevel(IOrifice orifice, GatedWeirFormula formula)
         {
-            if (formula.CanBeTimedependent && formula.UseLowerEdgeLevelTimeSeries)
-            {
-                IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key,
-                                        StructureTimFileNameGenerator.Generate(orifice, formula.LowerEdgeLevelTimeSeries), 
-                                        StructureRegion.GateLowerEdgeLevel.Description);
-            }
-            else
-            {
-                IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key,
-                                        (orifice.CrestLevel + formula.GateOpening),
-                                        StructureRegion.GateLowerEdgeLevel.Description,
-                                        StructureRegion.GateLowerEdgeLevel.Format);
-            }
+            AddProperty(formula.CanBeTimedependent && formula.UseLowerEdgeLevelTimeSeries,
+                        StructureRegion.GateLowerEdgeLevel.Key,
+                        (orifice.CrestLevel + formula.GateOpening),
+                        StructureRegion.GateLowerEdgeLevel.Description,
+                        StructureRegion.GateLowerEdgeLevel.Format);
         }
 
         private void AddCorrectionCoeff(GatedWeirFormula formula) => 

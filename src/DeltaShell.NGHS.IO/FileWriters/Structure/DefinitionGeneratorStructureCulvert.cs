@@ -3,12 +3,15 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructureCulvert : DefinitionGeneratorStructure
+    public class DefinitionGeneratorStructureCulvert : DefinitionGeneratorTimeSeriesStructure
     {
+        public DefinitionGeneratorStructureCulvert(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
+        
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
@@ -86,19 +89,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddGateInitialOpen(ICulvert culvert)
         {
-            if (culvert.UseGateInitialOpeningTimeSeries)
-            {
-                IniCategory.AddProperty(StructureRegion.IniValveOpen.Key,
-                                        StructureTimFileNameGenerator.Generate(culvert, culvert.GateInitialOpeningTimeSeries), 
-                                        StructureRegion.IniValveOpen.Description);
-            }
-            else
-            { 
-                IniCategory.AddProperty(StructureRegion.IniValveOpen.Key, 
-                                        culvert.GateInitialOpening, 
-                                        StructureRegion.IniValveOpen.Description, 
-                                        StructureRegion.IniValveOpen.Format);
-            }
+            AddProperty(culvert.UseGateInitialOpeningTimeSeries,
+                        StructureRegion.IniValveOpen.Key, 
+                        culvert.GateInitialOpening, 
+                        StructureRegion.IniValveOpen.Description, 
+                        StructureRegion.IniValveOpen.Format);
         }
 
         private void AddLossCoefficient(ICulvert culvert)
@@ -116,7 +111,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 IniCategory.AddProperty(StructureRegion.LossCoefficient.Key, lossCoeff, StructureRegion.LossCoefficient.Description, StructureRegion.LossCoefficient.Format);
             }
         }
-
-
     }
 }

@@ -18,10 +18,8 @@ namespace DeltaShell.NGHS.IO
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="function"/> is not a valid time series function.
         /// </exception>
-        void Read(string timFilePath,
-                  IFunction function,
-                  DateTime? refDate);
-
+        void Read(string timFilePath, IFunction function, DateTime? refDate);
+        
         /// <summary>
         /// Read the <see cref="TimeSeries"/> from <paramref name="timFilePath"/>.
         /// </summary>

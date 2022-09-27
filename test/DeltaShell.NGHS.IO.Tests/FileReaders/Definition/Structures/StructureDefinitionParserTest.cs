@@ -5,9 +5,11 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.Networks;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
@@ -46,7 +48,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
                                                   branch, 
                                                   type, 
                                                   structuresFilePath, 
-                                                  referenceDateTime);
+                                                  referenceDateTime,
+                                                  Substitute.For<ITimeSeriesFileReader>());
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedName));
@@ -66,7 +69,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
                                                   branch, 
                                                   type, 
                                                   structuresFilename, 
-                                                  referenceDateTime);
+                                                  referenceDateTime,
+                                                  Substitute.For<ITimeSeriesFileReader>());
 
             // Assert
             string expectedMessage = string.Format(Resources.StructureDefinitionParser_Could_not_parse_structure_type, type);

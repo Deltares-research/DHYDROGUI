@@ -5,7 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.Boundary;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
@@ -22,25 +23,25 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
         private static IEnumerable<TestCaseData> ConstructorParameterNullData()
         {
-            var timFileReader = Substitute.For<ITimFileReader>();
+            var timeSeriesFileReader = Substitute.For<ITimeSeriesFileReader>();
             IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
             IBranch branch = new Channel();
 
-            yield return new TestCaseData(null, category, branch, structuresFilename, "timFileReader");
-            yield return new TestCaseData(timFileReader, null, branch, structuresFilename, "category");
-            yield return new TestCaseData(timFileReader, category, null, structuresFilename, "branch");
-            yield return new TestCaseData(timFileReader, category, branch, null, "structuresFilename");
+            yield return new TestCaseData(null, category, branch, structuresFilename, "fileReader");
+            yield return new TestCaseData(timeSeriesFileReader, null, branch, structuresFilename, "category");
+            yield return new TestCaseData(timeSeriesFileReader, category, null, structuresFilename, "branch");
+            yield return new TestCaseData(timeSeriesFileReader, category, branch, null, "structuresFilename");
         }
 
         [Test]
         [TestCaseSource(nameof(ConstructorParameterNullData))]
-        public void Constructor_ParameterNull_ThrowsArgumentNullException(ITimFileReader timFileReader,
+        public void Constructor_ParameterNull_ThrowsArgumentNullException(ITimeSeriesFileReader specificTimeSeriesFileReader,
                                                                           IDelftIniCategory category,
                                                                           IBranch branch,
                                                                           string structuresFileName,
                                                                           string expectedParam)
         {
-            void Call() => new WeirDefinitionParser(timFileReader,
+            void Call() => new WeirDefinitionParser(specificTimeSeriesFileReader,
                                                     structureType,
                                                     category,
                                                     branch,
@@ -59,7 +60,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var branch = new Channel();
 
             // Call
-            var parser = new WeirDefinitionParser(Substitute.For<ITimFileReader>(),
+            var parser = new WeirDefinitionParser(Substitute.For<ITimeSeriesFileReader>(),
                                                   structureType, 
                                                   category, 
                                                   branch, 
@@ -97,8 +98,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.UseVelocityHeight.Key, useVelocityHeight.ToString());
             category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
             category.AddProperty(StructureRegion.DefinitionType.Key, weirFormula);
+            
+            var fileReaderSubstitute = Substitute.For<ITimeSeriesFileReader>();
 
-            var parser = new WeirDefinitionParser(Substitute.For<ITimFileReader>(),
+            var parser = new WeirDefinitionParser(fileReaderSubstitute,
                                                   structureType, 
                                                   category, 
                                                   branch, 
@@ -129,12 +132,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         {
             // Setup
             const string crestLevelTimeSeriesName = "crest_level.tim";
+            const string name = "Weir";
 
             IBranch branch = new Channel() { Length = 999 };
 
             IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
             category.AddProperty(StructureRegion.Id.Key, "Weir");
-            category.AddProperty(StructureRegion.Name.Key, "Weir");
+            category.AddProperty(StructureRegion.Name.Key, name);
             category.AddProperty(StructureRegion.CrestLevel.Key, crestLevelTimeSeriesName);
             category.AddProperty(StructureRegion.CrestWidth.Key, 3.3);
             category.AddProperty(StructureRegion.AllowedFlowDir.Key, "both");
@@ -142,7 +146,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.DefinitionType.Key, "weir");
             category.AddProperty(StructureRegion.UseVelocityHeight.Key, false.ToString());
 
-            var reader = Substitute.For<ITimFileReader>();
+            var reader = Substitute.For<ITimeSeriesFileReader>();
+            reader.IsTimeSeriesProperty("").ReturnsForAnyArgs(true);
 
             var parser = new OrificeDefinitionParser(reader,
                                                      structureType, 
@@ -155,7 +160,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             IStructure1D _ = parser.ParseStructure();
 
             // Assert
-            reader.Received(1).Read(crestLevelTimeSeriesName, Arg.Any<TimeSeries>(), referenceDateTime);
+            reader.Received(1).Read(Arg.Any<string>(),crestLevelTimeSeriesName,Arg.Any<IStructureTimeSeries>(), referenceDateTime);
         }
     }
 }

@@ -9,6 +9,8 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
+using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
@@ -25,14 +27,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         private static readonly ILog log = LogManager.GetLogger(typeof(CulvertDefinitionParser));
 
         private const string invertedSiphonTypeName = "invertedSiphon";
-        private readonly ITimFileReader timFileReader;
+        private readonly ITimeSeriesFileReader fileReader;
         private readonly string structuresFilePath;
         private readonly DateTime referenceDateTime;
 
         /// <summary>
         /// Initializes a new instance of <see cref="CulvertDefinitionParser"/>.
         /// </summary>
-        /// <param name="timFileReader">The tim file reader</param>
+        /// <param name="fileReader">The file reader</param>
         /// <param name="structureType">The structure type.</param>
         /// <param name="category">The <see cref="IDelftIniCategory"/> to parse a structure from.</param>
         /// <param name="crossSectionDefinitions">A collection of cross-section definitions.</param>
@@ -43,7 +45,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// <exception cref="InvalidEnumArgumentException">
         /// Thrown when an invalid <paramref name="structureType"/> is provided.
         /// </exception>
-        public CulvertDefinitionParser(ITimFileReader timFileReader,
+        public CulvertDefinitionParser(ITimeSeriesFileReader fileReader,
                                        StructureType structureType,
                                        IDelftIniCategory category,
                                        ICollection<ICrossSectionDefinition> crossSectionDefinitions,
@@ -52,9 +54,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                                        DateTime referenceDateTime)
             : base(structureType, category, crossSectionDefinitions, branch, Path.GetFileName(structuresFilePath))
         {
-            Ensure.NotNull(timFileReader, nameof(timFileReader));
+            Ensure.NotNull(fileReader, nameof(fileReader));
 
-            this.timFileReader = timFileReader;
+            this.fileReader = fileReader;
             this.structuresFilePath = structuresFilePath;
             this.referenceDateTime = referenceDateTime;
         }
@@ -116,7 +118,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                 return;
             }
 
-            if (gateInitialOpeningValue.EndsWith(FileSuffices.TimFile))
+            if (fileReader.IsTimeSeriesProperty(gateInitialOpeningValue))
             {
                 ReadGateInitialOpeningTimeSeries(culvert, gateInitialOpeningValue);
             }
@@ -134,7 +136,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 
             try
             {
-                timFileReader.Read(filePath, culvert.GateInitialOpeningTimeSeries, referenceDateTime);
+                fileReader.Read(relativeGateInitialOpeningPath, filePath, new StructureTimeSeries(culvert, culvert.GateInitialOpeningTimeSeries), referenceDateTime);
             }
             catch (FileReadingException e)
             {

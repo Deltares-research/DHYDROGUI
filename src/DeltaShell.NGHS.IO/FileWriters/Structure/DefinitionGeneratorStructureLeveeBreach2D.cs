@@ -6,14 +6,15 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructureLeveeBreach2D : DefinitionGeneratorStructure2D
+    public class DefinitionGeneratorStructureLeveeBreach2D : DefinitionGeneratorTimeSeriesStructure2D
     {
         private DateTime? ReferenceDateTime { get; }
+
         public DefinitionGeneratorStructureLeveeBreach2D(DateTime? referenceDateTime)
         {
             ReferenceDateTime = referenceDateTime;
         }
-        
+
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             var leveeBreach = hydroObject as ILeveeBreach;

@@ -10,6 +10,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     public class DefinitionGeneratorStructurePumpTest : 
         DefinitionGeneratorStructureBaseTestFixture<DefinitionGeneratorStructurePump>
     {
+        protected override DefinitionGeneratorStructurePump CreateGenerator()
+        {
+            return new DefinitionGeneratorStructurePump(StructureFileNameGeneratorSubstitute);
+        }
+        
         protected override string TStructureDefinitionType => "pump";
         private const string expectedBranchName = "branch-name";
         private const double inputChainage = 5.5;
@@ -33,7 +38,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         private static IEnumerable<TestCaseData> CreateStructureRegionData()
         {
             yield return CreateCreateStructureRegionTestData(
-                    CreatePump(true), "Pump_capacity.tim")
+                    CreatePump(true), ExpectedStructureFileName)
                 .SetName("With TimeSeries");
             yield return CreateCreateStructureRegionTestData(
                     CreatePump(false), "1.0000")

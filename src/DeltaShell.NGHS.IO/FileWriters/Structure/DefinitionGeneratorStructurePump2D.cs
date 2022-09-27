@@ -4,7 +4,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructurePump2D : DefinitionGeneratorStructure2D
+    public class DefinitionGeneratorStructurePump2D : DefinitionGeneratorTimeSeriesStructure2D
     {
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
@@ -18,16 +18,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddCapacityProperty(IPump pump)
         {
-            var capacityDescription = StructureRegion.Capacity.Description;
-            if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
-            {
-                var timeSeriesFileName = $"{pump.Name}_{StructureRegion.Capacity.Key}{FileSuffices.TimFile}";
-                IniCategory.AddProperty(StructureRegion.Capacity.Key, timeSeriesFileName, capacityDescription);
-            }
-            else
-            {
-                IniCategory.AddProperty(StructureRegion.Capacity.Key, pump.Capacity, capacityDescription, StructureRegion.Capacity.Format);
-            }
+            AddProperty(pump.CanBeTimedependent && pump.UseCapacityTimeSeries,
+                        StructureRegion.Capacity.Key,
+                        pump.Capacity,
+                        StructureRegion.Capacity.Description,
+                        StructureRegion.Capacity.Format,
+                        pump,
+                        pump.CapacityTimeSeries);
         }
     }
 }

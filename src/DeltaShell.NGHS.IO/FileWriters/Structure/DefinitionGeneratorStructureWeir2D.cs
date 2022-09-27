@@ -1,12 +1,11 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructureWeir2D : DefinitionGeneratorStructure2D
+    public class DefinitionGeneratorStructureWeir2D : DefinitionGeneratorTimeSeriesStructure2D
     {
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
@@ -21,19 +20,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             return IniCategory;
         }
 
-        
-
         private void AddCrestLevelProperty(IWeir weir)
         {
-            if (weir.IsUsingTimeSeriesForCrestLevel())
-            {
-                var timeSeriesFileName = $"{weir.Name}_{KnownStructureProperties.CrestLevel}{FileSuffices.TimFile}";
-                IniCategory.AddProperty(StructureRegion.CrestLevel.Key, timeSeriesFileName, StructureRegion.CrestLevel.Description);
-            }
-            else
-            {
-                IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
-            }
+            AddProperty(weir.IsUsingTimeSeriesForCrestLevel(),
+                        StructureRegion.CrestLevel.Key,
+                        weir.CrestLevel,
+                        StructureRegion.CrestLevel.Description,
+                        StructureRegion.CrestLevel.Format,
+                        weir,
+                        weir.CrestLevelTimeSeries);
         }
 
         private void AddCrestWidthProperty(IWeir weir)

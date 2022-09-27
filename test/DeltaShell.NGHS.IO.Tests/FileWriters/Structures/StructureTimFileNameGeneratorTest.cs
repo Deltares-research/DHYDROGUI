@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using DelftTools.Functions;
-using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using NSubstitute;
 using NUnit.Framework;
 using IStructure = DelftTools.Hydro.IStructure;
