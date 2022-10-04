@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters
@@ -57,22 +58,37 @@ namespace DeltaShell.NGHS.IO.FileWriters
 
         private void WriteTable(IList<IDelftBcQuantityData> table)
         {
-            var tableRows = new string[table[0].Values.Count]; // there will be as many rows as there are quantity values
+            StringBuilder[] tableRows = new StringBuilder[table[0].Values.Count]; // there will be as many rows as there are quantity values
+            InitializeStringBuilderArray(tableRows);
 
             foreach (IDelftBcQuantityData delftBcQuantityData in table)
             {
                 WriteProperty(delftBcQuantityData.Quantity);
                 WriteProperty(delftBcQuantityData.Unit);
 
-                for (int i = 0; i < delftBcQuantityData.Values.Count; i++)
-                {
-                    tableRows[i] += delftBcQuantityData.Values[i] + " "; // each row will have as many elements as there are quantities
-                }
+                InsertValuesInTableRows(delftBcQuantityData, tableRows); // each row will have as many elements as there are quantities
             }
 
-            foreach (string row in tableRows)
+            foreach (StringBuilder row in tableRows)
             {
                 WriteLine($"    {row}");
+            }
+        }
+
+        private static void InitializeStringBuilderArray(StringBuilder[] tableRows)
+        {
+            for (int i = 0; i < tableRows.Length; i++)
+            {
+                tableRows[i] = new StringBuilder();
+            }
+        }
+
+        private static void InsertValuesInTableRows(IDelftBcQuantityData delftBcQuantityData, StringBuilder[] tableRows)
+        {
+            for (int i = 0; i < delftBcQuantityData.Values.Count; i++)
+            {
+                tableRows[i].Append(delftBcQuantityData.Values[i]);
+                tableRows[i].Append(" ");
             }
         }
     }
