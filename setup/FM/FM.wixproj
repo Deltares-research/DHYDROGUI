@@ -49,7 +49,7 @@
     <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
     <SuppressIces>ICE57</SuppressIces>
     <OutputName>Installer</OutputName>
-    <Cultures Condition="'$(BUILD_NUMBER)' != '' ">fm,en-US;rws,en-US;fmo,en-US;fmnowaq,en-US</Cultures>
+    <Cultures Condition="'$(BUILD_NUMBER)' != '' ">fm,en-US;rws,en-US;fmo,en-US;fmwaq,en-US</Cultures>
     <Cultures Condition="'$(BUILD_NUMBER)' == '' ">fm,en-US</Cultures>
   </PropertyGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
