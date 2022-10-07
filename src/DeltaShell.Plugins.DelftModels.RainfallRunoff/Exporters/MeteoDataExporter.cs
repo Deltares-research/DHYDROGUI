@@ -8,7 +8,9 @@ using System.Text;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Exporters;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
@@ -26,12 +28,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             "* followed by the length of the event (dd HH mm ss). \n" +
             "* The last part is the data for each time step.";
 
-        private const string HeaderEvaporation =
-            "* Evaporation file \n" +
-            "* Format: \n" +
-            "* year month day evaporation_intensity (mm/day)\n";
-
         private static readonly ILog log = LogManager.GetLogger(typeof(MeteoDataExporter));
+        private readonly IEvaporationExporter evaporationExporter;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MeteoDataExporter"/> class.
+        /// </summary>
+        /// <param name="evaporationExporter"> The evaporation exporter. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="evaporationExporter"/> is <c>null</c>.
+        /// </exception>
+        public MeteoDataExporter(IEvaporationExporter evaporationExporter)
+        {
+            Ensure.NotNull(evaporationExporter, nameof(evaporationExporter));
+            this.evaporationExporter = evaporationExporter;
+        }
 
         public string Name => "Meteo data exporter";
 
@@ -62,7 +73,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 case RainfallRunoffModelDataSet.TemperatureName:
                     return ExportPrecipitationTemperature(meteoData, path);
                 case RainfallRunoffModelDataSet.EvaporationName:
-                    return ExportEvaporation(meteoData, path);
+                    evaporationExporter.Export((EvaporationMeteoData)meteoData, new FileInfo(path));
+                    return true;
                 default:
                     throw new ArgumentException($"Error during export: can not identify type of meteo data {meteoData.Name}.");
 
@@ -146,52 +158,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             return meteoData.DataDistributionType == MeteoDataDistributionType.Global
                        ? new List<string> { MeteoData.GlobalMeteoName }
                        : meteoDataDistributed.Arguments[1].Values.Cast<object>().Select(v => v.ToString()).ToList();
-        }
-
-        private static bool ExportEvaporation(MeteoData meteoData, string path)
-        {
-            IFunction meteoDataDistributed = meteoData.MeteoDataDistributed.Data;
-            if (meteoDataDistributed == null)
-            {
-                throw new ArgumentException("Meteo data appears to be corrupt. Export of meteo data has been aborted.");
-            }
-
-            DateTime[] times = meteoDataDistributed.Arguments[0].Values.Cast<DateTime>().ToArray();
-            var evaporationValues = meteoDataDistributed.Components[0].Values as IMultiDimensionalArray<double>;
-
-            using (var sw = new StreamWriter(path))
-            {
-                var sb = new StringBuilder();
-
-                sb.Append("* Created: " + DateTime.Now.ToString());
-                sb.Append(HeaderEvaporation);
-                for (var iTime = 0; iTime < evaporationValues.Shape[0]; iTime++)
-                {
-                    sb.Append(times[iTime].ToString("yyyy MM dd"));
-                    if (evaporationValues.Shape.Count() == 1)
-                    {
-                        // Global evaporation definition
-                        sb.AppendFormat(CultureInfo.InvariantCulture, " {0:0.000}", evaporationValues[iTime]);
-                    }
-                    else
-                    {
-                        // Per station or per catchment
-                        for (var iStation = 0; iStation < evaporationValues.Shape[1]; iStation++)
-                        {
-                            sb.AppendFormat(CultureInfo.InvariantCulture, " {0:0.000}", evaporationValues[iTime, iStation]);
-                        }
-                    }
-
-                    sb.Append("\n");
-                }
-
-                if (evaporationValues.Shape[0] > 0)
-                {
-                    sw.Write(sb.ToString());
-                }
-            }
-
-            return true;
         }
     }
 }

@@ -112,19 +112,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
 
         private static IEnumerable<TestCaseData> GetMeteoDataViewInfoData()
         {
-            TestCaseData ToData(Func<RainfallRunoffModel, MeteoData> fRetrieveMeteoData,
+            TestCaseData ToData(Func<RainfallRunoffModel, IMeteoData> fRetrieveMeteoData, Type meteoDataType,
                                 string description) =>
-                new TestCaseData(fRetrieveMeteoData).SetDescription(description);
+                new TestCaseData(fRetrieveMeteoData, meteoDataType).SetDescription(description);
 
-            yield return ToData(model => model.Precipitation, "Precipitation");
-            yield return ToData(model => model.Evaporation, "Evaporation");
-            yield return ToData(model => model.Temperature, "Temperature");
+            yield return ToData(model => model.Precipitation, typeof(IMeteoData), "Precipitation");
+            yield return ToData(model => model.Evaporation, typeof(IEvaporationMeteoData), "Evaporation");
+            yield return ToData(model => model.Temperature, typeof(IMeteoData), "Temperature");
         }
 
         [Test]
         [TestCaseSource(nameof(GetMeteoDataViewInfoData))]
         [Category(TestCategory.Integration)]
-        public void BuildViewInfoObject_MeteoData_HasACorrectViewForSpecificMeteoData(Func<RainfallRunoffModel, MeteoData> GetMeteoDataFunc)
+        public void BuildViewInfoObject_MeteoData_HasACorrectViewForSpecificMeteoData(Func<RainfallRunoffModel, IMeteoData> GetMeteoDataFunc, Type meteoDataType)
         {
             // Setup
             var model = new RainfallRunoffModel();
@@ -139,13 +139,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             var plugin = Substitute.For<IRainfallRunoffGuiPlugin>();
             plugin.Gui.Returns(gui);
 
-            MeteoData meteoData = GetMeteoDataFunc.Invoke(model);
-
-
+            IMeteoData meteoData = GetMeteoDataFunc.Invoke(model);
+            
             // Call
             IEnumerable<ViewInfo> viewInfos = RainfallRunoffViewInfoBuilder.BuildViewInfoObjects(plugin);
-
-            Type meteoDataType = typeof(IMeteoData);
+            
             Type viewType = typeof(MeteoEditorView);
 
             bool IsRelevantViewInfo(ViewInfo info) =>
@@ -158,8 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
 
             // Assert: Relevant view info is retrieved.
             Assert.That(relevantViewInfos, Has.Length.EqualTo(1));
-
-
+            
             using (var view = new MeteoEditorView())
             {
                 relevantViewInfos.FirstOrDefault()?.AfterCreate(view, meteoData);

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using DelftTools.Controls;
+using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Series;
 using DelftTools.Functions;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
@@ -57,6 +58,12 @@ namespace DeltaShell.NGHS.Common.Gui.WPF
                                                 typeof(System.EventHandler<TableSelectionChangedEventArgs>), 
                                                 typeof(MultipleFunctionViewWindowsFormsHostMap), 
                                                 new PropertyMetadata(PropertyChanged));
+        
+        public static readonly DependencyProperty ShowYearsProperty =
+            DependencyProperty.RegisterAttached("ShowYears",
+                                                typeof(bool),
+                                                typeof(MultipleFunctionViewWindowsFormsHostMap), 
+                                                new PropertyMetadata(PropertyChanged));
 
         public static ChartViewOptions GetChartViewOption(DependencyObject element) =>
             (ChartViewOptions)element.GetValue(ChartViewOptionProperty);
@@ -100,6 +107,12 @@ namespace DeltaShell.NGHS.Common.Gui.WPF
         public static void SetTableSelectionChanged(DependencyObject element, System.EventHandler<TableSelectionChangedEventArgs> value) =>
             element.SetValue(TableSelectionChangedChangedEventHandlerProperty, value);
 
+        public static bool GetShowYears(DependencyObject element) =>
+            (bool)element.GetValue(ShowYearsProperty);
+
+        public static void SetShowYears(DependencyObject element, bool value) =>
+            element.SetValue(ShowYearsProperty, value);
+        
         private static void PropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (!((sender as WindowsFormsHost)?.Child is MultipleFunctionView multipleFunctionView))
@@ -125,6 +138,8 @@ namespace DeltaShell.NGHS.Common.Gui.WPF
                 // otherwise the e.NewValue is just added to the existing functions.
                 multipleFunctionView.Functions = null;
                 multipleFunctionView.Functions = (IEnumerable<IFunction>)e.NewValue;
+
+                DetermineShowYears(GetShowYears((WindowsFormsHost) sender), multipleFunctionView);
             }
             else if (e.Property == OnCreateBindingListProperty)
             {
@@ -147,6 +162,23 @@ namespace DeltaShell.NGHS.Common.Gui.WPF
                     multipleFunctionView.TableView.SelectionChanged += 
                         (System.EventHandler<TableSelectionChangedEventArgs>)e.NewValue;
                 }
+            }
+            else if (e.Property == ShowYearsProperty)
+            {
+                DetermineShowYears((bool)e.NewValue, multipleFunctionView);
+            }
+        }
+
+        private static void DetermineShowYears(bool showYears, MultipleFunctionView multipleFunctionView)
+        {
+            if (showYears)
+            {
+                YearPatternHelper.ShowYears(multipleFunctionView.TableView, multipleFunctionView.ChartView as ChartView);
+                multipleFunctionView.RefreshChartView();
+            }
+            else
+            {
+                YearPatternHelper.HideYears(multipleFunctionView.TableView, multipleFunctionView.ChartView as ChartView);
             }
         }
     }

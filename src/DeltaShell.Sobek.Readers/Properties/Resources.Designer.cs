@@ -79,6 +79,35 @@ namespace DeltaShell.Sobek.Readers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line {0}: Not all date values are valid integers..
+        /// </summary>
+        public static string SobekRREvaporationReader_ParseLine_Line__0___Not_all_date_values_are_valid_integers_ {
+            get {
+                return ResourceManager.GetString("SobekRREvaporationReader_ParseLine_Line__0___Not_all_date_values_are_valid_intege" +
+                        "rs_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line {0}: Not all evaporation values are valid floating-point numbers..
+        /// </summary>
+        public static string SobekRREvaporationReader_ParseLine_Line__0___Not_all_evaporation_values_are_valid_floating_point_numbers_ {
+            get {
+                return ResourceManager.GetString("SobekRREvaporationReader_ParseLine_Line__0___Not_all_evaporation_values_are_valid" +
+                        "_floating_point_numbers_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The current {0} does not support reading..
+        /// </summary>
+        public static string SobekRREvaporationReader_Read_The_current__0__does_not_support_reading_ {
+            get {
+                return ResourceManager.GetString("SobekRREvaporationReader_Read_The_current__0__does_not_support_reading_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unsupported {0} discharge target for paved data with id {1}. Will be set to lateral source or boundary node..
         /// </summary>
         public static string SobekRRPavedReader_Warning_UnsupportedDischargeTarget {

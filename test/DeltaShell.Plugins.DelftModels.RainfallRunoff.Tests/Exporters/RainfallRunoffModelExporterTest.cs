@@ -5,6 +5,8 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Exporters;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -20,8 +22,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         [SetUp]
         public void Setup()
         {
-            exporter = new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer());
+            exporter = new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer(), Substitute.For<IEvaporationExporter>());
             rainfallRunoffModel = new RainfallRunoffModel();
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ConstructorArgNullCases))]
+        public void Constructor_ArgNull_ThrowsArgumentNullException(IBasinGeometrySerializer serializer, 
+                                                                    IEvaporationExporter evaporationExporter, 
+                                                                    string expParamName)
+        {
+            // Call
+            void Call() => new RainfallRunoffModelExporter(serializer, evaporationExporter);
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException
+                                    .With.Property(nameof(ArgumentException.ParamName)).EqualTo(expParamName));
         }
 
         [Test]
@@ -75,6 +91,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         {
             var filter = exporter.FileFilter;
             Assert.That(filter.EndsWith("*."), Is.True);
+        }
+
+        private static IEnumerable<TestCaseData> ConstructorArgNullCases()
+        {
+            yield return new TestCaseData(null, Substitute.For<IEvaporationExporter>(), "serializer");
+            yield return new TestCaseData(Substitute.For<IBasinGeometrySerializer>(), null, "evaporationExporter");
         }
     }
 }

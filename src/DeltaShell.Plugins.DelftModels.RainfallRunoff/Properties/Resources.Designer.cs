@@ -70,6 +70,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} is not a supported evaporation file..
+        /// </summary>
+        public static string _0_is_not_a_supported_evaporation_file {
+            get {
+                return ResourceManager.GetString("_0_is_not_a_supported_evaporation_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unsupported data distribution type for meteo: {0}.
         /// </summary>
         public static string Exception_UnsupportedDataDistributionType {
@@ -220,6 +229,46 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         public static string RainfallRunoffLogFiles_Could_not_reconnect_log_files {
             get {
                 return ResourceManager.GetString("RainfallRunoffLogFiles_Could_not_reconnect_log_files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The amount of days was not as the expected 366 days, it was: {0} days.
+        /// </summary>
+        public static string RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_The_amount_of_days_was_not_as_the_expected_366_days__it_was___0__days {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_The_amount_o" +
+                        "f_days_was_not_as_the_expected_366_days__it_was___0__days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The end date is incorrect, [{0}] is expected, the actual end date is: [{1}].
+        /// </summary>
+        public static string RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_The_end_date_is_incorrect____0___is_expected__the_actual_end_date_is____1__ {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_The_end_date" +
+                        "_is_incorrect____0___is_expected__the_actual_end_date_is____1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The start date is incorrect, [{0}] is expected, the actual start date is: [{1}].
+        /// </summary>
+        public static string RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_The_start_date_is_incorrect____0___is_expected__the_actual_start_date_is____1__ {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_The_start_da" +
+                        "te_is_incorrect____0___is_expected__the_actual_start_date_is____1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time steps should be in increments of 1 day, the following date seems incorrect:{0}.
+        /// </summary>
+        public static string RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_Time_steps_should_be_done_by_day__the_following_date_seems_incorrect__0_ {
+            get {
+                return ResourceManager.GetString("RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_Time_steps_s" +
+                        "hould_be_done_by_day__the_following_date_seems_incorrect__0_", resourceCulture);
             }
         }
         

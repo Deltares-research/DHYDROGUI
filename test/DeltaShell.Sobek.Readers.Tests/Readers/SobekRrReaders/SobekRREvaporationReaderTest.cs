@@ -17,8 +17,10 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Test]
         public void Read_StreamNull_ThrowsArgumentNullException()
         {
+            var reader = new SobekRREvaporationReader();
+
             // Call
-            void Call() => SobekRREvaporationReader.Read(null);
+            void Call() => reader.Read(null);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -29,11 +31,12 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         public void Read_StreamDoesNotSupportReading_ThrowsInvalidOperationException()
         {
             // Setup
+            var reader = new SobekRREvaporationReader();
             var stream = Substitute.For<Stream>();
             stream.CanRead.Returns(false);
 
             // Call
-            void Call() => SobekRREvaporationReader.Read(stream);
+            void Call() => reader.Read(stream);
 
             // Assert
             var e = Assert.Throws<InvalidOperationException>(Call);
@@ -44,6 +47,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         public void Read_LongTermAverage_ReturnsCorrectEvaporationData()
         {
             // Setup
+            var reader = new SobekRREvaporationReader();
+
             string data = string.Join(
                 Environment.NewLine,
                 "*Longtime average",
@@ -56,23 +61,23 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
             {
                 // Call
-                evaporation = SobekRREvaporationReader.Read(stream);
+                evaporation = reader.Read(stream);
             }
             
             // Assert
-            Assert.That(evaporation.IsLongTimeAverage, Is.True);
             Assert.That(evaporation.NumberOfLocations, Is.EqualTo(1));
-            Assert.That(evaporation.IsPeriodic, Is.True);
             Assert.That(evaporation.Data, Has.Count.EqualTo(3));
-            Assert.That(evaporation.Data[new DateTime(4,1,1)].Single(), Is.EqualTo(0.123));
-            Assert.That(evaporation.Data[new DateTime(4,1,2)].Single(), Is.EqualTo(0.234));
-            Assert.That(evaporation.Data[new DateTime(4,1,3)].Single(), Is.EqualTo(0.345));
+            Assert.That(evaporation.Data[new DateTime(1904,1,1)].Single(), Is.EqualTo(0.123));
+            Assert.That(evaporation.Data[new DateTime(1904,1,2)].Single(), Is.EqualTo(0.234));
+            Assert.That(evaporation.Data[new DateTime(1904,1,3)].Single(), Is.EqualTo(0.345));
         }
         
         [Test]
         public void Read_NotLongTermAverage_ReturnsCorrectEvaporationData()
         {
             // Setup
+            var reader = new SobekRREvaporationReader();
+
             string data = string.Join(
                 Environment.NewLine,
                 "*Verdampingsfile",
@@ -87,13 +92,11 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
             {
                 // Call
-                evaporation = SobekRREvaporationReader.Read(stream);
+                evaporation = reader.Read(stream);
             }
             
             // Assert
-            Assert.That(evaporation.IsLongTimeAverage, Is.False);
             Assert.That(evaporation.NumberOfLocations, Is.EqualTo(2));
-            Assert.That(evaporation.IsPeriodic, Is.False);
             Assert.That(evaporation.Data, Has.Count.EqualTo(3));
             Assert.That(evaporation.Data[new DateTime(2021,6,15)], Is.EqualTo(new []{0.123, 0.234}));
             Assert.That(evaporation.Data[new DateTime(2021,6,16)], Is.EqualTo(new []{0.345, 0.456}));
@@ -104,6 +107,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         public void Read_CannotConvertToInt_LogsErrorAndDoesNotAddEntry()
         {
             // Setup
+            var reader = new SobekRREvaporationReader();
+
             string data = string.Join(
                 Environment.NewLine,
                 "*Verdampingsfile",
@@ -120,16 +125,14 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
                 using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
                 {
                     // Call
-                    evaporation = SobekRREvaporationReader.Read(stream);
+                    evaporation = reader.Read(stream);
                 }
             }
 
             // Assert
             string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
             Assert.That(error, Is.EqualTo("Line 6: Not all date values are valid integers."));
-            Assert.That(evaporation.IsLongTimeAverage, Is.False);
             Assert.That(evaporation.NumberOfLocations, Is.EqualTo(2));
-            Assert.That(evaporation.IsPeriodic, Is.False);
             Assert.That(evaporation.Data, Has.Count.EqualTo(2));
             Assert.That(evaporation.Data[new DateTime(2021,6,15)], Is.EqualTo(new []{0.123, 0.234}));
             Assert.That(evaporation.Data[new DateTime(2021,6,17)], Is.EqualTo(new []{0.567, 0.678}));
@@ -139,6 +142,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         public void Read_CannotConvertToDouble_LogsErrorAndDoesNotAddEntry()
         {
             // Setup
+            var reader = new SobekRREvaporationReader();
+
             string data = string.Join(
                 Environment.NewLine,
                 "*Verdampingsfile",
@@ -155,16 +160,14 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
                 using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
                 {
                     // Call
-                    evaporation = SobekRREvaporationReader.Read(stream);
+                    evaporation = reader.Read(stream);
                 }
             }
 
             // Assert
             string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
             Assert.That(error, Is.EqualTo("Line 6: Not all evaporation values are valid floating-point numbers."));
-            Assert.That(evaporation.IsLongTimeAverage, Is.False);
             Assert.That(evaporation.NumberOfLocations, Is.EqualTo(2));
-            Assert.That(evaporation.IsPeriodic, Is.False);
             Assert.That(evaporation.Data, Has.Count.EqualTo(2));
             Assert.That(evaporation.Data[new DateTime(2021,6,15)], Is.EqualTo(new []{0.123, 0.234}));
             Assert.That(evaporation.Data[new DateTime(2021,6,17)], Is.EqualTo(new []{0.567, 0.678}));
@@ -174,6 +177,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         public void ReadTholenFile()
         {
             // Setup
+            var reader = new SobekRREvaporationReader();
+
             var text = @"*Name of this file: \SOBEK212\FIXED\THOLEN_2.EVP" + Environment.NewLine +
             @"*Date and time of construction: 27-06-2011   12:39:59" + Environment.NewLine +
             @"*Verdampingsfile" + Environment.NewLine +
@@ -220,7 +225,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(text)))
             {
                 // Call
-                evaporation = SobekRREvaporationReader.Read(stream);
+                evaporation = reader.Read(stream);
             }
             
             // Assert

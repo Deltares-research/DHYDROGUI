@@ -7,19 +7,28 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers.fnm;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.DataAccessObjects;
 using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
     public class SobekRRMeteoDataImporter : PartialSobekImporterBase
     {
+        private readonly ILogHandler logHandler = new LogHandler("importing meteo data", log);
+        private static readonly EvaporationFileNameConverter evaporationFileNameConverter = new EvaporationFileNameConverter();
+        private static readonly IOEvaporationMeteoDataSourceConverter evaporationMeteoDataSourceConverter = new IOEvaporationMeteoDataSourceConverter();
+        private static readonly SobekRREvaporationReader evaporationReader = new SobekRREvaporationReader();
+
         private sealed class MeteoImportData
         {
             public MeteoImportData(DateTime[] times, string[] stationNames, IDictionary<DateTime, double[]> values)
@@ -64,13 +73,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (rksFile != null)
             {
                 filePathPrecipitation = rksFile;
-                log.WarnFormat(Resources.SobekRRMeteoDataImporter_GetFilePaths__rks_files_are_not_supported__The_first_event_will_be_imported_as_precipitation_data_);
+                logHandler.ReportWarningFormat(Resources.SobekRRMeteoDataImporter_GetFilePaths__rks_files_are_not_supported__The_first_event_will_be_imported_as_precipitation_data_);
             }
 
             return (filePathPrecipitation, CaseData.EvaporationFile?.FullName, CaseData.TemperatureFile?.FullName);
         }
 
-        private static void ImportMeteoData(IRainfallRunoffModel model, string filePathPrecipitation, string filePathEvaporation, string filePathTemperature)
+        private void ImportMeteoData(IRainfallRunoffModel model, string filePathPrecipitation, string filePathEvaporation, string filePathTemperature)
         {
             var basinCatchments = model.Basin.Catchments;
 
@@ -84,7 +93,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (GetSobekRREvaporationMeteoImportData(filePathEvaporation, model.Evaporation, model, out MeteoImportData evaporationData))
             {
                 AddMeteoData(model.Evaporation, evaporationData, basinCatchments, model.MeteoStations);
-            }            
+            }
 
             log.DebugFormat("Importing temperature data...");
             bool fileCanBeEmpty = !basinCatchments.Any(c => Equals(c.CatchmentType, CatchmentType.Hbv));
@@ -103,7 +112,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private static bool GetBuiFileMeteoImportData(string path, MeteoData meteoData, out MeteoImportData importData, bool fileCanBeEmpty = false)
+        private bool GetBuiFileMeteoImportData(string path, MeteoData meteoData, out MeteoImportData importData, bool fileCanBeEmpty = false)
         {
             importData = null;
 
@@ -115,7 +124,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var buiFileReader = new SobekRRBuiFileReader();
             if (!buiFileReader.ReadBuiHeaderData(path))
             {
-                log.Error(string.Format(Resources.SobekRRMeteoDataImporter_GetBuiFileMeteoImportData__0__import_failed__could_not_read_header_data_from__1__file_, meteoData?.Name, path));
+                logHandler.ReportError(string.Format(Resources.SobekRRMeteoDataImporter_GetBuiFileMeteoImportData__0__import_failed__could_not_read_header_data_from__1__file_, meteoData?.Name, path));
                 return false;
             }
             
@@ -124,7 +133,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return true;
         }
 
-        private static bool GetSobekRREvaporationMeteoImportData(string path, MeteoData meteoData, IRainfallRunoffModel model, out MeteoImportData importData)
+        private bool GetSobekRREvaporationMeteoImportData(string path, MeteoData meteoData, IRainfallRunoffModel model, out MeteoImportData importData)
         {
             importData = null;
 
@@ -143,20 +152,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (meteoData.DataDistributionType == MeteoDataDistributionType.PerStation
                 && sobekRREvaporation.NumberOfLocations != model.MeteoStations.Count)
             {
-                log.Error(Resources.SobekRRMeteoDataImporter_GetSobekRREvaporationMeteoImportData_Number_of_evaporation_stations_does_not_match_the_number_of_precipitation_stations__Not_supported);
+                logHandler.ReportError(Resources.SobekRRMeteoDataImporter_GetSobekRREvaporationMeteoImportData_Number_of_evaporation_stations_does_not_match_the_number_of_precipitation_stations__Not_supported);
                 return false;
             }
 
-            if (sobekRREvaporation.IsLongTimeAverage)
-            {
-                sobekRREvaporation.ToLongTimeAverage(model.StartTime, model.StopTime);
-            }
+            var meteoDataSource = GetEvaporationMeteoDataSource(path);
+            model.Evaporation.SelectedMeteoDataSource = meteoDataSource;
 
-            if (sobekRREvaporation.IsPeriodic)
+            if (meteoDataSource != MeteoDataSource.UserDefined)
             {
                 meteoData.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Periodic;
             }
-
+  
             var meteoStations = GetEvaporationMeteoStations(meteoData, model).ToArray();
 
             importData = new MeteoImportData(sobekRREvaporation.Dates.ToArray(), meteoStations, sobekRREvaporation.Data);
@@ -179,11 +186,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private static bool CanReadEvaporation(string path, MeteoData meteoData, MeteoData modelPrecipitation)
+        private bool CanReadEvaporation(string path, MeteoData meteoData, MeteoData modelPrecipitation)
         {
             if (!File.Exists(path))
             {
-                log.Warn(string.Format(Resources.SobekRRMeteoDataImporter_CanReadEvaporation__0__file_does_not_exist___1_, meteoData?.Name, path));
+                logHandler.ReportWarning(string.Format(Resources.SobekRRMeteoDataImporter_CanReadEvaporation__0__file_does_not_exist___1_, meteoData?.Name, path));
                 return false;
             }
 
@@ -193,7 +200,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return true;
             }
 
-            log.Error(Resources.SobekRRMeteoDataImporter_CanReadEvaporation_Evaporation_has_multiple_stations_while_precipitation_has_not__Not_supported);
+            logHandler.ReportError(Resources.SobekRRMeteoDataImporter_CanReadEvaporation_Evaporation_has_multiple_stations_while_precipitation_has_not__Not_supported);
             return false;
         }
 
@@ -202,13 +209,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             SobekRREvaporation sobekRREvaporation;
             using (var stream = new FileStream(path, FileMode.Open))
             {
-                sobekRREvaporation = SobekRREvaporationReader.Read(stream);
+                sobekRREvaporation = evaporationReader.Read(stream);
             }
 
             return sobekRREvaporation;
         }
 
-        private static void AddMeteoData(MeteoData meteoData, MeteoImportData importData, IEnumerable<Catchment> basinCatchments, IList<string> stationList)
+        private void AddMeteoData(MeteoData meteoData, MeteoImportData importData, IEnumerable<Catchment> basinCatchments, IList<string> stationList)
         {
             try
             {
@@ -308,6 +315,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             stationVariable.SetValues(features);
+        }
+        
+        private MeteoDataSource GetEvaporationMeteoDataSource(string evaporationFilePath)
+        {
+            string fileName = Path.GetFileName(evaporationFilePath);
+            IOEvaporationMeteoDataSource ioEvaporationMeteoDataSource = evaporationFileNameConverter.FromFileName(fileName, logHandler);
+            MeteoDataSource evaporationMeteoDataSource = evaporationMeteoDataSourceConverter.FromIOMeteoDataSource(ioEvaporationMeteoDataSource);
+
+            return evaporationMeteoDataSource;
         }
     }
 }

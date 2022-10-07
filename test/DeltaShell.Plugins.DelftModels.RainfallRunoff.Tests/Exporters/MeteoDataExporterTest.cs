@@ -6,7 +6,9 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Exporters;
 using log4net.Core;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
@@ -16,13 +18,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
     public class MeteoDataExporterTest
     {
         [Test]
+        public void Constructor_EvaporationExporterNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new MeteoDataExporter(null);
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException
+                                    .With.Property(nameof(ArgumentException.ParamName)).EqualTo("evaporationExporter"));
+        }
+
+        [Test]
         public void ExportEvaporation()
         {
             using (var temp = new TemporaryDirectory())
             {
-                var meteoData = new MeteoData
+                var meteoData = new EvaporationMeteoData()
                 {
-                    Name = RainfallRunoffModelDataSet.EvaporationName,
                     DataDistributionType = MeteoDataDistributionType.Global
                 };
 
@@ -30,19 +42,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0, 2.0, 3.0);
 
                 string file = Path.Combine(temp.Path, "some_file_name.evp");
-                var exporter = new MeteoDataExporter();
+                var evaporationExporter = Substitute.For<IEvaporationExporter>();
+                var exporter = new MeteoDataExporter(evaporationExporter);
 
                 // Call
                 bool result = exporter.Export(meteoData, file);
 
                 // Assert
+                evaporationExporter.Received(1).Export(meteoData, Arg.Is<FileInfo>(f => f.FullName.Equals(file)));
                 Assert.That(result, Is.True);
-                Assert.That(file, Does.Exist);
-
-                string[][] lines = GetLastLines(file, 3);
-                AssertLineEqualTo(lines[0], "2014", "01", "01", "1.000");
-                AssertLineEqualTo(lines[1], "2014", "01", "02", "2.000");
-                AssertLineEqualTo(lines[2], "2014", "01", "03", "3.000");
             }
         }
 
@@ -51,9 +59,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         {
             using (var temp = new TemporaryDirectory())
             {
-                var meteoData = new MeteoData
+                var meteoData = new EvaporationMeteoData()
                 {
-                    Name = RainfallRunoffModelDataSet.EvaporationName,
                     DataDistributionType = MeteoDataDistributionType.PerStation
                 };
 
@@ -62,19 +69,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
 
                 string file = Path.Combine(temp.Path, "some_file_name.evp");
-                var exporter = new MeteoDataExporter();
+                var evaporationExporter = Substitute.For<IEvaporationExporter>();
+                var exporter = new MeteoDataExporter(evaporationExporter);
 
                 // Call
                 bool result = exporter.Export(meteoData, file);
 
                 // Assert
+                evaporationExporter.Received(1).Export(meteoData, Arg.Is<FileInfo>(f => f.FullName.Equals(file)));
                 Assert.That(result, Is.True);
-                Assert.That(file, Does.Exist);
-
-                string[][] lines = GetLastLines(file, 3);
-                AssertLineEqualTo(lines[0], "2014", "01", "01", "1.000", "2.000");
-                AssertLineEqualTo(lines[1], "2014", "01", "02", "3.000", "4.000");
-                AssertLineEqualTo(lines[2], "2014", "01", "03", "5.000", "6.000");
             }
         }
 
@@ -93,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0, 2.0, 3.0);
 
                 string file = Path.Combine(temp.Path, "some_file_name.tmp");
-                var exporter = new MeteoDataExporter();
+                var exporter = new MeteoDataExporter(Substitute.For<IEvaporationExporter>());
 
                 // Call
                 bool result = exporter.Export(meteoData, file);
@@ -125,7 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0, 2.0, 3.0);
 
                 string file = Path.Combine(temp.Path, "some_file_name.bui");
-                var exporter = new MeteoDataExporter();
+                var exporter = new MeteoDataExporter(Substitute.For<IEvaporationExporter>());
 
                 // Call
                 bool result = exporter.Export(meteoData, file);
@@ -159,7 +162,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 0.0123, 1.1234, 2.2345, 3.3456, 4.4567, 5.5678);
 
                 string file = Path.Combine(temp.Path, "some_file_name.bui");
-                var exporter = new MeteoDataExporter();
+                var exporter = new MeteoDataExporter(Substitute.For<IEvaporationExporter>());
 
                 // Call
                 bool result = exporter.Export(meteoData, file);
@@ -191,7 +194,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0);
 
                 string file = Path.Combine(temp.Path, "some_file_name.tmp");
-                var exporter = new MeteoDataExporter();
+                var exporter = new MeteoDataExporter(Substitute.For<IEvaporationExporter>());
 
                 var result = true;
                 
@@ -221,7 +224,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 };
                 
                 string file = Path.Combine(temp.Path, "some_file_name.tmp");
-                var exporter = new MeteoDataExporter();
+                var exporter = new MeteoDataExporter(Substitute.For<IEvaporationExporter>());
                 
                 // Call
                 bool result = exporter.Export(meteoData, file);

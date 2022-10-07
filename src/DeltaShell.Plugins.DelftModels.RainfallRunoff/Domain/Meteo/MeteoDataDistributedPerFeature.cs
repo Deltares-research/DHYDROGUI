@@ -3,6 +3,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             Ensure.NotNull(functionSplitter, nameof(functionSplitter));
             this.functionSplitter = functionSplitter;
 
-            data = new FeatureCoverage("Per catchment")
+            data = new FeatureCoverage(Resources.MeteoDataDistributionType_Per_Catchment)
             {
                 IsTimeDependent = true,
                 Time =

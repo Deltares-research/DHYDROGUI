@@ -46,6 +46,10 @@
 			<HintPath>$(PkgDeltaShell_TestProject)\lib\net48\DeltaShell.IntegrationTestUtils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="DeltaShell.Plugins.CommonTools.Gui">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="DeltaShell.Plugins.Data.NHibernate">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
 			<Private>False</Private>

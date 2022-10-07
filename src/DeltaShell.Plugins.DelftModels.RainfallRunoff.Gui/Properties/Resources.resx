@@ -223,4 +223,10 @@
   <data name="MeteoDataDistributionTypeConverter_ConvertBack_Converting_from__0___1__back_to_a__2__is_not_supported_" xml:space="preserve">
     <value>Converting from {0} {1} back to a {2} is not supported.</value>
   </data>
+  <data name="BaseMeteoEditorViewModel_OnGenerateTimeSeries_Please_add_a_station_before_generating_time_series" xml:space="preserve">
+    <value>Please add a station before generating time series</value>
+  </data>
+  <data name="BaseMeteoEditorViewModel_OnGenerateTimeSeries_Please_add_a_feature_before_generating_time_series" xml:space="preserve">
+    <value>Please add a catchment before generating time series</value>
+  </data>
 </root>

@@ -219,12 +219,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             
             var timeArgument = rrmodel.Precipitation.Data.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
 
-            new TimeSeriesGenerator().GenerateTimeSeries(timeArgument,
-                                                         rrmodel.StartTime,
-                                                         rrmodel.StartTime.AddDays(370), new TimeSpan(0, 1, 0, 0));
+            var timeSeriesGenerator = new TimeSeriesGenerator();
+            timeSeriesGenerator.GenerateTimeSeries(timeArgument,
+                                                   rrmodel.StartTime,
+                                                   rrmodel.StartTime.AddDays(370), new TimeSpan(0, 1, 0, 0));
 
             rrmodel.StopTime = rrmodel.StartTime.AddTicks(rrmodel.TimeStep.Ticks * 50); //50 timesteps
             rrmodel.ModelController = new RainfallRunoffModelController(rrmodel);
+
+            var timeArgumentEvaporation = rrmodel.Evaporation.Data.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+            timeSeriesGenerator.GenerateTimeSeries(timeArgumentEvaporation,
+                                                   rrmodel.StartTime,
+                                                   rrmodel.StartTime.AddDays(370), new TimeSpan(1, 0, 0, 0));
+            
 
             try
             {

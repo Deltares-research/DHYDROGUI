@@ -7,7 +7,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
-using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using NSubstitute;
 using NUnit.Framework;

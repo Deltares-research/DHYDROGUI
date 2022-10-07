@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
+﻿using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.DataAccessObjects;
+
+namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 {
     public interface IRRModelHybridFileWriter
     {
@@ -203,9 +205,10 @@
 
         #region Meteo
 
-        void SetMeteoDataStartTimeAndInterval(int startDate, int startTime, int timeStepInSeconds);
-
-        void AddEvaporationStation(string name, double[] evaporationInMMPerDay);
+        /// <summary>
+        /// The evaporation meteo data source.
+        /// </summary>
+        IOEvaporationMeteoDataSource EvaporationMeteoDataSource { get; set; }
 
         #endregion
     }

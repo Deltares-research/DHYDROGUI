@@ -13,6 +13,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concepts;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -27,6 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         #region Fields
 
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModelController));
+        private static readonly IOEvaporationMeteoDataSourceConverter meteoDataSourceConverter = new IOEvaporationMeteoDataSourceConverter();
 
         private readonly IEnumerable<IConceptModelController> conceptControllers = new IConceptModelController[]
             {
@@ -135,16 +137,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             File.WriteAllText(textDocument.Name, textDocument.Content);
         }
 
-        private void SendMeteoToModel()
-        {
-
-            MeteoDataModelController.AddMeteoData(Writer, model.Evaporation,
-                                                  model.StartTime,
-                                                  model.StopTime, 
-                                                  model.TimeStep);
-        }
-
-        
         internal static void AddFeaturesToFeatureCoverage(IFeatureCoverage featureCoverage, IList features)
         {
             featureCoverage.Features = new EventedList<IFeature>(features.OfType<IFeature>());
@@ -362,7 +354,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                 rrBoundaries = new List<IFeature>();
 
                 WriteSobekFixedFiles();
-                SendMeteoToModel();
                 SendConceptsToModelAndUpdateLinks();
                 SendWasteWaterTreatmentPlantsToModelAndUpdateLinks();
                 SendBoundariesToModel();
@@ -401,6 +392,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                     (int)model.TimeStep.TotalSeconds,
                     (int)model.OutputTimeStep.TotalSeconds);
                 
+                Writer.EvaporationMeteoDataSource = meteoDataSourceConverter.ToIOMeteoDataSource(model.Evaporation.SelectedMeteoDataSource);
+
                 Writer.WriteFiles(); 
                 return true;
             });

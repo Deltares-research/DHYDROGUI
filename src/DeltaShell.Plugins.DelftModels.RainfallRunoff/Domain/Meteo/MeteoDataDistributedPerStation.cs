@@ -5,6 +5,7 @@ using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 {
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             Ensure.NotNull(functionSplitter, nameof(functionSplitter));
             this.functionSplitter = functionSplitter;
 
-            data = new Function("Per station");
+            data = new Function(Resources.MeteoDataDistributionType_Per_Station);
 
             data.Arguments.Add(new Variable<DateTime>("Time")
                 {

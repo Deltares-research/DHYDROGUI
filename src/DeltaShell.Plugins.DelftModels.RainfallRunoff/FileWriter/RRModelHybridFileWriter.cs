@@ -5,11 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.DataAccessObjects;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Files.Fnm;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.FileWriters;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 {
     public class RRModelHybridFileWriter : IRRModelHybridFileWriter
     {
+        private const string sobek3BfnmFileName = "Sobek_3b.fnm";
+        private static readonly FnmFileWriter fnmFileWriter = new FnmFileWriter();
+        private static readonly EvaporationFileNameConverter evaporationFileNameConverter = new EvaporationFileNameConverter();
         private string iniFile;
         private readonly List<string> pavedData = new List<string>();
         private readonly List<string> pavedStorage = new List<string>();
@@ -33,27 +40,41 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         private readonly List<string> boundaries = new List<string>();
         private readonly List<string> wwtp = new List<string>();
         private readonly List<string> openWaterData = new List<string>();
-        private readonly Dictionary<string, double[]> evaporationPerStation = new Dictionary<string, double[]>();
-        private int startDateMeteoData;
-        private int startTimeMeteoData;
-        private int timeStepInSeconds;
         private CultureInfo oldCulture;
         private Dictionary<string, List<DelftTools.Utils.Tuple<string, string>>> iniOptions;
         private readonly List<string> pavedIds = new List<string>();
         private readonly List<NodeType> typeForNodes = new List<NodeType>();
         private readonly List<string> unpavedIds = new List<string>();
+        public IOEvaporationMeteoDataSource EvaporationMeteoDataSource { get; set; }
+        
+        private readonly IManifestRetriever manifestRetriever = new ManifestRetriever();
 
         public RRModelHybridFileWriter()
         {
             SetIniFile();
         }
+
+        private void WriteFnmFile()
+        {
+            string evaporationFileName = evaporationFileNameConverter.ToFileName(EvaporationMeteoDataSource);
+            
+            var fnmFile = new FnmFile
+            {
+                Evaporation = { FileName = evaporationFileName }
+            };
+            
+            using (StreamWriter writer = File.CreateText(sobek3BfnmFileName))
+            {
+                fnmFileWriter.Write(fnmFile, writer);
+            }
+        }
+
         public bool GenerateRRModelFiles()
         {
             WriteFixedFiles();
+            WriteFnmFile();
 
             File.WriteAllText("DELFT_3B.INI", iniFile);
-            File.WriteAllText("DEFAULT.EVP", FlushEvaporationData());
-
             File.WriteAllText("Paved.3b", String.Join("\r\n", pavedData.ToArray()));
             File.WriteAllText("Paved.sto", String.Join("\r\n", pavedStorage.ToArray()));
             File.WriteAllText("Paved.dwa", String.Join("\r\n", pavedDwf.ToArray()));
@@ -91,64 +112,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
         private void WriteFixedFiles()
         {
-            var currentNamespace = GetType().Namespace;
-            var assembly = GetType().Assembly;
-            var embeddedResources = assembly.GetManifestResourceNames();
-
-            var fixedResourcePrefix = $"{currentNamespace}.Fixed.";
-
-            foreach (var resourceName in embeddedResources.Where(n => n.StartsWith(fixedResourcePrefix)))
+            foreach (string resourceName in manifestRetriever.FixedResources)
             {
-                var resourceContents = assembly.GetManifestResourceStream(resourceName);
-                if (resourceContents != null)
+                using (Stream resourceStream = manifestRetriever.GetFixedStream(resourceName))
+                using (var streamReader = new StreamReader(resourceStream))
                 {
-                    var fileName = resourceName.Substring(fixedResourcePrefix.Length);
-                    var streamReader = new StreamReader(resourceContents);
-                    File.WriteAllText(fileName, streamReader.ReadToEnd());
+                    File.WriteAllText(resourceName, streamReader.ReadToEnd());
                 }
             }
         }
 
-        private string FlushEvaporationData()
-        {
-            var sb = new StringBuilder();
-
-            var valuesOfFirstStation = evaporationPerStation.Values.FirstOrDefault();
-
-            if (valuesOfFirstStation == null)
-            {
-                return "";
-            }
-
-            SwitchToInvariantCulture();
-
-            sb.AppendLine("*Verdampingsfile");
-            sb.AppendLine("*Meteo data: evaporation intensity in mm/day");
-            sb.AppendLine("*First record: start date, data in mm/day");
-            sb.AppendLine("*Datum (year month day), verdamping (mm/dag) voor elk weerstation");
-            sb.AppendLine("*jaar maand dag verdamping[mm]");
-
-            var currentDate = ConvertFromSobekDateTime(startDateMeteoData, startTimeMeteoData);
-            for (int i = 0; i < valuesOfFirstStation.Length; i++)
-            {
-                sb.Append($"{currentDate.Year}    {currentDate.Month}    {currentDate.Day}    ");
-
-                foreach (var station in evaporationPerStation.Keys)
-                {
-                    sb.Append(evaporationPerStation[station][i] + " ");
-                }
-                sb.AppendLine();
-
-                currentDate = currentDate.AddDays(1);
-            }
-
-            RestoreCulture();
-
-            evaporationPerStation.Clear();
-
-            return sb.ToString();
-        }
-        
         public void SwitchToInvariantCulture()
         {
             oldCulture = Thread.CurrentThread.CurrentCulture;
@@ -596,18 +569,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             return 0; //?
         }
 
-        public void SetMeteoDataStartTimeAndInterval(int startDate, int startTime, int timeStepInSeconds)
-        {
-            startDateMeteoData = startDate;
-            startTimeMeteoData = startTime;
-            this.timeStepInSeconds = timeStepInSeconds;
-        }
-
-        public void AddEvaporationStation(string name, double[] evaporationInMMPerDay)
-        {
-            evaporationPerStation.Add(name, evaporationInMMPerDay);
-        }
-        
         private void SetIniFile()
         {
             iniOptions = new Dictionary<string, List<DelftTools.Utils.Tuple<string, string>>>
@@ -677,6 +638,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         public void WriteFiles()
         {
             SwitchToInvariantCulture();
+            SwitchToInvariantCulture(); //See issue FM1D2D-2189
             GenerateRRModelFiles();
             RestoreCulture();
         }

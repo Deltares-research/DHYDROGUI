@@ -162,22 +162,45 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     var model = GetModelForData(o, rainfallRunoffGuiPlugin.Gui);
                     if (model == null) return false;
 
-                    return ReferenceEquals(o, model.Precipitation) || ReferenceEquals(o, model.Evaporation);
+                    return ReferenceEquals(o, model.Precipitation);
                 },
                 AfterCreate = (v, o) =>
                 {
                     var model = GetModelForData(o, rainfallRunoffGuiPlugin.Gui);
                     var stationListViewModel = new MeteoStationsListViewModel(model.MeteoStations);
                     var tableViewAdapter = new TableViewMeteoStationSelectionAdapter(v.MultipleFunctionView.TableView);
-                    MeteoDataSource[] possibleSources = { MeteoDataSource.UserDefined };
 
                     v.DataContext = new MeteoEditorViewModel(o,
                                                              stationListViewModel,
-                                                             possibleSources,
                                                              tableViewAdapter,
                                                              new TimeDependentFunctionSplitter(),
-                                                             model.StartTime,
+                                                             model.StartTime, 
                                                              model.StopTime);
+                }
+            };
+            
+            yield return new ViewInfo<IEvaporationMeteoData, MeteoEditorView>
+            {
+                Description = Resources.RainfallRunoffViewInfoBuilder_BuildViewInfoObjects_Meteorological_data_viewer,
+                AdditionalDataCheck = o =>
+                {
+                    var model = GetModelForData(o, rainfallRunoffGuiPlugin.Gui);
+                    if (model == null) return false;
+
+                    return ReferenceEquals(o, model.Evaporation);
+                },
+                AfterCreate = (v, o) =>
+                {
+                    var model = GetModelForData(o, rainfallRunoffGuiPlugin.Gui);
+                    var stationListViewModel = new MeteoStationsListViewModel(model.MeteoStations);
+                    var tableViewAdapter = new TableViewMeteoStationSelectionAdapter(v.MultipleFunctionView.TableView);
+
+                    v.DataContext = new MeteoEditorEvaporationViewModel(o,
+                                                                        stationListViewModel,
+                                                                        tableViewAdapter,
+                                                                        new TimeDependentFunctionSplitter(),
+                                                                        model.StartTime, 
+                                                                        model.StopTime);
                 }
             };
 
@@ -196,14 +219,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     var model = GetModelForData(o, rainfallRunoffGuiPlugin.Gui);
                     var stationListViewModel = new MeteoStationsListViewModel(model.TemperatureStations);
                     var tableViewAdapter = new TableViewMeteoStationSelectionAdapter(v.MultipleFunctionView.TableView);
-                    MeteoDataSource[] possibleSources = { MeteoDataSource.UserDefined };
 
                     v.DataContext = new MeteoEditorViewModel(o,
                                                              stationListViewModel,
-                                                             possibleSources,
                                                              tableViewAdapter,
                                                              new TimeDependentFunctionSplitter(),
-                                                             model.StartTime,
+                                                             model.StartTime, 
                                                              model.StopTime);
                 }
             };
@@ -297,6 +318,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 GetCompositeViewData = o => GetModelForFeatureCoverage(o, rainfallRunoffGuiPlugin.Gui)
             };
         }
+
         private static RainfallRunoffModel GetModelForFeatureCoverage(IFeatureCoverage featureCoverage, IGui gui)
         {
             return gui.Application.GetAllModelsInProject()

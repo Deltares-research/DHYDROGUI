@@ -10,8 +10,9 @@
              xmlns:commonConverters="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
              xmlns:converters="clr-namespace:DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Editors.MeteoDataEditor.Converters"
              xmlns:views="clr-namespace:DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Editors.MeteoDataEditor.Views"
+             xmlns:viewModels="clr-namespace:DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Editors.MeteoDataEditor.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance viewModels:MeteoEditorViewModel, IsDesignTimeCreatable = True}">
     <UserControl.Resources>
         <ImageSource x:Key="GenerateTimeSeriesImg">pack://application:,,,/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;component/Resources/generate_data.png</ImageSource>
         <ImageSource x:Key="WarningImg">pack://application:,,,/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;component/Resources/warning.png</ImageSource>
@@ -19,6 +20,7 @@
         <converters:MeteoDataDistributionTypeToVisibilityConverter x:Key="VisibilityConverter"/>
         <converters:MeteoDataDistributionTypeToChartViewOptionConverter x:Key="ChartViewOptionsConverter"/>
         <converters:MeteoDataDistributionTypeToAllowColumnsSortedConverter x:Key="AllowColumnsSortedConverter"/>
+        <converters:MeteoDataDistributionTypeToIsEnabledConverter x:Key="IsEnabledConverter"/>
         <commonConverters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
@@ -49,7 +51,8 @@
                 <Button DockPanel.Dock="Left"
                         Margin="2 0"
                         Padding="6 0"
-                        Command="{Binding GenerateTimeSeriesCommand}">
+                        Command="{Binding GenerateTimeSeriesCommand}"
+                        IsEnabled="{Binding Path=ActiveMeteoDataSource, Converter={StaticResource IsEnabledConverter}}">
                     <DockPanel LastChildFill="True">
                         <Image Source="{StaticResource GenerateTimeSeriesImg}" 
                                Width="14" 
@@ -108,8 +111,10 @@
                                   wpf:MultipleFunctionViewWindowsFormsHostMap.AllowColumnSorting="{Binding Path=MeteoDataDistributionType, Converter={StaticResource AllowColumnsSortedConverter}}"
                                   wpf:MultipleFunctionViewWindowsFormsHostMap.OnCreateBindingList="{Binding CreateBindingList}"
                                   wpf:MultipleFunctionViewWindowsFormsHostMap.TableSelectionChanged="{Binding Path=TableSelectionChangedEventHandler}"
+                                  wpf:MultipleFunctionViewWindowsFormsHostMap.ShowYears="{Binding Path=ShowYears, Mode=OneWay}"
                                   x:Name="WindowsFormsHost"
-                                  Margin="2">
+                                  Margin="2"
+                                  IsEnabled="{Binding Path=ActiveMeteoDataSource, Converter={StaticResource IsEnabledConverter}}">
                     <WindowsFormsHost.Child>
                         <functions:MultipleFunctionView x:Name="MultipleFunctionView" />
                     </WindowsFormsHost.Child>

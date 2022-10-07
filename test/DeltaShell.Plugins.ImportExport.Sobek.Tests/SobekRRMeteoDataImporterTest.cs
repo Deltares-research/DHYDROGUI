@@ -241,11 +241,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 Name = RainfallRunoffModelDataSet.PrecipitationName,
                 DataDistributionType = MeteoDataDistributionType.PerStation
             };
-            var evaporationMeteoData = new MeteoData
-            {
-                Name = RainfallRunoffModelDataSet.EvaporationName,
-                DataDistributionType = MeteoDataDistributionType.PerStation
-            };
+            var evaporationMeteoData = new EvaporationMeteoData();
             var temperatureMeteoData = new MeteoData
             {
                 Name = RainfallRunoffModelDataSet.TemperatureName,

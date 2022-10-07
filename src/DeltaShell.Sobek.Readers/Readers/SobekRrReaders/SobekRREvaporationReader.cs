@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Utils.Extensions;
+using DeltaShell.Sobek.Readers.Properties;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -15,7 +16,6 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
     /// </summary>
     public class SobekRREvaporationReader
     {
-        private const string longtimeAverageKey = "Longtime average";
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekRREvaporationReader));
 
         /// <summary>
@@ -31,13 +31,13 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         /// <exception cref="InvalidOperationException">
         /// Thrown when the provided <paramref name="stream"/> does not support reading.
         /// </exception>
-        public static SobekRREvaporation Read(Stream stream)
+        public SobekRREvaporation Read(Stream stream)
         {
             Ensure.NotNull(stream, nameof(stream));
 
             if (!stream.CanRead)
             {
-                throw new InvalidOperationException($"The current {nameof(stream)} does not support reading.");
+                throw new InvalidOperationException(string.Format(Resources.SobekRREvaporationReader_Read_The_current__0__does_not_support_reading_, nameof(stream)));
             }
 
             var evaporation = new SobekRREvaporation();
@@ -47,18 +47,8 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             {
                 lineIndex++;
 
-                if (line == string.Empty)
+                if (line == string.Empty || line.StartsWith("*"))
                 {
-                    continue;
-                }
-
-                if (line.StartsWith("*"))
-                {
-                    if (line.ContainsCaseInsensitive(longtimeAverageKey))
-                    {
-                        evaporation.IsLongTimeAverage = true;
-                    }
-
                     continue;
                 }
 
@@ -81,13 +71,13 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                 !int.TryParse(monthStr, out int month) ||
                 !int.TryParse(dayStr, out int day))
             {
-                log.Error($"Line {lineIndex}: Not all date values are valid integers.");
+                log.Error(string.Format(Resources.SobekRREvaporationReader_ParseLine_Line__0___Not_all_date_values_are_valid_integers_, lineIndex));
                 return;
             }
 
             if (!TryCreateDoubles(evaporationStr, out double[] evaporationValues))
             {
-                log.Error($"Line {lineIndex}: Not all evaporation values are valid floating-point numbers.");
+                log.Error(string.Format(Resources.SobekRREvaporationReader_ParseLine_Line__0___Not_all_evaporation_values_are_valid_floating_point_numbers_, lineIndex));
                 return;
             }
 

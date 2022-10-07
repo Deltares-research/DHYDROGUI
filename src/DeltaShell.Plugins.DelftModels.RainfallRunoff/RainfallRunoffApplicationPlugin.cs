@@ -8,9 +8,12 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr.Export;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Exporters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Files.Evaporation;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.FileWriters;
 using log4net;
 using Mono.Addins;
 
@@ -20,6 +23,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
     public class RainfallRunoffApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RainfallRunoffApplicationPlugin));
+
+        private static readonly IEvaporationExporter evaporationExporter = new EvaporationExporter(new EvaporationFileWriter(),
+                                                                                                   new EvaporationFileCreator(),
+                                                                                                   new EvaporationFileNameConverter(),
+                                                                                                   new IOEvaporationMeteoDataSourceConverter());
 
         public override string Name
         {
@@ -89,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             var projectDataFolderDirectory = Application.ProjectDataDirectory;
             var rrModels = GetModels(project);
-            var exporter = new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer());
+            var exporter = new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer(), evaporationExporter);
 
             foreach (var rainfallRunoffModel in rrModels)
             {
@@ -152,14 +160,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new RainfallRunoffModelImporter();
-            yield return new MeteoDataImporter(GetModelForMeteoData);
+            yield return new MeteoDataImporter(new PrecipitationDataImporter(),
+                                               new EvaporationDataImporter(),
+                                               new TemperatureDataImporter());
             yield return new NWRWCatchmentFrom3BImporter();
         }
 
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
-            yield return new MeteoDataExporter(); 
-            yield return new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer()); 
+            yield return new MeteoDataExporter(evaporationExporter); 
+            yield return new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer(), evaporationExporter); 
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -175,14 +185,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private static IEnumerable<RainfallRunoffModel> GetModels(Project project)
         {
             return project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
-        }
-        
-        private RainfallRunoffModel GetModelForMeteoData(MeteoData meteoData)
-        {
-            return GetModels(Application.Project).First(m =>
-                                                            meteoData == m.Evaporation ||
-                                                            meteoData == m.Precipitation ||
-                                                            meteoData == m.Temperature);
         }
     }
 }

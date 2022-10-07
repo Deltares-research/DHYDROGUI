@@ -27,6 +27,15 @@
     <data name="SobekReader_Could_not_read_file_because_it_is_locked" xml:space="preserve">
         <value>Could not read file {0}: it is locked by another process.</value>
     </data>
+    <data name="SobekRREvaporationReader_ParseLine_Line__0___Not_all_date_values_are_valid_integers_" xml:space="preserve">
+        <value>Line {0}: Not all date values are valid integers.</value>
+    </data>
+    <data name="SobekRREvaporationReader_ParseLine_Line__0___Not_all_evaporation_values_are_valid_floating_point_numbers_" xml:space="preserve">
+        <value>Line {0}: Not all evaporation values are valid floating-point numbers.</value>
+    </data>
+    <data name="SobekRREvaporationReader_Read_The_current__0__does_not_support_reading_" xml:space="preserve">
+        <value>The current {0} does not support reading.</value>
+    </data>
     <data name="The_extra_resistance_functionality_is_not_supported_skipping_this_item_with_id_0" xml:space="preserve">
         <value>The extra resistance functionality is not supported, skipping this item with id: {0}</value>
     </data>

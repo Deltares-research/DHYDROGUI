@@ -1,6 +1,4 @@
-﻿using System;
-using DelftTools.Functions;
-using DelftTools.Functions.Generic;
+﻿using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 
@@ -10,24 +8,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
     public class MeteoDataDistributedGlobal: Unique<long>, IMeteoDataDistributed  
     {
         private TimeSeries data;
+        private readonly MeteoTimeSeriesInstanceCreator meteoTimeSeriesInstanceCreator;
 
-        public MeteoDataDistributedGlobal()
+        public MeteoDataDistributedGlobal(MeteoTimeSeriesInstanceCreator meteoTimeSeriesInstanceCreator)
         {
-            data = new TimeSeries
-            {
-                Components =
-                        {
-                            new Variable<double>(MeteoData.GlobalMeteoName)
-                                {
-                                    DefaultValue = 0.0
-                                }
-                        },
-                Name = MeteoData.GlobalMeteoName
-            };
-            data.Time.DefaultValue = new DateTime(2000, 1, 1);
-            data.Time.InterpolationType = InterpolationType.Constant;
-            data.Time.AllowSetInterpolationType = false;
-            data.Time.ExtrapolationType = ExtrapolationType.None;
+            this.meteoTimeSeriesInstanceCreator = meteoTimeSeriesInstanceCreator;
+            data = meteoTimeSeriesInstanceCreator.CreateGlobalTimeSeries();
         }
 
         public IFunction Data
@@ -43,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 
         public object Clone()
         {
-            return new MeteoDataDistributedGlobal {Data = (IFunction) Data.Clone()};
+            return new MeteoDataDistributedGlobal(meteoTimeSeriesInstanceCreator) {Data = (IFunction) Data.Clone()};
         }
     }
 }

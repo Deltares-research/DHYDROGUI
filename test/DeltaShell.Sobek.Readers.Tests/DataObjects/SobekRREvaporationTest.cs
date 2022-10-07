@@ -18,7 +18,6 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
             var evaporation = new SobekRREvaporation();
 
             // Assert
-            Assert.That(evaporation.IsLongTimeAverage, Is.False);
             Assert.That(evaporation.NumberOfLocations, Is.Zero);
             Assert.That(evaporation.Data, Is.Not.Null);
             Assert.That(evaporation.Data, Is.Empty);
@@ -39,10 +38,10 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
         }
 
         [Test]
-        public void Add_LongTimeAverageFalse_AddsCorrectlyToData()
+        public void Add_YearGreaterThan1904_AddsCorrectlyToData()
         {
             // Setup
-            var evaporation = new SobekRREvaporation { IsLongTimeAverage = false };
+            var evaporation = new SobekRREvaporation();
             var values = new[]
             {
                 0.5,
@@ -58,10 +57,10 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
         }
 
         [Test]
-        public void Add_LongTimeAverageTrue_AddsCorrectlyToData()
+        public void Add_YearSmallerThan1904_AddsCorrectlyToData()
         {
             // Setup
-            var evaporation = new SobekRREvaporation { IsLongTimeAverage = true };
+            var evaporation = new SobekRREvaporation();
             var values = new[]
             {
                 0.5,
@@ -73,7 +72,7 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
 
             // Assert
             Assert.That(evaporation.Data, Has.Count.EqualTo(1));
-            Assert.That(evaporation.Data[new DateTime(4, 6, 15)], Is.EqualTo(values));
+            Assert.That(evaporation.Data[new DateTime(1904, 6, 15)], Is.EqualTo(values));
         }
 
         [Test]
@@ -131,62 +130,6 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
             string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
             Assert.That(error, Is.EqualTo($"2021/06/16 should have {expNumberOfLocations} evaporation {expValueStr}."));
             Assert.That(evaporation.Data, Has.Count.EqualTo(1));
-        }
-
-        [Test]
-        public void ToLongTimeAverage_LongTimeAverageFalse_ThrowsInvalidOperationException()
-        {
-            // Setup
-            var evaporation = new SobekRREvaporation { IsLongTimeAverage = false };
-
-            // Call
-            void Call() => evaporation.ToLongTimeAverage(DateTime.Today, DateTime.Today.AddDays(1));
-
-            // Assert
-            var e = Assert.Throws<InvalidOperationException>(Call);
-            Assert.That(e.Message, Is.EqualTo("The evaporation should be long time average."));
-        }
-
-        [Test]
-        public void ToLongTimeAverage_StopTimePrecedesStartTime_ThrowsArgumentOutOfRangeException()
-        {
-            // Setup
-            var evaporation = new SobekRREvaporation { IsLongTimeAverage = true };
-
-            // Call
-            void Call() => evaporation.ToLongTimeAverage(DateTime.Today.AddDays(1), DateTime.Today);
-
-            // Assert
-            var e = Assert.Throws<ArgumentOutOfRangeException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("stopTime"));
-            Assert.That(e.Message, Does.StartWith("The stop date should not precede the start date."));
-        }
-
-        [Test]
-        public void ToLongTimeAverage_ReturnsCorrectData()
-        {
-            // Setup
-            var evaporation = new SobekRREvaporation { IsLongTimeAverage = true };
-            AddLongTimeAverageData(evaporation);
-
-            var startTime = new DateTime(2020, 12, 27);
-            var stopTime = new DateTime(2021, 1, 5);
-
-            // Call
-            evaporation.ToLongTimeAverage(startTime, stopTime);
-
-            // Assert
-            Assert.That(evaporation.Data, Has.Count.EqualTo(10));
-            Assert.That(evaporation.Data[startTime].Single(), Is.EqualTo(362));
-            Assert.That(evaporation.Data[startTime.AddDays(1)].Single(), Is.EqualTo(363));
-            Assert.That(evaporation.Data[startTime.AddDays(2)].Single(), Is.EqualTo(364));
-            Assert.That(evaporation.Data[startTime.AddDays(3)].Single(), Is.EqualTo(365));
-            Assert.That(evaporation.Data[startTime.AddDays(4)].Single(), Is.EqualTo(366));
-            Assert.That(evaporation.Data[startTime.AddDays(5)].Single(), Is.EqualTo(1));
-            Assert.That(evaporation.Data[startTime.AddDays(6)].Single(), Is.EqualTo(2));
-            Assert.That(evaporation.Data[startTime.AddDays(7)].Single(), Is.EqualTo(3));
-            Assert.That(evaporation.Data[startTime.AddDays(8)].Single(), Is.EqualTo(4));
-            Assert.That(evaporation.Data[startTime.AddDays(9)].Single(), Is.EqualTo(5));
         }
 
         [Test]
@@ -319,20 +262,6 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
                 6,
                 9
             });
-        }
-
-        private static void AddLongTimeAverageData(SobekRREvaporation evaporation)
-        {
-            var startDate = new DateTime(4, 1, 1);
-            var stopDate = new DateTime(4, 12, 31);
-
-            for (DateTime date = startDate; date <= stopDate; date = date.AddDays(1))
-            {
-                evaporation.Add(date.Year, date.Month, date.Day, new double[]
-                {
-                    date.DayOfYear
-                });
-            }
         }
     }
 }

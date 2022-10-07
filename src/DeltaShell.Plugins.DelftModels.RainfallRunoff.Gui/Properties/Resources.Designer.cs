@@ -81,6 +81,26 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please add a catchment before generating time series.
+        /// </summary>
+        public static string BaseMeteoEditorViewModel_OnGenerateTimeSeries_Please_add_a_feature_before_generating_time_series {
+            get {
+                return ResourceManager.GetString("BaseMeteoEditorViewModel_OnGenerateTimeSeries_Please_add_a_feature_before_generat" +
+                        "ing_time_series", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please add a station before generating time series.
+        /// </summary>
+        public static string BaseMeteoEditorViewModel_OnGenerateTimeSeries_Please_add_a_station_before_generating_time_series {
+            get {
+                return ResourceManager.GetString("BaseMeteoEditorViewModel_OnGenerateTimeSeries_Please_add_a_station_before_generat" +
+                        "ing_time_series", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Delete {

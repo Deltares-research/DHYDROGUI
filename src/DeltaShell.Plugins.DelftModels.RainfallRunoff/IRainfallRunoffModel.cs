@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// <summary>
         /// Evaporation data for the model
         /// </summary>
-        MeteoData Evaporation { get; }
+        EvaporationMeteoData Evaporation { get; }
 
         /// <summary>
         /// Temperature data for the model

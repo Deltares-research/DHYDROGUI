@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             switch (meteoDataDistributionType)
             {
                 case MeteoDataDistributionType.Global:
-                    return new MeteoDataDistributedGlobal();
+                    return new MeteoDataDistributedGlobal(new MeteoTimeSeriesInstanceCreator());
                 case MeteoDataDistributionType.PerFeature:
                     return new MeteoDataDistributedPerFeature(new TimeDependentFunctionSplitter());
                 case MeteoDataDistributionType.PerStation:
@@ -76,16 +76,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 
         #region ICloneable members
 
-        public object Clone()
+        public virtual object Clone()
         {
-            var clone = new MeteoData(DataAggregationType)
-                {
-                    dataDistributionType = dataDistributionType,
-                    DataAggregationType = DataAggregationType,
-                    Name = Name
-                };
-            clone.SetMeteoDataDistribution((IMeteoDataDistributed) meteoDataDistributed.Clone());
-            return clone;
+            var clone = new MeteoData(DataAggregationType);
+            return Clone(clone);
+        }
+        
+        protected virtual object Clone(MeteoData clonedMeteoData)
+        {
+            clonedMeteoData.dataDistributionType = dataDistributionType;
+            clonedMeteoData.DataAggregationType = DataAggregationType;
+            clonedMeteoData.Name = Name;
+            clonedMeteoData.SetMeteoDataDistribution((IMeteoDataDistributed) meteoDataDistributed.Clone());
+            return clonedMeteoData;
         }
 
         #endregion

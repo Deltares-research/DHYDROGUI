@@ -2,23 +2,44 @@
 using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 {
+    /// <summary>
+    /// Meteo data importer for precipitation, evaporation and temperature.
+    /// </summary>
     public class MeteoDataImporter : IFileImporter
     {
+        private readonly PrecipitationDataImporter precipitationImporter;
+        private readonly EvaporationDataImporter evaporationImporter;
+        private readonly TemperatureDataImporter temperatureImporter;
         private IFileImporter importer = new PrecipitationDataImporter();
-        private readonly Func<MeteoData, RainfallRunoffModel> getModelFunc;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MeteoDataImporter"/> class.
         /// </summary>
-        /// <param name="getModelFunc"> Optional; a function to retrieve the corresponding model. </param>
-        public MeteoDataImporter(Func<MeteoData, RainfallRunoffModel> getModelFunc = null)
+        /// <param name="precipitationImporter"> The precipitation importer. </param>
+        /// <param name="evaporationImporter"> The evaporation importer. </param>
+        /// <param name="temperatureImporter"> The temperature importer. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="precipitationImporter"/>, <paramref name="evaporationImporter"/> or
+        /// <paramref name="temperatureImporter"/> is <c>null</c>.
+        /// </exception>
+        public MeteoDataImporter(PrecipitationDataImporter precipitationImporter, 
+                                 EvaporationDataImporter evaporationImporter,
+                                 TemperatureDataImporter temperatureImporter)
         {
-            this.getModelFunc = getModelFunc;
+            Ensure.NotNull(precipitationImporter, nameof(precipitationImporter));
+            Ensure.NotNull(evaporationImporter, nameof(evaporationImporter));
+            Ensure.NotNull(temperatureImporter, nameof(temperatureImporter));
+
+            this.precipitationImporter = precipitationImporter;
+            this.evaporationImporter = evaporationImporter;
+            this.temperatureImporter = temperatureImporter;
         }
+        
         public string Name
         {
             get { return importer.Name; }
@@ -81,17 +102,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
             {
                 if (meteoData.Name == RainfallRunoffModelDataSet.PrecipitationName)
                 {
-                    importer = new PrecipitationDataImporter();
+                    importer = precipitationImporter;
                 }
 
                 if (meteoData.Name == RainfallRunoffModelDataSet.EvaporationName)
                 {
-                    importer = new EvaporationDataImporter(getModelFunc);
+                    importer = evaporationImporter;
                 }
 
                 if (meteoData.Name == RainfallRunoffModelDataSet.TemperatureName)
                 {
-                    importer = new TemperatureDataImporter();
+                    importer = temperatureImporter;
                 }
             }
 

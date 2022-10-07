@@ -13,23 +13,17 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
     /// </summary>
     public class SobekRREvaporation
     {
-        private const int aLeapYear = 4;
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekRREvaporation));
-
+        
         /// <summary>
-        /// Whether or not the evaporation data is from a long time average.
+        /// Minimum year, used as reference.
         /// </summary>
-        public bool IsLongTimeAverage { get; set; }
+        private const int minimumYear = 1904;
 
         /// <summary>
         /// Gets the number of locations.
         /// </summary>
         public int NumberOfLocations { get; private set; }
-
-        /// <summary>
-        /// Whether or not the data is periodic.
-        /// </summary>
-        public bool IsPeriodic => IsLongTimeAverage;
 
         /// <summary>
         /// The evaporation data per date, with each date containing an evaporation value per location.
@@ -49,18 +43,22 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         /// <param name="day"> The date day. </param>
         /// <param name="values"> The evaporation values. </param>
         /// <remarks>
-        /// If <see cref="IsLongTimeAverage"/> of this instance is <c>true</c>,
-        /// the year will be replaced with a "dummy" leap year.
-        /// Does not add an entry and logs an error if:
-        /// - The provided year, month and day do not define a valid date.
-        /// - The number of values is zero.
+        /// If <paramref name="year"/> is below <see cref="minimumYear"/> or <see cref="IsLongTimeAverage"/> of this instance is <c>true</c>,
+        /// then <paramref name="year"/>  will use the value of <see cref="minimumYear"/>.<br/>
+        /// Does not add an entry and logs an error if:<br/>
+        /// - The provided year, month and day do not define a valid date.<br/>
+        /// - The number of values is zero.<br/>
         /// - The number of values does not equal the number of values of the first successful entry.
         /// </remarks>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is null.</exception>
         public void Add(int year, int month, int day, double[] values)
         {
             Ensure.NotNull(values, nameof(values));
 
-            year = IsLongTimeAverage ? aLeapYear : year;
+            if (year < minimumYear)
+            {
+                year = minimumYear;
+            }
 
             if (!TryCreateDate(year, month, day, out DateTime date))
             {
@@ -123,49 +121,6 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Converts data to evaporation data based on the long time average data between the provided dates.
-        /// of <paramref name="startTime"/> and <paramref name="stopTime"/>.
-        /// </summary>
-        /// <param name="startTime"> The start time of the time frame. </param>
-        /// <param name="stopTime"> The stop time of the time frame. </param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when <see cref="IsLongTimeAverage"/> of this instance is <c>false</c>.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown when the the date of the <paramref name="stopTime"/> precedes the date of the <paramref name="startTime"/>.
-        /// </exception>
-        public void ToLongTimeAverage(DateTime startTime, DateTime stopTime)
-        {
-            if (!IsLongTimeAverage)
-            {
-                throw new InvalidOperationException("The evaporation should be long time average.");
-            }
-
-            DateTime startDate = startTime.Date;
-            DateTime stopDate = stopTime.Date;
-
-            if (startDate > stopDate)
-            {
-                throw new ArgumentOutOfRangeException(nameof(stopTime), @"The stop date should not precede the start date.");
-            }
-
-            Data = GetDataBetweenDates(startDate, stopDate);
-        }
-
-        private IDictionary<DateTime, double[]> GetDataBetweenDates(DateTime startDate, DateTime stopDate)
-        {
-            var data = new Dictionary<DateTime, double[]>();
-            
-            for (DateTime date = startDate; date <= stopDate; date = date.AddDays(1))
-            {
-                var lookupDate = new DateTime(aLeapYear, date.Month, date.Day);
-                data[date] = Data[lookupDate];
-            }
-
-            return data;
         }
     }
 }

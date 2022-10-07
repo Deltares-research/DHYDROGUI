@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -751,6 +753,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         
         private static void SetGlobalMeteoDataForTesting(RainfallRunoffModel rrModel)
         {
+            OverwriteDefaultData(rrModel.Evaporation.Data);
             rrModel.Precipitation.DataDistributionType = MeteoDataDistributionType.Global;
             rrModel.Evaporation.DataDistributionType = MeteoDataDistributionType.Global;
 
@@ -765,6 +768,28 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             for (var current = rrModel.StartTime; current <= rrModel.StopTime; current += rrModel.TimeStep)
             {
                 rrModel.Precipitation.Data[current] = j++;
+            }
+        }
+        
+        private static void OverwriteDefaultData(IFunction data)
+        {
+            var timeArgument = data.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+            if (timeArgument != null)
+            {
+                
+                var startDate = new DateTime(1980, 01, 01);
+                var endDate = new DateTime(2030, 01, 01);
+                var dates = new List<DateTime>();
+                var currentDate = startDate;
+
+                while (currentDate <= endDate)
+                {
+                    dates.Add(currentDate);
+                    currentDate = currentDate.AddDays(1);
+                }
+
+                timeArgument.Clear();
+                timeArgument.SetValues(dates);
             }
         }
     }

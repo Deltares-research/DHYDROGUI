@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Filters;
+using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -180,20 +182,59 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         
         private static void SetRrModelSettings(RainfallRunoffModel rrModel)
         {
+            OverwriteDefaultEvaporationData(rrModel.Evaporation.Data);
+            SetPrecipitationValues(rrModel);
+        }
+
+        private static void SetPrecipitationValues(RainfallRunoffModel rrModel)
+        {
             DateTime startDateTime = new DateTime(2020, 01, 01, 0, 0, 0);
             int offsetInMinutes = 0;
-            
-            var precipitationValues = new [] {5.0, 7.5, 10.0, 5.0, 0.0, 0.0};
+
+            var precipitationValues = new[]
+            {
+                5.0,
+                7.5,
+                10.0,
+                5.0,
+                0.0,
+                0.0
+            };
 
             foreach (double precipitationValue in precipitationValues)
             {
                 var dateTime = startDateTime.AddMinutes(offsetInMinutes);
-                
+
                 rrModel.Precipitation.Data.SetValues(
-                    new[] { precipitationValue},
+                    new[]
+                    {
+                        precipitationValue
+                    },
                     new VariableValueFilter<DateTime>(rrModel.Precipitation.Data.Arguments[0], dateTime));
 
                 offsetInMinutes += 10; // Add 10 minutes.
+            }
+        }
+
+        private static void OverwriteDefaultEvaporationData(IFunction data)
+        {
+            var timeArgument = data.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+            if (timeArgument != null)
+            {
+
+                var startDate = new DateTime(1980, 01, 01);
+                var endDate = new DateTime(2030, 01, 01);
+                var dates = new List<DateTime>();
+                var currentDate = startDate;
+
+                while (currentDate <= endDate)
+                {
+                    dates.Add(currentDate);
+                    currentDate = currentDate.AddDays(1);
+                }
+
+                timeArgument.Clear();
+                timeArgument.SetValues(dates);
             }
         }
     }

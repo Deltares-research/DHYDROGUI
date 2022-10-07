@@ -53,6 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModel));
         private readonly DimrRunner runner;
+        private readonly IMeteoDataSourceSelector meteoDataSourceSelector;
 
         private readonly RainfallRunoffBasinSynchronizer basinSynchronizer;
         private RainfallRunoffChildDataItemProvider childDataItemProvider;
@@ -74,10 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             basinSynchronizer = new RainfallRunoffBasinSynchronizer(this);
 
             // evaporation
-            var globalEvaporation = new MeteoData(MeteoDataAggregationType.Cumulative)
-                {
-                    Name = RainfallRunoffModelDataSet.EvaporationName
-                };
+            var globalEvaporation = new EvaporationMeteoData();
             GenerateDefaultEvaporationTimeSeries(globalEvaporation.Data);
             AddDataItem(globalEvaporation, RainfallRunoffModelDataSet.EvaporationName, DataItemRole.Input, RainfallRunoffModelDataSet.EvaporationTag);
 
@@ -176,6 +174,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             runner = new DimrRunner(this, new DimrApiFactory());
             OutputFiles = new RainfallRunoffOutputFiles();
             RunLogFiles = new RainfallRunoffRunLogFiles(new ReadFileInTwoMegaBytesChunks(), this);
+
+            meteoDataSourceSelector = new MeteoDataSourceSelector(new ManifestRetriever(),
+                                                                  new MeteoTimeSeriesInstanceCreator());
+            globalEvaporation.PropertyChanged += OnEvaporationPropertyChanged;
         }
 
         /// <summary>
@@ -303,9 +305,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        public MeteoData Evaporation
+        public EvaporationMeteoData Evaporation
         {
-            get { return (MeteoData)GetDataItemValueByTag(RainfallRunoffModelDataSet.EvaporationTag); }
+            get { return (EvaporationMeteoData)GetDataItemValueByTag(RainfallRunoffModelDataSet.EvaporationTag); }
             private set
             {
                 if (value == Evaporation)
@@ -1319,6 +1321,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
                 return dimrCoupling;
             }
+        }
+
+        private void OnEvaporationPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!(sender is EvaporationMeteoData evaporationMeteoData) ||
+                !e.PropertyName.Equals(nameof(evaporationMeteoData.SelectedMeteoDataSource)) ||
+                Path == null)
+            {
+                return;
+            }
+
+            IFunction timeSeries = meteoDataSourceSelector.GetMeteoTimeSeries(evaporationMeteoData.SelectedMeteoDataSource,
+                                                                              new DirectoryInfo(System.IO.Path.GetDirectoryName(Path)));
+            evaporationMeteoData.MeteoDataDistributed.Data = timeSeries;
         }
     }
 }

@@ -14,9 +14,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
         public void ImportDataOnGlobalEvaporation()
         {
             var importer = new EvaporationDataImporter();
-            var targetItem = new MeteoData(MeteoDataAggregationType.Cumulative)
+            var targetItem = new EvaporationMeteoData
             {
-                Name = RainfallRunoffModelDataSet.EvaporationName,
                 DataDistributionType = MeteoDataDistributionType.Global
             };
 
@@ -29,9 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
         public void ImportDataOnSingleStationEvaporation()
         {
             var importer = new EvaporationDataImporter();
-            var targetItem = new MeteoData(MeteoDataAggregationType.Cumulative)
+            var targetItem = new EvaporationMeteoData
             {
-                Name = RainfallRunoffModelDataSet.EvaporationName,
                 DataDistributionType = MeteoDataDistributionType.PerStation
             };
             targetItem.Data.Arguments[1].Values.AddRange(new[] {"station1"});
@@ -44,9 +42,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
         public void ImportDataOnTwoStationEvaporation()
         {
             var importer = new EvaporationDataImporter();
-            var targetItem = new MeteoData(MeteoDataAggregationType.Cumulative)
+            var targetItem = new EvaporationMeteoData
             {
-                Name = RainfallRunoffModelDataSet.EvaporationName,
                 DataDistributionType = MeteoDataDistributionType.PerStation
             };
             targetItem.Data.Arguments[1].Values.AddRange(new[] {"station1", "station2"});
@@ -59,9 +56,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
         public void ImportDataOnThreeStationEvaporation()
         {
             var importer = new EvaporationDataImporter();
-            var targetItem = new MeteoData(MeteoDataAggregationType.Cumulative)
+            var targetItem = new EvaporationMeteoData
             {
-                Name = RainfallRunoffModelDataSet.EvaporationName,
                 DataDistributionType = MeteoDataDistributionType.PerStation
             };
             targetItem.Data.Arguments[1].Values.AddRange(new[] {"station1", "station2", "station3"});

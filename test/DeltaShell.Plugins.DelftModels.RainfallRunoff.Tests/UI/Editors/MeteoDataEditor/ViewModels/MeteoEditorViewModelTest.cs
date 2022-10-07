@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Functions;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Editors.MeteoDataEditor.Adapters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Editors.MeteoDataEditor.ViewModels;
@@ -22,6 +23,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
         private ITimeDependentFunctionSplitter FunctionSplitter { get; set; }
         private MeteoEditorViewModel ViewModel { get; set; }
 
+        private const string catchmentName = "Catchment";
+
         [SetUp]
         public void SetUp()
         {
@@ -33,15 +36,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
 
             var selectedStations = new ObservableCollection<MeteoStationViewModel>();
             StationsViewModel.SelectedStations.Returns(selectedStations);
-
-            MeteoDataSource[] sources = { MeteoDataSource.UserDefined };
+            
             Adapter = Substitute.For<ITableViewMeteoStationSelectionAdapter>();
 
             FunctionSplitter = Substitute.For<ITimeDependentFunctionSplitter>();
 
             ViewModel = new MeteoEditorViewModel(MeteoData,
                                                  StationsViewModel,
-                                                 sources,
                                                  Adapter,
                                                  FunctionSplitter,
                                                  DateTime.Now,
@@ -77,27 +78,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
             var adapter = Substitute.For<ITableViewMeteoStationSelectionAdapter>();
             var functionSplitter = Substitute.For<ITimeDependentFunctionSplitter>();
 
-            yield return new TestCaseData(null, stationsViewModel, sources, adapter, functionSplitter).SetName("meteoData");
-            yield return new TestCaseData(meteoData, null, sources, adapter, functionSplitter).SetName("meteoStationsListViewModel");
-            yield return new TestCaseData(meteoData, stationsViewModel, null, adapter, functionSplitter).SetName("possibleSources");
-            yield return new TestCaseData(meteoData, stationsViewModel, sources, null, functionSplitter).SetName("tableSelectionAdapter");
-            yield return new TestCaseData(meteoData, stationsViewModel, sources, adapter, null).SetName("functionSplitter");
+            yield return new TestCaseData(null, stationsViewModel, adapter, functionSplitter).SetName("meteoData");
+            yield return new TestCaseData(meteoData, null, adapter, functionSplitter).SetName("meteoStationsListViewModel");
+            yield return new TestCaseData(meteoData, stationsViewModel, null, functionSplitter).SetName("tableSelectionAdapter");
+            yield return new TestCaseData(meteoData, stationsViewModel, adapter, null).SetName("functionSplitter");
         }
 
         [Test]
         [TestCaseSource(nameof(ConstructorArgumentNullData))]
         public void Constructor_ArgumentNull_ThrowsArgumentNullException(IMeteoData meteoData,
                                                                          IMeteoStationsListViewModel stationsViewModel,
-                                                                         IEnumerable<MeteoDataSource> possibleSources,
                                                                          ITableViewMeteoStationSelectionAdapter adapter,
                                                                          ITimeDependentFunctionSplitter functionSplitter)
         {
-            void Call() => new MeteoEditorViewModel(meteoData, 
-                                                    stationsViewModel, 
-                                                    possibleSources, 
+            void Call() => new MeteoEditorViewModel(meteoData,
+                                                    stationsViewModel,
                                                     adapter, 
                                                     functionSplitter,
-                                                    DateTime.Now, 
+                                                    DateTime.Now,
                                                     DateTime.Now);
             Assert.That(Call, Throws.ArgumentNullException);
         }
@@ -166,34 +164,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
             Adapter.Received(1).SetSelection(Arg.Is<IEnumerable<string>>(x => x.SequenceEqual(expectedStations)));
         }
 
-        private static IEnumerable<TestCaseData> CanEditActiveMeteoDataSourceData()
-        {
-            MeteoDataSource[] singleSource = { MeteoDataSource.UserDefined };
-            yield return new TestCaseData(singleSource, false);
-
-            MeteoDataSource[] multipleSources = Enum.GetValues(typeof(MeteoDataSource)).Cast<MeteoDataSource>().ToArray();
-            yield return new TestCaseData(multipleSources, true);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(CanEditActiveMeteoDataSourceData))]
-        public void CanEditActiveMeteoDataSource_ExpectedResults(ICollection<MeteoDataSource> sources, 
-                                                                 bool expectedResults)
-        {
-            var functionSplitter = Substitute.For<ITimeDependentFunctionSplitter>();
-            using (var viewModel = new MeteoEditorViewModel(MeteoData,
-                                                            StationsViewModel,
-                                                            sources,
-                                                            Adapter,
-                                                            functionSplitter,
-                                                            DateTime.Now,
-                                                            DateTime.Now))
-            {
-                Assert.That(viewModel.CanEditActiveMeteoDataSource, Is.EqualTo(expectedResults));
-            }
-            
-        }
-
         [Test]
         public void MeteoDataDistributionType_UpdatesMeteoDataAndNotifiesPropertyChanged()
         {
@@ -213,7 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
             ViewModel.MeteoDataDistributionType = MeteoDataDistributionType.PerFeature;
 
             // Assert
-            Assert.That(callBacks, Has.Count.EqualTo(1));
+            Assert.That(callBacks, Has.Count.EqualTo(2));
 
             Assert.Multiple(() =>
             {
@@ -259,11 +229,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
             var function = Substitute.For<IFunction>();
             MeteoData.Data.Returns(function);
             MeteoData.DataDistributionType = MeteoDataDistributionType.Global;
-
-            MeteoDataSource[] sources = { MeteoDataSource.UserDefined };
+            
             using (var viewModel = new MeteoEditorViewModel(MeteoData,
                                                             StationsViewModel,
-                                                            sources,
                                                             Adapter,
                                                             FunctionSplitter,
                                                             DateTime.Now,
@@ -282,6 +250,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
         }
 
         [Test]
+        [TestCase(MeteoDataDistributionType.Global, MeteoDataDistributionType.PerStation)]
+        [TestCase(MeteoDataDistributionType.Global, MeteoDataDistributionType.PerFeature)]
+        [TestCase(MeteoDataDistributionType.PerStation, MeteoDataDistributionType.Global)]
+        [TestCase(MeteoDataDistributionType.PerStation, MeteoDataDistributionType.PerFeature)]
+        [TestCase(MeteoDataDistributionType.PerFeature, MeteoDataDistributionType.Global)]
+        [TestCase(MeteoDataDistributionType.PerFeature, MeteoDataDistributionType.PerStation)]
+        public void WhenMeteoDataDistributionTypeSwitched_CanEditActiveMeteoDataSourceAlwaysFalse_ActiveMeteoDataSourceSetToUserDefined(MeteoDataDistributionType startType, MeteoDataDistributionType changeToType)
+        {
+            //Arrange
+            using (ViewModel)
+            {
+                ViewModel.MeteoDataDistributionType = startType;
+                
+                //Act
+                ViewModel.MeteoDataDistributionType = changeToType;
+
+                //Assert
+                Assert.That(ViewModel.CanEditActiveMeteoDataSource, Is.False);
+                Assert.That(ViewModel.ActiveMeteoDataSource, Is.EqualTo(MeteoDataSource.UserDefined));
+            }
+        }
+
+        [Test]
         [TestCase(MeteoDataDistributionType.PerFeature)]
         [TestCase(MeteoDataDistributionType.PerStation)]
         public void TimeSeries_NotGlobal_ReturnsExpectedResult(MeteoDataDistributionType distributionType)
@@ -290,8 +281,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
             var function = Substitute.For<IFunction>();
             MeteoData.Data.Returns(function);
             MeteoData.DataDistributionType = distributionType;
-
-            MeteoDataSource[] sources = { MeteoDataSource.UserDefined };
 
             var expectedResults = new[]
             {
@@ -304,7 +293,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
 
             using (var viewModel = new MeteoEditorViewModel(MeteoData,
                                                             StationsViewModel,
-                                                            sources,
                                                             Adapter,
                                                             FunctionSplitter,
                                                             DateTime.Now,
@@ -380,12 +368,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
             MeteoData.CatchmentsChanged += Raise.EventWith(MeteoData, args);
 
             // Assert
-            Assert.That(callBacks, Has.Count.EqualTo(2));
+            Assert.That(callBacks, Has.Count.EqualTo(3));
 
             Assert.Multiple(() =>
             {
                 AssertHasCallback(callBacks, nameof(ViewModel.TimeSeries));
                 AssertHasCallback(callBacks, nameof(ViewModel.ShowNoFeaturesWarning));
+                AssertHasCallback(callBacks, nameof(ViewModel.ShowYears));
             });
 
             // Cleanup
@@ -547,32 +536,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
             StationsViewModel.Received(1).Dispose();
         }
 
-        [Test]
-        public void ActiveMeteoDataSource_NotifiesPropertyChanged()
-        {
-            // Setup
-            var callBacks = new List<(object Sender, PropertyChangedEventArgs e)>();
-
-            void OnPropertyChanged(object sender, PropertyChangedEventArgs e) =>
-                callBacks.Add((sender, e));
-
-            ViewModel.PropertyChanged += OnPropertyChanged;
-            
-            // Call
-            ViewModel.ActiveMeteoDataSource = MeteoDataSource.GuidelineSewerSystems;
-
-            // Assert
-            Assert.That(callBacks, Has.Count.EqualTo(1));
-
-            Assert.Multiple(() =>
-            {
-                AssertHasCallback(callBacks, nameof(ViewModel.ActiveMeteoDataSource), ViewModel);
-            });
-
-            // Clean up
-            ViewModel.PropertyChanged -= OnPropertyChanged;
-        }
-
         private static IEnumerable<TestCaseData> ShowNoStationsWarningData()
         {
             TestCaseData ToData(MeteoDataDistributionType distributionType,
@@ -637,17 +600,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
         {
             // Setup
             var function = Substitute.For<IFunction>();
+            SetupMeteoDataSubstitute(function, functions.Length);
             MeteoData.Data.Returns(function);
             MeteoData.DataDistributionType = distributionType;
-
-            MeteoDataSource[] sources = { MeteoDataSource.UserDefined };
 
             FunctionSplitter.SplitIntoFunctionsPerArgumentValue(function)
                             .Returns(functions);
 
             using (var viewModel = new MeteoEditorViewModel(MeteoData,
                                                             StationsViewModel,
-                                                            sources,
                                                             Adapter,
                                                             FunctionSplitter,
                                                             DateTime.Now,
@@ -660,6 +621,45 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Editors.MeteoDa
                 // Assert
                 Assert.That(result, Is.EqualTo(expectedResult));
             }
+        }
+
+        [Test]
+        public void ShowYearsTrue_ForNonEvaporation()
+        {
+            using (ViewModel)
+            {
+                Assert.That(ViewModel.ShowYears, Is.True);
+            }
+        }
+        
+        [Test]
+        public void PossibleMeteoDataSource_AlwaysUserDefined_ForNonEvaporation()
+        {
+            using (ViewModel)
+            {
+                MeteoDataSource[] actualMeteoDataSources = ViewModel.PossibleMeteoDataSources;
+                Assert.That(actualMeteoDataSources.Length, Is.EqualTo(1));
+                Assert.That(actualMeteoDataSources.First(), Is.EqualTo(MeteoDataSource.UserDefined));
+            }
+        }
+        
+        [Test]
+        public void WritingActiveMeteoDataSource_ThrowsNotSupportedException()
+        {
+            using (ViewModel)
+            {
+                void Call() => ViewModel.ActiveMeteoDataSource = MeteoDataSource.UserDefined;
+                Assert.Throws<NotSupportedException>(Call);
+            }
+        }
+
+        private static void SetupMeteoDataSubstitute(IFunction function, int amountOfCatchments)
+        {
+            var catchment = Substitute.For<IVariable>();
+            catchment.Name.Returns(catchmentName);
+            catchment.Values.Count.Returns(amountOfCatchments);
+            var eventedList = new EventedList<IVariable> {catchment};
+            function.Arguments.Returns(eventedList);
         }
 
         private static void AssertHasCallback(IEnumerable<(object Sender, PropertyChangedEventArgs e)> callBacks, 

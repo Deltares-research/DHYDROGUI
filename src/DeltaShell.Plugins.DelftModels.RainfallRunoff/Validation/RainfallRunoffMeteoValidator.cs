@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             var reports = new List<ValidationReport>();
 
             MeteoData precipitation = rainfallRunoffModel.Precipitation;
-            MeteoData evaporation = rainfallRunoffModel.Evaporation;
+            EvaporationMeteoData evaporation = rainfallRunoffModel.Evaporation;
             MeteoData temperature = rainfallRunoffModel.Temperature;
 
             reports.Add(new ValidationReport(Resources.RainfallRunoffMeteoValidator_Validate_Precipitation,
@@ -28,12 +28,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                                                                rainfallRunoffModel.StopTime,
                                                                rainfallRunoffModel.TimeStep,
                                                                true).ToList()));
+
             reports.Add(new ValidationReport(Resources.RainfallRunoffMeteoValidator_Validate_Evaporation,
-                                             ValidateMeteoData(evaporation,
-                                                               rainfallRunoffModel.StartTime,
-                                                               rainfallRunoffModel.StopTime,
-                                                               rainfallRunoffModel.TimeStep,
-                                                               true).ToList()));
+                                             ValidateEvaporation(rainfallRunoffModel, evaporation)));
+
 
             if (precipitation.DataDistributionType == MeteoDataDistributionType.PerStation) //always for both precip & evap
             {
@@ -57,6 +55,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             }
 
             return new ValidationReport(Resources.RainfallRunoffMeteoValidator_Validate_Meteo, reports);
+        }
+
+        private static List<ValidationIssue> ValidateEvaporation(RainfallRunoffModel rainfallRunoffModel, EvaporationMeteoData evaporation)
+        {
+            List<ValidationIssue> evaporationMeteoDataIssues = new List<ValidationIssue>();
+            if (evaporation.SelectedMeteoDataSource == MeteoDataSource.UserDefined)
+            {
+                evaporationMeteoDataIssues = ValidateMeteoData(evaporation,
+                                                               rainfallRunoffModel.StartTime,
+                                                               rainfallRunoffModel.StopTime,
+                                                               rainfallRunoffModel.TimeStep,
+                                                               true).ToList();
+            }
+            
+            evaporationMeteoDataIssues.AddRange(RainfallRunoffMeteoEvaporationValidator.ValidateEvaporationMeteoData(rainfallRunoffModel.Evaporation).ToList());
+            
+            return evaporationMeteoDataIssues;
         }
 
         private static IEnumerable<ValidationIssue> ValidateMeteoStations(RainfallRunoffModel model)

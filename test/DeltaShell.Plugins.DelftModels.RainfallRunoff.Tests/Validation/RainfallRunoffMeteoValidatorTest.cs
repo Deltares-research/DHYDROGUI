@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
 
-            Assert.AreEqual(1, issues.Count);
+            Assert.AreEqual(2, issues.Count);
             Assert.AreEqual("Not enough values defined", issues[0].Message);
             Assert.AreEqual(rrm.Precipitation, issues[0].Subject);
         }
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
 
-            Assert.AreEqual(2, issues.Count);
+            Assert.AreEqual(3, issues.Count);
             Assert.AreEqual("Time step of time series (01:30:00) should be a multiple of the computation time step 01:00:00", issues[0].Message);
             Assert.AreEqual("Time step of time series (00:10:00) should be a multiple of the computation time step 01:00:00", issues[1].Message);
         }
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
 
-            Assert.AreEqual(2, issues.Count);
+            Assert.AreEqual(3, issues.Count);
             Assert.AreEqual(String.Format("Time series starts ({0}) after start of model ({1})", precipStart, rrm.StartTime),
                 issues[0].Message);
             Assert.AreEqual(rrm.Precipitation, issues[0].Subject);

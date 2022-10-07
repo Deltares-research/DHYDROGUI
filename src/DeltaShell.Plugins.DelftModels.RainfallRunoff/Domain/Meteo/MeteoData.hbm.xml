@@ -6,6 +6,7 @@
     <id name="Id" column="id" type="Int64" unsaved-value="0" access="property">
       <generator class="increment" />
     </id>
+    <discriminator column="type" type="string" />
     <property name="Name" access="property" column="name" />
     <property name="DataAggregationType" access="property" column="data_aggr_type" />
     <property name="DataDistributionType" access="property" column="data_dist_type" />

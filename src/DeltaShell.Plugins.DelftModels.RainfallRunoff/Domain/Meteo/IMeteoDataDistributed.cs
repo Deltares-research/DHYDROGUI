@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 {
     public interface IMeteoDataDistributed : ICloneable, IUnique<long>
     {
-        IFunction Data { get; }
+        IFunction Data { get; set; }
 
         IFunction GetTimeSeries(object item);
     }

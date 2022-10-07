@@ -6,7 +6,6 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
