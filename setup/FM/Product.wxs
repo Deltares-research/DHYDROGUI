@@ -73,13 +73,13 @@
   - programassociations             Enables the user to include code to associate a program to a file.
   - additionalfiles                 Enables the user to include additional files to be installed.
   - languages                       Enables the user the languages which need to be supported. e.g. var.languages="1033,1043". Means English and Dutch. Note to add corresponding culturenames in settings window. 
-  - splashScreenCopyright:          © Deltares 2022
+  - splashScreenCopyright:          © Deltares 2023
   
   Required locales (in the overall locale file WixUIVariables.wxl):
   - PublicReleaseVersion:   Set this variable as a locale variable string via overall WixUIVariables.wxl.
-                            This is a 2 number product version. Example: 2022.04
+                            This is a 2 number product version. Example: 2023.01
   - ReleaseVersion:         Set this variable as a locale variable string via overall WixUIVariables.wxl.
-                            This is a 3 number product version. Example: 2022.4.0 (or preferably !(loc.PublicReleaseVersion).0) 
+                            This is a 3 number product version. Example: 2023.1.0 (or preferably !(loc.PublicReleaseVersion).0) 
   - ProductName:            Set this variable as a locale variable string via overall WixUIVariables.wxl.
                             E.g. "FM (Early Preview) !(loc.ReleaseVersion)" or "!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)"
   - FullProductName:        The full product name defines the name used in the installer as well as the installation location. 
@@ -95,9 +95,9 @@
   - HelpLink:                       https://www.deltares.nl/en/software-solutions/delft3d-4-delft3d-fm
   - Delft3DPackageName:             Delft3D FM HMWQ
   - RegistrationFeature:            Delft3D_FM_1D2D
-  - RegistrationVersion:            2022
+  - RegistrationVersion:            2023
   - SplashScreenCompany:            Deltares
-  - SplashScreenLicense:            Valid until 30 oct 2022
+  - SplashScreenLicense:            Valid until 30 oct 2023
   - LicenseRtf:                     Delft3D FM HMWQ_Resources\License.rtf
   - ManualFileName:                 Delta_Shell_User_Manual.pdf
 
@@ -128,8 +128,8 @@
   <?define customizationwxi="$(var.ProjectDir)Extras.wxi"?>
 
   <!-- optional splash screen copyright -->
-  <?define splashScreenCopyright="© Deltares 2022"?>
-
+  <?define splashScreenCopyright="© Deltares 2023"?>
+ 
   <?define RealNumberFormat="G12"?>
   <!--<?define CheckOriginOfProject="False"?>-->
   <!--<?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>-->
