@@ -178,7 +178,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             filtersOutputFM_NewModel = new List<string>
             {
-                "_numlimdt.xyz",
                 "_his.nc",
                 "_map.nc",
                 ".dia"

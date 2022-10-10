@@ -289,15 +289,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 List<string> contentSecondRun = RetrieveRunContent(model);
 
-                for (var i = 0; i < contentFirstRun.Count; i++)
-                {
-                    int startIndex = contentFirstRun[i].IndexOf("Execution start", StringComparison.OrdinalIgnoreCase);
-                    string content1 = contentFirstRun[i].Substring(startIndex + 17, 19);
-                    string content2 = contentSecondRun[i].Substring(startIndex + 17, 19);
-
-                    Assert.AreNotEqual(content1, content2);
-                }
+                // Assert
+                ExecutionStartTimeDifferent(contentFirstRun[0], contentSecondRun[0]);
+                ExecutionStartTimeDifferent(contentFirstRun[1], contentSecondRun[1]);
+                ExecutionStartTimeDifferent(contentFirstRun[2], contentSecondRun[2]);
             }
+        }
+
+        private static void ExecutionStartTimeDifferent(string entryA, string entryB)
+        {
+            const string lookFor = "Execution start";
+            int startIndex = entryA.IndexOf( lookFor, StringComparison.OrdinalIgnoreCase);
+            if (startIndex == -1)
+            {
+                Assert.Fail($"Could not find string '{lookFor}' in content of the file: {entryA}.");
+            }
+            string content1 = entryA.Substring(startIndex + 17, 19);
+            string content2 = entryB.Substring(startIndex + 17, 19);
+            
+            Assert.AreNotEqual(content1, content2);
         }
 
         private static void EditInputFileToCreateBinaryFiles(WaterQualityModel model)
