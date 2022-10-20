@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
-        public override string FileFormatVersion => "3.5.0.0";
+        public override string FileFormatVersion => "3.6.0.0";
 
         public override IApplication Application
         {
