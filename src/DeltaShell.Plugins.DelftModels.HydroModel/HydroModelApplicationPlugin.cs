@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
@@ -22,7 +21,7 @@ using Mono.Addins;
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
     [Extension(typeof(IPlugin))]
-    public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class HydroModelApplicationPlugin : ApplicationPlugin
     {
         public const string RHUINTEGRATEDMODEL_TEMPLATE_ID = "RHUIntegratedModel";
         public const string DimrProjectTemplateId = "DimrProjectTemplateId";
@@ -67,11 +66,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectOpened += ApplicationProjectOpened;
                 }
             }
-        }
-
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new HydroModelDataAccessListener();
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
@@ -215,11 +209,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void ApplicationProjectSavedOrFailed(Project project)
         {
-            DoWithHydroModels(project, "Linking items after for saving", m =>
-            {
-                m.RelinkDataItems();
-                m.RelinkHydroRegionLinks();
-            });
+            DoWithHydroModels(project, Properties.Resources.Linking_items_in_the_integrated_model_after_saving_the_project, RelinkHydroModelItems);
         }
 
         private void ApplicationProjectOpened(Project project)
@@ -228,6 +218,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
             });
+
+            DoWithHydroModels(project, Properties.Resources.Linking_items_in_the_integrated_model_after_loading_the_project, RelinkHydroModelItems);
+        }
+
+        private static void RelinkHydroModelItems(HydroModel hydroModel)
+        {
+            hydroModel.RelinkDataItems();
+            hydroModel.RelinkHydroRegionLinks();
         }
 
         private void ActivityRunnerOnActivityStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
