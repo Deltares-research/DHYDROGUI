@@ -15,6 +15,10 @@
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="1"/>
         </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="2,0,0,1"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
         <ObjectDataProvider x:Key="CrestShapes" MethodName="GetValues"
                             ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
@@ -82,10 +86,10 @@
 
                         <Label Grid.Row="1" Grid.Column="0" Content="Crest width" Visibility="{Binding SimpleWeirPropertiesVisibility}" />
                         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Weir.CrestWidth}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
-                        <Label Grid.Row="1" Grid.Column="2" Content="m" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="[m]" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
                         <Label Grid.Row="2" Grid.Column="0" Content="Crest level" Visibility="{Binding SimpleWeirPropertiesVisibility}" />
                         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Weir.CrestLevel}" Visibility="{Binding SimpleWeirPropertiesVisibility}" IsEnabled="{Binding IsCrestLevelConstantTime}"/>
-                        <Label Grid.Row="2" Grid.Column="2" Content="m AD" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="[m AD]" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
 
                         <CheckBox Grid.Row="3" Grid.Column="0"  Margin="5" Content="Use velocity height" VerticalAlignment="Center" IsChecked="{Binding UseVelocityHeight}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
 
