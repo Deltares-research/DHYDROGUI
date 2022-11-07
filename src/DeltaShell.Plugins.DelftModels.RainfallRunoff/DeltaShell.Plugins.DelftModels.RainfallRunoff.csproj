@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1717" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1741" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
 		<PackageReference Include="DHYDRO.Common" Version="1.1.0.47" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="Mono.Addins" Version="1.3.8" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="log4net" Version="2.0.12">
