@@ -2095,7 +2095,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         NetFile.WriteCoordinateSystem(mapFilePath, CoordinateSystem);
                     if (switchTo && OutputMapFileStore != null)
                     {
-                        OutputMapFileStore.Path = mapFilePath;
+                        OutputMapFileStore.SetPathWithoutLoadingData(mapFilePath);
+                        Log.Debug($"Set the path of the output 2D map file function store to: {mapFilePath}");
                     }
                     else
                     {
@@ -2105,7 +2106,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         // elsewise, there will be no subscription to the read and Path triggers the Read().
                         try
                         {
+                            Log.Debug($"Begin loading the output 2D map file data from: {mapFilePath}");
                             OutputMapFileStore.Path = mapFilePath;
+                            Log.Debug($"End loading the output 2D map file data from: {mapFilePath}");
                         }
                         catch (Exception e)
                         {
@@ -2120,14 +2123,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                     if (switchTo && Output1DFileStore != null)
                     {
-                        Output1DFileStore.Path = mapFilePath;
+                        Output1DFileStore.SetPathWithoutLoadingData(mapFilePath);
+                        Log.Debug($"Set the path of the output 1D map file function store to: {mapFilePath}");
                     }
                     else
                     {
                         Output1DFileStore = new FM1DFileFunctionStore(Network);
                         // don't change this to a property setter, because the timing is of great importance.
                         // elsewise, there will be no subscription to the read and Path triggers the Read().
+                        Log.Debug($"Begin loading the output 1D map file data from: {mapFilePath}");
                         Output1DFileStore.Path = mapFilePath;
+                        Log.Debug($"End loading the output 1D map file data from: {mapFilePath}");
                     }
                 }
             }
@@ -2148,12 +2154,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 FireImportProgressChanged(this,"Reading output files - Reading His file", 1, 2);
                 if (switchTo && OutputHisFileStore != null)
                 {
-                    OutputHisFileStore.Path = hisFilePath;
+                    OutputHisFileStore.SetPathWithoutLoadingData(hisFilePath);
+                    Log.Debug($"Set the path of the output his file function store to: {hisFilePath}");
                 }
                 else
                 {
                     OutputHisFileStore = new FMHisFileFunctionStore(Network, Area);
+                    Log.Debug($"Begin loading the output his file data from: {hisFilePath}");
                     OutputHisFileStore.Path = hisFilePath;
+                    Log.Debug($"End loading the output his file data from: {hisFilePath}");
                     OutputHisFileStore.CoordinateSystem = CoordinateSystem;
                 }
             }
@@ -2170,11 +2179,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             FireImportProgressChanged(this,"Reading output files - Reading Class Map file", 1, 2);
             if (switchTo && OutputClassMapFileStore != null)
             {
-                OutputClassMapFileStore.Path = classMapFilePath;
+                OutputClassMapFileStore.SetPathWithoutLoadingData(classMapFilePath);
+                Log.Debug($"Set the path of the output class map file function store to: {classMapFilePath}");
             }
             else
             {
+                Log.Debug($"Begin loading the output class map file data from: {classMapFilePath}");
                 OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
+                Log.Debug($"End loading the output class map file data from: {classMapFilePath}");
             }
         }
 
