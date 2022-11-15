@@ -75,7 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     HasMinValue = hasMinVal,
                     HasMaxValue = hasMaxVal,
                     MinValue = minVal,
-                    MaxValue = maxVal
+                    MaxValue = maxVal,
+                    UnitSymbol = prop.PropertyDefinition.Unit
                 };
         }
 

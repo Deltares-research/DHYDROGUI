@@ -43,6 +43,8 @@
             <sys:Double x:Key="UnitWidth">20</sys:Double>
 
             <GridLength x:Key="LabelLength">200</GridLength>
+            <GridLength x:Key="LabelLengthWithUnit">140</GridLength>
+            <GridLength x:Key="LabelUnitLength">60</GridLength>
             <GridLength x:Key="ControlLength">*</GridLength>
             <GridLength x:Key="UnitLength">20</GridLength>
 
@@ -50,6 +52,13 @@
                    TargetType="TextBlock">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+            </Style>
+            
+            <Style x:Key="UnitLabelTextBlockStyle"
+                   TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="TextWrapping" Value="Wrap" />
             </Style>
 
             <Style x:Key="ControlStyle"
@@ -105,27 +114,30 @@
                           DataType="{x:Type settingsView:GuiProperty}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelLength}" />
+                        <ColumnDefinition Width="{StaticResource LabelLengthWithUnit}" />
+                        <ColumnDefinition Width="{StaticResource LabelUnitLength}" />
                         <ColumnDefinition Width="{StaticResource ControlLength}" />
                         <ColumnDefinition Width="{StaticResource UnitLength}" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
                                Style="{StaticResource LabelTextBlockStyle}"
                                Text="{Binding Label}" />
-                    <TextBox Grid.Column="1"
+                    
+                    <TextBlock Grid.Column="1"
+                               Style="{StaticResource UnitLabelTextBlockStyle}"
+                               Text="{Binding UnitSymbol}"/>
+                    
+                    <TextBox Grid.Column="2"
                              attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
                              BorderBrush="{StaticResource DefaultLightColorBrush}"
                              IsEnabled="{Binding Path=IsEditable}"
                              Style="{StaticResource ControlWithErrorStyle}"
+                             VerticalAlignment="Center"
                              Text="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, Converter={StaticResource DoubleToStringConverter}}" 
                              LostKeyboardFocus="WpfSettingsView_Textbox_OnLostKeyboardFocus"/>
 
-                    <TextBlock Grid.Column="2"
-                               Width="{StaticResource UnitWidth}"
-                               Style="{StaticResource LabelTextBlockStyle}"
-                               Text="{Binding UnitSymbol}"
-                               Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource InverseBoolToVisibility}}" />
-                    <Button Grid.Column="2"
+                    
+                    <Button Grid.Column="3"
                             Width="{StaticResource UnitWidth}"
                             Height="{StaticResource UnitWidth}"
                             VerticalAlignment="Center"
