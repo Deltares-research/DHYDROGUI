@@ -22,7 +22,7 @@
                                     <Label Width="120" Margin="0,0,5,0">Type</Label>
                                     <ComboBox Width="120" Name="comboBoxRoughnessType" SelectedValue="{Binding SelectedCulvertFrictionType}"/>
                                 </StackPanel>
-                                <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxFrictionValue" Label="Friction value" Unit="m" Value="{Binding FrictionValue, Mode=TwoWay}"/>
+                                <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxFrictionValue" Label="Friction value" Unit="[m]" Value="{Binding FrictionValue, Mode=TwoWay}"/>
                                 <!-- not visible groundlayer from GUI, not yet implemented in the kernel, is confusing for the smart people -->
                                 <GroupBox Name="GroundLayerBox" Visibility="Collapsed" >
                                     <GroupBox.Header>
@@ -41,18 +41,18 @@
                             <Label Width="120" Margin="0,0,5,0">Sub type</Label>
                             <ComboBox MinWidth ="120" Name="comboBoxCulvertType" SelectedValue="{Binding SelectedCulvertStructureType}"/>
                         </StackPanel>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxCulvertLength" Label="Length" Unit="m" Value="{Binding CulvertLength, Mode=TwoWay}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxCulvertOffsetY" Label="Y offset" Unit="m" Value="{Binding CulvertOffsetY, Mode=TwoWay}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxCulvertLength" Label="Length" Unit="[m]" Value="{Binding CulvertLength, Mode=TwoWay}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxCulvertOffsetY" Label="Y offset" Unit="[m]" Value="{Binding CulvertOffsetY, Mode=TwoWay}"/>
                         <StackPanel Margin="0,0,0,10">
                             <StackPanel Orientation="Horizontal" Margin="125,0,0,0">
                                 <Label>Inlet</Label>
                                 <Label Margin="90,0,0,0">Outlet</Label>
                             </StackPanel>
-                            <structureFeatureView:DoubleTextBoxWithLabelAndUnitControl x:Name="TextboxCulvertLevel" Label="Level" Unit1="m" Unit2="m" Value1="{Binding InletLevel, Mode=TwoWay}" Value2="{Binding OutletLevel, Mode=TwoWay}"/>
-                            <structureFeatureView:DoubleTextBoxWithLabelAndUnitControl x:Name="TextboxCulvertLossCoeff" Label="Loss coefficients" Unit1="m" Unit2="m" Value1="{Binding InletLossCoeff, Mode=TwoWay}" Value2="{Binding OutletLossCoeff, Mode=TwoWay}"/>
+                            <structureFeatureView:DoubleTextBoxWithLabelAndUnitControl x:Name="TextboxCulvertLevel" Label="Level" Unit1="[m]" Unit2="[m]" Value1="{Binding InletLevel, Mode=TwoWay}" Value2="{Binding OutletLevel, Mode=TwoWay}"/>
+                            <structureFeatureView:DoubleTextBoxWithLabelAndUnitControl x:Name="TextboxCulvertLossCoeff" Label="Loss coefficients" Unit1="[m]" Unit2="[m]" Value1="{Binding InletLossCoeff, Mode=TwoWay}" Value2="{Binding OutletLossCoeff, Mode=TwoWay}"/>
                         </StackPanel>
 
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxBendLossCoeffInlet" Label="Bend loss coefficient" Unit="m" Value="{Binding BendLossCoefficient, Mode=TwoWay}" Visibility="{Binding BendLossCoeffVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxBendLossCoeffInlet" Label="Bend loss coefficient" Unit="[m]" Value="{Binding BendLossCoefficient, Mode=TwoWay}" Visibility="{Binding BendLossCoeffVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <GroupBox Header="Flow direction">
                             <StackPanel Orientation="Horizontal">
@@ -68,11 +68,11 @@
                                 <StackPanel IsEnabled="{Binding ElementName=checkBoxGate, Path=IsChecked}">
                                     <structureFeatureView:LabeledTimeSeriesControl x:Name="GateInitialOpening" 
                                                                                    Label="Initial gate opening" 
-                                                                                   Unit="m" 
+                                                                                   Unit="[m]" 
                                                                                    Value="{Binding GateInitialGateOpening}"
                                                                                    TimeSeries="{Binding GateInitialOpeningTimeSeries}"
                                                                                    IsTimeSeries="{Binding UseGateInitialOpeningTimeSeries}" />
-                                    <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GateLowEdgeLevel" Label="Low edge level" Unit="m" Value="{Binding GateLowEdgeLevel}" IsEnabled="False"/>
+                                    <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GateLowEdgeLevel" Label="Low edge level" Unit="[m]" Value="{Binding GateLowEdgeLevel}" IsEnabled="False"/>
                                     <Button Name="GateDialog" Click="GateDialog_OnClick" Margin="50,5,50,5">Define height opening coefficients</Button>
                                 </StackPanel>
                             </GroupBox.Content>
@@ -96,16 +96,16 @@
                                   ItemsSource="{Binding GeometryTabulated, ValidatesOnDataErrors=False}"
                                   Visibility="{Binding IsTabulated, Converter={StaticResource BooleanToVisibilityConverter}}">
                         </DataGrid>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryDiameter" Label="Diameter" Unit="m" Value="{Binding GeometryDiameter, Mode=TwoWay}" Visibility="{Binding IsRound, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryWidth" Label="Width" Unit="m" Value="{Binding GeometryWidth, Mode=TwoWay}" Visibility="{Binding GeometryWidthVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryHeight" Label="Height" Unit="m" Value="{Binding GeometryHeight, Mode=TwoWay}" Visibility="{Binding GeometryHeightVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryArcHeight" Label="Arc Height" Unit="m" Value="{Binding GeometryArcHeight, Mode=TwoWay}" Visibility="{Binding HasArcHeight, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryRadiusR" Label="Radius r" Unit="m" Value="{Binding GeometryRadiusR, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryRadiusR1" Label="Radius r1" Unit="m" Value="{Binding GeometryRadiusR1, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryRadiusR2" Label="Radius r2" Unit="m" Value="{Binding GeometryRadiusR2, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryRadiusR3" Label="Radius r3" Unit="m" Value="{Binding GeometryRadiusR3, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryAngleA" Label="Angle a" Unit="degrees" Value="{Binding GeometryAngleA, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryAngleA1" Label="Angle a1" Unit="degrees" Value="{Binding GeometryAngleA1, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryDiameter" Label="Diameter" Unit="[m]" Value="{Binding GeometryDiameter, Mode=TwoWay}" Visibility="{Binding IsRound, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryWidth" Label="Width" Unit="[m]" Value="{Binding GeometryWidth, Mode=TwoWay}" Visibility="{Binding GeometryWidthVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryHeight" Label="Height" Unit="[m]" Value="{Binding GeometryHeight, Mode=TwoWay}" Visibility="{Binding GeometryHeightVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryArcHeight" Label="Arc Height" Unit="[m]" Value="{Binding GeometryArcHeight, Mode=TwoWay}" Visibility="{Binding HasArcHeight, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryRadiusR" Label="Radius r" Unit="[m]" Value="{Binding GeometryRadiusR, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryRadiusR1" Label="Radius r1" Unit="[m]" Value="{Binding GeometryRadiusR1, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryRadiusR2" Label="Radius r2" Unit="[m]" Value="{Binding GeometryRadiusR2, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryRadiusR3" Label="Radius r3" Unit="[m]" Value="{Binding GeometryRadiusR3, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryAngleA" Label="Angle a" Unit="[deg]" Value="{Binding GeometryAngleA, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GeometryAngleA1" Label="Angle a1" Unit="[deg]" Value="{Binding GeometryAngleA1, Mode=TwoWay}" Visibility="{Binding IsSteelCunette, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

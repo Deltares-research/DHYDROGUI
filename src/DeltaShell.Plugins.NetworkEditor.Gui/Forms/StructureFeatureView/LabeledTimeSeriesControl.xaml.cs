@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 ColumnNames = new[]
                 {
                     "Date time",
-                    $"{Label} [{Unit}]"
+                    $"{Label} {Unit}"
                 },
                 ChartViewOption = ChartViewOptions.AllSeries,
                 Data = dialogData,
