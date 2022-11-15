@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using NUnit.Framework;
@@ -96,6 +97,51 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             Assert.IsTrue(propertyA.IsEnabled(properties),
                 "Use default isEnabled method");
             Assert.IsTrue(propertyString.IsEnabled(properties));
+        }
+
+        [Test]
+        public void DependenciesDefaultValueIndexerShouldLinkPropertiesAndUpdateDefaultValue()
+        {
+            //Arrange
+            List<ModelProperty> allProperties = new List<ModelProperty>();
+            ModelProperty dropDownProperty = GetDropDownProperty();
+            ModelProperty doublePropertyWithLink = GetDoublePropertyWithLink(dropDownProperty);
+            allProperties.Add(dropDownProperty);
+            allProperties.Add(doublePropertyWithLink);
+            
+            //Act
+            Dependencies.CompileDefaultValueIndexerDependencies(allProperties);
+            
+            //Assert
+            Assert.That(dropDownProperty.LinkedModelProperty, Is.EqualTo(doublePropertyWithLink));
+            Assert.That(doublePropertyWithLink.Value.ToString(), Is.EqualTo(doublePropertyWithLink.PropertyDefinition.DefaultValueAsStringArray[(int)dropDownProperty.Value]));
+        }
+
+        private static ModelProperty GetDoublePropertyWithLink(ModelProperty property)
+        {
+            ModelPropertyDefinition propertyDefinition = new TestModelPropertyDefinition();
+            propertyDefinition.DefaultValueAsStringArray = new List<string>();
+            propertyDefinition.DefaultValueAsStringArray.Add("10");
+            propertyDefinition.DefaultValueAsStringArray.Add("11");
+            const string propertyName = "UnifFrictCoefChannels";
+            propertyDefinition.FilePropertyName = propertyName;
+            propertyDefinition.DefaultsIndexer = property.PropertyDefinition.FilePropertyName;
+            propertyDefinition.DataType = typeof(double);
+            ModelProperty property2 = new TestModelProperty(propertyDefinition, "10");
+            return property2;
+        }
+
+        private static ModelProperty GetDropDownProperty()
+        {
+            ModelPropertyDefinition propertyDefinition = new TestModelPropertyDefinition();
+            string caption = "Uniform friction type:Chezy|Manning";
+            const string typeField = "0|1";
+            const string propertyName = "UnifFrictTypeChannels";
+            propertyDefinition.FilePropertyName = propertyName;
+            propertyDefinition.DataType = DataTypeValueParser.GetClrType(propertyName, typeField, ref caption, caption, 0);
+
+            ModelProperty property = new TestModelProperty(propertyDefinition, "0");
+            return property;
         }
     }
 }

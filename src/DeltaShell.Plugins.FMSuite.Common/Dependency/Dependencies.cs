@@ -112,5 +112,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                 }
             }
         }
+
+        public static void CompileDefaultValueIndexerDependencies(IEnumerable<ModelProperty> allProperties)
+        {
+            IEnumerable<ModelProperty> modelProperties = allProperties as ModelProperty[] ?? allProperties.ToArray();
+            foreach (var modelProperty in modelProperties)
+            {
+                // Nothing specified, use default:
+                if (string.IsNullOrEmpty(modelProperty.PropertyDefinition.DefaultsIndexer))
+                {
+                    continue;
+                }
+
+                var property = modelProperty;
+                var matchingDependency = modelProperties.SingleOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(property.PropertyDefinition.DefaultsIndexer));
+                    
+                if (matchingDependency != null)
+                {
+                    matchingDependency.LinkedModelProperty = property;
+                    property.SetValueAsString(property.PropertyDefinition.DefaultValueAsStringArray[(int)matchingDependency.Value]);
+                }
+            }
+        }
     }
 }

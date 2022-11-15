@@ -154,6 +154,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             Dependencies.CompileEnabledDependencies(Properties);
             Dependencies.CompileVisibleDependencies(Properties);
+            
+
             waterFlowFmPropertyChangedHandler = new Dictionary<string, Action<WaterFlowFMProperty>>
             {
                 {KnownProperties.ICdtyp.ToLower(), OnIcdTypePropertyChanged},
@@ -165,6 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {GuiProperties.WriteSnappedFeatures.ToLower(), OnWriteSnappedFeaturesPropertyChanged},
             };
 
+            Dependencies.CompileDefaultValueIndexerDependencies(Properties);
             SetDefaultReferenceDate();
             SetGuiTimePropertiesFromMduProperties();
 
@@ -253,10 +256,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 var propName = prop.PropertyDefinition.MduPropertyName.ToLower();
                 if (waterFlowFmPropertyChangedHandler.ContainsKey(propName))
                     waterFlowFmPropertyChangedHandler[propName](prop);
+                
+                UpdateLinkedProperties(prop);
             }
             finally
             {
                 handlingPropertyChanged = false;
+            }
+        }
+
+        private static void UpdateLinkedProperties(ModelProperty property)
+        {
+            if (property.LinkedModelProperty != null)
+            {
+                property.LinkedModelProperty.SetValueAsString(property.LinkedModelProperty.PropertyDefinition.DefaultValueAsStringArray[(int)property.Value]);
             }
         }
 

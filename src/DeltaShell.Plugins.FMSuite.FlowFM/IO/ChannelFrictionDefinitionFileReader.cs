@@ -63,9 +63,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_invalid_global_value_was_given, filePath));
             }
-
-            modelDefinition.SetModelProperty(GuiProperties.UnifFrictCoefChannels, globalValue);
+            
             modelDefinition.SetModelProperty(GuiProperties.UnifFrictTypeChannels, $"{ (int) globalType }");
+            modelDefinition.SetModelProperty(GuiProperties.UnifFrictCoefChannels, globalValue);
         }
 
         private static void ReadChannelFrictionDefinitions(

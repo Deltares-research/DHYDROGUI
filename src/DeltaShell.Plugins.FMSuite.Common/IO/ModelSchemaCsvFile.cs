@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
@@ -10,6 +11,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         public const string DefaultGUIGroupID = "misc";
         public const string DefaultGUIGroupCaption = "Miscellaneous";
         private const string descriptionHeader = "Description";
+        private readonly Regex csvParser;
+        public ModelSchemaCsvFile()
+        {
+            csvParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))",RegexOptions.Compiled);
+            
+        }
 
         public ModelSchema<TDef> ReadModelSchema<TDef>(string propertiesDefinitionFile, string fileGroupName) 
             where TDef:ModelPropertyDefinition,new()
@@ -63,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             string line;
             while ((line = GetNextLine()) != null)
             {
-                var lineFields = line.Split(',');
+                var lineFields = csvParser.Split(line);
                 if (RowHasLessThanExpectedAmountOfColumns(indexOfDescription, lineFields))
                 {
                     continue;
@@ -90,6 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 var fromRevString = lineFields[13];
                 var toRevString = lineFields[14];
                 var unit = GetUnitField(indexOfDescription, lineFields);
+                var defaultsIndexerField = GetDefaultsIndexerField(indexOfDescription, lineFields);
 
                 int fromRev;
                 int toRev;
@@ -118,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     SubCategory = subCategoryField,
                     Caption = captionField,
                     DataType = dataType,
-                    DefaultValueAsString = defaultField,
+                    DefaultValueAsString = GetDefaultValueAsString(defaultsIndexerField, defaultField),
                     MinValueAsString = minField,
                     MaxValueAsString = maxField,
                     IsMultipleFile = typeField.ToLower().Equals("multipleentriesfilename"),
@@ -128,6 +136,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     DocumentationSection = docSection,
                     EnabledDependencies = enabledDeps.ToLower(),
                     VisibleDependencies = visibleDeps.ToLower(),
+                    DefaultValueAsStringArray = defaultField.Split('|'),
+                    DefaultsIndexer = defaultsIndexerField,
                     FromRevision = fromRev,
                     UntilRevision = toRev,
                     IsDefinedInSchema = true,
@@ -174,6 +184,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private static string CreateDescriptionFromLastColumns(string[] lineFields, int amountOfColumnsBeforeDescription)
         {
             return string.Join("", lineFields.Skip(amountOfColumnsBeforeDescription).Select(s => s.Trim('"')));
+        }
+        
+        private static string GetDefaultsIndexerField(int indexOfDescription, string[] lineFields)
+        {
+            const int expectedDefaultsIndexerField = 16;
+            return indexOfDescription <= expectedDefaultsIndexerField ? string.Empty : lineFields[expectedDefaultsIndexerField];
+        }
+
+        private static string GetDefaultValueAsString(string defaultsIndexerField, string defaultField)
+        {
+            if (string.IsNullOrEmpty(defaultsIndexerField))
+            {
+                return defaultField;
+            }
+
+            return defaultField.Contains('|') ? defaultField.Split('|').First() : defaultField;
         }
 
         private string ReadMduGroups<TDef>(string fileGroupName, string line, ModelSchema<TDef> schema) where TDef : ModelPropertyDefinition, new()

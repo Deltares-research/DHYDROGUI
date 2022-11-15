@@ -134,7 +134,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public int FromRevision { get; set; }
 
         public int UntilRevision { get; set; }
-        
         public string Unit { get; set; }
+        public IList<string> DefaultValueAsStringArray { get; set; }
+        public string DefaultsIndexer { get; set; }
     }
 }

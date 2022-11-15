@@ -97,6 +97,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         {
             get { return propertyDefinition; }
         }
+        
+        /// <summary>
+        /// The linked model properties. 
+        /// </summary>
+        /// <example>This can be a property which defines default values for a property with an enum.</example>
+        public ModelProperty LinkedModelProperty { get; set; }
 
         /// <summary>
         /// Sets <see cref="Value"/> using a string representation.
