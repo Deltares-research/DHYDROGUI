@@ -11,7 +11,32 @@
   <String Id="LanguageName" Overridable="yes">en-US</String>
 
 
-  <String Id="LicenseRtf" Overridable="yes">License.rtf</String>
+  <String Id="AdvancedWelcomeEulaDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="BrowseDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="CustomizeDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="DiskCostDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="FeaturesDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="FilesInUseBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="InstallDirDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="InstallScopeDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="LicenseAgreementDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="MaintenanceTypeDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="MsiRMFilesInUseBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="OutOfDiskDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="OutOfRbDiskDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="ProgressDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="SetupTypeDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+  <String Id="VerifyReadyDlgBannerBitmap" Overridable="yes">UIBannerBmp</String>
+
+  <String Id="ExitDialogBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="FatalErrorBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="MaintenanceWelcomeDlgBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="PrepareDlgBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="ResumeDlgBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="UserExitBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="WelcomeDlgBitmap" Overridable="yes">UIDialogBmp</String>
+  <String Id="WelcomeEulaDlgBitmap" Overridable="yes">UIDialogBmp</String>
+
   <String Id="WindowLayoutFile" Overridable="yes">WindowLayout_normal.en-US.xml</String>
   <String Id="StartUpImage" Overridable="yes">setup_start.jpg</String> <!--Setting in Product.wxs-->
 
