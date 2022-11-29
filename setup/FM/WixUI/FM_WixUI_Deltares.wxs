@@ -24,6 +24,7 @@
  
 
       <Publish Dialog="ExitDialogDeltares" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="ExitDialogDeltares" Control="Finish" Event="DoAction" Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
 
       <Publish Dialog="WelcomeDlgDeltares" Control="Next" Event="NewDialog" Value="LicenseAgreementDlgDeltares">1</Publish>
 
