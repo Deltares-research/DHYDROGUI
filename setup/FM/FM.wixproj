@@ -6,7 +6,7 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>1.1.0</ReleaseVersion>
+    <ReleaseVersion>4.11.0</ReleaseVersion>
     <!-- Distribution Specific settings -->
     <ProjectGuid>{1dd62dbb-f7d3-40be-8063-b7b80cec8b9f}</ProjectGuid>
     <MyProductCode>{$([System.Guid]::NewGuid())}</MyProductCode>
