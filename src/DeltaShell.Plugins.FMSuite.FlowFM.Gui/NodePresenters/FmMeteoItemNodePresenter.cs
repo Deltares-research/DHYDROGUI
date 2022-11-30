@@ -35,10 +35,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         protected override bool RemoveNodeData(object parentNodeData, IFmMeteoField nodeData)
         {
-            var fmMeteoField = parentNodeData as IEventedList<IFmMeteoField>;
-            if (fmMeteoField != null)
+            var fmMeteoFields = parentNodeData as IEventedList<IFmMeteoField>;
+            if (fmMeteoFields != null)
             {
-                fmMeteoField.Remove(nodeData);
+                fmMeteoFields.Remove(nodeData);
                 return true;
             }
             return false;
@@ -52,37 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         public override bool CanRenameNode(ITreeNode node)
         {
             return false;
-        }
-
-        public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
-        {
-            var menu = base.GetContextMenu(sender, nodeData);
-            var menuStrip = new ContextMenuStrip();
-            var deleteItem = new ClonableToolStripMenuItem
-            {
-                Text = "Delete",
-                Tag = nodeData,
-                Image = Resources.DeleteHS
-            };
-            deleteItem.Click += DeleteItem;
-            menuStrip.Items.Add(deleteItem);
-            menu.Insert(1, new MenuItemContextMenuStripAdapter(menuStrip));
-            return menu;
-        }
-
-        private void DeleteItem(object sender, EventArgs e)
-        {
-            var data = ((ToolStripMenuItem)sender).Tag as IFmMeteoField;
-            if (data != null)
-            {
-                var list =
-                    GuiPlugin.Gui.Application.GetAllModelsInProject()
-                        .OfType<WaterFlowFMModel>()
-                        .First(m => m.FmMeteoFields.Contains(data))
-                        .FmMeteoFields;
-
-                list.Remove(data);
-            }
         }
     }
 }

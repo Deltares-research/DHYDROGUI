@@ -59,36 +59,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             return false;
         }
-
-        public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
-        {
-            var menu = base.GetContextMenu(sender, nodeData);
-            var menuStrip = new ContextMenuStrip();
-            var deleteItem = new ClonableToolStripMenuItem
-            {
-                Text = "Delete",
-                Tag = nodeData,
-                Image = Resources.DeleteHS
-            };
-            deleteItem.Click += DeleteItem;
-            menuStrip.Items.Add(deleteItem);
-            menu.Insert(1, new MenuItemContextMenuStripAdapter(menuStrip));
-            return menu;
-        }
-
-        private void DeleteItem(object sender, EventArgs e)
-        {
-            var data = ((ToolStripMenuItem)sender).Tag as IWindField;
-            if (data!=null)
-            {
-                var list =
-                    GuiPlugin.Gui.Application.GetAllModelsInProject()
-                        .OfType<WaterFlowFMModel>()
-                        .First(m => m.WindFields.Contains(data))
-                        .WindFields;
-
-                list.Remove(data);
-            }
-        }
     }
 }
