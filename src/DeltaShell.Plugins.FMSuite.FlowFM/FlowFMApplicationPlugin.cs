@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Category = ProductCategories.NewTemplateCategory,
                 Name = "FM model",
                 Description = "Creates a new standalone flexible mesh model",
-                ExecuteTemplate = (p, settings) =>
+                ExecuteTemplateOpenView = (p, settings) =>
                 {
                     var model = new WaterFlowFMModel();
                     if (settings is ModelSettings modelSettings)
@@ -112,7 +112,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
 
                     p.RootFolder.Items.Add(model);
-                    
+
+                    return model;
                 }
             };
         }
