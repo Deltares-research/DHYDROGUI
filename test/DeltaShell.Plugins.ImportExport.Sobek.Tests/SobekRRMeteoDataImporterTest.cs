@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //Arrange
             var model = Substitute.For<IRainfallRunoffModel>();
             var basin = Substitute.For<IDrainageBasin>();
-            var meteoData = new MeteoData
+            var meteoData = new PrecipitationMeteoData
             {
                 Name = RainfallRunoffModelDataSet.PrecipitationName,
                 DataDistributionType = MeteoDataDistributionType.Global
@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //Arrange
             var model = Substitute.For<IRainfallRunoffModel>();
             var basin = Substitute.For<IDrainageBasin>();
-            var meteoData = new MeteoData
+            var meteoData = new PrecipitationMeteoData
             {
                 Name = RainfallRunoffModelDataSet.PrecipitationName,
                 DataDistributionType = MeteoDataDistributionType.PerFeature
@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //Arrange
             var model = Substitute.For<IRainfallRunoffModel>();
             var basin = Substitute.For<IDrainageBasin>();
-            var meteoData = new MeteoData
+            var meteoData = new PrecipitationMeteoData
             {
                 Name = RainfallRunoffModelDataSet.PrecipitationName,
                 DataDistributionType = MeteoDataDistributionType.PerFeature
@@ -236,13 +236,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var meteoStations = Substitute.For<IEventedList<string>>();
             var temperatureStations = Substitute.For<IEventedList<string>>();
 
-            var precipitationMeteoData = new MeteoData
+            var precipitationMeteoData = new PrecipitationMeteoData
             {
                 Name = RainfallRunoffModelDataSet.PrecipitationName,
                 DataDistributionType = MeteoDataDistributionType.PerStation
             };
             var evaporationMeteoData = new EvaporationMeteoData();
-            var temperatureMeteoData = new MeteoData
+            var temperatureMeteoData = new TemperatureMeteoData
             {
                 Name = RainfallRunoffModelDataSet.TemperatureName,
                 DataDistributionType = MeteoDataDistributionType.PerStation

@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         {
             using (var temp = new TemporaryDirectory())
             {
-                var meteoData = new MeteoData
+                var meteoData = new TemperatureMeteoData
                 {
                     Name = RainfallRunoffModelDataSet.TemperatureName,
                     DataDistributionType = MeteoDataDistributionType.Global
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         {
             using (var temp = new TemporaryDirectory())
             {
-                var meteoData = new MeteoData
+                var meteoData = new PrecipitationMeteoData
                 {
                     Name = RainfallRunoffModelDataSet.PrecipitationName,
                     DataDistributionType = MeteoDataDistributionType.Global
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             using (var temp = new TemporaryDirectory())
             {
                 // Setup
-                var meteoData = new MeteoData
+                var meteoData = new PrecipitationMeteoData
                 {
                     Name = RainfallRunoffModelDataSet.PrecipitationName,
                     DataDistributionType = MeteoDataDistributionType.PerStation
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         {
             using (var temp = new TemporaryDirectory())
             {
-                var meteoData = new MeteoData
+                var meteoData = new TemperatureMeteoData
                 {
                     Name = RainfallRunoffModelDataSet.TemperatureName,
                     DataDistributionType = MeteoDataDistributionType.Global
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         {
             using (var temp = new TemporaryDirectory())
             {
-                var meteoData = new MeteoData
+                var meteoData = new TemperatureMeteoData
                 {
                     Name = RainfallRunoffModelDataSet.TemperatureName,
                     DataDistributionType = MeteoDataDistributionType.Global

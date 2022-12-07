@@ -1,3 +1,4 @@
+using DelftTools.Units;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
@@ -11,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
         /// <summary>
         /// Initializes a new instance of the <see cref="EvaporationMeteoData"/> class.
         /// </summary>
-        public EvaporationMeteoData() : base(MeteoDataAggregationType.Cumulative)
+        public EvaporationMeteoData() : base(MeteoDataAggregationType.Cumulative, new Unit(RainfallRunoffModelDataSet.EvaporationName, "mm"))
         {
             Name = RainfallRunoffModelDataSet.EvaporationName;
             SelectedMeteoDataSource = MeteoDataSource.UserDefined;
@@ -21,18 +22,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
         /// Selected Meteo Data source for Evaporation, initial value is <see cref="MeteoDataSource.UserDefined"/>
         /// </summary>
         public MeteoDataSource SelectedMeteoDataSource { get; set; }
-        
+
         /// <summary>
         /// Clones <see cref="EvaporationMeteoData"/>.
         /// </summary>
-        /// <returns><see cref="EvaporationMeteoData"/></returns>
+        /// <returns>
+        ///     <see cref="EvaporationMeteoData"/>
+        /// </returns>
         public override object Clone()
         {
-            var clone = new EvaporationMeteoData
-            {
-                SelectedMeteoDataSource = SelectedMeteoDataSource
-            };
-            
+            var clone = new EvaporationMeteoData { SelectedMeteoDataSource = SelectedMeteoDataSource };
+
             return base.Clone(clone);
         }
     }

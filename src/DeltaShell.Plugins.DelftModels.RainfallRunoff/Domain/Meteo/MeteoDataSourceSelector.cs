@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Functions;
+using DelftTools.Units;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
@@ -22,6 +23,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
         private readonly SobekRREvaporationReader evaporationReader = new SobekRREvaporationReader();
         private IFunction longTermAverageTimeSeries;
         private IFunction guideLineSewersSystemsTimeSeries;
+
+        private readonly Unit unit = new Unit(RainfallRunoffModelDataSet.EvaporationName, "mm");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeteoDataSourceSelector"/> class.
@@ -54,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
                 case MeteoDataSource.LongTermAverage:
                     return GetLongTermAverageTimesSeries(modelDirectory);
                 case MeteoDataSource.UserDefined:
-                    return meteoTimeSeriesInstanceCreator.CreateGlobalTimeSeries();
+                    return meteoTimeSeriesInstanceCreator.CreateGlobalTimeSeries(unit);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(meteoDataSource), meteoDataSource, null);
             }
@@ -97,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
                                                  ? ReadModelEvaporation(modelFilePath)
                                                  : ReadManifestEvaporation(evaporationFileName);
 
-            TimeSeries timeSeriesData = meteoTimeSeriesInstanceCreator.CreateGlobalTimeSeries();
+            TimeSeries timeSeriesData = meteoTimeSeriesInstanceCreator.CreateGlobalTimeSeries(unit);
             foreach (KeyValuePair<DateTime, double[]> data in evaporation.Data)
             {
                 DateTime dateTime = data.Key;

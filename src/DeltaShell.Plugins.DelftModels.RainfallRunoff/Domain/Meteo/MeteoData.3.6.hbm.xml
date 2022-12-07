@@ -6,7 +6,8 @@
     <id name="Id" column="id" type="Int64" unsaved-value="0" access="property">
       <generator class="increment" />
     </id>
-    <discriminator formula="case when name in ('Evaporation') then 'evaporation_data' else 'meteo_data' end"/>
+    <discriminator formula="case when name in ('Evaporation') then 'evaporation_data'
+                            when name in ('Precipitation') then 'precipitation_data' else 'temperature_data' end"/>
     <property name="Name" access="property" column="name" />
     <property name="DataAggregationType" access="property" column="data_aggr_type" />
     <property name="DataDistributionType" access="property" column="data_dist_type" />

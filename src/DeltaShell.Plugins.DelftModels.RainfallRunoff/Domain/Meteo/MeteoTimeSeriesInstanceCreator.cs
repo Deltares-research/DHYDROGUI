@@ -1,6 +1,8 @@
 using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Units;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
@@ -13,16 +15,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
         /// <summary>
         /// Creates a globally defined time series for meteo data.
         /// </summary>
+        /// <param name="unit">Unit of the time series.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="unit"/> is <c>null</c>.
+        /// </exception>
         /// <returns>
         /// The time series.
         /// </returns>
-        public TimeSeries CreateGlobalTimeSeries()
+        public TimeSeries CreateGlobalTimeSeries(IUnit unit)
         {
+            Ensure.NotNull(unit, nameof(unit));
             var timeSeries = new TimeSeries
             {
                 Components =
                 {
-                    new Variable<double>(Resources.MeteoDataDistributionType_Global)
+                    new Variable<double>(Resources.MeteoDataDistributionType_Global, unit)
                     {
                         DefaultValue = 0.0
                     }

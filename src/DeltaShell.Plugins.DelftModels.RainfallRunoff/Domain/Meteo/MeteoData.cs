@@ -1,39 +1,52 @@
 ﻿using System;
+using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 {
     [Entity]
-    public class MeteoData : EditableObjectUnique<long>, IMeteoData
+    public abstract class MeteoData : EditableObjectUnique<long>, IMeteoData
     {
         public const string GlobalMeteoName = "Global";
-        private static IMeteoDataDistributed CreateDataDistributed(MeteoDataDistributionType meteoDataDistributionType)
+
+        private MeteoDataDistributionType dataDistributionType;
+        private IMeteoDataDistributed meteoDataDistributed;
+        private readonly IUnit unit;
+        
+        private IMeteoDataDistributed CreateDataDistributed()
         {
-            switch (meteoDataDistributionType)
+            switch (dataDistributionType)
             {
                 case MeteoDataDistributionType.Global:
-                    return new MeteoDataDistributedGlobal(new MeteoTimeSeriesInstanceCreator());
+                    return new MeteoDataDistributedGlobal(new MeteoTimeSeriesInstanceCreator(), unit);
                 case MeteoDataDistributionType.PerFeature:
-                    return new MeteoDataDistributedPerFeature(new TimeDependentFunctionSplitter());
+                    return new MeteoDataDistributedPerFeature(new TimeDependentFunctionSplitter(), unit);
                 case MeteoDataDistributionType.PerStation:
-                    return new MeteoDataDistributedPerStation(new TimeDependentFunctionSplitter());
+                    return new MeteoDataDistributedPerStation(new TimeDependentFunctionSplitter(), unit);
                 default:
                     throw new ArgumentException(Resources.MeteoData_CreateDataDistributed_Meteo_data_distribution_DataDistributionType_unknown);
             }
         }
-
-        private MeteoDataDistributionType dataDistributionType;
-        private IMeteoDataDistributed meteoDataDistributed;
-
-        public MeteoData()
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MeteoData"/> class.
+        /// </summary>
+        /// <remarks>
+        /// This constructor should currently only be used by NHibernate.
+        /// Using this constructor might otherwise lead to an invalid state of this <see cref="MeteoData"/>.
+        /// </remarks>
+        protected MeteoData()
         {
+            unit = new Unit();
             dataDistributionType = MeteoDataDistributionType.Global;
-            SetMeteoDataDistribution(CreateDataDistributed(dataDistributionType));
+            SetMeteoDataDistribution(CreateDataDistributed());
             DataAggregationType = MeteoDataAggregationType.Cumulative;
             if (DataAggregationType == MeteoDataAggregationType.NonCumulative)
             {
@@ -41,10 +54,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             }
         }
 
-        public MeteoData(MeteoDataAggregationType timeAggregationtype)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MeteoData"/> class.
+        /// </summary>
+        /// <param name="timeAggregationtype">Aggregation for the <see cref="MeteoData"/>.</param>
+        /// <param name="unit">Unit of the meteo data.</param>
+        /// <exception cref="InvalidEnumArgumentException">
+        /// Thrown when <paramref name="timeAggregationtype"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="unit"/> is <c>null</c>.
+        /// </exception>
+        protected MeteoData(MeteoDataAggregationType timeAggregationtype, IUnit unit)
         {
+            Ensure.IsDefined(timeAggregationtype, nameof(MeteoDataAggregationType));
+            Ensure.NotNull(unit, nameof(unit));
+            
+            this.unit = unit;
             dataDistributionType = MeteoDataDistributionType.Global;
-            SetMeteoDataDistribution(CreateDataDistributed(dataDistributionType));
+            SetMeteoDataDistribution(CreateDataDistributed());
             DataAggregationType = timeAggregationtype;
             if (DataAggregationType == MeteoDataAggregationType.NonCumulative)
             {
@@ -59,8 +87,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             {
                 if (dataDistributionType != value)
                 {
-                    MeteoDataDistributed = CreateDataDistributed(value);
                     dataDistributionType = value;
+                    MeteoDataDistributed = CreateDataDistributed();
                 }
             }
         }
@@ -76,12 +104,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 
         #region ICloneable members
 
-        public virtual object Clone()
-        {
-            var clone = new MeteoData(DataAggregationType);
-            return Clone(clone);
-        }
-        
+        public abstract object Clone();
+
         protected virtual object Clone(MeteoData clonedMeteoData)
         {
             clonedMeteoData.dataDistributionType = dataDistributionType;

@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
     {
         private readonly ITimeDependentFunctionSplitter functionSplitter;
         private Function data;
+        private readonly IUnit unit;
 
         /// <summary>
         /// Construct a new <see cref="MeteoDataDistributedPerStation"/>.
@@ -26,13 +27,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
         /// The function splitter used to split a <see cref="IFunction"/> in its underlying functions
         /// per station.
         /// </param>
+        /// <param name="unit">Unit of the time series.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="functionSplitter"/> is <c>null</c>.
+        /// Thrown when <paramref name="unit"/> is <c>null</c>.
         /// </exception>
-        public MeteoDataDistributedPerStation(ITimeDependentFunctionSplitter functionSplitter)
+        public MeteoDataDistributedPerStation(ITimeDependentFunctionSplitter functionSplitter, IUnit unit)
         {
             Ensure.NotNull(functionSplitter, nameof(functionSplitter));
+            Ensure.NotNull(unit, nameof(unit));
             this.functionSplitter = functionSplitter;
+            this.unit = unit;
 
             data = new Function(Resources.MeteoDataDistributionType_Per_Station);
 
@@ -49,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
                     IsAutoSorted = false
                 });
 
-            data.Components.Add(new Variable<double> {DefaultValue = 0.0});
+            data.Components.Add(new Variable<double> {DefaultValue = 0.0, Unit = unit});
         }
 
         public IFunction Data
@@ -65,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 
         public object Clone()
         {
-            return new MeteoDataDistributedPerStation(functionSplitter) {Data = (IFunction) Data.Clone()};
+            return new MeteoDataDistributedPerStation(functionSplitter, unit) {Data = (IFunction) Data.Clone()};
         }
     }
 }

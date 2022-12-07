@@ -1,5 +1,6 @@
 ﻿using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Guards;
@@ -18,6 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
     {
         private readonly ITimeDependentFunctionSplitter functionSplitter;
         private FeatureCoverage data;
+        private readonly IUnit unit;
 
         /// <summary>
         /// Construct a new <see cref="MeteoDataDistributedPerFeature"/>.
@@ -26,13 +28,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
         /// The function splitter used to split a <see cref="IFunction"/> in its underlying functions
         /// per catchment.
         /// </param>
+        /// <param name="unit">Unit of the time series.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="functionSplitter"/> is <c>null</c>.
+        /// Thrown when <paramref name="unit"/> is <c>null</c>.
         /// </exception>
-        public MeteoDataDistributedPerFeature(ITimeDependentFunctionSplitter functionSplitter)
+        public MeteoDataDistributedPerFeature(ITimeDependentFunctionSplitter functionSplitter, IUnit unit)
         {
             Ensure.NotNull(functionSplitter, nameof(functionSplitter));
+            Ensure.NotNull(unit, nameof(unit));
             this.functionSplitter = functionSplitter;
+            this.unit = unit;
 
             data = new FeatureCoverage(Resources.MeteoDataDistributionType_Per_Catchment)
             {
@@ -45,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
                 }
             };
             data.Arguments.Add(new Variable<IFeature>("Catchment"));
-            data.Components.Add(new Variable<double> {DefaultValue = 0.0});
+            data.Components.Add(new Variable<double> {DefaultValue = 0.0, Unit = unit});
         }
 
         public IFunction Data
@@ -61,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 
         public object Clone()
         {
-            return new MeteoDataDistributedPerFeature(functionSplitter) {Data = (IFunction) Data.Clone()};
+            return new MeteoDataDistributedPerFeature(functionSplitter, unit) {Data = (IFunction) Data.Clone()};
         }
     }
 }

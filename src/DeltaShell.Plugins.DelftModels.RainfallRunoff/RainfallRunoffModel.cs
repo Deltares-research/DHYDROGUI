@@ -80,17 +80,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             AddDataItem(globalEvaporation, RainfallRunoffModelDataSet.EvaporationName, DataItemRole.Input, RainfallRunoffModelDataSet.EvaporationTag);
 
             // precipitation
-            var globalPrecipitation = new MeteoData(MeteoDataAggregationType.Cumulative)
-                {
-                    Name = RainfallRunoffModelDataSet.PrecipitationName
-                };
+            var globalPrecipitation = new PrecipitationMeteoData();
             AddDataItem(globalPrecipitation, RainfallRunoffModelDataSet.PrecipitationName, DataItemRole.Input, RainfallRunoffModelDataSet.PrecipitationTag);
 
             // temperature
-            var globalTemperature = new MeteoData(MeteoDataAggregationType.NonCumulative)
-                {
-                    Name = RainfallRunoffModelDataSet.TemperatureName
-                };
+            var globalTemperature = new TemperatureMeteoData();
             AddDataItem(globalTemperature, RainfallRunoffModelDataSet.TemperatureName, DataItemRole.Input, RainfallRunoffModelDataSet.TemperatureTag);
 
             // input water level (used by unpaved only)

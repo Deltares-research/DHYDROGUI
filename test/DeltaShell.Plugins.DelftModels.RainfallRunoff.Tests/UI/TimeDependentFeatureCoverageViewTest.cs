@@ -4,9 +4,7 @@ using System.Windows.Forms;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
@@ -27,15 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             var catchment1 = new Catchment {Name = "catch1"};
             var catchment2 = new Catchment {Name = "catch2"};
             var catchment3 = new Catchment {Name = "catch3"};
-
-            var basin = new DrainageBasin {Catchments = {catchment1, catchment2, catchment3}};
-
-            var meteoData = new MeteoData(MeteoDataAggregationType.Cumulative)
-            {
-                DataDistributionType = MeteoDataDistributionType.PerFeature
-            };
-
-            var data = meteoData.Data as IFeatureCoverage;
 
             timeDepFeatureCoverage.Features.Add(catchment1);
             timeDepFeatureCoverage.Features.Add(catchment2);

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Utils.PropertyBag.Dynamic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
@@ -12,15 +13,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
     public class MeteoDataPropertiesTest
     {
         [Test]
-        public void ShowEmpty()
+        [TestCaseSource(nameof(MeteoDataCases))]
+        public void ShowEmpty(MeteoData meteoData)
         {
             WindowsFormsTestHelper.ShowModal(new PropertyGrid
+            {
+                SelectedObject = new DynamicPropertyBag(new MeteoDataProperties
                 {
-                    SelectedObject = new DynamicPropertyBag(new MeteoDataProperties
-                        {
-                            Data = new MeteoData(MeteoDataAggregationType.Cumulative) { Name = "HihihiHahaha" }
-                        })
-                });
+                    Data = meteoData
+                })
+            });
+        }
+        
+        private static IEnumerable<MeteoData> MeteoDataCases()
+        {
+            yield return new EvaporationMeteoData();
+            yield return new PrecipitationMeteoData();
+            yield return new TemperatureMeteoData();
         }
     }
 }
