@@ -80,6 +80,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.ProvidersOutput
         {
             public override ILayer CreateLayer(IFlowFMLayerInstanceCreator creator) =>
                 creator.CreateHisFileFunctionStoreLayer();
+
+            public override IEnumerable<object> GenerateChildren(FMHisFileFunctionStore store)
+            {
+                foreach (IGrouping<string, IFunction> group in store.GetFunctionGrouping())
+                {
+                    if (group.Count() == 1)
+                    {
+                        yield return group.ElementAt(0);
+                    }
+                    else
+                    {
+                        yield return group;
+                    }
+                }
+            }
         }
 
         /// <summary>

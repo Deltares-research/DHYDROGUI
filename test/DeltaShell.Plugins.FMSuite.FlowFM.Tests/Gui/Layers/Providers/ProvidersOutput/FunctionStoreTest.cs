@@ -91,8 +91,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers.Providers.Providers
                 return new FMHisFileFunctionStore(network, area);
             }
 
-            public override IEnumerable<object> GetChildren(FMHisFileFunctionStore store) =>
-                store.Functions;
+            public override IEnumerable<object> GetChildren(FMHisFileFunctionStore store)
+            {
+                foreach (IGrouping<string, IFunction> group in store.GetFunctionGrouping())
+                {
+                    if (group.Count() == 1)
+                    {
+                        yield return group.ElementAt(0);
+                    }
+                    else
+                    {
+
+                        yield return group;
+                    }
+                }
+                
+            }
         }
 
         [TestFixture]

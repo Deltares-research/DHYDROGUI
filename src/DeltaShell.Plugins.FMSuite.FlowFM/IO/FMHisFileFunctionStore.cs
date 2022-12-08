@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -41,11 +42,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected const string LongNameAttribute = "long_name";
         protected const string UnitAttribute = "units";
         protected const string CoordinatesAttribute = "coordinates";
-
+        
+        
         private const string CF_ROLE = "cf_role";
         private const string TIMESERIES_ID = "timeseries_id";
         private const string PROJECTION_X_COORDINATE = "projection_x_coordinate";
         private const string PROJECTION_Y_COORDINATE = "projection_y_coordinate";
+        
+        private const string DefaultFriendlyCategoryName = "Observation points";
+
+        private static ReadOnlyDictionary<string, string> UserFriendlyCategoryNames = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>
+        {
+            { "cross_section", "Observation cross sections" },
+            { "weirgens", "Weirs + general structures" },
+            { "orifice", "Orifices" },
+            { "culvert", "Culverts" },
+            { "pumps", "Pumps" },
+            { "compoundStructures", "Compound structures" },
+            { "bridge", "Bridges" },
+            { "source_sink", "Source and sinks" },
+            { "lateral", "Laterals" },
+        });
 
         // nhib
         protected FMHisFileFunctionStore()
@@ -89,6 +106,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 file?.Close();
             }
         }
+        /// <summary>
+        /// Dynamically groups functions constructed in <see cref="ConstructFunctions"/> based on second dimension name
+        /// of the HIS functions read from the file. These functions are based on time and 'structure' category for example:
+        /// <example>
+        /// double weirgen_discharge(time, weirgens) ;
+        /// </example>
+        /// double means the value type of the discharge at a certain point in time at a certain type of structure.
+        /// so in this case it will be categorized with all other weirgens output coverages but using the user friendly name retrieved from <see cref="UserFriendlyCategoryNames"/>
+        /// <example>
+        /// double orifice_discharge(time, orifice) ;
+        /// </example>
+        /// double means the value type of the discharge at a certain point in time at a certain type of structure.
+        /// so in this case it will be categorized with all other orifices output coverages but using the user friendly name retrieved from <see cref="UserFriendlyCategoryNames"/>
+        /// 
+        /// This is placed in the feature variable (Function.Arguments[1]) Attributes dictionary (dictionary key <see cref="ReadOnlyNetCdfFunctionStoreBase.NcNameAttribute"/>)
+        /// The converted user friendly variable is also placed in the feature variable Attributes dictionary with key <see cref="UserFriendlyCategoryNameAttribute"/>
+        /// which converts the dynamically retrieved variable in to a user readable variable <see cref="UserFriendlyCategoryNames"/>
+        /// Similar action is done at <seealso cref="FMMapFileFunctionStore.GetFunctionGrouping"/> and in the kernels.
+        /// </summary>
+        /// <returns>Grouped functions by a customized user friendly category name <see cref="UserFriendlyCategoryNames"/>.</returns>
+        public IEnumerable<IGrouping<string, IFunction>> GetFunctionGrouping()
+        {
+            return Functions.Where(f => f.Arguments.Count > 1).GroupBy(f => f.Arguments[1].Attributes[UserFriendlyCategoryNameAttribute]);
+        }
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
@@ -123,6 +164,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var featureVariable = new Variable<IFeature> { IsEditable = false, Name = secondDimensionName };
 
                     featureVariable.Attributes[NcNameAttribute] = secondDimensionName;
+                    if (!UserFriendlyCategoryNames.TryGetValue(secondDimensionName, out string userFriendlyCategoryName))
+                    {
+                        userFriendlyCategoryName = DefaultFriendlyCategoryName;
+                    }
+
+                    featureVariable.Attributes[UserFriendlyCategoryNameAttribute] = userFriendlyCategoryName;
                     featureVariable.Attributes[NcUseVariableSizeAttribute] = "false";
                     var coverage = new FeatureCoverage(coverageLongName)
                     {

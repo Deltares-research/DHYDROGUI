@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -330,6 +336,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(2, dischargeFunction.Arguments[1].Values.Count);
 
             // TODO: check structure output, once we support it.
+        }
+        [Test]
+        public void OpenHisFileCheckFunctions_Grouped() // Issue #: FM1D2D-1825
+        {
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_hisfiles");
+            const string hisFileName = "FM_model_his.nc";
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                string hisFilePath = Path.Combine(tempDir, hisFileName); 
+                
+                FileUtils.CopyFile(Path.Combine(testDataFilePath, hisFileName), hisFilePath);
+
+                var store = new FMHisFileFunctionStore(hisFilePath);
+                // currently 119 output funct are created, but the time based function should be grouped in 10 groups (9 defined + 1 other/default) and 0 single groupings
+                // netCDF groups
+                // cross_section, weirgens, orifice, culvert, pumps, compoundStructures, bridge, source_sink, lateral, stations
+                // friendly named :
+                // Observation cross sections, Weirs + general structures, Orifices, Culverts, Pumps, Compound structures, Bridges, Source and sinks, Laterals, Observation points
+
+
+
+                Assert.AreEqual(119, store.Functions.Count);
+
+                List<IGrouping<string, IFunction>> groupings = store.GetFunctionGrouping().ToList();
+                Assert.AreEqual(10, groupings.Count);
+                string defaultFriendlyCategoryName = TypeUtils.GetStaticField<string>(typeof(FMHisFileFunctionStore), "DefaultFriendlyCategoryName");
+                ReadOnlyDictionary<string, string> userFriendlyCategoryNames = TypeUtils.GetStaticField<ReadOnlyDictionary<string, string>>(typeof(FMHisFileFunctionStore), "UserFriendlyCategoryNames");
+                List<string> userFriendlyCategoryNamesList = userFriendlyCategoryNames.Values.Plus(defaultFriendlyCategoryName).OrderBy(n => n).ToList();
+                List<string> groupingsNames = groupings.Select(g => g.Key).OrderBy(n => n).ToList();
+                
+                Assert.That(groupingsNames, Is.EquivalentTo(userFriendlyCategoryNamesList));
+
+                int numberOfSingleGroupings = groupings.Count(g => g.Count() == 1);
+                Assert.AreEqual(0, numberOfSingleGroupings);
+
+                int numberOfMultipleGroupings = groupings.Count(g => g.Count() > 1);
+                Assert.AreEqual(10, numberOfMultipleGroupings);
+            });
         }
     }
 }

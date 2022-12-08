@@ -15,6 +15,7 @@ using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -525,10 +526,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers
             featureCollection.Layer = layer;
             return layer;
         }
-
+        
         private static string GetCommonFunctionName(IList<IFunction> functions)
         {
             if (!functions.Any()) return string.Empty;
+            if (FunctionListHasUserFriendlyCategoryName(functions))
+            {
+                return string.Empty;
+            }
+
             char[] commonFunctionName = functions[0].Name.ToCharArray();
 
             for (var i = 1; i < functions.Count; i++)
@@ -543,6 +549,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers
                 commonFunctionName = new string(commonCharacters.ToArray()).Replace("()", string.Empty).ToCharArray();
             }
             return new string(commonFunctionName).Trim();
+        }
+
+        /// <summary>
+        /// Checks if function list of grouping contains an user defined group name for these functions
+        /// </summary>
+        /// <seealso cref="FMHisFileFunctionStore.GetFunctionGrouping"/>
+        /// <param name="functions">Function list for the grouplayer.</param>
+        /// <returns>true if <see cref="FMNetCdfFileFunctionStore.UserFriendlyCategoryNameAttribute"/> is correctly defined in attribute list.</returns>
+        private static bool FunctionListHasUserFriendlyCategoryName(IList<IFunction> functions)
+        {
+            return functions.Where(f => f.Arguments.Count >= 1).Any(f => f.Arguments[1].Attributes.ContainsKey(FMNetCdfFileFunctionStore.UserFriendlyCategoryNameAttribute));
         }
 
         private static CategorialTheme Create1D2DLinksTheme()

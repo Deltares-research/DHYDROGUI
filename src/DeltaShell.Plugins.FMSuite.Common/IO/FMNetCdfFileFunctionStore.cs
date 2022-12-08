@@ -12,6 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     public abstract class FMNetCdfFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(FMNetCdfFileFunctionStore));
+        public const string UserFriendlyCategoryNameAttribute = "userfriendly_category_name";
         private const double defaultNetCdfDouble = 9.9692099683868690e+36;
         private const string timeDimensionName = "time";
         private const string timeVariableName = "time";
