@@ -95,26 +95,6 @@ namespace DeltaShell.NGHS.Utils.Test.Extensions
             Assert.That(e.ParamName, Is.EqualTo("source"));
         }
 
-        [TestCaseSource(nameof(AllEqualReturnsCorrectResultCases))]
-        public void AllEqual_ReturnsCorrectResult(IEnumerable<string> source, bool expResult)
-        {
-            // Call
-            bool result = source.AllEqual();
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expResult));
-        }
-        
-        [TestCaseSource(nameof(AllUniqueReturnsCorrectResultCases))]
-        public void AllUnique_ReturnsCorrectResult(IEnumerable<string> source, bool expResult)
-        {
-            // Call
-            bool result = source.AllUnique();
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expResult));
-        }
-
         [Test]
         public void Duplicates_SourceNull_ThrowsArgumentNullException()
         {
@@ -197,7 +177,72 @@ namespace DeltaShell.NGHS.Utils.Test.Extensions
             };
             Assert.That(result, Is.EqualTo(expResult));
         }
-        
+
+        [Test]
+        [TestCaseSource(nameof(ToGroupedDictionaryArgNullCases))]
+        public void ToGroupedDictionary_ArgNull_ThrowsArgumentNullException(IEnumerable<string> source, Func<string, int> keySelector, string expParamName)
+        {
+            // Call
+            void Call() => source.ToGroupedDictionary(keySelector);
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo(expParamName));
+        }
+
+        [Test]
+        public void ToGroupedDictionary_ReturnsCorrectResult()
+        {
+            // Setup
+            var source = new[]
+            {
+                "a",
+                "abc",
+                "abcde",
+                "x",
+                "xyz"
+            };
+
+            // Call
+            Dictionary<int, IEnumerable<string>> result = source.ToGroupedDictionary(s => s.Length);
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(3));
+            Assert.That(result[1], Is.EqualTo(new[]
+            {
+                "a",
+                "x"
+            }));
+            Assert.That(result[3], Is.EqualTo(new[]
+            {
+                "abc",
+                "xyz"
+            }));
+            Assert.That(result[5], Is.EqualTo(new[]
+            {
+                "abcde",
+            }));
+        }
+
+        [TestCaseSource(nameof(AllEqualReturnsCorrectResultCases))]
+        public void AllEqual_ReturnsCorrectResult(IEnumerable<string> source, bool expResult)
+        {
+            // Call
+            bool result = source.AllEqual();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expResult));
+        }
+
+        [TestCaseSource(nameof(AllUniqueReturnsCorrectResultCases))]
+        public void AllUnique_ReturnsCorrectResult(IEnumerable<string> source, bool expResult)
+        {
+            // Call
+            bool result = source.AllUnique();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expResult));
+        }
+
         private static IEnumerable<TestCaseData> AllEqualReturnsCorrectResultCases()
         {
             yield return new TestCaseData(Array.Empty<string>(), true);
@@ -250,8 +295,15 @@ namespace DeltaShell.NGHS.Utils.Test.Extensions
 
         private static IEnumerable<TestCaseData> ForEachSourceCollectionNullCases()
         {
-            yield return new TestCaseData(((IEnumerable<string>) null, (IEnumerable<string>) new string[0]), "sources.Item1");
-            yield return new TestCaseData(((IEnumerable<string>) new string[0], (IEnumerable<string>) null), "sources.Item2");
+            yield return new TestCaseData(((IEnumerable<string>)null, (IEnumerable<string>)new string[0]), "sources.Item1");
+            yield return new TestCaseData(((IEnumerable<string>)new string[0], (IEnumerable<string>)null), "sources.Item2");
+        }
+
+        private static IEnumerable<TestCaseData> ToGroupedDictionaryArgNullCases()
+        {
+            Func<string, int> keySelector = s => s.Length;
+            yield return new TestCaseData(null, keySelector, "source");
+            yield return new TestCaseData(Enumerable.Empty<string>(), null, "keySelector");
         }
     }
 }

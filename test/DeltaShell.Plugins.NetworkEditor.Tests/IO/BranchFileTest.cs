@@ -1,15 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.TestUtils.EqualityComparers;
+using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
@@ -200,10 +208,264 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             Assert.AreEqual(sewerConnection.WaterType, properties.WaterType);
         }
 
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Read_FilePathNullOrWhiteSpace_ThrowsArgumentException(string filePath)
+        {
+            // Call
+            void Call() => BranchFile.Read(filePath, "FlowFM_net.nc", Substitute.For<IDelftIniReader>(), Substitute.For<ILogHandler>());
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("filePath"));
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Read_NetFilePathNullOrWhiteSpace_ThrowsArgumentException(string netFilePath)
+        {
+            // Call
+            void Call() => BranchFile.Read("branches.gui", netFilePath, Substitute.For<IDelftIniReader>(), Substitute.For<ILogHandler>());
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("netFilePath"));
+        }
+
+        [Test]
+        public void Read_DelftIniReaderNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => BranchFile.Read("branches.gui", "FlowFM_net.nc", null, Substitute.For<ILogHandler>());
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("delftIniReader"));
+        }
+
+        [Test]
+        public void Read_LogHandlerNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => BranchFile.Read("branches.gui", "FlowFM_net.nc", Substitute.For<IDelftIniReader>(), null);
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("logHandler"));
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Read_NullOrWhiteSpaceFileVersion_SkipsReadingFile(string fileVersion)
+        {
+            // Setup
+            var filePath = "branches.gui";
+            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var logHandler = Substitute.For<ILogHandler>();
+
+            var readCategories = new List<DelftIniCategory>
+            {
+                CreateGeneralCategory(fileVersion),
+                CreateBranchCategory("1"),
+                CreateBranchCategory("2")
+            };
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+
+            // Call
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+
+            // Assert
+            logHandler.Received(1).ReportError($"File version in general category is empty. branches.gui file will not be read.");
+            Assert.That(branchProperties, Is.Empty);
+        }
+
+        [Test]
+        public void Read_InvalidFileVersion_SkipsReadingFile()
+        {
+            // Setup
+            var filePath = "branches.gui";
+            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var logHandler = Substitute.For<ILogHandler>();
+
+            var readCategories = new List<DelftIniCategory>
+            {
+                CreateGeneralCategory("abc"),
+                CreateBranchCategory("1"),
+                CreateBranchCategory("2")
+            };
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+
+            // Call
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+
+            // Assert
+            logHandler.Received(1).ReportError("File version in general category is invalid: abc. branches.gui file will not be read.");
+            Assert.That(branchProperties, Is.Empty);
+        }
+
+        [Test]
+        public void Read_UnsupportedFileVersion_SkipsReadingFile()
+        {
+            // Setup
+            var filePath = "branches.gui";
+            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var logHandler = Substitute.For<ILogHandler>();
+
+            const string fileVersion = "1.01";
+
+            var readCategories = new List<DelftIniCategory>
+            {
+                CreateGeneralCategory(fileVersion),
+                CreateBranchCategory("1"),
+                CreateBranchCategory("2")
+            };
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+
+            // Call
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+
+            // Assert
+            logHandler.Received(1).ReportError($"File version in general category is not supported: {fileVersion}. branches.gui file will not be read.");
+            Assert.That(branchProperties, Is.Empty);
+        }
+
+        [Test]
+        public void Read_MissingGeneralCategory_LogsWarningAndReadsFileCorrectly()
+        {
+            // Setup
+            var filePath = "branches.gui";
+            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var logHandler = Substitute.For<ILogHandler>();
+
+            var readCategories = new List<DelftIniCategory>
+            {
+                CreateBranchCategory("1"),
+                CreateBranchCategory("2")
+            };
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+
+            // Call
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+
+            // Assert
+            logHandler.Received(1).ReportWarning("branches.gui file does not contain a general section. Model has probably been made with an older version of this software.");
+
+            Assert.That(branchProperties, Has.Count.EqualTo(2));
+
+            BranchProperties firstBranchProperty = branchProperties[0];
+            Assert.That(firstBranchProperty.Name, Is.EqualTo("some_branch_1"));
+            Assert.That(firstBranchProperty.BranchType, Is.EqualTo(BranchFile.BranchType.SewerConnection));
+            Assert.That(firstBranchProperty.IsCustomLength, Is.True);
+            Assert.That(firstBranchProperty.SourceCompartmentName, Is.EqualTo("some_source_compartment_1"));
+            Assert.That(firstBranchProperty.TargetCompartmentName, Is.EqualTo("some_target_compartment_1"));
+
+            BranchProperties secondBranchProperty = branchProperties[1];
+            Assert.That(secondBranchProperty.Name, Is.EqualTo("some_branch_2"));
+            Assert.That(secondBranchProperty.BranchType, Is.EqualTo(BranchFile.BranchType.SewerConnection));
+            Assert.That(secondBranchProperty.IsCustomLength, Is.True);
+            Assert.That(secondBranchProperty.SourceCompartmentName, Is.EqualTo("some_source_compartment_2"));
+            Assert.That(secondBranchProperty.TargetCompartmentName, Is.EqualTo("some_target_compartment_2"));
+        }
+
+        [Test]
+        public void Read_SupportedFileVersion_ReadsFileCorrectly()
+        {
+            // Setup
+            var filePath = "branches.gui";
+            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var logHandler = Substitute.For<ILogHandler>();
+
+            var readCategories = new List<DelftIniCategory>
+            {
+                CreateGeneralCategory(),
+                CreateBranchCategory("1"),
+                CreateBranchCategory("2")
+            };
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+
+            // Call
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+
+            // Assert
+            Assert.That(branchProperties, Has.Count.EqualTo(2));
+
+            BranchProperties firstBranchProperty = branchProperties[0];
+            Assert.That(firstBranchProperty.Name, Is.EqualTo("some_branch_1"));
+            Assert.That(firstBranchProperty.BranchType, Is.EqualTo(BranchFile.BranchType.SewerConnection));
+            Assert.That(firstBranchProperty.IsCustomLength, Is.True);
+            Assert.That(firstBranchProperty.SourceCompartmentName, Is.EqualTo("some_source_compartment_1"));
+            Assert.That(firstBranchProperty.TargetCompartmentName, Is.EqualTo("some_target_compartment_1"));
+
+            BranchProperties secondBranchProperty = branchProperties[1];
+            Assert.That(secondBranchProperty.Name, Is.EqualTo("some_branch_2"));
+            Assert.That(secondBranchProperty.BranchType, Is.EqualTo(BranchFile.BranchType.SewerConnection));
+            Assert.That(secondBranchProperty.IsCustomLength, Is.True);
+            Assert.That(secondBranchProperty.SourceCompartmentName, Is.EqualTo("some_source_compartment_2"));
+            Assert.That(secondBranchProperty.TargetCompartmentName, Is.EqualTo("some_target_compartment_2"));
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Write_FilePathNullOrWhiteSpace_ThrowsArgumentException(string filePath)
+        {
+            // Call
+            void Call() => BranchFile.Write(filePath, Enumerable.Empty<IBranch>(), Substitute.For<IDelftIniWriter>());
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("filePath"));
+        }
+
+        [Test]
+        public void Write_BranchesNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => BranchFile.Write("branches.gui", null, Substitute.For<IDelftIniWriter>());
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("branches"));
+        }
+
+        [Test]
+        public void Write_DelftIniWriterNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => BranchFile.Write("branches.gui", Enumerable.Empty<IBranch>(), null);
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("delftIniWriter"));
+        }
+
+        [Test]
+        public void Write_AddsGeneralCategory()
+        {
+            // Setup
+            var delftIniWriter = Substitute.For<IDelftIniWriter>();
+
+            DelftIniCategory generalCategory = CreateGeneralCategory();
+
+            DelftIniCategory[] expectedCategories =
+            {
+                generalCategory
+            };
+
+            // Call
+            BranchFile.Write("branches.gui", Enumerable.Empty<IBranch>(), delftIniWriter);
+
+            // Assert
+            delftIniWriter.Received(1).WriteDelftIniFile(
+                MatchingCategories(expectedCategories),
+                "branches.gui",
+                true);
+        }
+
         private void WriteAndCheckBranchTypeFileContent(List<IBranch> branches)
         {
-            BranchFile.Write(filePath, branches);
-            var propertiesPerBranch = BranchFile.Read(filePath, null);
+            BranchFile.Write(filePath, branches, new DelftIniWriter());
+            IList<BranchProperties> propertiesPerBranch = BranchFile.Read(filePath, "FlowFM_net.nc", new DelftIniReader(), Substitute.For<ILogHandler>());
             for (var n = 0; n < propertiesPerBranch.Count; n++)
             {
                 Assert.That(propertiesPerBranch[n].Name, Is.EqualTo(branches[n].Name));
@@ -231,6 +493,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 
             }
 
+        }
+
+        private static IEnumerable<IDelftIniCategory> MatchingCategories(IEnumerable<IDelftIniCategory> expectedCategories)
+        {
+            return Arg.Is<IEnumerable<IDelftIniCategory>>(actualCategories => CategoriesEqual(actualCategories, expectedCategories));
+        }
+
+        private static bool CategoriesEqual(IEnumerable<IDelftIniCategory> actualCategories, IEnumerable<IDelftIniCategory> expectedCategories)
+        {
+            if (actualCategories.Count() != expectedCategories.Count())
+            {
+                return false;
+            }
+
+            var categoryComparer = new DelftIniCategoryEqualityComparer();
+
+            IEnumerable<bool> categoryEqualities = actualCategories.Zip(expectedCategories,
+                                                                        (x, y) => categoryComparer.Equals(x, y));
+            return categoryEqualities.All(equal => equal);
+        }
+
+        private static DelftIniCategory CreateGeneralCategory(string fileVersion = "2.00")
+        {
+            var generalCategory = new DelftIniCategory("General");
+            generalCategory.AddProperty("fileVersion", fileVersion, "File version. Do not edit this.");
+            generalCategory.AddProperty("fileType", "branches", "File type. Do not edit this.");
+
+            return generalCategory;
+        }
+
+        private static DelftIniCategory CreateBranchCategory(string id)
+        {
+            var branchCategory = new DelftIniCategory("Branch");
+            branchCategory.AddProperty("name", $"some_branch_{id}", "Unique branch id");
+            branchCategory.AddProperty("branchType", "1", "Channel = 0, SewerConnection = 1, Pipe = 2");
+            branchCategory.AddProperty("isLengthCustom", "True", "branch length specified by user");
+            branchCategory.AddProperty("sourceCompartmentName", $"some_source_compartment_{id}", "Source compartment name this sewer connection is beginning");
+            branchCategory.AddProperty("targetCompartmentName", $"some_target_compartment_{id}", "Target compartment name this sewer connection is ending");
+
+            return branchCategory;
         }
     }
 }

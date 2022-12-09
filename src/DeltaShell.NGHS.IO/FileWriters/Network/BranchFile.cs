@@ -5,17 +5,24 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
+using DeltaShell.NGHS.Utils.Extensions;
+using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Network
 {
     public static class BranchFile
     {
+        private static readonly Version version = new Version(2, 0);
+        
         public enum BranchType
         {
             Channel = 0, SewerConnection = 1, Pipe = 2
@@ -47,9 +54,29 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             return branchProperties;
         }
 
-        public static void Write(string filePath, IEnumerable<IBranch> branches)
+        /// <summary>
+        /// Writes the provided branches to the branches.gui file at the specified path.
+        /// </summary>
+        /// <param name="filePath"> The file path to the branches.gui file. </param>
+        /// <param name="branches"> The branches to write. </param>
+        /// <param name="delftIniWriter"> The Delft INI writer. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="branches"/> or <paramref name="delftIniWriter"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="filePath"/> is <c>null</c> or white space.
+        /// </exception>
+        public static void Write(string filePath, IEnumerable<IBranch> branches, IDelftIniWriter delftIniWriter)
         {
-            var categories = new List<DelftIniCategory>();
+            Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
+            Ensure.NotNull(branches, nameof(branches));
+            Ensure.NotNull(delftIniWriter, nameof(delftIniWriter));
+            
+            var categories = new List<DelftIniCategory>
+            {
+                CreateGeneralCategory()
+            };
+
             foreach (var branch in branches)
             {
                 var properties = branch.GetBranchProperties();
@@ -85,14 +112,74 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             }
 
             // write branch file
-            new DelftIniWriter().WriteDelftIniFile(categories, filePath);
+            delftIniWriter.WriteDelftIniFile(categories, filePath);
         }
 
-        public static IList<BranchProperties> Read(string filePath, string netFilePath)
+        private static DelftIniCategory CreateGeneralCategory()
+        {
+            return GeneralRegionGenerator.GenerateGeneralRegion(
+                version.Major,
+                version.Minor,
+                GeneralRegion.FileTypeName.Branches);
+        }
+
+        /// <summary>
+        /// Reads the branch information from the branches.gui file.
+        /// </summary>
+        /// <param name="filePath"> The file path to the branches.gui file. </param>
+        /// <param name="netFilePath"> The file path to the network file. </param>
+        /// <param name="delftIniReader"> The Delft INI reader. </param>
+        /// <param name="logHandler"> The log handler to log messages with. </param>
+        /// <returns>
+        /// A collection of the branch properties that were collected from file.
+        /// Returns an empty collection when:
+        /// <list type="bullet">
+        /// <item><description> The file does not contain any branch categories. </description></item>
+        /// <item><description> The file misses a fileVersion in the general category. </description></item>
+        /// <item><description> The file contains an invalid fileVersion in the general category.</description></item>
+        /// </list>
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="delftIniReader"/> or <paramref name="logHandler"/> is <c>null</c>
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="filePath"/> or <paramref name="netFilePath"/> is <c>null</c> or white space.
+        /// </exception>
+        public static IList<BranchProperties> Read(string filePath, string netFilePath, IDelftIniReader delftIniReader, ILogHandler logHandler)
+        {
+            Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
+            Ensure.NotNullOrWhiteSpace(netFilePath, nameof(netFilePath));
+            Ensure.NotNull(delftIniReader, nameof(delftIniReader));
+            Ensure.NotNull(logHandler, nameof(logHandler));
+            
+            IList<DelftIniCategory> categories = delftIniReader.ReadDelftIniFile(filePath);
+            
+            Dictionary<string, IEnumerable<DelftIniCategory>> groupedCategories = categories.ToGroupedDictionary(category => category.Name);
+            if (groupedCategories.TryGetValue(GeneralRegion.IniHeader, out IEnumerable<DelftIniCategory> generalCategories))
+            {
+                if (!ValidateGeneralCategory(generalCategories.First(), logHandler))
+                {
+                    return new List<BranchProperties>();
+                }
+            }
+            else
+            {
+                logHandler.ReportWarning(Resources.BranchesGui_file_does_not_contain_a_general_section);
+            }
+            
+            if (!groupedCategories.TryGetValue(NetworkRegion.BranchIniHeader, out IEnumerable<DelftIniCategory> branchCategories))
+            {
+                return new List<BranchProperties>();
+            }
+
+            return ReadBranchProperties(branchCategories, netFilePath);
+        }
+
+        private static IList<BranchProperties> ReadBranchProperties(IEnumerable<DelftIniCategory> branchCategories, string netFilePath)
         {
             var propertiesPerBranch = new List<BranchProperties>();
-            var categories = new DelftIniReader().ReadDelftIniFile(filePath).ToList();
-            foreach (var category in categories)
+
+            foreach (var category in branchCategories)
             {
                 var branchProperties = new BranchProperties
                 {
@@ -138,6 +225,31 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             }
 
             return propertiesPerBranch;
+        }
+
+        private static bool ValidateGeneralCategory(IDelftIniCategory generalCategory, ILogHandler logHandler)
+        {
+            string fileVersionStr = generalCategory.GetPropertyValue(GeneralRegion.FileVersion.Key);
+
+            if (string.IsNullOrWhiteSpace(fileVersionStr))
+            {
+                logHandler.ReportError(Resources.File_version_in_general_category_is_empty);
+                return false;
+            }
+
+            if (!Version.TryParse(fileVersionStr, out Version fileVersion))
+            {
+                logHandler.ReportError(string.Format(Resources.File_version_in_general_category_is_invalid_0_, fileVersionStr));
+                return false;
+            }
+
+            if (fileVersion != version)
+            {
+                logHandler.ReportError(string.Format(Resources.File_version_in_general_category_is_not_supported_0_, fileVersionStr));
+                return false;
+            }
+
+            return true;
         }
 
         private static SewerConnectionWaterType ConvertBranchTypeToWaterType(int branchTypeValue)

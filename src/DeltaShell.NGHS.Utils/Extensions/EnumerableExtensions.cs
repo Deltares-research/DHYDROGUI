@@ -75,10 +75,10 @@ namespace DeltaShell.NGHS.Utils.Extensions
         public static bool AllUnique<T>(this IEnumerable<T> source)
         {
             Ensure.NotNull(source, nameof(source));
-            
+
             var hashset = new HashSet<T>();
-            
-            foreach(T element in source)
+
+            foreach (T element in source)
             {
                 if (!hashset.Add(element))
                 {
@@ -88,7 +88,7 @@ namespace DeltaShell.NGHS.Utils.Extensions
 
             return true;
         }
-        
+
         /// <summary>
         /// Invokes the <paramref name="selector"/> on each item of the <paramref name="source"/>, and returns the duplicates of
         /// this result, using the default <see cref="IEqualityComparer{T}"/>>.
@@ -141,6 +141,28 @@ namespace DeltaShell.NGHS.Utils.Extensions
                     dictionary[item] = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Groups the source by the provided <paramref name="keySelector"/> and
+        /// creates a dictionary with the key and the corresponding grouped items.
+        /// </summary>
+        /// <param name="source"> The source elements. </param>
+        /// <param name="keySelector"> The key selector. </param>
+        /// <typeparam name="TKey"> The type of the key. </typeparam>
+        /// <typeparam name="TValue"> The type of the elements. </typeparam>
+        /// <returns>
+        /// A dictionary with grouped items by their corresponding key.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/> or <paramref name="keySelector"/> is <c>null</c>.
+        /// </exception>
+        public static Dictionary<TKey, IEnumerable<TValue>> ToGroupedDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+        {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(keySelector, nameof(keySelector));
+
+            return source.GroupBy(keySelector).ToDictionary(r => r.Key, r => r.AsEnumerable());
         }
 
         private static bool AllEqualTo<T>(this IEnumerable<T> source, T value)

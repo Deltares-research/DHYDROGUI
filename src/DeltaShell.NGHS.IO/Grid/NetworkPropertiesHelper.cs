@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -19,9 +22,12 @@ namespace DeltaShell.NGHS.IO.Grid
         public static IEnumerable<BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
         {
             string branchTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
+            var logHandler = new LogHandler(Resources.Reading_the_branches_gui_file, typeof(BranchFile));
             IEnumerable<BranchProperties> propertiesPerBranch = File.Exists(branchTypeFilePath)
-                                                                    ? BranchFile.Read(branchTypeFilePath, netFilePath)
+                                                                    ? BranchFile.Read(branchTypeFilePath, netFilePath, new DelftIniReader(), logHandler)
                                                                     : Enumerable.Empty<BranchProperties>();
+
+            logHandler.LogReport();
 
             return propertiesPerBranch;
         }

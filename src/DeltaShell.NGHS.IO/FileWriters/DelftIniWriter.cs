@@ -5,14 +5,14 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
-    public class DelftIniWriter : NGHSFileBase
+    public class DelftIniWriter : NGHSFileBase, IDelftIniWriter
     {
         /// <summary>
         /// Creates a Delft .ini format file at target location.
         /// </summary>
         /// <param name="categories">Data to be written.</param>
         /// <param name="iniFile">File path to write to.</param>
-        /// <param name="writeComment"></param>
+        /// <param name="writeComment"> Optional; whether or not to write the comments. Defaults to <c>true</c>. </param>
         /// <exception cref="UnauthorizedAccessException">Access is denied.</exception>
         /// <exception cref="ArgumentException">
         ///   <paramref name="iniFile"/> is an empty string ("") or contains the name of a system device 

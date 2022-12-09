@@ -501,4 +501,19 @@
   <data name="BcSpecificTimeSeriesReader_Read_No_structure_found_with_name__0__quantity__1__in_file__2_" xml:space="preserve">
     <value>No structure found with name: {0} and quantity: {1} in file: {2}</value>
   </data>
+  <data name="Reading_the_branches_gui_file" xml:space="preserve">
+    <value>reading the branches.gui file</value>
+  </data>
+  <data name="File_version_in_general_category_is_not_supported_0_" xml:space="preserve">
+    <value>File version in general category is not supported: {0}. branches.gui file will not be read.</value>
+  </data>
+  <data name="File_version_in_general_category_is_invalid_0_" xml:space="preserve">
+    <value>File version in general category is invalid: {0}. branches.gui file will not be read.</value>
+  </data>
+  <data name="BranchesGui_file_does_not_contain_a_general_section" xml:space="preserve">
+    <value>branches.gui file does not contain a general section. Model has probably been made with an older version of this software.</value>
+  </data>
+  <data name="File_version_in_general_category_is_empty" xml:space="preserve">
+	  <value>File version in general category is empty. branches.gui file will not be read.</value>
+  </data>
 </root>

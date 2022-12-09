@@ -72,6 +72,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
             public const string LateralDischargeLocation = "latLocs";
             public const string BoundaryConditions = "boundConds";
             public const string BoundaryConditionExternalForcing = "extForce";
+            
+            /// <summary>
+            /// The serialized file type of the branches.gui file.
+            /// </summary>
+            public const string Branches = "branches";
             public const string RoughnessData = "roughness";
             public const string Retention = "retentions";
             public const string StorageNodes = "storageNodes";

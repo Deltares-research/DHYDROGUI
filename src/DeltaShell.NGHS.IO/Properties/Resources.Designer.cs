@@ -192,6 +192,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to branches.gui file does not contain a general section. Model has probably been made with an older version of this software..
+        /// </summary>
+        public static string BranchesGui_file_does_not_contain_a_general_section {
+            get {
+                return ResourceManager.GetString("BranchesGui_file_does_not_contain_a_general_section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
         /// </summary>
         public static string Could_not_read_file_0_properly_it_doesnt_exist {
@@ -233,6 +242,33 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string DelftIniPropertyExtensionMethods_Cannot_parse_value_for_property {
             get {
                 return ResourceManager.GetString("DelftIniPropertyExtensionMethods_Cannot_parse_value_for_property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File version in general category is empty. branches.gui file will not be read..
+        /// </summary>
+        public static string File_version_in_general_category_is_empty {
+            get {
+                return ResourceManager.GetString("File_version_in_general_category_is_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File version in general category is invalid: {0}. branches.gui file will not be read..
+        /// </summary>
+        public static string File_version_in_general_category_is_invalid_0_ {
+            get {
+                return ResourceManager.GetString("File_version_in_general_category_is_invalid_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File version in general category is not supported: {0}. branches.gui file will not be read..
+        /// </summary>
+        public static string File_version_in_general_category_is_not_supported_0_ {
+            get {
+                return ResourceManager.GetString("File_version_in_general_category_is_not_supported_0_", resourceCulture);
             }
         }
         
@@ -395,6 +431,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string Property_0_contains_unsupported_value_1_2_at_line_number_3_will_be_skipped {
             get {
                 return ResourceManager.GetString("Property_0_contains_unsupported_value_1_2_at_line_number_3_will_be_skipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to reading the branches.gui file.
+        /// </summary>
+        public static string Reading_the_branches_gui_file {
+            get {
+                return ResourceManager.GetString("Reading_the_branches_gui_file", resourceCulture);
             }
         }
         

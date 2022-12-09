@@ -19,7 +19,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
@@ -342,7 +341,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             RainfallRunoffModel rrModel, WaterFlowFMModel fmModel)
         {
             var featureElements = importedFeatureElements.ToArray();
-            var featureElementsByName = featureElements.GroupBy(e => e.Name).ToDictionary(g => g.Key);
+            var featureElementsByName = featureElements.ToGroupedDictionary(e => e.Name);
             var network = fmModel.Network;
             
             var branchesGeometryDict = network.Branches.ToLookup(b => b.Name, b => b.Target?.Geometry);

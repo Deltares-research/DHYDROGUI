@@ -6,7 +6,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
-    public class DelftIniReader : NGHSFileBase
+    public class DelftIniReader : NGHSFileBase, IDelftIniReader
     {
         private readonly Regex keyValueCommentRegex = new Regex(KeyValueCommentPattern);
 
