@@ -5,12 +5,13 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
-using SharpMap.Converters.Geometries;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Layers;
 using SharpMap.Rendering;
+using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
@@ -92,7 +93,31 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         public IEnumerable<IFeature> GetFeatures(IGeometry geometry, ILayer layer)
         {
-            return GetFeatures(geometry.EnvelopeInternal, layer);
+            var intersectedFeatures = new List<IFeature>();
+
+            foreach (IFeature feature in layer.DataSource.Features)
+            {
+                IGeometry geometryFeature = GetRenderedFeatureGeometry(feature, layer);
+                var envelope = geometryFeature?.EnvelopeInternal?.Copy();
+                envelope?.ExpandBy(layer.Map.PixelSize * 5);
+                if (envelope != null)
+                {
+                    var coordinates = new[]
+                    {
+                        new Coordinate(envelope.MinX, envelope.MinY),
+                        new Coordinate(envelope.MinX, envelope.MaxY),
+                        new Coordinate(envelope.MaxX, envelope.MaxY),
+                        new Coordinate(envelope.MaxX, envelope.MinY),
+                        new Coordinate(envelope.MinX, envelope.MinY)
+                    };
+                    var envelopeGeometry = new LinearRing(coordinates);
+                    if (envelopeGeometry.Intersects(geometry))
+                    {
+                        intersectedFeatures.Add(feature);
+                    }
+                }
+            }
+            return intersectedFeatures;
         }
 
         public IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)

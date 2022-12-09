@@ -117,7 +117,18 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         public IEnumerable<IFeature> GetFeatures(IGeometry geometry, ILayer layer)
         {
-            return GetFeatures(geometry.EnvelopeInternal, layer);
+            var intersectedFeatures = new List<IFeature>();
+
+            foreach (IFeature feature in layer.DataSource.Features)
+            {
+                var geometryFeature = GetRenderedFeatureGeometry(feature, layer);
+                if (geometry.Intersects(geometryFeature))
+                {
+                    intersectedFeatures.Add(feature);
+                }
+            }
+
+            return intersectedFeatures;
         }
 
         public IEnumerable<IFeature> GetFeatures(Envelope box, ILayer layer)
