@@ -229,4 +229,37 @@
   <data name="BaseMeteoEditorViewModel_OnGenerateTimeSeries_Please_add_a_feature_before_generating_time_series" xml:space="preserve">
     <value>Please add a catchment before generating time series</value>
   </data>
+  <data name="BoundariesLayer" xml:space="preserve">
+    <value>Boundaries</value>
+  </data>
+  <data name="UnpavedLayer" xml:space="preserve">
+    <value>Unpaved</value>
+  </data>
+  <data name="PavedLayer" xml:space="preserve">
+    <value>Paved</value>
+  </data>
+  <data name="GreenhouseLayer" xml:space="preserve">
+    <value>Greenhouse</value>
+  </data>
+  <data name="OpenWaterLayer" xml:space="preserve">
+    <value>Open water</value>
+  </data>
+  <data name="SacramentoLayer" xml:space="preserve">
+    <value>Sacramento</value>
+  </data>
+  <data name="HBVLayer" xml:space="preserve">
+    <value>HBV</value>
+  </data>
+  <data name="WWTPLayer" xml:space="preserve">
+    <value>WWTP</value>
+  </data>
+  <data name="BalancesLayer" xml:space="preserve">
+    <value>Balances</value>
+  </data>
+  <data name="LinksLayer" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="NWRWLayer" xml:space="preserve">
+    <value>NWRW</value>
+  </data>
 </root>

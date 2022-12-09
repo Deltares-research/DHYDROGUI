@@ -54,5 +54,32 @@ namespace DeltaShell.NGHS.Utils.Extensions
             
             return source.IndexOf(value, StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
+
+        /// <summary>
+        /// Gets the last substring between two characters in a string.
+        /// </summary>
+        /// <param name="source"> The source string. </param>
+        /// <param name="start"> The first enclosing character. </param>
+        /// <param name="end"> The last enclosing character. </param>
+        /// <returns>
+        /// The last substring between the two given characters if found; otherwise an empty string. 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/> is <c>null</c>.
+        /// </exception>
+        public static string LastStringBetween(this string source, char start, char end)
+        {
+            Ensure.NotNull(source, nameof(source));
+
+            int startIndex = source.LastIndexOf(start);
+            int endIndex = source.LastIndexOf(end);
+
+            if (startIndex == -1 || endIndex == -1 || startIndex > endIndex)
+            {
+                return string.Empty;
+            }
+
+            return source.Substring(startIndex + 1, endIndex - startIndex - 1);
+        }
     }
 }

@@ -12,6 +12,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.MapLayerProviders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses;
 using Mono.Addins;

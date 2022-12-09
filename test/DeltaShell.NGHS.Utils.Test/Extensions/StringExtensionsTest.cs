@@ -89,6 +89,68 @@ namespace DeltaShell.NGHS.Utils.Test.Extensions
             Assert.That(result, Is.EqualTo(expResult));
         }
 
+        [Test]
+        public void LastStringBetween_SourceNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => ((string) null).LastStringBetween('(', ')');
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("source"));
+        }
+
+        [Test]
+        public void LastStringBetween_DoesNotContainStartCharacter_ReturnsEmptyString()
+        {
+            // Setup
+            const string source = "example abc) def";
+
+            // Call
+            string result = source.LastStringBetween('(', ')');
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void LastStringBetween_DoesNotContainEndCharacter_ReturnsEmptyString()
+        {
+            // Setup
+            const string source = "example (abc def";
+
+            // Call
+            string result = source.LastStringBetween('(', ')');
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void LastStringBetween_EndCharacterBeforeStartCharacter_ReturnsEmptyString()
+        {
+            // Setup
+            const string source = "example )abc( def";
+
+            // Call
+            string result = source.LastStringBetween('(', ')');
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
+        [TestCase("example (abc) (def)")]
+        [TestCase("example (abc( (def)")]
+        [TestCase("example )abc) (def)")]
+        public void LastStringBetween_ReturnsLastStringBetweenStartAndEndCharacters(string source)
+        {
+            // Call
+            string result = source.LastStringBetween('(', ')');
+
+            // Assert
+            Assert.That(result, Is.EqualTo("def"));
+        }
+
         private static IEnumerable<TestCaseData> SplitOnEmptySpaceSplitStringCorrectlyCases()
         {
             yield return new TestCaseData("", Array.Empty<string>());
