@@ -8,7 +8,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Import
 {
-    public class CrossSectionZWFromGisImporter: NetworkFeatureFromGisImporterBase
+    public class CrossSectionZWFromGisImporter: NetworkFeatureFromGisImporterBase, INetworkFeatureZwFromGisImporter
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionZWFromGisImporter));
 

@@ -137,7 +137,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 availableFeatureFromGisImporters.Add("Cross Sections ZW", typeof (CrossSectionZWFromGisImporter));
                 availableFeatureFromGisImporters.Add("Cross Sections Y'Z", typeof (CrossSectionYZFromGisImporter));
                 availableFeatureFromGisImporters.Add("Cross Sections XYZ", typeof (CrossSectionXYZFromGisImporter));
-                availableFeatureFromGisImporters.Add("Bridge", typeof (BridgeFromGisImporter));
+                availableFeatureFromGisImporters.Add("Bridge", typeof (BridgeRectangularFromGisImporter));
+                availableFeatureFromGisImporters.Add("Bridge tabulated (ZW)", typeof (BridgeZwFromGisImporter));
+                availableFeatureFromGisImporters.Add("Bridge tabulated (YZ)", typeof (BridgeYzFromGisImporter));
                 availableFeatureFromGisImporters.Add("Culvert", typeof (CulvertFromGisImporter));
                 availableFeatureFromGisImporters.Add("Lateral sources", typeof (LateralSourceFromGisImporter));
                 availableFeatureFromGisImporters.Add("Observation points", typeof (ObservationPointFromGisImporter));

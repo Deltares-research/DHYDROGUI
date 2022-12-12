@@ -150,10 +150,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
             txtPath.Enabled = true;
             btnSelectFile.Enabled = true;
 
-            var visible = (comboBox.SelectedValue == typeof(CrossSectionZWFromGisImporter));
+            bool visible = IsLevelsInputVisible(comboBox);
+
             lblNumberOfLevels.Visible = visible;
             maskedTextBoxNumberOfLevels.Enabled = visible;
             maskedTextBoxNumberOfLevels.Visible = visible;
+        }
+
+        private static bool IsLevelsInputVisible(ComboBox comboBox)
+        {
+            if (comboBox.SelectedValue is Type sv)
+            {
+                return typeof(INetworkFeatureZwFromGisImporter).IsAssignableFrom(sv);
+            }
+            return false;
         }
 
         private void comboBoxTable_SelectedIndexChanged(object sender, EventArgs e)
@@ -282,10 +292,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
             networkFeatureFromGisImporter.FeatureFromGisImporterSettings.DiscriminatorColumn = discriminator;
             networkFeatureFromGisImporter.FeatureFromGisImporterSettings.DiscriminatorValue = Convert.ToString(comboBoxDiscriminatorValue.SelectedItem);
 
-            var crossSectionZwFromGisImporter = networkFeatureFromGisImporter as CrossSectionZWFromGisImporter;
-            if(crossSectionZwFromGisImporter != null)
+            if(networkFeatureFromGisImporter is INetworkFeatureZwFromGisImporter networkFeatureZwFromGisImporter)
             {
-                crossSectionZwFromGisImporter.NumberOfLevels = Convert.ToInt32(maskedTextBoxNumberOfLevels.Text);
+                networkFeatureZwFromGisImporter.NumberOfLevels = Convert.ToInt32(maskedTextBoxNumberOfLevels.Text);
             }
 
             networkFeatureFromGisImporter.FeatureFromGisImporterSettings.GeometryColumn = geometryColumn;
