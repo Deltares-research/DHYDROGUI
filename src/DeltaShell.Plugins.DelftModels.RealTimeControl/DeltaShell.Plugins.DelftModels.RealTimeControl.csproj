@@ -83,7 +83,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.1799" GeneratePathProperty="true" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.1804" GeneratePathProperty="true" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="FParsec" Version="1.1.1" />
     <PackageReference Include="FParsec-Pipes" Version="1.1.1" />
     <PackageReference Include="FSharp.Core" Version="6.0.5" />
@@ -96,7 +96,7 @@
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="PostSharp" Version="6.10.5">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
