@@ -70,5 +70,17 @@ namespace DelftTools.Hydro.SewerFeatures
         void AddOrUpdateGeometry(IHydroNetwork hydroNetwork, SewerImporterHelper helper);
 
         void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake();
+        
+        /// <summary>
+        /// The sewer connection type.
+        /// This is based on the sewer connection features.
+        /// - if an <see cref="IWeir"/> is on the sewer connection, it returns <see cref="SewerConnectionSpecialConnectionType.Weir"/>;
+        /// - if an <see cref="IPump"/> is on the sewer connection, it returns <see cref="SewerConnectionSpecialConnectionType.Pump"/>;
+        /// - otherwise, <see cref="SewerConnectionSpecialConnectionType.None"/>.
+        /// </summary>
+        /// <remarks>
+        /// This is not applicable for sewer connections of type <see cref="Pipe"/>.
+        /// </remarks>
+        SewerConnectionSpecialConnectionType SpecialConnectionType { get; }
     }
 }

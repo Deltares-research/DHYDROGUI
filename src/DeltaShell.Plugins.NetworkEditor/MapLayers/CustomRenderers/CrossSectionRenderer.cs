@@ -96,31 +96,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             }
             
             var currentVectorStyle = themeOn
-                                ? vectorLayer.Theme.GetStyle(crossSection) as VectorStyle
+                                ? vectorLayer.Theme.GetStyle(feature) as VectorStyle
                                 : vectorLayer.Style;
 
             if (null == currentVectorStyle)
             {
                 return false;
             }
-            switch (crossSection.CrossSectionType)
-            {
-                case CrossSectionType.YZ:
-                    currentVectorStyle.Line.Color = Color.Silver;
-                    break;
-                case CrossSectionType.ZW:
-                    currentVectorStyle.Line.Color = Color.Gray;
-                    break;
-                case CrossSectionType.GeometryBased:
-                    currentVectorStyle.Line.Color = Color.OrangeRed;
-                    break;
-                case CrossSectionType.Standard:
-                    currentVectorStyle.Line.Color = Color.Purple;
-                    break;
-                default:
-                    currentVectorStyle.Line.Color = Color.OrangeRed;
-                    break;
-            }
+            
             if (vectorLayer.Style.EnableOutline)
             {
                 //Draw background of all line-outlines first

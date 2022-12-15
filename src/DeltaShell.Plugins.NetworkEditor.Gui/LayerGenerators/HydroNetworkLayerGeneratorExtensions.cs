@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
             var layer = new VectorLayer(name)
             {
                 Style = NetworkLayerStyleFactory.CreateStyle(networkItems),
-                Theme = NetworkLayerStyleFactory.CreateTheme(networkItems),
+                Theme = NetworkLayerThemeFactory.CreateTheme(networkItems),
                 NameIsReadOnly = true,
                 DataSource = new HydroNetworkFeatureCollection
                 {
