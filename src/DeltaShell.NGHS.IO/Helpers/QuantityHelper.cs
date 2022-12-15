@@ -68,18 +68,17 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
 
         /// <summary>
-        /// Gets the quantity and unit in an expected form.
+        /// Gets the quantity-unit pair in an expected form.
         /// </summary>
         /// <param name="boundaryNodeData">BoundaryNodeData</param>
         /// <param name="givenQuantity">Quantity used when it should be overwritten, if empty use data from <paramref name="boundaryNodeData"/></param>
-        /// <returns>quantity and unit in an expected form</returns>
-        public static IDictionary<string, string> GetQuantityAndUnit(IFunction boundaryNodeData, string givenQuantity)
+        /// <returns> The quantity-unit pair in an expected form. </returns>
+        public static QuantityUnitPair GetQuantityAndUnit(IFunction boundaryNodeData, string givenQuantity)
         {
             string quantity = string.IsNullOrEmpty(givenQuantity) ? boundaryNodeData.Name : givenQuantity;
             string unit = boundaryNodeData.Components.First().Unit.Name;
             
-            var data = new Dictionary<string, string> {{quantity, unit}};
-            return data;
+            return new QuantityUnitPair(quantity, unit);
         }
     }
 }

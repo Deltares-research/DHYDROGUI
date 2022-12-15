@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
                 greenhouseData.PumpCapacity, greenhouseData.UseSubsoilStorage,
                 greenhouseData.SubSoilStorageArea, GetMeteoId(model, greenhouseData), GetAreaAdjustmentFactor(model, greenhouseData), greenhouseData.Catchment?.InteriorPoint?.X ?? 0d, greenhouseData.Catchment?.InteriorPoint?.Y ?? 0d);
 
-            RainfallRunoffModelController.AddLink(links, greenhouseData.Catchment);
+            links.Add(RainfallRunoffModelController.CreateModelLink(greenhouseData.Catchment));
         }
         
         public override bool CanHandle(ElementSet elementSet)

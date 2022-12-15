@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             SetSeepage(unpavedData, writer, model.StartTime, iref);
             SetDrainage(unpavedData, writer, drainageComputationOption, iref);
 
-            RainfallRunoffModelController.AddLink(links, unpavedData.Catchment);
+            links.Add(RainfallRunoffModelController.CreateModelLink(unpavedData.Catchment));
         }
 
         private double GetInitialGroundwaterLevel(UnpavedData unpavedData, IRainfallRunoffModel model)

@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
 
         protected override void OnAddArea(IRainfallRunoffModel model, SacramentoData data, IList<ModelLink> links)
         {
-            RainfallRunoffModelController.AddLink(links, data.Catchment);
+            links.Add(RainfallRunoffModelController.CreateModelLink(data.Catchment));
 
             var areaParameters = new[]
                 {

@@ -57,7 +57,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                                                                                    BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate,
                                                                                    periodic);
 
-            IDictionary<string, string> quantityAndUnitData = QuantityHelper.GetQuantityAndUnit(boundaryNodeData, quantity);
+            QuantityUnitPair quantityAndUnitData = QuantityHelper.GetQuantityAndUnit(boundaryNodeData, quantity);
             boundaryDefinition.Table = GenerateTableForTimeSeriesData(quantityAndUnitData, boundaryNodeData, startTime);
 
             return boundaryDefinition;

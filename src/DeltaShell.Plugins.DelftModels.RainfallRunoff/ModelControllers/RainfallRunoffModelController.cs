@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             foreach (var wwtp in model.Basin.WasteWaterTreatmentPlants)
             {
                 Writer.AddWasteWaterTreatmentPlant(wwtp.Name, wwtp.Geometry?.Coordinate.X ?? 0.0, wwtp.Geometry?.Coordinate.Y ?? 0.0);
-                AddLink(links, wwtp);
+                links.Add(CreateModelLink(wwtp));
                 allRRNodes.Add(wwtp);
             }
         }
@@ -501,29 +501,38 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
         #endregion
 
-        public static void AddLink(IList<ModelLink> links, IHydroObject hydroObject, HydroLink explicitWwtpLink = null)
+        public static ModelLink CreateModelLink(IHydroObject hydroObject, HydroLink explicitWwtpLink = null)
         {
             var link = explicitWwtpLink ?? hydroObject.Links.FirstOrDefault(l => !(l.Target is WasteWaterTreatmentPlant));
             
             //link inside rr domain (wwtp or runoff boundary)
             if (link != null && (link.Target is WasteWaterTreatmentPlant || link.Target is RunoffBoundary || link.Target is ILateralSource))
             {
-                links.Add(new ModelLink(link.Name, hydroObject, link, link.Target));
+                return new ModelLink(link.Name, hydroObject, link, link.Target);
             }
-            else //link outside rr domain (flow), or non-existent: use string iso feature
-            {
-                if (link == null) //no link defined..create fake (implicit) link and boundary
-                {
-                    link = new HydroLink(hydroObject, hydroObject)
-                    {
-                        Name = hydroObject + "_link",
-                        Geometry = GetFakeLinkGeometry(hydroObject)
-                    };
-                }
+            return CreateModelLinkOutsideRR(hydroObject, link);
+        }
 
-                var targetName = hydroObject.Name + "_boundary";
-                links.Add(new ModelLink(link.Name, hydroObject, link, targetName));
+        /// <summary>
+        /// link outside rr domain (flow), or non-existent: use string iso feature.
+        /// </summary>
+        /// <param name="hydroObject">hydroObject for creating model link.</param>
+        /// <param name="link">Link for the model link.</param>
+        /// <returns><see cref="ModelLink"/> outside RR domain.</returns>
+        /// <remarks>When no link defined, creates a fake (implicit) link and boundary.</remarks>
+        private static ModelLink CreateModelLinkOutsideRR(IHydroObject hydroObject, HydroLink link)
+        {
+            if (link == null)
+            {
+                link = new HydroLink(hydroObject, hydroObject)
+                {
+                    Name = hydroObject + "_link",
+                    Geometry = GetFakeLinkGeometry(hydroObject)
+                };
             }
+
+            string targetName = hydroObject.Name + "_boundary";
+            return new ModelLink(link.Name, hydroObject, link, targetName);
         }
 
         private static ILineString GetFakeLinkGeometry(IHydroObject hydroObject)

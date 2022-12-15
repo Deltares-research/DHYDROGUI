@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return new List<IDelftBcQuantityData>() { new DelftBcQuantityData(quantity, unit, new List<double>() { value }) };
         }
  
-        protected static IList<IDelftBcQuantityData> GenerateTableForTimeSeriesData(IDictionary<string, string> quantityData, IFunction functionData, DateTime startTime)
+        protected static IList<IDelftBcQuantityData> GenerateTableForTimeSeriesData(QuantityUnitPair quantityUnitPair, IFunction functionData, DateTime startTime)
         {
             var table = new List<IDelftBcQuantityData>();
             if (!functionData.Arguments.Any()) return table;
@@ -41,20 +41,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 
             table.Add(new DelftBcQuantityData(timeQuantity, timeUnit, formattedDateTimes));
 
-            for (var i = 0; i < quantityData.Count; i++)
+
+            var quantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, quantityUnitPair.Quantity, BoundaryRegion.Quantity.Description);
+            var unit = new DelftIniProperty(BoundaryRegion.Unit.Key, quantityUnitPair.Unit, BoundaryRegion.Unit.Description);
+
+            var data = new List<double>();
+            if (functionData.Components.Any())
             {
-                var quantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, quantityData.Keys.ElementAt(i), BoundaryRegion.Quantity.Description);
-                var unit = new DelftIniProperty(BoundaryRegion.Unit.Key, quantityData.Values.ElementAt(i), BoundaryRegion.Unit.Description);
-
-                var data = new List<double>();
-                if (i < functionData.Components.Count)
-                {
-                    data = ((MultiDimensionalArray<double>) functionData.Components[i].Values).ToList();
-                }
-                if(!data.Any()) data = Enumerable.Repeat(0.0, formattedDateTimes.Count).ToList();
-
-                table.Add(new DelftBcQuantityData(quantity, unit, data));
+                data = ((MultiDimensionalArray<double>) functionData.Components[0].Values).ToList();
             }
+            if(!data.Any()) data = Enumerable.Repeat(0.0, formattedDateTimes.Count).ToList();
+
+            table.Add(new DelftBcQuantityData(quantity, unit, data));
+            
 
             return table;
         }

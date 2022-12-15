@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
                 GetMeteoId(model, openWaterData),
                 GetAreaAdjustmentFactor(model, openWaterData),openWaterData.Catchment?.InteriorPoint?.X ?? 0d, openWaterData.Catchment?.InteriorPoint?.Y ?? 0d );
 
-            RainfallRunoffModelController.AddLink(links, openWaterData.Catchment);
+            links.Add(RainfallRunoffModelController.CreateModelLink(openWaterData.Catchment));
         }
 
         public override bool CanHandle(ElementSet elementSet)

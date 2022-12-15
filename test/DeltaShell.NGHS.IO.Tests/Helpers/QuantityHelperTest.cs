@@ -108,32 +108,32 @@ namespace DeltaShell.NGHS.IO.Tests.Helpers
         }
         
         [Test]
-        public void WhenGetQuantityData_GivenEmptyString_ReturnKeyStandardNameFromFunctionAndUnitNameAsExpectedStrings()
+        public void WhenGetQuantityData_GivenEmptyString_ReturnQuantityUnitPairWithStandardNameFromFunctionAndUnitAsExpectedStrings()
         {
             //Arrange
             IFunction function = InitializeSubstituteFunction();;
 
             //Act
-            var data = QuantityHelper.GetQuantityAndUnit(function, string.Empty);
+            QuantityUnitPair data = QuantityHelper.GetQuantityAndUnit(function, string.Empty);
             
             //Assert
-            Assert.That(data.ContainsKey(nameQuantity), Is.True);
-            Assert.That(data[nameQuantity], Is.EqualTo(nameOfUnit));
+            Assert.That(data.Quantity, Is.EqualTo(nameQuantity));
+            Assert.That(data.Unit, Is.EqualTo(nameOfUnit));
         }
         
         [Test]
-        public void WhenGetQuantityData_GivenQuantityStringName_ThenReturnKeyAndUnitNameAsExpectedStrings()
+        public void WhenGetQuantityData_GivenQuantityStringName_ThenReturnQuantityUnitPairWithKeyAndUnitNameAsExpectedStrings()
         {
             //Arrange 
             IFunction function = InitializeSubstituteFunction();;
             const string expectedName = "QuantityChangeName";
 
             //Act
-            var data = QuantityHelper.GetQuantityAndUnit(function, expectedName);
+            QuantityUnitPair data = QuantityHelper.GetQuantityAndUnit(function, expectedName);
             
             //Assert
-            Assert.That(data.ContainsKey(expectedName), Is.True);
-            Assert.That(data[expectedName], Is.EqualTo(nameOfUnit));
+            Assert.That(data.Quantity, Is.EqualTo(expectedName));
+            Assert.That(data.Unit, Is.EqualTo(nameOfUnit));
         }
         
         private static IFunction InitializeSubstituteFunction()

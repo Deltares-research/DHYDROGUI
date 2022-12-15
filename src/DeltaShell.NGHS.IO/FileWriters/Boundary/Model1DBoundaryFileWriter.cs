@@ -95,7 +95,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                         BoundaryRegion.UnitStrings.WaterDischarge, boundaryNodeData.Flow);
                     break;
                 case Model1DBoundaryNodeDataType.FlowTimeSeries:
-                    var waterDischargeData = new Dictionary<string, string>{ {BoundaryRegion.QuantityStrings.WaterDischarge, BoundaryRegion.UnitStrings.WaterDischarge} };
+                    var waterDischargeData = new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterDischarge, BoundaryRegion.UnitStrings.WaterDischarge);
                     boundaryDefinition.Table = GenerateTableForTimeSeriesData(waterDischargeData, boundaryNodeData.Data, startTime);
                     break;
                 case Model1DBoundaryNodeDataType.FlowWaterLevelTable:
@@ -106,7 +106,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                         BoundaryRegion.UnitStrings.WaterLevel, boundaryNodeData.WaterLevel);
                     break;
                 case Model1DBoundaryNodeDataType.WaterLevelTimeSeries:
-                    var waterLevelData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WaterLevel, BoundaryRegion.UnitStrings.WaterLevel } };
+                    var waterLevelData = new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterLevel, BoundaryRegion.UnitStrings.WaterLevel);
                     boundaryDefinition.Table = GenerateTableForTimeSeriesData(waterLevelData, boundaryNodeData.Data, startTime);
                     break;
             }
@@ -134,7 +134,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                         BoundaryRegion.UnitStrings.SaltPpt, boundaryNodeData.SaltConcentrationConstant);
                     break;
                 case SaltBoundaryConditionType.TimeDependent:
-                    var waterSalinityData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WaterSalinity, BoundaryRegion.UnitStrings.SaltPpt } };
+                    var waterSalinityData = new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterSalinity, BoundaryRegion.UnitStrings.SaltPpt);
                     boundaryDefinition.Table = GenerateTableForTimeSeriesData(waterSalinityData, boundaryNodeData.SaltConcentrationTimeSeries, startTime);
                     break;
             }
@@ -162,7 +162,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                         BoundaryRegion.UnitStrings.WaterTemperature, boundaryNodeData.TemperatureConstant);
                     break;
                 case TemperatureBoundaryConditionType.TimeDependent:
-                    var waterTemperatureData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WaterTemperature, BoundaryRegion.UnitStrings.WaterTemperature } };
+                    var waterTemperatureData = new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterTemperature, BoundaryRegion.UnitStrings.WaterTemperature);
                     boundaryDefinition.Table = GenerateTableForTimeSeriesData(waterTemperatureData, boundaryNodeData.TemperatureTimeSeries, startTime);
                     break;
             }
@@ -186,7 +186,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                         BoundaryRegion.UnitStrings.WaterDischarge, lateralSourceData.Flow);
                     break;
                 case Model1DLateralDataType.FlowTimeSeries:
-                    var waterDischargeData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.LateralDischarge, BoundaryRegion.UnitStrings.WaterDischarge } };
+                    var waterDischargeData = new QuantityUnitPair(BoundaryRegion.QuantityStrings.LateralDischarge, BoundaryRegion.UnitStrings.WaterDischarge);
                     lateralDefinition.Table = GenerateTableForTimeSeriesData(waterDischargeData, lateralSourceData.Data, startTime);
                     break;
                 case Model1DLateralDataType.FlowWaterLevelTable:
@@ -220,7 +220,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                         BoundaryRegion.UnitStrings.SaltPpt, lateralSourceData.SaltConcentrationDischargeConstant);
                     break;
                 case SaltLateralDischargeType.ConcentrationTimeSeries:
-                    var waterSalinityDataPpt = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WaterSalinity, BoundaryRegion.UnitStrings.SaltPpt } };
+                    var waterSalinityDataPpt = new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterSalinity, BoundaryRegion.UnitStrings.SaltPpt);
                     lateralDefinition.Table = GenerateTableForTimeSeriesData(waterSalinityDataPpt, lateralSourceData.SaltConcentrationTimeSeries, startTime);
                     break;
                 case SaltLateralDischargeType.MassConstant:
@@ -228,7 +228,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                         BoundaryRegion.UnitStrings.SaltMass, lateralSourceData.SaltMassDischargeConstant);
                     break;
                 case SaltLateralDischargeType.MassTimeSeries:
-                    var waterSalinityDataMass = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WaterSalinity, BoundaryRegion.UnitStrings.SaltMass } };
+                    var waterSalinityDataMass = new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterSalinity, BoundaryRegion.UnitStrings.SaltMass);
                     lateralDefinition.Table = GenerateTableForTimeSeriesData(waterSalinityDataMass, lateralSourceData.SaltMassTimeSeries, startTime);
                     break;
                 case SaltLateralDischargeType.Default:
@@ -259,7 +259,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                         BoundaryRegion.UnitStrings.WaterTemperature, lateralSourceData.TemperatureConstant);
                     break;
                 case TemperatureLateralDischargeType.TimeDependent:
-                    var waterTemperatureData = new Dictionary<string, string> {{BoundaryRegion.QuantityStrings.WaterTemperature, BoundaryRegion.UnitStrings.WaterTemperature}};
+                    var waterTemperatureData = new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterTemperature, BoundaryRegion.UnitStrings.WaterTemperature);
                     lateralDefinition.Table = GenerateTableForTimeSeriesData(waterTemperatureData, lateralSourceData.TemperatureTimeSeries, startTime);
                     break;
             }

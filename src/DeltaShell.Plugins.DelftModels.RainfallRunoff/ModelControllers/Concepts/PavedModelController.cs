@@ -35,10 +35,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             var wwtpLink = pavedData.Catchment.Links.FirstOrDefault(l => l.Target is WasteWaterTreatmentPlant);
             if (wwtpLink != null)
             {
-                RainfallRunoffModelController.AddLink(links, pavedData.Catchment, wwtpLink);
+                links.Add(RainfallRunoffModelController.CreateModelLink(pavedData.Catchment, wwtpLink));
             }
             //this link is either the 2nd outflow in non-mixed systems, OR it is an 'overstort' even in mixed systems
-            RainfallRunoffModelController.AddLink(links, pavedData.Catchment);
+            links.Add(RainfallRunoffModelController.CreateModelLink(pavedData.Catchment));
 
             var mixedLinkType = DischargeTargetToLinkType(pavedData.MixedAndOrRainfallSewerPumpDischarge);
             var dwfLinkType = DischargeTargetToLinkType(pavedData.DryWeatherFlowSewerPumpDischarge);

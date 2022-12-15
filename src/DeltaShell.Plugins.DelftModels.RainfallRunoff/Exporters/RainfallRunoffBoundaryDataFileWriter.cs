@@ -1,119 +1,190 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DeltaShell.NGHS.IO;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 {
+    /// <summary>
+    /// Writer responsible for writing the boundary data in the D-Rainfall Runoff model to file.
+    /// </summary>
     public class RainfallRunoffBoundaryDataFileWriter : BoundaryFileWriter
     {
-        public void WriteFile(string targetFile, IRainfallRunoffModel rainfallRunoffModel)
+        private static readonly QuantityUnitPair waterLevelQuantityUnitPair =
+            new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR,
+                                 BoundaryRegion.UnitStrings.WaterLevel);
+
+        private readonly IBcFileWriter bcFileWriter;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RainfallRunoffBoundaryDataFileWriter"/> class.
+        /// </summary>
+        /// <param name="bcFileWriter"> The BC file writer. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="bcFileWriter"/> is <c>null</c>.
+        /// </exception>
+        public RainfallRunoffBoundaryDataFileWriter(IBcFileWriter bcFileWriter)
         {
-            var categories = new List<IDelftIniCategory>()
+            Ensure.NotNull(bcFileWriter, nameof(bcFileWriter));
+            this.bcFileWriter = bcFileWriter;
+        }
+
+        /// <summary>
+        /// Writes the boundary data in the provided D-Rainfall Runoff model to the target file.
+        /// The following boundary data is written to file:
+        /// - The rainfall runoff boundary data.
+        /// - The boundary data of unpaved catchments that are not linked to a runoff boundary.
+        /// - Default boundary data with a constant water level of 0 for catchments other than unpaved that are not linked to a
+        /// runoff boundary. Default boundary data is required by the rainfall runoff kernel.
+        /// If a file at the specified path already exists, it will be overwritten.
+        /// </summary>
+        /// <param name="filePath"> The file path to write the boundary data to. </param>
+        /// <param name="rainfallRunoffModel"> The D-Rainfall Runoff model containing the boundary data. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="rainfallRunoffModel"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="filePath"/> is <c>null</c> or white space.
+        /// </exception>
+        public void WriteFile(string filePath, IRainfallRunoffModel rainfallRunoffModel)
+        {
+            Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
+            Ensure.NotNull(rainfallRunoffModel, nameof(rainfallRunoffModel));
+
+            IList<IDelftIniCategory> categories = CreateDelftIniCategories(rainfallRunoffModel);
+
+            FileUtils.DeleteIfExists(filePath);
+            bcFileWriter.WriteBcFile(categories, filePath);
+        }
+
+        private static IList<IDelftIniCategory> CreateDelftIniCategories(IRainfallRunoffModel rainfallRunoffModel)
+        {
+            var categories = new List<IDelftIniCategory>
             {
-                GeneralRegionGenerator.GenerateGeneralRegion(
-                    GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
-                    GeneralRegion.FileTypeName.BoundaryConditions)
+                CreateGeneralRegion()
             };
 
-            var startTime = rainfallRunoffModel.StartTime;
-            var rrBoundaries = new List<IFeature>();
-            foreach (var boundaryData in rainfallRunoffModel.BoundaryData)
-            {
-                categories.Add(GenerateBoundaryConditionDefinition(startTime, boundaryData));
-                rrBoundaries.Add(boundaryData.Boundary);
-            }
-            var rrModel = rainfallRunoffModel as RainfallRunoffModel;
-            if (rrModel != null)
-            {
-                var linksFound = rrModel.GetAllModelData()
-                    .SelectMany(md =>
-                    {
-                        var links = new List<ModelLink>();
-                        RainfallRunoffModelController.AddLink(links, md.Catchment);
-                        return links;
-                    });
+            categories.AddRange(CreateRunoffBoundaryCategories(rainfallRunoffModel));
+            categories.AddRange(CreateCatchmentBoundaryCategories(rainfallRunoffModel));
 
-                foreach (var link in linksFound)
+            return categories;
+        }
+
+        private static DelftIniCategory CreateGeneralRegion()
+        {
+            return GeneralRegionGenerator.GenerateGeneralRegion(
+                GeneralRegion.BoundaryConditionsMajorVersion,
+                GeneralRegion.BoundaryConditionsMinorVersion,
+                GeneralRegion.FileTypeName.BoundaryConditions);
+        }
+
+        private static IEnumerable<IDelftBcCategory> CreateRunoffBoundaryCategories(IRainfallRunoffModel rainfallRunoffModel)
+        {
+            foreach (RunoffBoundaryData boundaryData in rainfallRunoffModel.BoundaryData)
+            {
+                yield return CreateDelftBcCategory(rainfallRunoffModel.StartTime,
+                                                   boundaryData.Series,
+                                                   boundaryData.Boundary.Name);
+            }
+        }
+
+        private static IEnumerable<IDelftBcCategory> CreateCatchmentBoundaryCategories(IRainfallRunoffModel rainfallRunoffModel)
+        {
+            foreach (CatchmentModelData catchmentModelData in rainfallRunoffModel.ModelData)
+            {
+                ModelLink modelLink = RainfallRunoffModelController.CreateModelLink(catchmentModelData.Catchment);
+
+                if (ShouldSkipBoundary(modelLink))
                 {
-                    if (link.ToFeature != null && !(link.ToFeature is RunoffBoundary || link.ToFeature is ILateralSource)) continue;
-
-                    var boundary = link.ToFeature;
-                    if (boundary == null)
-                    {
-                        boundary = link.FromFeature;
-                    }
-
-                    if (rrBoundaries.Contains(boundary))
-                        continue; //already added
-
-                    if (boundary is Catchment boundaryOnTheCatchment && Equals(boundaryOnTheCatchment.CatchmentType, CatchmentType.NWRW))
-                        continue; //Nwrw catchments don't have catchment boundaries
-
-                    rrBoundaries.Add(boundary);
-                    var boundaryData = new RunoffBoundaryData(
-                        new RunoffBoundary
-                        {
-                            Attributes = boundary.Attributes,
-                            Geometry = boundary.Geometry,
-                            Name = link.ToId ?? link.FromId,
-                        });
-
-                    //This method currently ads a value to the series generated, however it will always be 0, should we include this?
-                    categories.Add(GenerateBoundaryConditionDefinition(startTime, boundaryData));
+                    continue;
                 }
-            }
 
-            if (File.Exists(targetFile)) File.Delete(targetFile);
-            new DelftBcWriter().WriteBcFile(categories, targetFile);
+                string boundaryName = modelLink.ToId ?? modelLink.FromId;
+
+                yield return catchmentModelData is UnpavedData unpavedData
+                                 ? CreateDelftBcCategory(rainfallRunoffModel.StartTime, unpavedData.BoundaryData, boundaryName)
+                                 : CreateDefaultDelftBcCategory(boundaryName);
+            }
         }
 
-        private IDelftIniCategory GenerateBoundaryConditionDefinition(DateTime startTime, RunoffBoundaryData boundaryData)
+        private static IDelftBcCategory CreateDefaultDelftBcCategory(string boundaryName)
         {
-            var boundaryDefinition = GetBoundaryDefinition(boundaryData);
-            if (boundaryData.Series.IsTimeSeries)
-            {
-                var waterLevelData = new Dictionary<string, string>{ {BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR, BoundaryRegion.UnitStrings.WaterLevel} };
-                boundaryDefinition.Table = GenerateTableForTimeSeriesData(waterLevelData, boundaryData.Series.Data, startTime);
-            }
-            else
-            {
-                boundaryDefinition.Table = GenerateTableForConstantData(BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR, BoundaryRegion.UnitStrings.WaterLevel, boundaryData.Series.Value);
-            }
-            
-            return boundaryDefinition;
+            IDelftBcCategory category = CreateDelftBcDefinitionCategory(boundaryName, BoundaryRegion.FunctionStrings.Constant, null, null);
+            category.Table = GenerateTableForConstantData(waterLevelQuantityUnitPair.Quantity, waterLevelQuantityUnitPair.Unit, 0);
+
+            return category;
         }
 
-        private static IDelftBcCategory GetBoundaryDefinition(RunoffBoundaryData boundaryData)
+        private static IDelftBcCategory CreateDelftBcCategory(DateTime startTime, RainfallRunoffBoundaryData rainfallRunoffBoundaryData, string boundaryName)
         {
-            var functionType = boundaryData.Series.IsTimeSeries
-                ? BoundaryRegion.FunctionStrings.TimeSeries
-                : BoundaryRegion.FunctionStrings.Constant;
+            string function = GetFunction(rainfallRunoffBoundaryData);
+            string interpolation = GetInterpolation(rainfallRunoffBoundaryData);
+            string periodic = GetPeriodic(rainfallRunoffBoundaryData);
 
-            var interpolationType = boundaryData.Series.IsTimeSeries
-                ? boundaryData.Series.Data.Arguments[0].InterpolationType == InterpolationType.Constant
-                    ? BoundaryRegion.TimeInterpolationStrings.BlockFrom
-                    : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate
-                : null;
+            IDelftBcCategory category = CreateDelftBcDefinitionCategory(boundaryName, function, interpolation, periodic);
+            category.Table = CreateTable(startTime, rainfallRunoffBoundaryData);
 
-            string periodic = boundaryData.Series.IsTimeSeries
-                ? GetTimeSeriesIsPeriodicProperty(boundaryData.Series.Data)
-                : null;
+            return category;
+        }
 
-            IDefinitionGeneratorBoundary definitionGenerator = new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
-            var boundaryDefinition =
-                definitionGenerator.CreateRegion(boundaryData.Boundary.Name, functionType, interpolationType, periodic);
-            return boundaryDefinition;
+        private static IDelftBcCategory CreateDelftBcDefinitionCategory(string boundaryName, string function, string interpolation, string periodic)
+        {
+            IDefinitionGeneratorBoundary boundaryDefinitionGenerator = new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
+            return boundaryDefinitionGenerator.CreateRegion(boundaryName, function, interpolation, periodic);
+        }
+
+        private static IList<IDelftBcQuantityData> CreateTable(DateTime startTime, RainfallRunoffBoundaryData rainfallRunoffBoundaryData)
+        {
+            return rainfallRunoffBoundaryData.IsTimeSeries
+                       ? GenerateTableForTimeSeriesData(waterLevelQuantityUnitPair, rainfallRunoffBoundaryData.Data, startTime)
+                       : GenerateTableForConstantData(waterLevelQuantityUnitPair.Quantity, waterLevelQuantityUnitPair.Unit, rainfallRunoffBoundaryData.Value);
+        }
+
+        private static string GetFunction(RainfallRunoffBoundaryData boundaryData)
+        {
+            return boundaryData.IsTimeSeries
+                       ? BoundaryRegion.FunctionStrings.TimeSeries
+                       : BoundaryRegion.FunctionStrings.Constant;
+        }
+
+        private static string GetInterpolation(RainfallRunoffBoundaryData boundaryData)
+        {
+            if (!boundaryData.IsTimeSeries)
+            {
+                return null;
+            }
+
+            return boundaryData.Data.Arguments[0].InterpolationType == InterpolationType.Constant
+                       ? BoundaryRegion.TimeInterpolationStrings.BlockFrom
+                       : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate;
+        }
+
+        private static string GetPeriodic(RainfallRunoffBoundaryData boundaryData)
+        {
+            return boundaryData.IsTimeSeries
+                       ? GetTimeSeriesIsPeriodicProperty(boundaryData.Data)
+                       : null;
+        }
+
+        private static bool ShouldSkipBoundary(ModelLink modelLink)
+        {
+            if (modelLink.ToFeature != null && !(modelLink.ToFeature is RunoffBoundary || modelLink.ToFeature is ILateralSource))
+            {
+                return true;
+            }
+
+            IFeature boundary = modelLink.ToFeature ?? modelLink.FromFeature;
+            return boundary is RunoffBoundary;
         }
     }
 }

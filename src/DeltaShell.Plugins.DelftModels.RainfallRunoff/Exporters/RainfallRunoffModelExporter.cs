@@ -6,8 +6,8 @@ using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Files.Evaporation;
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
         private static void ExportBcFile(string path, RainfallRunoffModel model)
         {
-            var bcWriter = new RainfallRunoffBoundaryDataFileWriter();
+            var bcWriter = new RainfallRunoffBoundaryDataFileWriter(new DelftBcWriter());
             bcWriter.WriteFile(Path.Combine(Path.GetFullPath(path), "BoundaryConditions.bc"), model);
         }
 
