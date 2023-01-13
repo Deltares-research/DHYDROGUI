@@ -29,17 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private const string noDataAttributeName = "_FillValue";
         private const string unitsAttributeName = "units";
         private const string longNameAttributeName = "long_name";
-        private const string standardNameAttribute = "standard_name";
-
-        /// <summary>
-        /// The list of netCDF standard_names of variables which contain Fourier data.
-        /// </summary>
-        private static readonly IEnumerable<string> fourierVariablesStandardNames = new List<string>
-        {
-            "sea_surface_height",
-            "sea_floor_depth_below_sea_surface",
-            "sea_water_speed"
-        };
+        private const string referenceDateAttribute = "reference_date_in_yyyymmdd";
 
         /// <summary>
         /// Read meta data from Fou file
@@ -216,13 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return false;
             }
 
-            if (!variableAttributes.ContainsKey(standardNameAttribute))
-            {
-                return false;
-            }
-
-            object attributes = variableAttributes[standardNameAttribute];
-            return fourierVariablesStandardNames.Contains(attributes);
+            return variableAttributes.ContainsKey(referenceDateAttribute);
         }
 
         private static string GetDimensionName(MeshType meshType)
