@@ -647,7 +647,7 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
+        protected System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBoxFormula;
         private System.Windows.Forms.BindingSource bindingSourceWeir;
         private System.Windows.Forms.Label labelCrestWidth;
@@ -658,12 +658,12 @@
         private System.Windows.Forms.TextBox textBoxOffsetY;
         private System.Windows.Forms.CheckBox checkBoxAllowNegativeFlow;
         private System.Windows.Forms.CheckBox checkBoxAllowPositiveFlow;
-        private System.Windows.Forms.ComboBox comboBoxWeirFormula;
-        private System.Windows.Forms.Label label1;
+        protected System.Windows.Forms.ComboBox comboBoxWeirFormula;
+        protected System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxLowerEdgeLevel;
         private System.Windows.Forms.Label labelLowerEdgeLevel;
-        private System.Windows.Forms.ComboBox comboBoxCrestShape;
-        private System.Windows.Forms.Label labelCrestShape;
+        protected System.Windows.Forms.ComboBox comboBoxCrestShape;
+        protected System.Windows.Forms.Label labelCrestShape;
         private System.Windows.Forms.TextBox textBoxGateOpening;
         private System.Windows.Forms.TextBox textBoxMaxPos;
         private System.Windows.Forms.Label labelFlowDirection;
@@ -682,7 +682,7 @@
         private System.Windows.Forms.Label GateOpeningUnitLabel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBoxGate;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        protected System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label labelGateOpening;
         private System.Windows.Forms.Label labelGeometry;
         private System.Windows.Forms.Button OpenCrestLevelTimeSeriesButton;
@@ -690,10 +690,10 @@
         private System.Windows.Forms.CheckBox CrestLevelTimeDependentCheckBox;
         private System.Windows.Forms.CheckBox LowerEdgeLevelTimeDependentCheckBox;
         private System.Windows.Forms.Button OpenLowerEdgeLevelTimeSeriesButton;
-        private System.Windows.Forms.Button OpenGateOpeningTimeSeriesButton;
+        protected System.Windows.Forms.Button OpenGateOpeningTimeSeriesButton;
         private System.Windows.Forms.CheckBox useVelocityHeightCheckBox;
-        private System.Windows.Forms.Label GateHeightLabel;
-        private System.Windows.Forms.TextBox textBoxGateHeight;
-        private System.Windows.Forms.Label GateHeightUnitLabel;
+        protected System.Windows.Forms.Label GateHeightLabel;
+        protected System.Windows.Forms.TextBox textBoxGateHeight;
+        protected System.Windows.Forms.Label GateHeightUnitLabel;
     }
 }

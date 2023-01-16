@@ -235,6 +235,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             yield return new ViewInfo<IWeir, WeirView>
             {
+                AdditionalDataCheck = o => o != null && o.Branch != null && !(o is IOrifice),
+                CompositeViewType = typeof(CompositeStructureView),
+                GetCompositeViewData = o => o.ParentStructure,
+            };
+            yield return new ViewInfo<IOrifice, OrificeView>
+            {
                 AdditionalDataCheck = o => o != null && o.Branch != null,
                 CompositeViewType = typeof(CompositeStructureView),
                 GetCompositeViewData = o => o.ParentStructure,
