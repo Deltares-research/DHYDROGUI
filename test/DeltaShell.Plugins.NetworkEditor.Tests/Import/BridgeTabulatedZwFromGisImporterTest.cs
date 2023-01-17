@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
     [TestFixture]
     public class BridgeTabulatedZwFromGisImporterTest
     {
-        private const string testFileLocation = "BridgeFromGisImporter_ShapeFiles/bridge_zw_test.shp";
+        private const string testFileLocation =  FromGisImporterHelper.FileLocationBridgeZw;
         private IHydroNetwork hydroNetwork;
         
         [Test]
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             var importer = new BridgeZwFromGisImporter();
             var baseImporter = new BridgeFromGisImporterHelper.TestBaseBridge();
             FeatureFromGisImporterSettings settings = baseImporter.FeatureFromGisImporterSettings;
-            BridgeFromGisImporterHelper.SetupAndLinkTestFilePath(settings, importer, testFileLocation);
+            FromGisImporterHelper.SetupAndLinkTestFilePath(settings, importer, testFileLocation);
 
             for (var i = 0; i <= importer.NumberOfLevels; i++)
             {
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             var importer = new BridgeZwFromGisImporter();
             var baseImporter = new BridgeFromGisImporterHelper.TestBaseBridge();
             FeatureFromGisImporterSettings settings = baseImporter.FeatureFromGisImporterSettings;
-            BridgeFromGisImporterHelper.SetupAndLinkTestFilePath(settings, importer, testFileLocation);
+            FromGisImporterHelper.SetupAndLinkTestFilePath(settings, importer, testFileLocation);
 
             settings.PropertiesMapping.Add(new PropertyMapping($"Width {1}") { PropertyUnit = "m" });
             settings.PropertiesMapping.Add(new PropertyMapping($"{ZwFromGisImporter.LblLevel} {1}"));
@@ -81,8 +81,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 
             importer.NumberOfLevels = 2;
             importer.FileBasedFeatureProviders = new List<IFileBasedFeatureProvider>();
-            importer.FileBasedFeatureProviders.Add(BridgeFromGisImporterHelper.GetTestFileBasedFeatureProvider(testFileLocation));
-            BridgeFromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer, hydroNetwork);
+            importer.FileBasedFeatureProviders.Add(FromGisImporterHelper.GetTestFileBasedFeatureProvider(testFileLocation));
+            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer, hydroNetwork);
             MapColumnsFromGisFile(importer);
             
             var data = importer.ImportItem("") as HydroNetwork;

@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
     [TestFixture]
     public class BridgeRectangularFromGisImporterTest
     {
-        private const string testFileLocation = "BridgeFromGisImporter_ShapeFiles/bridge_rectangular_test.shp";
+        private const string testFileLocation = FromGisImporterHelper.FileLocationBridgeRectangular;
         private static readonly PropertyMapping propertyMappingHeight = new PropertyMapping("Height") { PropertyUnit = "m" };
         private static readonly PropertyMapping propertyMappingWidth = new PropertyMapping("Width") { PropertyUnit = "m" };
         private IHydroNetwork hydroNetwork;
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             var importer = new BridgeRectangularFromGisImporter();
             var settings = new FeatureFromGisImporterSettings();
             settings.PropertiesMapping.AddRange(propertyMappingWithOneMissingProperty);
-            BridgeFromGisImporterHelper.SetupAndLinkTestFilePath(settings, importer, testFileLocation);
+            FromGisImporterHelper.SetupAndLinkTestFilePath(settings, importer, testFileLocation);
 
             //Act & Assert
             Assert.That(importer.ValidateNetworkFeatureFromGisImporterSettings(settings), Is.False);
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             var importer = new BridgeRectangularFromGisImporter();
             var baseImporter = new BridgeFromGisImporterHelper.TestBaseBridge();
             FeatureFromGisImporterSettings settings = baseImporter.FeatureFromGisImporterSettings;
-            BridgeFromGisImporterHelper.SetupAndLinkTestFilePath(settings, importer, testFileLocation);
+            FromGisImporterHelper.SetupAndLinkTestFilePath(settings, importer, testFileLocation);
 
             settings.PropertiesMapping.Add(propertyMappingHeight);
             settings.PropertiesMapping.Add(propertyMappingWidth);
@@ -73,8 +73,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             var importer = new BridgeRectangularFromGisImporter();
 
             importer.FileBasedFeatureProviders = new List<IFileBasedFeatureProvider>();
-            importer.FileBasedFeatureProviders.Add(BridgeFromGisImporterHelper.GetTestFileBasedFeatureProvider(testFileLocation));
-            BridgeFromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer, hydroNetwork);
+            importer.FileBasedFeatureProviders.Add(FromGisImporterHelper.GetTestFileBasedFeatureProvider(testFileLocation));
+            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer, hydroNetwork);
             MapColumnsFromGisFile(importer);
             
             var data = importer.ImportItem("") as HydroNetwork;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Geometries;
@@ -13,22 +12,26 @@ using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
-    public static class BridgeFromGisImporterHelper
+    /// <summary>
+    /// Helper class for test classes derived from <see cref="FeatureFromGisImporterBase"/>.
+    /// </summary>
+    public static class FromGisImporterHelper
     {
-        /// <summary>
-        /// TestName used for test class <see cref="TestBaseBridge"/>.
-        /// </summary>
-        public const string TestName = "TestName";
-        
+        public const string FileLocationBridgeRectangular = folderLocationShapeFiles + "bridge_rectangular_test.shp";
+        public const string FileLocationBridgeZw = folderLocationShapeFiles + "bridge_zw_test.shp";
+        public const string FileLocationYz = folderLocationShapeFiles + "yz_test.shp";
+        public const string FileLocationCrossSectionZw = folderLocationShapeFiles + "crosssection_zw_test.shp";
+        private const string folderLocationShapeFiles = "FromGisImporter_ShapeFiles/";
+
         /// <summary>
         /// Method to setup a hydro network with branches and a high snapping tolerance.
         /// </summary>
         /// <param name="importer">Importer under test.</param>
         /// <param name="hydroNetwork">network to be used by test.</param>
-        public static void SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(BridgeFromGisImporterBase importer, IHydroNetwork hydroNetwork)
+        public static void SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(FeatureFromGisImporterBase importer, IHydroNetwork hydroNetwork)
         {
             hydroNetwork = new HydroNetwork();
-            
+
             var node1 = new Node
             {
                 Name = "node1",
@@ -54,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 
             var branch1 = new Branch("branch1", node1, node2, 1000);
             var branch2 = new Branch("branch2", node2, node3, 1000);
-            Coordinate[] points = new[]
+            var points = new[]
             {
                 new Coordinate(0, 0),
                 new Coordinate(50, 50)
@@ -93,7 +96,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         /// <param name="settings">settings for FeatureFromGisImporterSettings.</param>
         /// <param name="importer">Importer under test.</param>
         /// <param name="filePath">Test file path.</param>
-        public static void SetupAndLinkTestFilePath(FeatureFromGisImporterSettings settings, BridgeFromGisImporterBase importer, string filePath)
+        public static void SetupAndLinkTestFilePath(FeatureFromGisImporterSettings settings, FeatureFromGisImporterBase importer, string filePath)
         {
             settings.Path = TestHelper.GetTestFilePath(filePath);
             var fileBasedFeatureProvider = Substitute.For<IFileBasedFeatureProvider>();
@@ -101,15 +104,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 
             importer.FileBasedFeatureProviders = new List<IFileBasedFeatureProvider>();
             importer.FileBasedFeatureProviders.Add(fileBasedFeatureProvider);
-        }
-        
-        /// <summary>
-        /// TestClass to test the base of the bridgeFromGisImporterBase.
-        /// </summary>
-        public class TestBaseBridge : BridgeFromGisImporterBase
-        {
-            public override string Name => TestName;
-            protected override BridgeType BridgeType { get; }
         }
     }
 }
