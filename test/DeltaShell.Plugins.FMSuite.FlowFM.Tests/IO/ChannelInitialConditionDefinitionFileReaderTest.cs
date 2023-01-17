@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     ChannelInitialConditionDefinitionFileReader.ReadFile(invalidPath, modelDefinition, null, null);
 
                 // Then
-                TestHelper.AssertAtLeastOneLogMessagesContains(action, $"Could not read file {invalidPath} properly, it doesn't exist.");
+                TestHelper.AssertAtLeastOneLogMessagesContains(action, string.Format(Properties.Resources.FeatureFile1D2DReader_ReadInitialConditionFiles_No_Initial_Quantity_ini_file_found_, invalidPath));
             }
         }
 

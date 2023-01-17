@@ -508,4 +508,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="MduFile_MduFile_Unknown_DFlowFMDll_version" xml:space="preserve">
     <value>Unknown</value>
   </data>
+  <data name="FeatureFile1D2DReader_ReadInitialConditionFiles_No_Initial_Quantity_ini_file_found_" xml:space="preserve">
+    <value>No Initial Quantity ini file found.</value>
+  </data>
 </root>

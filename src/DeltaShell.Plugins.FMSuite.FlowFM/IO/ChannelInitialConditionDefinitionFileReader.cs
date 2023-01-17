@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (!File.Exists(filePath))
             {
-                Log.Warn(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
+                Log.Warn(Resources.FeatureFile1D2DReader_ReadInitialConditionFiles_No_Initial_Quantity_ini_file_found_);
                 return;
             }
 

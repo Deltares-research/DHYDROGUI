@@ -32,10 +32,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <returns></returns>
         public static (InitialConditionQuantity, string) ReadFile(string filePath, WaterFlowFMModelDefinition modelDefinition)
         {
-            if (!File.Exists(filePath)) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
+            if (!File.Exists(filePath))
+            {
+                throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
+            }
 
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
-            if (categories.Count == 0) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
+            if (categories.Count == 0)
+            {
+                throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
+            }
             
             ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
             
@@ -66,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Log.Warn(Properties.Resources.Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others);
             }
             return initialConditionCategories.Any() 
-                ? ReadInitialConditionCategory(modelDefinition, initialConditionCategories.First())
+                ? ReadInitialConditionCategory(initialConditionCategories.First())
                 : (InitialConditionQuantity.WaterLevel, "");
 
         }
@@ -261,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
         }
-        private static (InitialConditionQuantity, string) ReadInitialConditionCategory(WaterFlowFMModelDefinition modelDefinition, DelftIniCategory initialConditionCategory)
+        private static (InitialConditionQuantity, string) ReadInitialConditionCategory(DelftIniCategory initialConditionCategory)
         {
             var quantityString = initialConditionCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
             var quantity = InitialConditionQuantityTypeConverter.ConvertStringToInitialConditionQuantity(quantityString);

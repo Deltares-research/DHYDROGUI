@@ -7,7 +7,6 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -21,6 +20,7 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -206,12 +206,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             (InitialConditionQuantity quantity, string filename) initialConditionTuple =
                 InitialConditionInitialFieldsFileReader.ReadFile(initialConditionFilePath, modelDefinition);
 
-
             // read Initial<quantity>.ini
-            var initialConditionQuantityFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionTuple.filename);
+            string initialConditionQuantityFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionTuple.filename);
 
-            var branches = network.Branches;
-            var branchDictionary = branches.ToDictionary(b => b.Name, b => b, StringComparer.InvariantCultureIgnoreCase);
+            IEventedList<IBranch> branches = network.Branches;
+            Dictionary<string, IBranch> branchDictionary = branches.ToDictionary(b => b.Name, b => b, StringComparer.InvariantCultureIgnoreCase);
 
             ChannelInitialConditionDefinitionFileReader.ReadFile(
                 initialConditionQuantityFilePath,
