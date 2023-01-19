@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
   <Shortcut Id="DWater_Quality_Input_File_Description_Shortcut" Name="!(loc.WaqFileManualName)" Target="[BINDIR]D-Water_Quality_Input_File_Description.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DWater_Quality_Processes_Technical_Reference_Manual_Shortcut" Name="!(loc.WaqReferenceManualName)" Target="[BINDIR]D-Water_Quality_Processes_Technical_Reference_Manual.pdf" WorkingDirectory="BINDIR"/>
   <Shortcut Id="DWater_Quality_User_Manual_Shortcut" Name="!(loc.WaqUserManualName)" Target="[BINDIR]D-Water_Quality_User_Manual.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DWater_Quality_PLCT_User_Manual_Shortcut" Name="!(loc.WaqUserManualName)" Target="[BINDIR]D-Water_Quality_PLCT_User_Manual.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DWater_Quality_Mass_Balances_Shortcut" Name="!(loc.WaqUserManualName)" Target="[BINDIR]D-Water_Quality_Mass_Balances.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DWater_Quality_Tools_Shortcut" Name="!(loc.WaqUserManualName)" Target="[BINDIR]D-Water_Quality_Tools.pdf" WorkingDirectory="BINDIR"/>
+  <Shortcut Id="DWater_Quality_Mass_Balances_Shortcut" Name="!(loc.WaqMassBalancesManualName)" Target="[BINDIR]D-Water_Quality_Mass_Balances.pdf" WorkingDirectory="BINDIR"/>
+  <Shortcut Id="DWater_Quality_Tools_Shortcut" Name="!(loc.WaqToolsManualName)" Target="[BINDIR]D-Water_Quality_Tools.pdf" WorkingDirectory="BINDIR"/>
 </Include>

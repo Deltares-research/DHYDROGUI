@@ -4,10 +4,18 @@
   <String Id="WaqFeatureDescription">Allows to simulate water quality processes.</String>
   <String Id="DuFlowProcessFeatureName">Duflow Processes Library</String>
   <String Id="DuFlowProcessFeatureDescription">Additional process libraries from Duflow</String>
-
-  <String Id="WaqUserManualName">D-Water Quality User Manual</String>
-  <String Id="WaqReferenceManualName">D-Water Quality Processes Technical Reference Manual</String>
+  
+  <!-- Manuals -->
   <String Id="WaqFileManualName">D-Water Quality Input File Description</String>
+  <String Id="WaqUserManualName">D-Water Quality User Manual</String>
+  <String Id="WaqToolsManualName">D-Water Quality Quality Tools Manual</String>
+  <String Id="WaqMassBalancesManualName">D-Water Quality Mass Balances User Manual</String>
+  
+  <!-- PLCT Manuals -->
   <String Id="PLCTUserManualName">D-Water Quality PLCT User Manual</String>
+  <String Id="PLCTTechnicalRefManualName">D-Water Quality Processes Technical Reference Manual</String>
+  <String Id="PLCTLibraryTablesManualName">D-Water Quality Processes Library Tables Manual</String>
+
+  <!-- Dido Manuals -->
   <String Id="DidoUserManualName">D-Water Quality Dido User Manual</String>
 </WixLocalization>

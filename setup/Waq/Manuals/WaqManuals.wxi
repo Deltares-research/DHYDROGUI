@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <File Id="DWater_Quality_DIDO_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_DIDO_User_Manual.pdf"/>
+  <!--WAQ-->
   <File Id="DWater_Quality_Input_File_Description" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Input_File_Description.pdf"/>
-  <File Id="DWater_Quality_Processes_Library_Tables" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Processes_Library_Tables.pdf"/>
-  <File Id="DWater_Quality_Processes_Technical_Reference_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Processes_Technical_Reference_Manual.pdf"/>
   <File Id="DWater_Quality_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_User_Manual.pdf"/>
-  <File Id="DWater_Quality_PLCT_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_PLCT_User_Manual.pdf"/>
   <File Id="DWater_Quality_Mass_Balances" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Mass_Balances.pdf"/>
   <File Id="DWater_Quality_Tools" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Tools.pdf"/>
+
+  <!-- PLCT -->
+  <File Id="DWater_Quality_Processes_Library_Tables" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Processes_Library_Tables.pdf"/>
+  <File Id="DWater_Quality_Processes_Technical_Reference_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Processes_Technical_Reference_Manual.pdf"/>
+  <File Id="DWater_Quality_PLCT_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_PLCT_User_Manual.pdf"/>
+
+  <!--DIDO-->
+  <File Id="DWater_Quality_DIDO_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_DIDO_User_Manual.pdf"/>
+
 </Include>

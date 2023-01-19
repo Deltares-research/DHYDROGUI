@@ -50,7 +50,7 @@
       </Component>
       <Component Id="waq_plugin_manuals_component" Guid="$(var.MyWaqPluginComponents)">
         <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedWaqPluginManuals" Type="integer" Value="1"/>
-        <Condition>(INSTALLER_VARIANT = "fmwaq")</Condition>
+        <Condition>(INSTALLER_VARIANT = "fmwaq" Or INSTALLER_VARIANT = "rws")</Condition>
         <?include ..\Waq\Manuals\WaqManuals.wxi?>
       </Component>
 
@@ -69,7 +69,7 @@
         </Component>
         <Component Id="WaqManualsMenuShortcut" Guid="$(var.WaqManualsMenuShortcutGUID)">
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedWaqManualsShortcutFolder" Type="integer" Value="1"/>
-          <Condition>(INSTALLER_VARIANT = "fmwaq")</Condition>
+          <Condition>(INSTALLER_VARIANT = "fmwaq" Or INSTALLER_VARIANT = "rws")</Condition>
           <?include ..\Waq\Manuals\WaqManualShortcuts.wxi?>
         </Component>
       </DirectoryRef>
@@ -131,7 +131,7 @@
           <?include $(var.plugin_utilityshortcuts)?>
         </Component>
         <Component Id="WaqUtilitiesMenuShortcuts" Guid="$(var.WaqUtilitiesMenuShortcutsGUID)">
-          <Condition><![CDATA[(INSTALLER_VARIANT = "fmwaq")]]></Condition> <!-- WAQ UTILITIES WHEN INSTALLING WAQ --> 
+          <Condition><![CDATA[(INSTALLER_VARIANT = "fmwaq" Or INSTALLER_VARIANT = "rws")]]></Condition> <!-- WAQ UTILITIES WHEN INSTALLING WAQ --> 
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedWaqUtilitiesShortcutFolder" Type="integer" Value="1"/>
           <?include ..\Waq\WaqPlugin_UtilityShortcuts.wxi?>
         </Component>
