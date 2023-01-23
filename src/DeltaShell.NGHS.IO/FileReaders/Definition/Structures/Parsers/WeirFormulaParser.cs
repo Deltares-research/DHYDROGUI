@@ -194,6 +194,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
             else
             {
                 var gateLowerEdgeLevel = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key);
+                gatedWeirFormula.LowerEdgeLevel = gateLowerEdgeLevel;
                 gatedWeirFormula.GateOpening = gateLowerEdgeLevel - weir.CrestLevel;
             }
         }

@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Windows.Forms;
 using DelftTools.Controls.Swf;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -100,6 +103,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             WindowsFormsTestHelper.ShowModal(weirView);
         }
 
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowWeirViewWithGatedWeirAndActionToValidateIfGatedWeirFormulaIsUpdatedViaAnEvent()
+        {
+            var weir = new Weir("TestWeir");
+            weir.WeirFormula = new GatedWeirFormula { LowerEdgeLevel = 18, GateOpening = 5 };
+            var weirView = new WeirView
+            {
+                Data = weir
+            };
+
+            Action<Form> action = form =>
+            {
+                Control[] controls = form.Controls.Find("textBoxLowerEdgeLevel", true);
+                Assert.That(int.Parse(controls[0].Text, NumberStyles.Any, CultureInfo.CurrentCulture), Is.EqualTo(18));
+                ((IGatedWeirFormula)weir.WeirFormula).LowerEdgeLevel = 25;
+                Assert.That(int.Parse(controls[0].Text, NumberStyles.Any, CultureInfo.CurrentCulture), Is.EqualTo(25));
+            };
+            WindowsFormsTestHelper.ShowModal(weirView, action);
+        }
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowWeirViewWithDetailedCrestDefinition()

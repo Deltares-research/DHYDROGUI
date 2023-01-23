@@ -234,6 +234,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                         {
                             throw new InvalidOperationException("Cannot set value from row when using time dependent lower edge level.");
                         }
+
+                        GatedWeirFormula.LowerEdgeLevel = newValue;
                         GatedWeirFormula.GateOpening = newValue - Weir.CrestLevel;
                     }
                     if (Formula == FormulaEnum.GeneralStructure)

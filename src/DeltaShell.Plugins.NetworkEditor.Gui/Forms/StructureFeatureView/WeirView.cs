@@ -134,11 +134,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private void SubscribeToWeir()
         {
             ((INotifyPropertyChanged)data).PropertyChanged += WeirPropertyChanged;
+            ((INotifyPropertyChanged)data.WeirFormula).PropertyChanged += WeirPropertyChanged;
         }
 
         private void UnSubscribeToWeir()
         {
             ((INotifyPropertyChanged)data).PropertyChanged -= WeirPropertyChanged;
+            ((INotifyPropertyChanged)data.WeirFormula).PropertyChanged -= WeirPropertyChanged;
         }
         
         private void WeirPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -156,7 +158,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
 
             if (sender is IGatedWeirFormula && 
-                (e.PropertyName == gateOpeningPropertyName || e.PropertyName == useLowerEdgeLevelTimeSeriesPropertyName))
+                (e.PropertyName == gateOpeningPropertyName || 
+                 e.PropertyName == useLowerEdgeLevelTimeSeriesPropertyName) ||
+                 e.PropertyName == nameof(IGatedWeirFormula.LowerEdgeLevel) 
+                )
             {
                 RenderGateControls();
                 handlingPropertyChanged = false;

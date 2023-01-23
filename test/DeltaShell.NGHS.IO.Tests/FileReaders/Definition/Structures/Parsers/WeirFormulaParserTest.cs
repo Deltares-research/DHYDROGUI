@@ -176,17 +176,19 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             // Setup
             const string formulaType = "Orifice";
             const double lateralContraction = 1.0;
-            const double gateOpening = 12.34;
             const double contractionCoefficient = 23.45;
             const bool useMaxFlowPos = true;
             const double maxFlowPos = 34.56;
             const bool useMaxFlowNeg = false;
             const double maxFlowNeg = 45.67;
             const double crestLevel = 1.234;
+            const double lowerEdgeLevel = 5.678;
+            double gateOpening = lowerEdgeLevel - crestLevel;
             
             var category = StructureParserTestHelper.CreateStructureCategory();
             category.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
-            category.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, gateOpening);
+            category.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, lowerEdgeLevel);
+
             category.AddProperty(StructureRegion.CorrectionCoeff.Key, contractionCoefficient);
             category.AddProperty(StructureRegion.UseLimitFlowPos.Key, useMaxFlowPos.ToString());
             category.AddProperty(StructureRegion.LimitFlowPos.Key, maxFlowPos);
@@ -205,7 +207,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             Assert.That(parsedWeirFormula, Is.TypeOf<GatedWeirFormula>());
 
             var gatedWeirFormula = (GatedWeirFormula) parsedWeirFormula;
-            Assert.That(gatedWeirFormula.GateOpening, Is.EqualTo(gateOpening - crestLevel));
+            Assert.That(gatedWeirFormula.GateOpening, Is.EqualTo(gateOpening));
+            Assert.That(gatedWeirFormula.LowerEdgeLevel, Is.EqualTo(lowerEdgeLevel));
             Assert.That(gatedWeirFormula.ContractionCoefficient, Is.EqualTo(contractionCoefficient));
             Assert.That(gatedWeirFormula.UseMaxFlowPos, Is.EqualTo(useMaxFlowPos));
             Assert.That(gatedWeirFormula.MaxFlowPos, Is.EqualTo(maxFlowPos));
