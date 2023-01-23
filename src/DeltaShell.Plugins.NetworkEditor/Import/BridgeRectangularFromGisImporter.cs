@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -15,12 +16,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         public BridgeRectangularFromGisImporter()
         {
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.Height);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.Width);
-            base.FeatureFromGisImporterSettings.FeatureType = "Bridges (rectangle profile)";
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.Height);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.Width);
+            base.FeatureFromGisImporterSettings.FeatureType = Resources.BridgeRectangularFromGisImporter_BridgeRectangularFromGisImporter_Bridges__rectangle_profile_;
         }
 
-        public override string Name => "Bridge from GIS importer";
+        public override string Name => Resources.BridgeRectangularFromGisImporter_Name_Bridge_from_GIS_importer;
 
         public override bool ValidateNetworkFeatureFromGisImporterSettings(FeatureFromGisImporterSettings featureFromGisImporterSettings)
         {
@@ -53,11 +54,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             }
             catch (Exception e)
             {
-                log.ErrorFormat("Exception ocurred during import of bridge \"{0}\": {1}", bridge.Name, e);
+                log.ErrorFormat(Resources.BridgeRectangularFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_, bridge.Name, e);
             }
         }
 
-        private PropertyMapping PropertyMappingWidth => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.Width.PropertyName);
-        private PropertyMapping PropertyMappingHeight => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.Height.PropertyName);
+        private PropertyMapping PropertyMappingWidth => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(BridgeDefaultGisPropertyMappings.Width.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingHeight => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(BridgeDefaultGisPropertyMappings.Height.PropertyName, StringComparison.InvariantCulture));
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -17,25 +18,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         public CrossSectionZWFromGisImporter()
         {
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(CrossSectionDefaultPropertyMappings.Name);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(CrossSectionDefaultPropertyMappings.LongName);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(CrossSectionDefaultPropertyMappings.Description);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(CrossSectionDefaultPropertyMappings.ShiftLevel);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.Name);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.LongName);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.Description);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.ShiftLevel);
 
-            base.FeatureFromGisImporterSettings.FeatureType = "Cross Sections ZW";
+            base.FeatureFromGisImporterSettings.FeatureType = Resources.CrossSectionZWFromGisImporter_CrossSectionZWFromGisImporter_Cross_Sections_ZW;
             base.FeatureFromGisImporterSettings.FeatureImporterFromGisImporterType = GetType().ToString();
 
             var propertyMapping = new Dictionary<string, string>
             {
-                { CrossSectionDefaultPropertyMappings.FlowWidth.PropertyName, CrossSectionDefaultPropertyMappings.FlowWidth.PropertyUnit },
-                { CrossSectionDefaultPropertyMappings.StorageWidth.PropertyName, CrossSectionDefaultPropertyMappings.StorageWidth.PropertyUnit }
+                { CrossSectionDefaultGisPropertyMappings.FlowWidth.PropertyName, CrossSectionDefaultGisPropertyMappings.FlowWidth.PropertyUnit },
+                { CrossSectionDefaultGisPropertyMappings.StorageWidth.PropertyName, CrossSectionDefaultGisPropertyMappings.StorageWidth.PropertyUnit }
             };
 
             zwFromGisImporter = new ZwFromGisImporter(propertyMapping);
             zwFromGisImporter.MakeNumberOfLevelPropertiesMapping(standardLevels, base.FeatureFromGisImporterSettings.PropertiesMapping);
         }
 
-        public override string Name => "Tabulated river cross-section from GIS importer";
+        public override string Name => Resources.CrossSectionZWFromGisImporter_Name_Tabulated_river_cross_section_from_GIS_importer;
 
         public int NumberOfLevels
         {
@@ -54,8 +55,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 !PropertyMappingExistsInSettings(featureFromGisImporterSettings, PropertyMappingDescription.PropertyName) ||
                 !PropertyMappingExistsInSettings(featureFromGisImporterSettings, PropertyMappingShiftLevel.PropertyName) ||
                 !PropertyMappingLevelsExistInSettings(featureFromGisImporterSettings, ZwFromGisImporter.LblLevel) ||
-                !PropertyMappingLevelsExistInSettings(featureFromGisImporterSettings, CrossSectionDefaultPropertyMappings.FlowWidth.PropertyName) ||
-                !PropertyMappingLevelsExistInSettings(featureFromGisImporterSettings, CrossSectionDefaultPropertyMappings.StorageWidth.PropertyName))
+                !PropertyMappingLevelsExistInSettings(featureFromGisImporterSettings, CrossSectionDefaultGisPropertyMappings.FlowWidth.PropertyName) ||
+                !PropertyMappingLevelsExistInSettings(featureFromGisImporterSettings, CrossSectionDefaultGisPropertyMappings.StorageWidth.PropertyName))
             {
                 return false;
             }
@@ -82,10 +83,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             return HydroNetwork;
         }
 
-        private PropertyMapping PropertyMappingName => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == CrossSectionDefaultPropertyMappings.Name.PropertyName);
-        private PropertyMapping PropertyMappingLongName => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == CrossSectionDefaultPropertyMappings.LongName.PropertyName);
-        private PropertyMapping PropertyMappingDescription => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == CrossSectionDefaultPropertyMappings.Description.PropertyName);
-        private PropertyMapping PropertyMappingShiftLevel => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == CrossSectionDefaultPropertyMappings.ShiftLevel.PropertyName);
+        private PropertyMapping PropertyMappingName => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.Name.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingLongName => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.LongName.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingDescription => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.Description.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingShiftLevel => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.ShiftLevel.PropertyName, StringComparison.InvariantCulture));
 
         private bool PropertyMappingLevelsExistInSettings(FeatureFromGisImporterSettings featureFromGisImporterSettings, string propertyName)
         {
@@ -169,8 +170,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             for (var i = 1; i <= zwFromGisImporter.NumberOfLevels; i++)
             {
                 PropertyMapping propertyLevel = FeatureFromGisImporterSettings.PropertiesMapping.First(p => p.PropertyName == ZwFromGisImporter.LblLevel + i);
-                PropertyMapping propertyFlowWidth = FeatureFromGisImporterSettings.PropertiesMapping.First(p => p.PropertyName == $"{CrossSectionDefaultPropertyMappings.FlowWidth.PropertyName} {i}");
-                PropertyMapping propertyStorageWidth = FeatureFromGisImporterSettings.PropertiesMapping.First(p => p.PropertyName == $"{CrossSectionDefaultPropertyMappings.StorageWidth.PropertyName} {i}");
+                PropertyMapping propertyFlowWidth = FeatureFromGisImporterSettings.PropertiesMapping.First(p => p.PropertyName == $"{CrossSectionDefaultGisPropertyMappings.FlowWidth.PropertyName} {i}");
+                PropertyMapping propertyStorageWidth = FeatureFromGisImporterSettings.PropertiesMapping.First(p => p.PropertyName == $"{CrossSectionDefaultGisPropertyMappings.StorageWidth.PropertyName} {i}");
 
                 var level = Convert.ToDouble(feature.Attributes[propertyLevel.MappingColumn.Alias]);
                 var flowWidth = Convert.ToDouble(feature.Attributes[propertyFlowWidth.MappingColumn.Alias]);

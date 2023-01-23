@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
+using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using NUnit.Framework;
 using SharpMap.Api;
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -18,12 +20,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         public BridgeYzFromGisImporter()
         {
             yzFromGisImporter = new YzFromGisImporter();
-            base.FeatureFromGisImporterSettings.FeatureType = "Bridges (YZ profile)";
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.YValues);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.ZValues);
+            base.FeatureFromGisImporterSettings.FeatureType = Resources.BridgeYzFromGisImporter_BridgeYzFromGisImporter_Bridges__YZ_profile_;
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.YValues);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.ZValues);
         }
 
-        public override string Name => "Bridge YZ from GIS importer";
+        public override string Name => Resources.BridgeYzFromGisImporter_Name_Bridge_YZ_from_GIS_importer;
 
         public override bool ValidateNetworkFeatureFromGisImporterSettings(FeatureFromGisImporterSettings featureFromGisImporterSettings)
         {
@@ -47,18 +49,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             }
             catch (Exception e)
             {
-                log.ErrorFormat("Exception ocurred during import of bridge \"{0}\": {1}", bridge.Name, e);
+                log.ErrorFormat(Resources.BridgeYzFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_, bridge.Name, e);
             }
         }
 
-        private PropertyMapping PropertyMappingYValues => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.YValues.PropertyName);
-        private PropertyMapping PropertyMappingZValues => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.ZValues.PropertyName);
+        private PropertyMapping PropertyMappingYValues => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(BridgeDefaultGisPropertyMappings.YValues.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingZValues => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(BridgeDefaultGisPropertyMappings.ZValues.PropertyName, StringComparison.InvariantCulture));
 
         private void ConvertBridgePropertiesYz(IFeature feature, IBridge bridge)
         {
             IList<double> yValues = yzFromGisImporter.ConvertPropertyMappingToList(feature.Attributes[PropertyMappingYValues.MappingColumn.Alias].ToString());
             IList<double> zValues = yzFromGisImporter.ConvertPropertyMappingToList(feature.Attributes[PropertyMappingZValues.MappingColumn.Alias].ToString());
-            yzFromGisImporter.ConvertYzProperties(bridge.YZCrossSectionDefinition, yValues, zValues);
+            bridge.YZCrossSectionDefinition.SetYzValues(yValues, zValues);
         }
     }
 }

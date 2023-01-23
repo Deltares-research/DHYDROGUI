@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -19,15 +20,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         public BridgeZwFromGisImporter()
         {
-            base.FeatureFromGisImporterSettings.FeatureType = "Bridges (ZW profile)";
+            base.FeatureFromGisImporterSettings.FeatureType = Resources.BridgeZwFromGisImporter_BridgeZwFromGisImporter_Bridges__ZW_profile_;
 
-            var propertyMapping = new Dictionary<string, string> { { BridgeDefaultPropertyMappings.Width.PropertyName, BridgeDefaultPropertyMappings.Width.PropertyUnit } };
+            var propertyMapping = new Dictionary<string, string> { { BridgeDefaultGisPropertyMappings.Width.PropertyName, BridgeDefaultGisPropertyMappings.Width.PropertyUnit } };
 
             zwFromGisImporter = new ZwFromGisImporter(propertyMapping);
             zwFromGisImporter.MakeNumberOfLevelPropertiesMapping(standardLevels, base.FeatureFromGisImporterSettings.PropertiesMapping);
         }
 
-        public override string Name => "Bridge ZW from GIS importer";
+        public override string Name => Resources.BridgeZwFromGisImporter_Name_Bridge_ZW_from_GIS_importer;
 
         public int NumberOfLevels
         {
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         public override bool ValidateNetworkFeatureFromGisImporterSettings(FeatureFromGisImporterSettings featureFromGisImporterSettings)
         {
             if (!PropertyMappingLevelsExistInSettings(featureFromGisImporterSettings, ZwFromGisImporter.LblLevel) ||
-                !PropertyMappingLevelsExistInSettings(featureFromGisImporterSettings, BridgeDefaultPropertyMappings.Width.PropertyName))
+                !PropertyMappingLevelsExistInSettings(featureFromGisImporterSettings, BridgeDefaultGisPropertyMappings.Width.PropertyName))
             {
                 return false;
             }
@@ -61,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             }
             catch (Exception e)
             {
-                log.ErrorFormat("Exception ocurred during import of bridge \"{0}\": {1}", bridge.Name, e);
+                log.ErrorFormat(Resources.BridgeZwFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_, bridge.Name, e);
             }
         }
 
@@ -84,9 +85,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             var hfswData = new List<HeightFlowStorageWidth>();
             for (var i = 1; i <= zwFromGisImporter.NumberOfLevels; i++)
             {
-                PropertyMapping propertyLevel = FeatureFromGisImporterSettings.PropertiesMapping.First(p => p.PropertyName == ZwFromGisImporter.LblLevel + i);
-                PropertyMapping propertyFlowWidth = FeatureFromGisImporterSettings.PropertiesMapping.First(p => p.PropertyName == $"{BridgeDefaultPropertyMappings.Width.PropertyName} {i}");
-
+                PropertyMapping propertyLevel = FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(p => p.PropertyName.Equals(ZwFromGisImporter.LblLevel + i, StringComparison.InvariantCulture));
+                if (propertyLevel == null) continue;
+                PropertyMapping propertyFlowWidth = FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(p => p.PropertyName.Equals($"{BridgeDefaultGisPropertyMappings.Width.PropertyName} {i}", StringComparison.InvariantCulture));
+                if (propertyFlowWidth == null) continue;
                 double level = Convert.ToDouble(feature.Attributes[propertyLevel.MappingColumn.Alias]);
                 double width = Convert.ToDouble(feature.Attributes[propertyFlowWidth.MappingColumn.Alias]);
 

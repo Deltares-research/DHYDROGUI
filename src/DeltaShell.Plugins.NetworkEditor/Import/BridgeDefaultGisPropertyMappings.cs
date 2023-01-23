@@ -3,7 +3,7 @@
     /// <summary>
     /// Default property mappings used for bridge related gis importers.
     /// </summary>
-    public static class BridgeDefaultPropertyMappings
+    public static class BridgeDefaultGisPropertyMappings
     {
         public static PropertyMapping Name => new PropertyMapping("Name", true, true);
         public static PropertyMapping LongName => new PropertyMapping("LongName");

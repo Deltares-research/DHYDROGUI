@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
+using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using NUnit.Framework;
 using SharpMap.Api;
 
@@ -11,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
     [TestFixture]
     public class BridgeYzFromGisImporterTest
     {
-        private const string testFileLocation =  FromGisImporterHelper.FileLocationYz;
+        private const string testFileLocation = FromGisImporterHelper.FileLocationYz;
         private static readonly PropertyMapping propertyMappingYValues = new PropertyMapping("Y'-values");
         private static readonly PropertyMapping propertyMappingZValues = new PropertyMapping("Z'-values");
         private IHydroNetwork hydroNetwork;

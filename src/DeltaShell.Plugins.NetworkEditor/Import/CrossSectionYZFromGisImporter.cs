@@ -2,70 +2,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Import
 {
-    public class CrossSectionYZFromGisImporter: NetworkFeatureFromGisImporterBase
+    /// <summary>
+    /// Class for the YZ cross section from Gis importer.
+    /// </summary>
+    public class CrossSectionYZFromGisImporter : NetworkFeatureFromGisImporterBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionYZFromGisImporter));
-        
-        private PropertyMapping propertyMappingName;
-        private PropertyMapping propertyMappingLongName;
-        private PropertyMapping propertyMappingDescription;
-        private PropertyMapping propertyMappingShiftLevel;
-        private PropertyMapping propertyMappingY;
-        private PropertyMapping propertyMappingZ;
+        private readonly YzFromGisImporter yzFromGisImporter;
 
         public CrossSectionYZFromGisImporter()
         {
-            propertyMappingName = new PropertyMapping("Name", true, true);
-            propertyMappingLongName = new PropertyMapping("LongName", false, false);
-            propertyMappingDescription = new PropertyMapping("Description", false, false);
-            propertyMappingShiftLevel = new PropertyMapping("ShiftLevel", false, false);
-            propertyMappingY = new PropertyMapping("Y'-values", false, false);
-            propertyMappingZ = new PropertyMapping("Z-values", false, false);
-
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(propertyMappingName);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(propertyMappingLongName);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(propertyMappingDescription);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(propertyMappingShiftLevel);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(propertyMappingY);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(propertyMappingZ);
-
-            base.FeatureFromGisImporterSettings.FeatureType = "Cross Sections Y'Z";
-            base.FeatureFromGisImporterSettings.FeatureImporterFromGisImporterType = GetType().ToString();
+            yzFromGisImporter = new YzFromGisImporter();
+            SetGisImportSettings();
         }
 
-        public override FeatureFromGisImporterSettings FeatureFromGisImporterSettings
-        {
-            get
-            {
-                return base.FeatureFromGisImporterSettings;
-            }
-            set
-            {
-                propertyMappingName = value.PropertiesMapping.First(pm => pm.PropertyName == propertyMappingName.PropertyName);
-                propertyMappingLongName = value.PropertiesMapping.First(pm => pm.PropertyName == propertyMappingLongName.PropertyName);
-                propertyMappingDescription = value.PropertiesMapping.First(pm => pm.PropertyName == propertyMappingDescription.PropertyName);
-                propertyMappingShiftLevel = value.PropertiesMapping.First(pm => pm.PropertyName == propertyMappingShiftLevel.PropertyName);
-                propertyMappingY = value.PropertiesMapping.First(pm => pm.PropertyName == propertyMappingY.PropertyName);
-                propertyMappingZ = value.PropertiesMapping.First(pm => pm.PropertyName == propertyMappingZ.PropertyName);
-                base.FeatureFromGisImporterSettings = value;
-            }
-        }
+        public override string Name => Resources.CrossSectionYZFromGisImporter_Name_Y_Z_cross_section_from_GIS_importer;
 
         public override bool ValidateNetworkFeatureFromGisImporterSettings(FeatureFromGisImporterSettings featureFromGisImporterSettings)
         {
-            if (!PropertyMappingExistsInSettings(featureFromGisImporterSettings, propertyMappingName.PropertyName) ||
-                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, propertyMappingLongName.PropertyName) ||
-                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, propertyMappingDescription.PropertyName) ||
-                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, propertyMappingShiftLevel.PropertyName) ||
-                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, propertyMappingY.PropertyName) ||
-                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, propertyMappingZ.PropertyName))
+            if (!PropertyMappingExistsInSettings(featureFromGisImporterSettings, PropertyMappingName.PropertyName) ||
+                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, PropertyMappingLongName.PropertyName) ||
+                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, PropertyMappingDescription.PropertyName) ||
+                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, PropertyMappingShiftLevel.PropertyName) ||
+                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, PropertyMappingYValues.PropertyName) ||
+                !PropertyMappingExistsInSettings(featureFromGisImporterSettings, PropertyMappingZValues.PropertyName))
             {
                 return false;
             }
@@ -73,110 +39,96 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             return base.ValidateNetworkFeatureFromGisImporterSettings(featureFromGisImporterSettings);
         }
 
-        public override string Name
-        {
-            get { return "Y'Z cross-section from GIS importer"; }
-        }
-
         public override object ImportItem(string path, object target = null)
         {
-            IFeature previousFeature = null;
-            string previousName = null;
-            ICrossSectionDefinition definition = null;
-            var yzCoordinates = new List<Coordinate>();
-            var features = GetFeatures();
-            foreach (var feature in features)
+            IList<IFeature> features = GetFeatures();
+            foreach (IFeature feature in features)
             {
-                var name = feature.Attributes[propertyMappingName.MappingColumn.Alias].ToString();
-                
-                if (!Equals(name, previousName)) //new profile
-                {
-                    try
-                    {
-                        if (definition is CrossSectionDefinitionYZ && previousFeature != null) // finish previous definition
-                        {
-                            double shiftLevel = 0;
-                            try
-                            {
-                               shiftLevel = Convert.ToDouble(previousFeature.Attributes[propertyMappingShiftLevel.MappingColumn.Alias]);
-                            }
-                            catch (Exception e)
-                            {
-                                log.Warn("Shift level readout failed: ", e);
-                            }
-                            if (yzCoordinates.Any())
-                            {
-                                SetYZValues((CrossSectionDefinitionYZ) definition, yzCoordinates, shiftLevel);
-                                yzCoordinates.Clear();
-                            }
-                        }
-
-                        var crossSection = AddOrUpdateCrossSectionFromHydroNetwork(feature, propertyMappingName.MappingColumn.Alias, CrossSectionType.YZ);
-                        
-                        definition = crossSection.Definition;
-                    }
-                    catch (Exception e)
-                    {
-                        log.Warn("Shape file cross section import was skipped: ", e);
-                        previousName = name;
-                        previousFeature = feature;
-                        continue;
-                    }
-                }
                 try
                 {
-                    var yValue = Convert.ToDouble(feature.Attributes[propertyMappingY.MappingColumn.Alias]);
-                    var zValue = Convert.ToDouble(feature.Attributes[propertyMappingZ.MappingColumn.Alias]);
-                    if (!yzCoordinates.Select(c => c.X).Contains(yValue))
+                    ICrossSection crossSection = AddOrUpdateCrossSectionFromHydroNetwork(feature, PropertyMappingName.MappingColumn.Alias, CrossSectionType.YZ);
+                    SetDefaultCrossSectionProperties(feature, crossSection);
+                    if (crossSection.Definition is CrossSectionDefinitionYZ crossSectionDefinitionYz)
                     {
-                        yzCoordinates.Add(new Coordinate(yValue, zValue));
+                        SetCrossSectionDefinitionPropertiesYz(feature, crossSectionDefinitionYz);
+                    }
+                    else
+                    {
+                        log.Warn(string.Format(Resources.CrossSectionYZFromGisImporter_ImportItem_Cross_section_definition__0___not_an_YZ_cross_section_definition, crossSection.Name));
                     }
                 }
                 catch (Exception e)
                 {
                     log.Warn("Cross section profile import was skipped: " + e.Message + " -- continuing with default profile.");
-                    previousName = name;
-                    previousFeature = feature;
-                    continue;
-                }             
-                previousName = name;
-                previousFeature = feature;
-            }
-
-            if (definition is CrossSectionDefinitionYZ && previousFeature != null) // finish previous definition
-            {
-                double shiftLevel = 0;
-                try
-                {
-                    shiftLevel = Convert.ToDouble(previousFeature.Attributes[propertyMappingShiftLevel.MappingColumn.Alias]);
-                }
-                catch (Exception e)
-                {
-                    log.Warn("Shift level readout failed: ", e);
-                }
-                if (yzCoordinates.Any())
-                {
-                    SetYZValues((CrossSectionDefinitionYZ) definition, yzCoordinates, shiftLevel);
                 }
             }
 
             return HydroNetwork;
         }
 
-        private static void SetYZValues(CrossSectionDefinitionYZ crossSectionDefinition, List<Coordinate> YZCoordinates, double shiftLevel)
+        private PropertyMapping PropertyMappingName => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.Name.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingLongName => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.LongName.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingDescription => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.Description.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingShiftLevel => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.ShiftLevel.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingYValues => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.YValues.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingZValues => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals(CrossSectionDefaultGisPropertyMappings.ZValues.PropertyName, StringComparison.InvariantCulture));
+
+        private void SetGisImportSettings()
         {
-            crossSectionDefinition.BeginEdit(new DefaultEditAction("Set YZ values"));
+            SetPropertyMappings();
+            base.FeatureFromGisImporterSettings.FeatureType = Resources.CrossSectionYZFromGisImporter_SetGisImportSettings_Cross_Sections_Y_Z;
+            base.FeatureFromGisImporterSettings.FeatureImporterFromGisImporterType = GetType().ToString();
+        }
 
-            crossSectionDefinition.YZDataTable.Clear();
+        private void SetPropertyMappings()
+        {
+            List<PropertyMapping> propertiesMapping = base.FeatureFromGisImporterSettings.PropertiesMapping;
 
-            YZCoordinates = YZCoordinates.OrderBy(c => c.X).ToList();
+            propertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.Name);
+            propertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.LongName);
+            propertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.Description);
+            propertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.ShiftLevel);
+            propertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.YValues);
+            propertiesMapping.Add(CrossSectionDefaultGisPropertyMappings.ZValues);
+        }
 
-            foreach (var coordinate in YZCoordinates)
-            {    
-                crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(coordinate.X, coordinate.Y + shiftLevel);
+        private void SetDefaultCrossSectionProperties(IFeature feature, ICrossSection crossSection)
+        {
+            if (!PropertyMappingName.MappingColumn.IsNullValue)
+            {
+                crossSection.Name = feature.Attributes[PropertyMappingName.MappingColumn.Alias].ToString();
             }
 
-            crossSectionDefinition.EndEdit();
+            if (!PropertyMappingDescription.MappingColumn.IsNullValue)
+            {
+                crossSection.Description = feature.Attributes[PropertyMappingDescription.MappingColumn.Alias].ToString();
+            }
+
+            if (!PropertyMappingLongName.MappingColumn.IsNullValue)
+            {
+                crossSection.LongName = feature.Attributes[PropertyMappingLongName.MappingColumn.Alias].ToString();
+            }
+        }
+
+        private void SetCrossSectionDefinitionPropertiesYz(IFeature feature, CrossSectionDefinitionYZ crossSectionDefinition)
+        {
+            try
+            {
+                IList<double> yValues = yzFromGisImporter.ConvertPropertyMappingToList(feature.Attributes[PropertyMappingYValues.MappingColumn.Alias].ToString());
+                IList<double> zValues = yzFromGisImporter.ConvertPropertyMappingToList(feature.Attributes[PropertyMappingZValues.MappingColumn.Alias].ToString());
+                crossSectionDefinition.SetYzValues( yValues, zValues);
+
+                if (!PropertyMappingShiftLevel.MappingColumn.IsNullValue)
+                {
+                    var shiftLevel = Convert.ToDouble(feature.Attributes[PropertyMappingShiftLevel.MappingColumn.Alias]);
+                    crossSectionDefinition.ShiftLevel(shiftLevel);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                log.ErrorFormat(Resources.CrossSectionYZFromGisImporter_ConvertCrossSectionPropertiesYz_Exception_ocurred_during_import_of_crosssection___0_____1_, crossSectionDefinition.Name, e);
+            }
         }
     }
 }

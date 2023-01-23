@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -17,12 +18,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         protected BridgeFromGisImporterBase()
         {
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.Name);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.LongName);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.Description);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.Level);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.Length);
-            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultPropertyMappings.FrictionValue);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.Name);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.LongName);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.Description);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.Level);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.Length);
+            base.FeatureFromGisImporterSettings.PropertiesMapping.Add(BridgeDefaultGisPropertyMappings.FrictionValue);
             base.FeatureFromGisImporterSettings.FeatureImporterFromGisImporterType = GetType().ToString();
         }
 
@@ -94,12 +95,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             }
         }
 
-        private PropertyMapping PropertyMappingName => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.Name.PropertyName);
-        private PropertyMapping PropertyMappingLongName => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.LongName.PropertyName);
-        private PropertyMapping PropertyMappingDescription => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.Description.PropertyName);
-        private PropertyMapping PropertyMappingLevel => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.Level.PropertyName);
-        private PropertyMapping PropertyMappingLength => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.Length.PropertyName);
-        private PropertyMapping PropertyMappingFrictionValue => FeatureFromGisImporterSettings.PropertiesMapping.First(pm => pm.PropertyName == BridgeDefaultPropertyMappings.FrictionValue.PropertyName);
+        private PropertyMapping PropertyMappingName => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals( BridgeDefaultGisPropertyMappings.Name.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingLongName => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals( BridgeDefaultGisPropertyMappings.LongName.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingDescription => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals( BridgeDefaultGisPropertyMappings.Description.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingLevel => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals( BridgeDefaultGisPropertyMappings.Level.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingLength => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals( BridgeDefaultGisPropertyMappings.Length.PropertyName, StringComparison.InvariantCulture));
+        private PropertyMapping PropertyMappingFrictionValue => FeatureFromGisImporterSettings.PropertiesMapping.FirstOrDefault(pm => pm.PropertyName.Equals( BridgeDefaultGisPropertyMappings.FrictionValue.PropertyName, StringComparison.InvariantCulture));
 
         private void ImportBridge(IFeature feature, string columnNameName, string columnNameDescription)
         {
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
             if (bridge == null)
             {
-                log.ErrorFormat("Failed to import bridge \"{0}\".", feature);
+                log.ErrorFormat(Resources.BridgeFromGisImporterBase_ImportBridge_Failed_to_import_bridge___0___, feature);
                 return;
             }
 
@@ -122,7 +123,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             }
             catch (Exception e)
             {
-                log.ErrorFormat("Exception ocurred during import of bridge \"{0}\": {1}", bridge.Name, e);
+                log.ErrorFormat(Resources.BridgeFromGisImporterBase_ImportBridge_Exception_ocurred_during_import_of_bridge___0_____1_, bridge.Name, e);
                 // Resume regular control flow. 
             }
         }

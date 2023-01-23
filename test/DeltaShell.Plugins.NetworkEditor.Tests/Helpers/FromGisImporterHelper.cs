@@ -10,7 +10,7 @@ using NSubstitute;
 using SharpMap.Api;
 using SharpMap.Data.Providers;
 
-namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
+namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 {
     /// <summary>
     /// Helper class for test classes derived from <see cref="FeatureFromGisImporterBase"/>.
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         public const string FileLocationYz = folderLocationShapeFiles + "yz_test.shp";
         public const string FileLocationCrossSectionZw = folderLocationShapeFiles + "crosssection_zw_test.shp";
         private const string folderLocationShapeFiles = "FromGisImporter_ShapeFiles/";
-
+        
         /// <summary>
         /// Method to setup a hydro network with branches and a high snapping tolerance.
         /// </summary>

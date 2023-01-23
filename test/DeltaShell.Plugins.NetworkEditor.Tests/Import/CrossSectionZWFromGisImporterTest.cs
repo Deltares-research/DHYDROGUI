@@ -5,6 +5,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
+using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using NUnit.Framework;
 using SharpMap.Api;
 

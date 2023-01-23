@@ -208,4 +208,55 @@
   <data name="Gully" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Gully.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="CrossSectionYZFromGisImporter_Name_Y_Z_cross_section_from_GIS_importer" xml:space="preserve">
+    <value>Y'Z cross-section from GIS importer</value>
+  </data>
+  <data name="CrossSectionYZFromGisImporter_SetGisImportSettings_Cross_Sections_Y_Z" xml:space="preserve">
+    <value>Cross Sections Y'Z</value>
+  </data>
+  <data name="CrossSectionYZFromGisImporter_ConvertCrossSectionPropertiesYz_Exception_ocurred_during_import_of_crosssection___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of crosssection "{0}": {1}</value>
+  </data>
+  <data name="CrossSectionZWFromGisImporter_CrossSectionZWFromGisImporter_Cross_Sections_ZW" xml:space="preserve">
+    <value>Cross Sections ZW</value>
+  </data>
+  <data name="CrossSectionZWFromGisImporter_Name_Tabulated_river_cross_section_from_GIS_importer" xml:space="preserve">
+    <value>Tabulated river cross-section from GIS importer</value>
+  </data>
+  <data name="BridgeYzFromGisImporter_BridgeYzFromGisImporter_Bridges__YZ_profile_" xml:space="preserve">
+    <value>Bridges (YZ profile)</value>
+  </data>
+  <data name="BridgeYzFromGisImporter_Name_Bridge_YZ_from_GIS_importer" xml:space="preserve">
+    <value>Bridge YZ from GIS importer</value>
+  </data>
+  <data name="BridgeZwFromGisImporter_BridgeZwFromGisImporter_Bridges__ZW_profile_" xml:space="preserve">
+    <value>Bridges (ZW profile)</value>
+  </data>
+  <data name="BridgeZwFromGisImporter_Name_Bridge_ZW_from_GIS_importer" xml:space="preserve">
+    <value>Bridge ZW from GIS importer</value>
+  </data>
+  <data name="BridgeZwFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of bridge "{0}": {1}</value>
+  </data>
+  <data name="BridgeYzFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of bridge "{0}": {1}</value>
+  </data>
+  <data name="BridgeRectangularFromGisImporter_BridgeRectangularFromGisImporter_Bridges__rectangle_profile_" xml:space="preserve">
+    <value>Bridges (rectangle profile)</value>
+  </data>
+  <data name="BridgeRectangularFromGisImporter_Name_Bridge_from_GIS_importer" xml:space="preserve">
+    <value>Bridge from GIS importer</value>
+  </data>
+  <data name="BridgeRectangularFromGisImporter_ConvertBridgeProperties_Exception_ocurred_during_import_of_bridge___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of bridge "{0}": {1}</value>
+  </data>
+  <data name="BridgeFromGisImporterBase_ImportBridge_Exception_ocurred_during_import_of_bridge___0_____1_" xml:space="preserve">
+    <value>Exception ocurred during import of bridge "{0}": {1}</value>
+  </data>
+  <data name="BridgeFromGisImporterBase_ImportBridge_Failed_to_import_bridge___0___" xml:space="preserve">
+    <value>Failed to import bridge "{0}".</value>
+  </data>
+  <data name="CrossSectionYZFromGisImporter_ImportItem_Cross_section_definition__0___not_an_YZ_cross_section_definition" xml:space="preserve">
+    <value>Cross section definition {0}, not an YZ cross section definition</value>
+  </data>
 </root>
