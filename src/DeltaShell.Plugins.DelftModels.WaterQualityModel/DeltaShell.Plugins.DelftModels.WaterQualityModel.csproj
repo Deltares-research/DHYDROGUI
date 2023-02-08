@@ -80,7 +80,7 @@
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="PLCT.Libs" Version="1.0.0.76858" />
+    <PackageReference Include="PLCT.Libs" Version="1.0.0.77823" />
     <PackageReference Include="PostSharp" Version="6.10.5">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
