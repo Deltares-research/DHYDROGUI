@@ -27,36 +27,88 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
 
             List<FouFileRow> fouFileEntries = ReadFouFile(fouFilePath);
 
-            UpdateSettings(fouFileEntries, modelDefinition);
+            UpdateWlProperty(fouFileEntries, modelDefinition);
+            UpdateUcProperty(fouFileEntries, modelDefinition);
+            UpdateFbProperty(fouFileEntries, modelDefinition);
+            UpdateWdogProperty(fouFileEntries, modelDefinition);
+            UpdateVogProperty(fouFileEntries, modelDefinition);
         }
 
-        private static void UpdateSettings(IReadOnlyCollection<FouFileRow> rows, WaterFlowFMModelDefinition modelDefinition)
+        private static void UpdateWlProperty(IReadOnlyCollection<FouFileRow> rows, WaterFlowFMModelDefinition modelDefinition)
         {
             WaterFlowFMProperty writeWlAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWlAverage);
-            IEnumerable<FouFileRow> row = rows.Where(t => t.Var.Equals("wl", StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpAverage, StringComparison.InvariantCultureIgnoreCase));
+            IEnumerable<FouFileRow> row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterLevel, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpAverage, StringComparison.InvariantCultureIgnoreCase));
             writeWlAverage.Value = row.Any();
 
             WaterFlowFMProperty writeWlMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWlMaximum);
-            row = rows.Where(t => t.Var.Equals("wl", StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMaximum, StringComparison.InvariantCultureIgnoreCase));
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterLevel, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMaximum, StringComparison.InvariantCultureIgnoreCase));
             writeWlMaximum.Value = row.Any();
 
             WaterFlowFMProperty writeWlMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWlMinimum);
-            row = rows.Where(t => t.Var.Equals("wl", StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMinimum, StringComparison.InvariantCultureIgnoreCase));
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterLevel, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMinimum, StringComparison.InvariantCultureIgnoreCase));
             writeWlMinimum.Value = row.Any();
+        }
 
+        private static void UpdateUcProperty(IReadOnlyCollection<FouFileRow> rows, WaterFlowFMModelDefinition modelDefinition)
+        {
             WaterFlowFMProperty writeUcAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteUcAverage);
-            row = rows.Where(t => t.Var.Equals("uc", StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpAverage, StringComparison.InvariantCultureIgnoreCase));
+            IEnumerable<FouFileRow> row = rows.Where(t => t.Var.Equals(FouFileProperties.VarVelocityMagnitude, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpAverage, StringComparison.InvariantCultureIgnoreCase));
             writeUcAverage.Value = row.Any();
 
             WaterFlowFMProperty writeUcMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteUcMaximum);
-            row = rows.Where(t => t.Var.Equals("uc", StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMaximum, StringComparison.InvariantCultureIgnoreCase));
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarVelocityMagnitude, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMaximum, StringComparison.InvariantCultureIgnoreCase));
             writeUcMaximum.Value = row.Any();
 
             WaterFlowFMProperty writeUcMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteUcMinimum);
-            row = rows.Where(t => t.Var.Equals("uc", StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMinimum, StringComparison.InvariantCultureIgnoreCase));
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarVelocityMagnitude, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMinimum, StringComparison.InvariantCultureIgnoreCase));
             writeUcMinimum.Value = row.Any();
         }
 
+        private static void UpdateFbProperty(IReadOnlyCollection<FouFileRow> rows, WaterFlowFMModelDefinition modelDefinition)
+        {
+            WaterFlowFMProperty writeFbAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteFbAverage);
+            IEnumerable<FouFileRow> row = rows.Where(t => t.Var.Equals(FouFileProperties.VarFreeboard, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpAverage, StringComparison.InvariantCultureIgnoreCase));
+            writeFbAverage.Value = row.Any();
+
+            WaterFlowFMProperty writeFbMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteFbMaximum);
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarFreeboard, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMaximum, StringComparison.InvariantCultureIgnoreCase));
+            writeFbMaximum.Value = row.Any();
+
+            WaterFlowFMProperty writeFbMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteFbMinimum);
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarFreeboard, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMinimum, StringComparison.InvariantCultureIgnoreCase));
+            writeFbMinimum.Value = row.Any();
+        }
+
+        private static void UpdateWdogProperty(IReadOnlyCollection<FouFileRow> rows, WaterFlowFMModelDefinition modelDefinition)
+        {
+            WaterFlowFMProperty writeWdogAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWdogAverage);
+            IEnumerable<FouFileRow> row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterDepthOnGround, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpAverage, StringComparison.InvariantCultureIgnoreCase));
+            writeWdogAverage.Value = row.Any();
+
+            WaterFlowFMProperty writeWdogMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWdogMaximum);
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterDepthOnGround, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMaximum, StringComparison.InvariantCultureIgnoreCase));
+            writeWdogMaximum.Value = row.Any();
+
+            WaterFlowFMProperty writeWdogMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWdogMinimum);
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterDepthOnGround, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMinimum, StringComparison.InvariantCultureIgnoreCase));
+            writeWdogMinimum.Value = row.Any();
+        }
+
+        private static void UpdateVogProperty(IReadOnlyCollection<FouFileRow> rows, WaterFlowFMModelDefinition modelDefinition)
+        {
+            WaterFlowFMProperty writeVogAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteVogAverage);
+            IEnumerable<FouFileRow> row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterVolumeOnGround, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpAverage, StringComparison.InvariantCultureIgnoreCase));
+            writeVogAverage.Value = row.Any();
+
+            WaterFlowFMProperty writeVogMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteVogMaximum);
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterVolumeOnGround, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMaximum, StringComparison.InvariantCultureIgnoreCase));
+            writeVogMaximum.Value = row.Any();
+
+            WaterFlowFMProperty writeVogMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteVogMinimum);
+            row = rows.Where(t => t.Var.Equals(FouFileProperties.VarWaterVolumeOnGround, StringComparison.InvariantCultureIgnoreCase) && t.Elp.Equals(FouFileProperties.ElpMinimum, StringComparison.InvariantCultureIgnoreCase));
+            writeVogMinimum.Value = row.Any();
+        }        
+        
         private static string IsFouFileUsed(string targetDir, WaterFlowFMModelDefinition modelDefinition)
         {
             WaterFlowFMProperty fouFileProperty = modelDefinition.GetModelProperty(FouFileProperties.MduFouFileProperty);
@@ -129,6 +181,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
                 return uc;
             }
 
+            FouFileRow fb = MakeFreeboard(tokens);
+            if (fb != null)
+            {
+                return fb;
+            }
+
+            FouFileRow wdog = MakeWaterDepthOnGround(tokens);
+            if (wdog != null)
+            {
+                return wdog;
+            }
+
+            FouFileRow vog = MakeWaterVolumeOnGround(tokens);
+            if (vog != null)
+            {
+                return vog;
+            }
+
             return null;
         }
 
@@ -169,13 +239,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
             catch (FormatException formatException)
             {
                 log.Debug(formatException);
-                string tokenString = null;
-                foreach (string token in tokens)
-                {
-                    tokenString += token + " ";
-                }
-
-                log.Error($"The FouFile entry ({tokenString}) was not in correct format.");
+                log.Error($"The FouFile entry ({string.Join(" ", tokens)}) was not in correct format.");
+                return null;
             }
 
             return fouFileRow;
@@ -218,13 +283,140 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
             catch (FormatException formatException)
             {
                 log.Debug(formatException);
-                string tokenString = null;
-                foreach (string token in tokens)
-                {
-                    tokenString += token + " ";
-                }
+                log.Error($"The FouFile entry ({string.Join(" ", tokens)}) was not in correct format.");
+                return null;
+            }
 
-                log.Error($"The FouFile entry ({tokenString}) was not in correct format.");
+            return fouFileRow;
+        }
+        
+        private static FouFileRow MakeFreeboard(IReadOnlyList<string> tokens)
+        {
+            if (tokens.Count() < 6 || tokens.Count() > 7)
+            {
+                // invalid number of tokens
+                return null;
+            }
+
+            string firstToken = tokens[0];
+            if (!string.Equals(firstToken, FouFileProperties.VarFreeboard, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return null;
+            }
+
+            FouFileRow fouFileRow = null;
+            try
+            {
+                fouFileRow = new FouFileRow();
+                fouFileRow.Var = tokens[0];
+                fouFileRow.Tsrts = Convert.ToDouble(tokens[1]);
+                fouFileRow.Sstop = Convert.ToDouble(tokens[2]);
+                fouFileRow.Numcyc = Convert.ToInt32(tokens[3]);
+                fouFileRow.Knfac = Convert.ToInt32(tokens[4]);
+                fouFileRow.V0plu = Convert.ToInt32(tokens[5]);
+                fouFileRow.Layno = null;
+                if (tokens.Count() == 7)
+                {
+                    fouFileRow.Elp = tokens[6];
+                }
+                else
+                {
+                    fouFileRow.Elp = "";
+                }
+            }
+            catch (FormatException formatException)
+            {
+                log.Debug(formatException);
+                log.Error($"The FouFile entry ({string.Join(" ", tokens)}) was not in correct format.");
+                return null;
+            }
+
+            return fouFileRow;
+        }
+        
+        private static FouFileRow MakeWaterDepthOnGround(IReadOnlyList<string> tokens)
+        {
+            if (tokens.Count() < 6 || tokens.Count() > 7)
+            {
+                // invalid number of tokens
+                return null;
+            }
+
+            string firstToken = tokens[0];
+            if (!string.Equals(firstToken, FouFileProperties.VarWaterDepthOnGround, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return null;
+            }
+
+            FouFileRow fouFileRow = null;
+            try
+            {
+                fouFileRow = new FouFileRow();
+                fouFileRow.Var = tokens[0];
+                fouFileRow.Tsrts = Convert.ToDouble(tokens[1]);
+                fouFileRow.Sstop = Convert.ToDouble(tokens[2]);
+                fouFileRow.Numcyc = Convert.ToInt32(tokens[3]);
+                fouFileRow.Knfac = Convert.ToInt32(tokens[4]);
+                fouFileRow.V0plu = Convert.ToInt32(tokens[5]);
+                fouFileRow.Layno = null;
+                if (tokens.Count() == 7)
+                {
+                    fouFileRow.Elp = tokens[6];
+                }
+                else
+                {
+                    fouFileRow.Elp = "";
+                }
+            }
+            catch (FormatException formatException)
+            {
+                log.Debug(formatException);
+                log.Error($"The FouFile entry ({string.Join(" ", tokens)}) was not in correct format.");
+                return null;
+            }
+
+            return fouFileRow;
+        }
+        
+        private static FouFileRow MakeWaterVolumeOnGround(IReadOnlyList<string> tokens)
+        {
+            if (tokens.Count() < 6 || tokens.Count() > 7)
+            {
+                // invalid number of tokens
+                return null;
+            }
+
+            string firstToken = tokens[0];
+            if (!string.Equals(firstToken, FouFileProperties.VarWaterVolumeOnGround, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return null;
+            }
+
+            FouFileRow fouFileRow = null;
+            try
+            {
+                fouFileRow = new FouFileRow();
+                fouFileRow.Var = tokens[0];
+                fouFileRow.Tsrts = Convert.ToDouble(tokens[1]);
+                fouFileRow.Sstop = Convert.ToDouble(tokens[2]);
+                fouFileRow.Numcyc = Convert.ToInt32(tokens[3]);
+                fouFileRow.Knfac = Convert.ToInt32(tokens[4]);
+                fouFileRow.V0plu = Convert.ToInt32(tokens[5]);
+                fouFileRow.Layno = null;
+                if (tokens.Count() == 7)
+                {
+                    fouFileRow.Elp = tokens[6];
+                }
+                else
+                {
+                    fouFileRow.Elp = "";
+                }
+            }
+            catch (FormatException formatException)
+            {
+                log.Debug(formatException);
+                log.Error($"The FouFile entry ({string.Join(" ", tokens)}) was not in correct format.");
+                return null;
             }
 
             return fouFileRow;

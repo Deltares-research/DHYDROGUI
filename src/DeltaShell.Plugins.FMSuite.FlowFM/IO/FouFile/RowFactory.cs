@@ -44,5 +44,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
 
             return wlRow;
         }
+
+        public FouFileRow Freeboard(string elpValue)
+        {
+            var wlRow = new FouFileRow()
+            {
+                Var = "fb",
+                Tsrts = startTime,
+                Sstop = stopTime,
+                Numcyc = 0,
+                Knfac = 1,
+                V0plu = 0,
+                Layno = null,
+                Elp = elpValue
+            };
+
+            return wlRow;
+        }
+        
+        public FouFileRow WaterDepthOnGround(string elpValue)
+        {
+            var wlRow = new FouFileRow()
+            {
+                Var = "wdog",
+                Tsrts = startTime,
+                Sstop = stopTime,
+                Numcyc = 0,
+                Knfac = 1,
+                V0plu = 0,
+                Layno = null,
+                Elp = elpValue
+            };
+
+            return wlRow;
+        }
+        
+        public FouFileRow VolumeOnGround(string elpValue)
+        {
+            var wlRow = new FouFileRow()
+            {
+                Var = "vog",
+                Tsrts = startTime,
+                Sstop = stopTime,
+                Numcyc = 0,
+                Knfac = 1,
+                V0plu = 0,
+                Layno = null,
+                Elp = elpValue
+            };
+
+            return wlRow;
+        }
     }
 }
