@@ -99,6 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             { KnownProperties.ObsCrsFile, "CrsFile" },
         };
 
+        private static ISet<string> ObsoleteProperties { get; } = new HashSet<string> { "hdam", "writebalancefile", "transportmethod" };
+
         public MduFile(IFlexibleMeshModelApi api  =  null)
         {
             if (FMDllVersion != null)
@@ -1013,8 +1015,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         {
                             mduPropertyName = "BedLevType";
                         }
-                        if (mduPropertyLowerCase.Equals("hdam") || mduPropertyLowerCase.Equals("writebalancefile"))
+                        if (ObsoleteProperties.Contains(mduPropertyLowerCase))
                         {
+                            Log.Warn(string.Format(Resources.Key_0_in_1_is_deprecated_and_automatically_removed_from_model, mduPropertyName, IOPath.GetFileName(filePath)));
                             line = GetNextLine();
                             continue;
                         }

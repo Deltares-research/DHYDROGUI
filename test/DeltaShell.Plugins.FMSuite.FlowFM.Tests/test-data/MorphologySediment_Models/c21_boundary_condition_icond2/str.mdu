@@ -42,7 +42,6 @@ AdvecType                         = 3                   # Advection type (0: non
 TimeStepType                      = 2                   # Time step handling (0: only transport, 1: transport + velocity update, 2: full implicit step-reduce, 3: step-Jacobi, 4: explicit)
 Limtypmom                         = 4                   # Limiter type for cell center advection velocity (0: none, 1: minmod, 2: van Leer, 3: Kooren, 4: monotone central)
 Limtypsa                          = 0                   # Limiter type for salinity transport (0: none, 1: minmod, 2: van Leer, 3: Kooren, 4: monotone central)
-TransportMethod                   = 1                   # Transport method (0: Herman's method, 1: transport module)
 TransportTimestepping             = 0                   # Timestepping method in Transport module, 0 = global (default) , 1 = local
 Vertadvtypsal                     = 6                   # Vertical advection type for salinity (0: none, 1: upwind explicit, 2: central explicit, 3: upwind implicit, 4: central implicit, 5: central implicit but upwind for neg. stratif., 6: higher order explicit, no Forester)
 Vertadvtyptem                     = 6                   # Vertical advection type for temperature (0: none, 1: upwind explicit, 2: central explicit, 3: upwind implicit, 4: central implicit, 5: central implicit but upwind for neg. stratif., 6: higher order explicit, no Forester)
