@@ -110,7 +110,6 @@ S1incinterval                      =
 WaqFileBase                        =  
 WaqInterval                        =  0.                  
 StatsInterval                      =                                     
-WriteBalancefile                   =  0                                  
 SnapshotDir                        =                      
 TimingsInterval                    =                                     
 TimeSplitInterval                  =  0X                                 

@@ -78,7 +78,6 @@ AntiCreep                         = 0                   # Include anti-creep cal
 Maxwaterleveldiff                 = 0                   # Upper bound on water level changes (<=0: no bounds)
 Maxvelocitydiff                   = 0                   # Upper bound on velocity changes (<=0: no bounds)
 Epshu                             = 0.0001              # Threshold water depth for wet and dry cells
-TransportMethod                   = 1
 Vertadvtypsal                     = 5
 FixedWeirfrictscheme              = 1
 Fixedweirtopwidth                 = 3

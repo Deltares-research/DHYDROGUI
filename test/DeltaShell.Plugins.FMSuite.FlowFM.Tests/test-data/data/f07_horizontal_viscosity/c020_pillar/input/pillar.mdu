@@ -32,7 +32,6 @@ CFLWaveFrac      = 0.1                 # Wave velocity fraction, total courant v
 AdvecType        = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
 Limtypmom        = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
 Limtypsa         = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
-Hdam             = 0.                  # Threshold for minimum bottomlevel step at which to apply energy conservation factor i.c. flow contraction
 Teta0            = 0.550000011920929   # Teta of time integration, 0.5 < Teta < 1d0
 
 [physics]

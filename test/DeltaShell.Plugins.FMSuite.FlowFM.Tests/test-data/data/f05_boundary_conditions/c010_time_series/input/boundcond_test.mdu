@@ -213,7 +213,6 @@ WaterdepthClasses                 = 0.0                   # Water depth classes
 ClassMapInterval                  = 300                   # Class output interval [Dd HH:MM:SS.ZZZ]
 WaqInterval                       = 0                     # Interval (in s) between Delwaq file outputs
 StatsInterval                     =                       # Interval (in s) between simulation statistics output [Dd HH:MM:SS.ZZZ]
-Writebalancefile                  = 0                     # Write balance file (1: yes, 0: no)
 TimingsInterval                   =                       # Timings statistics output interval [Dd HH:MM:SS.ZZZ]
 Richardsononoutput                = 1                     # Write Richardson numbers (1: yes, 0: no)
 WaqFileBase                       =                       # Basename (without extension) for all Delwaq files to be written.

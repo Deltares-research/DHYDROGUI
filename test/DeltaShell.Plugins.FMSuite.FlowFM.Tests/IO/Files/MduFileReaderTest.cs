@@ -7,6 +7,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
+using log4net.Core;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 {
@@ -305,17 +306,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
             var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
             var definition = new WaterFlowFMModelDefinition();
+            var filePath = "FlowFM.mdu";
 
             // Call
-            void Call() => MduFileReader.Read(stream, string.Empty, definition);
+            void Call() => MduFileReader.Read(stream, filePath, definition);
 
             // Assert
-            string expectedMessage = "During reading the mdu file the following warnings were reported:"
+            string expectedMessage = $"During reading the {filePath} file the following warnings were reported:"
                                      + Environment.NewLine
                                      + "- An unsupported option for *Uniform friction type* has been detected and the default value will be used."
                                      + Environment.NewLine
                                      + "- An unsupported option for *Turbulence model* has been detected and the default value will be used.";
             TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase("transportmethod", "numerics")]
+        [TestCase("hdam", "numerics")]
+        [TestCase("writebalancefile", "output")]
+        public void Read_WithObsoleteProperty_PropertyIsRemovedFromModelDefinition(string property, string category)
+        {
+            // Setup
+            string mduFileContent =
+                $"[{category}]{Environment.NewLine}" +
+                $"{property}=";
+
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(mduFileContent));
+            var definition = new WaterFlowFMModelDefinition();
+            var mduFilePath = "FlowFM.mdu";
+
+            // Call
+            MduFileReader.Read(stream, mduFilePath, definition);
+
+            // Assert
+            Assert.That(definition.Properties.Select(p => p.PropertyDefinition.MduPropertyName), Does.Not.Contain(property));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase("transportmethod", "numerics")]
+        [TestCase("hdam", "numerics")]
+        [TestCase("writebalancefile", "output")]
+        public void Read_WithObsoleteProperty_LogsWarning(string property, string category)
+        {
+            // Setup
+            string mduFileContent =
+                $"[{category}]{Environment.NewLine}" +
+                $"{property}=";
+
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(mduFileContent));
+            var definition = new WaterFlowFMModelDefinition();
+            var mduFilePath = "FlowFM.mdu";
+
+            // Call
+            void Call() => MduFileReader.Read(stream, mduFilePath, definition);
+            string[] warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
+
+            // Assert
+            string expectedWarning =
+                $"During reading the {mduFilePath} file the following warnings were reported:" +
+                Environment.NewLine +
+                $"- Key {property} is deprecated and automatically removed from model.";
+            Assert.That(warnings, Does.Contain(expectedWarning));
         }
 
         private static IEnumerable<string> GetMultiValuedPropertiesFileContents()

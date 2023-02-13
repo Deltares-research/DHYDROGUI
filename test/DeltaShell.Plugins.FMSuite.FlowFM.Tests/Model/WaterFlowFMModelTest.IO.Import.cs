@@ -110,10 +110,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 var model = Substitute.ForPartsOf<WaterFlowFMModel>();
 
                 // Call
-                void Call() => model.LoadFromMdu(mduFilePath);
+                model.LoadFromMdu(mduFilePath);
 
                 // Assert
-                Assert.That(TestHelper.GetAllRenderedMessages(Call, Level.Warn), Is.Empty);
                 Assert.That(model.UseRestart, Is.False);
                 Assert.That(model.RestartInput.IsEmpty);
             }

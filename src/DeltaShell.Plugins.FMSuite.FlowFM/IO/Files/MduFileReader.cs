@@ -30,23 +30,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <remarks> The stream is implicitly disposed. </remarks>
         public static void Read(Stream stream, string filePath, WaterFlowFMModelDefinition definition)
         {
+            var logHandler = new LogHandler($"reading the {Path.GetFileName(filePath)} file", log);
             IList<DelftIniCategory> categories = new MduDelftIniReader().ReadDelftIniFile(stream, filePath);
 
-            RemoveRedundantProperties(categories, definition);
+            RemoveRedundantProperties(categories, definition, logHandler);
             UpdateLegacyNames(categories);
 
-            AddOrUpdateProperties(definition, categories);
+            AddOrUpdateProperties(definition, categories, logHandler);
 
             ExecutePostReadActions(definition);
+
+            logHandler.LogReport();
         }
 
-        private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
+        private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition, ILogHandler logHandler)
         {
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
             categories.ForEach(category =>
             {
                 category.RemoveAllPropertiesWhere(p => definition.ContainsProperty(p.Name) && p.Value == string.Empty);
-                category.RemoveAllPropertiesWhere(p => backwardsCompatibilityHelper.IsObsoletePropertyName(p.Name));
+                backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(category, logHandler);
             });
         }
 
@@ -68,9 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             });
         }
 
-        private static void AddOrUpdateProperties(WaterFlowFMModelDefinition definition, IEnumerable<DelftIniCategory> categories)
+        private static void AddOrUpdateProperties(WaterFlowFMModelDefinition definition, IEnumerable<DelftIniCategory> categories, ILogHandler logHandler)
         {
-            var logHandler = new LogHandler("reading the mdu file", log);
             foreach (DelftIniCategory category in categories)
             {
                 foreach (DelftIniProperty property in category.Properties)
@@ -85,8 +87,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     SetPropertyValue(definition, property, logHandler);
                 }
             }
-
-            logHandler.LogReport();
         }
 
         private static WaterFlowFMProperty CreateFmProperty(DelftIniProperty property, string categoryName)
