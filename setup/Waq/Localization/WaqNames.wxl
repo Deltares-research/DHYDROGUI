@@ -10,6 +10,7 @@
   <String Id="WaqUserManualName">D-Water Quality User Manual</String>
   <String Id="WaqToolsManualName">D-Water Quality Quality Tools Manual</String>
   <String Id="WaqMassBalancesManualName">D-Water Quality Mass Balances User Manual</String>
+  <String Id="WaqOpenProcLibManualName">D-Water Quality Open Proc Lib User Manual</String>
   
   <!-- PLCT Manuals -->
   <String Id="PLCTUserManualName">D-Water Quality PLCT User Manual</String>
