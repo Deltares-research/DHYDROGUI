@@ -17,7 +17,7 @@
   
   <String Id="LicenseRtf" Overridable="yes">D-HYDRO_Resources\License.rtf</String>
 
-  <String Id="SupportEmail" Overridable="yes">1D2D-beta.support@deltares.nl</String>
+  <String Id="SupportEmail" Overridable="yes">software.support@deltares.nl</String>
   <String Id="SplashScreenLogoImageFilePath" Overridable="yes">splash_screen.jpg</String>
   <String Id="ManualFileName" Overridable="yes">Delta_Shell_User_Manual.pdf</String>
   <String Id="PluginFeatureDescription">The hydrodynamic module D-Flow Flexible Mesh (D-Flow FM) which is part of the D-HYDRO Suite.</String>
