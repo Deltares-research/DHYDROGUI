@@ -129,9 +129,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time series data could not be read because variable &apos;{0}&apos; was not found in file {1}..
+        ///   Looks up a localized string similar to Time series data could not be read because variable with standard name &apos;{0}&apos; was not found in file {1}..
         /// </summary>
-        public static string NetCdfFileReaderHelper_GetDateTimes_Time_variable_not_found {
+        internal static string NetCdfFileReaderHelper_GetDateTimes_Time_variable_not_found {
             get {
                 return ResourceManager.GetString("NetCdfFileReaderHelper_GetDateTimes_Time_variable_not_found", resourceCulture);
             }

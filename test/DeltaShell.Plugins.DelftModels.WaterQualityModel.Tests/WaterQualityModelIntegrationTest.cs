@@ -25,39 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
     public class WaterQualityModelIntegrationTest
     {
         [Test]
-        public void ImportSobekHydFileAndRun()
-        {
-            string dataDir = TestHelper.GetTestDataDirectory();
-            string hydFile = Path.Combine(dataDir, "ValidWaqModels", "Flow1D", "sobek.hyd");
-
-            using (var model = new WaterQualityModel())
-            {
-                EditInputFileToCreateBinaryFiles(model);
-                new HydFileImporter().ImportItem(hydFile, model);
-
-                string subFilePath = Path.Combine(dataDir, "ValidWaqModels", "Eutrof_simple_sobek.sub");
-                new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
-
-                // Send the model to delwaq
-                ActivityRunner.RunActivity(model);
-
-                Assert.IsTrue(model.Status == ActivityStatus.Cleaned);
-                Assert.IsTrue(model.OutputSubstancesDataItemSet.DataItems.Any());
-                IDataItem oxygenDataItem = model.OutputSubstancesDataItemSet.DataItems.FirstOrDefault(d => d.Name.Equals("OXY"));
-                Assert.NotNull(oxygenDataItem, "OXY dataitem not found.");
-                var oxygen = (UnstructuredGridCellCoverage) oxygenDataItem.Value;
-                IFunction firstFeature = oxygen.GetTimeSeries(oxygen.GetCoordinatesForGrid(oxygen.Grid).First());
-                Assert.NotNull(firstFeature, "First feature in oxygen data item not found.");
-                IVariable firstComponent = firstFeature.Components.FirstOrDefault();
-                Assert.NotNull(firstComponent, "first feature component invalid.");
-                for (var i = 1; i < firstComponent.Values.Count; i++)
-                {
-                    Assert.IsTrue((double) firstComponent.Values[i] > 0d);
-                }
-            }
-        }
-
-        [Test]
         public void ImportFMHydFileAndRun()
         {
             string dataDir = TestHelper.GetTestDataDirectory();

@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 using (DeltaShellApplication deltaShell = GetRunningDSApplication(tempDirPath, true))
                 {
                     string dataDir = TestHelper.GetTestDataDirectory();
-                    string realHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
+                    string realHydFile = Path.Combine(dataDir, "WaterQualityDataFiles", "flow-model", "westernscheldt01.hyd");
 
                     string deltaShellWorkingDirectory = deltaShell.WorkDirectory;
                     WaterQualityModel model = CreateWaqModelWithData(realHydFile, false);
@@ -82,6 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     deltaShell.Project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
+                    Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
                     Assert.IsTrue(Directory.Exists(deltaShell.ProjectDataDirectory),
                                   "Couldn't find " + deltaShell.ProjectDataDirectory);
