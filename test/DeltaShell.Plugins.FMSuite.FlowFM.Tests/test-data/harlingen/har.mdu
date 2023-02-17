@@ -220,3 +220,8 @@ FullGridOutput    = 0
 EulerVelocities   = 0
 WaqFileBase       = har                 # Basename (without extension) for all Delwaq files to be written.
 SnapshotDir       = figures             # Directory where snapshots/screendumps are saved.
+
+[volumeTables]
+useVolumeTables   = 0
+increment         = 0.1
+useVolumeTablesFile= 0
