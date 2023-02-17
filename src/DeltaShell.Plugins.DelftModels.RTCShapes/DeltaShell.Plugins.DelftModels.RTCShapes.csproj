@@ -6,8 +6,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1833" GeneratePathProperty="true">
-			<IncludeAssets>compile;build</IncludeAssets>
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1847" GeneratePathProperty="true">
+			<IncludeAssets>compile; build</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="PostSharp" Version="6.10.5">
