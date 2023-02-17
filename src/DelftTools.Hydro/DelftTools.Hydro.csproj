@@ -51,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.1847" GeneratePathProperty="true">
+    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.1849" GeneratePathProperty="true">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="log4net" Version="2.0.12">
