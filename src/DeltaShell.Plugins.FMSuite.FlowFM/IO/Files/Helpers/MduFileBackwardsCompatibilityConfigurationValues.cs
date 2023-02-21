@@ -10,7 +10,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
     /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>
     public sealed class MduFileBackwardsCompatibilityConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
     {
-        public ISet<string> ObsoleteProperties { get; } = new HashSet<string>() {"hdam", "writebalancefile", "transportmethod"};
+        public ISet<string> ObsoleteProperties { get; } = new HashSet<string>()
+        {
+            "hdam",
+            "writebalancefile",
+            "transportmethod",
+            "transporttimestepping"
+        };
 
         public IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; } = new Dictionary<string, string>()
         {
