@@ -914,6 +914,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCase("transportmethod", "numerics")]
+        [TestCase("transporttimestepping", "numerics")]
         [TestCase("hdam", "numerics")]
         [TestCase("writebalancefile", "output")]
         public void Read_WithObsoleteProperty_LogsWarningAndPropertyIsRemovedFromModelDefinition(string property, string category)

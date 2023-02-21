@@ -99,7 +99,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             { KnownProperties.ObsCrsFile, "CrsFile" },
         };
 
-        private static ISet<string> ObsoleteProperties { get; } = new HashSet<string> { "hdam", "writebalancefile", "transportmethod" };
+        private static ISet<string> ObsoleteProperties { get; } = new HashSet<string>
+        {
+            "hdam",
+            "writebalancefile",
+            "transportmethod",
+            "transporttimestepping"
+        };
 
         public MduFile(IFlexibleMeshModelApi api  =  null)
         {
