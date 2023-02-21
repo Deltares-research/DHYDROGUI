@@ -70,88 +70,98 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 },
                 GetViewName = (v, o) => "Nwrw Surface Settings",
             };
-            yield return new ViewInfo<UnpavedData, UnpavedDataView>
+            var buildPavedDataViewInfo = new ViewInfo<PavedData, PavedDataView>
+            {
+                Description = "Paved view",
+                AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
+            }; 
+            var buildUnpavedDataViewInfo = new ViewInfo<UnpavedData, UnpavedDataView>
             {
                 Description = "Unpaved view",
                 AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
             };
-            yield return new ViewInfo<PavedData, PavedDataView>
-            {
-                Description = "Paved view",
-                AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
-            };
-            yield return new ViewInfo<OpenWaterData, OpenWaterDataView>
+            var buildOpenWaterViewInfo = new ViewInfo<OpenWaterData, OpenWaterDataView>
             {
                 Description = "Open water view",
                 AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
             };
-            yield return new ViewInfo<GreenhouseData, GreenhouseDataView>
+            var buildGreenhouseDataViewInfo = new ViewInfo<GreenhouseData, GreenhouseDataView>
             {
                 Description = "Greenhouse view",
                 AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
             };
-            yield return new ViewInfo<SacramentoData, SacramentoDataView>
+            var buildSacramentoDataViewInfo = new ViewInfo<SacramentoData, SacramentoDataView>
             {
                 Description = "Sacramento view",
                 AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
             };
-            yield return new ViewInfo<HbvData, HbvDataView>
+            var buildHbvDataViewInfo = new ViewInfo<HbvData, HbvDataView>
             {
                 Description = "HBV view",
                 AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
             };
+
+            yield return buildPavedDataViewInfo;
+            yield return buildUnpavedDataViewInfo;
+            yield return buildOpenWaterViewInfo;
+            yield return buildGreenhouseDataViewInfo;
+            yield return buildSacramentoDataViewInfo;
+            yield return buildHbvDataViewInfo;
+
+            ViewInfo pavedDataViewCatchmentWrapper = ViewInfoWrapper<Catchment>.Create(
+                buildPavedDataViewInfo, 
+                o => (PavedData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui), 
+                o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is PavedData,
+                (v,o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui));
+            pavedDataViewCatchmentWrapper.CloseForData = (view, o) => view.Data != null && view.Data.Equals(o);
+            yield return pavedDataViewCatchmentWrapper;
+
+            ViewInfo unpavedDataViewCatchmentWrapper = ViewInfoWrapper<Catchment>.Create(
+                buildUnpavedDataViewInfo,
+                o => (UnpavedData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
+                o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is UnpavedData,
+                (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui));
+            unpavedDataViewCatchmentWrapper.CloseForData = (view, o) => view.Data != null && view.Data.Equals(o);
+            yield return unpavedDataViewCatchmentWrapper;
+
+            ViewInfo openWaterDataViewCatchmentWrapper = ViewInfoWrapper<Catchment>.Create(
+                buildOpenWaterViewInfo, 
+                o => (OpenWaterData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui), 
+                o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is OpenWaterData,
+                (v,o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui));
+            openWaterDataViewCatchmentWrapper.CloseForData = (view, o) => view.Data != null && view.Data.Equals(o);
+            yield return openWaterDataViewCatchmentWrapper;
+
+            ViewInfo greenhouseDataViewCatchmentWrapper = ViewInfoWrapper<Catchment>.Create(
+                buildGreenhouseDataViewInfo,
+                o => (GreenhouseData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
+                o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is GreenhouseData,
+                (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui));
+            greenhouseDataViewCatchmentWrapper.CloseForData = (view, o) => view.Data != null && view.Data.Equals(o);
+            yield return greenhouseDataViewCatchmentWrapper;
+
+            ViewInfo sacramentoDataViewCatchmentWrapper = ViewInfoWrapper<Catchment>.Create(
+                buildSacramentoDataViewInfo,
+                o => (SacramentoData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
+                o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is SacramentoData,
+                (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui));
+            sacramentoDataViewCatchmentWrapper.CloseForData = (view, o) => view.Data != null && view.Data.Equals(o);
+            yield return sacramentoDataViewCatchmentWrapper;
+
+            ViewInfo hbvDataViewCatchmentWrapper = ViewInfoWrapper<Catchment>.Create(
+                buildHbvDataViewInfo,
+                o => (HbvData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
+                o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is HbvData,
+                (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui));
+            hbvDataViewCatchmentWrapper.CloseForData = (view, o) => view.Data != null && view.Data.Equals(o);
+            yield return hbvDataViewCatchmentWrapper;
+
             yield return new ViewInfo<RunoffBoundary, RunoffBoundaryData, RunoffBoundaryDataView>
             {
                 GetViewName = (v, o) => "Runoff Boundary Data",
                 Description = "Runoff boundary data",
                 GetViewData = o => GetModelForRunoffBoundary(o, rainfallRunoffGuiPlugin.Gui).BoundaryData.First(bd => bd.Boundary == o),
                 AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
-            };
-            yield return new ViewInfo<Catchment, UnpavedData, UnpavedDataView>
-            {
-                Description = "Unpaved view",
-                GetViewData = o => (UnpavedData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
-                AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is UnpavedData,
-                AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
-            };
-            yield return new ViewInfo<Catchment, PavedData, PavedDataView>
-            {
-                Description = "Paved view",
-                GetViewData = o => (PavedData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
-                AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is PavedData,
-                AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
-            };
-
-            yield return new ViewInfo<Catchment, OpenWaterData, OpenWaterDataView>
-            {
-                Description = "Open water view",
-                GetViewData = o => (OpenWaterData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
-                AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is OpenWaterData,
-                AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
-            };
-
-            yield return new ViewInfo<Catchment, GreenhouseData, GreenhouseDataView>
-            {
-                Description = "Greenhouse view",
-                GetViewData = o => (GreenhouseData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
-                AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is GreenhouseData,
-                AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
-            };
-
-            yield return new ViewInfo<Catchment, SacramentoData, SacramentoDataView>
-            {
-                Description = "Sacramento view",
-                GetViewData = o => (SacramentoData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
-                AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is SacramentoData,
-                AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
-            };
-
-            yield return new ViewInfo<Catchment, HbvData, HbvDataView>
-            {
-                Description = "HBV view",
-                GetViewData = o => (HbvData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
-                AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is HbvData,
-                AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
             };
 
             yield return new ViewInfo<IMeteoData, MeteoEditorView>
@@ -396,7 +406,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             if (view is IRRModelRunModeAwareView modelModeAwareView)
             {
                 RainfallRunoffModel model = GetModelForData(actualData, gui);
-                modelModeAwareView.GetIsModelRunningParallelWithFlowFunc = model.IsRunningParallelWithFlow;
+                if (model != null)
+                {
+                    modelModeAwareView.GetIsModelRunningParallelWithFlowFunc = model.IsRunningParallelWithFlow;
+                }
             }
         }
 

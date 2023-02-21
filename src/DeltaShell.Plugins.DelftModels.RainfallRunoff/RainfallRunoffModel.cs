@@ -885,6 +885,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             return base.GetDirectChildren()
                 .Concat(GetRainfallRunoffMDEData())
+                .Concat(ModelData)
                 .Concat(OutputCoverages
                             .Where(oc => oc.Store is ReadOnlyMapHisFileFunctionStore osFileStore && osFileStore.Functions != null)
                             .SelectMany(oc => ((ReadOnlyMapHisFileFunctionStore)oc.Store).Functions.OfType<IFeatureCoverage>()));
