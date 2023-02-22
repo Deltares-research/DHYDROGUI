@@ -6,6 +6,8 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -83,9 +85,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     preconditionExpectedBranchFeaturesCount,
                     preconditionExpectedCatchmentsCount, gui.Application);
 
-                RainfallRunoffModel rrModel = hydroModel.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
-                Assert.That(rrModel, Is.Not.Null);
-                AcceptanceModelTestHelper.EnableAllRainfallRunoffOutputSettings(rrModel);
+                Console.WriteLine("Setting model settings");
+                SetModelSettings(hydroModel);
                 
                 // [When]
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
@@ -112,6 +113,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                                           new Dictionary<string, IEnumerable<string>>(),
                                                           AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
             }
+        }
+        
+        private static void SetModelSettings(HydroModel hydroModel)
+        {
+            RainfallRunoffModel rrModel = hydroModel.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+            Assert.That(rrModel, Is.Not.Null);
+            
+            WaterFlowFMModel fmModel = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>()?.FirstOrDefault();
+            Assert.That(fmModel, Is.Not.Null);
+
+            SetFlowFmModelSettings(fmModel);
+            AcceptanceModelTestHelper.EnableAllRainfallRunoffOutputSettings(rrModel);
+        }
+        
+        private static void SetFlowFmModelSettings(WaterFlowFMModel fmModel)
+        {
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.UseVolumeTables, false);
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.UseVolumeTablesFile, false);
         }
     }
 }

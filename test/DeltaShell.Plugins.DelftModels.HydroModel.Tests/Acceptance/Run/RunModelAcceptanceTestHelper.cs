@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             
             string actualOutputFolder = Path.Combine(tempDirectory, "SavedModel_data", actualModelOutputDirectory, "output");
             string[] actualOutputFiles = Directory.GetFiles(actualOutputFolder);
-            if (!expectedOutputFiles.Any())
+            if (!actualOutputFiles.Any())
             {
                 Assert.Fail("No output has been created after running the model.");
             }
