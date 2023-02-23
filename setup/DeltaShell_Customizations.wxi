@@ -4,7 +4,7 @@
   <?define ShowStartUpScreen="true"?>
   <?define CheckOriginOfProject="true"?>
   <!--<?define StartNamesCompatibleProducts=""?>-->
-  <?define supportEmail="support1d2d@deltares.nl"?>
+  <?define supportEmail="software.support@deltares.nl"?>
   <?define supportPhone="0645046579"?>
   
   <!-- optional splash screen -->

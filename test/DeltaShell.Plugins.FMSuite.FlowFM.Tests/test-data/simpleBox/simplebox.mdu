@@ -89,3 +89,8 @@ SnapshotDir          =                     # Directory where snapshots/screendum
 TimingsInterval      =                     # Timings output interval
 TimeSplitInterval    = 0X                  # Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.
 #MapOutputTimeVector  = mpttimes.mpt        # File (.mpt) containing fixed map output times (s) w.r.t. RefDate
+
+[volumeTables]
+useVolumeTables   = 0
+increment         = 0.1
+useVolumeTablesFile= 0

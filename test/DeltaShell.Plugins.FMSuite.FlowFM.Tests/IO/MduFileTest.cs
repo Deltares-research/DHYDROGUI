@@ -21,6 +21,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
@@ -907,6 +908,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 AssertLine(data[0], "*var", "tsrts", "sstop", "numcyc", "knfac", "v0plu", "layno", "elp");
                 AssertLine(data[1], "wl", "0", nSecondsPerDay.ToString(), "0", "1", "0", "max");
                 AssertLine(data[2], "uc", "0", nSecondsPerDay.ToString(), "0", "1", "0", "1", "max");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase("transportmethod", "numerics")]
+        [TestCase("transporttimestepping", "numerics")]
+        [TestCase("hdam", "numerics")]
+        [TestCase("writebalancefile", "output")]
+        public void Read_WithObsoleteProperty_LogsWarningAndPropertyIsRemovedFromModelDefinition(string property, string category)
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                var mduFile = new MduFile();
+                string mduFileContent =
+                    $"[{category}]{Environment.NewLine}" +
+                    $"{property}=";
+                string mduFilePath = temp.CreateFile($"with_obsolete_property_{property}.mdu", mduFileContent);
+
+                var modelDefinition = new WaterFlowFMModelDefinition();
+
+                // Call
+                void Call() => mduFile.Read(mduFilePath, modelDefinition,
+                                            new HydroArea(),
+                                            new HydroNetwork(),
+                                            new Discretization(),
+                                            new EventedList<Model1DBoundaryNodeData>(),
+                                            new EventedList<Model1DLateralSourceData>(),
+                                            new List<ModelFeatureCoordinateData<FixedWeir>>());
+
+                string[] warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
+
+                // Assert
+                var expectedWarning = $"Key {property} in {Path.GetFileName(mduFilePath)} is deprecated and automatically removed from model.";
+                Assert.That(warnings, Does.Contain(expectedWarning));
+
             }
         }
 

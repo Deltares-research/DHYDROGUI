@@ -511,4 +511,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="FeatureFile1D2DReader_ReadInitialConditionFiles_No_Initial_Quantity_ini_file_found_" xml:space="preserve">
     <value>No Initial Quantity ini file found.</value>
   </data>
+  <data name="Key_0_in_1_is_deprecated_and_automatically_removed_from_model" xml:space="preserve">
+	  <value>Key {0} in {1} is deprecated and automatically removed from model.</value>
+  </data>
 </root>

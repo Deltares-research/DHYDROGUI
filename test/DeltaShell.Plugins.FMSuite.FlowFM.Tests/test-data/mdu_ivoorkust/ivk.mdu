@@ -57,7 +57,6 @@ TimeStepType      = 2
 Limtyphu          = 0
 Limtypmom         = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
 Limtypsa          = 4                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
-TransportMethod   = 1
 Vertadvtypsal     = 5
 Icgsolver         = 1                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud
 Maxdegree         = 6
@@ -219,3 +218,8 @@ FullGridOutput    = 0
 EulerVelocities   = 0
 WaqFileBase       =                     # Basename (without extension) for all Delwaq files to be written.
 SnapshotDir       =                     # Directory where snapshots/screendumps are saved.
+
+[volumeTables]
+useVolumeTables   = 0
+increment         = 0.1
+useVolumeTablesFile= 0
