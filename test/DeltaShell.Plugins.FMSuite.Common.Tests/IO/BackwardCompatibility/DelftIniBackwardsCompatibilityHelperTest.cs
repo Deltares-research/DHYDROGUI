@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using NSubstitute;
 using NUnit.Framework;
@@ -157,6 +158,63 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("propertyName"));
+        }
+
+        [Test]
+        public void RemoveObsoletePropertiesWithWarning_CategoryNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var config = new TestConfigurationValues { ObsoleteProperties = new HashSet<string>() };
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
+            var logHandler = Substitute.For<ILogHandler>();
+
+            // Call
+            void Call() => backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(null, logHandler);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("category"));
+        }
+
+        [Test]
+        public void RemoveObsoletePropertiesWithWarning_LogHandlerNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var config = new TestConfigurationValues { ObsoleteProperties = new HashSet<string>() };
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
+            var category = new DelftIniCategory("category_name");
+
+            // Call
+            void Call() => backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(category, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("logHandler"));
+        }
+
+        [Test]
+        public void RemoveObsoletePropertiesWithWarning_RemovesObsoletePropertiesFromTheCategoryAndLogsWarning()
+        {
+            // Setup
+            var obsoletePropertyName = "obsolete_property";
+            var config = new TestConfigurationValues { ObsoleteProperties = new HashSet<string> { obsoletePropertyName } };
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
+
+            var obsoleteProperty = new DelftIniProperty(obsoletePropertyName, "property_value", "property_comment");
+            var nonObsoleteProperty = new DelftIniProperty("property_name", "property_value", "property_comment");
+
+            var category = new DelftIniCategory("category_name");
+            category.AddProperty(obsoleteProperty);
+            category.AddProperty(nonObsoleteProperty);
+
+            var logHandler = Substitute.For<ILogHandler>();
+
+            // Call
+            backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(category, logHandler);
+
+            // Assert
+            Assert.That(category.Properties, Does.Not.Contain(obsoleteProperty));
+            logHandler.Received(1).ReportWarning($"Key {obsoletePropertyName} is deprecated and automatically removed from model.");
         }
 
         private sealed class TestConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues

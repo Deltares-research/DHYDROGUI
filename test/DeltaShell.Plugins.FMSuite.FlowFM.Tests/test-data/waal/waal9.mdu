@@ -34,7 +34,6 @@ Limtypmom        = 4                   # Limiter type for cell center advection 
 Limtypsa         = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
 FixedWeirScheme  = 1                   # 0 = no, 1 = compact stencil, 2 = whole tile lifted, full subgrid weir + factor
 Izbndpos         = 1                   # Position of z boundary, 0=D3Dflow, 1=on net boundary, 2 = on specifiend polyline
-Hdam             = 0.                  # Threshold for minimum bottomlevel step at which to apply energy conservation factor i.c. flow contraction
 
 [physics]
 UnifFrictCoef    = 0.2                 # Uniform friction coefficient, 0=no friction

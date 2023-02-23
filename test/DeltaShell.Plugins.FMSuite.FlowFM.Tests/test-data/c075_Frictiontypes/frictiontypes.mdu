@@ -34,7 +34,6 @@ AdvecType            = 3                   # Adv type, 0=no, 1= Wenneker, qu-udz
 Limtypmom            = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
 Limtypsa             = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
 Icgsolver            = 1                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud
-Hdam                 = 0.                  # Threshold for minimum bottomlevel step at which to apply energy conservation factor i.c. flow contraction
 
 [physics]
 UnifFrictCoef        = 2.3d-2              # Uniform friction coefficient, 0=no friction

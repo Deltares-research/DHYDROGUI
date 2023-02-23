@@ -168,4 +168,7 @@
   <data name="Feature2DImportExportBase_AddOrReplace_Import_failed_Current_project_does_not_contain_unique_names_for_features" xml:space="preserve">
     <value>Import failed. Current project does not contain unique names for features.</value>
   </data>
+  <data name="Key_0_is_deprecated_and_automatically_removed_from_model" xml:space="preserve">
+	  <value>Key {0} is deprecated and automatically removed from model.</value>
+  </data>
 </root>

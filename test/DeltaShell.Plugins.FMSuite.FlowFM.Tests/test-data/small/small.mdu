@@ -115,7 +115,6 @@ RstInterval       =
 S1incinterval     =
 WaqInterval       =
 StatsInterval     =
-Writebalancefile  = 0
 TimingsInterval   =
 MapOutputTimeVector=
 FullGridOutput    = 0

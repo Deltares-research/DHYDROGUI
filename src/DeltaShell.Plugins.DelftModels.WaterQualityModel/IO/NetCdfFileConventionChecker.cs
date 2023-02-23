@@ -7,7 +7,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public static class NetCdfFileConventionChecker
     {
-        private const string conventionsAttributeName = "Conventions";
         private const double supportedCfConvention = 1.6;
         private const double supportedUgridConvention = 1.0;
         private const string cfString = "CF-";
@@ -37,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static bool HasSupportedConvention(NetCdfFile file)
         {
-            NetCdfAttribute conventionAttribute = file.GetGlobalAttribute(conventionsAttributeName);
+            NetCdfAttribute conventionAttribute = file.GetGlobalAttribute(NetCdfConventions.Attributes.Conventions);
             if (conventionAttribute == null)
             {
                 return false;

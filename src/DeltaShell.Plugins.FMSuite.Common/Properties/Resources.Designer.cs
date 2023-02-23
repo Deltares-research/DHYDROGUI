@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -105,6 +105,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         public static string FMNetCdfFileFunctionStore_Could_not_parse_time_reference {
             get {
                 return ResourceManager.GetString("FMNetCdfFileFunctionStore_Could_not_parse_time_reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key {0} is deprecated and automatically removed from model..
+        /// </summary>
+        public static string Key_0_is_deprecated_and_automatically_removed_from_model {
+            get {
+                return ResourceManager.GetString("Key_0_is_deprecated_and_automatically_removed_from_model", resourceCulture);
             }
         }
         

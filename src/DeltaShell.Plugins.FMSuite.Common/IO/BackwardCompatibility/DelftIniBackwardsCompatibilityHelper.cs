@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
@@ -90,6 +92,32 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         {
             Ensure.NotNull(categoryName, nameof(categoryName));
             return GetUpdatedName(categoryName, configurationValues.LegacyCategoryMapping, logHandler);
+        }
+
+        /// <summary>
+        /// Removes the obsolete properties from the given category.
+        /// For each removed property a warning is reported.
+        /// </summary>
+        /// <param name="category">The Delft INI category to delete the obsolete properties from. </param>
+        /// <param name="logHandler"> The log handler to log messages with. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any argument is <c>null</c>
+        /// </exception>
+        public void RemoveObsoletePropertiesWithWarning(DelftIniCategory category, ILogHandler logHandler)
+        {
+            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(logHandler, nameof(logHandler));
+
+            foreach (DelftIniProperty property in category.Properties.ToArray())
+            {
+                if (!IsObsoletePropertyName(property.Name))
+                {
+                    continue;
+                }
+
+                logHandler.ReportWarning(string.Format(Resources.Key_0_is_deprecated_and_automatically_removed_from_model, property.Name));
+                category.RemoveProperty(property);
+            }
         }
 
         private static string GetUpdatedName(string propertyName,

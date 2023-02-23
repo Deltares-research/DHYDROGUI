@@ -13,9 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public static class DelwaqNetCdfHistoryFileReader
     {
-        private const string timeVariableName = "nhistory_dlwq_time";
         private const string numberOfStationsDimensionName = "nStations";
-        private const string fillValueAttributeName = "_FillValue";
         private const string stationNameVariableName = "station_name";
         private const string nameLengthDimensionName = "name_len";
 
@@ -52,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             var origins = new int[2];
             var shapes = new int[2];
 
-            DateTime[] timeSteps = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName).ToArray();
+            DateTime[] timeSteps = NetCdfFileReaderHelper.GetDateTimes(file).ToArray();
             string[] outputVariableNames = outputVariables.Select(file.GetVariableName).ToArray();
             string[] locationNames = GetLocationNames(file).ToArray();
             int timeStepCount = timeSteps.Length;
@@ -94,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static IEnumerable<NetCdfVariable> GetOutputVariables(NetCdfFile file)
         {
             return file.GetVariables()
-                       .Where(v => file.GetAttributes(v).ContainsKey(fillValueAttributeName));
+                       .Where(v => file.GetAttributes(v).ContainsKey(NetCdfConventions.Attributes.FillValue));
         }
 
         private static IEnumerable<string> GetLocationNames(NetCdfFile file)

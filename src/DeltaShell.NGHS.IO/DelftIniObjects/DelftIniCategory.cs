@@ -196,6 +196,19 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         }
 
         /// <summary>
+        /// Removes the given property from this category if it exists.
+        /// </summary>
+        /// <param name="property">The Delft INI property.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="property"/> is <c>null</c>.
+        /// </exception>
+        public void RemoveProperty(DelftIniProperty property)
+        {
+            Ensure.NotNull(property, nameof(property));
+            delftIniProperties.Remove(property);
+        }
+
+        /// <summary>
         /// Override to add the <seealso cref="Name"/>.
         /// </summary>
         /// <returns>Base.ToString and a the <seealso cref="Name"/> of the <seealso cref="DelftIniCategory"/> </returns>

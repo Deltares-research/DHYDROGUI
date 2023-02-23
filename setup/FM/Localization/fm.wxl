@@ -15,7 +15,7 @@
   <String Id="SplashScreenCompany">Deltares</String>
   <String Id="SplashScreenLicense">Valid until 14 nov 2023</String>
 
-  <String Id="LicenseRtf" Overridable="yes">Delft3D FM HMWQ_Resources\License.rtf</String>
+  <String Id="LicenseRtf" Overridable="yes">Delft3D FM HM_Resources\License.rtf</String>
 
   <String Id="SupportEmail" Overridable="yes">software.support@deltares.nl</String>
   <!--<?define supportEmail="software.support@deltares.nl"?>-->

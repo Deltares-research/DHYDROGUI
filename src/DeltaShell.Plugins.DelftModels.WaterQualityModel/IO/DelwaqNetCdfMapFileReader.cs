@@ -13,11 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public static class DelwaqNetCdfMapFileReader
     {
-        private const string timeVariableName = "nmesh2d_dlwq_time";
-        private const string timeDimensionName = "nmesh2d_dlwq_time";
-        private const string substanceAttributeName = "delwaq_name";
         private const string mesh2dVariableName = "mesh2d";
-        private const string faceDimensionAttributeName = "face_dimension";
         private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNetCdfMapFileReader));
 
         /// <summary>
@@ -89,17 +85,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static MapFileMetaData ReadMetaData(NetCdfFile file)
         {
-            IEnumerable<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(file, timeVariableName);
+            List<DateTime> times = NetCdfFileReaderHelper.GetDateTimes(file).ToList();
             int nFaces = file.GetDimensionLength(GetFaceDimensionNameForMesh2D(file));
             Dictionary<string, string> substanceToVariableMapping = SubstanceToVariableMapping(file);
-            int nTimeSteps = file.GetDimensionLength(timeDimensionName);
 
             return new MapFileMetaData
             {
-                Times = times.ToList(),
+                Times = times,
                 SubstancesMapping = substanceToVariableMapping,
                 Substances = substanceToVariableMapping.Keys.ToList(),
-                NumberOfTimeSteps = nTimeSteps,
+                NumberOfTimeSteps = times.Count,
                 NumberOfSegments = nFaces,
                 NumberOfSubstances = substanceToVariableMapping.Count
             };
@@ -112,6 +107,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 return new List<double>();
             }
+
+            if (!NetCdfFileReaderHelper.TryGetVariableByStandardName(file, NetCdfConventions.StandardNames.Time, out NetCdfVariable timeVariable))
+            {
+                log.ErrorFormat(Resources.NetCdfFileReaderHelper_GetDateTimes_Time_variable_not_found, NetCdfConventions.StandardNames.Time, file.Path);
+                return new List<double>();
+            }
+
+            string timeDimensionName = file.GetVariableName(timeVariable);
 
             NetCdfVariable variable = file.GetVariableByName(netCdfVariableName);
             List<NetCdfDimension> dimensions = file.GetDimensions(variable).ToList();
@@ -161,25 +164,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             IEnumerable<NetCdfVariable> substanceVariables = file.GetVariables()
                                                                  .Where(v => file.GetAttributes(v)
-                                                                                 .ContainsKey(substanceAttributeName));
+                                                                                 .ContainsKey(NetCdfConventions.Attributes.DelwaqName));
             Dictionary<string, string> mapping = substanceVariables
-                .ToDictionary(v => file.GetAttributeValue(v, substanceAttributeName), file.GetVariableName);
+                .ToDictionary(v => GetSubstanceName(file, v), file.GetVariableName);
 
             return mapping;
         }
 
+        /// <summary>
+        /// Gets the substance name by retrieving the `delwaq_name` attribute value from the variable.
+        /// This value may or may not contain the `_avg` postfix.
+        /// If the attribute value contains the postfix, it needs to be removed to retrieve the substance name. 
+        /// </summary>
+        /// <param name="file"> The NetCDF file. </param>
+        /// <param name="variable"> The substance NetCDF variable. </param>
+        /// <returns></returns>
+        private static string GetSubstanceName(INetCdfFile file, NetCdfVariable variable)
+        {
+            string delwaqName = file.GetAttributeValue(variable, NetCdfConventions.Attributes.DelwaqName);
+            string substanceName = delwaqName.Replace("_avg", "");
+
+            return substanceName;
+        }
+
         private static List<double> ReadFromFile(NetCdfFile file, NetCdfVariable variable, int[] origins, int[] shapes)
         {
-            var floatArray = (float[,,]) file.Read(variable, origins, shapes);
-            List<double> doubleValues = (from float floatValue in floatArray
-                                         select (double) floatValue).ToList();
+            Array floatArray = file.Read(variable, origins, shapes);
+
+            var doubleValues = new List<double>();
+            foreach (float floatValue in floatArray)
+            {
+                doubleValues.Add(floatValue);
+            }
+
             return doubleValues;
         }
 
         private static string GetFaceDimensionNameForMesh2D(NetCdfFile file)
         {
             NetCdfVariable mesh2dVariable = file.GetVariableByName(mesh2dVariableName);
-            return file.GetAttributeValue(mesh2dVariable, faceDimensionAttributeName);
+            return file.GetAttributeValue(mesh2dVariable, NetCdfConventions.Attributes.FaceDimension);
         }
     }
 }
