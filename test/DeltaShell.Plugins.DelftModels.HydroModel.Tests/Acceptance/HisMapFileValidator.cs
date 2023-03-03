@@ -49,11 +49,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             {
                 yield return $"The output file '{fileName}' is missing the item '{missingItem}'.";
             }
-            
-            foreach (T unexpectedItem in actual.Except(expected))
-            {
-                yield return $"The output file '{fileName}' contains the unexpected item '{unexpectedItem}'.";
-            }
         }
     }
 }

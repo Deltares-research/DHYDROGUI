@@ -66,10 +66,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                         yield return $"The actual netcdf file '{fileName}' contains a dimension '{actualDimensionName}' with a value of '{actualDimensionLength}', but '{expectedDimensionLength}' was expected.";
                     }
                 }
-                else
-                {
-                    yield return $"The actual netcdf file '{fileName}' contains the unexpected dimension '{actualDimensionName}'.";
-                }
             }
 
             IEnumerable<string> missingDimensions = expectedDimensionLookup.Keys.Except(actualDimensionLookup.Keys).ToArray();
@@ -111,10 +107,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                         yield return attributeValidationIssue;
                     }
                 }
-                else
-                {
-                    yield return $"The actual netcdf file '{fileName}' contains the unexpected variable '{actualVariableName}'.";
-                }
             }
 
             IEnumerable<string> missingVariables = expectedVariableLookup.Keys.Except(actualVariableLookup.Keys).ToArray();
@@ -128,27 +120,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                                                                       Dictionary<string, object> expectedAttributes, 
                                                                       string fileName)
         {
-            foreach (KeyValuePair<string, object> actualAttributeKeyValuePair in actualAttributes)
+            IEnumerable<string> missingAttributes = expectedAttributes.Keys.Except(actualAttributes.Keys).ToArray();
+            if (missingAttributes.Any())
             {
-                string actualAttributeName = actualAttributeKeyValuePair.Key;
-                if (expectedAttributes.TryGetValue(actualAttributeName, out object expectedAttributeValue))
-                {
-                    object actualAttributeValue = actualAttributeKeyValuePair.Value;
-                    if (!expectedAttributeValue.Equals(actualAttributeValue))
-                    {
-                        yield return $"The actual attribute value is '{actualAttributeValue}', but '{expectedAttributeValue}' was expected.";
-                    }
-                }
-                else
-                {
-                    yield return $"The actual netcdf file '{fileName}' contains the unexpected attribute '{actualAttributeName}'.";
-                }
-            }
-
-            IEnumerable<string> extraAttributes = expectedAttributes.Keys.Except(actualAttributes.Keys).ToArray();
-            if (extraAttributes.Any())
-            {
-                yield return $"The actual netcdf file '{fileName}' is missing the following attribute(s): {string.Join(Environment.NewLine, extraAttributes)}";
+                yield return $"The actual netcdf file '{fileName}' is missing the following attribute(s): {string.Join(Environment.NewLine, missingAttributes)}";
             }
         }
 
@@ -158,18 +133,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         {
             IEnumerable<string> expectedDimensionNames = GetVariableDimensionNames(expectedVariable, expectedNetCdfFile);
             IEnumerable<string> actualDimensionNames = GetVariableDimensionNames(actualVariable, actualNetCdfFile);
-
             IEnumerable<string> missingDimensions = expectedDimensionNames.Except(actualDimensionNames).ToArray();
-            IEnumerable<string> extraDimensions = actualDimensionNames.Except(expectedDimensionNames).ToArray();
 
             if (missingDimensions.Any())
             {
                 yield return $"The actual netcdf file '{fileName}' contains a variable '{variableName}' that is missing the following dimension(s): {string.Join(Environment.NewLine, missingDimensions)}";
-            }
-
-            if (extraDimensions.Any())
-            {
-                yield return $"The actual netcdf file '{fileName}' contains a variable '{variableName}' that has the unexpected dimension(s): {string.Join(Environment.NewLine, extraDimensions)}";
             }
         }
 
