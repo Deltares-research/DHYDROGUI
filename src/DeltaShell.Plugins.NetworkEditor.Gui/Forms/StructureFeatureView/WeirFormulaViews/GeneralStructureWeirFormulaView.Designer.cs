@@ -75,9 +75,11 @@
             this.labelGateOpeningWidth = new System.Windows.Forms.Label();
             this.comboBoxGateOpeningDirection = new System.Windows.Forms.ComboBox();
             this.labelGateOpeningDirection = new System.Windows.Forms.Label();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceGeneralStructure)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // textboxFreeGatePos
@@ -510,99 +512,132 @@
             // 
             // checkBoxExtraResistance
             // 
+            this.checkBoxExtraResistance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxExtraResistance.AutoSize = true;
             this.checkBoxExtraResistance.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.bindingSourceGeneralStructure, "UseExtraResistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxExtraResistance.Location = new System.Drawing.Point(270, 126);
+            this.checkBoxExtraResistance.Location = new System.Drawing.Point(307, 6);
             this.checkBoxExtraResistance.Name = "checkBoxExtraResistance";
-            this.checkBoxExtraResistance.Size = new System.Drawing.Size(101, 17);
+            this.checkBoxExtraResistance.Size = new System.Drawing.Size(113, 17);
             this.checkBoxExtraResistance.TabIndex = 20;
             this.checkBoxExtraResistance.Text = "Extra resistance";
+            this.checkBoxExtraResistance.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBoxExtraResistance.UseVisualStyleBackColor = true;
             // 
             // textBoxExtraResistance
             // 
             this.textBoxExtraResistance.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGeneralStructure, "ExtraResistance", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
             this.textBoxExtraResistance.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceGeneralStructure, "UseExtraResistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBoxExtraResistance.Location = new System.Drawing.Point(377, 123);
+            this.textBoxExtraResistance.Location = new System.Drawing.Point(426, 3);
             this.textBoxExtraResistance.Name = "textBoxExtraResistance";
-            this.textBoxExtraResistance.Size = new System.Drawing.Size(78, 20);
+            this.textBoxExtraResistance.Size = new System.Drawing.Size(76, 20);
             this.textBoxExtraResistance.TabIndex = 21;
+            this.textBoxExtraResistance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // textBoxCrestLength
             // 
+            this.textBoxCrestLength.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCrestLength.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGeneralStructure, "CrestLength", true));
-            this.textBoxCrestLength.Location = new System.Drawing.Point(143, 159);
+            this.textBoxCrestLength.Location = new System.Drawing.Point(132, 4);
             this.textBoxCrestLength.Name = "textBoxCrestLength";
-            this.textBoxCrestLength.Size = new System.Drawing.Size(100, 20);
+            this.textBoxCrestLength.Size = new System.Drawing.Size(46, 20);
             this.textBoxCrestLength.TabIndex = 22;
+            this.textBoxCrestLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // textBoxGateOpeningWidth
             // 
+            this.textBoxGateOpeningWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxGateOpeningWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGeneralStructure, "GateOpeningWidth", true));
-            this.textBoxGateOpeningWidth.Location = new System.Drawing.Point(143, 186);
+            this.textBoxGateOpeningWidth.Location = new System.Drawing.Point(132, 33);
             this.textBoxGateOpeningWidth.Name = "textBoxGateOpeningWidth";
-            this.textBoxGateOpeningWidth.Size = new System.Drawing.Size(100, 20);
+            this.textBoxGateOpeningWidth.Size = new System.Drawing.Size(46, 20);
             this.textBoxGateOpeningWidth.TabIndex = 23;
+            this.textBoxGateOpeningWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // labelCrestLength
             // 
+            this.labelCrestLength.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCrestLength.AutoSize = true;
-            this.labelCrestLength.Location = new System.Drawing.Point(14, 162);
+            this.labelCrestLength.Location = new System.Drawing.Point(3, 8);
             this.labelCrestLength.Name = "labelCrestLength";
-            this.labelCrestLength.Size = new System.Drawing.Size(63, 13);
+            this.labelCrestLength.Size = new System.Drawing.Size(123, 13);
             this.labelCrestLength.TabIndex = 24;
             this.labelCrestLength.Text = "Crest length";
             // 
             // labelGateOpeningWidth
             // 
+            this.labelGateOpeningWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelGateOpeningWidth.AutoSize = true;
-            this.labelGateOpeningWidth.Location = new System.Drawing.Point(14, 189);
+            this.labelGateOpeningWidth.Location = new System.Drawing.Point(3, 37);
             this.labelGateOpeningWidth.Name = "labelGateOpeningWidth";
-            this.labelGateOpeningWidth.Size = new System.Drawing.Size(99, 13);
+            this.labelGateOpeningWidth.Size = new System.Drawing.Size(123, 13);
             this.labelGateOpeningWidth.TabIndex = 25;
             this.labelGateOpeningWidth.Text = "Gate opening width";
             // 
             // comboBoxGateOpeningDirection
             // 
+            this.comboBoxGateOpeningDirection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxGateOpeningDirection.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGeneralStructure, "GateOpeningHorizontalDirection", true));
             this.comboBoxGateOpeningDirection.FormattingEnabled = true;
-            this.comboBoxGateOpeningDirection.Location = new System.Drawing.Point(185, 212);
+            this.comboBoxGateOpeningDirection.Location = new System.Drawing.Point(184, 63);
             this.comboBoxGateOpeningDirection.Name = "comboBoxGateOpeningDirection";
-            this.comboBoxGateOpeningDirection.Size = new System.Drawing.Size(103, 21);
+            this.comboBoxGateOpeningDirection.Size = new System.Drawing.Size(117, 21);
             this.comboBoxGateOpeningDirection.TabIndex = 26;
             // 
             // labelGateOpeningDirection
             // 
+            this.labelGateOpeningDirection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelGateOpeningDirection.AutoSize = true;
-            this.labelGateOpeningDirection.Location = new System.Drawing.Point(17, 220);
+            this.tableLayoutPanel3.SetColumnSpan(this.labelGateOpeningDirection, 2);
+            this.labelGateOpeningDirection.Location = new System.Drawing.Point(3, 67);
             this.labelGateOpeningDirection.Name = "labelGateOpeningDirection";
-            this.labelGateOpeningDirection.Size = new System.Drawing.Size(162, 13);
+            this.labelGateOpeningDirection.Size = new System.Drawing.Size(175, 13);
             this.labelGateOpeningDirection.TabIndex = 27;
             this.labelGateOpeningDirection.Text = "Gate opening horizontal direction";
+            this.labelGateOpeningDirection.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 5;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 123F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 119F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 81F));
+            this.tableLayoutPanel3.Controls.Add(this.textBoxCrestLength, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.textBoxExtraResistance, 4, 0);
+            this.tableLayoutPanel3.Controls.Add(this.comboBoxGateOpeningDirection, 2, 2);
+            this.tableLayoutPanel3.Controls.Add(this.checkBoxExtraResistance, 3, 0);
+            this.tableLayoutPanel3.Controls.Add(this.labelGateOpeningDirection, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.labelCrestLength, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.textBoxGateOpeningWidth, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.labelGateOpeningWidth, 0, 1);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(11, 156);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 3;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33332F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(505, 89);
+            this.tableLayoutPanel3.TabIndex = 28;
             // 
             // GeneralStructureWeirFormulaView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.labelGateOpeningDirection);
-            this.Controls.Add(this.comboBoxGateOpeningDirection);
-            this.Controls.Add(this.labelGateOpeningWidth);
-            this.Controls.Add(this.labelCrestLength);
-            this.Controls.Add(this.textBoxGateOpeningWidth);
-            this.Controls.Add(this.textBoxCrestLength);
-            this.Controls.Add(this.textBoxExtraResistance);
-            this.Controls.Add(this.checkBoxExtraResistance);
+            this.AutoSize = true;
+            this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "GeneralStructureWeirFormulaView";
-            this.Size = new System.Drawing.Size(766, 242);
+            this.Size = new System.Drawing.Size(768, 252);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceGeneralStructure)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -654,5 +689,6 @@
         private System.Windows.Forms.Label labelGateOpeningWidth;
         private System.Windows.Forms.ComboBox comboBoxGateOpeningDirection;
         private System.Windows.Forms.Label labelGateOpeningDirection;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
     }
 }

@@ -260,10 +260,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                         ? new ElementHost { Child = (System.Windows.Controls.Control) view }
                         : (Control) view;
 
-                    control.Dock = DockStyle.Fill;
-
-                    // HACK: increase height by 30%, looks like a bug in DotNetBar in combination with TabControl
-                    tabPage.AutoScrollMinSize = new Size(control.Width, (int)(control.Height * 1.3));
                     tabPage.Controls.Add(control);
 
                     tabControl1.TabPages.Add(tabPage);

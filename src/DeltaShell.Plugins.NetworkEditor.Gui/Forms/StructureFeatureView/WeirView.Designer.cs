@@ -77,12 +77,14 @@
             this.labelCrestShape = new System.Windows.Forms.Label();
             this.groupBoxFormula = new System.Windows.Forms.GroupBox();
             this.panelFormula = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceWeir)).BeginInit();
             this.groupBoxGate.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBoxFormula.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -109,8 +111,7 @@
             this.groupBox1.Controls.Add(this.labelUnitMaxPos);
             this.groupBox1.Controls.Add(this.comboBoxCrestShape);
             this.groupBox1.Controls.Add(this.labelCrestShape);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(568, 254);
             this.groupBox1.TabIndex = 0;
@@ -267,10 +268,10 @@
             // textBoxGateOpening
             // 
             this.textBoxGateOpening.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxGateOpening.ReadOnly = true;
             this.textBoxGateOpening.Location = new System.Drawing.Point(153, 29);
             this.textBoxGateOpening.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxGateOpening.Name = "textBoxGateOpening";
+            this.textBoxGateOpening.ReadOnly = true;
             this.textBoxGateOpening.Size = new System.Drawing.Size(77, 20);
             this.textBoxGateOpening.TabIndex = 1;
             this.textBoxGateOpening.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -292,8 +293,8 @@
             this.textBoxGateHeight.Name = "textBoxGateHeight";
             this.textBoxGateHeight.Size = new System.Drawing.Size(78, 20);
             this.textBoxGateHeight.TabIndex = 12;
-            this.textBoxGateHeight.Validated += new System.EventHandler(this.TextBoxGateHeightValidated);
             this.textBoxGateHeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBoxGateHeight.Validated += new System.EventHandler(this.TextBoxGateHeightValidated);
             // 
             // GateHeightUnitLabel
             // 
@@ -601,13 +602,16 @@
             // 
             // groupBoxFormula
             // 
+            this.groupBoxFormula.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxFormula.AutoSize = true;
             this.groupBoxFormula.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBoxFormula.Controls.Add(this.panelFormula);
-            this.groupBoxFormula.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxFormula.Location = new System.Drawing.Point(0, 254);
+            this.groupBoxFormula.Location = new System.Drawing.Point(4, 264);
+            this.groupBoxFormula.Margin = new System.Windows.Forms.Padding(4);
             this.groupBoxFormula.Name = "groupBoxFormula";
-            this.groupBoxFormula.Size = new System.Drawing.Size(568, 217);
+            this.groupBoxFormula.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBoxFormula.Size = new System.Drawing.Size(570, 36);
             this.groupBoxFormula.TabIndex = 0;
             this.groupBoxFormula.TabStop = false;
             this.groupBoxFormula.Text = "Specific weir properties";
@@ -616,20 +620,35 @@
             // 
             this.panelFormula.AutoSize = true;
             this.panelFormula.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panelFormula.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelFormula.Location = new System.Drawing.Point(3, 16);
             this.panelFormula.Name = "panelFormula";
-            this.panelFormula.Size = new System.Drawing.Size(562, 198);
+            this.panelFormula.Size = new System.Drawing.Size(0, 0);
             this.panelFormula.TabIndex = 5;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.AutoSize = true;
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.groupBox1, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.groupBoxFormula, 0, 1);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(578, 304);
+            this.tableLayoutPanel3.TabIndex = 1;
             // 
             // WeirView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBoxFormula);
-            this.Controls.Add(this.groupBox1);
+            this.AutoSize = true;
+            this.Controls.Add(this.tableLayoutPanel3);
             this.Name = "WeirView";
-            this.Size = new System.Drawing.Size(568, 471);
+            this.Size = new System.Drawing.Size(578, 304);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceWeir)).EndInit();
@@ -640,6 +659,8 @@
             this.tableLayoutPanel1.PerformLayout();
             this.groupBoxFormula.ResumeLayout(false);
             this.groupBoxFormula.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -695,5 +716,6 @@
         protected System.Windows.Forms.Label GateHeightLabel;
         protected System.Windows.Forms.TextBox textBoxGateHeight;
         protected System.Windows.Forms.Label GateHeightUnitLabel;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
     }
 }
