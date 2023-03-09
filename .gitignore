@@ -66,3 +66,7 @@ DiagnosticReport
 src/DeltaShell.Dimr/drtc_xsd/rtcRuntimeConfig.cs
 src/DeltaShell.Dimr/dimr_xsd/dimr.cs
 .idea/
+
+# Installer generated
+HarvestedDeltaShellFiles.wxs
+HarvestedPluginsFiles.wxs
