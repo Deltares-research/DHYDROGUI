@@ -188,9 +188,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
 
-            if (FouFileWriter.UseFouFile(modelDefinition))
+            var fouFileWriter = new FouFileWriter(modelDefinition);
+            
+            if (fouFileWriter.CanWrite())
             {
-                FouFileWriter.Process(targetDir, modelDefinition);
+                fouFileWriter.WriteToDirectory(targetDir);
             }
 
             if(targetMduFilePath != null &&
@@ -955,7 +957,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             reportProgress("Reading FouFile if used", 7, totalSteps);
 
             string targetDir = System.IO.Path.GetDirectoryName(filePath);
-            FouFileReader.ReadFouFile(targetDir, modelDefinition);
+            
+            var fouFileReader = new FouFileReader(modelDefinition);
+
+            if (fouFileReader.CanReadFromDirectory(targetDir))
+            {
+                fouFileReader.ReadFromDirectory(targetDir);
+            }
             
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }

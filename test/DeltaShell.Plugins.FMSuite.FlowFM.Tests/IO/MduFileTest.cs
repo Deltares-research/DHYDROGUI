@@ -879,7 +879,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var modelDefinition = new WaterFlowFMModelDefinition();
                 var area = new HydroArea();
 
-                modelDefinition.SetModelProperty(FouFileProperties.WriteFouFile, true);
+                modelDefinition.SetModelProperty(GuiProperties.WriteFouFile, true);
 
                 // Set model time properties
                 modelDefinition.SetModelProperty(KnownProperties.RefDate, startTime);

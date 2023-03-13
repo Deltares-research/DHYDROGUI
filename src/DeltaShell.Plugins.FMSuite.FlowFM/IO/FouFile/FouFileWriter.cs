@@ -1,202 +1,166 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using DelftTools.Utils.Guards;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
 {
-    public static class FouFileWriter
+    /// <summary>
+    /// Provides a writer for statistical analysis input files (*.fou).
+    /// </summary>
+    public sealed class FouFileWriter
     {
+        public const string DefaultFileName = "Maxima.fou";
+
+        private const int columnWidth = 10;
+
         private static readonly ILog log = LogManager.GetLogger(typeof(FouFileWriter));
-        
-        public static bool UseFouFile(WaterFlowFMModelDefinition modelDefinition)
+
+        private readonly WaterFlowFMModelDefinition modelDefinition;
+        private readonly FouFileDefinition fouFileDefinition;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FouFileWriter"/> class.
+        /// </summary>
+        /// <param name="modelDefinition">The model definition that defines which fou variables are enabled.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="modelDefinition"/> is <c>null</c>.</exception>
+        public FouFileWriter(WaterFlowFMModelDefinition modelDefinition)
         {
             Ensure.NotNull(modelDefinition, nameof(modelDefinition));
 
-            WaterFlowFMProperty shouldWriteFouFile = modelDefinition.GetModelProperty(FouFileProperties.WriteFouFile);
-            var writeFile = (bool) shouldWriteFouFile.Value;
-            if (writeFile)
-            {
-                WaterFlowFMProperty fouFileName = modelDefinition.GetModelProperty(FouFileProperties.MduFouFileProperty);
-                fouFileName.Value = FouFileProperties.FouFileName;
-            }
-            else
-            {
-                WaterFlowFMProperty fouUpdateStep = modelDefinition.GetModelProperty(FouFileProperties.MduFouUpdateStep);
-                fouUpdateStep.Value = Enum.Parse(fouUpdateStep.PropertyDefinition.DataType, "0");
-            }
-
-            return writeFile;
+            this.modelDefinition = modelDefinition;
+            fouFileDefinition = new FouFileDefinition();
         }
 
-        public static void Process(string targetDir, WaterFlowFMModelDefinition modelDefinition)
+        /// <summary>
+        /// Returns whether fou file writing is enabled.
+        /// </summary>
+        /// <returns><c>true</c> when file writing is enabled; otherwise <c>false</c>.</returns>
+        public bool CanWrite()
         {
-            Ensure.NotNullOrEmpty(targetDir, nameof(targetDir));
-            Ensure.NotNull(modelDefinition, nameof(modelDefinition));
-
-            WriteFouFileData(targetDir, modelDefinition);
+            WaterFlowFMProperty writeFouFileProperty = modelDefinition.GetModelProperty(GuiProperties.WriteFouFile);
+            return (bool)writeFouFileProperty.Value;
         }
 
-        private static void WriteFouFileData(string targetDir, WaterFlowFMModelDefinition modelDefinition)
+        /// <summary>
+        /// Writes the fou file to the specified directory.
+        /// </summary>
+        /// <param name="directory">The directory to which to write the fou file.</param>
+        /// <exception cref="ArgumentException">When <paramref name="directory"/> is <c>null</c> or empty.</exception>
+        /// <exception cref="InvalidOperationException">When fou file writing is disabled in the model definition.</exception>
+        public void WriteToDirectory(string directory)
         {
-            using (StreamWriter fouFile = CreateFile(targetDir))
+            Ensure.NotNullOrEmpty(directory, nameof(directory));
+
+            if (!CanWrite())
             {
-                if (fouFile == null)
-                {
-                    log.Error($"Could not create a FouFile.");
-                    return;
-                }
-                
-                WriteHeader(fouFile, new FouFileHeader());
-
-                var mduStartTime = (double) modelDefinition.GetModelProperty(KnownProperties.TStart).Value;
-                var mduStopTime = (double) modelDefinition.GetModelProperty(KnownProperties.TStop).Value;
-                var rowFactory = new RowFactory(mduStartTime, mduStopTime);
-
-                WriteWlProperty(fouFile, rowFactory, modelDefinition);
-                WriteUcProperty(fouFile, rowFactory, modelDefinition);
-                WriteFbProperty(fouFile, rowFactory, modelDefinition);
-                WriteWdogProperty(fouFile, rowFactory, modelDefinition);
-                WriteVogProperty(fouFile, rowFactory, modelDefinition);
+                throw new InvalidOperationException("Fou file writing is disabled in the model definition.");
             }
+
+            string path = GetFilePath(directory);
+            string contents = GetFileContents();
+
+            WriteToFile(path, contents);
         }
 
-        private static void WriteWlProperty(StreamWriter sw, RowFactory rowFactory, WaterFlowFMModelDefinition modelDefinition)
+        private void WriteToFile(string path, string contents)
         {
-            WaterFlowFMProperty writeWlAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWlAverage);
-            if ((bool) writeWlAverage.Value)
-            {
-                WriteRow(sw, rowFactory.WaterLevelRow(FouFileProperties.ElpAverage));
-            }
+            log.Info($"Writing statistical analysis input file to '{path}'.");
 
-            WaterFlowFMProperty writeWlMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWlMaximum);
-            if ((bool) writeWlMaximum.Value)
-            {
-                WriteRow(sw, rowFactory.WaterLevelRow(FouFileProperties.ElpMaximum));
-            }
-
-            WaterFlowFMProperty writeWlMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWlMinimum);
-            if ((bool) writeWlMinimum.Value)
-            {
-                WriteRow(sw, rowFactory.WaterLevelRow(FouFileProperties.ElpMinimum));
-            }
+            File.WriteAllText(path, contents);
         }
 
-        private static void WriteUcProperty(StreamWriter sw, RowFactory rowFactory, WaterFlowFMModelDefinition modelDefinition)
+        private string GetFilePath(string directory)
         {
-            WaterFlowFMProperty writeUcAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteUcAverage);
-            if ((bool) writeUcAverage.Value)
-            {
-                WriteRow(sw, rowFactory.VelocityMagnitudeRow(FouFileProperties.ElpAverage));
-            }
-
-            WaterFlowFMProperty writeUcMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteUcMaximum);
-            if ((bool) writeUcMaximum.Value)
-            {
-                WriteRow(sw, rowFactory.VelocityMagnitudeRow(FouFileProperties.ElpMaximum));
-            }
-
-            WaterFlowFMProperty writeUcMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteUcMinimum);
-            if ((bool) writeUcMinimum.Value)
-            {
-                WriteRow(sw, rowFactory.VelocityMagnitudeRow(FouFileProperties.ElpMinimum));
-            }
+            string fileName = GetOrUpdateFileName();
+            return Path.Combine(directory, fileName);
         }
 
-        private static void WriteFbProperty(StreamWriter sw, RowFactory rowFactory, WaterFlowFMModelDefinition modelDefinition)
+        private string GetOrUpdateFileName()
         {
-            WaterFlowFMProperty writeFbAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteFbAverage);
-            if ((bool) writeFbAverage.Value)
+            WaterFlowFMProperty fouFileProperty = modelDefinition.GetModelProperty(KnownProperties.FouFile);
+
+            if (string.IsNullOrEmpty((string)fouFileProperty.Value))
             {
-                WriteRow(sw, rowFactory.Freeboard(FouFileProperties.ElpAverage));
+                fouFileProperty.Value = DefaultFileName;
             }
 
-            WaterFlowFMProperty writeFbMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteFbMaximum);
-            if ((bool) writeFbMaximum.Value)
-            {
-                WriteRow(sw, rowFactory.Freeboard(FouFileProperties.ElpMaximum));
-            }
+            return (string)fouFileProperty.Value;
+        }
 
-            WaterFlowFMProperty writeFbMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteFbMinimum);
-            if ((bool) writeFbMinimum.Value)
+        private string GetFileContents()
+        {
+            var stringBuilder = new StringBuilder();
+
+            AppendHeader(stringBuilder);
+            AppendVariables(stringBuilder);
+
+            return stringBuilder.ToString();
+        }
+
+        private void AppendHeader(StringBuilder stringBuilder)
+        {
+            var columnTitles = new[]
             {
-                WriteRow(sw, rowFactory.Freeboard(FouFileProperties.ElpMinimum));
+                "*var",
+                "tsrts",
+                "sstop",
+                "numcyc",
+                "knfac",
+                "v0plu",
+                "layno",
+                "elp"
+            };
+
+            foreach (string title in columnTitles)
+            {
+                stringBuilder.Append($"{title,-columnWidth}");
             }
         }
 
-        private static void WriteWdogProperty(StreamWriter sw, RowFactory rowFactory, WaterFlowFMModelDefinition modelDefinition)
+        private void AppendVariables(StringBuilder stringBuilder)
         {
-            WaterFlowFMProperty writeWdogAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWdogAverage);
-            if ((bool) writeWdogAverage.Value)
-            {
-                WriteRow(sw, rowFactory.WaterDepthOnGround(FouFileProperties.ElpAverage));
-            }
+            IEnumerable<FouFileVariable> variables = fouFileDefinition.Variables;
+            IEnumerable<FouFileVariable> variablesToWrite = variables.Where(CanWriteVariable);
 
-            WaterFlowFMProperty writeWdogMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWdogMaximum);
-            if ((bool) writeWdogMaximum.Value)
+            foreach (FouFileVariable variable in variablesToWrite)
             {
-                WriteRow(sw, rowFactory.WaterDepthOnGround(FouFileProperties.ElpMaximum));
-            }
-
-            WaterFlowFMProperty writeWdogMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteWdogMinimum);
-            if ((bool) writeWdogMinimum.Value)
-            {
-                WriteRow(sw, rowFactory.WaterDepthOnGround(FouFileProperties.ElpMinimum));
+                SetStartStopTime(variable);
+                AppendVariable(stringBuilder, variable);
             }
         }
 
-        private static void WriteVogProperty(StreamWriter sw, RowFactory rowFactory, WaterFlowFMModelDefinition modelDefinition)
+        private bool CanWriteVariable(FouFileVariable variable)
         {
-            WaterFlowFMProperty writeVogAverage = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteVogAverage);
-            if ((bool) writeVogAverage.Value)
-            {
-                WriteRow(sw, rowFactory.VolumeOnGround(FouFileProperties.ElpAverage));
-            }
-
-            WaterFlowFMProperty writeVogMaximum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteVogMaximum);
-            if ((bool) writeVogMaximum.Value)
-            {
-                WriteRow(sw, rowFactory.VolumeOnGround(FouFileProperties.ElpMaximum));
-            }
-
-            WaterFlowFMProperty writeVogMinimum = modelDefinition.GetModelProperty(FouFileProperties.GuiOnlyWriteVogMinimum);
-            if ((bool) writeVogMinimum.Value)
-            {
-                WriteRow(sw, rowFactory.VolumeOnGround(FouFileProperties.ElpMinimum));
-            }
-        }
-        
-        private static void WriteRow(StreamWriter sw, FouFileRow row)
-        {
-            sw.Write($"{row.Var, -FouFileProperties.ColumnWidth}");
-            sw.Write($"{row.Tsrts, -FouFileProperties.ColumnWidth}");
-            sw.Write($"{row.Sstop, -FouFileProperties.ColumnWidth}");
-            sw.Write($"{row.Numcyc, -FouFileProperties.ColumnWidth}");
-            sw.Write($"{row.Knfac, -FouFileProperties.ColumnWidth}");
-            sw.Write($"{row.V0plu, -FouFileProperties.ColumnWidth}");
-            sw.Write($"{(row.Layno != null ? row.Layno.ToString() : string.Empty), -FouFileProperties.ColumnWidth}");
-            sw.Write(row.Elp);
-            sw.WriteLine();
+            string modelPropertyName = fouFileDefinition.GetModelPropertyName(variable);
+            WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(modelPropertyName);
+            return (bool)modelProperty.Value;
         }
 
-        private static void WriteHeader(StreamWriter sw, FouFileHeader row)
+        private void SetStartStopTime(FouFileVariable variable)
         {
-            foreach (string rowHeader in row.Headers)
-            {
-                sw.Write($"{rowHeader, -FouFileProperties.ColumnWidth}");
-            }
-            
-            sw.WriteLine();
+            WaterFlowFMProperty startTime = modelDefinition.GetModelProperty(KnownProperties.TStart);
+            WaterFlowFMProperty stopTime = modelDefinition.GetModelProperty(KnownProperties.TStop);
+
+            variable.StartTime = (double)startTime.Value;
+            variable.StopTime = (double)stopTime.Value;
         }
 
-        private static StreamWriter CreateFile(string targetMduFilePath)
+        private void AppendVariable(StringBuilder stringBuilder, FouFileVariable variable)
         {
-            string nodeFilePath = Path.Combine(targetMduFilePath, FouFileProperties.FouFileName);
-            FileUtils.DeleteIfExists(nodeFilePath);
-
-            return new StreamWriter(nodeFilePath);
+            stringBuilder.AppendLine();
+            stringBuilder.Append($"{variable.Name,-columnWidth}");
+            stringBuilder.Append($"{variable.StartTime,-columnWidth}");
+            stringBuilder.Append($"{variable.StopTime,-columnWidth}");
+            stringBuilder.Append($"{variable.NumberOfCycles,-columnWidth}");
+            stringBuilder.Append($"{variable.AmplificationFactor,-columnWidth}");
+            stringBuilder.Append($"{variable.AstronomicalArgument,-columnWidth}");
+            stringBuilder.Append($"{variable.LayerNumber,-columnWidth}");
+            stringBuilder.Append(variable.EllipticParameters);
         }
     }
 }

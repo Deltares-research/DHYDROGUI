@@ -110,6 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string Dxmin1D = "Dxmin1D";
         public const string WaqOutputDir = "WAQOutputDir";
         public const string UseCaching = "UseCaching";
+        public const string FouFile = "FouFile";
         public const string UseVolumeTables = "useVolumeTables";
         public const string UseVolumeTablesFile = "useVolumeTablesFile";
     }
@@ -163,8 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string WriteClassMapFile = "writeclassmapfile";
         public const string ClassMapOutputDeltaT = "classmapoutputdeltat";
 
-
-
+        public const string WriteFouFile = "WriteFouFile";
     }
 
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -13,50 +13,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
     public class FouFileWriterTests
     {
         [Test]
-        public void UseFouFile_ModelDefinitionIsNull_ThrowsArgumentNullException()
+        public void Constructor_ModelDefinitionIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => FouFileWriter.UseFouFile(null));
+            FouFileWriter _;
+
+            Assert.Throws<ArgumentNullException>(() => _ = new FouFileWriter(null));
         }
 
         [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
-        public void UseFouFile_WriteFouFilePropertyValueIsTestCaseValue_ReturnsExpected(bool expected)
+        public void CanWrite_WriteFouFilePropertyIsSet_ReturnsExpected(bool expected)
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
+            var fouFileWriter = new FouFileWriter(modelDefinition);
 
-            SetPropertyValue(modelDefinition, FouFileProperties.WriteFouFile, expected);
+            SetPropertyValue(modelDefinition, GuiProperties.WriteFouFile, expected);
 
-            Assert.AreEqual(expected, FouFileWriter.UseFouFile(modelDefinition));
+            Assert.AreEqual(expected, fouFileWriter.CanWrite());
         }
 
         [Test]
         [TestCase(null)]
         [TestCase("")]
         [Category(TestCategory.DataAccess)]
-        public void Process_TargetDirIsNullOrEmpty_ThrowsArgumentException(string targetDir)
+        public void WriteToDirectory_DirectoryIsNullOrEmpty_ThrowsArgumentException(string directory)
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
+            var fouFileWriter = new FouFileWriter(modelDefinition);
 
-            Assert.Throws<ArgumentException>(() => FouFileWriter.Process(targetDir, modelDefinition));
-        }
-
-        [Test]
-        public void Process_ModelDefinitionIsNull_ThrowsArgumentNullException()
-        {
-            var targetDir = Guid.NewGuid().ToString();
-
-            Assert.Throws<ArgumentNullException>(() => FouFileWriter.Process(targetDir, null));
+            Assert.Throws<ArgumentException>(() => fouFileWriter.WriteToDirectory(directory));
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Process_FouFilePropertyValuesAreSetToFalse_WritesFouFileWithHeaderOnly()
+        public void WriteToDirectory_WriteFouFilePropertyIsFalse_ThrowsInvalidOperationException()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var fouFileWriter = new FouFileWriter(modelDefinition);
+
+            var directory = Guid.NewGuid().ToString();
+
+            SetPropertyValue(modelDefinition, GuiProperties.WriteFouFile, false);
+
+            Assert.Throws<InvalidOperationException>(() => fouFileWriter.WriteToDirectory(directory));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteToDirectory_ModelPropertyValuesAreSetToFalse_WritesFouFileWithHeaderOnly()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            SetFouFilePropertyValues(modelDefinition, false);
+            SetModelPropertyValues(modelDefinition, false);
 
             string fouFileData = WriteAndReadFouFile(modelDefinition);
             var expected = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp";
@@ -66,11 +76,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.FouFile
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Process_FouFilePropertyValuesAreSetToTrue_WritesFouFileWithHeaderAndProperties()
+        public void WriteToDirectory_ModelPropertyValuesAreSetToTrue_WritesFouFileWithHeaderAndVariables()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            SetFouFilePropertyValues(modelDefinition, true);
+            SetModelPropertyValues(modelDefinition, true);
 
             string fouFileData = WriteAndReadFouFile(modelDefinition);
             var expected = @"*var      tsrts     sstop     numcyc    knfac     v0plu     layno     elp       
@@ -93,9 +103,11 @@ vog       0         86400     0         1         0                   min";
             Assert.AreEqual(expected, fouFileData);
         }
 
-        private void SetFouFilePropertyValues(WaterFlowFMModelDefinition modelDefinition, bool value)
+        private void SetModelPropertyValues(WaterFlowFMModelDefinition modelDefinition, bool value)
         {
-            FouFileProperties.PropertyNames.ForEach(propertyName => SetPropertyValue(modelDefinition, propertyName, value));
+            var fouFileDefinition = new FouFileDefinition();
+            
+            fouFileDefinition.ModelPropertyNames.ToList().ForEach(propertyName => SetPropertyValue(modelDefinition, propertyName, value));
         }
 
         private void SetPropertyValue(WaterFlowFMModelDefinition modelDefinition, string propertyName, object value)
@@ -107,11 +119,16 @@ vog       0         86400     0         1         0                   min";
         private string WriteAndReadFouFile(WaterFlowFMModelDefinition modelDefinition)
         {
             string targetDir = FileUtils.CreateTempDirectory();
-            string fouFilePath = Path.Combine(targetDir, FouFileProperties.FouFileName);
+            string fouFilePath = Path.Combine(targetDir, FouFileWriter.DefaultFileName);
+
+            var fouFileWriter = new FouFileWriter(modelDefinition);
+            
+            SetPropertyValue(modelDefinition, GuiProperties.WriteFouFile, true);
 
             try
             {
-                FouFileWriter.Process(targetDir, modelDefinition);
+                fouFileWriter.WriteToDirectory(targetDir);
+                
                 return File.ReadAllText(fouFilePath).Trim();
             }
             finally
