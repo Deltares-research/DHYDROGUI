@@ -8,6 +8,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
@@ -92,6 +93,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
                 Assert.That(nwrwData.DryWeatherFlows[1].DryWeatherFlowId, Is.EqualTo("test2"));
             });
             
+        }
+        [Test]
+        public void GivenNwrwCatchmentModelData_ChangingTheClosedPavedFlatNwrwCatchmentDataOfModelViaMDEDataRow_ShouldUpdateCatchmentGeometryArea()
+        {
+            //Arrange
+            var model = Substitute.For<IRainfallRunoffModel>();
+            var catchment = new Catchment();
+            var nwrwData = new NwrwData(catchment);
+            model.GetAllModelData().OfType<NwrwData>().Returns(Enumerable.Repeat(nwrwData, 1));
+            var rowProvider = new ConceptDataRowProvider<NwrwData, NwrwDataRow>(model, "NWRW") { Filter = Enumerable.Repeat(catchment, 1) };
+
+            // Act & Assert
+            catchment.SetAreaSize(1000);
+            Assert.That(catchment.GeometryArea, Is.EqualTo(1000).Within(0.1)); 
+            
+            var nwrwDataRow = rowProvider.Rows.FirstOrDefault() as NwrwDataRow;
+            Assert.That(nwrwDataRow, Is.Not.Null);
+            nwrwDataRow.ClosedPavedFlat = 3000;
+            Assert.That(catchment.GeometryArea, Is.EqualTo(3000).Within(0.1));
         }
     }
 }

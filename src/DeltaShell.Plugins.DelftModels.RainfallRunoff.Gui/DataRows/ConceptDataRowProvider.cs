@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
     {
         private readonly ICatchmentModelDataSynchronizer synchronizer;
 
-        public ConceptDataRowProvider(RainfallRunoffModel model, string name, ICatchmentModelDataSynchronizer customSynchronizer = null)
+        public ConceptDataRowProvider(IRainfallRunoffModel model, string name, ICatchmentModelDataSynchronizer customSynchronizer = null)
         {
             Model = model;
             Name = name;
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
 
         public IEnumerable<Catchment> Filter { get; set; }
 
-        public RainfallRunoffModel Model { get; private set; }
+        public IRainfallRunoffModel Model { get; private set; }
         public string Name { get; private set; }
 
         public IEnumerable<IDataRow> Rows

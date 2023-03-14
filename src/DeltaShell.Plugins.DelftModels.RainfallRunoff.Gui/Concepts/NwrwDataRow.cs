@@ -22,11 +22,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict!=null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.ClosedPavedWithSlope, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.ClosedPavedWithSlope, out double result)
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedWithSlope] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedWithSlope] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Closed Flat area (m²)")]
@@ -38,7 +42,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlat] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlat] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Closed Stretch area (m²)")]
@@ -50,7 +58,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlatStretch] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlatStretch] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Open Sloped area (m²)")]
@@ -62,7 +74,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.OpenPavedWithSlope] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.OpenPavedWithSlope] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
 
@@ -75,7 +91,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlat] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlat] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Open Stretch area (m²)")]
@@ -87,7 +107,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlatStretched] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlatStretched] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Roof Sloped area (m²)")]
@@ -99,7 +123,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.RoofWithSlope] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.RoofWithSlope] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Roof Flat area (m²)")]
@@ -111,7 +139,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.RoofFlat] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.RoofFlat] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Roof Stretch area (m²)")]
@@ -123,7 +155,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.RoofFlatStretched] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.RoofFlatStretched] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Unpaved Sloped area (m²)")]
@@ -135,7 +171,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.UnpavedWithSlope] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.UnpavedWithSlope] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Unpaved Flat area (m²)")]
@@ -147,7 +187,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlat] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlat] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Unpaved Stretch area (m²)")]
@@ -159,7 +203,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ? result
                     : 0.0;
             }
-            set { data.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlatStretched] = value; }
+            set
+            {
+                data.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlatStretched] = value;
+                data.UpdateCatchmentAreaSize();
+            }
         }
 
         [Description("Number of units (inhabitant)")]
@@ -217,7 +265,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.MeteoStationId = value; }
         }
 
-        public override void SetColumnEditorForDataWithModel(RainfallRunoffModel model,
+        public override void SetColumnEditorForDataWithModel(IRainfallRunoffModel model,
             IEnumerable<ITableViewColumn> tableViewColumns)
         {
             var dwfidcolumn = tableViewColumns.FirstOrDefault(c =>
@@ -225,8 +273,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             if (dwfidcolumn != null)
             {
                 dwfidcolumn.Editor = new ComboBoxTypeEditor
-                    {
-                        Items = model?.NwrwDryWeatherFlowDefinitions
+                {
+                    Items = model?.NwrwDryWeatherFlowDefinitions
                             .Select(dwfd => dwfd.Name)
                 };
             }
@@ -235,10 +283,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             if (dwfidcolumn != null)
             {
                 dwfidcolumn.Editor = new ComboBoxTypeEditor
-                    { 
-                        Items = model?.NwrwDryWeatherFlowDefinitions
+                {
+                    Items = model?.NwrwDryWeatherFlowDefinitions
                             .Select(dwfd => dwfd.Name)
-                    };
+                };
             }
         }
     }

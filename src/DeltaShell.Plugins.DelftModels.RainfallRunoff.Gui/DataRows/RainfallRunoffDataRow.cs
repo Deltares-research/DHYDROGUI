@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public virtual void SetColumnEditorForDataWithModel(RainfallRunoffModel model,
+        public virtual void SetColumnEditorForDataWithModel(IRainfallRunoffModel model,
             IEnumerable<ITableViewColumn> tableViewColumns)
         {
             //use default column editors

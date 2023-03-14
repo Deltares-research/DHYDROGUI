@@ -6,6 +6,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
@@ -31,6 +32,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// Data defined on the basin catchments
         /// </summary>
         IEnumerable<CatchmentModelData> ModelData { get; }
+
+        /// <summary>
+        /// Retrieve all ModelData defined on the basin catchments and its child catchments
+        /// </summary>
+        IEnumerable<CatchmentModelData> GetAllModelData();
 
         /// <summary>
         /// Precipitation data for the model
@@ -65,5 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         event EventHandler<EventArgs<CatchmentModelData>> ModelDataAdded;
         
         event EventHandler<EventArgs<CatchmentModelData>> ModelDataRemoved;
+        
+        IEventedList<NwrwDryWeatherFlowDefinition> NwrwDryWeatherFlowDefinitions { get; set; }
     }
 }
