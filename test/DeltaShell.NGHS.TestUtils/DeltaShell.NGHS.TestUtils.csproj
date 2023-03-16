@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)\Build\targets\Test.targets" />
   <ItemGroup>
     <Reference Include="DelftTools.Shell.Core">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>

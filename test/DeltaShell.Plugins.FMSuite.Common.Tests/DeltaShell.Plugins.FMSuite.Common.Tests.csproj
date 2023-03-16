@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)\Build\targets\Test.targets" />
   <ItemGroup>
     <Reference Include="DelftTools.Controls">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.dll</HintPath>

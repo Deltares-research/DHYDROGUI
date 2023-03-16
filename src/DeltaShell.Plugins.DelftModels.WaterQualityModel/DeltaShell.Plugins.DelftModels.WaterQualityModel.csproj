@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
+  <Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy $(ProjectDir)Scripts $(OutDir)..\DeltaShell.Plugins.Toolbox\Scripts /s /y" />

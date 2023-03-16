@@ -1,6 +1,0 @@
-<Project>
-  <Import Project="Source.targets" />
-  <PropertyGroup>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\DeltaShell</OutputPath>
-  </PropertyGroup>
-</Project>

@@ -1,0 +1,57 @@
+<Project>
+  <PropertyGroup>
+    <Company>Deltares</Company>
+    <Copyright>Copyright © Deltares 2023</Copyright>
+    <Product>$(MSBuildProjectName)</Product>
+    <AssemblyTitle>$(MSBuildProjectName)</AssemblyTitle>
+
+    <GitHash>DEV</GitHash>
+    <BuildNumber>0</BuildNumber>
+
+    <DhydroFileVersion>4.11.0</DhydroFileVersion>
+    <Version>$(DhydroFileVersion).$(BuildNumber)</Version>
+    <FileVersion>$(Version)</FileVersion>
+    <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
+
+    <LangVersion>7.3</LangVersion>
+    <TargetFramework>net48</TargetFramework>
+
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
+    <TargetsPath>$(SolutionDir)Build\targets\</TargetsPath>
+
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+    <NoWarn>$(NoWarn);1591</NoWarn>
+
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\**"/>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include=".\**\*.hbm.xml"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('Properties\Resources.resx')">
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

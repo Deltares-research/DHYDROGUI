@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)\Build\targets\Common.targets" />
+  <PropertyGroup>
+    <OutputPath>$(OutputPath)\DeltaShell</OutputPath>
+  </PropertyGroup>
   
   <ItemGroup>
     <Reference Include="DelftTools.Shell.Core">

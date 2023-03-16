@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
+  <Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+  </ItemGroup>
+  
   <Target Name="PreBuild" BeforeTargets="CoreCompile" Condition="!Exists('$(ProjectDir)\dimr_xsd\dimr.cs') Or !Exists('$(ProjectDir)\drtc_xsd\rtcRuntimeConfig.cs')">
     <Exec Command="cd &quot;$(ProjectDir)\drtc_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd&#xD;&#xA;cd &quot;$(ProjectDir)\dimr_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.DimrXsd&#xD;&#xA;  " />
     <ItemGroup>

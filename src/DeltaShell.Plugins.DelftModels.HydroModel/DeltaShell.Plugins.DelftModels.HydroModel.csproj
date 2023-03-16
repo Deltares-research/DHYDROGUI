@@ -1,10 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
+  <Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+  </ItemGroup>
   
   <ItemGroup>
     <EmbeddedResource Include="HydroModelBuilder.py" />
   </ItemGroup>
-
   
   <ItemGroup>
     <Reference Include="BasicModelInterface">

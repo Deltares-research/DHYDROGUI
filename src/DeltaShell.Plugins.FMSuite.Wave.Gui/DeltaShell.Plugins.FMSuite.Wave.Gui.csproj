@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-  <Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
+  <Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
+
   <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>DeltaShell.Plugins.FMSuite.Wave.Tests</_Parameter1>
-    </AssemblyAttribute>
+    <InternalsVisibleTo Include="$(MSBuildProjectName.Replace('.Gui', '.Tests'))" />
   </ItemGroup>
 
   <PropertyGroup>
