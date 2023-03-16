@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)\Build\targets\Base.targets" />
-	
 	<PropertyGroup>
-		<OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\DeltaShell.Plugins.ImportExport.Sobek</OutputPath>
+		<OutputPath>$(OutputPath)\plugins\DeltaShell.Plugins.ImportExport.Sobek</OutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)\Build\targets\Base.targets" />
-	
 	<PropertyGroup>
-		<OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\DeltaShell.Plugins.DelftModels.RealTimeControl</OutputPath>
+		<OutputPath>$(OutputPath)\plugins\DeltaShell.Plugins.DelftModels.RealTimeControl</OutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>

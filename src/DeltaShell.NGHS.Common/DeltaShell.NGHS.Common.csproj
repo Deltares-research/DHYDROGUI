@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)\Build\targets\Source.targets" />
-
+	<PropertyGroup>
+		<OutputPath>$(OutputPath)\DeltaShell</OutputPath>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1905" GeneratePathProperty="true">
 			<IncludeAssets>compile;build</IncludeAssets>

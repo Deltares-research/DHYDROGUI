@@ -1,15 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)\Build\targets\Base.targets" />
-
 	<Target Name="PreBuild" BeforeTargets="CoreCompile" Condition="!Exists('$(ProjectDir)\dimr_xsd\dimr.cs') Or !Exists('$(ProjectDir)\drtc_xsd\rtcRuntimeConfig.cs')">
-	<Exec Command="cd &quot;$(ProjectDir)\drtc_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd&#xD;&#xA;cd &quot;$(ProjectDir)\dimr_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.DimrXsd " />
-	<ItemGroup>
-		<Compile Include="dimr_xsd\dimr.cs;drtc_xsd\rtcRuntimeConfig.cs" />
-	</ItemGroup>
-</Target>
+		<Exec Command="cd &quot;$(ProjectDir)\drtc_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd&#xD;&#xA;cd &quot;$(ProjectDir)\dimr_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.DimrXsd " />
+		<ItemGroup>
+			<Compile Include="dimr_xsd\dimr.cs;drtc_xsd\rtcRuntimeConfig.cs" />
+		</ItemGroup>
+	</Target>
 
 	<PropertyGroup>
-		<OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+		<OutputPath>$(OutputPath)\plugins\$(MSBuildProjectName)</OutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>

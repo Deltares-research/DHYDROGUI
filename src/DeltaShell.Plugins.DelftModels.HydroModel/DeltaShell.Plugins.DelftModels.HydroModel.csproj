@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
+	<Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
+	
 	<ItemGroup>
 	  <None Remove="HydroModelBuilder.py" />
 	</ItemGroup>

@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
-
+	<Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
+	
 	<ItemGroup>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-			<_Parameter1>DeltaShell.Plugins.DelftModels.HydroModel.Tests</_Parameter1>
-		</AssemblyAttribute>
+		<InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+		<InternalsVisibleTo Include="DeltaShell.Plugins.DelftModels.HydroModel.Tests" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 	</ItemGroup>
 	
 	<ItemGroup>

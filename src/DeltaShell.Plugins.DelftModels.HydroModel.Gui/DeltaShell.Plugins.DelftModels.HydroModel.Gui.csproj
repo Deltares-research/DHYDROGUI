@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-	<Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
-
-	<ItemGroup>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-			<_Parameter1>DeltaShell.Plugins.DelftModels.HydroModel.Tests</_Parameter1>
-		</AssemblyAttribute>
-	</ItemGroup>
-
+	<Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
+	
 	<PropertyGroup>
 		<ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
 		<UseWPF>true</UseWPF>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1905" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />

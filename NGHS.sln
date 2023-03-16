@@ -99,10 +99,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Utils.Test"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{A791355F-6EDC-4172-94CE-FB7AB2F42D07}"
 ProjectSection(SolutionItems) = preProject
-	Build\targets\Base.targets = Build\targets\Base.targets
-	Build\targets\Plugin.targets = Build\targets\Plugin.targets
-	Build\targets\Source.targets = Build\targets\Source.targets
-	Build\targets\Test.targets = Build\targets\Test.targets
+	Directory.Build.props = Directory.Build.props
+	Directory.Build.targets = Directory.Build.targets
+	Build\targets\DeltaShell.Plugins.targets = Build\targets\DeltaShell.Plugins.targets
 EndProjectSection
 EndProject
 Global

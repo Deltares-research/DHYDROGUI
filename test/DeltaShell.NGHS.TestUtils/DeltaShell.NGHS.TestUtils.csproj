@@ -1,6 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
-
 	<ItemGroup>
 		<PackageReference Include="AutoFixture.AutoNSubstitute">
 			<Version>4.13.0</Version>

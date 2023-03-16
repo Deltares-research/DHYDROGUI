@@ -1,0 +1,15 @@
+<Project>
+  <ItemGroup>
+    <None Remove="test-data\**"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'@(InternalsVisibleTo->Count())' &gt; 0">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>%(InternalsVisibleTo.Identity)</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <Target Name="CreateTestDataLink" AfterTargets="Build" Condition="'$(PkgDeltaShell_TestProject)' != ''">
+    <Exec Command="$(PkgDeltaShell_TestProject)\tools\mklink-test-data.bat $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data"/>
+  </Target>
+</Project>
