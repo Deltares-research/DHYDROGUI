@@ -1,4 +1,6 @@
 ﻿using System.Windows.Threading;
+using BasicModelInterface;
+using DeltaShell.Dimr;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
@@ -10,8 +12,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
     [SetUpFixture]
     public class TestClassSetup
     {
+        [OneTimeSetUp]
+        public void TestFixtureSetUp()
+        {
+            DimrApiDataSet.FeedbackLevel = Level.All;
+        }
+
         [OneTimeTearDown]
-        public void TearDownWPFGuiAndWorkerThread()
+        public void TestFixtureTearDown()
         {
             // Ensure shut down of background thread to ensure no COM erros are thrown.
             // This should be done after all test fixtures have run.
