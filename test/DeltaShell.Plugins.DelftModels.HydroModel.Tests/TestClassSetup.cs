@@ -1,16 +1,21 @@
 ﻿using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
+using BasicModelInterface;
+using DeltaShell.Dimr;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
-    [SetUpFixture, Apartment(ApartmentState.STA)]
+    [SetUpFixture]
+    [Apartment(ApartmentState.STA)]
     public class TestClassSetup
     {
         [OneTimeSetUp]
-        public void RetrieveApplicationOnceInOrderToCorrectlyInstantiateResourceDictionaries()
+        public void TestFixtureSetUp()
         {
+            DimrApiDataSet.FeedbackLevel = Level.All;
+
             // Ensure calls to ...
             //
             //   new Uri("pack://application:,,,/<path>");
@@ -20,11 +25,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             //   Invalid URI: Invalid port specified
             //
             // ... due to the fact that the application is not fully initialized yet.
-            var application = Application.Current;
+            Application _ = Application.Current;
         }
 
         [OneTimeTearDown]
-        public void TearDownWpfGuiAndWorkerThread()
+        public void TestFixtureTearDown()
         {
             // Ensure shut down of background thread to ensure no COM errors are thrown.
             // This should be done after all test fixtures have run.

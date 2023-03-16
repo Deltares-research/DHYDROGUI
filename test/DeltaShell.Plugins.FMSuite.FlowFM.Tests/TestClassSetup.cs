@@ -1,6 +1,9 @@
 ﻿using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
+using BasicModelInterface;
+using DeltaShell.Dimr;
+using log4net.Config;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -11,8 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class TestClassSetup
     {
         [OneTimeSetUp]
-        public void RetrieveApplicationOnceInOrderToCorrectlyInstantiateResourceDictionaries()
+        public void TestFixtureSetUp()
         {
+            DimrApiDataSet.FeedbackLevel = Level.All;
+            
             // Ensure calls to ...
             //
             //   new Uri("pack://application:,,,/<path>");
@@ -29,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [OneTimeTearDown]
-        public void TearDownWpfGuiAndWorkerThread()
+        public void TestFixtureTearDown()
         {
             // Ensure shut down of background thread to ensure no COM errors are thrown.
             // This should be done after all test fixtures have run.
