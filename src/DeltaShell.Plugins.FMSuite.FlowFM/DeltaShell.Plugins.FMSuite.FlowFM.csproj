@@ -8,7 +8,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1905" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1912" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
 		<PackageReference Include="DHYDRO.Common" Version="1.1.0.47">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>compile</IncludeAssets>
