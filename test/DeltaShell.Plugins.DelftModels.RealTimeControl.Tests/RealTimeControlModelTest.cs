@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
-using Castle.Core.Internal;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects;
@@ -221,8 +220,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             model.ConnectOutput(null);
 
             // Assert
-            Assert.That(model.RestartOutput.IsNullOrEmpty());
-            Assert.That(model.OutputDocuments.IsNullOrEmpty());
+            Assert.IsFalse(model.RestartOutput.Any());
+            Assert.IsFalse(model.OutputDocuments.Any());
             Assert.IsNull(model.OutputFileFunctionStore);
         }
 
@@ -237,8 +236,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             model.ConnectOutput("");
 
             // Assert
-            Assert.That(model.RestartOutput.IsNullOrEmpty());
-            Assert.That(model.OutputDocuments.IsNullOrEmpty());
+            Assert.IsFalse(model.RestartOutput.Any());
+            Assert.IsFalse(model.OutputDocuments.Any());
             Assert.IsNull(model.OutputFileFunctionStore);
         }
 
@@ -253,8 +252,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             model.ConnectOutput("C://");
 
             // Assert
-            Assert.That(model.RestartOutput.IsNullOrEmpty());
-            Assert.That(model.OutputDocuments.IsNullOrEmpty());
+            Assert.IsFalse(model.RestartOutput.Any());
+            Assert.IsFalse(model.OutputDocuments.Any());
             Assert.IsNull(model.OutputFileFunctionStore);
         }
 
@@ -269,8 +268,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             model.ConnectOutput("C://test");
 
             // Assert
-            Assert.That(model.RestartOutput.IsNullOrEmpty());
-            Assert.That(model.OutputDocuments.IsNullOrEmpty());
+            Assert.IsFalse(model.RestartOutput.Any());
+            Assert.IsFalse(model.OutputDocuments.Any());
             Assert.IsNull(model.OutputFileFunctionStore);
         }
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Castle.Core.Internal;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -363,7 +362,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             // Then
             Assert.IsTrue(hydroModel.Models.Contains(modelWithNullRegion));
-            Assert.IsTrue(hydroModel.Region.SubRegions.IsNullOrEmpty());
+            Assert.IsFalse(hydroModel.Region.SubRegions.Any());
         }
 
         [Test]
