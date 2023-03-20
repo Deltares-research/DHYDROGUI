@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1921" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1921" GeneratePathProperty="true" PrivateAssets="all" />
-		<PackageReference Include="NUnit" Version="3.13.3" />
-		<PackageReference Include="PostSharp" Version="6.10.5">
+		<PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
+		<PackageReference Include="NUnit" />
+		<PackageReference Include="PostSharp">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="PostSharp.Redist" Version="6.10.5">
+		<PackageReference Include="PostSharp.Redist">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>

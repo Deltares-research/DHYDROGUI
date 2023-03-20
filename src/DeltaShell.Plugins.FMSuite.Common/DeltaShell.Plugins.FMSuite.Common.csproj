@@ -2,22 +2,22 @@
 	<Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
 	
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1921" GeneratePathProperty="true">
+		<PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true">
 			<IncludeAssets>compile;build</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="DHYDRO.Common" Version="1.0.0.47">
+		<PackageReference Include="DHYDRO.Common">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="log4net" Version="2.0.12">
+		<PackageReference Include="log4net">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="PostSharp" Version="6.10.5">
+		<PackageReference Include="PostSharp">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="PostSharp.Redist" Version="6.10.5">
+		<PackageReference Include="PostSharp.Redist">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>

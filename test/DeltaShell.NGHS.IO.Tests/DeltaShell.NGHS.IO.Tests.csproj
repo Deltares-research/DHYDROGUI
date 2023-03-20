@@ -1,18 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1921" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1921" GeneratePathProperty="true" PrivateAssets="all" />
-		<PackageReference Include="DHYDRO.Common" Version="1.1.0.47" IncludeAssets="compile" PrivateAssets="all" />
-		<PackageReference Include="MeshKernelNET" Version="1.0.0.56-Beta" IncludeAssets="compile" PrivateAssets="all" />
-		<PackageReference Include="NUnit" Version="3.13.3" />
+		<PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
+		<PackageReference Include="DHYDRO.Common" IncludeAssets="compile" PrivateAssets="all" />
+		<PackageReference Include="MeshKernelNET" IncludeAssets="compile" PrivateAssets="all" />
+		<PackageReference Include="NUnit" />
 		<PackageReference Include="Deltares.UGrid">
-			<Version>1.0.69569</Version>
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="NSubstitute">
-			<Version>4.2.2</Version>
-		</PackageReference>
+		<PackageReference Include="NSubstitute" />
 	</ItemGroup>
 
 	<ItemGroup>
