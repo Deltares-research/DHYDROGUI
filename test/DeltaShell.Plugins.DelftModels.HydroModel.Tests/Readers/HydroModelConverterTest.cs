@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Castle.Core.Internal;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
@@ -13,7 +12,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DHYDRO.Common.Logging;
-using GeoAPI.Extensions.Feature;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
@@ -407,7 +405,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             // Then
             Assert.IsTrue(hydroModel.Models.Contains(modelWithNullRegion));
-            Assert.IsTrue(hydroModel.Region.SubRegions.IsNullOrEmpty());
+            Assert.IsFalse(hydroModel.Region.SubRegions.Any());
         }
 
         private IDimrModelFileImporter GetDimrModelFileImporter(string subModelName)
