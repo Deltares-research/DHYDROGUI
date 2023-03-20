@@ -87,19 +87,19 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.1921" GeneratePathProperty="true" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="log4net" Version="2.0.12">
+    <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="log4net">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Mono.Addins" Version="1.3.8">
+    <PackageReference Include="Mono.Addins">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="PostSharp" Version="6.10.5">
+    <PackageReference Include="PostSharp">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="PostSharp.Redist" Version="6.10.5">
+    <PackageReference Include="PostSharp.Redist">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
