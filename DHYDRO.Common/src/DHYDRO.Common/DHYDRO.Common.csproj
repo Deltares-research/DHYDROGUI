@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
     </ItemGroup>
 
     <PropertyGroup>
@@ -28,7 +28,7 @@
         <OutputPath>$(SolutionDir)\bin\$(Configuration)\src\</OutputPath>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
         <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-        <NoWarn>1591</NoWarn>
+        <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <TargetFramework>net48</TargetFramework>
         <LangVersion>7.3</LangVersion>
@@ -71,10 +71,10 @@
         </EmbeddedResource>
     </ItemGroup>
 
-    <!-- Make internals visible to test project --> 
+    <!-- Make internals visible to test project -->
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
             <_Parameter1>$(AssemblyName).Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
-</Project>    
+</Project>
