@@ -1,9 +1,7 @@
-﻿using BasicModelInterface;
-using DeltaShell.Dimr;
-using log4net.Config;
+﻿using log4net.Config;
 using NUnit.Framework;
 
-namespace DeltaShell.NGHS.IO.Tests
+namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
 {
     [SetUpFixture]
     public class TestClassSetup
@@ -11,8 +9,6 @@ namespace DeltaShell.NGHS.IO.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            DimrApiDataSet.FeedbackLevel = Level.All;
-            
             XmlConfigurator.Configure();
         }
     }

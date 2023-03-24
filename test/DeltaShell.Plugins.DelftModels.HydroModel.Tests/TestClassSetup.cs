@@ -1,14 +1,11 @@
 ﻿using System.Windows.Threading;
 using BasicModelInterface;
 using DeltaShell.Dimr;
+using log4net.Config;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
-    /// <summary>
-    /// Assembly Fixture to ensure shutdown of backgrounds threads used by
-    /// Windows Form tests.
-    /// </summary>
     [SetUpFixture]
     public class TestClassSetup
     {
@@ -16,6 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void TestFixtureSetUp()
         {
             DimrApiDataSet.FeedbackLevel = Level.All;
+
+            XmlConfigurator.Configure();
         }
 
         [OneTimeTearDown]

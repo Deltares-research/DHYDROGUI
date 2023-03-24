@@ -1,4 +1,5 @@
-using BasicModelInterface;
+﻿using BasicModelInterface;
+using log4net.Config;
 using NUnit.Framework;
 
 namespace DeltaShell.Dimr.Tests
@@ -10,6 +11,8 @@ namespace DeltaShell.Dimr.Tests
         public void TestFixtureSetUp()
         {
             DimrApiDataSet.FeedbackLevel = Level.All;
+            
+            XmlConfigurator.Configure();
         }
     }
 }
