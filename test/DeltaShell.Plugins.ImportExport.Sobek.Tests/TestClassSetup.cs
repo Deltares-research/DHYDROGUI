@@ -2,6 +2,7 @@
 using System.Windows.Threading;
 using BasicModelInterface;
 using DeltaShell.Dimr;
+using log4net.Config;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
@@ -14,13 +15,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void TestFixtureSetUp()
         {
             DimrApiDataSet.FeedbackLevel = Level.All;
+
+            XmlConfigurator.Configure();
         }
-        
+
         [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
-            DimrApiDataSet.FeedbackLevel = Level.All;
-
             // Ensure shut down of background thread to ensure no COM errors are thrown.
             // This should be done after all test fixtures have run.
             Dispatcher.CurrentDispatcher.InvokeShutdown();

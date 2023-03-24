@@ -10,14 +10,17 @@ using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
-    [SetUpFixture, Apartment(ApartmentState.STA)]
+    [SetUpFixture]
+    [Apartment(ApartmentState.STA)]
     public class TestClassSetup
     {
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             DimrApiDataSet.FeedbackLevel = Level.All;
-            
+
+            XmlConfigurator.Configure();
+
             // Ensure calls to ...
             //
             //   new Uri("pack://application:,,,/<path>");
@@ -27,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             //   Invalid URI: Invalid port specified
             //
             // ... due to the fact that the application is not fully initialized yet.
-            var application = Application.Current;
+            Application _ = Application.Current;
 
             // Set static Map.CoordinateSystemFactory so coordinate transformation can be done
             Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();

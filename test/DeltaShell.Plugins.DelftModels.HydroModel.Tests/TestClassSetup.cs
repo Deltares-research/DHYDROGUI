@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Threading;
 using BasicModelInterface;
 using DeltaShell.Dimr;
+using log4net.Config;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -15,6 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void TestFixtureSetUp()
         {
             DimrApiDataSet.FeedbackLevel = Level.All;
+
+            XmlConfigurator.Configure();
 
             // Ensure calls to ...
             //

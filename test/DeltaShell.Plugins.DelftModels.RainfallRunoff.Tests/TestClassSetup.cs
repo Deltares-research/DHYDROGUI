@@ -2,6 +2,7 @@
 using System.Windows.Threading;
 using BasicModelInterface;
 using DeltaShell.Dimr;
+using log4net.Config;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
@@ -14,8 +15,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         public void TestFixtureSetUp()
         {
             DimrApiDataSet.FeedbackLevel = Level.All;
+
+            XmlConfigurator.Configure();
         }
-        
+
         [OneTimeTearDown]
         public void TestFixtureTearDown()
         {

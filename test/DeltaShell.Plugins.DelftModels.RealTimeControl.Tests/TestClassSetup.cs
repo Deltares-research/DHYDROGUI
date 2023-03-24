@@ -1,5 +1,6 @@
-using BasicModelInterface;
+﻿using BasicModelInterface;
 using DeltaShell.Dimr;
+using log4net.Config;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
@@ -11,6 +12,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void TestFixtureSetUp()
         {
             DimrApiDataSet.FeedbackLevel = Level.All;
+            
+            XmlConfigurator.Configure();
         }
     }
 }
