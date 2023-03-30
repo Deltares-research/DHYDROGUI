@@ -84,8 +84,8 @@
   <String Id="SetupTypeDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Choose the setup type that best suits your needs</String>
   <String Id="LicenseAgreementDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Please read the following license agreement carefully</String>
   <String Id="FullProductName" Overridable="yes">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
-  <String Id="PublicReleaseVersion">2023.02</String>
-  <String Id="ReleaseVersion">4.11.0</String> <!--Need to discuss with the team-->
+  <String Id="PublicReleaseVersion">2023.03</String>
+  <String Id="ReleaseVersion">4.12.0</String> <!--Need to discuss with the team-->
   <String Id="ProductName">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
   <String Id="SupportPhone">+31 (0)88 335 8100</String>
   <String Id="DeltaShellFeatureName">DeltaShell</String>

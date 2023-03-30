@@ -919,8 +919,8 @@
 
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigSetting>fullVersion</_CheckDeltaShellGuiExeConfigSetting>
-      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">2023.02.$(BUILD_NUMBER)</_CheckDeltaShellGuiExeConfigExpectedValue>
-      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">2023.02</_CheckDeltaShellGuiExeConfigExpectedValue>
+      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">2023.03.$(BUILD_NUMBER)</_CheckDeltaShellGuiExeConfigExpectedValue>
+      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">2023.03</_CheckDeltaShellGuiExeConfigExpectedValue>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"
@@ -1413,4 +1413,3 @@
     <Message Text="##teamcity[testFinished name='$(Package).$(File).$(Key) $(TestTypeName)']" Importance="high" />
   </Target>
 </Project>
-
