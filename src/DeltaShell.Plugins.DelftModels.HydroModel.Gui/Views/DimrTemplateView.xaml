@@ -4,7 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels"
-             Width="800"
+             Width="500"
              Background="White"
              mc:Ignorable="d">
     <UserControl.DataContext>
@@ -38,14 +38,14 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
         <Rectangle Grid.RowSpan="2"
                    Grid.Column="0"
                    Height="125"
                    Margin="5"
                    VerticalAlignment="Top"
-                   Fill="{StaticResource DeltaresLogoAndTextBrush}" />
+                   Fill="{StaticResource DeltaresIconBrush}" />
         <GroupBox Grid.Row="0"
                   Grid.Column="1"
                   Header="Dimr XML file import"

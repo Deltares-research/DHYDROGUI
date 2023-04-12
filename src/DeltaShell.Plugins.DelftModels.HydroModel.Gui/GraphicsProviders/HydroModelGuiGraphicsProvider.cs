@@ -62,13 +62,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
 
                 if (projectTemplate.Id == HydroModelApplicationPlugin.DimrProjectTemplateId)
                 {
-                    return (DrawingGroup)resources["DeltaresLogoDrawing"];
+                    return (DrawingGroup)resources["DeltaresIconDrawing"];
                 }
             }
 
             if (item is DHydroConfigXmlImporter)
             {
-                return (DrawingGroup)resources["DeltaresLogoDrawing"];
+                return (DrawingGroup)resources["DeltaresIconDrawing"];
             }
 
             return null;
