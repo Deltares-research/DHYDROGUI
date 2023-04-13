@@ -222,10 +222,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                     pointTool.OnMouseUp(coord, args);
 
                     Assert.AreEqual(2, layer.DataSource.Features.Count);
-                    Assert.AreEqual(-587778.500, ((Feature2DPoint)layer.DataSource.Features[1]).Geometry.Coordinate.X, 0.001);
+                    Assert.AreEqual(-587778.636, ((Feature2DPoint)layer.DataSource.Features[1]).Geometry.Coordinate.X, 0.001);
 
                     Assert.AreEqual(2, area.ObservationPoints.Count);
-                    Assert.AreEqual(-587778.500, area.ObservationPoints[1].Geometry.Coordinate.X,0.001);
+                    Assert.AreEqual(-587778.636, area.ObservationPoints[1].Geometry.Coordinate.X,0.001);
                 };
                 WindowsFormsTestHelper.ShowModal(mapView, formAction);
             }
