@@ -91,6 +91,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
@@ -108,28 +109,37 @@
                 <TextBlock Grid.Row="1"
                            Grid.Column="0"
                            VerticalAlignment="Center"
-                           Text="Coordinate system" />
+                           Text="Use model name for project" />
+                
+                <CheckBox Grid.Row="1"
+                          Grid.Column="1"
+                          IsChecked="{Binding ModelSettings.UseModelNameForProject}" />
 
-                <gui:CoordinateSystemPicker Grid.Row="1"
-                                            Grid.Column="1"
-                                            CoordinateSystem="{Binding ModelSettings.CoordinateSystem}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="0"
                            VerticalAlignment="Center"
-                           Text="Add rainfall runoff" />
-                <CheckBox Grid.Row="2"
-                          Grid.Column="1"
-                          IsChecked="{Binding ModelSettings.UseRR}" />
+                           Text="Coordinate system" />
+
+                <gui:CoordinateSystemPicker Grid.Row="2"
+                                            Grid.Column="1"
+                                            CoordinateSystem="{Binding ModelSettings.CoordinateSystem}" />
                 <TextBlock Grid.Row="3"
                            Grid.Column="0"
-                           Text="Add flow flexible mesh" />
+                           VerticalAlignment="Center"
+                           Text="Add rainfall runoff" />
                 <CheckBox Grid.Row="3"
                           Grid.Column="1"
-                          IsChecked="{Binding ModelSettings.UseFlowFM}" />
+                          IsChecked="{Binding ModelSettings.UseRR}" />
                 <TextBlock Grid.Row="4"
                            Grid.Column="0"
-                           Text="Add real-time control" />
+                           Text="Add flow flexible mesh" />
                 <CheckBox Grid.Row="4"
+                          Grid.Column="1"
+                          IsChecked="{Binding ModelSettings.UseFlowFM}" />
+                <TextBlock Grid.Row="5"
+                           Grid.Column="0"
+                           Text="Add real-time control" />
+                <CheckBox Grid.Row="5"
                           Grid.Column="1"
                           IsChecked="{Binding ModelSettings.UseRTC}" />
             </Grid>

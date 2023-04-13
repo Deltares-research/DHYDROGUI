@@ -109,6 +109,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     {
                         model.Name = modelSettings.ModelName;
                         model.CoordinateSystem = modelSettings.CoordinateSystem;
+                        if (modelSettings.UseModelNameForProject)
+                        {
+                            p.Name = model.Name;
+                        }
                     }
 
                     p.RootFolder.Items.Add(model);

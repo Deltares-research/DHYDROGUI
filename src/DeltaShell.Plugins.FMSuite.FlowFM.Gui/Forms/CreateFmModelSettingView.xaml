@@ -14,10 +14,14 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/DefaultControlTemplates.xaml" />
                 <ResourceDictionary Source="../GraphicsProviders/FMGuiGraphics.xaml" />
                 <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DrawingBrushesDictionary.xaml" />
                 <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionairy.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="CheckBox">
+                <Setter Property="Template" Value="{StaticResource CheckBoxControlTemplate}" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -80,6 +84,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
@@ -99,9 +104,19 @@
                            Grid.Column="0"
                            Margin="0,2,5,2"
                            VerticalAlignment="Center"
+                           Text="Use model name for project" />
+
+                <CheckBox Grid.Row="1"
+                          Grid.Column="1"
+                          IsChecked="{Binding ModelSettings.UseModelNameForProject}" />
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Margin="0,2,5,2"
+                           VerticalAlignment="Center"
                            Text="Coordinate system" />
 
-                <gui:CoordinateSystemPicker Grid.Row="1"
+                <gui:CoordinateSystemPicker Grid.Row="2"
                                             Grid.Column="1"
                                             Margin="0,2,5,2"
                                             CoordinateSystem="{Binding ModelSettings.CoordinateSystem}" />

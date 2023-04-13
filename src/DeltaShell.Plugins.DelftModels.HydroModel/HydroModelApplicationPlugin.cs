@@ -140,6 +140,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         {
                             hydroModel.Activities.RemoveAllWhere(a => a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFBC));
                         }
+
+                        if (modelSettings.UseModelNameForProject)
+                        {
+                            project.Name = hydroModel.Name;
+                        }
                     }
 
                     hydroModel.TimeStep = new TimeSpan(0, 5, 0);

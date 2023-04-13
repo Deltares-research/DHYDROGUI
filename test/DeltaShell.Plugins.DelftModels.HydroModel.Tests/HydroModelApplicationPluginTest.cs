@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -168,6 +169,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             });
 
             Assert.IsTrue(messages.Any(m => m.StartsWith("DeltaShell version")), "HydroModel plugin version should be logged");
+        }
+        
+        private ProjectTemplate ConfigurePluginProjectTemplate()
+        {
+            // Setup
+            var applicationPlugin = new HydroModelApplicationPlugin();
+            // Call
+            IEnumerable<ProjectTemplate> projectTemplates = applicationPlugin.ProjectTemplates();
+
+            // Assert
+            var projectTemplate = projectTemplates.FirstOrDefault(
+                template => template.Id.Equals(HydroModelApplicationPlugin.RHUINTEGRATEDMODEL_TEMPLATE_ID));
+            
+            Assert.That(projectTemplate, Is.Not.Null);
+            Assert.That(projectTemplate.ExecuteTemplateOpenView, Is.Not.Null);
+            return projectTemplate;
+        }
+
+        [Test]
+        public void ProjectTemplate_IfUseModelNameForProjectIsTrue_ProjectNameIsEqualToModelName()
+        {
+            string projectName = "hello-world-this-is-a-project-name";
+
+            var project = new Project();
+            var modelSettings = new HydroModelProjectTemplateSettings();
+            var projectTemplate = ConfigurePluginProjectTemplate();
+            project.Name = projectName;
+            
+            object returnValue = projectTemplate.ExecuteTemplateOpenView.Invoke(project, modelSettings);
+            var model = returnValue as HydroModel;
+            Assert.IsNotNull(model);
+
+            Assert.AreEqual(modelSettings.ModelName,model.Name);
+            Assert.AreEqual(model.Name, project.Name);
+        }
+
+        [Test]
+        public void ProjectTemplate_IfUseModelNameForProjectIsFalse_ProjectNameIsNotChanged()
+        {
+            string projectName = "hello-world-this-is-a-project-name";
+
+            var project = new Project();
+            var modelSettings = new HydroModelProjectTemplateSettings();
+            var projectTemplate = ConfigurePluginProjectTemplate();
+            project.Name = projectName;
+
+            modelSettings.UseModelNameForProject = false;
+            
+            object returnValue = projectTemplate.ExecuteTemplateOpenView.Invoke(project, modelSettings);
+            var model = returnValue as HydroModel;
+            Assert.IsNotNull(model);
+
+            Assert.AreEqual(modelSettings.ModelName,model.Name);
+            Assert.AreEqual(projectName, project.Name);
         }
     }
 }
