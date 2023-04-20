@@ -945,9 +945,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
 
-            Assert.That(model.CoordinateSystem.Name, Is.EqualTo("WGS 84"));
+            using (var model = new WaterFlowFMModel(mduPath))
+            {
+                Assert.That(model.CoordinateSystem.Name, Is.EqualTo("WGS 84"));
+            }
         }
 
         [Test]
@@ -958,11 +960,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(mduPath);
+            using (var model = new WaterFlowFMModel(mduPath))
+            {
+                model.Initialize();
 
-            model.Initialize();
-
-            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Initialized));
+                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Initialized));
+            }
         }
 
         [Test]

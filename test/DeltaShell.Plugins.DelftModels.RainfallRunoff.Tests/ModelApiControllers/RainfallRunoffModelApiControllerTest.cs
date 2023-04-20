@@ -563,7 +563,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         public void InitializeModelWritesCapsimToIniFile()
         {
-            var model = new RainfallRunoffModel();
+            var model = new RainfallRunoffModel
+            {
+                WorkingDirectoryPathFunc = () => TestHelper.GetTestWorkingDirectory(TestHelper.GetCurrentMethodName())
+            };
             model.CapSim = true;
             model.CapSimCropAreaOption = RainfallRunoffEnums.CapsimCropAreaOptions.PerCropArea;
             model.CapSimInitOption = RainfallRunoffEnums.CapsimInitOptions.AtMoistureContentpF2;
