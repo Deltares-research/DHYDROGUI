@@ -5,6 +5,7 @@
              xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
              xmlns:gui="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ext="clr-namespace:DelftTools.Shell.Gui.Wpf.Extensions;assembly=DelftTools.Shell.Gui.Wpf"
              Width="1004.574"
              Height="168"
              Background="White"
@@ -66,7 +67,7 @@
                               Group="{Binding ElementName=geospatialContextualGroup}"
                               Header="Map"
                               ReduceOrder="HydroRegion,HydroNetwork,DrainageBasin,NetworkCoverage,Analysis">
-            <fluent:RibbonGroupBox Header="Background layers">
+            <fluent:RibbonGroupBox Header="Background layers" ext:RibbonExtensions.GroupSortIndex="2">
                 <fluent:DropDownButton Header="Add dutch layers">
                     <fluent:DropDownButton.LargeIcon>
                         <Rectangle Width="32"
@@ -96,10 +97,11 @@
                 </fluent:DropDownButton>
             </fluent:RibbonGroupBox>
 
-            <fluent:RibbonGroupBox x:Name="HydroNetwork"
+            <fluent:RibbonGroupBox x:Name="Network1D"
                                    fluent:KeyTip.Keys="ZN"
-                                   Header="Network"
-                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkGroup.png">
+                                   Header="1D Network"
+                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkGroup.png"
+                                   ext:RibbonExtensions.GroupSortIndex="7">
                 <!--  branches / nodes  -->
                 <fluent:ToggleButton x:Name="ButtonAddNewBranch"
                                      fluent:KeyTip.Keys="B"
@@ -245,9 +247,10 @@
                                      ToolTip="Add Observation Point" />
             </fluent:RibbonGroupBox>
 
-            <fluent:RibbonGroupBox x:Name="DrainageBasin"
-                                   Header="Basin"
-                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
+            <fluent:RibbonGroupBox x:Name="RRBasin"
+                                   Header="RR Basin"
+                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png"
+                                   ext:RibbonExtensions.GroupSortIndex="5">
                 <fluent:ToggleButton x:Name="ButtonAddNewCatchmentPaved"
                                      Click="ButtonAddNewCatchmentPaved_Click"
                                      Header="Paved"
@@ -299,8 +302,9 @@
             </fluent:RibbonGroupBox>
 
             <fluent:RibbonGroupBox x:Name="Area2D"
-                                   Header="Area"
-                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
+                                   Header="2D Area"
+                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png"
+                                   ext:RibbonExtensions.GroupSortIndex="8">
                 <fluent:ToggleButton x:Name="ButtonAddNewThinDam2D"
                                      Click="ButtonAddNewThinDam_Click"
                                      Header="Thin dam"
@@ -411,9 +415,10 @@
                                      ToolTip="Add new bridge pillar" />
             </fluent:RibbonGroupBox>
 
-            <fluent:RibbonGroupBox x:Name="HydroRegion"
-                                   Header="Region"
-                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\RegionGroup.png">
+            <fluent:RibbonGroupBox x:Name="RRRegion"
+                                   Header="RR Region"
+                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\RegionGroup.png"
+                                   ext:RibbonExtensions.GroupSortIndex="6">
                 <fluent:ToggleButton x:Name="ButtonAddNewLink"
                                      Click="ButtonAddNewLink_Click"
                                      Header="Link"
@@ -424,7 +429,8 @@
 
             <fluent:RibbonGroupBox x:Name="NetworkCoverage"
                                    Header="Network Coverage"
-                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkCoverageGroup.png">
+                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkCoverageGroup.png"
+                                   ext:RibbonExtensions.GroupSortIndex="11">
                 <WrapPanel x:Name="NetworkCoverageEditPanel">
                     <Label Content="Coverage" />
                     <ComboBox x:Name="ComboBoxSelectNetworkCoverage"

@@ -5,6 +5,7 @@
              xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ribbon="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon"
+             xmlns:ext="clr-namespace:DelftTools.Shell.Gui.Wpf.Extensions;assembly=DelftTools.Shell.Gui.Wpf"
              Width="686.4"
              Height="168"
              Background="White"
@@ -33,8 +34,9 @@
                               Group="{Binding ElementName=geospatialContextualGroup}"
                               Header="Map"
                               ReduceOrder="FmRegion">
-            <fluent:RibbonGroupBox Name="FmRegion"
-                                   Header="FM Region">
+            <fluent:RibbonGroupBox Name="Region2D"
+                                   Header="2D Region"
+                                   ext:RibbonExtensions.GroupSortIndex="9">
                 <fluent:RibbonGroupBox.DataContext>
                     <ribbon:RibbonViewModelRegion x:Name="ViewModelRegion" />
                 </fluent:RibbonGroupBox.DataContext>
@@ -93,7 +95,8 @@
                                      ToolTip="Generate grid based on embankments" />
             </fluent:RibbonGroupBox>
             <fluent:RibbonGroupBox Name="Fm1D2D"
-                                   Header="1D2D Links">
+                                   Header="1D2D Links"
+                                   ext:RibbonExtensions.GroupSortIndex="10">
                 <fluent:RibbonGroupBox.DataContext>
                     <ribbon:RibbonViewModel1D2D x:Name="ViewModel1D2D" />
                 </fluent:RibbonGroupBox.DataContext>

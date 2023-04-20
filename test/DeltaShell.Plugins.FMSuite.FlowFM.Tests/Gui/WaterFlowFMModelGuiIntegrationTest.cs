@@ -41,6 +41,7 @@ using SharpMap.Layers;
 using SharpMap.SpatialOperations;
 using SharpMap.UI.Tools;
 using Control = System.Windows.Controls.Control;
+using Ribbon = Fluent.Ribbon;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -1127,6 +1128,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     }
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, formVisibleChangedAction);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Wpf)]
+        public void MapRibbonGroupsShouldBeSorted()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                var mainWindow = (Control)gui.MainWindow;
+
+                WpfTestHelper.ShowModal(mainWindow);
+
+                var ribbon = (Ribbon)mainWindow.FindName("MainWindowRibbon");
+                Assert.IsNotNull(ribbon);
+                
+                var mapTab = ribbon.Tabs.FirstOrDefault(x => x.Header.Equals("Map"));
+                Assert.IsNotNull(mapTab);
+                
+                Assert.AreEqual(12, mapTab.Groups.Count);
+                Assert.AreEqual("Decorations", mapTab.Groups[0].Header);
+                Assert.AreEqual("Tools", mapTab.Groups[1].Header);
+                Assert.AreEqual("Background layers", mapTab.Groups[2].Header);
+                Assert.AreEqual("Edit", mapTab.Groups[3].Header);
+                Assert.AreEqual("Grid Profile", mapTab.Groups[4].Header);
+                Assert.AreEqual("RR Basin", mapTab.Groups[5].Header);
+                Assert.AreEqual("RR Region", mapTab.Groups[6].Header);
+                Assert.AreEqual("1D Network", mapTab.Groups[7].Header);
+                Assert.AreEqual("2D Area", mapTab.Groups[8].Header);
+                Assert.AreEqual("2D Region", mapTab.Groups[9].Header);
+                Assert.AreEqual("1D2D Links", mapTab.Groups[10].Header);
+                Assert.AreEqual("Network Coverage", mapTab.Groups[11].Header);
             }
         }
     }

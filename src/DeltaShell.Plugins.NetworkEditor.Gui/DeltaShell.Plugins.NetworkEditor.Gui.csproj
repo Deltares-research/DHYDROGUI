@@ -74,6 +74,10 @@
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="DelftTools.Shell.Gui.Wpf">
+		  <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.Wpf.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="DelftTools.Units">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Units.dll</HintPath>
 			<Private>False</Private>
