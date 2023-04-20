@@ -401,8 +401,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel { ShowModelRunConsole = true };
             model.ImportFromMdu(mduPath);
 
-            ActivityRunner.RunActivity(model);
-
             using (var gui = new DeltaShellGui())
             {
                 IApplication app = gui.Application;
@@ -419,6 +417,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     Project project = app.Project;
                     project.RootFolder.Add(model);
+
+                    ActivityRunner.RunActivity(model);
 
                     // open central map view
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
