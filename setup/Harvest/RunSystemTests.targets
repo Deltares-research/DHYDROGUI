@@ -566,6 +566,17 @@
                           KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)"
              ContinueOnError="WarnAndContinue"/>
     
+    <PropertyGroup>
+      <_CheckDeltaShellGuiPluginIconFile>FM.ico</_CheckDeltaShellGuiPluginIconFile>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=DeltaShell Exe Gui plugin icon file;
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiPluginIconFile)"
+             ContinueOnError="WarnAndContinue"/>
+    
     <CallTarget Targets="CheckDeltaShellExeStartAndRunAndClose" 
 				Condition="Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeFile)))) AND Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile))))"
 				ContinueOnError="WarnAndContinue"/>
@@ -904,6 +915,17 @@
              Properties=" xmlKey=$(_CheckDeltaShellGuiExeConfigSetting);
                           xmlKeyExpectedValue=$(_CheckDeltaShellGuiExeConfigExpectedValue);
                           CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)" 
+             ContinueOnError="WarnAndContinue"/>
+    
+    <PropertyGroup>
+      <_CheckDeltaShellGuiExeConfigSetting>applicationIcon</_CheckDeltaShellGuiExeConfigSetting>
+      <_CheckDeltaShellGuiExeConfigExpectedValue>$(_CheckDeltaShellFolder)\FM.ico</_CheckDeltaShellGuiExeConfigExpectedValue>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"
+             Properties=" xmlKey=$(_CheckDeltaShellGuiExeConfigSetting);
+                          xmlKeyExpectedValue=$(_CheckDeltaShellGuiExeConfigExpectedValue);
+                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)"
              ContinueOnError="WarnAndContinue"/>
     
     <PropertyGroup>

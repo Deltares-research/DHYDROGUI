@@ -194,6 +194,14 @@
           <?define GUICONFIGFILE = "DeltaShell.Gui.exe.config"?>
           <?include GuiConfigXml.wxi?>
         </Component>
+        <?ifdef pluginicon?>
+          <Component Id="PluginApplicationIcon" Guid="$(var.PluginApplicationIconGUID)">
+            <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedPluginApplicationIcon" Type="integer" Value="1" />
+            <CreateFolder/>
+            <RemoveFolder Id="RemoveDeltaShellBinDir_ComponentPluginIcon" Directory="INSTALLDIR" On="uninstall"/>
+            <File Id="PluginApplicationIconFile" KeyPath="yes" Source="$(var.pluginicon)" />
+          </Component>
+        <?endif?>
         <Directory Id="HarvestedDeltaShellFilesDir"/>
       </Directory>
       <Directory Id="Plugins" Name="plugins">
@@ -248,6 +256,7 @@
     <Feature Id="Complete" Title="!(loc.ProductName)" Description="!(loc.CompletePackageDescription)"
              Display="expand" Level="1" Absent="disallow" AllowAdvertise="yes" ConfigurableDirectory="INSTALLDIR">
       <ComponentRef Id="DeltaShellGuiExeConfig"/>
+      <ComponentRef Id="PluginApplicationIcon"/>
       <Feature Id="DeltaShell" Title="!(loc.DeltaShellFeatureName)" Description ="!(loc.DeltaShellFeatureDescription)" Level="1" Absent="disallow" AllowAdvertise="no">
         <ComponentGroupRef Id="HarvestedDeltaShellFilesComponent" Primary="yes" />
       </Feature>

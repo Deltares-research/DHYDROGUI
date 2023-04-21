@@ -5,6 +5,13 @@
                 ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationName&quot;[\]]/@value"
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="!(loc.ProductName)"/>
+  <?ifdef pluginicon?>
+  <util:XmlFile Id="SetKeyApplicationPluginIcon$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationIcon&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="[BINDIR]FM.ico"/>
+  <?endif?>
 
   <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
                 Action="setValue"
