@@ -592,6 +592,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsNotNull(retrievedModel.OutputMapFileStore);
             }
         }
+        
+        [Test]
+        // Test related to issue FM1D2D-2077.
+        public void ImportHarlingenRunSaveAsLoadCheckLogsDoesNotContainNetworkChangedClearingResults()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.IsProjectCreatedInTemporaryDirectory = true;
+                app.Run();
+
+                // import
+                const string path = "har.dsproj";
+                var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+                var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
+                var model = new WaterFlowFMModel(mduFilePath);
+                app.Project.RootFolder.Add(model);
+                // run
+                ActivityRunner.RunActivity(model);
+                // save
+                app.SaveProjectAs(path);
+                
+                // close
+                app.CloseProject();
+
+                // reopen
+                TestHelper.AssertLogMessageIsNotGenerated(()=>app.OpenProject(path), "Network has changed, clearing results.");
+            }
+        }
 
         [Test]
         public void DeleteDataPointSaveLoadShouldNotKeepDataPoint()

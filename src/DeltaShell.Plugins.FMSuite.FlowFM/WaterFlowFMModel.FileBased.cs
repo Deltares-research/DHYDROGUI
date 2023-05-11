@@ -431,10 +431,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnLoad(string mduPath)
         {
+            SuspendClearOutputOnInputChange = true;
             CreateDataItemsNotAvailableInPreviousVersion();
             LoadStateFromMdu(mduPath);
 
             FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions);
+            SuspendClearOutputOnInputChange = false;
             UpdateDataItemsNotCreatedInPreviousVersion();
             LoadLinks();
 
