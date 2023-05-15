@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var structuresFile = new StructuresFile
                 {
                     StructureSchema = model.ModelDefinition.StructureSchema,
-                    ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+                    ReferenceDate = model.ModelDefinition.GetReferenceDateAsDateTime()
                 };
             try
             {

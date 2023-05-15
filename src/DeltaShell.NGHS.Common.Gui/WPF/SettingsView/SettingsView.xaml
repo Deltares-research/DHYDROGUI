@@ -33,6 +33,7 @@
             <settingsView:SettingsTemplateSelector x:Key="TemplateSelector" />
             <valueConverters1:DoubleToStringConverter x:Key="DoubleToStringConverter" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+            <valueConverters1:DateOnlyToDateTimeConverter x:Key="DateTimeToDateOnlyConverter" />
 
             <valueConverters:ValueConverterGroup x:Key="InverseBoolToVisibility">
                 <valueConverters:InverseBooleanConverter />
@@ -190,6 +191,31 @@
                                          TextAlignment="Left"
                                          Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}" />
                 </Grid>
+            </DataTemplate>
+
+            <!--  DataTemplate for DateOnly -->
+            <DataTemplate x:Key="DateOnlyTemplate"
+                          DataType="{x:Type settingsView:GuiProperty}">
+              <Grid Style="{StaticResource GridStyle}">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="{StaticResource LabelLength}" />
+                  <ColumnDefinition Width="{StaticResource ControlLength}" />
+                  <ColumnDefinition Width="{StaticResource UnitLength}" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Style="{StaticResource LabelTextBlockStyle}"
+                           Text="{Binding Label}" />
+                <xctk:DateTimePicker Grid.Column="1"
+                                     BorderBrush="{StaticResource DefaultLightColorBrush}"
+                                     Format="Custom"
+                                     FormatString="yyyy-MM-dd"
+                                     Style="{StaticResource ControlWithErrorStyle}"
+                                     TextAlignment="Left"
+                                     TimePickerVisibility="Collapsed"
+                                     Value="{Binding Value, Converter={StaticResource DateTimeToDateOnlyConverter}, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}" />
+                
+              </Grid>
             </DataTemplate>
 
             <!--  DataTemplate for TimeSpan  -->

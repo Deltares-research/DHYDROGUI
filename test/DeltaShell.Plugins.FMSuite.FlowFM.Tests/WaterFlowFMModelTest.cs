@@ -1041,7 +1041,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 model.BoundaryConditions.First(
                     bc => bc is FlowBoundaryCondition && ((Feature2D) bc.Feature).Name == "071_02");
 
-            var refDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var refDate = model.ModelDefinition.GetReferenceDateAsDateTime();
 
             var function = boundaryCondition.GetDataAtPoint(0);
 

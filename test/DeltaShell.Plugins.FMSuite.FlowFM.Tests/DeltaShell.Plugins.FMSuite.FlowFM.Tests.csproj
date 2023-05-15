@@ -7,6 +7,7 @@
 		<PackageReference Include="DHYDRO.TestModels.DFlowFM" />
 		<PackageReference Include="NUnit" />
 		<PackageReference Include="NSubstitute" />
+		<PackageReference Include="Portable.System.DateTimeOnly"/>
 		<PackageReference Include="RhinoMocks" />
 		<PackageReference Include="System.ValueTuple" />
 	</ItemGroup>

@@ -324,9 +324,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                return (DateTime) ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+                return modelDefinition.GetReferenceDateAsDateTime();
             }
-            set { ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = value; }
+            set
+            {
+                modelDefinition.SetReferenceDateAsDateTime(value);
+            }
         }
 
         private int CdType

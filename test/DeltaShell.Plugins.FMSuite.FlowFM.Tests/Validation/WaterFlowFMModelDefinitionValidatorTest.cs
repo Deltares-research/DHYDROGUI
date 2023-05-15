@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 };
 
             model.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
-            model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = new DateTime(2000, 1, 1);
+            model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = new DateOnly(2000, 1, 1);
             return model;
         }
 

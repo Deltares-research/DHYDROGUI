@@ -175,7 +175,7 @@ waves,Wavemodelnr,,Processes,Wave model:None|Fetch/depth limited Hurdle-Stive|Yo
 waves,WaveNikuradse,physics,Wave,Wave friction Nikuradse ks coefficient,Double,0.01,0,,TRUE,,Wavemodelnr=3,,,,,,"Wave friction Nikuradse ks coefficient (m), used in Krone-Swart",,,
 waves,Rouwav,physics,Wave,Friction model for wave stress:None|Fredsøe (1984)|Myrhaug and Slaattelid (1990)|Huynh-Thanh and Temperville (1991)|Grant and Madsen (1979)|Davies et al. (1988)|Bijker (1967)|Christoffersen and Jonsson (1985)|O` Connor and Yoo (1988)|Van Rijn et al. (2004),No|FR84|MS90|HT91|GM79|DS88|BK67|CJ85|OY88|VR04,FR84,,,TRUE,,Wavemodelnr=3,,,,,,Friction model for wave induced shear stress,,,
 waves,Gammax,physics,Wave,Max. wave/depth ratio,Double,1,,,TRUE,,,,,,,,Maximum wave height/water depth ratio,,,
-time,RefDate,timeframe,Time Frame,Reference date,DateTime,,,,FALSE,,,,,,,,Reference date (yyyymmdd),,,
+time,RefDate,timeframe,Time Frame,Reference date,DateOnly,,,,FALSE,,,,,,,,Reference date (yyyymmdd),,,
 time,Tzone,timeframe,Time Frame,Time zone,Double,0,,,FALSE,,,,,,,,Time zone assigned to input time series,,,
 time,DtUser,timeframe,Time Frame,User time step,Interval,60,0,,FALSE,,,,,,,,Time interval (s) for external forcing update,,,
 time,DtNodal,timeframe,Time Frame,Nodal update interval,Interval,0,0,,TRUE,,,,,,,,Time interval (s) for updating nodal factors in astronomical boundary conditions,,,

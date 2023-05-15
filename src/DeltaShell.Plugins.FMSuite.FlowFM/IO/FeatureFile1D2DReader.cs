@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             IHydroNetwork network, ICrossSectionDefinition[] crossSectionDefinitions)
         {
             string structureFile = modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
-            var referenceDateTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var referenceDateTime = modelDefinition.GetReferenceDateAsDateTime();
 
             structureFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, structureFile);
             if (!File.Exists(structureFile))

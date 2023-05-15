@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDefinition.AddProperty(targetMduFilePathProperty);
 
                 IHydroRegion[] regions = { network, area };
-                var referenceTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+                var referenceTime = modelDefinition.GetReferenceDateAsDateTime();
                 
                 StructureFileWriter.WriteFile(structuresFilePath, 
                                               regions, 

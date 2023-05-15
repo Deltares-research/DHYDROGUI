@@ -4,6 +4,7 @@
 		<PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="NSubstitute" />
 		<PackageReference Include="NUnit" />
+		<PackageReference Include="Portable.System.DateTimeOnly" />
 		<PackageReference Include="RhinoMocks" />
 	</ItemGroup>
 

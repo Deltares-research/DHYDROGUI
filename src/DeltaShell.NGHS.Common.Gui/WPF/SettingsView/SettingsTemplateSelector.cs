@@ -58,6 +58,9 @@ namespace DeltaShell.NGHS.Common.Gui.WPF.SettingsView
             if (type == typeof(DateTime))
                 return fe.FindResource("DateTimeTemplate") as DataTemplate;
 
+            if (type == typeof(DateOnly))
+                return fe.FindResource("DateOnlyTemplate") as DataTemplate;
+
             if (type == typeof(bool))
                 return fe.FindResource("CheckboxTemplate") as DataTemplate;
 

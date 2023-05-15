@@ -4,6 +4,7 @@
 		<PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="GeoAPI.Core" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="NUnit" />
+		<PackageReference Include="Portable.System.DateTimeOnly" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="RhinoMocks" />
 	</ItemGroup>
 

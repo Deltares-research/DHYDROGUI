@@ -60,6 +60,7 @@ namespace DeltaShell.NGHS.Common.Gui.Tests.WPF.SettingsView
         [TestCase(typeof(double))]
         [TestCase(typeof(int))]
         [TestCase(typeof(DateTime))]
+        [TestCase(typeof(DateOnly))]
         [TestCase(typeof(bool))]
         [TestCase(typeof(TimeSpan))]
         [TestCase(typeof(Enum))]

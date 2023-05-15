@@ -699,7 +699,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 structuresFileWriter.StructureSchema = modelDefinition.StructureSchema;
                 structuresFileWriter.ReferenceDate =
-                    (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+                    modelDefinition.GetReferenceDateAsDateTime();
             }
 
             return fileWriter;
@@ -1087,7 +1087,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             definition.GetModelProperty(KnownProperties.RefDate).Value =
-                DataTypeValueParser.ParseFMDateTime(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
+                DataTypeValueParser.ParseFMDateOnly(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
 
             definition.SetGuiTimePropertiesFromMduProperties();
 
@@ -1374,7 +1374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var fileReader = new StructuresFile
                 {
                     StructureSchema = modelDefinition.StructureSchema,
-                    ReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+                    ReferenceDate = modelDefinition.GetReferenceDateAsDateTime()
                 };
                 var featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
                 var referencesToNonExistentFilesExist = false;

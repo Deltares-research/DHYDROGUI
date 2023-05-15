@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D = null, IEnumerable<Model1DLateralSourceData> lateralSourcesData = null, ICollection<GroupableFeature2DPolygon> roofAreas = null)
         {
-            var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var refDate = modelDefinition.GetReferenceDateAsDateTime();
 
             Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, boundaryConditions1D, lateralSourcesData, roofAreas?? new GroupableFeature2DPolygon[0] , modelDefinition.Embankments, modelDefinition.FmMeteoFields,
                 modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile), refDate);

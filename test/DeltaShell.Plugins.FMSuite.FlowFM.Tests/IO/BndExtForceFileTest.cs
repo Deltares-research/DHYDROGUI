@@ -1214,7 +1214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 
                 var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
                 modelDefinition.FmMeteoFields.Add(meteoField);
-                modelDefinition.SetModelProperty(KnownProperties.RefDate, referenceDate);
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, DateOnly.FromDateTime(referenceDate));
                 
                 var coordinates = new[]
                 {
@@ -1294,7 +1294,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 
                 var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
                 modelDefinition.FmMeteoFields.Add(meteoField);
-                modelDefinition.SetModelProperty(KnownProperties.RefDate, referenceDate);
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, DateOnly.FromDateTime(referenceDate));
                 
                 var bndExtForceFile = new BndExtForceFile();
                 

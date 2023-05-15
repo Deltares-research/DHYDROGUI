@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// </summary>
         private void SetDefaultReferenceDate()
         {
-            GetModelProperty(KnownProperties.RefDate).Value = DateTime.Today;
+            GetModelProperty(KnownProperties.RefDate).Value = DateOnly.FromDateTime(DateTime.Today);
         }
 
 
@@ -711,8 +711,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 }
             }
             var ticks = (long)(TimeSpan.TicksPerSecond * relativeTime * timeUnitInSeconds);
-            var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
-            return referenceDate.AddTicks(ticks);
+            return GetReferenceDateAsDateTime().AddTicks(ticks);
         }
 
         private double GetRelativeDateTime(DateTime dateTime, bool useTUnit)
@@ -735,8 +734,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     numSecondsInTimeStep = 86400;
                 }
             }
-            var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
-            double ticks = dateTime.Ticks - referenceDate.Ticks;
+
+            double ticks = dateTime.Ticks - GetReferenceDateAsDateTime().Ticks;
             return ticks / TimeSpan.TicksPerSecond / numSecondsInTimeStep;
         }
 
@@ -1028,6 +1027,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 Resources.WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_, messageKey, key);
 
             return String.Empty;
+        }
+
+        public DateTime GetReferenceDateAsDateTime()
+        {
+            object value = GetModelProperty(KnownProperties.RefDate).Value;
+            var refDate = (DateOnly)value;
+            return refDate.ToDateTime(TimeOnly.MinValue);
+        }
+
+        public void SetReferenceDateAsDateTime(DateTime value)
+        {
+            DateOnly refDate = DateOnly.FromDateTime(value);
+            if (refDate.ToDateTime(TimeOnly.MinValue) != value)
+            {
+                throw new ArgumentException($"Unexpected non-zero time in ReferenceTime value {value}");
+            }
+            GetModelProperty(KnownProperties.RefDate).Value = refDate;
+
         }
     }
 }

@@ -24,6 +24,7 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NSubstitute" Version="5.0.0" />
     <PackageVersion Include="NUnit" Version="3.13.3" />
+    <PackageVersion Include="Portable.System.DateTimeOnly" Version="7.0.0" />
     <PackageVersion Include="PostSharp" Version="2023.0.3" />
     <PackageVersion Include="PostSharp.Redist" Version="2023.0.3" />
     <PackageVersion Include="ProtoBufRemote" Version="1.1.31" />

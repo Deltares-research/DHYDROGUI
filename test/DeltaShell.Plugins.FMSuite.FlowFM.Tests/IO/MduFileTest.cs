@@ -882,7 +882,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 modelDefinition.SetModelProperty(GuiProperties.WriteFouFile, true);
 
                 // Set model time properties
-                modelDefinition.SetModelProperty(KnownProperties.RefDate, startTime);
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, DateOnly.FromDateTime(startTime));
                 modelDefinition.SetModelProperty(KnownProperties.TStart, 0d);
                 modelDefinition.SetModelProperty(KnownProperties.TStop, (double)2 * nSecondsPerDay);
 
