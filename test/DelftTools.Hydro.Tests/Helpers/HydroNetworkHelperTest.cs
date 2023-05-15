@@ -312,6 +312,46 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.AreEqual(2, route.Locations.Values.Count);
             Assert.AreEqual(1, route.Segments.Values.Count);
         }
+        
+        [Test]
+        public void GivenRoute_WhenOnExecute_ThenRemoveRoute()
+        {
+            // Arrange
+            IHydroNetwork hydroNetwork = CreateTestNetwork();
+            Route route = AddNewRouteToHydroNetwork(hydroNetwork);
+            Assert.That(hydroNetwork.Routes.Contains(route), Is.True);
+
+            // Act
+            HydroNetworkHelper.RemoveRoute(route);
+
+            //Assert
+            Assert.That(hydroNetwork.Routes.Contains(route), Is.False);
+        }
+
+        [Test]
+        public void GivenTwoRoutes_WhenOnExecute_ThenRemoveOneRoute()
+        {
+            // Arrange
+            IHydroNetwork hydroNetwork = CreateTestNetwork();
+            Route route = AddNewRouteToHydroNetwork(hydroNetwork);
+            Route route2 = AddNewRouteToHydroNetwork(hydroNetwork);
+            Assert.That(hydroNetwork.Routes.Contains(route), Is.True);
+            Assert.That(hydroNetwork.Routes.Contains(route2), Is.True);
+
+            // Act
+            HydroNetworkHelper.RemoveRoute(route);
+
+            //Assert
+            Assert.That(hydroNetwork.Routes.Contains(route), Is.False);
+            Assert.That(hydroNetwork.Routes.Contains(route2), Is.True);
+        }
+        
+        private static Route AddNewRouteToHydroNetwork(IHydroNetwork hydroNetwork)
+        {
+            var route = new Route() { Network = hydroNetwork };
+            hydroNetwork.Routes.Add(route);
+            return route;
+        }
 
         /// <summary>
         /// Split the test network in the center.

@@ -101,6 +101,14 @@ namespace DelftTools.Hydro.Helpers
             return route;
         }
 
+        public static void RemoveRoute(Route route)
+        {
+            var hydroNetwork = (IHydroNetwork)route.Network;
+            hydroNetwork.BeginEdit(new DefaultEditAction("Delete feature " + route.Name));
+            hydroNetwork.Routes.Remove(route);
+            hydroNetwork.EndEdit();
+        }
+
         private static int GetAvailableRouteNumber(IHydroNetwork network)
         {
             int lastNr = 0;

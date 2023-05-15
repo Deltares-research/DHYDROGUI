@@ -459,6 +459,12 @@
                                Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\sideview.png"
                                SizeDefinition="Middle,Small,Small"
                                ToolTip="Show Side View" />
+                <fluent:ToggleButton x:Name="ButtonRemoveRoute"
+                                     Click="ButtonRemoveRoute_Click"
+                                     Header="Remove Route"
+                                     Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\DeleteHS.png"
+                                     SizeDefinition="Middle,Small,Small"
+                                     ToolTip="Remove Route" />
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
 

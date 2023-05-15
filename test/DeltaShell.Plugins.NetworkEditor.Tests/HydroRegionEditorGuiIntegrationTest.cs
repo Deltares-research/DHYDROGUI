@@ -181,6 +181,54 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             
             WpfTestHelper.ShowModal(mainWindow);
         }
+        
+        [Test]
+        public void SelectedRouteGetsRemovedWhenRemoveSelectedRouteIsExecuted()
+        {
+            onMainWindowShown = () =>
+            {
+                /* get the coverages combo box from te ribbon */
+                var ribbon = (Fluent.Ribbon)TypeUtils.GetField(mainWindow, "MainWindowRibbon");
+                var tab = ribbon.Tabs.First(t => t.Header.Equals("Map"));
+                var group = tab.Groups.First(g => g.Name.Equals("NetworkCoverage"));
+                var wrapPanel = group.Items.OfType<WrapPanel>().First();
+                var comboBox = wrapPanel.Children.OfType<ComboBox>().First(c => c.Name == "ComboBoxSelectNetworkCoverage");
+                
+                Assert.NotNull(comboBox);
+
+                /* attach event to see how many times the selected item attibute is set */
+                var count = 0;
+                comboBox.SelectionChanged += (s, e) => {  count++; };
+
+                /* check if combobox is still empty! */
+                Assert.IsFalse(comboBox.HasItems);
+
+                /* add simple branch and add a route to the hydroregion */
+                IChannel addedBranch = AddBranch(new[] { new Coordinate(0, 0, 0), new Coordinate(1000, 0, 0) });
+                new AddNewNetworkRouteCommand().Execute();
+                
+                /* check if the route (route_1) is added to the combobox as ONLY one */
+                Assert.AreEqual(1, count);
+                Assert.IsTrue(comboBox.HasItems);
+                Assert.AreEqual(1, comboBox.Items.Count);
+                var routeLayer = comboBox.Items[0] as Layer;
+                Assert.IsNotNull(routeLayer);
+                Assert.AreEqual("route_1", routeLayer.Name);
+
+                /* validate that the just added route is the selected item */
+                var selected = comboBox.SelectedItem as Layer;
+                Assert.IsNotNull(selected);
+                Assert.AreEqual("route_1", selected.Name);
+
+                Assert.That(addedBranch.HydroNetwork.Routes, Is.Not.Empty);
+                var removeCommand = new RemoveSelectedRouteCommand();
+                removeCommand.Gui = gui;
+                removeCommand.Execute();
+                Assert.That(addedBranch.HydroNetwork.Routes, Is.Empty);
+            };
+            
+            WpfTestHelper.ShowModal(mainWindow);
+        }
 
 
         private HydroLink AddLink(Coordinate start, Coordinate end)

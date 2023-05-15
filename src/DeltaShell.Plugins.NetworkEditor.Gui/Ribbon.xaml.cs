@@ -6,11 +6,13 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using Fluent;
 using SharpMap.Layers;
+using MessageBox = System.Windows.MessageBox;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
@@ -52,6 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
         private ICommand addNewRouteCommand = new AddNewNetworkRouteCommand();
         private ICommand showCrossSectionHistoryCommand = new ShowCrossSectionHistoryCommand();
+        private ICommand removeRouteCommand = new RemoveSelectedRouteCommand();
         private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
         private ICommand addNewCatchmentUnpavedCommand = new AddNewCatchmentCommand.AddNewUnpavedCommand();
         private ICommand addNewCatchmentOpenWaterCommand = new AddNewCatchmentCommand.AddNewOpenWaterCommand();
@@ -81,6 +84,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addGullyCommand = new MapToolCommand(HydroRegionEditorMapTool.GullyToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) {LayerType = typeof(AreaLayer)};
+
+        private readonly IRouteSelectionFinder routeSelectionFinder = new RouteSelectionFinder();
 
         public Ribbon()
         {
@@ -115,6 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewObservationPointCommand;
                 yield return addNewRouteCommand;
                 yield return showCrossSectionHistoryCommand;
+                yield return removeRouteCommand;
                 yield return addNewCatchmentPavedCommand;
                 yield return addNewCatchmentUnpavedCommand;
                 yield return addNewCatchmentOpenWaterCommand;
@@ -189,7 +195,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             
             ButtonAddNewRoute.SetState(addNewRouteCommand, showNetworkTools);
             ButtonShowCrossSectionHistory.SetState(showCrossSectionHistoryCommand);
-
+            
+            ButtonRemoveRoute.IsEnabled = removeRouteCommand.Enabled;
+            ButtonRemoveRoute.SetState(removeRouteCommand, showNetworkTools);
+            
             // catchment tools
             ButtonAddNewCatchmentPaved.SetState(addNewCatchmentPavedCommand, showBasinTools);
             ButtonAddNewCatchmentUnpaved.SetState(addNewCatchmentUnpavedCommand, showBasinTools);
@@ -453,6 +462,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonShowCrossSectionHistory_Click(object sender, RoutedEventArgs e)
         {
             showCrossSectionHistoryCommand.Execute();
+            ValidateItems();
+        }
+
+        private void ButtonRemoveRoute_Click(object sender, RoutedEventArgs e)
+        {
+            string message = string.Format(Properties.Resources.Ribbon_RemoveRoute_Are_you_sure_you_want_to_delete_the_following_item___0_,
+                                           routeSelectionFinder.GetSelectedRoute(NetworkEditorGuiPlugin.Instance.Gui));
+  
+            if(MessageBox.Show(message, Properties.Resources.Ribbon_RemoveRoute_Confirm,
+                               MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                removeRouteCommand.Execute();
+            }
             ValidateItems();
         }
 

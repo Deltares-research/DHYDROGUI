@@ -626,4 +626,10 @@
   <data name="HydroRegionEditorMapTool_Do_you_want_to_continue" xml:space="preserve">
     <value>Do you want to continue?</value>
   </data>
+  <data name="Ribbon_RemoveRoute_Are_you_sure_you_want_to_delete_the_following_item___0_" xml:space="preserve">
+    <value>Are you sure you want to delete the following item: {0}</value>
+  </data>
+  <data name="Ribbon_RemoveRoute_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
 </root>

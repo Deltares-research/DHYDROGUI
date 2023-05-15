@@ -1,9 +1,8 @@
 ﻿using System.Drawing;
 using DelftTools.Controls;
-using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
-using DelftTools.Utils.Editing;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
@@ -13,7 +12,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
         private static readonly Image RouteImage = Properties.Resources.route;
 
         public NetworkRouteTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin) { }
+            : base(guiPlugin)
+        {
+        }
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, Route nodeData)
         {
@@ -52,11 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         protected override bool RemoveNodeData(object parentNodeData, Route route)
         {
-            var hydroNetwork = ((IHydroNetwork) route.Network);
-            hydroNetwork.BeginEdit(new DefaultEditAction("Delete feature " + route.Name));
-            hydroNetwork.Routes.Remove(route);
-            hydroNetwork.EndEdit();
-
+            HydroNetworkHelper.RemoveRoute(route);
             return true;
         }
     }
