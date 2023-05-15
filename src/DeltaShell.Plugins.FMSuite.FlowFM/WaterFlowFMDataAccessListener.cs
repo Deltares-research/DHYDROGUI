@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Spatial;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
@@ -45,6 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (ProjectRepository.IsLegacyProject(ProjectRepository.Path))
                 {
                     model.ClearOutput();
+                    Log.WarnFormat(Resources.WaterFlowFMDataAccessListener_OnPostLoad_Model_output_is_removed_because_project_has_been_migrated_from_older_project_version);
                 }
 
                 // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
