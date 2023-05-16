@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Controls.Swf.Charting;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
@@ -125,9 +126,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             VectorStyle normalStyle = CulvertStyling.NormalInletStyle;
             VectorStyle selectedStyle = CulvertStyling.SelectedInletStyle;
 
-            var level = bridge.GroundLayerThickness + (bridge.BridgeType == BridgeType.YzProfile ? bridge.YZCrossSectionDefinition.LowestPoint : bridge.EffectiveCrossSectionDefinition.LowestPoint);
+            ICrossSectionDefinition crossSectionDefinition = bridge.GetShiftedCrossSectionDefinition();
 
-            var worldWidth = (bridge.BridgeType == BridgeType.YzProfile ? bridge.YZCrossSectionDefinition.Width: bridge.EffectiveCrossSectionDefinition.Width);
+            var level = bridge.GroundLayerThickness + crossSectionDefinition.LowestPoint;
+            var worldWidth = crossSectionDefinition.Width;
             var x = bridge.OffsetY;
 
             var feature = new FixedRectangleShapeFeature(Chart, x, level, worldWidth, 3, true, false)
@@ -148,14 +150,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             if (bridge.IsPillar)
                 return null;
 
-            IList<Coordinate> yzValues = bridge.BridgeType == BridgeType.YzProfile
-                ? bridge.YZCrossSectionDefinition.FlowProfile.ToList()
-                : bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
+            ICrossSectionDefinition crossSectionDefinition = bridge.GetShiftedCrossSectionDefinition();
+            IList<Coordinate> yzValues = crossSectionDefinition.FlowProfile.ToList();
 
             if (yzValues.Count <= 2)
                 return null;
 
-            var centerY = bridge.OffsetY + (bridge.BridgeType == BridgeType.YzProfile ? bridge.YZCrossSectionDefinition.Width : bridge.EffectiveCrossSectionDefinition.Width) / 2.0;
+            var centerY = bridge.OffsetY + crossSectionDefinition.Width / 2.0;
             var maxY = yzValues.Select(x => x.X).Max() + GetWorldWidth(SurfaceOverhang);
             var minY = yzValues.Select(x => x.X).Min() - GetWorldWidth(SurfaceOverhang);
             var minZ = yzValues.Select(x => x.Y).Max();
@@ -179,16 +180,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             if (bridge.IsPillar)
                 return null;
 
-            IList<Coordinate> coordinates = bridge.BridgeType == BridgeType.YzProfile
-                ? bridge.YZCrossSectionDefinition.FlowProfile.ToList()
-                : bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
+            ICrossSectionDefinition crossSectionDefinition = bridge.GetShiftedCrossSectionDefinition();
+            IList<Coordinate> coordinates = crossSectionDefinition.FlowProfile.ToList();
 
             if (coordinates.Count <= 2)
                 return null;
+            
             double min = coordinates.Min(c => c.X);
             // calculation of offset in profile is done in structure view; bridge.OffsetY is the left most absolute value
-            var drawCoordinates =
-                coordinates.Select(c => new Coordinate(c.X + bridge.OffsetY - min, c.Y)).ToList();
+            var drawCoordinates = coordinates.Select(c => new Coordinate(c.X + bridge.OffsetY - min, c.Y)).ToList();
             //add the first as the last so we get a closed ring
             drawCoordinates.Add(drawCoordinates.First());
 

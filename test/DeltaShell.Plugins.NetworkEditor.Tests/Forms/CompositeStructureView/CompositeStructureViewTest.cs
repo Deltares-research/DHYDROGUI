@@ -403,7 +403,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             weir.CrestLevel = double.NaN;
             pump.StartDelivery = double.NaN;
-            bridge.EffectiveCrossSectionDefinition.ZWDataTable.Select(v => v.Z = double.NaN);
+            bridge.TabulatedCrossSectionDefinition.ZWDataTable.Select(v => v.Z = double.NaN);
             bridge.YZCrossSectionDefinition.YZDataTable.Select(v => v.Z = double.NaN);
             culvert.CrossSectionDefinitionAtInletAbsolute.ZWDataTable.Select(v => v.Z = double.NaN);
             crossSection.Definition.GetProfile().ForEach(c => c.Y = double.NaN);

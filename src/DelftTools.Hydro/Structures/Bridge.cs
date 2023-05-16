@@ -163,19 +163,6 @@ namespace DelftTools.Hydro.Structures
                 }
             }
         }
-        /// <summary>
-        /// Effective crosssection of the bridge. If rectangle a single section tabulated is returned.
-        /// </summary>
-        /// <returns>Crosssection as used for ModelAPI and in views</returns>
-        public virtual CrossSectionDefinitionZW EffectiveCrossSectionDefinition
-        {
-            get
-            {
-                if (BridgeType == BridgeType.Tabulated)
-                    return TabulatedCrossSectionDefinition;
-                return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromRectangle(Width, Height).AddLevel(Shift);
-            }
-        }
 
         [DynamicReadOnly]
         [DisplayName("Inlet loss coefficient")]

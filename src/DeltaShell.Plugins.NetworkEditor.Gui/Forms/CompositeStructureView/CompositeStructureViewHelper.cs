@@ -77,14 +77,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private static void UpdateMinMaxForBridge(IBridge bridge, ref double min, ref double max)
         {
-            var zValues = bridge.BridgeType == BridgeType.YzProfile
-                ? bridge.YZCrossSectionDefinition.YZDataTable.Select(h => h.Z).Where(v => !double.IsNaN(v)).ToList()
-                : bridge.EffectiveCrossSectionDefinition.ZWDataTable.Select(h => h.Z).Where(v => !double.IsNaN(v)).ToList();
-            if (zValues.Any())
-            {
-                min = double.IsNaN(min) ? zValues.Min() : Math.Min(min, zValues.Min());
-                max = double.IsNaN(max) ? zValues.Max() : Math.Max(max, zValues.Max());
-            }
+            ICrossSectionDefinition crossSectionDefinition = bridge.GetShiftedCrossSectionDefinition();
+
+            var lowestPoint = crossSectionDefinition.LowestPoint;
+            var highestPoint = crossSectionDefinition.HighestPoint;
+
+            min = double.IsNaN(min) ? lowestPoint : Math.Min(min, lowestPoint);
+            max = double.IsNaN(max) ? highestPoint : Math.Max(max, highestPoint);
         }
 
         private static void UpdateMinMaxForPump(IPump pump, ref double min, ref double max)

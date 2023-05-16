@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         public BridgeView()
         {
             InitializeComponent();
-
+            bridgeTypeCombobox.DataSource = Enum.GetValues(typeof(BridgeType));
             tableViewTabulatedData.PasteController = new TableViewArgumentBasedPasteController(tableViewTabulatedData, new List<int> { 0 });
             tableViewTabulatedData.InputValidator += InputValidator;
         }

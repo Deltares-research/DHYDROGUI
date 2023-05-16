@@ -8,12 +8,6 @@ namespace DelftTools.Hydro.Structures
         string LongName { get; set; }
 
         /// <summary>
-        /// Crosssection of the bridge. If rectangle a single section tabulated is returned.
-        /// </summary>
-        /// <returns>Crosssection as used for ModelAPI</returns>
-        CrossSectionDefinitionZW EffectiveCrossSectionDefinition { get; }
-
-        /// <summary>
         /// Inlet loss
         /// </summary>
         double InletLossCoefficient { get; set; }

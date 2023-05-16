@@ -4,6 +4,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.ImportExport.Sobek.Builders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 using BridgeType = DelftTools.Hydro.Structures.BridgeType;
 
@@ -61,23 +62,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var builder = new BridgeBuilder(crossSectionDefinitions);
             
 
-            var bridges = builder.GetBranchStructures(structureDefinition);
-            Assert.AreEqual(1, bridges.Count());
+            var bridges = builder.GetBranchStructures(structureDefinition).ToList();
+            Assert.AreEqual(1, bridges.Count);
 
             Bridge actualBridge = bridges.FirstOrDefault();
+            
+            Assert.IsNotNull(actualBridge);
+            Assert.AreEqual(BridgeType.Tabulated, actualBridge.BridgeType);
+            Assert.AreEqual(3.0, actualBridge.Height, 1.0e-6);
+            Assert.AreEqual(50.0, actualBridge.Width, 1.0e-6);
+            Assert.AreEqual(0.0, actualBridge.Shift, 1.0e-6);
+            
+            ICrossSectionDefinition crossSectionDefinition = actualBridge.GetShiftedCrossSectionDefinition();
+            List<Coordinate> flowProfile = crossSectionDefinition.FlowProfile.ToList();
 
-            Assert.AreEqual(CrossSectionType.ZW, actualBridge.EffectiveCrossSectionDefinition.CrossSectionType);
-            Assert.AreEqual(BridgeType.Tabulated,actualBridge.BridgeType);
-
-            int count = actualBridge.EffectiveCrossSectionDefinition.ZWDataTable.Count;
-
-            Assert.AreEqual(2, count);
-            Assert.AreEqual(1.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[0].Z, 1.0e-6);
-            Assert.AreEqual(21.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[0].Width, 1.0e-6);
-            Assert.AreEqual(10.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[0].StorageWidth, 1.0e-6);
-            Assert.AreEqual(0.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[1].Z, 1.0e-6);
-            Assert.AreEqual(20.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[1].Width, 1.0e-6);
-            Assert.AreEqual(10.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[1].StorageWidth, 1.0e-6);
+            Assert.AreEqual(CrossSectionType.ZW, crossSectionDefinition.CrossSectionType);
+            Assert.AreEqual(21.0, crossSectionDefinition.Width);
+            Assert.AreEqual(4, flowProfile.Count);
+            Assert.AreEqual(new Coordinate(-5.5, 1.0), flowProfile[0]);
+            Assert.AreEqual(new Coordinate(-5.0, 0.0), flowProfile[1]);
+            Assert.AreEqual(new Coordinate(5.0, 0.0), flowProfile[2]);
+            Assert.AreEqual(new Coordinate(5.5, 1.0), flowProfile[3]);
         }
 
         [Test]
@@ -106,32 +111,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var builder = new BridgeBuilder(crossSectionDefinitions);
             
 
-            var bridges = builder.GetBranchStructures(structureDefinition);
-            Assert.AreEqual(1, bridges.Count());
-
+            var bridges = builder.GetBranchStructures(structureDefinition).ToList();
+            Assert.AreEqual(1, bridges.Count);
+            
             Bridge actualBridge = bridges.FirstOrDefault();
-
-            //this is actually always tabulated
-            Assert.AreEqual(CrossSectionType.ZW, actualBridge.EffectiveCrossSectionDefinition.CrossSectionType);
-
+            
+            Assert.IsNotNull(actualBridge);
             Assert.AreEqual(BridgeType.Rectangle, actualBridge.BridgeType);
-
-            int count = actualBridge.EffectiveCrossSectionDefinition.ZWDataTable.Count;
-
-            Assert.AreEqual(2, count);
             Assert.AreEqual(5.0, actualBridge.Height, 1.0e-6);
             Assert.AreEqual(21.0, actualBridge.Width, 1.0e-6);
             Assert.AreEqual(0.0, actualBridge.Shift, 1.0e-6);
 
-            //check the bridge geometry
-            Assert.AreEqual(2, count);
-            Assert.AreEqual(5.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[0].Z, 1.0e-6);
-            Assert.AreEqual(21.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[0].Width, 1.0e-6);
-            Assert.AreEqual(0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[0].StorageWidth, 1.0e-6);
-            Assert.AreEqual(0.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[1].Z, 1.0e-6);
-            Assert.AreEqual(21.0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[1].Width, 1.0e-6);
-            Assert.AreEqual(0, actualBridge.EffectiveCrossSectionDefinition.ZWDataTable[1].StorageWidth, 1.0e-6);
-
+            ICrossSectionDefinition crossSectionDefinition = actualBridge.GetShiftedCrossSectionDefinition();
+            List<Coordinate> flowProfile = crossSectionDefinition.FlowProfile.ToList();
+            
+            Assert.AreEqual(CrossSectionType.Standard, crossSectionDefinition.CrossSectionType);
+            Assert.AreEqual(21.0, crossSectionDefinition.Width);
+            Assert.AreEqual(4, flowProfile.Count);
+            Assert.AreEqual(new Coordinate(-10.5, 5.0), flowProfile[0]);
+            Assert.AreEqual(new Coordinate(-10.5, 0.0), flowProfile[1]);
+            Assert.AreEqual(new Coordinate(10.5, 0.0), flowProfile[2]);
+            Assert.AreEqual(new Coordinate(10.5, 5.0), flowProfile[3]);
         }
 
         [Test]
@@ -165,21 +165,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             crossSectionDefinitions["0"] = sobekCrossSectionDefinition;
             var builder = new BridgeBuilder(crossSectionDefinitions);
 
-            var bridges = builder.GetBranchStructures(structureDefinition);
-            Assert.AreEqual(1, bridges.Count());
+            var bridges = builder.GetBranchStructures(structureDefinition).ToList();
+            Assert.AreEqual(1, bridges.Count);
 
-            Bridge bridge = bridges.First();
+            Bridge actualBridge = bridges.FirstOrDefault();
 
-            Assert.IsNotNull(bridge);
-            Assert.AreEqual(BridgeType.Rectangle, bridge.BridgeType);
-
-            //check the bridge geometry (+ -1 of BottemLevel)
-            Assert.AreEqual(4.0, bridge.EffectiveCrossSectionDefinition.ZWDataTable[0].Z, 1.0e-6);
-            Assert.AreEqual(21.0, bridge.EffectiveCrossSectionDefinition.ZWDataTable[0].Width, 1.0e-6);
-            Assert.AreEqual(0, bridge.EffectiveCrossSectionDefinition.ZWDataTable[0].StorageWidth, 1.0e-6);
-            Assert.AreEqual(-1.0, bridge.EffectiveCrossSectionDefinition.ZWDataTable[1].Z, 1.0e-6);
-            Assert.AreEqual(21.0, bridge.EffectiveCrossSectionDefinition.ZWDataTable[1].Width, 1.0e-6);
-            Assert.AreEqual(0, bridge.EffectiveCrossSectionDefinition.ZWDataTable[1].StorageWidth, 1.0e-6);
+            Assert.IsNotNull(actualBridge);
+            Assert.AreEqual(BridgeType.Rectangle, actualBridge.BridgeType);
+            Assert.AreEqual(5.0, actualBridge.Height, 1.0e-6);
+            Assert.AreEqual(21.0, actualBridge.Width, 1.0e-6);
+            Assert.AreEqual(-1.0, actualBridge.Shift, 1.0e-6);
+            
+            ICrossSectionDefinition crossSectionDefinition = actualBridge.GetShiftedCrossSectionDefinition();
+            List<Coordinate> flowProfile = crossSectionDefinition.FlowProfile.ToList();
+            
+            Assert.AreEqual(CrossSectionType.Standard, crossSectionDefinition.CrossSectionType);
+            Assert.AreEqual(21.0, crossSectionDefinition.Width);
+            Assert.AreEqual(4, flowProfile.Count);
+            Assert.AreEqual(new Coordinate(-10.5, 4.0), flowProfile[0]);
+            Assert.AreEqual(new Coordinate(-10.5, -1.0), flowProfile[1]);
+            Assert.AreEqual(new Coordinate(10.5, -1.0), flowProfile[2]);
+            Assert.AreEqual(new Coordinate(10.5, 4.0), flowProfile[3]);
         }
 
         [Test]
@@ -204,7 +210,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var crossSectionDefinitions = new Dictionary<string, SobekCrossSectionDefinition>();
             var builder = new BridgeBuilder(crossSectionDefinitions);
 
-            var bridges = builder.GetBranchStructures(structureDefinition);
+            var bridges = builder.GetBranchStructures(structureDefinition).ToList();
             Assert.AreEqual(1, bridges.Count());
 
             Bridge pillarBridge = bridges.FirstOrDefault();

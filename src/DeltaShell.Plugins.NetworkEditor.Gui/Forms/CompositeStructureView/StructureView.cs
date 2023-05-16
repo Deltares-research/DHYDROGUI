@@ -576,9 +576,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         
         private static Envelope GetBoundingRectBridge(IBridge bridge)
         {
-            IList<Coordinate> yzValues = bridge.BridgeType == BridgeType.YzProfile 
-            ? bridge.YZCrossSectionDefinition.FlowProfile.ToList()
-            : bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
+            ICrossSectionDefinition crossSectionDefinition = bridge.GetShiftedCrossSectionDefinition();
+            IList<Coordinate> yzValues = crossSectionDefinition.FlowProfile.ToList();
+
             return GetEnvelope(yzValues, bridge.Shift);
         }
 

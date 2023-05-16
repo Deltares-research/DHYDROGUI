@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Controls.Swf.Charting;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
@@ -117,7 +118,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             VectorStyle normalStyle = CulvertStyling.NormalInletStyle;
             VectorStyle selectedStyle = CulvertStyling.SelectedInletStyle;
 
-            var level = Structure.GroundLayerThickness + (Structure.BridgeType == BridgeType.YzProfile ? Structure.YZCrossSectionDefinition.LowestPoint : Structure.EffectiveCrossSectionDefinition.LowestPoint);
+            ICrossSectionDefinition crossSectionDefinition = Structure.GetShiftedCrossSectionDefinition();
+
+            var level = Structure.GroundLayerThickness + crossSectionDefinition.LowestPoint;
             var x = OffsetInSideView - Structure.Length / 2;
             var width = Structure.Length;
 
@@ -143,9 +146,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             if (bridge.IsPillar)
                 return null;
 
-            IList<Coordinate> yzValues = bridge.BridgeType == BridgeType.YzProfile
-                ? bridge.YZCrossSectionDefinition.FlowProfile.ToList()
-                : bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
+            ICrossSectionDefinition crossSectionDefinition = Structure.GetShiftedCrossSectionDefinition();
+            IList<Coordinate> yzValues = crossSectionDefinition.FlowProfile.ToList();
 
             if (yzValues.Count <= 2)
                 return null;
@@ -173,9 +175,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             if (bridge.IsPillar)
                 return null;
 
-            IList<Coordinate> yzValues = bridge.BridgeType == BridgeType.YzProfile
-                ? bridge.YZCrossSectionDefinition.FlowProfile.ToList()
-                : bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
+            ICrossSectionDefinition crossSectionDefinition = Structure.GetShiftedCrossSectionDefinition();
+            IList<Coordinate> yzValues = crossSectionDefinition.FlowProfile.ToList();
 
             if (yzValues.Count <= 2)
                 return null;
