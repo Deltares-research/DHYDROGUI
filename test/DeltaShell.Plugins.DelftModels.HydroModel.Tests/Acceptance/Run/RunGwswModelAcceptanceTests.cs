@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         {
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.UseVolumeTables, false);
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.UseVolumeTablesFile, false);
-            fmModel.ModelDefinition.SetModelProperty(KnownProperties.RefDate, "20200101000000");
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.RefDate, "20200101");
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.HisInterval, "1200"); // 20 minutes output step
             fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, "1200"); // 20 minutes output step
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.MapInterval, "1200"); // 20 minutes output step
