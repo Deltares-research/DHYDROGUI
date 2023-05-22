@@ -44,6 +44,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Views;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -178,7 +179,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 AdditionalDataCheck = t => t.Id?.Equals(FlowFMApplicationPlugin.FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID, StringComparison.CurrentCultureIgnoreCase) ?? false
             };
-
+            yield return new ViewInfo<ProjectTemplate, MduTemplateView>
+            {
+                AdditionalDataCheck = t => t.Id == FlowFMApplicationPlugin.FM_MODEL_MDU_IMPORT_PROJECT_TEMPLATE_ID
+            };
             yield return GetLateralSourceViewInfo();
 
             yield return new ViewInfo<WaterFlowFMModel, SettingsView>

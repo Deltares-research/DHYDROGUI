@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
                 case ModelInfo modelInfo:
                     return modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName;
                 case ProjectTemplate projectTemplate:
-                    return projectTemplate.Id == "FMModel";
+                    return IsValidFMProjectTemplate(projectTemplate);
                 case FlowFMApplicationPlugin _:
                     return true;
                 case FlowFMGuiPlugin _:
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
         public DrawingGroup CreateDrawingGroupFor(object item)
         {
             if ((item is ModelInfo modelInfo && modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName) ||
-                (item is ProjectTemplate projectTemplate && projectTemplate.Id == "FMModel") ||
+                item is ProjectTemplate projectTemplate && IsValidFMProjectTemplate(projectTemplate)||
                 item is WaterFlowFMFileImporter ||
                 item is FlowFMApplicationPlugin ||
                 item is FlowFMGuiPlugin ||
@@ -47,5 +47,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
             
             return null;
         }
+        private static bool IsValidFMProjectTemplate(ProjectTemplate projectTemplate)
+        {
+            return projectTemplate.Id == FlowFMApplicationPlugin.FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID || projectTemplate.Id == FlowFMApplicationPlugin.FM_MODEL_MDU_IMPORT_PROJECT_TEMPLATE_ID;
+        }
+
     }
 }

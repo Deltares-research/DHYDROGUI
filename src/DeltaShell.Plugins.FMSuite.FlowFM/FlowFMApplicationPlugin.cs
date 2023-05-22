@@ -8,6 +8,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common;
@@ -36,6 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public const string FlowFlexibleMeshModelModelInfoName = "Flow Flexible Mesh Model";
         public const string FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID = "FMModel";
+        public const string FM_MODEL_MDU_IMPORT_PROJECT_TEMPLATE_ID = "FMModelMDUImport";
 
         private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
         internal static string PluginVersion { get; } = typeof(FlowFMApplicationPlugin).Assembly.GetName().Version.ToString();
@@ -118,6 +120,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     p.RootFolder.Items.Add(model);
 
                     return model;
+                }
+            };
+            yield return new ProjectTemplate
+            {
+                Id = FM_MODEL_MDU_IMPORT_PROJECT_TEMPLATE_ID,
+                Category = ProductCategories.ImportTemplateCategory,
+                Description = Properties.Resources.FlowFMApplicationPlugin_ProjectTemplates_Import_FM_mdu_as_model,
+                Name = Properties.Resources.FlowFMApplicationPlugin_ProjectTemplates_DFlowFM_mdu_import,
+                ExecuteTemplateOpenView = (project, o) =>
+                {
+                    if (!(o is string path) || !File.Exists(path))
+                    {
+                        return null;
+                    }
+
+                    var importer = new WaterFlowFMFileImporter(() => Application.WorkDirectory);
+
+                    var fileImportActivity = new FileImportActivity(importer, project)
+                    {
+                        Files = new[]
+                        {
+                            path
+                        }
+                    };
+
+                    fileImportActivity.OnImportFinished += (activity, importedObject, fileImporter) =>
+                    {
+                        project.RootFolder.Add(importedObject);
+                    };
+
+                    Application.ActivityRunner.Enqueue(fileImportActivity);
+                    return fileImportActivity;
                 }
             };
         }

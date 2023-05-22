@@ -76,5 +76,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(modelSettings.ModelName,model.Name);
             Assert.AreEqual(projectName, project.Name);
         }
+
+        [TestCase(FlowFMApplicationPlugin.FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID)]
+        [TestCase(FlowFMApplicationPlugin.FM_MODEL_MDU_IMPORT_PROJECT_TEMPLATE_ID)]
+        public void FMAppProjectTemplate_Expected(string projectTemplateName)
+        {
+            // Arrange
+            applicationPlugin = new FlowFMApplicationPlugin();
+            
+            // Act
+            IEnumerable<ProjectTemplate> projectTemplates = applicationPlugin.ProjectTemplates();
+
+            // Assert
+            Assert.That(projectTemplates, Has.One.With.Property(nameof(ProjectTemplate.Id)).EqualTo(projectTemplateName));
+        }
+
     }
 }

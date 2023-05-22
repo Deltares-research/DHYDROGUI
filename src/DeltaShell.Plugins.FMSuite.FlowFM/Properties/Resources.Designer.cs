@@ -348,6 +348,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DFlowFM mdu import.
+        /// </summary>
+        public static string FlowFMApplicationPlugin_ProjectTemplates_DFlowFM_mdu_import {
+            get {
+                return ResourceManager.GetString("FlowFMApplicationPlugin_ProjectTemplates_DFlowFM_mdu_import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import FM mdu as model.
+        /// </summary>
+        public static string FlowFMApplicationPlugin_ProjectTemplates_Import_FM_mdu_as_model {
+            get {
+                return ResourceManager.GetString("FlowFMApplicationPlugin_ProjectTemplates_Import_FM_mdu_as_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Will not import three dimensional time dependent variable ({0}), because the map file version does not support it..
         /// </summary>
         public static string FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out {
