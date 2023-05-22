@@ -276,15 +276,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
              * but if this is not the case, the side view will be more realistic. 
              */
 
-            double[] structureChainages = GetActiveStructureChainagesFromRoute();
+            double[] structureChainages = GetOrderedActiveStructureChainagesFromRoute();
 
             SideViewWaterLevelFunctionUpdater.UpdateFunctionWithExtraDataPointsForStructures(function, 
                                                                                              structureChainages);
         }
 
-        private double[] GetActiveStructureChainagesFromRoute()
+        private double[] GetOrderedActiveStructureChainagesFromRoute()
         {
-            return activeStructures.Select(structure => RouteHelper.GetRouteChainage(route, structure)).ToArray();
+            return activeStructures.Select(structure => RouteHelper.GetRouteChainage(route, structure)).OrderBy(c => c).ToArray();
         }
         
         private static IEnumerable<double> GetYValueForLocations(IEnumerable<LocationInRoute> locationsInRoute, 
