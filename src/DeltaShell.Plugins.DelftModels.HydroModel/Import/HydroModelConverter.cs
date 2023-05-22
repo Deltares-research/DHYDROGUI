@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -39,13 +40,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <param name="dimrObject">Parsed <see cref="dimrXML"/> object</param>
         /// <param name="path">Path to dimr.xml (used for finding sub-model folders)</param>
         /// <param name="fileImporters">List of file importers for importing sub-models</param>
+        /// <param name="reportProgress">String to feedback to importer what importers are working on.</param>
         /// <returns>Converted <see cref="HydroModel"/></returns>
         /// <exception cref="ArgumentException">
         /// When
         /// <param name="dimrObject"/>
         /// is null
         /// </exception>
-        public HydroModel Convert(dimrXML dimrObject, string path, IList<IDimrModelFileImporter> fileImporters)
+        public HydroModel Convert(dimrXML dimrObject, string path, IList<IDimrModelFileImporter> fileImporters, Action<string> reportProgress = null)
         {
             if (dimrObject == null)
             {
@@ -57,9 +59,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
             using (hydroModel.InEditMode("Importing full Dimr model"))
             {
+                reportProgress?.Invoke(Resources.HydroModelConverter_Convert_importing_on_hydromodel);
                 hydroModel.DoWithPropertySet(nameof(hydroModel.SuspendClearOutputOnInputChange), true, () =>
                 {
-                    AddModels(hydroModel, fileImporters, dimrObject, rootFolder);
+                    AddModels(hydroModel, fileImporters, dimrObject, rootFolder, reportProgress);
 
                     if (dimrObject.coupler == null)
                     {
@@ -74,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return hydroModel;
         }
 
-        private void AddModels(HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
+        private void AddModels(HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder, Action<string> progressChanged = null)
         {
             foreach (dimrComponentXML component in dimrObject.component)
             {
@@ -94,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     continue;
                 }
 
-                importer.ProgressChanged = (name, step, steps) => {};
+                importer.ProgressChanged = (name, step, steps) => { progressChanged?.Invoke("importing for "+importer.Name+Environment.NewLine+name);};
 
                 foreach (dimrComponentXML component in componentGroup)
                 {

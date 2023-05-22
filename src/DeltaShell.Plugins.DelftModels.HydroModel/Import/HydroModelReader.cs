@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -24,8 +27,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// </summary>
         /// <param name="path">Path to the Dimr.xml</param>
         /// <param name="fileImporters">File importers for importing sub-models</param>
+        /// <param name="reportProgress">String to feedback to importer what importers are working on.</param>
         /// <returns>Read <see cref="HydroModel"/></returns>
-        public static HydroModel Read(string path, IList<IDimrModelFileImporter> fileImporters)
+        public static HydroModel Read(string path, IList<IDimrModelFileImporter> fileImporters, Action<string> reportProgress = null)
         {
             var logHandler = new LogHandler("import of the Hydro Model");
 
@@ -35,14 +39,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
 
             var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+            reportProgress?.Invoke(Resources.HydroModelReader_Read_Parsing_Dimr_xml_file);
             var dataObject = delftConfigXmlParser.Read<dimrXML>(path);
 
             var hydroModelConverter = new HydroModelConverter(logHandler);
-            HydroModel hydroModel = hydroModelConverter.Convert(dataObject, path, fileImporters);
+            HydroModel hydroModel = hydroModelConverter.Convert(dataObject, path, fileImporters, reportProgress);
             var allActivitiesRecursive = hydroModel.GetAllActivitiesRecursive<IHydroModel>().OfType<IHasCoordinateSystem>();
             var hasCoordinateSystem = allActivitiesRecursive.FirstOrDefault(a => a.CoordinateSystem != null);
             if (hasCoordinateSystem != null)
+            {
+                reportProgress?.Invoke(Resources.HydroModelReader_Read_Set_hydromodel_coordinate_system);
                 hydroModel.CoordinateSystem = hasCoordinateSystem.CoordinateSystem;
+            }
             logHandler.LogReport();
 
             return hydroModel;

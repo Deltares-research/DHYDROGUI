@@ -346,7 +346,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             const string path = "somePath";
 
             var readFunc =
-                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+                MockRepository.GenerateStrictMock<DHydroConfigXmlImporter.ReadDimrModelFunction>();
             readFunc.Expect(f => f.Invoke(null, null))
                     .IgnoreArguments()
                     .Throw((Exception) Activator.CreateInstance(exceptionType))
@@ -376,7 +376,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             const string errorMsg = "Uncaught Exception";
 
             var readFunc =
-                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+                MockRepository.GenerateStrictMock<DHydroConfigXmlImporter.ReadDimrModelFunction>();
             readFunc.Expect(f => f.Invoke(null, null))
                     .IgnoreArguments()
                     .Throw(new Exception(errorMsg))
@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             const string path = "somePath";
 
             var readFunc =
-                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+                MockRepository.GenerateStrictMock<DHydroConfigXmlImporter.ReadDimrModelFunction>();
 
             readFunc.Expect(f => f.Invoke(null, null))
                     .IgnoreArguments()
@@ -444,7 +444,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             const string path = "somePath";
 
             var readFunc =
-                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+                MockRepository.GenerateStrictMock<DHydroConfigXmlImporter.ReadDimrModelFunction>();
 
             readFunc.Expect(f => f.Invoke(null, null))
                     .IgnoreArguments()
@@ -487,7 +487,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             const string path = "somePath";
 
             var readFunc =
-                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+                MockRepository.GenerateStrictMock<DHydroConfigXmlImporter.ReadDimrModelFunction>();
 
             readFunc.Expect(f => f.Invoke(null, null))
                     .IgnoreArguments()
@@ -525,7 +525,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             const string path = "somePath";
 
             var readFunc =
-                MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
+                MockRepository.GenerateStrictMock<DHydroConfigXmlImporter.ReadDimrModelFunction>();
 
             readFunc.Expect(f => f.Invoke(null, null))
                     .IgnoreArguments()

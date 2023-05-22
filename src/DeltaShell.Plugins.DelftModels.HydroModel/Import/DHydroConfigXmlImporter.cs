@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
@@ -18,18 +19,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
     {
         private readonly ILog log = LogManager.GetLogger(typeof(DHydroConfigXmlImporter));
 
-        /// <summary> Function responsible for reading the model. </summary>
-        private readonly Func<string, IList<IDimrModelFileImporter>, HydroModel> readFunc;
+        /// <summary> Delegate with function signature responsible for reading the model. </summary>
+        public delegate HydroModel ReadDimrModelFunction(string dimrXmlFileName, IList<IDimrModelFileImporter> dimrModelFileImporters, Action<string> progressChanged = null);
 
+        private readonly ReadDimrModelFunction readDimrFunc;
         private readonly Func<IList<IDimrModelFileImporter>> getDimrModelFileImporters;
 
         private readonly Func<string> storeWorkingDirectoryPathFunc;
+        
+        /// <remarks>Empirical determined by Ralph. In reality it should be the max steps of the models types to be imported combined but it is not in scope.</remarks>
+        private const int totalSteps = 40; 
+        private int step = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DHydroConfigXmlImporter"/> class
         /// with the specified read function and dimrFileImporters.
         /// </summary>
-        /// <param name="readFunc">The read function.</param>
+        /// <param name="readDimrFunc">The read function.</param>
         /// <param name="dimrFileImporters">The DIMR file importers.</param>
         /// <param name="getWorkingDirectoryPathFunc">
         /// Func for retrieving working directory
@@ -38,13 +44,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="getWorkingDirectoryPathFunc"/> is null.
         /// </exception>
-        public DHydroConfigXmlImporter(Func<string, IList<IDimrModelFileImporter>, HydroModel> readFunc,
+        public DHydroConfigXmlImporter(ReadDimrModelFunction readDimrFunc,
                                        Func<IList<IDimrModelFileImporter>> dimrFileImporters, Func<string> getWorkingDirectoryPathFunc)
         {
             Ensure.NotNull(getWorkingDirectoryPathFunc, nameof(getWorkingDirectoryPathFunc));
             storeWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
 
-            this.readFunc = readFunc;
+            this.readDimrFunc = readDimrFunc;
             getDimrModelFileImporters = dimrFileImporters;
         }
 
@@ -135,7 +141,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     folder.Items.Remove(targetModel);
                     folder.Items.Add(importedModel);
                 }
-
+                ProgressChanged?.Invoke(Resources.DHydroConfigXmlImporter_ImportItem_Import_finished, totalSteps, totalSteps);
                 return ShouldCancel ? null : importedModel;
             }
             catch (Exception e) when (e is ArgumentException ||
@@ -161,7 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <returns> The model read from the specified path. </returns>
         private HydroModel Read(string path)
         {
-            return readFunc.Invoke(path, GetDimrModelFileImporters);
+            return readDimrFunc?.Invoke(path, GetDimrModelFileImporters, stepName => ProgressChanged?.Invoke($"Importing Dimr xml {Environment.NewLine}{stepName}", step++, totalSteps));
         }
     }
 }

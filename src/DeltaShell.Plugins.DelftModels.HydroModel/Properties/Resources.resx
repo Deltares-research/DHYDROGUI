@@ -195,4 +195,16 @@
   <data name="Linking_items_in_the_integrated_model_after_loading_the_project" xml:space="preserve">
     <value>Linking items in the integrated model after loading the project</value>
   </data>
+  <data name="DHydroConfigXmlImporter_ImportItem_Import_finished" xml:space="preserve">
+    <value>Import finished</value>
+  </data>
+  <data name="HydroModelConverter_Convert_importing_on_hydromodel" xml:space="preserve">
+    <value>importing on hydromodel</value>
+  </data>
+  <data name="HydroModelReader_Read_Parsing_Dimr_xml_file" xml:space="preserve">
+    <value>Parsing Dimr xml file</value>
+  </data>
+  <data name="HydroModelReader_Read_Set_hydromodel_coordinate_system" xml:space="preserve">
+    <value>Set hydromodel coordinate system</value>
+  </data>
 </root>
