@@ -105,18 +105,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                             break;
                     }
 
-                    ProgressChanged?.Invoke("Import finished", 10, 10);
+                    ProgressChanged?.Invoke(Resources.WaterFlowFMFileImporter_OnImportItem_Import_finished, WaterFlowFMModel.TOTALSTEPS, WaterFlowFMModel.TOTALSTEPS);
                     return ShouldCancel ? null : importedFmModel;
                 }
                 
                 //add / replace the FM Model in the integrated model
                 case ICompositeActivity hydroModel:
                     importedFmModel.MoveModelIntoIntegratedModel(null, hydroModel);
-                    ProgressChanged?.Invoke("Import finished", 10, 10);
+                    ProgressChanged?.Invoke(Resources.WaterFlowFMFileImporter_OnImportItem_Import_finished, WaterFlowFMModel.TOTALSTEPS, WaterFlowFMModel.TOTALSTEPS);
                     return hydroModel;
     
                 default:
-                    ProgressChanged?.Invoke("Import finished", 10, 10);
+                    ProgressChanged?.Invoke(Resources.WaterFlowFMFileImporter_OnImportItem_Import_finished, WaterFlowFMModel.TOTALSTEPS, WaterFlowFMModel.TOTALSTEPS);
                     return ShouldCancel ? null : importedFmModel;
             }
         }

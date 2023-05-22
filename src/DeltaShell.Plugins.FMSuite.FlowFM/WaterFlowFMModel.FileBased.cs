@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -14,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
@@ -73,7 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             MduFilePath = GetMduPathFromDeltaShellPath(path);
             ExportTo(MduFilePath);
-
             filePath = path;
             isOpen = true;
         }
@@ -258,22 +260,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ImportProgressChanged = progressChanged;
 
             LoadStateFromMdu(mduFilePath);
-
-            FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions);
-
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReadFromMdu_Reading_1d2d_features);
+            FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, text => FireImportProgressChanged(text + Environment.NewLine + Resources.WaterFlowFMModel_ReadFromMdu_Reading_1d2d_features));
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReadFromMdu_done_reading_1d2d_features);
             LoadLinks();
 
-            FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReadFromMdu_Reading_spatial_operations);
             IEventedList<IDataItem> modelDataItems = AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating(modelDataItems);
 
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReadFromMdu_Reading_sewer_roughness);
             AddSewerRoughnessIfNecessary();
             LoadOutputStateFromMdu(mduFilePath);
         }
 
-        private static void FireImportProgressChanged(WaterFlowFMModel model, string currentStepName, int currentStep, int totalSteps)
+        [InvokeRequired]
+        private void FireImportProgressChanged(string currentStepName)
         {
-            model.ImportProgressChanged?.Invoke(currentStepName, currentStep, totalSteps);
+            ImportProgressChanged?.Invoke(currentStepName, currentStep++, TOTALSTEPS);
         }
 
         private void LoadStateFromMdu(string mduFilePath)
@@ -296,17 +300,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 SedimentFile.LoadSediments(SedFilePath, this);
             }
 
-            FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
+            FireImportProgressChanged(Resources.WaterFlowFMModel_LoadStateFromMdu_Reading_grid);
             Grid = UGridFileHelper.ReadUnstructuredGrid(NetFilePath) ?? new UnstructuredGrid();
 
             bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(NetFilePath, BedLevelLocation);
 
-            FireImportProgressChanged(this, "Renaming sub files", 5, TotalImportSteps);
+            FireImportProgressChanged(Resources.WaterFlowFMModel_LoadStateFromMdu_Renaming_sub_files);
             RenameSubFilesIfApplicable();
 
-            FireImportProgressChanged(this, "Initialize input spatial data", 6, TotalImportSteps);
+            FireImportProgressChanged(Resources.WaterFlowFMModel_LoadStateFromMdu_Initialize_input_spatial_data);
             InitializeUnstructuredGridCoverages();
 
+            FireImportProgressChanged(string.Format(Resources.WaterFlowFMModel_LoadStateFromMdu_Reading_Coordinate_system_from__0_, Path.GetFileName(NetFilePath))); 
             CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(NetFilePath);
 
             // read depth layer definition
@@ -315,11 +320,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                        : new DepthLayerDefinition(ModelDefinition.Kmx);
 
             // find all names for tracer definitions
+            FireImportProgressChanged(Resources.WaterFlowFMModel_LoadStateFromMdu_Assemble_tracer_definitions);
             AssembleTracerDefinitions();
 
+            FireImportProgressChanged(Resources.WaterFlowFMModel_LoadStateFromMdu_Assemble_spatially_varying_sediment_properties); 
             AssembleSpatiallyVaryingSedimentProperties();
 
             // now that tracers and sediment fractions are imported we can complete the source and sink function
+            FireImportProgressChanged(Resources.WaterFlowFMModel_LoadStateFromMdu_Populate_source_and_sinks);
             SourcesAndSinks.ForEach(sourceAndSink =>
             {
                 var componentSettings = new Dictionary<string, bool>()
@@ -333,8 +341,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 sourceAndSink.TracerNames.ForEach(tn => componentSettings.Add(tn, true));
                 sourceAndSink.PopulateFunctionValuesFromAttributes(componentSettings);
             });
-
-            FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
         }
 
         private void LoadModelFromMdu(string mduFilePath)
@@ -348,7 +354,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (File.Exists(mduFilePath))
             {
                 isLoading = true;
-                mduFile.Read(mduFilePath, ModelDefinition, Area, Network, NetworkDiscretization, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
+                mduFile.Read(mduFilePath, ModelDefinition, Area, Network, NetworkDiscretization, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, (stepName) => FireImportProgressChanged(stepName + Environment.NewLine + Resources.WaterFlowFMModel_LoadModelFromMdu_Reading_mdu_file ), BridgePillarsDataModel);
 
                 isLoading = false;
                 SyncModelTimesWithBase();
@@ -361,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 netFileProperty.Value = Name + NetFile.FullExtension;
             }
 
-            FireImportProgressChanged(this, "Loading restart", 2, TotalImportSteps);
+            FireImportProgressChanged(Resources.WaterFlowFMModel_LoadModelFromMdu_Loading_restart);
 
             // sync the heat flux model, because events are off during reading
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
@@ -435,7 +441,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             CreateDataItemsNotAvailableInPreviousVersion();
             LoadStateFromMdu(mduPath);
 
-            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions);
+            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, text => FireImportProgressChanged(text + Environment.NewLine + Resources.WaterFlowFMModel_OnLoad_Reading_1D2D_features));
             SuspendClearOutputOnInputChange = false;
             UpdateDataItemsNotCreatedInPreviousVersion();
             LoadLinks();

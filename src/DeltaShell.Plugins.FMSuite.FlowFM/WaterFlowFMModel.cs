@@ -1704,7 +1704,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IHydroRegion fmRegion;
         private ValidationReport report;
 
-        private const int TotalImportSteps = 10;
+        public const int TOTALSTEPS = 32;
+        private int currentStep = 0;
 
         #region Output
         private string outputSnappedFeaturesPath;
@@ -2063,13 +2064,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 return;
             }
-
-            FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
+            
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectOutputFiles_Reading_output_files);
 
             using (this.InEditMode(DelftTools.Hydro.Properties.Resources.Reconnect_output_files_edit_action))
             {
                 ReadDiaFile(outputDirectoryPath);
-
                 ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
                 ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
                 ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
@@ -2077,6 +2077,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
                 ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
                 ReconnectRestartFiles(outputDirectory.RestartFilePaths);
+                FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectOutputFiles_Reading_output_files___done);
                 ReportProgressText();
 
                 OutputIsEmpty = false;
@@ -2094,6 +2095,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 // update map file coordinate system:
                 if (!Grid.IsEmpty)
                 {
+                    FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectMapFile_Reading_output_files___Reading_map_2d_file);
                     if (CoordinateSystem != null && cs != CoordinateSystem)
                         NetFile.WriteCoordinateSystem(mapFilePath, CoordinateSystem);
                     if (switchTo && OutputMapFileStore != null)
@@ -2123,6 +2125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 if (Network != null && !Network.IsEdgesEmpty && !Network.IsVerticesEmpty)
                 {
+                    FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectMapFile_Reading_output_files___Reading_map_1d_file);
 
                     if (switchTo && Output1DFileStore != null)
                     {
@@ -2154,7 +2157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (hisFilePath != null)
             {
                 ReportProgressText("Reading his file");
-                FireImportProgressChanged(this,"Reading output files - Reading His file", 1, 2);
+                FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectHistoryFile_Reading_output_files___Reading_His_file);
                 if (switchTo && OutputHisFileStore != null)
                 {
                     OutputHisFileStore.SetPathWithoutLoadingData(hisFilePath);
@@ -2179,7 +2182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             ReportProgressText("Reading class map file");
-            FireImportProgressChanged(this,"Reading output files - Reading Class Map file", 1, 2);
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectClassMapFile_Reading_output_files___Reading_Class_Map_file);
             if (switchTo && OutputClassMapFileStore != null)
             {
                 OutputClassMapFileStore.SetPathWithoutLoadingData(classMapFilePath);
@@ -2201,7 +2204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             ReportProgressText("Reading fou file");
-            FireImportProgressChanged(this, "Reading output files - Reading Fou file", 1, 2);
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectFouFile_Reading_output_files___Reading_Fou_file);
             if (switchTo && OutputFouFileStore != null)
             {
                 OutputFouFileStore.Path = fouFilePath;
@@ -2227,6 +2230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void ReconnectWaterQualityOutputDirectory(string waqOutputDirectoryPath)
         {
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectWaterQualityOutputDirectory_Reading_output_files___Reconnect_WAQ_output_dir); 
             if (waqOutputDirectoryPath != null)
             {
                 DelwaqOutputDirectoryPath = waqOutputDirectoryPath;
@@ -2252,6 +2256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private void ReconnectSnappedOutputDirectory(string snappedOutputDirectoryPath)
         {
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectSnappedOutputDirectory_Reading_output_files___Reconnect_snapped_output_dir);
             if (snappedOutputDirectoryPath != null)
             {
                 OutputSnappedFeaturesPath = snappedOutputDirectoryPath;
@@ -2262,6 +2267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void ReconnectRestartFiles(IEnumerable<string> restartFilePaths)
         {
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReconnectRestartFiles_Reading_output_files___connect_restart_files);
             RestartOutput = restartFilePaths.Select(p => new RestartFile(p)).ToList();
         }
         #endregion
@@ -2900,6 +2906,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void ReadDiaFile(string outputDirectory)
         {
             ReportProgressText("Reading dia file");
+            FireImportProgressChanged(Resources.WaterFlowFMModel_ReadDiaFile_Reading_output_files___Reading_dia_file);
             var diaFileName = $"{Name}.dia";
             string diaFilePath = Path.Combine(outputDirectory, diaFileName);
             if (File.Exists(diaFilePath))

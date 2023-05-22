@@ -823,18 +823,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IDiscretization discretization, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string, int, int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
+        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IDiscretization discretization, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
         {
-            if (reportProgress == null) reportProgress = (name, current, total) => { };
-            var totalSteps = 7;
-
-            reportProgress("Reading properties", 1, totalSteps);
+            reportProgress?.Invoke(Resources.MduFile_Read_Reading_properties);
             ReadProperties(filePath, modelDefinition);
 
-            reportProgress("Reading morphology properties", 2, totalSteps);
+            reportProgress?.Invoke(Resources.MduFile_Read_Reading_morphology_properties);
             MorphologyFile.Read(filePath, modelDefinition);
 
-            reportProgress("Reading area features", 3, totalSteps);
+            reportProgress?.Invoke(Resources.MduFile_Read_Reading_area_features);
             ReadAreaFeatures(filePath, modelDefinition, hydroArea);
 
             //fix for fixed weirs
@@ -925,7 +922,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!string.IsNullOrEmpty(netFilePath) && File.Exists(netFilePath))
                 UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath), NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath));
 
-            reportProgress("Reading external forcings file", 4, totalSteps);
+            reportProgress?.Invoke(Resources.MduFile_Read_Reading_external_forcings_file);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
             if (extForceFileProperty != null)
             {
@@ -939,7 +936,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            reportProgress("Reading boundary external forcings file", 5, totalSteps);
+            reportProgress?.Invoke(Resources.MduFile_Read_Reading_boundary_external_forcings_file);
             var bndExtForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             if (bndExtForceFileProperty != null)
             {
@@ -952,9 +949,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            reportProgress("Reading fm meteo external forcings file", 6, totalSteps);
+            reportProgress?.Invoke(Resources.MduFile_Read_Reading_fm_meteo_external_forcings_file);
 
-            reportProgress("Reading FouFile if used", 7, totalSteps);
+            reportProgress?.Invoke(Resources.MduFile_Read_Reading_FouFile_if_used);
 
             string targetDir = System.IO.Path.GetDirectoryName(filePath);
             

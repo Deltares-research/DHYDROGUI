@@ -516,5 +516,125 @@ File import of structures file '{1}' has failed.</value>
   </data>
   <data name="WaterFlowFMDataAccessListener_OnPostLoad_Model_output_is_removed_because_project_has_been_migrated_from_older_project_version" xml:space="preserve">
     <value>Model output is removed because project has been migrated from older project version</value>
+ </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_routes" xml:space="preserve">
+    <value>Reading routes</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_cross_section_definitions" xml:space="preserve">
+    <value>Reading cross section definitions</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_structures" xml:space="preserve">
+    <value>Reading structures</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_observation_points" xml:space="preserve">
+    <value>Reading observation points</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_roughness" xml:space="preserve">
+    <value>Reading roughness</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_retentions" xml:space="preserve">
+    <value>Reading retentions</value>
+  </data>
+  <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_initial_conditions" xml:space="preserve">
+    <value>Reading initial conditions</value>
+  </data>
+  <data name="MduFile_Read_Reading_properties" xml:space="preserve">
+    <value>Reading properties</value>
+  </data>
+  <data name="MduFile_Read_Reading_morphology_properties" xml:space="preserve">
+    <value>Reading morphology properties</value>
+  </data>
+  <data name="MduFile_Read_Reading_area_features" xml:space="preserve">
+    <value>Reading area features</value>
+  </data>
+  <data name="MduFile_Read_Reading_external_forcings_file" xml:space="preserve">
+    <value>Reading external forcings file</value>
+  </data>
+  <data name="MduFile_Read_Reading_boundary_external_forcings_file" xml:space="preserve">
+    <value>Reading boundary external forcings file</value>
+  </data>
+  <data name="MduFile_Read_Reading_fm_meteo_external_forcings_file" xml:space="preserve">
+    <value>Reading fm meteo external forcings file</value>
+  </data>
+  <data name="MduFile_Read_Reading_FouFile_if_used" xml:space="preserve">
+    <value>Reading FouFile if used</value>
+  </data>
+  <data name="WaterFlowFMFileImporter_OnImportItem_Import_finished" xml:space="preserve">
+    <value>Import finished</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadFromMdu_Reading_1d2d_features" xml:space="preserve">
+    <value>Reading 1d2d features</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadFromMdu_done_reading_1d2d_features" xml:space="preserve">
+    <value>done reading 1d2d features</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadFromMdu_Reading_spatial_operations" xml:space="preserve">
+    <value>Reading spatial operations</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadFromMdu_Reading_sewer_roughness" xml:space="preserve">
+    <value>Reading sewer roughness</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Reading_grid" xml:space="preserve">
+    <value>Reading grid</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Renaming_sub_files" xml:space="preserve">
+    <value>Renaming sub files</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Initialize_input_spatial_data" xml:space="preserve">
+    <value>Initialize input spatial data</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Reading_Coordinate_system_from__0_" xml:space="preserve">
+    <value>Reading Coordinate system from {0}</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Assemble_tracer_definitions" xml:space="preserve">
+    <value>Assemble tracer definitions</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Assemble_spatially_varying_sediment_properties" xml:space="preserve">
+    <value>Assemble spatially varying sediment properties</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadStateFromMdu_Populate_source_and_sinks" xml:space="preserve">
+    <value>Populate source and sinks</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadModelFromMdu_Loading_restart" xml:space="preserve">
+    <value>Loading restart</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectOutputFiles_Reading_output_files" xml:space="preserve">
+    <value>Reading output files</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectOutputFiles_Reading_output_files___done" xml:space="preserve">
+    <value>Reading output files - done</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectMapFile_Reading_output_files___Reading_map_2d_file" xml:space="preserve">
+    <value>Reading output files - Reading map 2d file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectMapFile_Reading_output_files___Reading_map_1d_file" xml:space="preserve">
+    <value>Reading output files - Reading map 1d file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectHistoryFile_Reading_output_files___Reading_His_file" xml:space="preserve">
+    <value>Reading output files - Reading His file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectClassMapFile_Reading_output_files___Reading_Class_Map_file" xml:space="preserve">
+    <value>Reading output files - Reading Class Map file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectFouFile_Reading_output_files___Reading_Fou_file" xml:space="preserve">
+    <value>Reading output files - Reading Fou file</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectWaterQualityOutputDirectory_Reading_output_files___Reconnect_WAQ_output_dir" xml:space="preserve">
+    <value>Reading output files - Reconnect WAQ output dir</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectSnappedOutputDirectory_Reading_output_files___Reconnect_snapped_output_dir" xml:space="preserve">
+    <value>Reading output files - Reconnect snapped output dir</value>
+  </data>
+  <data name="WaterFlowFMModel_ReconnectRestartFiles_Reading_output_files___connect_restart_files" xml:space="preserve">
+    <value>Reading output files - connect restart files</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadDiaFile_Reading_output_files___Reading_dia_file" xml:space="preserve">
+    <value>Reading output files - Reading dia file</value>
+  </data>
+  <data name="WaterFlowFMModel_LoadModelFromMdu_Reading_mdu_file" xml:space="preserve">
+    <value>Reading mdu file</value>
+  </data>
+  <data name="WaterFlowFMModel_OnLoad_Reading_1D2D_features" xml:space="preserve">
+    <value>Reading 1D2D features</value>
   </data>
 </root>

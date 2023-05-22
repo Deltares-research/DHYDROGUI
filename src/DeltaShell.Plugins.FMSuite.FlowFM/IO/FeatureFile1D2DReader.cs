@@ -41,6 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <param name="roughnessSections"> The roughness sections. </param>
         /// <param name="channelFrictionDefinitions"> The channel friction definitions. </param>
         /// <param name="channelInitialConditionDefinitions"> The channel initial condition definitions. </param>
+        /// <param name="report1DOr2DFeatureRead">Function to report progress on</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
@@ -49,7 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                             IHydroNetwork network,
                                             IEventedList<RoughnessSection> roughnessSections,
                                             IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions,
-                                            IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
+                                            IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
+                                            Action<string> report1DOr2DFeatureRead = null)
         {
             Ensure.NotNull(mduFilePath, nameof(mduFilePath));
             Ensure.NotNull(modelDefinition, nameof(modelDefinition));
@@ -57,19 +59,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             Ensure.NotNull(roughnessSections, nameof(roughnessSections));
             Ensure.NotNull(channelFrictionDefinitions, nameof(channelFrictionDefinitions));
             Ensure.NotNull(channelInitialConditionDefinitions, nameof(channelInitialConditionDefinitions));
-            
-            ReadRoutesFile(mduFilePath, network);
-            ICrossSectionDefinition[] definitions = ReadCrossSectionFiles(mduFilePath, modelDefinition, network, channelFrictionDefinitions);
-            ReadStructuresFiles(mduFilePath, modelDefinition, network, definitions);
-            ReadObservationPointsFiles(mduFilePath, modelDefinition, network);
-            ReadRoughnessFiles(mduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions);
 
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_routes);
+            ReadRoutesFile(mduFilePath, network);
+
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_cross_section_definitions);
+            ICrossSectionDefinition[] definitions = ReadCrossSectionFiles(mduFilePath, modelDefinition, network, channelFrictionDefinitions);
+
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_structures); 
+            ReadStructuresFiles(mduFilePath, modelDefinition, network, definitions);
+
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_observation_points); 
+            ReadObservationPointsFiles(mduFilePath, modelDefinition, network);
+
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_roughness); 
+            ReadRoughnessFiles(mduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions);
+            
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_retentions);
             var retentions= ReadRetentionsFromFile(mduFilePath, modelDefinition, network);
             foreach (IRetention retention in retentions)
             {
                 retention.Branch.BranchFeatures.Add(retention);
             }
 
+            report1DOr2DFeatureRead?.Invoke(Resources.FeatureFile1D2DReader_Read1D2DFeatures_Reading_initial_conditions); 
             ReadInitialConditionFiles(mduFilePath, modelDefinition, network, channelInitialConditionDefinitions);
         }
 
