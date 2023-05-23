@@ -197,6 +197,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Coverages\" />
 	  <Folder Include="GraphicsProvider\" />
 	  <Folder Include="Properties\" />
 	</ItemGroup>

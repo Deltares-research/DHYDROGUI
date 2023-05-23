@@ -119,8 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             var newLocations = coverage.GetCoordinatesForGrid(grid).ToList();
             var count = newLocations.Count();
             var locationIndexVariable = coverage.Arguments.Last();
-
-            locationIndexVariable.Clear();
+            locationIndexVariable.ClearWithoutEventing();
             if (count > 0)
             {
                 coverage.BeginEdit(new DefaultEditAction("setting location index variables on coverage"));
@@ -157,9 +156,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                                         ? grid.ReOrderResultsForFlowLinks(targetZ)
                                         : new double[0];
                                 }
-
                                 coverage.BeginEdit(new DefaultEditAction("Interpolating values on coverage"));
-                                coverage.Components[i].Values.Clear();
+                                coverage.Components[i].ClearWithoutEventing();
                                 FunctionHelper.SetValuesRaw<double>(coverage.Components[i], targetZ);
                                 coverage.EndEdit();
                             }
@@ -186,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                             value = -999.0d;
                     }
                     coverage.BeginEdit(new DefaultEditAction("Setting empty value on converage"));
-                    coverage.Components[i].Values.Clear();
+                    coverage.Components[i].ClearWithoutEventing();
                     FunctionHelper.SetValuesRaw(coverage.Components[i], Enumerable.Repeat(value, count));
                     coverage.EndEdit();
                 }
