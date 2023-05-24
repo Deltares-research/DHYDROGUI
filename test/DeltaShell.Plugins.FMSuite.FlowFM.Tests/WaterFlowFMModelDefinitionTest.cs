@@ -1546,5 +1546,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Assert
             Assert.That(property.Value, Is.EqualTo(4.56d));
         }
+
+        [Test]
+        public void SetRefDateFromDateTime_ExtractsDatePart()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var dateTime = new DateTime(2023, 05, 23, 01, 02, 03);
+            var datePart = DateOnly.FromDateTime(dateTime).ToDateTime(TimeOnly.MinValue);
+
+            modelDefinition.SetReferenceDateFromDatePartOfDateTime(dateTime);
+            
+            Assert.That( modelDefinition.GetReferenceDateAsDateTime(), Is.EqualTo(datePart) );
+        }
     }
 }

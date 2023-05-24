@@ -320,6 +320,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        /// <summary>
+        /// The reference date as a DateTime. The time part is always 0. The setter will extract only the date part.
+        /// </summary>
         public DateTime ReferenceTime
         {
             get
@@ -328,7 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             set
             {
-                modelDefinition.SetReferenceDateAsDateTime(value);
+                modelDefinition.SetReferenceDateFromDatePartOfDateTime(value);
             }
         }
 

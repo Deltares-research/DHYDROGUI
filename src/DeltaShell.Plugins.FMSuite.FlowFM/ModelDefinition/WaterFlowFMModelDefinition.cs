@@ -1036,15 +1036,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             return refDate.ToDateTime(TimeOnly.MinValue);
         }
 
-        public void SetReferenceDateAsDateTime(DateTime value)
+        public void SetReferenceDateFromDatePartOfDateTime(DateTime value)
         {
-            DateOnly refDate = DateOnly.FromDateTime(value);
-            if (refDate.ToDateTime(TimeOnly.MinValue) != value)
-            {
-                throw new ArgumentException($"Unexpected non-zero time in ReferenceTime value {value}");
-            }
-            GetModelProperty(KnownProperties.RefDate).Value = refDate;
-
+            GetModelProperty(KnownProperties.RefDate).Value = DateOnly.FromDateTime(value);
         }
     }
 }
