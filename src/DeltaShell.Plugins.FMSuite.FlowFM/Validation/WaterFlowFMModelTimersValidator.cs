@@ -46,10 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time precedes reference time", new FmValidationShortcut() { FlowFmModel = model as WaterFlowFMModel, TabName = "Time Frame" });
             }
-            else if (IsRunningInParallelWithOtherModels(waterFlowFmModel) && waterFlowFmModel.ReferenceTime != waterFlowFmModel.StartTime)
-            {
-                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time should be the same as reference time when running in parallel with other models", new FmValidationShortcut { FlowFmModel = model as WaterFlowFMModel, TabName = "Time Frame" });
-            }
 
             var issues = new[]
                 {
@@ -93,14 +89,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 TabName = "Output Parameters"
             };
             return new ValidationIssue(category, ValidationSeverity.Error, errorMessage,validationShortcut);
-        }
-
-        private bool IsRunningInParallelWithOtherModels(IWaterFlowFMModel model)
-        {
-            if (!(model.Owner is ICompositeActivity owner))
-                return false;
-
-            return owner.GetActivitiesRunningSimultaneous(model).Any();
         }
     }
 }
