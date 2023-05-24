@@ -9,7 +9,11 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Data;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
@@ -2282,6 +2286,56 @@ namespace DelftTools.Hydro.Tests.Helpers
             var name = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink(Substitute.For<IHydroObject>(), Substitute.For<IHydroObject>()));
 
             Assert.AreNotEqual(link.Name, name);
+        }
+        
+        [Test]
+        public void CreateUniqueHydroObjectNameInRegionIfNotEntity()
+        {
+            var region = Substitute.For<IHydroRegion>();
+            var feature = Substitute.For<INameable>();
+            feature.Name = "myName";
+
+            var name = HydroNetworkHelper.GetUniqueFeatureName(region, feature);
+
+            Assert.AreEqual(feature.Name, name);
+        }
+        
+        [Test]
+        public void CreateUniqueHydroObjectNameWithoutRegionReturnsEntityType()
+        {
+            var feature = Substitute.For<INameable,IUnique<long>>();
+            feature.Name = "myName";
+            ((IUnique<long>)feature).GetEntityType().Returns(typeof(Node));
+
+            var name = HydroNetworkHelper.GetUniqueFeatureName(null, feature);
+
+            Assert.AreEqual(nameof(Node), name);
+        }
+        
+        [Test]
+        public void CreateUniqueNodeNameWithHydroNetworkReturnsNewName()
+        {
+            var hydroNetwork = Substitute.For<IHydroNetwork>();
+            var feature = Substitute.For<INode, IUnique<long>>();
+            ((IUnique<long>)feature).GetEntityType().Returns(typeof(Node));
+            hydroNetwork.Nodes.Returns(new EventedList<INode> { feature });
+            feature.Name = "myName";
+            var name = TypeUtils.CallPrivateStaticMethod(typeof(HydroNetworkHelper), "GetUniqueFeatureNameInNetwork", hydroNetwork, feature, false);
+            
+            Assert.AreNotEqual(feature.Name, name);
+        }
+
+        [Test]
+        public void CreateUniqueBranchNameWithHydroNetworkReturnsNewName()
+        {
+            var hydroNetwork = Substitute.For<IHydroNetwork>();
+            var feature = Substitute.For<IBranch, IUnique<long>>();
+            ((IUnique<long>)feature).GetEntityType().Returns(typeof(Branch));
+            hydroNetwork.Branches.Returns(new EventedList<IBranch> { feature });
+            feature.Name = "myName";
+            var name = TypeUtils.CallPrivateStaticMethod(typeof(HydroNetworkHelper), "GetUniqueFeatureNameInNetwork", hydroNetwork, feature, false);
+            
+            Assert.AreNotEqual(feature.Name, name);
         }
 
         [Test]

@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Data;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -24,6 +27,7 @@ namespace DelftTools.Hydro.Helpers
     /// </summary>
     public class HydroNetworkHelper
     {
+        private const string Unique1DPostFixId = "_1D_";
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
 
         public static void UpdateChannelNames(IChannel splittedChannel, IChannel newChannel) 
@@ -519,46 +523,150 @@ namespace DelftTools.Hydro.Helpers
         /// <summary>
         /// Sets the default name of a specific feature.
         /// </summary>
-        /// <param name="region"></param>
-        /// <param name="feature"></param>
-        /// <param name="checkIfNewNameIsNeeded"></param>
-        public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false)
+        /// <param name="region">The location where the feature is in ((hydro)network, RR domain, Link domain, RTC, etc)</param>
+        /// <param name="feature">Feature where we want to check or set the name for.</param>
+        /// <param name="checkIfNewNameIsNeeded">If set return a unique new feature name</param>
+        public static string GetUniqueFeatureName(IHydroRegion region, INameable feature, bool checkIfNewNameIsNeeded = false)
         {
-            var featureName = feature.GetEntityType().Name;
+            if (!(feature is IUnique<long> entity))
+            {
+                return feature.Name;
+            }
+
+            var featureName = entity.GetEntityType().Name;
             if (region == null) return featureName;
 
-            var fullRegion = region.Parent as IHydroRegion ?? region;
-            HashSet<string> names = null;
-            lock (fullRegion)
-            {
-                var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName)
-                    .Select(f => f.Name);
-                var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links)
-                    .Select(l => l.Name);
-                var allNames = hydroObjectNames.Concat(allLinkNames);
+            HashSet<string> names = RetrieveNamesFromRegion(feature, region, featureName);
 
-                names = new HashSet<string>(allNames);
-            }
+            return checkIfNewNameIsNeeded 
+                   && !string.IsNullOrWhiteSpace(feature.Name) 
+                   && !names.Contains(feature.Name) 
+                       ? feature.Name // no need to generate one, this one is already unique
+                       : GenerateUniqueFeatureName(featureName, names);
+        }
 
-            if (checkIfNewNameIsNeeded)
-            {
-                var nameProperty = feature.GetType().GetProperty("Name");
-                if (nameProperty != null)
-                {
-                    var currentName = nameProperty.GetValue(feature, null);
-
-                    if (!string.IsNullOrWhiteSpace(currentName as string) && !names.Contains(currentName.ToString())) return currentName.ToString();
-                }
-            }
+        /// <summary>
+        /// Generate a unique feature name with apparently some kind of 1d suffix from the provided list
+        /// </summary>
+        /// <param name="featureName">current feature name</param>
+        /// <param name="names">list of already created feature names</param>
+        /// <returns></returns>
+        private static string GenerateUniqueFeatureName(string featureName, HashSet<string> names)
+        {
             int i = 1;
-            var uniqueName = featureName + "_1D_" + i;
+            var uniqueName = featureName + Unique1DPostFixId + i;
             while (names.Contains(uniqueName))
             {
                 i++;
-                uniqueName = featureName + "_1D_" + i;
+                uniqueName = featureName + Unique1DPostFixId + i;
             }
 
             return uniqueName;
+        }
+
+        /// <summary>
+        /// Retrieve all names of this feature type in the provided region
+        /// </summary>
+        /// <param name="feature">the feature</param>
+        /// <param name="fullRegion">the region to search the feature names</param>
+        /// <param name="featureEntityTypeName">the feature type name</param>
+        /// <returns></returns>
+        private static HashSet<string> RetrieveNamesFromRegion(INameable feature, IHydroRegion region, string featureEntityTypeName)
+        {
+            HashSet<string> names = null;
+            var fullRegion = region.Parent as IHydroRegion ?? region;
+            lock (fullRegion)
+            {
+                if (feature is HydroLink)
+                {
+                    names = new HashSet<string>(fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links)
+                                                          .Select(l => l.Name));
+                }
+                else
+                {
+                    names = new HashSet<string>(fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name.Equals(featureEntityTypeName, StringComparison.InvariantCultureIgnoreCase))
+                                                          .Select(f => f.Name));
+                }
+            }
+
+            return names;
+        }
+
+        /// <summary>
+        /// Sets the default name of a specific feature.
+        /// </summary>
+        /// <param name="network">HydroNetwork to find feature in</param>
+        /// <param name="feature">Network feature to check if name is in network already (of that feature type)</param>
+        /// <param name="checkIfNewNameIsNeeded">If true create next available unique name (of that feature type)</param>
+        private static string GetUniqueFeatureNameInNetwork(IHydroNetwork network, INetworkFeature feature, bool checkIfNewNameIsNeeded = false)
+        {
+            var featureName = feature.GetEntityType().Name; 
+            HashSet<string> names = RetrieveNamesFromHydroNetwork(network, featureName);
+
+            return checkIfNewNameIsNeeded 
+                   && !string.IsNullOrWhiteSpace(feature.Name) 
+                   && !names.Contains(feature.Name) 
+                       ? feature.Name // no need to generate one, this one is already unique
+                       : GenerateUniqueFeatureName(featureName, names);
+        }
+
+        /// <summary>
+        /// Retrieve all names of this feature type in the provided hydronetwork
+        /// </summary>
+        /// <param name="network">HydroNetwork to find feature names in</param>
+        /// <param name="featureEntityTypeName">The feature entity type to find feature names for</param>
+        /// <returns></returns>
+        private static HashSet<string> RetrieveNamesFromHydroNetwork(IHydroNetwork network, string featureEntityTypeName)
+        {
+            ConcurrentQueue<string> namesQueue = new ConcurrentQueue<string>();
+            if (network != null)
+            {
+                lock (network)
+                {
+                    const string nodeEntitityType = nameof(Node);
+                    if (nodeEntitityType.Equals(featureEntityTypeName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        lock (network.Nodes)
+                            network.Nodes
+                                   .Select(n => n.Name)
+                                   .AsParallel().ForAll(n => namesQueue.Enqueue(n));
+                    }
+                    else
+                    {
+                        lock (network.NodeFeatures)
+                            network.Nodes
+                                   .SelectMany(n => n.NodeFeatures)
+                                   .Where(nodeFeature => nodeFeature.GetEntityType().Name.Equals(featureEntityTypeName, StringComparison.InvariantCultureIgnoreCase))
+                                   .Select(nf => nf.Name)
+                                   .AsParallel().ForAll(n => namesQueue.Enqueue(n));
+                    }
+
+                    const string branchEntityType = nameof(Branch);
+                    const string pipeEntityType = nameof(Pipe);
+                    const string sewerConnectionEntityType = nameof(SewerConnection);
+                    if (featureEntityTypeName.Equals(branchEntityType, StringComparison.InvariantCultureIgnoreCase)
+                        || featureEntityTypeName.Equals(pipeEntityType, StringComparison.InvariantCultureIgnoreCase)
+                        || featureEntityTypeName.Equals(sewerConnectionEntityType, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        lock (network.Branches)
+                            network.Branches
+                                   .Select(b => b.Name)
+                                   .AsParallel().ForAll(b => namesQueue.Enqueue(b));
+                    }
+                    else
+                    {
+                        lock (network.BranchFeatures)
+                            network.Branches
+                                   .SelectMany(b => b.BranchFeatures)
+                                   .Where(bf => bf.GetEntityType().Name.Equals(featureEntityTypeName, StringComparison.InvariantCultureIgnoreCase))
+                                   .Select(bf => bf.Name)
+                                   .AsParallel().ForAll(n => namesQueue.Enqueue(n));
+                    }
+                }
+            }
+
+            var names = new HashSet<string>(namesQueue);
+            return names;
         }
 
         public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure, IStructure1D structure)
@@ -602,7 +710,7 @@ namespace DelftTools.Hydro.Helpers
                 if (generateUniqueName)
                 {
                     // make new composite structure names unique
-                    compositeBranchStructure.Name = GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
+                    compositeBranchStructure.Name = GetUniqueFeatureNameInNetwork(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
                 }
 
                 lock(branch.BranchFeatures)

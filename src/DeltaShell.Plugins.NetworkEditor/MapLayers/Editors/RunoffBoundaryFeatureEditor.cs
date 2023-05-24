@@ -19,10 +19,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             {
                 var feat = base.AddNewFeatureByGeometry(layer, geometry);
 
-                var nameable = feat as INameable;
-                if (nameable != null)
+                if (feat is INameable nameableFeature)
                 {
-                    nameable.Name = HydroNetworkHelper.GetUniqueFeatureName(DrainageBasin, feat);
+                    nameableFeature.Name = HydroNetworkHelper.GetUniqueFeatureName(DrainageBasin, nameableFeature);
                 }
 
                 return feat;
