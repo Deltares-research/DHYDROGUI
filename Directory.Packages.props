@@ -5,9 +5,9 @@
   <ItemGroup>
     <PackageVersion Include="AutoFixture.AutoNSubstitute" Version="4.18.0" />
     <PackageVersion Include="AutoFixture.NUnit3" Version="4.18.0" />
-    <PackageVersion Include="Deltares.UGrid" Version="1.0.142700" />
+    <PackageVersion Include="Deltares.UGrid" Version="1.0.69569" />
     <PackageVersion Include="DeltaShell.Framework" Version="2.0.0.2198" />
-    <PackageVersion Include="DeltaShell.Plugins.GridEditor" Version="1.1.0.143-beta" />
+    <PackageVersion Include="DeltaShell.Plugins.GridEditor" Version="1.1.0.321" />
     <PackageVersion Include="DeltaShell.TestProject" Version="2.0.0.2198" />
     <PackageVersion Include="DHYDRO.Common" Version="1.1.0.47" />
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="2.1.0.2" />
@@ -19,7 +19,7 @@
     <PackageVersion Include="GeoAPI.Core" Version="1.7.5" />
     <PackageVersion Include="log4net" Version="2.0.15" />
     <PackageVersion Include="MathematicalExpressionParser.Core" Version="2.1.0.12" />
-    <PackageVersion Include="MeshKernelNET" Version="1.0.0.56-beta" />
+    <PackageVersion Include="MeshKernelNET" Version="1.0.0.62-Beta" />
     <PackageVersion Include="Mono.Addins" Version="1.4.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NSubstitute" Version="5.0.0" />
