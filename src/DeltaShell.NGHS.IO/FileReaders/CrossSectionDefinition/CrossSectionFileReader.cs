@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,7 @@ using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using GeoAPI.Extensions.Networks;
 using log4net;
+using log4net.Core;
 
 namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 {
@@ -47,20 +49,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
                                       .Where(d => d.ReadProperty<bool>(DefinitionPropertySettings.IsShared, true) || 
                                                   duplicateDefinitionIds.Contains(d.ReadProperty<string>(DefinitionPropertySettings.Id.Key)))
                                       .ToArray();
-
-            // Shared cross-section definitions lookup
-            var sharedDefinitionNameLookup = sharedCsdCategories
-                                             .Select(c => CreateCrossSectionDefinitionFromCategory(c, hydroNetwork))
-                                             .Where(csd => csd != null)
-                                             .ToDictionaryWithDuplicateLogging("SharedCrossSections", csd => csd.Name, csd => csd, comparer:StringComparer.InvariantCultureIgnoreCase);
-
-            // Unshared cross-section definitions lookup
-            var unsharedDefinitionNameLookup = csDefinitionCategories
-                                               .Except(sharedCsdCategories)
-                                               .Select(c => CreateCrossSectionDefinitionFromCategory(c, hydroNetwork))
-                                               .Where(csd => csd != null)
-                                               .ToDictionaryWithDuplicateLogging("UnsharedCrossSections", csd => csd.Name, csd => csd, comparer: StringComparer.InvariantCultureIgnoreCase);
-
+            IDictionary<string, ICrossSectionDefinition> sharedDefinitionNameLookup = DefinitionNameLookup(hydroNetwork, sharedCsdCategories, "SharedCrossSections");
+            IDictionary<string, ICrossSectionDefinition> unsharedDefinitionNameLookup = DefinitionNameLookup(hydroNetwork, csDefinitionCategories.Except(sharedCsdCategories), "UnsharedCrossSections");
+            
             var assignedDefinitions = new List<ICrossSectionDefinition>();
             var fileReadingExceptions = new List<FileReadingException>();
             
@@ -116,6 +107,36 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
             }
 
             return unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).ToArray();
+        }
+
+        private static IDictionary<string, ICrossSectionDefinition> DefinitionNameLookup(IHydroNetwork hydroNetwork, IEnumerable<IDelftIniCategory> csdCategories, string context)
+        {
+            var crossSectionDefinitions = new ConcurrentDictionary<string, ICrossSectionDefinition>(StringComparer.InvariantCultureIgnoreCase);
+            var duplicateDefinitionNameKeys = new ConcurrentQueue<string>();
+            
+            csdCategories
+                .Select(c => c)
+                .AsParallel()
+                .ForAll(c =>
+                {
+                    var csd = CreateCrossSectionDefinitionFromCategory(c, hydroNetwork);
+                    if (csd != null)
+                    {
+                        crossSectionDefinitions.AddOrUpdate(csd.Name, csd, (name, definition) =>
+                        {
+                            duplicateDefinitionNameKeys.Enqueue(name);
+                            return definition;
+                        });
+                    }
+                });
+            
+            if (duplicateDefinitionNameKeys.Any())
+            {
+                var message = $"{Resources.CrossSectionFileReader_DefinitionNameLookup_The_following_cross_section_entries_were_not_unique__}{string.Format(Resources.CrossSectionFileReader_DefinitionNameLookup___0____Total_non_unique___1___in___2__, string.Join(", ", duplicateDefinitionNameKeys), duplicateDefinitionNameKeys.Count, context)}";
+                log.Warn(message);
+            }
+
+            return crossSectionDefinitions;
         }
 
         private static void SetFrictionType(IChannel channel, ICrossSection crossSection, ILookup<IChannel, ChannelFrictionDefinition> frictionDefinitions)
@@ -176,7 +197,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
             return true;
         }
 
-        private static ICrossSectionDefinition GetDefinitionForLocation(string definitionId, string name, Dictionary<string, ICrossSectionDefinition> sharedDefinitionNameLookup, Dictionary<string, ICrossSectionDefinition> unsharedDefinitionNameLookup, List<FileReadingException> fileReadingExceptions)
+        private static ICrossSectionDefinition GetDefinitionForLocation(string definitionId, string name, IDictionary<string, ICrossSectionDefinition> sharedDefinitionNameLookup, IDictionary<string, ICrossSectionDefinition> unsharedDefinitionNameLookup, List<FileReadingException> fileReadingExceptions)
         {
             if (sharedDefinitionNameLookup.TryGetValue(definitionId, out ICrossSectionDefinition definition))
             {
@@ -191,7 +212,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
             return definition;
         }
 
-        private static ICrossSectionDefinition CreateCrossSectionDefinitionFromCategory(DelftIniCategory csdCategory, IHydroNetwork network)
+        private static ICrossSectionDefinition CreateCrossSectionDefinitionFromCategory(IDelftIniCategory csdCategory, IHydroNetwork network)
         {
             var typeProperty = csdCategory.ReadProperty<string>(DefinitionPropertySettings.DefinitionType);
             var templateProperty = csdCategory.ReadProperty<string>(DefinitionPropertySettings.Template, true);
@@ -199,7 +220,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
             var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderCrossSection(typeProperty, templateProperty);
             if (definitionReader == null)
             {
-                log.Error($"No definition reader available for this cross section definition type {typeProperty}");
+                log.Error(string.Format(Resources.CrossSectionFileReader_CreateCrossSectionDefinitionFromCategory_No_definition_reader_available_for_this_cross_section_definition_type__0_, typeProperty));
                 return null;
             }
 
@@ -262,22 +283,28 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 
             if (IsDefaultChannelsSectionId(sectionTypeName))
             {
-                readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                lock (network.CrossSectionSectionTypes)
                 {
-                    SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
-                    MinY = readCrossSectionDefinition.Left,
-                    MaxY = readCrossSectionDefinition.Right,
-                    IsDefaultChannelsSection = true
-                });
+                    readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                    {
+                        SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
+                        MinY = readCrossSectionDefinition.Left,
+                        MaxY = readCrossSectionDefinition.Right,
+                        IsDefaultChannelsSection = true
+                    });
+                }
                 return;
             }
 
-            readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+            lock (network.CrossSectionSectionTypes)
             {
-                SectionType = GetCrossSectionSectionType(sectionTypeName, network),
-                MinY = readCrossSectionDefinition.Left,
-                MaxY = readCrossSectionDefinition.Right
-            });
+                readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                {
+                    SectionType = GetCrossSectionSectionType(sectionTypeName, network),
+                    MinY = readCrossSectionDefinition.Left,
+                    MaxY = readCrossSectionDefinition.Right
+                });
+            }
         }
 
         private static void SetZwCrossSectionFriction(IDelftIniCategory csdDefinitionCategory, ICrossSectionDefinition readCrossSectionDefinition, IHydroNetwork network)
@@ -292,7 +319,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
                 // read definition as zw definition
                 string sectionName = frictionId ?? frictionIds.First();
                 CrossSectionSectionType crossSectionSectionType = GetCrossSectionSectionType(sectionName, network);
-                readCrossSectionDefinition.AddSection(crossSectionSectionType, flowWidths.Max());
+                lock (network.CrossSectionSectionTypes)
+                    readCrossSectionDefinition.AddSection(crossSectionSectionType, flowWidths.Max());
                 return;
             }
 
@@ -301,7 +329,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 
             if (frictionIds != null && frictionIds.Count == 3 && frictionIds.All(IsDefaultChannelsSectionId))
             {
-                readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, readCrossSectionDefinition.Width);
+                lock (network.CrossSectionSectionTypes) 
+                    readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, readCrossSectionDefinition.Width);
                 return;
             }
 
@@ -310,19 +339,23 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 
             double floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
 
-            readCrossSectionDefinition.Sections.Clear();
-            readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
+            lock (network.CrossSectionSectionTypes) 
+                readCrossSectionDefinition.Sections.Clear();
+            lock (network.CrossSectionSectionTypes) 
+                readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
 
             if (Math.Abs(floodPlain1Width) > 1e-6)
             {
                 CrossSectionSectionType floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
-                readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
+                lock (network.CrossSectionSectionTypes) 
+                    readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
             }
 
             if (Math.Abs(floodPlain2Width) > 1e-6)
             {
                 CrossSectionSectionType floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
-                readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
+                lock (network.CrossSectionSectionTypes) 
+                    readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
             }
         }
 
@@ -336,14 +369,16 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 
             if (frictionIds.Count == 1 && IsDefaultChannelsSectionId(frictionIds[0]))
             {
-                readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                lock (network.CrossSectionSectionTypes)
                 {
-                    SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
-                    MinY = readCrossSectionDefinition.Left,
-                    MaxY = readCrossSectionDefinition.Right,
-                    IsDefaultChannelsSection = true
-                });
-
+                    readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                    {
+                        SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
+                        MinY = readCrossSectionDefinition.Left,
+                        MaxY = readCrossSectionDefinition.Right,
+                        IsDefaultChannelsSection = true
+                    });
+                }
                 return;
             }
 
@@ -358,18 +393,23 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
                 throw new FileReadingException("reading error");
             }
 
-            readCrossSectionDefinition.Sections.Clear();
+            lock (network.CrossSectionSectionTypes)
+            {
+                readCrossSectionDefinition.Sections.Clear();
+            }
 
             for (int index = 0; index < frictionIds.Count; index++)
             {
                 var networkSectionType = GetCrossSectionSectionType(frictionIds[index], network);
-
-                readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                lock (network.CrossSectionSectionTypes)
                 {
-                    SectionType = networkSectionType,
-                    MinY = frictionPositions[index],
-                    MaxY = frictionPositions[index + 1]
-                });
+                    readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                    {
+                        SectionType = networkSectionType,
+                        MinY = frictionPositions[index],
+                        MaxY = frictionPositions[index + 1]
+                    });
+                }
             }
         }
 
@@ -387,13 +427,16 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 
         private static CrossSectionSectionType GetCrossSectionSectionType(string sectionTypeName, IHydroNetwork network)
         {
-            var crossSectionSectionType = network.CrossSectionSectionTypes.FirstOrDefault(cst => string.Equals(cst.Name, sectionTypeName, StringComparison.InvariantCultureIgnoreCase));
-            if (crossSectionSectionType == null)
+            lock (network.CrossSectionSectionTypes)
             {
-                crossSectionSectionType = new CrossSectionSectionType { Name = sectionTypeName };
-                network.CrossSectionSectionTypes.Add(crossSectionSectionType);
+                var crossSectionSectionType = network.CrossSectionSectionTypes.FirstOrDefault(cst => string.Equals(cst.Name, sectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+                if (crossSectionSectionType == null)
+                {
+                    crossSectionSectionType = new CrossSectionSectionType { Name = sectionTypeName };
+                    network.CrossSectionSectionTypes.Add(crossSectionSectionType);
+                }
+                return crossSectionSectionType;
             }
-            return crossSectionSectionType;
         }
 
         private static HashSet<string> GetDuplicateDefinitionIds(IEnumerable<CrossSectionLocation> crossSectionLocations) => 
