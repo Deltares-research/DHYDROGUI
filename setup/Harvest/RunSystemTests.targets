@@ -153,8 +153,7 @@
       <_CheckNGHS_IO_NetCDFDllFile>io_netcdf.dll</_CheckNGHS_IO_NetCDFDllFile>
       <_CheckNGHS_Deltares_UgridDllFile>Deltares.UGrid.dll</_CheckNGHS_Deltares_UgridDllFile>
     </PropertyGroup>
-    <!-- RP as of new cmake implementation io_netcdf does not get correct version number to check. Disable until resolved in kernel
-	<MsBuild Projects="$(MSBuildProjectFullPath)"
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
@@ -162,7 +161,7 @@
                           Key=$(_CheckNGHS_IO_NetCDFDllFile);
                           KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_IO_NetCDFDllFile);
                           FileVersion=$(_CheckNGHS_IO_NetCDFDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>-->
+             ContinueOnError="WarnAndContinue"/>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
@@ -437,8 +436,7 @@
       <_CheckNGHS_IO_NetCDFDllFile>io_netcdf.dll</_CheckNGHS_IO_NetCDFDllFile>
       <_CheckNGHS_Deltares_UgridDllFile>Deltares.UGrid.dll</_CheckNGHS_Deltares_UgridDllFile>
     </PropertyGroup>
-    <!-- RP as of new cmake implementation io_netcdf does not get correct version number to check. Disable until resolved in kernel
-	<MsBuild Projects="$(MSBuildProjectFullPath)"
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
                           File=$(_VersionsFile);
@@ -446,8 +444,7 @@
                           Key=$(_CheckNGHS_IO_NetCDFDllFile);
                           KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_IO_NetCDFDllFile);
                           FileVersion=$(_CheckNGHS_IO_NetCDFDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>
-			 -->
+             ContinueOnError="WarnAndContinue"/>			 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
