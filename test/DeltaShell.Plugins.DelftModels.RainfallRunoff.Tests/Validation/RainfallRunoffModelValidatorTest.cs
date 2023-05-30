@@ -96,6 +96,36 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             Assert.AreEqual(ValidationSeverity.None, report.Severity()); // expect no more warning: we fix it
         }
 
+        [Test]
+        public void Validate_UnconnectedWasteWaterTreatmentPlant_RaisesErrors()
+        {
+            var model = new RainfallRunoffModel();
+
+            var c = Catchment.CreateDefault();
+            var boundary = new RunoffBoundary();
+            c.CatchmentType = CatchmentType.Unpaved;
+            model.Basin.Catchments.Add(c);
+            model.Basin.Boundaries.Add(boundary);
+            c.LinkTo(boundary);
+
+            var unpavedData = model.GetCatchmentModelData(c);
+            unpavedData.MeteoStationName = "blah";
+            model.MeteoStations.Add("a");
+
+            FillMeteoDataTimes(model);
+
+            var report = RainfallRunoffModelValidator.Validate(model);
+
+            Assert.AreEqual(ValidationSeverity.None, report.Severity());
+
+            var wwtp = WasteWaterTreatmentPlant.CreateDefault();
+            model.Basin.WasteWaterTreatmentPlants.Add(wwtp);
+
+            report = RainfallRunoffModelValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.Error,report.Severity());
+            Assert.AreEqual(2,report.AllErrors.Count());
+        }
+
         private static void FillMeteoDataTimes(RainfallRunoffModel model)
         {
             var generator = new TimeSeriesGenerator();

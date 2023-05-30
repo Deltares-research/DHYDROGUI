@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 
@@ -28,8 +30,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
         IEventedList<string> TemperatureStations { set; } 
     }
     
-    public interface IRRModelRunModeAwareView
+    public interface IRRModelRunModeAwareView : IComponent
     {
-        Func<bool> GetIsModelRunningParallelWithFlowFunc { set; }
+        void SetInitialWorkFlowState(bool isRunningParallel);
+        void WorkflowChanged(object sender, bool isRunningParallel);
     }
 }

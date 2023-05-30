@@ -17,6 +17,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
 using GeoAPI.Extensions.Coverages;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiControllers
@@ -383,6 +384,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 var wwtp = new WasteWaterTreatmentPlant();
                 model.Basin.WasteWaterTreatmentPlants.Add(wwtp);
                 runoffBoundary.LinkTo(wwtp);
+
+                var wwtpLinkTarget = Substitute.For<IHydroObject>();
+                wwtpLinkTarget.Region.Returns(wwtp.Region);
+                wwtp.LinkTo(wwtpLinkTarget);
 
                 catchment.LinkTo(wwtp);
                 catchment2.LinkTo(wwtp);

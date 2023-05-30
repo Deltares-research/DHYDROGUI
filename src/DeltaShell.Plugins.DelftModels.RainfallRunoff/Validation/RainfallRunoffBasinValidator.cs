@@ -45,13 +45,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             {
                 if (wwtp.Links.Count(l => Equals(wwtp, l.Target)) == 0)
                 {
-                    issues.Add(new ValidationIssue(wwtp, ValidationSeverity.Warning,
-                                                   "Wastewater Treatment Plant has no incoming runoff links", new ValidatedFeatures(target, wwtp)));
+                    issues.Add(new ValidationIssue(wwtp, ValidationSeverity.Error,
+                                                   "Wastewater Treatment Plant has no incoming runoff links; please remove WWTP node", new ValidatedFeatures(target, wwtp)));
                 }
                 if (wwtp.Links.Count(l => Equals(wwtp, l.Source)) == 0)
                 {
-                    issues.Add(new ValidationIssue(wwtp, ValidationSeverity.Warning,
-                                                   "Wastewater Treatment Plant has no outgoing runoff links; an implicit boundary will be created.", new ValidatedFeatures(target, wwtp)));
+                    issues.Add(new ValidationIssue(wwtp, ValidationSeverity.Error,
+                                                   "Wastewater Treatment Plant has no outgoing runoff links; please remove WWTP node", new ValidatedFeatures(target, wwtp)));
                 }
                 else if (wwtp.Links.Count(l => Equals(wwtp, l.Source)) > 1)
                 {

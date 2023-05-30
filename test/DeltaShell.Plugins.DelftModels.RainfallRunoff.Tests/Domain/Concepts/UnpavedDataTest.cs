@@ -13,10 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts
         public void GivenUnpavedData_ChangingAreaSum_ShouldChangeDependentGeometry()
         {
             //Arrange
-            var catchment = new Catchment
-            {
-                CatchmentType = CatchmentType.Unpaved
-            };
+            var catchment = new Catchment { CatchmentType = CatchmentType.Unpaved };
             var unpavedData = new UnpavedData(catchment);
 
             // check if no geometry is set
@@ -46,29 +43,55 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts
                 CatchmentType = CatchmentType.Unpaved,
                 Geometry = new Polygon(new LinearRing(new[]
                 {
-                    new Coordinate(0,0),
-                    new Coordinate(10,0),
-                    new Coordinate(10,10),
-                    new Coordinate(0,10),
-                    new Coordinate(0,0)
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 0),
+                    new Coordinate(10, 10),
+                    new Coordinate(0, 10),
+                    new Coordinate(0, 0)
                 }))
             };
-            var greenhouseData = new UnpavedData(catchment);
+            var unpavedData = new UnpavedData(catchment);
             var geometryArea = catchment.GeometryArea;
 
             // Act & Assert
             Assert.IsFalse(catchment.IsGeometryDerivedFromAreaSize);
             Assert.AreEqual(100, geometryArea);
 
-            greenhouseData.AreaPerCrop[UnpavedEnums.CropType.Corn] = 2000;
+            unpavedData.AreaPerCrop[UnpavedEnums.CropType.Corn] = 2000;
 
             Assert.AreEqual(100, catchment.GeometryArea, 1e-7);
             Assert.IsFalse(catchment.IsGeometryDerivedFromAreaSize);
 
-            greenhouseData.AreaPerCrop[UnpavedEnums.CropType.Grass] = 3000;
+            unpavedData.AreaPerCrop[UnpavedEnums.CropType.Grass] = 3000;
 
             Assert.AreEqual(100, catchment.GeometryArea, 1e-7);
             Assert.IsFalse(catchment.IsGeometryDerivedFromAreaSize);
+        }
+
+        [Test]
+        public void GivenUnpavedData_Clone_Test()
+        {
+            var useLocalBoundaryData = true;
+
+            //Arrange
+            var catchment = new Catchment
+            {
+                CatchmentType = CatchmentType.Unpaved,
+                Geometry = new Polygon(new LinearRing(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 0),
+                    new Coordinate(10, 10),
+                    new Coordinate(0, 10),
+                    new Coordinate(0, 0)
+                })),
+            };
+            var unpavedData = new UnpavedData(catchment) { UseLocalBoundaryData = useLocalBoundaryData };
+
+            // Act & Assert
+            var clone = unpavedData.Clone() as UnpavedData;
+
+            Assert.AreEqual(useLocalBoundaryData, clone?.UseLocalBoundaryData);
         }
     }
 }

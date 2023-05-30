@@ -28,6 +28,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         }
 
         public RainfallRunoffBoundaryData BoundaryData { get; set; }
+        
+        /// <summary>
+        /// Local Water Level Data is given by the user
+        /// If this value is true: when the unpaved catchment is linked to a Lateral (1D) it's still using the local data (not the water level at the lateral)
+        /// </summary>
+        public virtual bool UseLocalBoundaryData { get; set; }
 
         private UnpavedEnums.GroundWaterSourceType initialGroundWaterLevelSource;
         private UnpavedEnums.SeepageSourceType seepageSource;
@@ -190,8 +196,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public double SeepageH0HydraulicResistance { get; set; } //day (C)
         public TimeSeries SeepageH0Series { get; set; } //m AD (piezometric level H0)
 
-        //future: use from MODFLOW 
-
         #region ICloneable Members
 
         public override object Clone()
@@ -204,6 +208,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                                                       ? (TimeSeries) InitialGroundWaterLevelSeries.Clone()
                                                       : null;
             clone.BoundaryData = BoundaryData != null ? (RainfallRunoffBoundaryData) BoundaryData.Clone() : null;
+            clone.UseLocalBoundaryData = UseLocalBoundaryData;
             return clone;
         }
 

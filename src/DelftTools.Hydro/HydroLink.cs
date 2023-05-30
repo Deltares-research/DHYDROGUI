@@ -51,7 +51,7 @@ namespace DelftTools.Hydro
         /// </summary>
         [FeatureAttribute]
         public virtual string Name { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the source hydro object of this hydro link.
         /// </summary>

@@ -52,12 +52,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// <summary>
         /// Whether or not to use the water level from the linked node.
         /// </summary>
-        public bool UseWaterLevelFromLinkedNode => LinkedToRunoffBoundary || LinkedToFlowNode && ModelRunningParallelWithFlow;
+        public bool UseWaterLevelFromLinkedNode
+        {
+            get => !Data.UseLocalBoundaryData;
+            set => Data.UseLocalBoundaryData = !value;
+        }
+        
+        public bool LinkedToRunoffBoundary => Data.Catchment.Links.FirstOrDefault()?.Target is RunoffBoundary;
 
-        /// <summary>
-        /// Whether or not to overwrite the water level boundary.
-        /// </summary>
-        public bool OverwriteWaterLevelBoundaryEnabled => !UseWaterLevelFromLinkedNode;
+        public bool LinkedToFlowNode => Data.Catchment.Links.Any() && !LinkedToRunoffBoundary;
+        
+        public bool EnableWaterLevelForm { get; set; }
 
         /// <summary>
         /// Whether or not the ground water level is from the linked node.
@@ -194,10 +199,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// The area per crop type label.
         /// </summary>
         public string AreaPerCropTypeLabel => "Area per crop type in " + AreaUnitLabel;
-
-        private bool LinkedToRunoffBoundary => Data.Catchment.Links.FirstOrDefault()?.Target is RunoffBoundary;
-
-        private bool LinkedToFlowNode => Data.Catchment.Links.Any() && !LinkedToRunoffBoundary;
 
         private double GetArea(double value) =>
             RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, value);

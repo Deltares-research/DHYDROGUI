@@ -7,6 +7,8 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using NSubstitute;
 using NUnit.Framework;
@@ -24,7 +26,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         private const string targetmodelText = "My TargetModel";
         private const string couplerText = "source_coupler";
 
-       
         [Test]
         [TestCase("Greenhouse", true)]
         [TestCase("OpenWater", true)]
@@ -69,6 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             source.Expect(m => m.Name).Return(sourcemodelText).Repeat.Any();
             source.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
             source.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
+            
             ((IDimrModel)source).Expect(m => m.ShortName).Return("rr").Repeat.Any();
             
 
@@ -92,7 +94,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             catchment1.CatchmentType = catchmentType;
             var links = new EventedList<HydroLink>() { new HydroLink(catchment1, targetObj) };
             catchment1.Links = links;
-
+            
+            if (Equals(catchmentType, CatchmentType.Unpaved))
+            {
+                var modelData = new List<CatchmentModelData> { new UnpavedData(catchment1) };
+                source.Expect(m => m.ModelData).Return(modelData).Repeat.Any();
+            }
             
             var catchmentsList = new List<Catchment>{catchment1};
             var catchments = mocks.Stub<IEventedList<Catchment>>();
@@ -109,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             ((IHydroModel)source).Expect(m => m.Region).Return(basin).Repeat.Any();
             ((IDimrModel)source).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
             ((IDimrModel)source).Expect(dm => dm.IsMasterTimeStep).Return(false).Repeat.Any();
-
+            
             ICompositeActivity sourceCoupler;
 
             var activities = new EventedList<IActivity>();
@@ -155,10 +162,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             if (catchmentType == CatchmentType.Unpaved || Equals(catchmentType, CatchmentType.Paved))
             {
                 links.Clear();
-                links.Add(new HydroLink(targetObj, catchment1));;
+                links.Add(new HydroLink(targetObj, catchment1));
             }
             modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(target, source, null, null);
-            if (Equals(catchmentType, CatchmentType.Unpaved) || Equals(catchmentType, CatchmentType.Paved))
+            if (Equals(catchmentType, CatchmentType.Paved))
             {
                 expectedCouperName = ((IDimrModel) target).ShortName +
                                      DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER +

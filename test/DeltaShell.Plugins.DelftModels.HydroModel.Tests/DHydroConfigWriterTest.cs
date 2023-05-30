@@ -12,7 +12,11 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.Dimr.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -76,6 +80,66 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             HydroModel hydroModel = BuildCoupledDemoModel();
             CheckCouplerXml(hydroModel);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void WriteDocument_RR_FM_WaterLevelBoundary(bool useLocalBoundaryData)
+        {
+            var hydroModel = new HydroModel();
+            var waterFlowFMModel = new WaterFlowFMModel();
+            var rainfallRunoffModel = new RainfallRunoffModel();
+                        
+            //set up workflow
+            hydroModel.Activities.Add(waterFlowFMModel);
+            hydroModel.Activities.Add(rainfallRunoffModel);
+
+            hydroModel.CurrentWorkflow = hydroModel.Workflows.First(wf => wf.Name == @"(RR + FlowFM)");
+
+            //set up 1d network and lateral
+            var node1 = new HydroNode(){ Geometry = new Point(0,0) };
+            var node2 = new HydroNode(){ Geometry = new Point(100,0) };
+            var lateralSource = new LateralSource() { Geometry = new Point(50,0), Chainage = 50};
+            var branch1 = new Channel
+            {
+                Source = node1,
+                Target = node2,
+            };
+            waterFlowFMModel.Network.Branches.Add(branch1);
+            branch1.BranchFeatures.Add(lateralSource);
+            
+            //set up unpaved catchment
+            var catchment = new Catchment()
+            {
+                CatchmentType = CatchmentType.Unpaved,
+                Geometry = new LinearRing(new[]{new Coordinate(40,40),new Coordinate(40,60),new Coordinate(60,60),new Coordinate(60,40),new Coordinate(40,40)})
+            };
+            rainfallRunoffModel.Basin.Catchments.Add(catchment);
+            var unpavedData = (UnpavedData)rainfallRunoffModel.ModelData.First();
+            unpavedData.UseLocalBoundaryData = useLocalBoundaryData;
+            
+            //add link to region and set one way direction
+            hydroModel.Region.AddNewLink(catchment,lateralSource);
+            
+            //write file
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
+            var writer = new DHydroConfigWriter();
+            var xmlDocument = writer.CreateConfigDocument(hydroModel.CurrentWorkflow);
+            
+            List<XElement> couplers = xmlDocument.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
+
+            if (useLocalBoundaryData)
+            {
+                Assert.AreEqual(1,couplers.Count);
+                Assert.AreEqual("rr_to_flow",couplers.First().FirstAttribute.Value);
+            }
+            else
+            {
+                Assert.AreEqual(2,couplers.Count);
+                Assert.AreEqual("rr_to_flow",couplers.First().FirstAttribute.Value);   
+                Assert.AreEqual("flow_to_rr",couplers.Last().FirstAttribute.Value);   
+            }
         }
 
         #region PrivateHelperMethods

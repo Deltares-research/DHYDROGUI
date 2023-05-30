@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
@@ -65,6 +69,39 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public bool UseRestart { get; set; }
 
         public bool WriteRestart { get; set; }
+        
+        #region Hybride Section File-NHibernate Data
+
+        /// <summary>
+        /// Save UnpavedDataExtended is for persistency, save/load in Nhibernate
+        /// See <see cref="UnpavedDataExtended"/>
+        /// </summary>
+        public virtual IEventedList<UnpavedDataExtended> SaveUnpavedDataExtended { get; set; }
+        
+        /// <summary>
+        /// Method to synchronize UnpavedData and UnpavedDataExtended
+        /// </summary>
+        public void UpdateUnpavedDataWithExtendedData()
+        {
+            var unpavedDataExtendDictionary = SaveUnpavedDataExtended.ToDictionary(data => data.CatchmentName, data => data.UseLocalBoundaryData);
+            var unpavedDataEnumerable = ModelData.OfType<UnpavedData>();
+            unpavedDataEnumerable.ForEach(unpavedData =>
+            {
+                 if (unpavedDataExtendDictionary.ContainsKey(unpavedData.Name)) unpavedData.UseLocalBoundaryData = unpavedDataExtendDictionary[unpavedData.Name];
+            });
+        }
+
+        /// <summary>
+        /// Method to synchronize UnpavedData and UnpavedDataExtended
+        /// </summary>
+        public void UpdateUnpavedDataExtended()
+        {
+            SaveUnpavedDataExtended.Clear();
+            var unpavedDataCollection = modelData.OfType<UnpavedData>();
+            unpavedDataCollection.ForEach(unpavedData => SaveUnpavedDataExtended.Add(new UnpavedDataExtended(unpavedData.Name,unpavedData.UseLocalBoundaryData)));
+        }
+        
+        #endregion Hybride Section File-NHibernate Data
     }
 
 }

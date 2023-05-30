@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
@@ -214,5 +217,90 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             Assert.That(actualEvaporationValues.Count, Is.EqualTo(expectedDates.Count));
             Assert.That(actualEvaporationValues, Is.All.EqualTo(0));
         }
+
+        [Test]
+        public void Parse_Owner_Workflow_Changed_Event()
+        {
+            var owner = new MyCompositeActivity();
+            var counter = 0;
+            
+            var model = new RainfallRunoffModel();
+            model.WorkflowChanged += (s, b) =>
+            {
+                counter++;
+            };
+
+            model.Owner = owner;
+            
+            Assert.AreEqual(1,counter);
+
+            owner.CurrentWorkflow = new MyCompositeActivity();
+            
+            Assert.AreEqual(2,counter);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void UpdateUnpavedDataExtended(bool useLocalBoundaryData)
+        {
+            var rrModel = new RainfallRunoffModel();
+            var catchmentName = "Hihihihi";
+            var catchment = new Catchment() { Name = catchmentName };
+            rrModel.ModelData.Add(new UnpavedData(catchment) { UseLocalBoundaryData = useLocalBoundaryData});
+
+            Assert.AreEqual(0, rrModel.SaveUnpavedDataExtended.Count());
+            
+            //action & assert
+            rrModel.UpdateUnpavedDataExtended();
+            
+            Assert.AreEqual(1, rrModel.SaveUnpavedDataExtended.Count());
+            var unpavedDataExtended = rrModel.SaveUnpavedDataExtended.First();
+            Assert.AreEqual(catchmentName, unpavedDataExtended.CatchmentName);
+            Assert.AreEqual(useLocalBoundaryData, unpavedDataExtended.UseLocalBoundaryData);
+        }
+        
+        [Test]
+        public void UpdateUnpavedDataWithExtendedData()
+        {
+            var rrModel = new RainfallRunoffModel();
+            var catchmentName = "Hihihihi";
+            var catchment = new Catchment() { Name = catchmentName };
+            rrModel.ModelData.Add(new UnpavedData(catchment) { UseLocalBoundaryData = false});
+            rrModel.SaveUnpavedDataExtended.Add(new UnpavedDataExtended(catchmentName, true));
+            
+            rrModel.UpdateUnpavedDataWithExtendedData();
+            
+            Assert.IsTrue(rrModel.ModelData.OfType<UnpavedData>().First().UseLocalBoundaryData);
+        }
+    }
+    
+    [Entity] public class MyCompositeActivity : ICompositeActivity
+    {
+        public MyCompositeActivity()
+        {
+            Activities = new EventedList<IActivity>();
+        }
+        
+        public IEventedList<IActivity> Activities { get; }
+        public bool ReadOnly { get; set; }
+        public virtual ICompositeActivity CurrentWorkflow { get; set; }
+
+        public Type GetEntityType() { return null; }
+        public long Id { get; set; }
+        public IEnumerable<object> GetDirectChildren() { return null;}
+
+        public string Name { get; set; }
+        public object DeepClone() { return null; }
+        public void Initialize(){ }
+        public void Execute() {}
+        public void Cancel() {}
+        public void Finish() {}
+        public void Cleanup() {}
+        public void ResetActivity() {}
+        public IEventedList<IActivity> DependsOn { get; set; }
+        public ActivityStatus Status { get; }
+        public string ProgressText { get; }
+        public event EventHandler ProgressChanged;
+        public event EventHandler<ActivityStatusChangedEventArgs> StatusChanged;
     }
 }

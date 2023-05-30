@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges
 
         [DataMember]
         public string LinkName { get; set; }
-
+        
         [DataMember]
         public string LinkGeometryWkt { get; set; }
     }

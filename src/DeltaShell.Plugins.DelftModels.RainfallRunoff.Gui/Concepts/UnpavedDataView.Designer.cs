@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using DelftTools.Controls.Swf;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 
@@ -26,8 +27,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
@@ -100,7 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.catchmentMeteoStationSelection1 = new DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.CatchmentMeteoStationSelection();
             this.waterlevelTab = new System.Windows.Forms.TabPage();
             this.rrBoundarySeriesView1 = new DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls.RRBoundarySeriesView();
-            this.valuesFromLinkedNodeChkBox = new System.Windows.Forms.CheckBox();
+            this.rrBoundaryLinkPanel = new DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls.RRBoundaryLinkPanel();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceUnpavedViewModel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceUnpaved)).BeginInit();
             this.drainageComboPanel.SuspendLayout();
@@ -120,9 +121,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // seepageH0SeriesButton
             // 
             this.seepageH0SeriesButton.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpavedViewModel, "SeepageIsH0Series", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.seepageH0SeriesButton.Location = new System.Drawing.Point(226, 126);
+            this.seepageH0SeriesButton.Location = new System.Drawing.Point(301, 155);
+            this.seepageH0SeriesButton.Margin = new System.Windows.Forms.Padding(4);
             this.seepageH0SeriesButton.Name = "seepageH0SeriesButton";
-            this.seepageH0SeriesButton.Size = new System.Drawing.Size(70, 20);
+            this.seepageH0SeriesButton.Size = new System.Drawing.Size(93, 25);
             this.seepageH0SeriesButton.TabIndex = 5;
             this.seepageH0SeriesButton.Text = "...";
             this.seepageH0SeriesButton.UseVisualStyleBackColor = true;
@@ -135,36 +137,40 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(302, 130);
+            this.label24.Location = new System.Drawing.Point(403, 160);
+            this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(33, 13);
+            this.label24.Size = new System.Drawing.Size(42, 17);
             this.label24.TabIndex = 3;
             this.label24.Text = "m AD";
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(77, 130);
+            this.label23.Location = new System.Drawing.Point(103, 160);
+            this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(103, 13);
+            this.label23.Size = new System.Drawing.Size(136, 17);
             this.label23.TabIndex = 3;
             this.label23.Text = "Piezometric level H0";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(77, 103);
+            this.label22.Location = new System.Drawing.Point(103, 127);
+            this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(123, 13);
+            this.label22.Size = new System.Drawing.Size(164, 17);
             this.label22.TabIndex = 3;
             this.label22.Text = "Hydraulic Resistance (C)";
             // 
             // seepageSeriesButton
             // 
             this.seepageSeriesButton.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpavedViewModel, "SeepageIsSeries", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.seepageSeriesButton.Location = new System.Drawing.Point(148, 50);
+            this.seepageSeriesButton.Location = new System.Drawing.Point(197, 62);
+            this.seepageSeriesButton.Margin = new System.Windows.Forms.Padding(4);
             this.seepageSeriesButton.Name = "seepageSeriesButton";
-            this.seepageSeriesButton.Size = new System.Drawing.Size(70, 20);
+            this.seepageSeriesButton.Size = new System.Drawing.Size(93, 25);
             this.seepageSeriesButton.TabIndex = 5;
             this.seepageSeriesButton.Text = "...";
             this.seepageSeriesButton.UseVisualStyleBackColor = true;
@@ -174,27 +180,30 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.label17.AutoSize = true;
             this.label17.ForeColor = System.Drawing.Color.DimGray;
-            this.label17.Location = new System.Drawing.Point(25, 160);
+            this.label17.Location = new System.Drawing.Point(33, 197);
+            this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(314, 13);
+            this.label17.Size = new System.Drawing.Size(414, 17);
             this.label17.TabIndex = 4;
             this.label17.Text = "Notice: positive = upward (inflow), negative = downward (outflow)";
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(302, 103);
+            this.label21.Location = new System.Drawing.Point(403, 127);
+            this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(24, 13);
+            this.label21.Size = new System.Drawing.Size(31, 17);
             this.label21.TabIndex = 3;
             this.label21.Text = "day";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(225, 30);
+            this.label16.Location = new System.Drawing.Point(300, 37);
+            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(45, 13);
+            this.label16.Size = new System.Drawing.Size(57, 17);
             this.label16.TabIndex = 3;
             this.label16.Text = "mm/day";
             // 
@@ -202,9 +211,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.seepageConstantRadio.AutoSize = true;
             this.seepageConstantRadio.Checked = true;
-            this.seepageConstantRadio.Location = new System.Drawing.Point(28, 28);
+            this.seepageConstantRadio.Location = new System.Drawing.Point(37, 34);
+            this.seepageConstantRadio.Margin = new System.Windows.Forms.Padding(4);
             this.seepageConstantRadio.Name = "seepageConstantRadio";
-            this.seepageConstantRadio.Size = new System.Drawing.Size(67, 17);
+            this.seepageConstantRadio.Size = new System.Drawing.Size(85, 21);
             this.seepageConstantRadio.TabIndex = 0;
             this.seepageConstantRadio.TabStop = true;
             this.seepageConstantRadio.Text = "Constant";
@@ -215,9 +225,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.seepageHydraulicResistance.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpaved, "SeepageH0HydraulicResistance", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
             this.seepageHydraulicResistance.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpavedViewModel, "SeepageIsH0Series", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.seepageHydraulicResistance.Location = new System.Drawing.Point(226, 100);
+            this.seepageHydraulicResistance.Location = new System.Drawing.Point(301, 123);
+            this.seepageHydraulicResistance.Margin = new System.Windows.Forms.Padding(4);
             this.seepageHydraulicResistance.Name = "seepageHydraulicResistance";
-            this.seepageHydraulicResistance.Size = new System.Drawing.Size(70, 20);
+            this.seepageHydraulicResistance.Size = new System.Drawing.Size(92, 22);
             this.seepageHydraulicResistance.TabIndex = 2;
             // 
             // bindingSourceUnpaved
@@ -228,17 +239,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.seepage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpaved, "SeepageConstant", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
             this.seepage.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpavedViewModel, "SeepageIsConstant", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.seepage.Location = new System.Drawing.Point(149, 27);
+            this.seepage.Location = new System.Drawing.Point(199, 33);
+            this.seepage.Margin = new System.Windows.Forms.Padding(4);
             this.seepage.Name = "seepage";
-            this.seepage.Size = new System.Drawing.Size(70, 20);
+            this.seepage.Size = new System.Drawing.Size(92, 22);
             this.seepage.TabIndex = 2;
             // 
             // seepageH0SeriesRadio
             // 
             this.seepageH0SeriesRadio.AutoSize = true;
-            this.seepageH0SeriesRadio.Location = new System.Drawing.Point(28, 74);
+            this.seepageH0SeriesRadio.Location = new System.Drawing.Point(37, 91);
+            this.seepageH0SeriesRadio.Margin = new System.Windows.Forms.Padding(4);
             this.seepageH0SeriesRadio.Name = "seepageH0SeriesRadio";
-            this.seepageH0SeriesRadio.Size = new System.Drawing.Size(112, 17);
+            this.seepageH0SeriesRadio.Size = new System.Drawing.Size(149, 21);
             this.seepageH0SeriesRadio.TabIndex = 1;
             this.seepageH0SeriesRadio.TabStop = true;
             this.seepageH0SeriesRadio.Text = "Variable (H0-table)";
@@ -248,9 +261,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // seepageSeriesRadio
             // 
             this.seepageSeriesRadio.AutoSize = true;
-            this.seepageSeriesRadio.Location = new System.Drawing.Point(28, 51);
+            this.seepageSeriesRadio.Location = new System.Drawing.Point(37, 63);
+            this.seepageSeriesRadio.Margin = new System.Windows.Forms.Padding(4);
             this.seepageSeriesRadio.Name = "seepageSeriesRadio";
-            this.seepageSeriesRadio.Size = new System.Drawing.Size(95, 17);
+            this.seepageSeriesRadio.Size = new System.Drawing.Size(126, 21);
             this.seepageSeriesRadio.TabIndex = 1;
             this.seepageSeriesRadio.TabStop = true;
             this.seepageSeriesRadio.Text = "Variable (table)";
@@ -260,9 +274,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // drainagePanel
             // 
             this.drainagePanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.drainagePanel.Location = new System.Drawing.Point(10, 52);
+            this.drainagePanel.Location = new System.Drawing.Point(13, 64);
+            this.drainagePanel.Margin = new System.Windows.Forms.Padding(4);
             this.drainagePanel.Name = "drainagePanel";
-            this.drainagePanel.Size = new System.Drawing.Size(599, 230);
+            this.drainagePanel.Size = new System.Drawing.Size(802, 283);
             this.drainagePanel.TabIndex = 5;
             // 
             // drainageComboPanel
@@ -270,17 +285,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.drainageComboPanel.Controls.Add(this.label25);
             this.drainageComboPanel.Controls.Add(this.drainageComboBox);
             this.drainageComboPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.drainageComboPanel.Location = new System.Drawing.Point(10, 10);
+            this.drainageComboPanel.Location = new System.Drawing.Point(13, 12);
+            this.drainageComboPanel.Margin = new System.Windows.Forms.Padding(4);
             this.drainageComboPanel.Name = "drainageComboPanel";
-            this.drainageComboPanel.Size = new System.Drawing.Size(599, 42);
+            this.drainageComboPanel.Size = new System.Drawing.Size(802, 52);
             this.drainageComboPanel.TabIndex = 4;
             // 
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(17, 14);
+            this.label25.Location = new System.Drawing.Point(23, 17);
+            this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(98, 13);
+            this.label25.Size = new System.Drawing.Size(130, 17);
             this.label25.TabIndex = 3;
             this.label25.Text = "Computation option";
             // 
@@ -288,13 +305,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.drainageComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.drainageComboBox.FormattingEnabled = true;
-            this.drainageComboBox.Items.AddRange(new object[] {
-            "De Zeeuw-Hellinga",
-            "Ernst",
-            "Krayenhoff van de Leur"});
-            this.drainageComboBox.Location = new System.Drawing.Point(140, 10);
+            this.drainageComboBox.Items.AddRange(new object[]
+            {
+                "De Zeeuw-Hellinga",
+                "Ernst",
+                "Krayenhoff van de Leur"
+            });
+            this.drainageComboBox.Location = new System.Drawing.Point(187, 12);
+            this.drainageComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.drainageComboBox.Name = "drainageComboBox";
-            this.drainageComboBox.Size = new System.Drawing.Size(239, 21);
+            this.drainageComboBox.Size = new System.Drawing.Size(317, 24);
             this.drainageComboBox.TabIndex = 0;
             this.drainageComboBox.SelectedValueChanged += new System.EventHandler(this.DrainageComboBoxSelectedValueChanged);
             // 
@@ -303,26 +323,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.infiltrationUnitComboBox.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.bindingSourceUnpavedViewModel, "InfiltrationCapacityUnit", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.infiltrationUnitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.infiltrationUnitComboBox.FormattingEnabled = true;
-            this.infiltrationUnitComboBox.Location = new System.Drawing.Point(239, 22);
+            this.infiltrationUnitComboBox.Location = new System.Drawing.Point(319, 27);
+            this.infiltrationUnitComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.infiltrationUnitComboBox.Name = "infiltrationUnitComboBox";
-            this.infiltrationUnitComboBox.Size = new System.Drawing.Size(79, 21);
+            this.infiltrationUnitComboBox.Size = new System.Drawing.Size(104, 24);
             this.infiltrationUnitComboBox.TabIndex = 3;
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(28, 25);
+            this.label15.Location = new System.Drawing.Point(37, 31);
+            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(95, 13);
+            this.label15.Size = new System.Drawing.Size(125, 17);
             this.label15.TabIndex = 3;
             this.label15.Text = "Infiltration capacity";
             // 
             // infiltrationCapacity
             // 
             this.infiltrationCapacity.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpavedViewModel, "InfiltrationCapacity", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.infiltrationCapacity.Location = new System.Drawing.Point(152, 22);
+            this.infiltrationCapacity.Location = new System.Drawing.Point(203, 27);
+            this.infiltrationCapacity.Margin = new System.Windows.Forms.Padding(4);
             this.infiltrationCapacity.Name = "infiltrationCapacity";
-            this.infiltrationCapacity.Size = new System.Drawing.Size(70, 20);
+            this.infiltrationCapacity.Size = new System.Drawing.Size(92, 22);
             this.infiltrationCapacity.TabIndex = 4;
             // 
             // storageUnitComboBox
@@ -330,60 +353,67 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.storageUnitComboBox.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.bindingSourceUnpavedViewModel, "StorageUnit", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.storageUnitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.storageUnitComboBox.FormattingEnabled = true;
-            this.storageUnitComboBox.Location = new System.Drawing.Point(314, 73);
+            this.storageUnitComboBox.Location = new System.Drawing.Point(419, 90);
+            this.storageUnitComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.storageUnitComboBox.Name = "storageUnitComboBox";
-            this.storageUnitComboBox.Size = new System.Drawing.Size(79, 21);
+            this.storageUnitComboBox.Size = new System.Drawing.Size(104, 24);
             this.storageUnitComboBox.TabIndex = 3;
             // 
             // initialLandStorage
             // 
             this.initialLandStorage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpavedViewModel, "InitialLandStorage", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.initialLandStorage.Location = new System.Drawing.Point(228, 73);
+            this.initialLandStorage.Location = new System.Drawing.Point(304, 90);
+            this.initialLandStorage.Margin = new System.Windows.Forms.Padding(4);
             this.initialLandStorage.Name = "initialLandStorage";
-            this.initialLandStorage.Size = new System.Drawing.Size(70, 20);
+            this.initialLandStorage.Size = new System.Drawing.Size(92, 22);
             this.initialLandStorage.TabIndex = 2;
             // 
             // maximumLandStorage
             // 
             this.maximumLandStorage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpavedViewModel, "MaximumLandStorage", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.maximumLandStorage.Location = new System.Drawing.Point(152, 73);
+            this.maximumLandStorage.Location = new System.Drawing.Point(203, 90);
+            this.maximumLandStorage.Margin = new System.Windows.Forms.Padding(4);
             this.maximumLandStorage.Name = "maximumLandStorage";
-            this.maximumLandStorage.Size = new System.Drawing.Size(70, 20);
+            this.maximumLandStorage.Size = new System.Drawing.Size(92, 22);
             this.maximumLandStorage.TabIndex = 2;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(227, 57);
+            this.label14.Location = new System.Drawing.Point(303, 70);
+            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(31, 13);
+            this.label14.Size = new System.Drawing.Size(40, 17);
             this.label14.TabIndex = 1;
             this.label14.Text = "Initial";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(151, 57);
+            this.label13.Location = new System.Drawing.Point(201, 70);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(51, 13);
+            this.label13.Size = new System.Drawing.Size(66, 17);
             this.label13.TabIndex = 1;
             this.label13.Text = "Maximum";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(28, 76);
+            this.label12.Location = new System.Drawing.Point(37, 94);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(82, 13);
+            this.label12.Size = new System.Drawing.Size(109, 17);
             this.label12.TabIndex = 1;
             this.label12.Text = "Storage on land";
             // 
             // groundwaterSeriesButton
             // 
             this.groundwaterSeriesButton.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpavedViewModel, "GroundWaterLevelIsSeries", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groundwaterSeriesButton.Location = new System.Drawing.Point(150, 141);
+            this.groundwaterSeriesButton.Location = new System.Drawing.Point(200, 174);
+            this.groundwaterSeriesButton.Margin = new System.Windows.Forms.Padding(4);
             this.groundwaterSeriesButton.Name = "groundwaterSeriesButton";
-            this.groundwaterSeriesButton.Size = new System.Drawing.Size(70, 20);
+            this.groundwaterSeriesButton.Size = new System.Drawing.Size(93, 25);
             this.groundwaterSeriesButton.TabIndex = 4;
             this.groundwaterSeriesButton.Text = "...";
             this.groundwaterSeriesButton.UseVisualStyleBackColor = true;
@@ -392,27 +422,30 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(226, 124);
+            this.label11.Location = new System.Drawing.Point(301, 153);
+            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(84, 13);
+            this.label11.Size = new System.Drawing.Size(110, 17);
             this.label11.TabIndex = 3;
             this.label11.Text = "m below surface";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(227, 51);
+            this.label9.Location = new System.Drawing.Point(303, 63);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(33, 13);
+            this.label9.Size = new System.Drawing.Size(42, 17);
             this.label9.TabIndex = 3;
             this.label9.Text = "m AD";
             // 
             // groundwaterSeriesRadio
             // 
             this.groundwaterSeriesRadio.AutoSize = true;
-            this.groundwaterSeriesRadio.Location = new System.Drawing.Point(37, 143);
+            this.groundwaterSeriesRadio.Location = new System.Drawing.Point(49, 176);
+            this.groundwaterSeriesRadio.Margin = new System.Windows.Forms.Padding(4);
             this.groundwaterSeriesRadio.Name = "groundwaterSeriesRadio";
-            this.groundwaterSeriesRadio.Size = new System.Drawing.Size(95, 17);
+            this.groundwaterSeriesRadio.Size = new System.Drawing.Size(122, 21);
             this.groundwaterSeriesRadio.TabIndex = 1;
             this.groundwaterSeriesRadio.Text = "Pick from table";
             this.groundwaterSeriesRadio.UseVisualStyleBackColor = true;
@@ -422,9 +455,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.groundwaterConstantRadio.AutoSize = true;
             this.groundwaterConstantRadio.Checked = true;
-            this.groundwaterConstantRadio.Location = new System.Drawing.Point(37, 120);
+            this.groundwaterConstantRadio.Location = new System.Drawing.Point(49, 148);
+            this.groundwaterConstantRadio.Margin = new System.Windows.Forms.Padding(4);
             this.groundwaterConstantRadio.Name = "groundwaterConstantRadio";
-            this.groundwaterConstantRadio.Size = new System.Drawing.Size(67, 17);
+            this.groundwaterConstantRadio.Size = new System.Drawing.Size(85, 21);
             this.groundwaterConstantRadio.TabIndex = 1;
             this.groundwaterConstantRadio.TabStop = true;
             this.groundwaterConstantRadio.Text = "Constant";
@@ -434,9 +468,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // groundwaterLinkedNodeRadio
             // 
             this.groundwaterLinkedNodeRadio.AutoSize = true;
-            this.groundwaterLinkedNodeRadio.Location = new System.Drawing.Point(37, 98);
+            this.groundwaterLinkedNodeRadio.Location = new System.Drawing.Point(49, 121);
+            this.groundwaterLinkedNodeRadio.Margin = new System.Windows.Forms.Padding(4);
             this.groundwaterLinkedNodeRadio.Name = "groundwaterLinkedNodeRadio";
-            this.groundwaterLinkedNodeRadio.Size = new System.Drawing.Size(262, 17);
+            this.groundwaterLinkedNodeRadio.Size = new System.Drawing.Size(351, 21);
             this.groundwaterLinkedNodeRadio.TabIndex = 1;
             this.groundwaterLinkedNodeRadio.Text = "Take from linked node (boundary or lateral source)";
             this.groundwaterLinkedNodeRadio.UseVisualStyleBackColor = true;
@@ -445,27 +480,30 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(227, 25);
+            this.label7.Location = new System.Drawing.Point(303, 31);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(15, 13);
+            this.label7.Size = new System.Drawing.Size(19, 17);
             this.label7.TabIndex = 3;
             this.label7.Text = "m";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(28, 77);
+            this.label10.Location = new System.Drawing.Point(37, 95);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(60, 13);
+            this.label10.Size = new System.Drawing.Size(78, 17);
             this.label10.TabIndex = 1;
             this.label10.Text = "Initial Level";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(28, 51);
+            this.label8.Location = new System.Drawing.Point(37, 63);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(115, 13);
+            this.label8.Size = new System.Drawing.Size(150, 17);
             this.label8.TabIndex = 1;
             this.label8.Text = "Maximum allowed level";
             // 
@@ -473,34 +511,38 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.groundwaterConstant.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpaved, "InitialGroundWaterLevelConstant", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
             this.groundwaterConstant.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpavedViewModel, "GroundWaterLevelIsConstant", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groundwaterConstant.Location = new System.Drawing.Point(150, 119);
+            this.groundwaterConstant.Location = new System.Drawing.Point(200, 146);
+            this.groundwaterConstant.Margin = new System.Windows.Forms.Padding(4);
             this.groundwaterConstant.Name = "groundwaterConstant";
-            this.groundwaterConstant.Size = new System.Drawing.Size(70, 20);
+            this.groundwaterConstant.Size = new System.Drawing.Size(92, 22);
             this.groundwaterConstant.TabIndex = 2;
             // 
             // maximumGroundwaterLevel
             // 
             this.maximumGroundwaterLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpaved, "MaximumAllowedGroundWaterLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.maximumGroundwaterLevel.Location = new System.Drawing.Point(151, 48);
+            this.maximumGroundwaterLevel.Location = new System.Drawing.Point(201, 59);
+            this.maximumGroundwaterLevel.Margin = new System.Windows.Forms.Padding(4);
             this.maximumGroundwaterLevel.Name = "maximumGroundwaterLevel";
-            this.maximumGroundwaterLevel.Size = new System.Drawing.Size(70, 20);
+            this.maximumGroundwaterLevel.Size = new System.Drawing.Size(92, 22);
             this.maximumGroundwaterLevel.TabIndex = 2;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(28, 25);
+            this.label6.Location = new System.Drawing.Point(37, 31);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(81, 13);
+            this.label6.Size = new System.Drawing.Size(107, 17);
             this.label6.TabIndex = 1;
             this.label6.Text = "Layer thickness";
             // 
             // groundwaterThickness
             // 
             this.groundwaterThickness.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpaved, "GroundWaterLayerThickness", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.groundwaterThickness.Location = new System.Drawing.Point(151, 22);
+            this.groundwaterThickness.Location = new System.Drawing.Point(201, 27);
+            this.groundwaterThickness.Margin = new System.Windows.Forms.Padding(4);
             this.groundwaterThickness.Name = "groundwaterThickness";
-            this.groundwaterThickness.Size = new System.Drawing.Size(70, 20);
+            this.groundwaterThickness.Size = new System.Drawing.Size(92, 22);
             this.groundwaterThickness.TabIndex = 2;
             // 
             // soilTypeComboBox
@@ -508,44 +550,49 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.soilTypeComboBox.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.bindingSourceUnpaved, "SoilType", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.soilTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.soilTypeComboBox.FormattingEnabled = true;
-            this.soilTypeComboBox.Location = new System.Drawing.Point(151, 54);
+            this.soilTypeComboBox.Location = new System.Drawing.Point(201, 66);
+            this.soilTypeComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.soilTypeComboBox.Name = "soilTypeComboBox";
-            this.soilTypeComboBox.Size = new System.Drawing.Size(242, 21);
+            this.soilTypeComboBox.Size = new System.Drawing.Size(321, 24);
             this.soilTypeComboBox.TabIndex = 2;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(28, 57);
+            this.label3.Location = new System.Drawing.Point(37, 70);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 13);
+            this.label3.Size = new System.Drawing.Size(62, 17);
             this.label3.TabIndex = 1;
             this.label3.Text = "Soil type";
             // 
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(28, 25);
+            this.label27.Location = new System.Drawing.Point(37, 31);
+            this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(69, 13);
+            this.label27.Size = new System.Drawing.Size(90, 17);
             this.label27.TabIndex = 4;
             this.label27.Text = "Surface level";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(227, 25);
+            this.label1.Location = new System.Drawing.Point(303, 31);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(33, 13);
+            this.label1.Size = new System.Drawing.Size(42, 17);
             this.label1.TabIndex = 3;
             this.label1.Text = "m AD";
             // 
             // surfaceLevel
             // 
             this.surfaceLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpaved, "SurfaceLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
-            this.surfaceLevel.Location = new System.Drawing.Point(151, 22);
+            this.surfaceLevel.Location = new System.Drawing.Point(201, 27);
+            this.surfaceLevel.Margin = new System.Windows.Forms.Padding(4);
             this.surfaceLevel.Name = "surfaceLevel";
-            this.surfaceLevel.Size = new System.Drawing.Size(70, 20);
+            this.surfaceLevel.Size = new System.Drawing.Size(92, 22);
             this.surfaceLevel.TabIndex = 2;
             // 
             // groundWaterAreaPanel
@@ -554,18 +601,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.groundWaterAreaPanel.Controls.Add(this.groundwaterArea);
             this.groundWaterAreaPanel.Controls.Add(this.differentGroundwaterAreaCheckBox);
             this.groundWaterAreaPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groundWaterAreaPanel.Location = new System.Drawing.Point(10, 209);
+            this.groundWaterAreaPanel.Location = new System.Drawing.Point(13, 257);
+            this.groundWaterAreaPanel.Margin = new System.Windows.Forms.Padding(4);
             this.groundWaterAreaPanel.Name = "groundWaterAreaPanel";
-            this.groundWaterAreaPanel.Size = new System.Drawing.Size(599, 60);
+            this.groundWaterAreaPanel.Size = new System.Drawing.Size(802, 74);
             this.groundWaterAreaPanel.TabIndex = 6;
             // 
             // unitLabel
             // 
             this.unitLabel.AutoSize = true;
             this.unitLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpavedViewModel, "AreaUnitLabel", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.unitLabel.Location = new System.Drawing.Point(216, 32);
+            this.unitLabel.Location = new System.Drawing.Point(288, 39);
+            this.unitLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.unitLabel.Name = "unitLabel";
-            this.unitLabel.Size = new System.Drawing.Size(24, 13);
+            this.unitLabel.Size = new System.Drawing.Size(31, 17);
             this.unitLabel.TabIndex = 3;
             this.unitLabel.Text = "unit";
             // 
@@ -573,18 +622,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.groundwaterArea.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpavedViewModel, "TotalAreaForGroundWaterCalculations", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N2"));
             this.groundwaterArea.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpaved, "UseDifferentAreaForGroundWaterCalculations", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groundwaterArea.Location = new System.Drawing.Point(139, 29);
+            this.groundwaterArea.Location = new System.Drawing.Point(185, 36);
+            this.groundwaterArea.Margin = new System.Windows.Forms.Padding(4);
             this.groundwaterArea.Name = "groundwaterArea";
-            this.groundwaterArea.Size = new System.Drawing.Size(70, 20);
+            this.groundwaterArea.Size = new System.Drawing.Size(92, 22);
             this.groundwaterArea.TabIndex = 2;
             // 
             // differentGroundwaterAreaCheckBox
             // 
             this.differentGroundwaterAreaCheckBox.AutoSize = true;
             this.differentGroundwaterAreaCheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.bindingSourceUnpaved, "UseDifferentAreaForGroundWaterCalculations", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.differentGroundwaterAreaCheckBox.Location = new System.Drawing.Point(19, 6);
+            this.differentGroundwaterAreaCheckBox.Location = new System.Drawing.Point(25, 7);
+            this.differentGroundwaterAreaCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.differentGroundwaterAreaCheckBox.Name = "differentGroundwaterAreaCheckBox";
-            this.differentGroundwaterAreaCheckBox.Size = new System.Drawing.Size(246, 17);
+            this.differentGroundwaterAreaCheckBox.Size = new System.Drawing.Size(326, 21);
             this.differentGroundwaterAreaCheckBox.TabIndex = 5;
             this.differentGroundwaterAreaCheckBox.Text = "Use different area for groundwater calculations";
             this.differentGroundwaterAreaCheckBox.UseVisualStyleBackColor = true;
@@ -593,18 +644,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // 
             this.cropsHeaderPanel.Controls.Add(this.lblAreaPerCropType);
             this.cropsHeaderPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cropsHeaderPanel.Location = new System.Drawing.Point(10, 10);
+            this.cropsHeaderPanel.Location = new System.Drawing.Point(13, 12);
+            this.cropsHeaderPanel.Margin = new System.Windows.Forms.Padding(4);
             this.cropsHeaderPanel.Name = "cropsHeaderPanel";
-            this.cropsHeaderPanel.Size = new System.Drawing.Size(599, 30);
+            this.cropsHeaderPanel.Size = new System.Drawing.Size(802, 37);
             this.cropsHeaderPanel.TabIndex = 3;
             // 
             // lblAreaPerCropType
             // 
             this.lblAreaPerCropType.AutoSize = true;
             this.lblAreaPerCropType.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceUnpavedViewModel, "AreaPerCropTypeLabel", true));
-            this.lblAreaPerCropType.Location = new System.Drawing.Point(6, 9);
+            this.lblAreaPerCropType.Location = new System.Drawing.Point(8, 11);
+            this.lblAreaPerCropType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAreaPerCropType.Name = "lblAreaPerCropType";
-            this.lblAreaPerCropType.Size = new System.Drawing.Size(94, 13);
+            this.lblAreaPerCropType.Size = new System.Drawing.Size(126, 17);
             this.lblAreaPerCropType.TabIndex = 1;
             this.lblAreaPerCropType.Text = "Area per crop type";
             // 
@@ -620,9 +673,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.unpavedTabControl.Controls.Add(this.waterlevelTab);
             this.unpavedTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.unpavedTabControl.Location = new System.Drawing.Point(0, 0);
+            this.unpavedTabControl.Margin = new System.Windows.Forms.Padding(4);
             this.unpavedTabControl.Name = "unpavedTabControl";
             this.unpavedTabControl.SelectedIndex = 0;
-            this.unpavedTabControl.Size = new System.Drawing.Size(627, 399);
+            this.unpavedTabControl.Size = new System.Drawing.Size(836, 491);
             this.unpavedTabControl.TabIndex = 7;
             // 
             // cropsTab
@@ -631,10 +685,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.cropsTab.Controls.Add(this.groundWaterAreaPanel);
             this.cropsTab.Controls.Add(this.areaDictionaryEditor);
             this.cropsTab.Controls.Add(this.cropsHeaderPanel);
-            this.cropsTab.Location = new System.Drawing.Point(4, 22);
+            this.cropsTab.Location = new System.Drawing.Point(4, 25);
+            this.cropsTab.Margin = new System.Windows.Forms.Padding(4);
             this.cropsTab.Name = "cropsTab";
-            this.cropsTab.Padding = new System.Windows.Forms.Padding(10);
-            this.cropsTab.Size = new System.Drawing.Size(619, 373);
+            this.cropsTab.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
+            this.cropsTab.Size = new System.Drawing.Size(828, 462);
             this.cropsTab.TabIndex = 0;
             this.cropsTab.Text = "Crops";
             this.cropsTab.UseVisualStyleBackColor = true;
@@ -642,9 +697,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // areaDictionaryEditor
             // 
             this.areaDictionaryEditor.Dock = System.Windows.Forms.DockStyle.Top;
-            this.areaDictionaryEditor.Location = new System.Drawing.Point(10, 40);
+            this.areaDictionaryEditor.Location = new System.Drawing.Point(13, 49);
+            this.areaDictionaryEditor.Margin = new System.Windows.Forms.Padding(5);
             this.areaDictionaryEditor.Name = "areaDictionaryEditor";
-            this.areaDictionaryEditor.Size = new System.Drawing.Size(599, 169);
+            this.areaDictionaryEditor.Size = new System.Drawing.Size(802, 208);
             this.areaDictionaryEditor.TabIndex = 2;
             this.areaDictionaryEditor.TotalAreaLabel = "Total area";
             this.areaDictionaryEditor.UnitLabel = "unit";
@@ -660,10 +716,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.surfaceSoilTab.Controls.Add(this.label27);
             this.surfaceSoilTab.Controls.Add(this.label1);
             this.surfaceSoilTab.Controls.Add(this.surfaceLevel);
-            this.surfaceSoilTab.Location = new System.Drawing.Point(4, 22);
+            this.surfaceSoilTab.Location = new System.Drawing.Point(4, 25);
+            this.surfaceSoilTab.Margin = new System.Windows.Forms.Padding(4);
             this.surfaceSoilTab.Name = "surfaceSoilTab";
-            this.surfaceSoilTab.Padding = new System.Windows.Forms.Padding(25);
-            this.surfaceSoilTab.Size = new System.Drawing.Size(619, 373);
+            this.surfaceSoilTab.Padding = new System.Windows.Forms.Padding(33, 31, 33, 31);
+            this.surfaceSoilTab.Size = new System.Drawing.Size(828, 462);
             this.surfaceSoilTab.TabIndex = 1;
             this.surfaceSoilTab.Text = "Surface & Soil";
             this.surfaceSoilTab.UseVisualStyleBackColor = true;
@@ -671,29 +728,31 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // lblComment
             // 
             this.lblComment.AutoSize = true;
-            this.lblComment.Location = new System.Drawing.Point(32, 128);
+            this.lblComment.Location = new System.Drawing.Point(43, 158);
+            this.lblComment.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblComment.Name = "lblComment";
-            this.lblComment.Size = new System.Drawing.Size(387, 13);
+            this.lblComment.Size = new System.Drawing.Size(518, 17);
             this.lblComment.TabIndex = 7;
-            this.lblComment.Text = "*) If the model settings has been set to capsim the capsim soil types will be use" +
-    "d. ";
+            this.lblComment.Text = "*) If the model settings has been set to capsim the capsim soil types will be use" + "d. ";
             // 
             // capsimSoilTypeComboBox
             // 
             this.capsimSoilTypeComboBox.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.bindingSourceUnpaved, "SoilTypeCapsim", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.capsimSoilTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.capsimSoilTypeComboBox.FormattingEnabled = true;
-            this.capsimSoilTypeComboBox.Location = new System.Drawing.Point(152, 89);
+            this.capsimSoilTypeComboBox.Location = new System.Drawing.Point(203, 110);
+            this.capsimSoilTypeComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.capsimSoilTypeComboBox.Name = "capsimSoilTypeComboBox";
-            this.capsimSoilTypeComboBox.Size = new System.Drawing.Size(242, 21);
+            this.capsimSoilTypeComboBox.Size = new System.Drawing.Size(321, 24);
             this.capsimSoilTypeComboBox.TabIndex = 6;
             // 
             // lblCapsimSoilType
             // 
             this.lblCapsimSoilType.AutoSize = true;
-            this.lblCapsimSoilType.Location = new System.Drawing.Point(29, 92);
+            this.lblCapsimSoilType.Location = new System.Drawing.Point(39, 113);
+            this.lblCapsimSoilType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCapsimSoilType.Name = "lblCapsimSoilType";
-            this.lblCapsimSoilType.Size = new System.Drawing.Size(88, 13);
+            this.lblCapsimSoilType.Size = new System.Drawing.Size(117, 17);
             this.lblCapsimSoilType.TabIndex = 5;
             this.lblCapsimSoilType.Text = "CapSim soil type*";
             // 
@@ -713,10 +772,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.groundwaterTab.Controls.Add(this.label8);
             this.groundwaterTab.Controls.Add(this.label7);
             this.groundwaterTab.Controls.Add(this.label10);
-            this.groundwaterTab.Location = new System.Drawing.Point(4, 22);
+            this.groundwaterTab.Location = new System.Drawing.Point(4, 25);
+            this.groundwaterTab.Margin = new System.Windows.Forms.Padding(4);
             this.groundwaterTab.Name = "groundwaterTab";
-            this.groundwaterTab.Padding = new System.Windows.Forms.Padding(25);
-            this.groundwaterTab.Size = new System.Drawing.Size(619, 373);
+            this.groundwaterTab.Padding = new System.Windows.Forms.Padding(33, 31, 33, 31);
+            this.groundwaterTab.Size = new System.Drawing.Size(828, 462);
             this.groundwaterTab.TabIndex = 2;
             this.groundwaterTab.Text = "Groundwater";
             this.groundwaterTab.UseVisualStyleBackColor = true;
@@ -733,10 +793,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.storageInfiltrationTab.Controls.Add(this.label12);
             this.storageInfiltrationTab.Controls.Add(this.label14);
             this.storageInfiltrationTab.Controls.Add(this.label13);
-            this.storageInfiltrationTab.Location = new System.Drawing.Point(4, 22);
+            this.storageInfiltrationTab.Location = new System.Drawing.Point(4, 25);
+            this.storageInfiltrationTab.Margin = new System.Windows.Forms.Padding(4);
             this.storageInfiltrationTab.Name = "storageInfiltrationTab";
-            this.storageInfiltrationTab.Padding = new System.Windows.Forms.Padding(25);
-            this.storageInfiltrationTab.Size = new System.Drawing.Size(619, 373);
+            this.storageInfiltrationTab.Padding = new System.Windows.Forms.Padding(33, 31, 33, 31);
+            this.storageInfiltrationTab.Size = new System.Drawing.Size(828, 462);
             this.storageInfiltrationTab.TabIndex = 3;
             this.storageInfiltrationTab.Text = "Storage & Infiltration";
             this.storageInfiltrationTab.UseVisualStyleBackColor = true;
@@ -746,10 +807,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.drainageTab.AutoScroll = true;
             this.drainageTab.Controls.Add(this.drainagePanel);
             this.drainageTab.Controls.Add(this.drainageComboPanel);
-            this.drainageTab.Location = new System.Drawing.Point(4, 22);
+            this.drainageTab.Location = new System.Drawing.Point(4, 25);
+            this.drainageTab.Margin = new System.Windows.Forms.Padding(4);
             this.drainageTab.Name = "drainageTab";
-            this.drainageTab.Padding = new System.Windows.Forms.Padding(10);
-            this.drainageTab.Size = new System.Drawing.Size(619, 373);
+            this.drainageTab.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
+            this.drainageTab.Size = new System.Drawing.Size(828, 462);
             this.drainageTab.TabIndex = 4;
             this.drainageTab.Text = "Drainage";
             this.drainageTab.UseVisualStyleBackColor = true;
@@ -770,10 +832,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.seepageTab.Controls.Add(this.seepageHydraulicResistance);
             this.seepageTab.Controls.Add(this.label21);
             this.seepageTab.Controls.Add(this.label16);
-            this.seepageTab.Location = new System.Drawing.Point(4, 22);
+            this.seepageTab.Location = new System.Drawing.Point(4, 25);
+            this.seepageTab.Margin = new System.Windows.Forms.Padding(4);
             this.seepageTab.Name = "seepageTab";
-            this.seepageTab.Padding = new System.Windows.Forms.Padding(25);
-            this.seepageTab.Size = new System.Drawing.Size(619, 373);
+            this.seepageTab.Padding = new System.Windows.Forms.Padding(33, 31, 33, 31);
+            this.seepageTab.Size = new System.Drawing.Size(828, 462);
             this.seepageTab.TabIndex = 5;
             this.seepageTab.Text = "Seepage";
             this.seepageTab.UseVisualStyleBackColor = true;
@@ -781,9 +844,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // meteoTab
             // 
             this.meteoTab.Controls.Add(this.catchmentMeteoStationSelection1);
-            this.meteoTab.Location = new System.Drawing.Point(4, 22);
+            this.meteoTab.Location = new System.Drawing.Point(4, 25);
+            this.meteoTab.Margin = new System.Windows.Forms.Padding(4);
             this.meteoTab.Name = "meteoTab";
-            this.meteoTab.Size = new System.Drawing.Size(619, 373);
+            this.meteoTab.Size = new System.Drawing.Size(828, 462);
             this.meteoTab.TabIndex = 7;
             this.meteoTab.Text = "Meteo";
             this.meteoTab.UseVisualStyleBackColor = true;
@@ -793,20 +857,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.catchmentMeteoStationSelection1.CatchmentModelData = null;
             this.catchmentMeteoStationSelection1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.catchmentMeteoStationSelection1.Location = new System.Drawing.Point(0, 0);
+            this.catchmentMeteoStationSelection1.Margin = new System.Windows.Forms.Padding(5);
             this.catchmentMeteoStationSelection1.MeteoStations = null;
             this.catchmentMeteoStationSelection1.Name = "catchmentMeteoStationSelection1";
-            this.catchmentMeteoStationSelection1.Size = new System.Drawing.Size(619, 373);
+            this.catchmentMeteoStationSelection1.Size = new System.Drawing.Size(828, 462);
             this.catchmentMeteoStationSelection1.TabIndex = 0;
             this.catchmentMeteoStationSelection1.UseMeteoStations = false;
             // 
             // waterlevelTab
             // 
             this.waterlevelTab.Controls.Add(this.rrBoundarySeriesView1);
-            this.waterlevelTab.Controls.Add(this.valuesFromLinkedNodeChkBox);
-            this.waterlevelTab.Location = new System.Drawing.Point(4, 22);
+            this.waterlevelTab.Controls.Add(this.rrBoundaryLinkPanel);
+            this.waterlevelTab.Location = new System.Drawing.Point(4, 25);
+            this.waterlevelTab.Margin = new System.Windows.Forms.Padding(4);
             this.waterlevelTab.Name = "waterlevelTab";
-            this.waterlevelTab.Padding = new System.Windows.Forms.Padding(5);
-            this.waterlevelTab.Size = new System.Drawing.Size(619, 373);
+            this.waterlevelTab.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.waterlevelTab.Size = new System.Drawing.Size(828, 462);
             this.waterlevelTab.TabIndex = 6;
             this.waterlevelTab.Text = "Boundary Waterlevel";
             this.waterlevelTab.UseVisualStyleBackColor = true;
@@ -814,35 +880,39 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             // rrBoundarySeriesView1
             // 
             this.rrBoundarySeriesView1.Data = null;
-            this.rrBoundarySeriesView1.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpavedViewModel, "OverwriteWaterLevelBoundaryEnabled", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.rrBoundarySeriesView1.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceUnpavedViewModel, "EnableWaterLevelForm", true));
             this.rrBoundarySeriesView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rrBoundarySeriesView1.Image = null;
-            this.rrBoundarySeriesView1.Location = new System.Drawing.Point(5, 22);
+            this.rrBoundarySeriesView1.Location = new System.Drawing.Point(7, 84);
+            this.rrBoundarySeriesView1.Margin = new System.Windows.Forms.Padding(5);
             this.rrBoundarySeriesView1.Name = "rrBoundarySeriesView1";
-            this.rrBoundarySeriesView1.Size = new System.Drawing.Size(609, 346);
+            this.rrBoundarySeriesView1.Size = new System.Drawing.Size(814, 372);
             this.rrBoundarySeriesView1.TabIndex = 0;
+            this.rrBoundarySeriesView1.ViewInfo = null;
             // 
-            // valuesFromLinkedNodeChkBox
+            // rrBoundaryLinkPanel
             // 
-            this.valuesFromLinkedNodeChkBox.AutoSize = true;
-            this.valuesFromLinkedNodeChkBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.bindingSourceUnpavedViewModel, "UseWaterLevelFromLinkedNode", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.valuesFromLinkedNodeChkBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.valuesFromLinkedNodeChkBox.Enabled = false;
-            this.valuesFromLinkedNodeChkBox.Location = new System.Drawing.Point(5, 5);
-            this.valuesFromLinkedNodeChkBox.Name = "valuesFromLinkedNodeChkBox";
-            this.valuesFromLinkedNodeChkBox.Size = new System.Drawing.Size(609, 17);
-            this.valuesFromLinkedNodeChkBox.TabIndex = 1;
-            this.valuesFromLinkedNodeChkBox.Text = "Use value(s) from linked node";
-            this.valuesFromLinkedNodeChkBox.UseVisualStyleBackColor = true;
+            this.rrBoundaryLinkPanel.AutoSize = true;
+            this.rrBoundaryLinkPanel.BackColor = System.Drawing.Color.Transparent;
+            this.rrBoundaryLinkPanel.Data = null;
+            this.rrBoundaryLinkPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.rrBoundaryLinkPanel.Image = null;
+            this.rrBoundaryLinkPanel.Location = new System.Drawing.Point(7, 6);
+            this.rrBoundaryLinkPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.rrBoundaryLinkPanel.Name = "rrBoundaryLinkPanel";
+            this.rrBoundaryLinkPanel.Size = new System.Drawing.Size(814, 78);
+            this.rrBoundaryLinkPanel.TabIndex = 1;
+            this.rrBoundaryLinkPanel.ViewInfo = null;
             // 
             // UnpavedDataView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.Controls.Add(this.unpavedTabControl);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "UnpavedDataView";
-            this.Size = new System.Drawing.Size(627, 399);
+            this.Size = new System.Drawing.Size(836, 491);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceUnpavedViewModel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceUnpaved)).EndInit();
             this.drainageComboPanel.ResumeLayout(false);
@@ -866,7 +936,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             this.waterlevelTab.ResumeLayout(false);
             this.waterlevelTab.PerformLayout();
             this.ResumeLayout(false);
-
         }
 
         #endregion
@@ -928,12 +997,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         private System.Windows.Forms.TabPage drainageTab;
         private System.Windows.Forms.TabPage seepageTab;
         private System.Windows.Forms.TabPage waterlevelTab;
-        private RRBoundarySeriesView rrBoundarySeriesView1;
+        private DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls.RRBoundarySeriesView rrBoundarySeriesView1;
         private System.Windows.Forms.Label lblCapsimSoilType;
         private System.Windows.Forms.Label lblComment;
         private System.Windows.Forms.TabPage meteoTab;
         private CatchmentMeteoStationSelection catchmentMeteoStationSelection1;
-        private CheckBox valuesFromLinkedNodeChkBox;
+        private DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls.RRBoundaryLinkPanel rrBoundaryLinkPanel;
         private BindableComboBox soilTypeComboBox;
         private BindableComboBox storageUnitComboBox;
         private BindableComboBox infiltrationUnitComboBox;

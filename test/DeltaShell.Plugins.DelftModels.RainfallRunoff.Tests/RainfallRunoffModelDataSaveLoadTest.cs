@@ -403,7 +403,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
             }
         }
-
+        
         [Test]
         [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadUnpavedData()
@@ -924,7 +924,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             Assert.AreEqual(1, retrievedWwtp.Links.Count);
             Assert.AreSame(retrievedLink, retrievedWwtp.Links.First());
         }
-
+        
         [Test]
         [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadWasteWaterTreatmentPlant()
@@ -943,6 +943,51 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             Assert.AreEqual(basin, retrievedWwtp.Basin);
             //Assert.AreEqual(wwtp.Description, retrievedWwtp.Description);
         }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)] 
+        [Category(TestCategory.Integration)] 
+        public void SaveAndLoad_UnpavedDataExtended()
+        {
+            string path = null;
+            var useLocalBoundaryData = true;
+            try
+            {
+                var firstCatchment = new Catchment
+                    {Name = ORIGINAL_CATCHMENT_NAME, CatchmentType = CatchmentType.Unpaved};
+
+                var rrModel = GetRRModel();
+                rrModel.Basin.Catchments.Add(firstCatchment);
+
+                var unpavedData = (UnpavedData) rrModel.GetCatchmentModelData(firstCatchment);
+
+                unpavedData.UseLocalBoundaryData = useLocalBoundaryData;
+
+                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                {
+                    CreateRunningDeltaShellApplication(application);
+
+                    application.Project.RootFolder.Items.Add(rrModel);
+                    path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                
+                    application.OpenProject(path);
+                    var retrievedProject = application.Project;
+                    var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
+                                                         .OfType<RainfallRunoffModel>().FirstOrDefault();
+                    Assert.NotNull(retrievedModel);
+                    var retrievedUnpavedData =
+                        (UnpavedData) retrievedModel.GetCatchmentModelData(retrievedModel.Basin.Catchments.First());
+                    Assert.IsNotNull(retrievedUnpavedData);
+
+                    Assert.AreEqual(useLocalBoundaryData,retrievedUnpavedData.UseLocalBoundaryData);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
+            }
+        }
+
 
 
         private RainfallRunoffModel GetRRModel()

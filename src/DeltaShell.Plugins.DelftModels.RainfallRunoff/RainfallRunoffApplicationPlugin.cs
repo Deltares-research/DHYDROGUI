@@ -62,6 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 if (base.Application != null)
                 {
                     base.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerOnActivityStatusChanged;
+                    base.Application.ProjectSaving -= SynchronizeDataBeforeSaving;
                     base.Application.ProjectSaved -= SaveToFile;
                     base.Application.ProjectOpened -= ApplicationOnProjectOpened;
                 }
@@ -71,12 +72,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 if (base.Application != null)
                 {
                     base.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerOnActivityStatusChanged;
+                    base.Application.ProjectSaving += SynchronizeDataBeforeSaving;
                     base.Application.ProjectSaved += SaveToFile;
                     base.Application.ProjectOpened += ApplicationOnProjectOpened;
                 }
             }
         }
-
         public override void Activate()
         {
             base.Activate();
@@ -88,7 +89,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             foreach (var rainfallRunoffModel in GetModels(project))
             {
                 rainfallRunoffModel.WorkingDirectoryPathFunc = () => Application?.WorkDirectory;
+                UpdateDataAfterOpened(rainfallRunoffModel);
             }
+        }
+        
+        private void SynchronizeDataBeforeSaving(Project project)
+        {
+            var rrModels = GetModels(project);
+            foreach (var rainfallRunoffModel in rrModels)
+            {
+                rainfallRunoffModel.UpdateUnpavedDataExtended();
+            }
+        }
+        
+        private void UpdateDataAfterOpened(RainfallRunoffModel rainfallRunoffModel)
+        {
+            rainfallRunoffModel.UpdateUnpavedDataWithExtendedData();
         }
 
         private void SaveToFile(Project project)
@@ -184,7 +200,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         
         private static IEnumerable<RainfallRunoffModel> GetModels(Project project)
         {
-            return project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
+            if (project != null)
+            {
+                return project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
+            }
+            return Enumerable.Empty<RainfallRunoffModel>();
         }
     }
 }

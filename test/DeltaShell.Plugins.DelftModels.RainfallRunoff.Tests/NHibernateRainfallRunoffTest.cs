@@ -9,6 +9,7 @@ using DeltaShell.Core.Services;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Plugins.NetCDF;
@@ -197,6 +198,38 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             project.RootFolder.Items.Add(dataItem);
             return model;
+        }
+        
+        [Test]
+        public void SaveLoadUnpavedDataExtended()
+        {
+            Project project;
+            HybridProjectRepository hybridProjectRepository;
+            RainfallRunoffModel model = GetRRModel(out project, out hybridProjectRepository);
+
+            var catchmentName = "hahahaha";
+            var useLocalBoundaryData = true;
+            
+            model.SaveUnpavedDataExtended.Add(new UnpavedDataExtended(catchmentName,useLocalBoundaryData));
+
+            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+
+            hybridProjectRepository.SaveProjectAs(project, path);
+            hybridProjectRepository.Close(project);
+            hybridProjectRepository.Dispose();
+
+            using (projectRepository = factory.CreateNew())
+            {
+                projectRepository.Open(path);
+                var retrievedProject = projectRepository.GetProject();
+                var retrievedModel = (RainfallRunoffModel) retrievedProject.RootFolder.DataItems.First().Value;
+
+                Assert.AreEqual(1,retrievedModel.SaveUnpavedDataExtended.Count);
+                var unpavedDataExtended = retrievedModel.SaveUnpavedDataExtended.First();
+                
+                Assert.AreEqual(catchmentName,unpavedDataExtended.CatchmentName);
+                Assert.AreEqual(useLocalBoundaryData,unpavedDataExtended.UseLocalBoundaryData);
+            }
         }
     }
 }

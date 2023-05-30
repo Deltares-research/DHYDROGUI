@@ -408,7 +408,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 RainfallRunoffModel model = GetModelForData(actualData, gui);
                 if (model != null)
                 {
-                    modelModeAwareView.GetIsModelRunningParallelWithFlowFunc = model.IsRunningParallelWithFlow;
+                	model.WorkflowChanged += modelModeAwareView.WorkflowChanged;
+                    modelModeAwareView.Disposed += (_,__) => model.WorkflowChanged -= modelModeAwareView.WorkflowChanged;
+                	modelModeAwareView.SetInitialWorkFlowState(model.IsRunningParallelWithFlow());
                 }
             }
         }

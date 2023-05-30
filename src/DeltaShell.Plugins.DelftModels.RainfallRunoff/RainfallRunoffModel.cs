@@ -141,6 +141,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 };
 
             ModelData = new EventedList<CatchmentModelData>();
+            SaveUnpavedDataExtended = new EventedList<UnpavedDataExtended>();
             NwrwDryWeatherFlowDefinitions = new EventedList<NwrwDryWeatherFlowDefinition>()
             {
                 NwrwDryWeatherFlowDefinition.CreateDefaultDwaDefinition()
@@ -968,9 +969,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         protected virtual bool ClearingOutput { get; set; }
         private IEventedList<RunoffBoundaryData> boundaryData;
         private IEventedList<string> meteoStations;
-        private IEventedList<string> temperatureStations; 
-        
-        #region Save State: Time Range
+        private IEventedList<string> temperatureStations;
+        private ICompositeActivity modelOwner;
+
+        #region Save State
 
         public virtual bool UseSaveStateTimeRange { get; set; }
 
@@ -979,21 +981,67 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public virtual DateTime SaveStateStopTime { get; set; }
 
         public virtual TimeSpan SaveStateTimeStep { get; set; }
-
-        #endregion
-
         
         #endregion
-
+        
+        #endregion
+        
+        #region Run information
+        
         public bool IsRunningParallelWithFlow()
         {
-            var owner = Owner as ICompositeActivity;
-            if (owner == null)
+            if (!(Owner is ICompositeActivity owner))
+            {
                 return false;
+            }
 
-            var simtaneousActivities = owner.GetActivitiesRunningSimultaneous(this);
-            return simtaneousActivities.Any();
+            IEnumerable<IActivity> simultaneousActivities = owner.GetActivitiesRunningSimultaneous(this);
+            return simultaneousActivities.Any();
         }
+
+        public override object Owner
+        {
+            get => base.Owner;
+            set
+            {
+                base.Owner = value;
+                SetModelOwner(value as ICompositeActivity);
+            }
+        }
+
+        private void SetModelOwner(ICompositeActivity updatedModelOwner )
+        {
+            if (modelOwner != null)
+            {
+                ((INotifyPropertyChanged)modelOwner).PropertyChanged -= OnModelOwnerPropertyChanged;
+            }
+
+            modelOwner = updatedModelOwner;
+
+            if (modelOwner != null)
+            {
+                ((INotifyPropertyChanged)modelOwner).PropertyChanged += OnModelOwnerPropertyChanged;
+            }
+
+            WorkflowChanged?.Invoke(this, IsRunningParallelWithFlow());
+        }
+
+        private void OnModelOwnerPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(modelOwner.CurrentWorkflow)))
+            {
+                WorkflowChanged?.Invoke(this, IsRunningParallelWithFlow());
+            }
+        }
+
+        /// <summary>
+        /// Event Handler for Run situation (parallel or sequential)
+        /// </summary>
+        public event EventHandler<bool> WorkflowChanged;
+        
+        #endregion Run information
+        
+        
         #region Implementation of IDimrModel
 
         public virtual string LibraryName { get { return "rr_dll"; } }
@@ -1165,7 +1213,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 fileStore.Close();
             }
-
+            
             if (modelController == null) return;
 
             try

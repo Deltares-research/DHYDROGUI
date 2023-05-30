@@ -5,12 +5,11 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
-using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryConditionsHelpers;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
@@ -20,6 +19,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
     public class SobekRRBoundaryConditionsImporter : PartialSobekImporterBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRBoundaryConditionsImporter));
+        private readonly RRBoundaryConditionsBcImporter bcImporter = new RRBoundaryConditionsBcImporter();
         private string filePathBoundaryConditions = "";
         private string filePathBoundaryTableConditions = "";
 
@@ -57,29 +57,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                 ReadAndSetBoundaryConditions(rainfallRunoffModel);
             }
-            if (File.Exists(GetFilePath("BoundaryConditions.bc")))
+            string bcFilePath = GetFilePath("BoundaryConditions.bc");
+            if (File.Exists(bcFilePath))
             {
-                ReadAndSetBoundaryConditionsViaBC(rainfallRunoffModel);
-            }
-        }
-
-        private void ReadAndSetBoundaryConditionsViaBC(RainfallRunoffModel model)
-        {
-            var boundaryDatas = model.BoundaryData;
-            
-            var bcFileReader = new BcFile(){BlockKey = $"[{BoundaryRegion.BcBoundaryHeader}]" };
-            var bcBlockDatas = bcFileReader.Read(GetFilePath("BoundaryConditions.bc"));
-            
-            foreach (var bcBlockData in bcBlockDatas)
-            {
-                //put condition on the boundary itself
-                var boundaryCondition = boundaryDatas.FirstOrDefault(bd => bd.Boundary.Name == bcBlockData.FunctionType);
-                if (boundaryCondition != null)
-                {
-                    var boundaryData = boundaryCondition.Series;
-                    boundaryData.IsConstant = bcBlockData.FunctionType.Equals("constant", StringComparison.InvariantCultureIgnoreCase);
-                    boundaryData.Data.Time.ExtrapolationType = ExtrapolationType.Constant;
-                }
+                bcImporter.Import(bcFilePath, rainfallRunoffModel);
             }
         }
 

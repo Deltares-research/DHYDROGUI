@@ -104,5 +104,39 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts
                                              f =>
                                              unpavedData.SwitchDrainageFormula<KrayenhoffVanDeLeurDrainageFormula>());
         }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void SetInitialWorkFlowStateTest(bool isRunningParallel)
+        {
+            var unpavedData = new UnpavedData(new Catchment());
+            var unpavedDataView = new TestClassUnpavedDataView { Data = unpavedData };
+            
+            unpavedDataView.SetInitialWorkFlowState(isRunningParallel);
+
+            var viewModel = unpavedDataView.GetViewModel();
+            Assert.AreEqual(isRunningParallel,viewModel.ModelRunningParallelWithFlow);
+        }
+        
+        [TestCase(false)]
+        [TestCase(true)]
+        public void WorkflowChangedTest(bool isRunningParallel)
+        {
+            var unpavedData = new UnpavedData(new Catchment());
+            var unpavedDataView = new TestClassUnpavedDataView { Data = unpavedData };
+            
+            unpavedDataView.WorkflowChanged(new object(),isRunningParallel);
+
+            var viewModel = unpavedDataView.GetViewModel();
+            Assert.AreEqual(isRunningParallel,viewModel.ModelRunningParallelWithFlow);
+        }
+
+        public class TestClassUnpavedDataView : UnpavedDataView
+        {
+            public UnpavedDataViewModel GetViewModel()
+            {
+                return base.ViewModel;
+            }
+        }
     }
 }

@@ -144,6 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         var hasTargetHydroObject = hasTargetHydroObjectType && 
                                                    targetHydroObjectTypes.TryGetValue(regionExchange.TargetName,out target) && 
                                                    target.CanBeLinkTarget;
+                        
 
                         if (!hasSourceHydroObject || !hasTargetHydroObject)
                         {
@@ -169,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                             {
                                 hydroLink.Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt);
                             }
-
+                                
                             Region.Links.Add(hydroLink);
                             linkConnections.Add((hydroLink.Source, hydroLink.Target));
                         }

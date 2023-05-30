@@ -30,13 +30,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             var catchmentWarnings = warnings.Where(i => ReferenceEquals(i.Subject, catchment));
             var wwtpWarnings = warnings.Where(i => ReferenceEquals(i.Subject, wwtp));
 
-            Assert.AreEqual(ValidationSeverity.Warning, report.Severity());
-            Assert.GreaterOrEqual(report.ErrorCount, 0);
-            Assert.GreaterOrEqual(report.WarningCount, 1);
+            Assert.AreEqual(ValidationSeverity.Error, report.Severity());
+            Assert.GreaterOrEqual(report.ErrorCount, 1);
+            Assert.GreaterOrEqual(report.WarningCount, 0);
             Assert.GreaterOrEqual(catchmentErrors.Count(), 0);
             Assert.GreaterOrEqual(catchmentWarnings.Count(), 0);
-            Assert.GreaterOrEqual(wwtpErrors.Count(),0);
-            Assert.GreaterOrEqual(wwtpWarnings.Count(), 1);
+            Assert.GreaterOrEqual(wwtpErrors.Count(),1);
+            Assert.GreaterOrEqual(wwtpWarnings.Count(), 0);
         }
 
         [Test]

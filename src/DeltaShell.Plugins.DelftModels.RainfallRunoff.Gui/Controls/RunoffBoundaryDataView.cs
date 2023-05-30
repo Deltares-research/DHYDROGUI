@@ -40,5 +40,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
         }
 
         public ViewInfo ViewInfo { get; set; }
+
     }
 }

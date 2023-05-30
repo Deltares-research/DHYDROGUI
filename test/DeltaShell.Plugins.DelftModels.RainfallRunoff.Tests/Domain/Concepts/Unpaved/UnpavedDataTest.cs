@@ -76,5 +76,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Un
             Assert.AreNotSame(unpaved.AreaPerCrop, clone.AreaPerCrop);
             Assert.AreEqual(unpaved.AreaPerCrop.Values, clone.AreaPerCrop.Values);
         }
+        
+        [Test]
+        public void CloneWithUseLocalBoundaryData()
+        {
+            var unpaved = new UnpavedData(new Catchment());
+
+            unpaved.UseLocalBoundaryData = true;
+
+            var clone = (UnpavedData)unpaved.Clone();
+
+            Assert.AreNotSame(unpaved.UseLocalBoundaryData, clone.UseLocalBoundaryData);
+            Assert.AreEqual(unpaved.UseLocalBoundaryData, clone.UseLocalBoundaryData);
+        }
     }
 }

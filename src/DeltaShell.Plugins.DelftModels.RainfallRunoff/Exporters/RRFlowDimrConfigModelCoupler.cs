@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
@@ -30,25 +31,37 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             }
 
             // create mapping for flow => rr
-            if (target is IRainfallRunoffModel targetRainfallRunoffModel)
+            if (target is IRainfallRunoffModel targetRainfallRunoffModel && (source is IDimrModel sourceDimr))
             {
-                ICollection<Catchment> catchments = new List<Catchment>();
-                foreach (Catchment catchment in targetRainfallRunoffModel.Basin.Catchments)
+                IList<Catchment> catchments = GetPavedAndUnpavedCatchmentsToLink(targetRainfallRunoffModel);
+                IEnumerable<HydroLink> links = catchments.SelectMany(c => c.Links);
+                if(links.Any())
+                    SetCouplingInformation(sourceDimr, targetRainfallRunoffModel, links, FunctionAttributes.StandardNames.WaterLevel, true);
+            }
+        }
+
+        private static IList<Catchment> GetPavedAndUnpavedCatchmentsToLink(IRainfallRunoffModel targetRainfallRunoffModel)
+        {
+            var catchments = new List<Catchment>();
+            foreach (Catchment catchment in targetRainfallRunoffModel.Basin.Catchments)
+            {
+                CatchmentType catchmentType = catchment.CatchmentType;
+                if (Equals(catchmentType, CatchmentType.Paved))
                 {
-                    CatchmentType catchmentType = catchment.CatchmentType;
-                    if (Equals(catchmentType, CatchmentType.Unpaved) || Equals(catchmentType, CatchmentType.Paved))
+                    catchments.Add(catchment);
+                }
+
+                if (Equals(catchmentType, CatchmentType.Unpaved))
+                {
+                    var unpavedData = targetRainfallRunoffModel.ModelData.FirstOrDefault(md => catchment.Equals(md.Catchment)) as UnpavedData;
+                    if (unpavedData != null && !unpavedData.UseLocalBoundaryData)
                     {
                         catchments.Add(catchment);
                     }
                 }
-                
-                if (!catchments.Any()) return;
-
-                if (!(source is IDimrModel sourceDimr)) return;
-
-                IEnumerable<HydroLink> links = catchments.SelectMany(c => c.Links);
-                SetCouplingInformation(sourceDimr, targetRainfallRunoffModel, links, FunctionAttributes.StandardNames.WaterLevel, true);
             }
+
+            return catchments;
         }
 
         public string Source { get; private set; }

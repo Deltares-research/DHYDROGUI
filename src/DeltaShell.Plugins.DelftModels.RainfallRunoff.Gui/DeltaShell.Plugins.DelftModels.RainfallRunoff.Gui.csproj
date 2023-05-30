@@ -117,4 +117,10 @@
 		<Reference Include="WindowsBase" />
 		<Reference Include="WindowsFormsIntegration" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Controls\RRBoundaryLinkPanel.cs">
+	    <SubType>UserControl</SubType>
+	  </Compile>
+	</ItemGroup>
 </Project>

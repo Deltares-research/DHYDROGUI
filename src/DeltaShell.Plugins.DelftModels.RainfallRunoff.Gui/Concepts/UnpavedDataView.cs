@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
         private RainfallRunoffEnums.AreaUnit areaUnit;
         private UnpavedData data;
+        private UnpavedDataViewModel viewModel;
         private bool updatingRadioButtons;
         private bool isCapsimUsed;
 
@@ -44,14 +45,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             unpavedTabControl.SelectedIndexChanged += UnpavedTabControlSelectedTabChanged;
         }
 
-
         public RainfallRunoffEnums.AreaUnit AreaUnit
         {
             get { return areaUnit; }
             set
             {
                 cropAreaController.AreaUnit = value;
-                ViewModel.AreaUnit = value;
+                viewModel.AreaUnit = value;
                 areaUnit = value;
             }
         }
@@ -70,7 +70,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        private UnpavedDataViewModel ViewModel { get; set; }
+        protected UnpavedDataViewModel ViewModel
+        {
+            get { return viewModel; }
+            set
+            {
+                if (viewModel != null)
+                {
+                    ((INotifyPropertyChanged)viewModel).PropertyChanged -= ViewModelPropertyChanged;
+                }
+
+                viewModel = value;
+                
+                if (viewModel != null)
+                {
+                    ((INotifyPropertyChanged)viewModel).PropertyChanged += ViewModelPropertyChanged;
+                }
+            }
+        }
+
+        private void ViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            UpdateUsageOfWaterLevelBoundary();
+        }
 
         #region IView<UnpavedData> Members
 
@@ -105,7 +127,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     ((INotifyPropertyChanged) data).PropertyChanged += UnpavedDataViewPropertyChanged;
                     bindingSourceUnpaved.DataSource = data;
                     bindingSourceUnpavedViewModel.DataSource = ViewModel;
-
+                    rrBoundaryLinkPanel.Data = ViewModel;
                     rrBoundarySeriesView1.Data = data.BoundaryData;
 
                     data.Catchment.Links.CollectionChanged += LinksCollectionChanged;
@@ -117,21 +139,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
         private void LinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            UpdateRunMode();
+            UpdateUsageOfWaterLevelBoundary();
         }
 
         void UnpavedTabControlSelectedTabChanged(object sender, EventArgs e)
         {
             if (unpavedTabControl.SelectedTab == waterlevelTab)
             {
-                UpdateRunMode();
+                UpdateUsageOfWaterLevelBoundary();
             }
-        }
-
-        private void UpdateRunMode()
-        {
-            if (GetIsModelRunningParallelWithFlowFunc != null)
-                ViewModel.ModelRunningParallelWithFlow = GetIsModelRunningParallelWithFlowFunc();
         }
 
         public Image Image { get; set; }
@@ -230,7 +246,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                 dataChanging = false;
                 InitializeDrainagePanel();
             }
-
+            
+            if (e.PropertyName == nameof(ViewModel.UseWaterLevelFromLinkedNode))
+            {
+                UpdateUsageOfWaterLevelBoundary();
+            }
         }
 
         private void InitializeDrainagePanel()
@@ -347,6 +367,59 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         public bool UseMeteoStations { set { catchmentMeteoStationSelection1.UseMeteoStations = value; } }
         public IEventedList<string> MeteoStations { set { catchmentMeteoStationSelection1.MeteoStations = value; } }
         
-        public Func<bool> GetIsModelRunningParallelWithFlowFunc { set; private get; }
+        #region Water Level Boundary
+        
+        /// <summary>
+        /// Method set the initial state of the workflow. 
+        /// </summary>
+        /// <param name="isRunningParallel">boolean for a parallel workflow</param>
+        public void SetInitialWorkFlowState(bool isRunningParallel)
+        {
+            ViewModel.ModelRunningParallelWithFlow = isRunningParallel;
+        }
+
+        /// <summary>
+        /// An event handler for a workflow changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="isRunningParallel">boolean for a parallel workflow</param>
+        public void WorkflowChanged(object sender, bool isRunningParallel)
+        {
+            ViewModel.ModelRunningParallelWithFlow = isRunningParallel;
+            UpdateUsageOfWaterLevelBoundary();
+        }
+        private void UpdateUsageOfWaterLevelBoundary()
+        {
+            var isLinked = ViewModel.LinkedToFlowNode && ViewModel.ModelRunningParallelWithFlow;
+            SetBoundaryLinkPanelVisible(isLinked);
+            
+            var enableForm = !isLinked || !ViewModel.UseWaterLevelFromLinkedNode;
+            if (ViewModel.EnableWaterLevelForm != enableForm) ViewModel.EnableWaterLevelForm = enableForm;
+        }
+        
+        
+        /// <summary>
+        /// Since DataBindings.Add(new System.Windows.Forms.Binding("Visible", this.bindingSourceViewModel, "property", true)); is NOT working
+        /// </summary>
+        /// <param name="show"></param>
+        private void SetBoundaryLinkPanelVisible(bool show)
+        {
+            if (show)
+            {
+                if (!rrBoundaryLinkPanel.Visible)
+                {
+                    rrBoundaryLinkPanel.Show();
+                }
+            }
+            else
+            {
+                if (rrBoundaryLinkPanel.Visible)
+                {
+                    rrBoundaryLinkPanel.Hide();
+                }
+            }
+        }
+        
+        #endregion Water Level Boundary
     }
 }
