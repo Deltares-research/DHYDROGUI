@@ -196,12 +196,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             var pointClouds = new Dictionary<IPointCloud, bool>();
             foreach (var component in coverage.Components.Cast<IVariable<double>>())
             {
-                double value;
-                if (SingleValue(component.Values.ToList(), out value))
+                if (SingleValue(component.Values.ToList(), out double value))
                 {
                     var pointCloud = new PointCloud();
                     pointCloud.PointValues.Add(new PointValue {X = 0, Y = 0, Value = value});
                     pointClouds.Add(pointCloud, false);
+                }
+                else if (!component.Values.Any())
+                {
+                    pointClouds.Add(new PointCloud(), false);
                 }
                 else
                 {
@@ -220,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 return false;
             }
             value = values[0];
-            for (int i = 1; i < values.Count; ++i)
+            for (var i = 1; i < values.Count; ++i)
             {
                 if (values[i] != value) return false;
             }

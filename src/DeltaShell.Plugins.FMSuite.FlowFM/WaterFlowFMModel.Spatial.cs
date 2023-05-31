@@ -200,7 +200,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
 
                     bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(NetFilePath, BedLevelLocation);
-                    Grid = newGrid;
+
+                    if (Grid != null)
+                    {
+                        // Current grid object can be in use by other parts of the application (e.g. grid editor).
+                        // Instead of overwriting it, preserve the object and reset the state.
+                        Grid.ResetState(newGrid.Vertices, newGrid.Edges, newGrid.Cells, newGrid.FlowLinks);
+                    }
+                    else
+                    {
+                        Grid = newGrid;
+                    }
                 }
             }
             finally
@@ -745,10 +755,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     grid.Cells = resultMesh.CreateCells();
                 }
 
+                RefreshGridExtents();
+
                 // add flowlinks to input grid for adding data on input FlowLink coverages (Roughness, Viscosity etc.)
                 grid.FlowLinks.Clear();
                 grid.FlowLinks.AddRange(GenerateFlowLinksForEdges(grid));
-
+                
                 UpdateCoverageOnGridStateChange(Bathymetry, g => Bathymetry = g);
                 UpdateCoverageOnGridStateChange(InitialWaterLevel, g =>  InitialWaterLevel = g);
                 UpdateCoverageOnGridStateChange(Roughness, g => Roughness = g);

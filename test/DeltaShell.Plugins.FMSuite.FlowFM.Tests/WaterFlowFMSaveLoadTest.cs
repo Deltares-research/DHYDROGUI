@@ -16,6 +16,7 @@ using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -354,11 +355,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     retrievedModel.NetFilePath);
             }
         }
+        
+        [Test]
+        public void SaveModelVerifyGridObjectIsNotReplaced()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Run();
+
+                const string path = "mdu_grid.dsproj";
+                app.SaveProjectAs(path);
+
+                string mduPath = GetBendProfPath();
+                mduPath = TestHelper.CreateLocalCopy(mduPath);
+                var model = new WaterFlowFMModel(mduPath);
+                
+                UnstructuredGrid gridBeforeSaving = model.Grid;
+
+                app.Project.RootFolder.Add(model);
+
+                app.SaveProject();
+
+                Assert.AreSame(gridBeforeSaving, model.Grid);
+            }
+        }
 
         [Test]
         public void SaveAsLoadModelVerifyGridIsCopiedAlong()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = new DeltaShellApplication())   
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());

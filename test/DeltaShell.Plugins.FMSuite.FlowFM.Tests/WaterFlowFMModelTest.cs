@@ -1140,7 +1140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
                     UnstructuredGridCoverage;
 
-            Assert.IsFalse(originalGrid == model.Grid);
+            Assert.IsTrue(originalGrid == model.Grid);
             Assert.IsTrue(cov.Grid == model.Grid);
         }
 
