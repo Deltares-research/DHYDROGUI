@@ -246,24 +246,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 
                 foreach (var structure in structures)
                 {
-                    var view = createView != null ? createView(structure) : null;
-                    if (view == null) continue;
-
-                    var tabPage = new TabPage(structure.Name)
-                    {
-                        Name = structure.Name,
-                        AutoScroll = true,
-                        Tag = structure
-                    };
-
-                    var control = structure is Culvert
-                        ? new ElementHost { Child = (System.Windows.Controls.Control) view }
-                        : (Control) view;
-
-                    tabPage.Controls.Add(control);
-
-                    tabControl1.TabPages.Add(tabPage);
-                    childViews.Add(view);
+                    CreateAndAddViewToTabControlForThisStructure(createView, structure);
                 }
                 if (tabControl1.SelectedTab != null)
                 {
@@ -275,6 +258,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             
             settingFormsView = false;
             RestorePreviouslyFocusedControl();
+        }
+
+        private void CreateAndAddViewToTabControlForThisStructure(Func<object, IView> createView, IStructure1D structure)
+        {
+            var view = createView != null ? createView(structure) : null;
+            if (view == null) return;
+
+            var tabPage = new TabPage(structure.Name)
+            {
+                Name = structure.Name,
+                AutoScroll = true,
+                Tag = structure
+            };
+
+            var control = structure is Culvert
+                              ? new ElementHost { Child = (System.Windows.Controls.Control)view }
+                              : (Control)view;
+            if (structure is Culvert)
+                control.Dock = DockStyle.Fill;
+            tabPage.Controls.Add(control);
+
+            tabControl1.TabPages.Add(tabPage);
+            childViews.Add(view);
         }
 
         /// <summary>
