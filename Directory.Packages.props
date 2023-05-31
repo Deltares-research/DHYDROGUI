@@ -7,8 +7,8 @@
     <PackageVersion Include="AutoFixture.AutoNSubstitute" Version="4.18.0" />
     <PackageVersion Include="AutoFixture.NUnit3" Version="4.18.0" />
     <PackageVersion Include="Castle.Core" Version="5.1.1" />
-    <PackageVersion Include="DeltaShell.Framework" Version="2.0.0.2198" />
-    <PackageVersion Include="DeltaShell.TestProject" Version="2.0.0.2198" />
+    <PackageVersion Include="DeltaShell.Framework" Version="2.0.0.2231" />
+    <PackageVersion Include="DeltaShell.TestProject" Version="2.0.0.2231" />
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="2.1.0.2" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="2.1.0.2" />
     <PackageVersion Include="DIDO" Version="7.0.0.74073" />
