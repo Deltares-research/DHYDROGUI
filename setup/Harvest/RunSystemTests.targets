@@ -112,7 +112,7 @@
 
     
     <PropertyGroup>
-      <_CheckGridGeomStatefulFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor\win-x64\native</_CheckGridGeomStatefulFolder>
+      <_CheckGridGeomStatefulFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor\Lib</_CheckGridGeomStatefulFolder>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
@@ -373,7 +373,7 @@
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
-      <_CheckGridGeomStatefulFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor\win-x64\native</_CheckGridGeomStatefulFolder>
+      <_CheckGridGeomStatefulFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor\Lib</_CheckGridGeomStatefulFolder>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
