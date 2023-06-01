@@ -1,4 +1,9 @@
 <Project>
+  <PropertyGroup>
+    <TestDataPath>$(OutputPath)test-data\</TestDataPath>
+    <TestDataProjectPath>$(TestDataPath)\$(ProjectName)</TestDataProjectPath>
+  </PropertyGroup>
+  
   <ItemGroup>
     <None Remove="test-data\**"/>
   </ItemGroup>
@@ -22,7 +27,17 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <Target Name="CreateTestDataLink" AfterTargets="Build" Condition="'$(PkgDeltaShell_TestProject)' != ''">
-    <Exec Command="$(PkgDeltaShell_TestProject)\tools\mklink-test-data.bat $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data"/>
+  <Target Name="CopyTestDataItems" AfterTargets="Build">
+    <ItemGroup>
+      <TestDataItems Include="$(ProjectDir)test-data\**\*.*"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(TestDataItems)"
+          DestinationFiles="@(TestDataItems->'$(TestDataProjectPath)\%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          ContinueOnError="true"/>
+  </Target>
+
+  <Target Name="CleanTestDataItems" AfterTargets="Clean" Condition="Exists($(TestDataProjectPath))">
+    <RemoveDir Directories="$(TestDataProjectPath)" ContinueOnError="true"/>
   </Target>
 </Project>
