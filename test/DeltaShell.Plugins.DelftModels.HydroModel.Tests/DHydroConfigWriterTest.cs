@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
             rainfallRunoffModel.Basin.Catchments.Add(catchment);
             var unpavedData = (UnpavedData)rainfallRunoffModel.ModelData.First();
-            unpavedData.UseLocalBoundaryData = useLocalBoundaryData;
+            unpavedData.BoundarySettings.UseLocalBoundaryData = useLocalBoundaryData;
             
             //add link to region and set one way direction
             hydroModel.Region.AddNewLink(catchment,lateralSource);

@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -135,7 +136,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         
                         if (unpavedCatchmentLookup.TryGetValue(incomingLink.NodeFromId, out UnpavedData unpavedCatchmentData))
                         {
-                            boundaryData = unpavedCatchmentData.BoundaryData;
+                            boundaryData = unpavedCatchmentData.BoundarySettings.BoundaryData;
                         }
                         else if (pavedCatchmentDataLookup.TryGetValue(incomingLink.NodeFromId, out PavedData pavedCatchmentData))
                         {

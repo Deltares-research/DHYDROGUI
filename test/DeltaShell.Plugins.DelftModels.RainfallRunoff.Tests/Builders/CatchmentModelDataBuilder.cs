@@ -81,7 +81,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Builders
 
         private class TestCatchmentModelData : CatchmentModelData
         {
-            public TestCatchmentModelData(Catchment catchment) : base(catchment) {}
+            public TestCatchmentModelData(Catchment catchment) : base(catchment)
+            {
+                catchment.ModelData = this;
+            }
         }
     }
 }

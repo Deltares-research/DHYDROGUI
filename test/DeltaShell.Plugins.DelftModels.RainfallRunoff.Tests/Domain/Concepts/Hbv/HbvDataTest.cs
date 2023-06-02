@@ -9,6 +9,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Hb
     public class HbvDataTest
     {
         [Test]
+        public void Constructor_SetsCatchmentModelDataOnCatchment()
+        {
+            // Setup
+            var catchment = new Catchment();
+
+            // Call
+            var data = new HbvData(catchment);
+
+            // Assert
+            Assert.That(catchment.ModelData, Is.SameAs(data));
+        }
+        
+        [Test]
         public void CloneHbvData()
         {
             var hbvData = new HbvData(new Catchment {Name = "catchment"});

@@ -54,8 +54,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// </summary>
         public bool UseWaterLevelFromLinkedNode
         {
-            get => !Data.UseLocalBoundaryData;
-            set => Data.UseLocalBoundaryData = !value;
+            get => !Data.BoundarySettings.UseLocalBoundaryData;
+            set => Data.BoundarySettings.UseLocalBoundaryData = !value;
         }
         
         public bool LinkedToRunoffBoundary => Data.Catchment.Links.FirstOrDefault()?.Target is RunoffBoundary;

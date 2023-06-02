@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             var unpavedDataEnumerable = ModelData.OfType<UnpavedData>();
             unpavedDataEnumerable.ForEach(unpavedData =>
             {
-                 if (unpavedDataExtendDictionary.ContainsKey(unpavedData.Name)) unpavedData.UseLocalBoundaryData = unpavedDataExtendDictionary[unpavedData.Name];
+                 if (unpavedDataExtendDictionary.ContainsKey(unpavedData.Name)) unpavedData.BoundarySettings.UseLocalBoundaryData = unpavedDataExtendDictionary[unpavedData.Name];
             });
         }
 
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             SaveUnpavedDataExtended.Clear();
             var unpavedDataCollection = modelData.OfType<UnpavedData>();
-            unpavedDataCollection.ForEach(unpavedData => SaveUnpavedDataExtended.Add(new UnpavedDataExtended(unpavedData.Name,unpavedData.UseLocalBoundaryData)));
+            unpavedDataCollection.ForEach(unpavedData => SaveUnpavedDataExtended.Add(new UnpavedDataExtended(unpavedData.Name,unpavedData.BoundarySettings.UseLocalBoundaryData)));
         }
         
         #endregion Hybride Section File-NHibernate Data

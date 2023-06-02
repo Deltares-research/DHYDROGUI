@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public HbvData(Catchment catchment)
             : base(catchment)
         {
+            catchment.ModelData = this;
             TemperatureStationName = "";
 
             // quasi-arbitrary defaults: should be (0,1)

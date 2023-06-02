@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
         public GreenhouseData(Catchment catchment) : base(catchment)
         {
+            catchment.ModelData = this;
             SurfaceLevel = 1.5;
             SiloCapacity = 200;
             PumpCapacity = 0.02;

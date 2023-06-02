@@ -309,6 +309,43 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 filePath);
         }
 
+        [Test]
+        public void Two_unpaved_catchments_with_a_link_to_the_same_lateral_results_in_only_one_boundary_being_written()
+        {
+            // Setup
+            var delftBcWriter = Substitute.For<IBcFileWriter>();
+            var rrBoundaryDataFileWriter = new RainfallRunoffBoundaryDataFileWriter(delftBcWriter);
+            
+            var rainfallRunoffModel = Substitute.For<IRainfallRunoffModel>();
+            var modelBoundaryData = new EventedList<RunoffBoundaryData>();
+            var modelCatchmentData = new List<CatchmentModelData>();
+            rainfallRunoffModel.BoundaryData.Returns(modelBoundaryData);
+            rainfallRunoffModel.ModelData.Returns(modelCatchmentData);
+
+            const string lateralSourceName = "LateralSource1"; 
+            modelCatchmentData.Add(UnpavedDataBuilder.Start()
+                                                     .WithName("Catchment1")
+                                                     .WithLinkToLateralSource(lateralSourceName)
+                                                     .Build());
+            modelCatchmentData.Add(UnpavedDataBuilder.Start()
+                                                     .WithName("Catchment2")
+                                                     .WithLinkToLateralSource(lateralSourceName)
+                                                     .Build());
+
+            // Call
+            const string filePath = "boundaryConditions.bc";
+            rrBoundaryDataFileWriter.WriteFile(filePath, rainfallRunoffModel);
+
+            // Assert
+            var expectedCategories = new List<IDelftIniCategory>
+            {
+                CreateExpectedGeneralCategory(),
+                CreateExpectedConstantBcCategory(lateralSourceName, 0)
+            };
+            
+            delftBcWriter.Received(1).WriteBcFile(MatchingCategories(expectedCategories), filePath);
+        }
+
         private static DelftIniCategory CreateExpectedGeneralCategory()
         {
             var generalCategory = new DelftIniCategory("General");

@@ -17,6 +17,8 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.NetworkEditor;
@@ -497,6 +499,98 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 Status = ActivityStatus.Done;
             }
+        }
+
+        [Test]
+        public void AddingSecondUnpavedCatchmentToLateralSourceSynchronizesBoundaryConditions()
+        {
+            // Setup
+            HydroModel hydroModel = CreateIntegratedModelWithFmAndRr_WithOneUnpavedCatchmentLinkedToALateralSource();
+            RainfallRunoffModel rrModel = hydroModel.GetActivitiesOfType<RainfallRunoffModel>().First();
+            WaterFlowFMModel fmModel = hydroModel.GetActivitiesOfType<WaterFlowFMModel>().First();
+            ILateralSource lateralSource = fmModel.Network.LateralSources.First();
+            var existingUnpavedData = rrModel.ModelData.First() as UnpavedData;
+            
+            UnpavedData newUnpavedData = AddNewUnlinkedUnpavedCatchmentToRrModel(rrModel);
+
+            // Call
+            newUnpavedData.Catchment.LinkTo(lateralSource);
+
+            // Assert
+            Assert.That(newUnpavedData.BoundarySettings, Is.SameAs(existingUnpavedData.BoundarySettings));
+        }
+
+        [Test]
+        public void UnlinkingSecondUnpavedCatchmentFromLateralSourceRemovesSynchronizationOfBoundaryConditions()
+        {
+            // Setup
+            HydroModel hydroModel = CreateIntegratedModelWithFmAndRr_WithOneUnpavedCatchmentLinkedToALateralSource();
+            RainfallRunoffModel rrModel = hydroModel.GetActivitiesOfType<RainfallRunoffModel>().First();
+            WaterFlowFMModel fmModel = hydroModel.GetActivitiesOfType<WaterFlowFMModel>().First();
+            ILateralSource lateralSource = fmModel.Network.LateralSources.First();
+            var existingUnpavedData = rrModel.ModelData.First() as UnpavedData;
+            
+            UnpavedData newUnpavedData = AddNewUnlinkedUnpavedCatchmentToRrModel(rrModel);
+            newUnpavedData.Catchment.LinkTo(lateralSource);
+            
+            // Precondition
+            Assert.That(newUnpavedData.BoundarySettings, Is.SameAs(existingUnpavedData.BoundarySettings));
+
+            // Call
+            newUnpavedData.Catchment.UnlinkFrom(lateralSource);
+            
+            // Assert
+            Assert.That(newUnpavedData.BoundarySettings, Is.Not.SameAs(existingUnpavedData.BoundarySettings));
+            Assert.That(newUnpavedData.BoundarySettings.BoundaryData.Value, Is.EqualTo(existingUnpavedData.BoundarySettings.BoundaryData.Value));
+            Assert.That(newUnpavedData.BoundarySettings.BoundaryData.IsConstant, Is.EqualTo(existingUnpavedData.BoundarySettings.BoundaryData.IsConstant));
+        }
+
+        private static HydroModel CreateIntegratedModelWithFmAndRr_WithOneUnpavedCatchmentLinkedToALateralSource()
+        {
+            var hydroModel = new HydroModel();
+            var fmModel = new WaterFlowFMModel();
+            var rrModel = new RainfallRunoffModel();
+
+            hydroModel.Activities.Add(fmModel);
+            hydroModel.Activities.Add(rrModel);
+
+            var node1 = new HydroNode();
+            var node2 = new HydroNode();
+            var branch = new Channel(node1, node2);
+
+            fmModel.Network.Nodes.Add(node1);
+            fmModel.Network.Nodes.Add(node2);
+            fmModel.Network.Branches.Add(branch);
+
+            var lateralSource = new LateralSource { Branch = branch };
+            branch.BranchFeatures.Add(lateralSource);
+
+            UnpavedData unpavedData = AddNewUnlinkedUnpavedCatchmentToRrModel(rrModel);
+            unpavedData.Catchment.LinkTo(lateralSource);
+
+            return hydroModel;
+        }
+        
+        private static UnpavedData AddNewUnlinkedUnpavedCatchmentToRrModel(RainfallRunoffModel rrModel)
+        {
+            var catchment = new Catchment();
+            rrModel.Basin.Catchments.Add(catchment);
+            
+            var boundaryData = new RainfallRunoffBoundaryData()
+            {
+                IsConstant = true,
+                Value = 123
+            };
+            var unpavedData = new UnpavedData(catchment) 
+            { 
+                BoundarySettings = { 
+                    BoundaryData = boundaryData,
+                    UseLocalBoundaryData = true
+                }
+            };
+            rrModel.ModelData.Add(unpavedData);
+
+            return unpavedData;
         }
     }
 }

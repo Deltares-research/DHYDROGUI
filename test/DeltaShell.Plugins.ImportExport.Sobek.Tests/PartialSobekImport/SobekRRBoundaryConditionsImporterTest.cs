@@ -48,11 +48,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                     };
 
                     Assert.That(unpavedData, Is.Not.Null);
-                    Assert.That(unpavedData.BoundaryData.Data.Components.First().Values[0], Is.EqualTo(expectedTimeSeriesSetValuesFromFile[0]));
-                    Assert.That(unpavedData.BoundaryData.Data.Components.First().Values[1], Is.EqualTo(expectedTimeSeriesSetValuesFromFile[1]));
-                    Assert.That(unpavedData.BoundaryData.Data.Components.First().Values[2], Is.EqualTo(expectedTimeSeriesSetValuesFromFile[2]));
-                    Assert.That(unpavedData.BoundaryData.IsConstant, Is.False);
-                    Assert.That(unpavedData.BoundaryData.IsTimeSeries, Is.True);
+                    Assert.That(unpavedData.BoundarySettings.BoundaryData.Data.Components.First().Values[0], Is.EqualTo(expectedTimeSeriesSetValuesFromFile[0]));
+                    Assert.That(unpavedData.BoundarySettings.BoundaryData.Data.Components.First().Values[1], Is.EqualTo(expectedTimeSeriesSetValuesFromFile[1]));
+                    Assert.That(unpavedData.BoundarySettings.BoundaryData.Data.Components.First().Values[2], Is.EqualTo(expectedTimeSeriesSetValuesFromFile[2]));
+                    Assert.That(unpavedData.BoundarySettings.BoundaryData.IsConstant, Is.False);
+                    Assert.That(unpavedData.BoundarySettings.BoundaryData.IsTimeSeries, Is.True);
                 }
             }
         }
@@ -86,9 +86,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                     //Assert
                     const double expectedConstantValueFromFile = 10.0;
                     Assert.That(unpavedData, Is.Not.Null);
-                    Assert.That(unpavedData.BoundaryData.Value, Is.EqualTo(expectedConstantValueFromFile));
-                    Assert.That(unpavedData.BoundaryData.IsConstant, Is.True);
-                    Assert.That(unpavedData.BoundaryData.IsTimeSeries, Is.False);
+                    Assert.That(unpavedData.BoundarySettings.BoundaryData.Value, Is.EqualTo(expectedConstantValueFromFile));
+                    Assert.That(unpavedData.BoundarySettings.BoundaryData.IsConstant, Is.True);
+                    Assert.That(unpavedData.BoundarySettings.BoundaryData.IsTimeSeries, Is.False);
                 }
             }
         }

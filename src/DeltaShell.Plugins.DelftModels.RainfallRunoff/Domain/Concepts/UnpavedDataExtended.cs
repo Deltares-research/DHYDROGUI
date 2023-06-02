@@ -13,8 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         /// </summary>
         protected UnpavedDataExtended(){ }
 
-        public UnpavedDataExtended(string catchmentName) : this(catchmentName, false) {}
-        
         public UnpavedDataExtended(string catchmentName, bool useLocalBoundaryData)
         {
             CatchmentName = catchmentName;

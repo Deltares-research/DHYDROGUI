@@ -961,7 +961,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 var unpavedData = (UnpavedData) rrModel.GetCatchmentModelData(firstCatchment);
 
-                unpavedData.UseLocalBoundaryData = useLocalBoundaryData;
+                unpavedData.BoundarySettings.UseLocalBoundaryData = useLocalBoundaryData;
 
                 using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
                 {
@@ -979,7 +979,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         (UnpavedData) retrievedModel.GetCatchmentModelData(retrievedModel.Basin.Catchments.First());
                     Assert.IsNotNull(retrievedUnpavedData);
 
-                    Assert.AreEqual(useLocalBoundaryData,retrievedUnpavedData.UseLocalBoundaryData);
+                    Assert.AreEqual(useLocalBoundaryData,retrievedUnpavedData.BoundarySettings.UseLocalBoundaryData);
                 }
             }
             finally

@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                     if (link == null || !runningParallelWithFlow) //no link or sequential
                     {
                         //grab local
-                        return modelData.BoundaryData.Evaluate(currentTime);
+                        return modelData.BoundarySettings.BoundaryData.Evaluate(currentTime);
                     }
 
                     //grab from flow (only if linked simultaneous)

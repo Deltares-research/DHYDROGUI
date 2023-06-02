@@ -152,27 +152,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                 $"Could not restore link between {regionExchange.SourceName} ({regionExchangeInfo.SourceRegionName}) and {regionExchange.TargetName} ({regionExchangeInfo.TargetRegionName})");
                             continue;
                         }
-                        
-                        if (source.CanLinkTo(target) && !linkConnections.Contains((source, target)))
-                        {
-                            var hydroLink = new HydroLink(source, target) { Name = regionExchange.LinkName };
 
-                            if (source is Catchment catchment && Equals(catchment.CatchmentType, CatchmentType.NWRW))
+                        if (!source.CanLinkTo(target) || linkConnections.Contains((source, target)))
+                        {
+                            continue;
+                        }
+
+                        var hydroLink = new HydroLink(source, target) { Name = regionExchange.LinkName };
+
+                        var sourceAsCatchment = source as Catchment;
+                        if (sourceAsCatchment != null && Equals(sourceAsCatchment.CatchmentType, CatchmentType.NWRW))
+                        {
+                            source.Geometry = target.Geometry;
+                            hydroLink.Geometry = new LineString(new[]
                             {
-                                source.Geometry = target.Geometry;
-                                hydroLink.Geometry = new LineString(new[]
-                                {
-                                    source.Geometry?.Coordinate,
-                                    target.Geometry?.Coordinate
-                                });
-                            }
-                            else
-                            {
-                                hydroLink.Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt);
-                            }
+                                source.Geometry?.Coordinate,
+                                target.Geometry?.Coordinate
+                            });
+                        }
+                        else
+                        {
+                            hydroLink.Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt);
+                        }
                                 
-                            Region.Links.Add(hydroLink);
-                            linkConnections.Add((hydroLink.Source, hydroLink.Target));
+                        Region.Links.Add(hydroLink);
+                        linkConnections.Add((hydroLink.Source, hydroLink.Target));
+
+                        if (sourceAsCatchment != null && sourceAsCatchment.ModelData != null)
+                        {
+                            sourceAsCatchment.ModelData.DoAfterLinking(target);
                         }
                     }
                 }

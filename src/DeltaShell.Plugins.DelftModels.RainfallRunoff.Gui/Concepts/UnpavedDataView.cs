@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                     bindingSourceUnpaved.DataSource = data;
                     bindingSourceUnpavedViewModel.DataSource = ViewModel;
                     rrBoundaryLinkPanel.Data = ViewModel;
-                    rrBoundarySeriesView1.Data = data.BoundaryData;
+                    rrBoundarySeriesView1.Data = data.BoundarySettings.BoundaryData;
 
                     data.Catchment.Links.CollectionChanged += LinksCollectionChanged;
 
@@ -250,6 +250,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             if (e.PropertyName == nameof(ViewModel.UseWaterLevelFromLinkedNode))
             {
                 UpdateUsageOfWaterLevelBoundary();
+            }
+
+            if (e.PropertyName == nameof(data.BoundarySettings))
+            {
+                rrBoundarySeriesView1.Data = data.BoundarySettings.BoundaryData;
+                rrBoundarySeriesView1.ResetBindings();
             }
         }
 

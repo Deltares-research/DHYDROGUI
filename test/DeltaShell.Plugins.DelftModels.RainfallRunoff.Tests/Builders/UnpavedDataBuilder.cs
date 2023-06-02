@@ -16,7 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Builders
         {
             var catchment = new Catchment();
             var boundaryData = new RainfallRunoffBoundaryData();
-            unpavedData = new UnpavedData(catchment) { BoundaryData = boundaryData };
+            unpavedData = new UnpavedData(catchment);
+            unpavedData.BoundarySettings.BoundaryData = boundaryData;
         }
 
         /// <summary>
@@ -76,11 +77,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Builders
         /// <returns> The current builder. </returns>
         public UnpavedDataBuilder WithTimeSeries(DateTime startDate, params double[] values)
         {
-            unpavedData.BoundaryData.IsConstant = false;
+            unpavedData.BoundarySettings.BoundaryData.IsConstant = false;
 
             for (var i = 0; i < values.Length; i++)
             {
-                unpavedData.BoundaryData.Data[startDate.AddDays(i)] = values[i];
+                unpavedData.BoundarySettings.BoundaryData.Data[startDate.AddDays(i)] = values[i];
             }
 
             return this;
@@ -92,8 +93,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Builders
         /// <returns> The current builder. </returns>
         public UnpavedDataBuilder WithConstantValue(double value)
         {
-            unpavedData.BoundaryData.IsConstant = true;
-            unpavedData.BoundaryData.Value = value;
+            unpavedData.BoundarySettings.BoundaryData.IsConstant = true;
+            unpavedData.BoundarySettings.BoundaryData.Value = value;
             return this;
         }
 

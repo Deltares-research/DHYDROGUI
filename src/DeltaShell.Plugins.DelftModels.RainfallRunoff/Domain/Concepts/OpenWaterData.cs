@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
         public OpenWaterData(Catchment catchment) : base(catchment)
         {
+            catchment.ModelData = this;
         }
     }
 }

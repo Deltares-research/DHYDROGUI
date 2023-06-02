@@ -16,14 +16,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Un
         public void CloneWithDeZeeuw()
         {
             var unpaved = new UnpavedData(new Catchment());
-            var zeeuw = (unpaved.DrainageFormula as DeZeeuwHellingaDrainageFormula);
+            var zeeuw = unpaved.DrainageFormula as DeZeeuwHellingaDrainageFormula;
             zeeuw.HorizontalInflow = 23423;
             zeeuw.LevelOneEnabled = true;
             var clone = (UnpavedData)unpaved.Clone();
             ReflectionTestHelper.AssertPublicPropertiesAreEqual(unpaved, clone);
 
             var clonedZeeuw = clone.DrainageFormula as DeZeeuwHellingaDrainageFormula;
-            
+
             ReflectionTestHelper.AssertPublicPropertiesAreEqual(zeeuw, clonedZeeuw);
         }
 
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Un
         {
             var unpaved = new UnpavedData(new Catchment());
             unpaved.SwitchDrainageFormula<KrayenhoffVanDeLeurDrainageFormula>();
-            var krayenhoff = (unpaved.DrainageFormula as KrayenhoffVanDeLeurDrainageFormula);
+            var krayenhoff = unpaved.DrainageFormula as KrayenhoffVanDeLeurDrainageFormula;
             krayenhoff.ResevoirCoefficient = 23423;
             var clone = (UnpavedData)unpaved.Clone();
             ReflectionTestHelper.AssertPublicPropertiesAreEqual(unpaved, clone);
@@ -76,18 +76,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Un
             Assert.AreNotSame(unpaved.AreaPerCrop, clone.AreaPerCrop);
             Assert.AreEqual(unpaved.AreaPerCrop.Values, clone.AreaPerCrop.Values);
         }
-        
+
         [Test]
-        public void CloneWithUseLocalBoundaryData()
+        public void CloneWithBoundarySettings()
         {
+            // Setup
             var unpaved = new UnpavedData(new Catchment());
+            RainfallRunoffBoundarySettings originalBoundarySettings = unpaved.BoundarySettings;
 
-            unpaved.UseLocalBoundaryData = true;
+            // Call
+            var clone = unpaved.Clone() as UnpavedData;
 
-            var clone = (UnpavedData)unpaved.Clone();
-
-            Assert.AreNotSame(unpaved.UseLocalBoundaryData, clone.UseLocalBoundaryData);
-            Assert.AreEqual(unpaved.UseLocalBoundaryData, clone.UseLocalBoundaryData);
+            // Assert
+            Assert.That(clone, Is.Not.Null);
+            Assert.That(originalBoundarySettings, Is.Not.SameAs(clone.BoundarySettings));
         }
     }
 }

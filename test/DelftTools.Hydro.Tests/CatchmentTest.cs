@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests
@@ -108,6 +109,7 @@ namespace DelftTools.Hydro.Tests
             Assert.AreEqual(catchment.Geometry, clone.Geometry);
             Assert.AreNotSame(catchment.Geometry, clone.Geometry);
             Assert.AreEqual(catchment.Name, clone.Name);
+            Assert.That(clone.ModelData, Is.SameAs(catchment.ModelData));
         }
 
         [Test]
@@ -222,6 +224,71 @@ namespace DelftTools.Hydro.Tests
                 .SetName("Cannot link paved catchment to a runoff boundary and a lateral source.");
             yield return new TestCaseData(new RunoffBoundary(), new RunoffBoundary())
                 .SetName("Cannot link paved catchment to 2 runoff boundaries.");
+        }
+
+        [Test]
+        public void AfterCreatingANewLink_DoAfterLinkingIsCalled()
+        {
+            // Setup
+            var basin = Substitute.For<IDrainageBasin>();
+            basin.AddNewLink(Arg.Any<IHydroObject>(), Arg.Any<IHydroObject>()).Returns(new HydroLink());
+
+            var target = Substitute.For<IHydroObject>();
+
+            var catchment = new Catchment() { Basin = basin };
+            
+            var modelData = Substitute.For<CatchmentModelData>(catchment);
+            catchment.ModelData = modelData;
+
+            // Call
+            catchment.LinkTo(target);
+
+            // Assert
+            modelData.Received(1).DoAfterLinking(target);
+        }
+        
+        [Test]
+        public void AfterRemovingLink_DoAfterUnlinkingIsCalled()
+        {
+            // Setup
+            var basin = Substitute.For<IDrainageBasin>();
+            var target = Substitute.For<IHydroObject>();
+
+            var catchment = new Catchment() { Basin = basin };
+            
+            var modelData = Substitute.For<CatchmentModelData>(catchment);
+            catchment.ModelData = modelData;
+
+            // Call
+            catchment.UnlinkFrom(target);
+
+            // Assert
+            modelData.Received(1).DoAfterUnlinking();
+        }
+        
+        [Test]
+        public void WhenSettingNewCatchmentModelData_EnsureThatCatchmentInModelDataIsUpdated()
+        {
+            // Setup
+            var catchment1 = new Catchment();
+            var catchment2 = new Catchment();
+            
+            var modelData1 = new TestCatchmentModelData(catchment1);
+            var modelData2 = new TestCatchmentModelData(catchment2);
+
+            // Call
+            catchment1.ModelData = modelData2;
+
+            // Assert
+            Assert.That(modelData2.Catchment, Is.SameAs(catchment1));
+        }
+        
+        private class TestCatchmentModelData : CatchmentModelData
+        {
+            public TestCatchmentModelData(Catchment catchment) : base(catchment)
+            {
+                catchment.ModelData = this;
+            }
         }
 
     }

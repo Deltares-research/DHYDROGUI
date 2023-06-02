@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
             else if (firstRRModel && entity is RainfallRunoffModel)
             {
-                ProjectRepository.PreLoad<UnpavedData>(up => up.BoundaryData);
+                ProjectRepository.PreLoad<UnpavedData>(up => up.BoundarySettings.BoundaryData);
                 ProjectRepository.PreLoad<UnpavedData>(up => up.DrainageFormula);
                 firstRRModel = false;
             }

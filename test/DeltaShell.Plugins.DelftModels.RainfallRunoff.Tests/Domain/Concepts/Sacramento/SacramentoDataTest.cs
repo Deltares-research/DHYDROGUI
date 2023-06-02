@@ -10,6 +10,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Sa
     public class SacramentoDataTest
     {
         [Test]
+        public void Constructor_SetsCatchmentModelDataOnCatchment()
+        {
+            // Setup
+            var catchment = new Catchment();
+
+            // Call
+            var data = new SacramentoData(catchment);
+
+            // Assert
+            Assert.That(catchment.ModelData, Is.SameAs(data));
+        }
+        
+        [Test]
         public void CloneSacramentoData()
         {
             var sacramentoData = new SacramentoData(new Catchment {Name = "catchment"});

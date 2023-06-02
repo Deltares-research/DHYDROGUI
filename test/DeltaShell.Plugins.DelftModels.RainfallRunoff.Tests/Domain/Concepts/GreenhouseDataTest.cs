@@ -10,6 +10,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts
     public class GreenhouseDataTest
     {
         [Test]
+        public void Constructor_SetsCatchmentModelDataOnCatchment()
+        {
+            // Setup
+            var catchment = new Catchment();
+
+            // Call
+            var data = new GreenhouseData(catchment);
+
+            // Assert
+            Assert.That(catchment.ModelData, Is.SameAs(data));
+        }
+        
+        [Test]
         public void GivenGreenhouseData_ChangingAreaSum_ShouldChangeDependentGeometry()
         {
             //Arrange

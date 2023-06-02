@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             var unpavedData = CreateUnpavedArea();
             unpavedData.Catchment.Links.Add(new HydroLink(unpavedData.Catchment, new LateralSource())); //linked to a lateral
             unpavedData.InitialGroundWaterLevelSource = UnpavedEnums.GroundWaterSourceType.FromLinkedNode;
-            unpavedData.BoundaryData.Data[startTime] = -5.0;
+            unpavedData.BoundarySettings.BoundaryData.Data[startTime] = -5.0;
 
             model.Expect(m => m.StartTime).Return(startTime).Repeat.Any(); 
             model.Expect(m => m.CapSim).Return(false).Repeat.Once();

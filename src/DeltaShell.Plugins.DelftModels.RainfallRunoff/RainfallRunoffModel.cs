@@ -936,7 +936,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             foreach (var data in clone.GetAllModelData())
             {
                 var indexInOriginal = allCatchments.IndexOf(data.Catchment);
-                ((ICatchmentSettable) data).CatchmentSetter = allClonedCatchments[indexInOriginal];
+                data.Catchment = allClonedCatchments[indexInOriginal];
             }
 
             var allBoundaries = originalBasin.Boundaries.ToList();

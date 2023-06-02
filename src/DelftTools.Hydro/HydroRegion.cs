@@ -279,6 +279,7 @@ namespace DelftTools.Hydro
             {
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
+                    link.Source.UnlinkFrom(link.Target);
                     link.Source.Links.Remove(link);
                     link.Target.Links.Remove(link);
                 }

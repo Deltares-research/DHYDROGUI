@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryC
             {
                 if (unpavedDataByName.TryGetValue(linkToBoundary.NodeFromId, out UnpavedData unpavedData))
                 {
-                    unpavedData.BoundaryData = boundaryData;
+                    unpavedData.BoundarySettings.BoundaryData = boundaryData;
                 }
             }
         }

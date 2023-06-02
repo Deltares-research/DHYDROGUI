@@ -5,6 +5,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator;
 using DelftTools.Controls.Swf.DataEditorGenerator.FromType;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;

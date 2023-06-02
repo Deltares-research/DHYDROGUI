@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Hydro;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -92,6 +91,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts
             Assert.AreEqual(100, catchment.GeometryArea, 1e-7);
             Assert.IsFalse(catchment.IsGeometryDerivedFromAreaSize);
             Assert.AreEqual(3000,catchmentModelData.CalculationArea);
+        }
+
+        [Test]
+        public void WhenSettingNewCatchment_EnsureThatModelDataInCatchmentIsUpdated()
+        {
+            // Setup
+            var catchment1 = new Catchment();
+            var unpavedData = new TestCatchmentModelData(catchment1);
+
+            // Call
+            var catchment2 = new Catchment();
+            unpavedData.Catchment = catchment2;
+
+            // Assert
+            Assert.That(catchment2.ModelData, Is.SameAs(unpavedData));
+        }
+
+        private class TestCatchmentModelData : CatchmentModelData
+        {
+            public TestCatchmentModelData(Catchment catchment) : base(catchment)
+            {
+                catchment.ModelData = this;
+            }
         }
     }
 }

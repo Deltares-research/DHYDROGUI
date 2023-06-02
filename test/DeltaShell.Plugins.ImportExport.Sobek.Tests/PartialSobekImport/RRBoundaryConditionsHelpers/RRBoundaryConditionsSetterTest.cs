@@ -69,8 +69,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
             conditionsSetter.Set(data);
 
             //Assert
-            Assert.That(unpaved.BoundaryData.Value, Is.EqualTo(expectedValue));
-            Assert.That(unpaved.BoundaryData, Is.SameAs(boundaryData[name]));
+            Assert.That(unpaved.BoundarySettings.BoundaryData.Value, Is.EqualTo(expectedValue));
+            Assert.That(unpaved.BoundarySettings.BoundaryData, Is.SameAs(boundaryData[name]));
         }
 
         [Test]

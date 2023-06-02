@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 if (Equals(catchmentType, CatchmentType.Unpaved))
                 {
                     var unpavedData = targetRainfallRunoffModel.ModelData.FirstOrDefault(md => catchment.Equals(md.Catchment)) as UnpavedData;
-                    if (unpavedData != null && !unpavedData.UseLocalBoundaryData)
+                    if (unpavedData != null && !unpavedData.BoundarySettings.UseLocalBoundaryData)
                     {
                         catchments.Add(catchment);
                     }

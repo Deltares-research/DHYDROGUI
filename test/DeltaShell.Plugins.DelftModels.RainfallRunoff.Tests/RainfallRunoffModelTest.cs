@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             Assert.AreEqual(0, hits.Count, "hit catchment");
 
             // see if we can find the old unpaved boundary data still in this model
-            var hits2 = TestReferenceHelper.SearchObjectInObjectGraph(c1Data.BoundaryData, clonedModel);
+            var hits2 = TestReferenceHelper.SearchObjectInObjectGraph(c1Data.BoundarySettings.BoundaryData, clonedModel);
             hits2.ForEach(Console.WriteLine);
             Assert.AreEqual(0, hits2.Count, "hits unpaved boundary data");
 
@@ -246,7 +246,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var rrModel = new RainfallRunoffModel();
             var catchmentName = "Hihihihi";
             var catchment = new Catchment() { Name = catchmentName };
-            rrModel.ModelData.Add(new UnpavedData(catchment) { UseLocalBoundaryData = useLocalBoundaryData});
+
+            var unpavedData = new UnpavedData(catchment);
+            unpavedData.BoundarySettings.UseLocalBoundaryData = useLocalBoundaryData;
+            rrModel.ModelData.Add(unpavedData);
 
             Assert.AreEqual(0, rrModel.SaveUnpavedDataExtended.Count());
             
@@ -265,12 +268,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var rrModel = new RainfallRunoffModel();
             var catchmentName = "Hihihihi";
             var catchment = new Catchment() { Name = catchmentName };
-            rrModel.ModelData.Add(new UnpavedData(catchment) { UseLocalBoundaryData = false});
+            var unpavedData = new UnpavedData(catchment);
+            rrModel.ModelData.Add(unpavedData);
+            unpavedData.BoundarySettings.UseLocalBoundaryData = false;
+
             rrModel.SaveUnpavedDataExtended.Add(new UnpavedDataExtended(catchmentName, true));
             
             rrModel.UpdateUnpavedDataWithExtendedData();
             
-            Assert.IsTrue(rrModel.ModelData.OfType<UnpavedData>().First().UseLocalBoundaryData);
+            Assert.IsTrue(rrModel.ModelData.OfType<UnpavedData>().First().BoundarySettings.UseLocalBoundaryData);
         }
     }
     

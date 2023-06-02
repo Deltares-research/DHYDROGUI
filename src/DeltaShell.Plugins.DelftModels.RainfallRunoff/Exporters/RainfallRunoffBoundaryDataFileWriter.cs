@@ -23,6 +23,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         private static readonly QuantityUnitPair waterLevelQuantityUnitPair =
             new QuantityUnitPair(BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR,
                                  BoundaryRegion.UnitStrings.WaterLevel);
+        
+        private readonly HashSet<string> handledBoundaries = new HashSet<string>(StringComparer.CurrentCultureIgnoreCase);
 
         private readonly IBcFileWriter bcFileWriter;
 
@@ -67,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             bcFileWriter.WriteBcFile(categories, filePath);
         }
 
-        private static IList<IDelftIniCategory> CreateDelftIniCategories(IRainfallRunoffModel rainfallRunoffModel)
+        private IList<IDelftIniCategory> CreateDelftIniCategories(IRainfallRunoffModel rainfallRunoffModel)
         {
             var categories = new List<IDelftIniCategory>
             {
@@ -88,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 GeneralRegion.FileTypeName.BoundaryConditions);
         }
 
-        private static IEnumerable<IDelftBcCategory> CreateRunoffBoundaryCategories(IRainfallRunoffModel rainfallRunoffModel)
+        private IEnumerable<IDelftBcCategory> CreateRunoffBoundaryCategories(IRainfallRunoffModel rainfallRunoffModel)
         {
             foreach (RunoffBoundaryData boundaryData in rainfallRunoffModel.BoundaryData)
             {
@@ -98,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             }
         }
 
-        private static IEnumerable<IDelftBcCategory> CreateCatchmentBoundaryCategories(IRainfallRunoffModel rainfallRunoffModel)
+        private IEnumerable<IDelftBcCategory> CreateCatchmentBoundaryCategories(IRainfallRunoffModel rainfallRunoffModel)
         {
             foreach (CatchmentModelData catchmentModelData in rainfallRunoffModel.ModelData)
             {
@@ -109,12 +111,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                     continue;
                 }
 
-                string boundaryName = modelLink.ToId ?? modelLink.FromId;
+                string boundaryName = GetBoundaryName(modelLink);
 
                 yield return catchmentModelData is UnpavedData unpavedData
-                                 ? CreateDelftBcCategory(rainfallRunoffModel.StartTime, unpavedData.BoundaryData, boundaryName)
+                                 ? CreateDelftBcCategory(rainfallRunoffModel.StartTime, unpavedData.BoundarySettings.BoundaryData, boundaryName)
                                  : CreateDefaultDelftBcCategory(boundaryName);
             }
+        }
+
+        private static string GetBoundaryName(ModelLink modelLink)
+        {
+            return modelLink.ToId ?? modelLink.FromId;
         }
 
         private static IDelftBcCategory CreateDefaultDelftBcCategory(string boundaryName)
@@ -125,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             return category;
         }
 
-        private static IDelftBcCategory CreateDelftBcCategory(DateTime startTime, RainfallRunoffBoundaryData rainfallRunoffBoundaryData, string boundaryName)
+        private IDelftBcCategory CreateDelftBcCategory(DateTime startTime, RainfallRunoffBoundaryData rainfallRunoffBoundaryData, string boundaryName)
         {
             string function = GetFunction(rainfallRunoffBoundaryData);
             string interpolation = GetInterpolation(rainfallRunoffBoundaryData);
@@ -133,6 +140,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
             IDelftBcCategory category = CreateDelftBcDefinitionCategory(boundaryName, function, interpolation, periodic);
             category.Table = CreateTable(startTime, rainfallRunoffBoundaryData);
+            
+            handledBoundaries.Add(boundaryName);
 
             return category;
         }
@@ -176,15 +185,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                        : null;
         }
 
-        private static bool ShouldSkipBoundary(ModelLink modelLink)
+        private bool ShouldSkipBoundary(ModelLink modelLink)
         {
-            if (modelLink.ToFeature != null && !(modelLink.ToFeature is RunoffBoundary || modelLink.ToFeature is ILateralSource))
+            if (LinkHasInvalidLinkTarget(modelLink) || BoundaryHasAlreadyBeenHandled(GetBoundaryName(modelLink)))
             {
                 return true;
             }
 
             IFeature boundary = modelLink.ToFeature ?? modelLink.FromFeature;
             return boundary is RunoffBoundary;
+        }
+
+        private static bool LinkHasInvalidLinkTarget(ModelLink modelLink)
+        {
+            return modelLink.ToFeature != null && !(modelLink.ToFeature is RunoffBoundary || modelLink.ToFeature is ILateralSource);
+        }
+        
+        private bool BoundaryHasAlreadyBeenHandled(string boundaryName)
+        {
+            return handledBoundaries.Contains(boundaryName);
         }
     }
 }

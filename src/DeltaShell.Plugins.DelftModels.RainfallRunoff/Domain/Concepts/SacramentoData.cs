@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public SacramentoData(Catchment catchment)
             : base(catchment)
         {
+            catchment.ModelData = this;
+            
             HydrographValues = new EventedList<double>(new double[36]);
             HydrographValues[0] = 1;
 

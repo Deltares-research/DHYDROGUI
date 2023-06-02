@@ -226,6 +226,24 @@ namespace DelftTools.Hydro.Tests
             }
         }
 
+        [Test]
+        public void WhenRemovingLink_UnlinkFromIsCalled()
+        {
+            // Setup
+            var region = new HydroRegion();
+            
+            var source = Substitute.For<IHydroObject>();
+            var target = Substitute.For<IHydroObject>();
+            var link = new HydroLink(source, target);
+            region.Links.Add(link);
+
+            // Call
+            region.Links.Remove(link);
+
+            // Assert
+            source.Received(1).UnlinkFrom(target);
+        }
+        
         [TestFixture]
         public class CanLinkHydroNetworkToDrainageBasin
         {

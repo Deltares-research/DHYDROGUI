@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
@@ -9,31 +10,21 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Unpaved;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 {
-    [Entity(FireOnCollectionChange=false)]
+    /// <summary>
+    /// Represents data for unpaved catchments.
+    /// </summary>
+    [Entity(FireOnCollectionChange = false)]
     public class UnpavedData : CatchmentModelData
     {
         /// <summary>
         /// The land storage unit.
         /// </summary>
         public const RainfallRunoffEnums.StorageUnit LandStorageUnit = RainfallRunoffEnums.StorageUnit.mm;
-        
+
         /// <summary>
         /// The infiltration capacity unit.
         /// </summary>
         public const RainfallRunoffEnums.RainfallCapacityUnit InfiltrationCapacityUnit = RainfallRunoffEnums.RainfallCapacityUnit.mm_hr;
-        
-        //nhib
-        protected UnpavedData():base(null)
-        {
-        }
-
-        public RainfallRunoffBoundaryData BoundaryData { get; set; }
-        
-        /// <summary>
-        /// Local Water Level Data is given by the user
-        /// If this value is true: when the unpaved catchment is linked to a Lateral (1D) it's still using the local data (not the water level at the lateral)
-        /// </summary>
-        public virtual bool UseLocalBoundaryData { get; set; }
 
         private UnpavedEnums.GroundWaterSourceType initialGroundWaterLevelSource;
         private UnpavedEnums.SeepageSourceType seepageSource;
@@ -41,15 +32,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         private bool useDifferentAreaForGroundWaterCalculations;
         private CropAreaDictionary areaPerCrop;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnpavedData"/> class with the specified catchment.
+        /// </summary>
+        /// <param name="catchment">The catchment associated with the data.</param>
         public UnpavedData(Catchment catchment) : base(catchment)
         {
+            catchment.ModelData = this;
             SurfaceLevel = 1.5;
             SoilType = UnpavedEnums.SoilType.sand_maximum;
             SoilTypeCapsim = UnpavedEnums.SoilTypeCapsim.soiltype_capsim_1;
             GroundWaterLayerThickness = 5;
             MaximumAllowedGroundWaterLevel = 1.5;
             InfiltrationCapacity = 5;
-            BoundaryData = new RainfallRunoffBoundaryData();
+            BoundarySettings = new RainfallRunoffBoundarySettings(new RainfallRunoffBoundaryData(), false);
             DrainageFormula = new DeZeeuwHellingaDrainageFormula
             {
                 SurfaceRunoff = 100,
@@ -58,6 +54,42 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             };
         }
 
+        // Required for NHibernate
+        protected UnpavedData() : base(null) {}
+
+        /// <summary>
+        /// Gets or sets the calculation area for the unpaved catchment data.
+        /// </summary>
+        /// <remarks>
+        /// When setting the calculation area, the <see cref="AreaPerCrop"/> is updated accordingly, and the base class's calculation area is set.
+        /// </remarks>
+        public override double CalculationArea
+        {
+            get
+            {
+                return AreaPerCrop?.Sum ?? 0.0;
+            }
+            set
+            {
+                if (Math.Abs(value - base.CalculationArea) < 1e-10)
+                {
+                    return;
+                }
+
+                AreaPerCrop.Reset(UnpavedEnums.CropType.Grass, value);
+
+                base.CalculationArea = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the boundary settings for the unpaved data.
+        /// </summary>
+        public RainfallRunoffBoundarySettings BoundarySettings { get; private set; }
+
+        /// <summary>
+        /// Gets the area per crop dictionary in m².
+        /// </summary>
         public CropAreaDictionary AreaPerCrop
         {
             get
@@ -66,12 +98,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 {
                     areaPerCrop = CreateInitializedAreaCropsDictionary();
                 }
+
                 return areaPerCrop;
             }
-        } // m2
+        }
 
+        /// <summary>
+        /// Gets or sets the total area for groundwater calculations in m².
+        /// </summary>
         [Description("Area for groundwater calculations")]
-        public double TotalAreaForGroundWaterCalculations // m2
+        public double TotalAreaForGroundWaterCalculations
         {
             get
             {
@@ -79,28 +115,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 {
                     return totalAreaForGroundWaterCalculations;
                 }
+
                 return CalculationArea;
             }
-            set { totalAreaForGroundWaterCalculations = value; }
-        }
-
-        public override double CalculationArea
-        {
-            get { return AreaPerCrop?.Sum ?? 0.0; }
             set
             {
-                if (Math.Abs(value - base.CalculationArea) < 1e-10)
-                    return;
-
-                AreaPerCrop.Reset(UnpavedEnums.CropType.Grass, value);
-
-                base.CalculationArea = value;
+                totalAreaForGroundWaterCalculations = value;
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to use a different area for groundwater calculations.
+        /// </summary>
         public bool UseDifferentAreaForGroundWaterCalculations
         {
-            get { return useDifferentAreaForGroundWaterCalculations; }
+            get
+            {
+                return useDifferentAreaForGroundWaterCalculations;
+            }
             set
             {
                 if (value
@@ -110,36 +142,52 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                     //if turning this on for the first time, set correct initial value
                     totalAreaForGroundWaterCalculations = CalculationArea;
                 }
+
                 useDifferentAreaForGroundWaterCalculations = value;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the surface level of the unpaved area in m AD.
+        /// </summary>
         [Description("Surface level")]
         public double SurfaceLevel { get; set; }
-
-        //m AD
+        
+        /// <summary>
+        /// Gets or sets the soil type of the unpaved area.
+        /// </summary>
         [Description("Soil type")]
-        public UnpavedEnums.SoilType SoilType { get; set; } //int = SoilType, mu = 'per m' == m/m?
+        public UnpavedEnums.SoilType SoilType { get; set; }
 
         /// <summary>
-        /// Soiltype for capsim calculation
+        /// Gets or sets the soil type for capsim calculations.
         /// </summary>
         [Description("Soil type for capsim calculation")]
-        public UnpavedEnums.SoilTypeCapsim SoilTypeCapsim { get; set; } 
+        public UnpavedEnums.SoilTypeCapsim SoilTypeCapsim { get; set; }
 
+        /// <summary>
+        /// Gets or sets the thickness of the groundwater layer in m.
+        /// </summary>
         [Description("Groundwater layer thickness")]
         public double GroundWaterLayerThickness { get; set; }
+        
 
-        //m
-
+        /// <summary>
+        /// Gets or sets the maximum allowed groundwater level in m AD.
+        /// </summary>
         [Description("Maximum allowed groundwater level")]
         public double MaximumAllowedGroundWaterLevel { get; set; }
 
-        //m AD
 
+        /// <summary>
+        /// Gets or sets the source of the initial groundwater level.
+        /// </summary>
         public UnpavedEnums.GroundWaterSourceType InitialGroundWaterLevelSource
         {
-            get { return initialGroundWaterLevelSource; }
+            get
+            {
+                return initialGroundWaterLevelSource;
+            }
             set
             {
                 initialGroundWaterLevelSource = value;
@@ -147,37 +195,48 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             }
         }
 
+        /// <summary>
+        /// Gets or sets the constant value of the initial groundwater level in m below surface.
+        /// </summary>
         [Description("Initial groundwater level")]
         public double InitialGroundWaterLevelConstant { get; set; }
-
-        //m below surface
-
-        //[note: is a timeseries to pick the inital ground water level from (so only single value is used), remove?]
-        public TimeSeries InitialGroundWaterLevelSeries { get; set; } //m below surface
+        
 
         /// <summary>
-        /// The maximum land storage (mm) of the area (m²).
+        /// Gets or sets the time series for the initial groundwater level in m below surface.
+        /// </summary>
+        public TimeSeries InitialGroundWaterLevelSeries { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum land storage (mm) of the area (m²).
         /// </summary>
         [Description("Maximum land storage")]
         public double MaximumLandStorage { get; set; }
-        
+
         /// <summary>
-        /// The initial land storage (mm) of the area (m²).
+        /// Gets or sets the initial land storage (mm) of the area (m²).
         /// </summary>
         [Description("Initial land storage")]
         public double InitialLandStorage { get; set; }
-        
+
         /// <summary>
-        /// The infiltration capacity (mm/hr) of the area (m²)
+        /// Gets or sets the infiltration capacity (mm/hr) of the area (m²).
         /// </summary>
         [Description("Infiltration capacity")]
         public double InfiltrationCapacity { get; set; }
         
-        public IDrainageFormula DrainageFormula { get; set; } //De Zeeuw-Hellinga, Ernst, Krayenhoff van de Leur
+        /// <summary>
+        /// Gets or sets the drainage formula used for the unpaved area.
+        /// </summary>
+        /// <remarks>De Zeeuw-Hellinga, Ernst, Krayenhoff van de Leur.</remarks>
+        public IDrainageFormula DrainageFormula { get; set; }
 
+        /// <summary>
+        /// Gets or sets the source of seepage in the unpaved area.
+        /// </summary>
         public UnpavedEnums.SeepageSourceType SeepageSource
         {
-            get { return seepageSource; }
+            get => seepageSource;
             set
             {
                 seepageSource = value;
@@ -185,35 +244,32 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             }
         }
 
-        //how is the seepage defined?
-
+        /// <summary>
+        /// Gets or sets the constant value of seepage in the unpaved area.
+        /// </summary>
         [Description("Seepage")]
         public double SeepageConstant { get; set; }
 
-        //mm/day
-        //[note: is a timeseries to pick the initial seepage from (so only single value is used)]
-        public TimeSeries SeepageSeries { get; set; } //mm/day
-        public double SeepageH0HydraulicResistance { get; set; } //day (C)
-        public TimeSeries SeepageH0Series { get; set; } //m AD (piezometric level H0)
+        /// <summary>
+        /// Gets or sets the time series for seepage in the unpaved area in mm/day.
+        /// </summary>
+        /// <remarks>This is a time series to pick the initial seepage from (so only single value is used).</remarks>
+        public TimeSeries SeepageSeries { get; set; }
 
-        #region ICloneable Members
-
-        public override object Clone()
-        {
-            var clone = (UnpavedData)base.Clone();
-            clone.areaPerCrop = (CropAreaDictionary) AreaPerCrop.Clone();
-            clone.DrainageFormula = (IDrainageFormula) DrainageFormula.Clone();
-            clone.SeepageSeries = SeepageSeries != null ? (TimeSeries) SeepageSeries.Clone() : null;
-            clone.InitialGroundWaterLevelSeries = InitialGroundWaterLevelSeries != null
-                                                      ? (TimeSeries) InitialGroundWaterLevelSeries.Clone()
-                                                      : null;
-            clone.BoundaryData = BoundaryData != null ? (RainfallRunoffBoundaryData) BoundaryData.Clone() : null;
-            clone.UseLocalBoundaryData = UseLocalBoundaryData;
-            return clone;
-        }
-
-        #endregion
+        /// <summary>
+        /// Gets or sets the hydraulic resistance of seepage in the unpaved area in day (C).
+        /// </summary>
+        public double SeepageH0HydraulicResistance { get; set; }
         
+        /// <summary>
+        /// Gets or sets the time series for the piezometric level H0 in the unpaved area in m AD.
+        /// </summary>
+        public TimeSeries SeepageH0Series { get; set; }
+
+        /// <summary>
+        /// Switches the drainage formula used for the unpaved area to the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of the drainage formula.</typeparam>
         public void SwitchDrainageFormula<T>() where T : IDrainageFormula, new()
         {
             if (DrainageFormula is T)
@@ -223,6 +279,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
             DrainageFormula = new T();
         }
+
+        #region ICloneable Members
+
+        /// <summary>
+        /// Creates a new instance that is a copy of the current <see cref="UnpavedData"/> instance.
+        /// </summary>
+        /// <returns>A new object that is a copy of this instance.</returns>
+        public override object Clone()
+        {
+            var clone = (UnpavedData)base.Clone();
+
+            clone.areaPerCrop = (CropAreaDictionary)AreaPerCrop.Clone();
+            clone.DrainageFormula = (IDrainageFormula)DrainageFormula.Clone();
+            clone.SeepageSeries = SeepageSeries != null ? (TimeSeries)SeepageSeries.Clone() : null;
+            clone.InitialGroundWaterLevelSeries = InitialGroundWaterLevelSeries != null
+                                                      ? (TimeSeries)InitialGroundWaterLevelSeries.Clone()
+                                                      : null;
+            clone.BoundarySettings = (RainfallRunoffBoundarySettings)BoundarySettings?.Clone();
+
+            return clone;
+        }
+
+        #endregion
 
         [EditAction]
         private void CreateInitialGroundwaterLevelFunctionIfNeeded()
@@ -234,13 +313,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 case UnpavedEnums.GroundWaterSourceType.Series:
                     if (InitialGroundWaterLevelSeries == null)
                     {
-                        InitialGroundWaterLevelSeries = new TimeSeries {Name = "Initial Groundwater Level"};
+                        InitialGroundWaterLevelSeries = new TimeSeries { Name = "Initial Groundwater Level" };
                         InitialGroundWaterLevelSeries.Components.Add(new Variable<double>
-                            {
-                                Name = "Initial Groundwater Level",
-                                Unit = new Unit("m below surface", "m bel. surf.")
-                            });
+                        {
+                            Name = "Initial Groundwater Level",
+                            Unit = new Unit("m below surface", "m bel. surf.")
+                        });
                     }
+
                     break;
                 case UnpavedEnums.GroundWaterSourceType.FromLinkedNode:
                     break;
@@ -259,21 +339,26 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 case UnpavedEnums.SeepageSourceType.Series:
                     if (SeepageSeries == null)
                     {
-                        SeepageSeries = new TimeSeries {Name = "Seepage"};
+                        SeepageSeries = new TimeSeries { Name = "Seepage" };
                         SeepageSeries.Components.Add(new Variable<double>
-                            {Name = "Seepage", Unit = new Unit("mm/day", "mm/day")});
+                        {
+                            Name = "Seepage",
+                            Unit = new Unit("mm/day", "mm/day")
+                        });
                     }
+
                     break;
                 case UnpavedEnums.SeepageSourceType.H0Series:
                     if (SeepageH0Series == null)
                     {
-                        SeepageH0Series = new TimeSeries {Name = "Piezometric level H0"};
+                        SeepageH0Series = new TimeSeries { Name = "Piezometric level H0" };
                         SeepageH0Series.Components.Add(new Variable<double>
-                            {
-                                Name = "Piezometric level H0",
-                                Unit = new Unit("m AD", "m AD")
-                            });
+                        {
+                            Name = "Piezometric level H0",
+                            Unit = new Unit("m AD", "m AD")
+                        });
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -295,6 +380,50 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 base.CalculationArea = e.Sum;
             };
             return areaPerCropDictionary;
+        }
+
+        /// <inheritdoc />
+        public override void DoAfterLinking(IHydroObject target)
+        {
+            if (!(target is ILateralSource lateralSource))
+            {
+                return;
+            }
+
+            SetBoundarySettingsToSharedInstance(lateralSource);
+        }
+
+        private void SetBoundarySettingsToSharedInstance(ILateralSource lateralSource)
+        {
+            RainfallRunoffBoundarySettings boundarySettingsOfExistingUnpavedData = GetBoundarySettingsOfExistingUnpavedData(lateralSource);
+            if (boundarySettingsOfExistingUnpavedData != null)
+            {
+                BoundarySettings = boundarySettingsOfExistingUnpavedData;
+            }
+        }
+
+        private static RainfallRunoffBoundarySettings GetBoundarySettingsOfExistingUnpavedData(ILateralSource lateralSource)
+        {
+            foreach (HydroLink link in lateralSource.Links)
+            {
+                if (link.Source is Catchment catchment && catchment.ModelData is UnpavedData unpavedData)
+                {
+                    return unpavedData.BoundarySettings;
+                }
+            }
+
+            return null;
+        }
+        
+        /// <inheritdoc />
+        public override void DoAfterUnlinking()
+        {
+            CreateUnsharedBoundarySettingCopyOfSharedInstance();
+        }
+
+        private void CreateUnsharedBoundarySettingCopyOfSharedInstance()
+        {
+            BoundarySettings = (RainfallRunoffBoundarySettings)BoundarySettings.Clone();
         }
     }
 }
