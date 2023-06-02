@@ -300,5 +300,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var report = ComputationalGridValidator.Validate(model.NetworkDiscretization, model.Grid, model.MinimumSegmentLength);
             Assert.IsFalse(report.Issues.Any());
         }
+
+        [Test]
+        public void TwoGridPointsWithTheSameNameGivesValidationError()
+        {
+            // Setup
+            WaterFlowFMModel model = WaterFlowFMTestHelper.CreateModelWithDemoNetwork();
+
+            const string nonUniqueName = "NotUnique";
+
+            model.NetworkDiscretization.Locations.Values[0].Name = nonUniqueName;
+            model.NetworkDiscretization.Locations.Values[1].Name = nonUniqueName;
+
+            // Call
+            ValidationReport report = ComputationalGridValidator.Validate(model.NetworkDiscretization, model.Grid);
+            
+            // Assert
+            const string expectedMessage = "Several grid points with the same id exist";
+            Assert.That(report.AllErrors.Any(error => error.Message.Equals(expectedMessage)), Is.True);
+        }
     }
 }

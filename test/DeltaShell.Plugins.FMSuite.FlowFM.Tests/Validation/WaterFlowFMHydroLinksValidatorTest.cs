@@ -6,6 +6,8 @@ using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
+using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
@@ -73,33 +75,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             WaterFlowFMModel fmModel = hydroModel.GetActivitiesOfType<WaterFlowFMModel>().First();
             RainfallRunoffModel rrModel = hydroModel.GetActivitiesOfType<RainfallRunoffModel>().First();
             
-            var lateralSource = new LateralSource();
-            var branch = new Channel();
-            fmModel.Network.Branches.Add(branch);
-            branch.BranchFeatures.Add(lateralSource);
+            IHydroNetwork network = fmModel.Network;
+
+            var node1 = new HydroNode("node1");
+            var node2 = new HydroNode("node2");
+            var branch = new Branch(node1, node2);
+
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node1);
+            network.Branches.Add(branch);
+
+            const string nonUniqueName = "nonUniqueName";
+            var lateralSource1 = new LateralSource { Name = nonUniqueName, Branch = branch, Network = network }; // linked to catchment
+            var lateralSource2 = new LateralSource { Name = nonUniqueName, Branch = branch, Network = network }; // not linked
+
+            var lateralSourceData1 = new Model1DLateralSourceData() { Feature = lateralSource1 };
+            var lateralSourceData2 = new Model1DLateralSourceData() { Feature = lateralSource2 };
+            
+            fmModel.LateralSourcesData.Add(lateralSourceData1);
+            fmModel.LateralSourcesData.Add(lateralSourceData2);
             
             var catchment = new Catchment();
             rrModel.Basin.Catchments.Add(catchment);
             
-            Model1DLateralSourceData lateralSourceData = fmModel.LateralSourcesData.First();
-            catchment.LinkTo(lateralSourceData.Feature);
-            
-            lateralSourceData.DataType = lateralDataType;
-            
+            catchment.LinkTo(lateralSource1);
+            lateralSourceData1.DataType = lateralDataType;
+
             // Call
-            ValidationReport report = fmModel.Validate();
+            ValidationReport report = WaterFlowFMHydroLinksValidator.Validate(fmModel);
             
             // Assert
-            ValidationReport hydroLinksReport = report.SubReports.FirstOrDefault(sr => sr.Category.Equals("HydroLinks"));
-            Assert.That(hydroLinksReport, Is.Not.Null);
-            
-            IEnumerable<ValidationIssue> issues = hydroLinksReport.Issues;
-            Assert.That(issues, Has.Count.EqualTo(1));
-            
-            ValidationIssue issue = issues.First();
-            const string expectedErrorMessage = "A hydrolink between a catchment and a lateral must be of type realtime.";
-            Assert.That(issue.Message, Is.EqualTo(expectedErrorMessage));
-            Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Error));
+            const string expectedMessage = "A hydrolink between a catchment and a lateral must be of type realtime.";
+            Assert.That(report.AllErrors.Any(error => error.Message.Equals(expectedMessage)), Is.True);
         }
     }
 }

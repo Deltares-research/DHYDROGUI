@@ -4,58 +4,83 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Properties;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Validators
 {
+    /// <summary>
+    /// Validator for <see cref="IHydroNetwork"/>.
+    /// </summary>
     public static class HydroNetworkValidator
     {
+        /// <summary>
+        /// Validate the given <see cref="IHydroNetwork"/>.
+        /// </summary>
+        /// <param name="target">The hydro network to validate.</param>
+        /// <returns>A <see cref="ValidationReport"/> containing the results of the validation.</returns>
         public static ValidationReport Validate(IHydroNetwork target)
         {
+            Ensure.NotNull(target, nameof(target));
+
             var subReports = new List<ValidationReport>();
-            if (target != null)
+
+            if (target.HydroNodes.Any())
             {
-                if (target.HydroNodes.Any())
+                subReports.AddRange(new[]
                 {
-                    subReports.AddRange(new[]
-                    {
-                        ValidateCoordinateSystem(target),
-                        ValidateIds(target),
-                        ValidateCulverts(target),
-                        ValidateBranches(target),
-                        ValidateCrossSections(target),
-                        ValidateRetentions(target),
-                        StructuresValidator.Validate(target),
-                    });
-                }
-                if (target.Compartments.Any() && target.Pipes.Any() && target.Manholes.Any())
-                {
-                    subReports.AddRange(new[]
-                    {
-                        ValidateCompartments(target)
-                    });
-                }
+                    ValidateCoordinateSystem(target),
+                    ValidateIds(target),
+                    ValidateCulverts(target),
+                    ValidateBranches(target),
+                    ValidateCrossSections(target),
+                    ValidateRetentions(target),
+                    StructuresValidator.Validate(target),
+                });
             }
-            return new ValidationReport("Network", new List<ValidationIssue>(),
-                                        subReports);
+
+            if (target.Manholes.Any())
+            {
+                subReports.AddRange(new[]
+                {
+                    ValidateManholes(target),
+                    ValidateCompartments(target),
+                    ValidateSewerConnections(target)
+                });
+            }
+
+            if (target.Routes.Any())
+            {
+                subReports.Add(ValidateRoutes(target));
+            }
+
+            return new ValidationReport("Network", new List<ValidationIssue>(), subReports);
+        }
+
+        private static ValidationReport ValidateRoutes(IHydroNetwork network)
+        {
+            var issues = new List<ValidationIssue>();
+            
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(network.Routes, "routes", network));
+            
+            return new ValidationReport("Routes", issues);
         }
 
         private static ValidationReport ValidateRetentions(IHydroNetwork network)
         {
             var issues = new List<ValidationIssue>();
-            foreach (var retention in network.Retentions)
+            foreach (IRetention retention in network.Retentions)
             {
                 if (!retention.UseTable && Math.Abs(retention.StorageArea) < double.Epsilon)
                 {
                     issues.Add(new ValidationIssue(retention,
                                                    ValidationSeverity.Error,
-                                                   $"The values in the storage graph of retention {retention.Name} should be greater than zero."));
-
-
+                                                   string.Format(Resources.HydroNetworkValidator_Values_storage_graph_retention_should_be_greater_than_zero, retention.Name)));
                 }
 
                 IFunction retentionTableData = retention.Data;
@@ -63,15 +88,19 @@ namespace DelftTools.Hydro.Validators
                 {
                     issues.Add(new ValidationIssue(retention,
                                                    ValidationSeverity.Error,
-                                                   $"Table should be used for {retention.Name}, but no values are set.", retentionTableData));
+                                                   string.Format(Resources.HydroNetworkValidator_Table_should_be_used_for_retention, retention.Name)));
                     continue;
                 }
 
                 if (retention.UseTable)
                 {
-                    var levelStorageValues = retentionTableData.Components[0].GetValues<double>().ToArray();
-                    var levelStorageHeigth = retentionTableData.Arguments[0].GetValues<double>().ToArray();
-                    if (levelStorageValues.Length != levelStorageHeigth.Length) continue;
+                    double[] levelStorageValues = retentionTableData.Components[0].GetValues<double>().ToArray();
+                    double[] levelStorageHeigth = retentionTableData.Arguments[0].GetValues<double>().ToArray();
+                    if (levelStorageValues.Length != levelStorageHeigth.Length)
+                    {
+                        continue;
+                    }
+
                     for (var index = 0; index < levelStorageValues.Length; index++)
                     {
                         double value = levelStorageValues[index];
@@ -80,7 +109,9 @@ namespace DelftTools.Hydro.Validators
                         {
                             issues.Add(new ValidationIssue(retention,
                                                            ValidationSeverity.Error,
-                                                           $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", retentionTableData));
+                                                           string.Format(Resources.HydroNetworkValidator_Table_is_used_for_retention_but_wrong_value_at_specific_height,
+                                                                         retention.Name, height, value),
+                                                           retentionTableData));
                         }
                     }
                 }
@@ -92,13 +123,14 @@ namespace DelftTools.Hydro.Validators
         private static ValidationReport ValidateCulverts(IHydroNetwork target)
         {
             var issues = new List<ValidationIssue>();
-            foreach (var culvert in target.Culverts)
+            foreach (ICulvert culvert in target.Culverts)
             {
                 if (culvert.IsGated && (culvert.GateOpeningLossCoefficientFunction == null || culvert.GateOpeningLossCoefficientFunction.Components.Any(c => c.Values.Count == 0)))
                 {
-                    issues.Add(new ValidationIssue(culvert, ValidationSeverity.Error,
-                                                string.Format("Culvert {0} is gated and has no gateopening losscoefficient datatable",
-                                                    culvert.Name), culvert));
+                    issues.Add(new ValidationIssue(culvert,
+                                                   ValidationSeverity.Error,
+                                                   string.Format(string.Format(Resources.HydroNetworkValidator_Gated_culvert_has_no_gate_opening_table), culvert.Name),
+                                                   culvert));
                 }
             }
 
@@ -110,20 +142,26 @@ namespace DelftTools.Hydro.Validators
             if (target.CoordinateSystem == null)
             {
                 var issue = new ValidationIssue(target.CoordinateSystem, ValidationSeverity.Warning,
-                    string.Format(
-                        "No Coordinate System selected for Network. Default map projection will be used for distance calculations."), target.CoordinateSystem);
+                                                Resources.HydroNetworkValidator_No_coordinate_system_selected_for_network,
+                                                target.CoordinateSystem);
 
-                return new ValidationReport("Network Coordinate system", new[] { issue });
+                return new ValidationReport("Network Coordinate system", new[]
+                {
+                    issue
+                });
             }
 
             if (target.CoordinateSystem != null && target.CoordinateSystem.IsGeographic)
             {
                 var issue = new ValidationIssue(target.CoordinateSystem, ValidationSeverity.Error,
                                                 string.Format(
-                                                    "Cannot perform calculation in geographical coordinate system {0}",
+                                                    Resources.HydroNetworkValidator_Cannot_perform_calculation_in_geographical_coordinate_system,
                                                     target.CoordinateSystem.Name), target.CoordinateSystem);
 
-                return new ValidationReport("Coordinate system", new[] {issue});
+                return new ValidationReport("Coordinate system", new[]
+                {
+                    issue
+                });
             }
 
             return new ValidationReport("Coordinate system", Enumerable.Empty<ValidationIssue>());
@@ -131,29 +169,29 @@ namespace DelftTools.Hydro.Validators
 
         private static ValidationReport ValidateBranches(IHydroNetwork network)
         {
-            var issues = network?.Channels
-                                .SelectMany(b => GetBranchValidationIssues(b))
-                                .ToList() 
-                         ?? Enumerable.Empty<ValidationIssue>();
+            IEnumerable<ValidationIssue> issues = network?.Channels
+                                                         .SelectMany(b => GetBranchValidationIssues(b))
+                                                         .ToList()
+                                                  ?? Enumerable.Empty<ValidationIssue>();
 
-            var nodeIssues = network?.Nodes
-                                    .SelectMany(n => GetBranchOrderNumbersAtNode(n, network))
-                                    .ToList() 
-                             ?? Enumerable.Empty<ValidationIssue>();
+            IEnumerable<ValidationIssue> nodeIssues = network?.Nodes
+                                                             .SelectMany(n => GetBranchOrderNumbersAtNode(n, network))
+                                                             .ToList()
+                                                      ?? Enumerable.Empty<ValidationIssue>();
 
             return new ValidationReport("Branches", issues.Concat(nodeIssues));
         }
 
         private static IEnumerable<ValidationIssue> GetBranchOrderNumbersAtNode(INode node, INetwork network)
         {
-            var mergedBranchesList = node.IncomingBranches.Concat(node.OutgoingBranches).ToList();
-            var groupedBranchesPerOrderNumber = mergedBranchesList.GroupBy(b => b.OrderNumber);
-            foreach (var orderNumberGroup in groupedBranchesPerOrderNumber)
+            List<IBranch> mergedBranchesList = node.IncomingBranches.Concat(node.OutgoingBranches).ToList();
+            IEnumerable<IGrouping<int, IBranch>> groupedBranchesPerOrderNumber = mergedBranchesList.GroupBy(b => b.OrderNumber);
+            foreach (IGrouping<int, IBranch> orderNumberGroup in groupedBranchesPerOrderNumber)
             {
                 int orderNumber = orderNumberGroup.Key;
                 if (orderNumber > 0 && orderNumberGroup.Count() > 2)
                 {
-                    var message = string.Format("More than two branches with the same ordernumber '{0}' are connected to node {1}; can not start calculation.", orderNumber, node.Name);
+                    string message = string.Format(Resources.HydroNetworkValidator_Multiple_branches_with_same_order_number_connected_to_single_node, orderNumber, node.Name);
                     yield return new ValidationIssue(node, ValidationSeverity.Error, message, new ValidatedFeatures(network, new List<IFeature>(orderNumberGroup) { node }.ToArray()));
                 }
             }
@@ -163,62 +201,65 @@ namespace DelftTools.Hydro.Validators
         {
             if (channel.Source.Name == channel.Target.Name)
             {
-                var message = $"Target and source node of branch '{channel.Name}' have the same id, '{channel.Source.Name}'. Circular branch?";
+                string message = string.Format(Resources.HydroNetworkValidator_Target_and_source_node_of_branch_have_same_id, channel.Name, channel.Source.Name);
                 yield return new ValidationIssue(channel, ValidationSeverity.Error, message, new ValidatedFeatures(channel.Network, channel));
             }
 
             if (channel.OrderNumber != -1 && channel.OrderNumber < 0)
             {
-                var message = $"Branch '{channel.Name}' has an order number of '{channel.OrderNumber}'. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 ";
+                string message = string.Format(Resources.HydroNetworkValidator_Branch_has_invalid_order_number, channel.Name, channel.OrderNumber);
                 yield return new ValidationIssue(channel, ValidationSeverity.Error, message, new ValidatedFeatures(channel.Network, channel));
             }
         }
 
         private static ValidationReport ValidateIds(IHydroNetwork network)
         {
-            IEnumerable<ICrossSectionDefinition> crossSectionDefinitions = GetCrossSectionDefinitions(network.CrossSections.Select(cs => cs.Definition),
-                                                                                                      network.SharedCrossSectionDefinitions);
-            
-            var issuesAsArray = new[]
-                                    {
-                                        ValidationHelper.ValidateDuplicateNames(network.Branches.Cast<INameable>(), "branches", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.Bridges.Cast<INameable>(), "bridges", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.Culverts.Cast<INameable>(), "culverts", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.CrossSections.Cast<INameable>(), "cross sections", network),
-                                        ValidationHelper.ValidateDuplicateNames(crossSectionDefinitions.Cast<INameable>(), "cross section definitions", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.HydroNodes.Cast<INameable>(), "nodes", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.LateralSources.Cast<INameable>(), "lateral sources", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.ObservationPoints.Cast<INameable>(), "observation points", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.Pipes.Cast<INameable>(), "pipes", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.Pumps.Cast<INameable>(), "pumps", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.Retentions.Cast<INameable>(), "retentions", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.Weirs.Cast<INameable>(), "weirs", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.Gates.Cast<INameable>(), "gates", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.CompositeBranchStructures.Cast<INameable>(), "composite branch structures", network),
+            List<ICrossSectionDefinition> sharedCrossSectionDefinitions = network.SharedCrossSectionDefinitions.ToList();
+            List<ICrossSectionDefinition> crossSectionDefinitions = GetCrossSectionDefinitions(network.CrossSections.Select(cs => cs.Definition),
+                                                                                               sharedCrossSectionDefinitions).ToList();
 
-                                        ValidationHelper.ValidateNoEmptyNames(network.Branches.Cast<INameable>(), "branch", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.Bridges.Cast<INameable>(), "bridge", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.Culverts.Cast<INameable>(), "culvert", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.CrossSections.Cast<INameable>(), "cross section", network),
-                                        ValidationHelper.ValidateNoEmptyNames(crossSectionDefinitions.Cast<INameable>(), "cross section definition", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.HydroNodes.Cast<INameable>(), "node", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.LateralSources.Cast<INameable>(), "lateral source", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.ObservationPoints.Cast<INameable>(), "observation point", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.Pipes.Cast<INameable>(), "pipe", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.Pumps.Cast<INameable>(), "pump", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.Retentions.Cast<INameable>(), "retention", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.Weirs.Cast<INameable>(), "weir", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.Gates.Cast<INameable>(), "gate", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.CompositeBranchStructures.Cast<INameable>(), "composite branch structure", network)
-                                    };
+            IList<ValidationIssue>[] issuesAsArray =
+            {
+                ValidationHelper.ValidateDuplicateNames(network.Branches, "branches", network),
+                ValidationHelper.ValidateDuplicateNames(network.Bridges, "bridges", network),
+                ValidationHelper.ValidateDuplicateNames(network.Culverts, "culverts", network),
+                ValidationHelper.ValidateDuplicateNames(network.CrossSections, "cross sections", network),
+                ValidationHelper.ValidateDuplicateNames(crossSectionDefinitions, "cross section definitions", network),
+                ValidationHelper.ValidateDuplicateNames(network.HydroNodes, "nodes", network),
+                ValidationHelper.ValidateDuplicateNames(network.Manholes, "manholes", network),
+                ValidationHelper.ValidateDuplicateNames(network.LateralSources, "lateral sources", network),
+                ValidationHelper.ValidateDuplicateNames(network.ObservationPoints, "observation points", network),
+                ValidationHelper.ValidateDuplicateNames(network.Pipes, "pipes", network),
+                ValidationHelper.ValidateDuplicateNames(network.Pumps, "pumps", network),
+                ValidationHelper.ValidateDuplicateNames(network.Retentions, "retentions", network),
+                ValidationHelper.ValidateDuplicateNames(network.Weirs, "weirs", network),
+                ValidationHelper.ValidateDuplicateNames(network.Gates, "gates", network),
+                ValidationHelper.ValidateDuplicateNames(network.CompositeBranchStructures, "composite branch structures", network),
 
-            var issues = issuesAsArray.SelectMany(iss => iss);
+                ValidationHelper.ValidateNoEmptyNames(network.Branches, "branch", network),
+                ValidationHelper.ValidateNoEmptyNames(network.Bridges, "bridge", network),
+                ValidationHelper.ValidateNoEmptyNames(network.Culverts, "culvert", network),
+                ValidationHelper.ValidateNoEmptyNames(network.CrossSections, "cross section", network),
+                ValidationHelper.ValidateNoEmptyNames(crossSectionDefinitions, "cross section definition", network),
+                ValidationHelper.ValidateNoEmptyNames(network.HydroNodes, "node", network),
+                ValidationHelper.ValidateNoEmptyNames(network.LateralSources, "lateral source", network),
+                ValidationHelper.ValidateNoEmptyNames(network.Manholes, "manholes", network),
+                ValidationHelper.ValidateNoEmptyNames(network.ObservationPoints, "observation point", network),
+                ValidationHelper.ValidateNoEmptyNames(network.Pipes, "pipe", network),
+                ValidationHelper.ValidateNoEmptyNames(network.Pumps, "pump", network),
+                ValidationHelper.ValidateNoEmptyNames(network.Retentions, "retention", network),
+                ValidationHelper.ValidateNoEmptyNames(network.Weirs, "weir", network),
+                ValidationHelper.ValidateNoEmptyNames(network.Gates, "gate", network),
+                ValidationHelper.ValidateNoEmptyNames(network.CompositeBranchStructures, "composite branch structure", network)
+            };
+
+            IEnumerable<ValidationIssue> issues = issuesAsArray.SelectMany(iss => iss);
 
             return new ValidationReport("General", issues);
         }
 
-        private static IEnumerable<ICrossSectionDefinition> GetCrossSectionDefinitions(IEnumerable<ICrossSectionDefinition> crossSectionDefinitions, 
-                                                                                       IEnumerable<ICrossSectionDefinition> sharedDefinitions)
+        private static IEnumerable<ICrossSectionDefinition> GetCrossSectionDefinitions(IEnumerable<ICrossSectionDefinition> crossSectionDefinitions,
+                                                                                       IReadOnlyCollection<ICrossSectionDefinition> sharedDefinitions)
         {
             // We have to validate whether there are any duplicate ids for cross-section definitions.
             // This can, for example, occur whenever two cross-sections both have a definition with the same name,
@@ -238,15 +279,17 @@ namespace DelftTools.Hydro.Validators
         private static ValidationReport ValidateCrossSections(IHydroNetwork network)
         {
             var channelsCheckedOnInterpolationBranches = new HashSet<string>();
-            var issues = network?.Channels.SelectMany(b => GetCrossSectionValidationIssues(b, network, channelsCheckedOnInterpolationBranches)).ToList() ?? new List<ValidationIssue>();
+            List<ValidationIssue> issues = network?.Channels.SelectMany(b => GetCrossSectionValidationIssues(b, network, channelsCheckedOnInterpolationBranches)).ToList() ?? new List<ValidationIssue>();
 
-            var issuesContainSectionIssues = issues.Where(i => i.Message.Equals("The maximum flow width of this cross section does not match the total width of all its sections.")).ToList();
-            var finalIssues = issues.Where(i => !i.Message.Equals("The maximum flow width of this cross section does not match the total width of all its sections.")).ToList();
+            List<ValidationIssue> issuesContainSectionIssues = issues.Where(i => i.Message.Equals(Resources.HydroNetworkValidator_Maximum_flow_width_of_cross_section_does_not_match_total_width)).ToList();
+            List<ValidationIssue> finalIssues = issues.Where(i => !i.Message.Equals(Resources.HydroNetworkValidator_Maximum_flow_width_of_cross_section_does_not_match_total_width)).ToList();
             if (issuesContainSectionIssues.Any())
             {
-                var crossSectionsToCorrect = issuesContainSectionIssues.Select(issue => issue.ViewData as ICrossSection).ToList();
-                finalIssues.Add(new ValidationIssue($"Cross section sections issues ({crossSectionsToCorrect.Count})", ValidationSeverity.Error,
-                    "The maximum flow width of one or more cross sections is larger than the total width of all its sections.", crossSectionsToCorrect));
+                List<ICrossSection> crossSectionsToCorrect = issuesContainSectionIssues.Select(issue => issue.ViewData as ICrossSection).ToList();
+                finalIssues.Add(new ValidationIssue(string.Format(Resources.HydroNetworkValidator_Cross_section_sections_issues, crossSectionsToCorrect.Count),
+                                                    ValidationSeverity.Error,
+                                                    Resources.HydroNetworkValidator_Maximum_flow_width_of_cross_sections_is_larger_than_total_width,
+                                                    crossSectionsToCorrect));
             }
 
             return new ValidationReport("Cross sections", finalIssues);
@@ -254,14 +297,17 @@ namespace DelftTools.Hydro.Validators
 
         private static IEnumerable<ValidationIssue> GetCrossSectionValidationIssues(IChannel channel, IHydroNetwork network, HashSet<string> channelsCheckedOnInterpolationBranches)
         {
-            foreach (var issue in channel.CrossSections.SelectMany(cs => GetCorrectCrossSectionIssue(cs, network)))
+            foreach (ValidationIssue issue in channel.CrossSections.SelectMany(cs => GetCorrectCrossSectionIssue(cs, network)))
             {
                 yield return issue;
             }
 
             if (channel.OrderNumber == -1)
             {
-                foreach(var issue in GetCorrectCrossSectionsOnChannelIssue(new[] { channel }, network))
+                foreach (ValidationIssue issue in GetCorrectCrossSectionsOnChannelIssue(new[]
+                         {
+                             channel
+                         }, network))
                 {
                     yield return issue;
                 }
@@ -270,9 +316,9 @@ namespace DelftTools.Hydro.Validators
             {
                 if (!channelsCheckedOnInterpolationBranches.Contains(channel.Name))
                 {
-                    var chainOfChannels = GetChainOfChannelsWithSameOrderNumber(channel, network).ToList();
+                    List<IChannel> chainOfChannels = GetChainOfChannelsWithSameOrderNumber(channel, network).ToList();
 
-                    foreach (var issue in GetCorrectCrossSectionsOnChannelIssue(chainOfChannels.ToArray(), network))
+                    foreach (ValidationIssue issue in GetCorrectCrossSectionsOnChannelIssue(chainOfChannels.ToArray(), network))
                     {
                         yield return issue;
                     }
@@ -284,12 +330,13 @@ namespace DelftTools.Hydro.Validators
 
         private static IEnumerable<ValidationIssue> GetCorrectCrossSectionsOnChannelIssue(IChannel[] chainOfChannels, IHydroNetwork network)
         {
-            var crossSections = chainOfChannels.SelectMany(c => c.CrossSections);
-            var crossSectionTypes = crossSections.Select(cs => cs.CrossSectionType).Distinct().ToArray();
-            
+            IEnumerable<ICrossSection> crossSections = chainOfChannels.SelectMany(c => c.CrossSections);
+            CrossSectionType[] crossSectionTypes = crossSections.Select(cs => cs.CrossSectionType).Distinct().ToArray();
+
             if (!crossSectionTypes.Any())
             {
-                var message = $"No cross sections on channel(s) {string.Join(",", chainOfChannels.Select(c => c.Name).ToArray())}; can not start calculation.";
+                string message = string.Format(Resources.HydroNetworkValidator_No_cross_sections_on_channels, 
+                                               string.Join(",", chainOfChannels.Select(c => c.Name).ToArray()));
                 yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, message, new ValidatedFeatures(network, chainOfChannels.ToArray<IFeature>()));
             }
 
@@ -297,105 +344,146 @@ namespace DelftTools.Hydro.Validators
             if ((crossSectionTypes.Contains(CrossSectionType.GeometryBased) || crossSectionTypes.Contains(CrossSectionType.YZ)) &&
                 (crossSectionTypes.Contains(CrossSectionType.Standard) || crossSectionTypes.Contains(CrossSectionType.ZW)))
             {
-                var msg = $"Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({string.Join(",", chainOfChannels.Select(c => c.Name).ToArray())})";
+                string msg = string.Format(Resources.HydroNetworkValidator_Multiple_cross_section_types_per_branch_not_supported,
+                                           string.Join(",", chainOfChannels.Select(c => c.Name).ToArray()));
                 yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, msg, new ValidatedFeatures(network, chainOfChannels.ToArray<IFeature>()));
             }
         }
 
-        private static ValidationReport ValidateCompartments(IHydroNetwork target)
+        private static ValidationReport ValidateManholes(IHydroNetwork network)
+        {
+            var issues = new List<ValidationIssue>();
+            
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(network.Manholes, "manholes", network));
+            
+            return new ValidationReport("Manholes", issues);
+        }
+        
+        private static ValidationReport ValidateCompartments(IHydroNetwork network)
         {
             var issues = new List<ValidationIssue>();
 
-            foreach (var compartment in target.Compartments)
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(network.Compartments, "compartments", network));
+            
+            foreach (Compartment compartment in network.Compartments)
             {
                 if (compartment.ManholeWidth <= 0)
                 {
-                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Error, "Width / diameter must be larger than 0"));
+                    issues.Add(new ValidationIssue(compartment,
+                                                   ValidationSeverity.Error,
+                                                   Resources.HydroNetworkValidator_Width_or_diamater_must_be_larger_than_0));
                 }
 
                 if (compartment.ManholeLength <= 0)
                 {
-                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Error, "Length must be larger than 0"));
+                    issues.Add(new ValidationIssue(compartment,
+                                                   ValidationSeverity.Error,
+                                                   Resources.HydroNetworkValidator_Length_must_be_larger_than_0));
                 }
 
                 if (compartment.FloodableArea <= 0)
                 {
-                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Warning, "Street storage area is set to 0. Recommended to use storage type closed instead of reservoir"));
+                    issues.Add(new ValidationIssue(compartment,
+                                                   ValidationSeverity.Warning,
+                                                   Resources.HydroNetworkValidator_Street_storage_area_is_0));
                 }
             }
 
             return new ValidationReport("Compartments", issues);
         }
 
+        private static ValidationReport ValidateSewerConnections(IHydroNetwork network)
+        {
+            var issues = new List<ValidationIssue>();
+            
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(network.SewerConnections, "sewer connections", network));
+            
+            return new ValidationReport("Sewer Connections", issues);
+        }
+        
         private static IEnumerable<ValidationIssue> GetCorrectCrossSectionIssue(ICrossSection crossSection, IHydroNetwork network)
         {
             string errorMessage;
-            var crossSectionDefinition = crossSection.Definition;
+            ICrossSectionDefinition crossSectionDefinition = crossSection.Definition;
 
-            if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection) crossSection, out errorMessage))
+            if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection)crossSection, out errorMessage))
             {
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error, errorMessage, new ValidatedFeatures(network, crossSection));
             }
 
             if (crossSection.Geometry.Coordinates.Length == 0)
             {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "No profile defined", crossSection);
+                yield return new ValidationIssue(crossSection,
+                                                 ValidationSeverity.Error,
+                                                 Resources.HydroNetworkValidator_No_profile_defined,
+                                                 crossSection);
             }
 
             if (!CrossSectionValidator.IsFlowProfileValid(crossSectionDefinition))
             {
                 if (crossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
                 {
-                    yield return new ValidationIssue(crossSection, ValidationSeverity.Error,  
-                        string.Format("Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", crossSection), crossSection);
+                    yield return new ValidationIssue(crossSection, 
+                                                     ValidationSeverity.Error,
+                                                     string.Format(Resources.HydroNetworkValidator_Tabulated_cross_section_cannot_have_0_width_above_deepest_point, crossSection),
+                                                     crossSection);
                 }
                 else
                 {
-                    yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "Invalid flow profile", crossSection);
+                    yield return new ValidationIssue(crossSection,
+                                                     ValidationSeverity.Error,
+                                                     Resources.HydroNetworkValidator_Invalid_flow_profile,
+                                                     crossSection);
                 }
             }
 
             if (!CrossSectionValidator.AreCrossSectionsEqualToTheFlowWidth(crossSectionDefinition))
             {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
-                    "The maximum flow width of this cross section does not match the total width of all its sections.", crossSection);
+                yield return new ValidationIssue(crossSection,
+                                                 ValidationSeverity.Error,
+                                                 Resources.HydroNetworkValidator_Maximum_flow_width_of_cross_section_does_not_match_total_width,
+                                                 crossSection);
             }
 
             if (!CrossSectionValidator.AreFloodPlain1AndFloodPlain2WidthsValid(crossSectionDefinition))
             {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
-                    "FloodPlain2 width cannot be larger than 0.0, if FloodPlain1 width is equal to 0.0", crossSection);
+                yield return new ValidationIssue(crossSection,
+                                                 ValidationSeverity.Error,
+                                                 Resources.HydroNetworkValidator_Floodplain2_width_cannot_be_larger_than_0_if_floodplain1_width_is_0,
+                                                 crossSection);
             }
         }
 
         private static IEnumerable<IChannel> GetChainOfChannelsWithSameOrderNumber(IChannel channel, IHydroNetwork network, IList<IChannel> previousLinks = null)
         {
-            var startNode = channel.Source;
+            INode startNode = channel.Source;
             previousLinks = previousLinks ?? new List<IChannel>();
-            var channelTo = network.Channels.FirstOrDefault(c => c.OrderNumber == channel.OrderNumber && c.Target == startNode);
+            IChannel channelTo = network.Channels.FirstOrDefault(c => c.OrderNumber == channel.OrderNumber && c.Target == startNode);
 
             if (channelTo != null && !previousLinks.Contains(channelTo))
             {
                 yield return channelTo;
                 previousLinks.Add(channel);
-                foreach (var channelInChain in GetChainOfChannelsWithSameOrderNumber(channelTo, network, previousLinks))
+                foreach (IChannel channelInChain in GetChainOfChannelsWithSameOrderNumber(channelTo, network, previousLinks))
                 {
                     yield return channelInChain;
                 }
+
                 previousLinks.Remove(channel);
             }
 
-            var endNode = channel.Target;
-            var channelFrom = network.Channels.FirstOrDefault(c => c.OrderNumber == channel.OrderNumber && c.Source == endNode);
+            INode endNode = channel.Target;
+            IChannel channelFrom = network.Channels.FirstOrDefault(c => c.OrderNumber == channel.OrderNumber && c.Source == endNode);
 
             if (channelFrom != null && !previousLinks.Contains(channelFrom))
             {
                 yield return channelFrom;
                 previousLinks.Add(channel);
-                foreach (var channelInChain in GetChainOfChannelsWithSameOrderNumber(channelFrom, network, previousLinks))
+                foreach (IChannel channelInChain in GetChainOfChannelsWithSameOrderNumber(channelFrom, network, previousLinks))
                 {
                     yield return channelInChain;
                 }
+
                 previousLinks.Remove(channel);
             }
 

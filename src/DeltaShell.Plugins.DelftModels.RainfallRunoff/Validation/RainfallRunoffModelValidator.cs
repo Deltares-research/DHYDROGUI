@@ -7,8 +7,16 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
+    /// <summary>
+    /// Validator for <see cref="RainfallRunoffModel"/>.
+    /// </summary>
     public class RainfallRunoffModelValidator
     {
+        /// <summary>
+        /// Validate the given <see cref="RainfallRunoffModel"/>
+        /// </summary>
+        /// <param name="rainfallRunoffModel">The model to validate.</param>
+        /// <returns>A <see cref="ValidationReport"/> containing the results of the validation.</returns>
         public static ValidationReport Validate(RainfallRunoffModel rainfallRunoffModel)
         {
             return new ValidationReport(rainfallRunoffModel.Name + " (Rainfall Runoff Model)", new[]

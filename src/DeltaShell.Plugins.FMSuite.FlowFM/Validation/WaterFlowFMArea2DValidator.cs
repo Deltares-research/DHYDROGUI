@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Validators;
@@ -10,12 +11,22 @@ using ValidationAspects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
+    /// <summary>
+    /// Validator for <see cref="HydroArea"/>.
+    /// </summary>
     public static class WaterFlowFMArea2DValidator
     {
+        /// <summary>
+        /// Validate the <see cref="HydroArea"/> of the given <see cref="WaterFlowFMModel"/>.
+        /// </summary>
+        /// <param name="model">The model for which to validate the hydro area.</param>
+        /// <returns>A <see cref="ValidationReport"/> containing the results of the validation.</returns>
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
             var area = model.Area;
+            
+            issues.AddRange(ValidateIds(area));
             
             foreach (var thinDam in area.ThinDams)
             {
@@ -277,6 +288,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
 
             return new ValidationReport("Structures", issues);
+        }
+
+        private static IEnumerable<ValidationIssue> ValidateIds(HydroArea area)
+        {
+            var issues = new List<ValidationIssue>();
+            
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.BridgePillars, "bridge pillars (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.DryAreas, "dry areas (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.Embankments, "embankments (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.FixedWeirs, "fixed weirs (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.Gates, "gates (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.Gullies, "gullies (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.LandBoundaries, "land boundaries (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.LeveeBreaches, "levee breaches (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.ObservationPoints, "observation points (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.ObservationCrossSections, "observation cross-sections (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.Pumps, "pumps (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.RoofAreas, "roof areas (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.ThinDams, "thin dams (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(area.Weirs, "weirs (2D)", area));
+            
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.BridgePillars, "bridge pillar (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.DryAreas, "dry area (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.Embankments, "embankment (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.FixedWeirs, "fixed weir (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.Gates, "gate (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.Gullies, "gully (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.LandBoundaries, "land boundary (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.LeveeBreaches, "levee breach (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.ObservationPoints, "observation point (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.ObservationCrossSections, "observation cross-section (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.Pumps, "pump (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.RoofAreas, "roof area (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.ThinDams, "thin dam (2D)", area));
+            issues.AddRange(ValidationHelper.ValidateNoEmptyNames(area.Weirs, "weir (2D)", area));
+
+            return issues;
         }
 
         private static void ValidatePumpSuctionSide(IPump sobekPump, ICollection<ValidationIssue> issues)

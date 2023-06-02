@@ -228,4 +228,19 @@
   <data name="RainfallRunoffMeteoEvaporationValidator_ValidateEvaporationMeteoData_The_end_date_is_incorrect____0___is_expected__the_actual_end_date_is____1__" xml:space="preserve">
     <value>The end date is incorrect, [{0}] is expected, the actual end date is: [{1}]</value>
   </data>
+  <data name="RainfallRunoffBasinValidator_Multiple_objects_with_same_name" xml:space="preserve">
+    <value>This object has the same name as one or more other objects.</value>
+  </data>
+  <data name="RainfallRunoffBasinValidator_WWTP_has_no_incoming_runoff_links" xml:space="preserve">
+    <value>Wastewater treatment plant has no incoming runoff links</value>
+  </data>
+  <data name="RainfallRunoffBasinValidator_WWTP_has_no_outgoing_runoff_links" xml:space="preserve">
+    <value>Wastewater treatment plant has no outgoing runoff links; an implicit boundary will be created.</value>
+  </data>
+  <data name="RainfallRunoffBasinValidator_WWTP_has_more_than_one_outoging_runoff_links" xml:space="preserve">
+    <value>Wastewater treatment plant has more than one outgoing runoff link</value>
+  </data>
+  <data name="RainfallRunoffBasinValidator_Basin_contains_no_catchments" xml:space="preserve">
+    <value>Contains no concrete catchments</value>
+  </data>
 </root>

@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var reports = new List<ValidationReport>();
 
             var invalidIdsIssues = ValidationHelper.ValidateDuplicateNames(networkDiscretization.Locations.Values,
-                                                                 "grid points", networkDiscretization, ValidationSeverity.Warning);
+                                                                 "grid points", networkDiscretization);
             if (invalidIdsIssues.Any())
             {
                 reports.Add(new ValidationReport("General", invalidIdsIssues));

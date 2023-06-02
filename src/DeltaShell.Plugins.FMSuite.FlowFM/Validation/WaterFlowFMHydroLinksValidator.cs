@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -22,28 +23,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             var issues = new List<ValidationIssue>();
             var report = new ValidationReport("HydroLinks", issues);
-            
+
             var hydroRegion = model.Network?.Parent as HydroRegion;
             if (hydroRegion == null)
             {
                 return report;
             }
 
-            Dictionary<string, HydroLink> linksTargetLookup = CreateLinksTargetLookup(hydroRegion.Links);
-            
-            Dictionary<string, Model1DLateralSourceData> lateralSourceDataLookup = 
-                model.LateralSourcesData.Distinct().ToDictionary(ld => ld.Feature.Name, StringComparer.InvariantCultureIgnoreCase);
-            
-            issues.AddRange(ValidateThatRealtimeLateralsHaveCorrectHydroLinks(hydroRegion, model.LateralSourcesData, linksTargetLookup));
-            issues.AddRange(ValidateThatHydroLinksBetweenCatchmentAndLateralHaveRealtimeLaterals(hydroRegion, lateralSourceDataLookup));
-            
+            issues.AddRange(ValidateThatRealtimeLateralsHaveCorrectHydroLinks(hydroRegion, model.LateralSourcesData, hydroRegion.Links.ToList()));
+            issues.AddRange(ValidateThatHydroLinksBetweenCatchmentAndLateralHaveRealtimeLaterals(hydroRegion, model.LateralSourcesData.ToList()));
+
             return report;
         }
 
         private static Dictionary<string, HydroLink> CreateLinksTargetLookup(IEnumerable<HydroLink> hydroRegionLinks)
         {
             var linksTargetLookup = new Dictionary<string, HydroLink>(StringComparer.InvariantCultureIgnoreCase);
-            
+
             foreach (HydroLink hydroLink in hydroRegionLinks)
             {
                 string targetName = hydroLink.Target.Name;
@@ -51,6 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     continue;
                 }
+
                 linksTargetLookup.Add(targetName, hydroLink);
             }
 
@@ -60,21 +57,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// <summary>
         /// Validates that laterals of type realtime have a hydrolink from a catchment to a lateral.
         /// </summary>
+        /// <param name="region">The region for which to validate the laterals.</param>
         /// <param name="lateralSourceDatas">The laterals to validate.</param>
-        /// <param name="linksTargetLookup">Hydrolink lookup.</param>
+        /// <param name="links">The hydro links in the region that are required to perform validation.</param>
         /// <returns>A collection of validation issues.</returns>
         private static IEnumerable<ValidationIssue> ValidateThatRealtimeLateralsHaveCorrectHydroLinks(
             IHydroRegion region,
-            IEnumerable<Model1DLateralSourceData> lateralSourceDatas, 
-            IReadOnlyDictionary<string, HydroLink> linksTargetLookup)
+            IEnumerable<Model1DLateralSourceData> lateralSourceDatas,
+            IEnumerable<HydroLink> links)
         {
+            Dictionary<string, HydroLink> linksTargetLookup = CreateLinksTargetLookup(links);
+
             foreach (Model1DLateralSourceData lateralSourceData in lateralSourceDatas)
             {
                 if (lateralSourceData.DataType != Model1DLateralDataType.FlowRealTime)
                 {
                     continue;
                 }
-                
+
                 LateralSource lateralSource = lateralSourceData.Feature;
 
                 if (linksTargetLookup.TryGetValue(lateralSource.Name, out HydroLink hydroLink) && hydroLink.Source is Catchment)
@@ -82,8 +82,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     continue;
                 }
 
-                const string errorMessage = "A lateral of type realtime must have a hydrolink between a catchment and the lateral.";
-                yield return new ValidationIssue(lateralSource, ValidationSeverity.Error, errorMessage, new ValidatedFeatures(region, lateralSource));
+                yield return new ValidationIssue(lateralSource,
+                                                 ValidationSeverity.Error,
+                                                 Resources.WaterFlowFMHydroLinksValidator_Realtime_lateral_must_have_link_between_catchment_and_lateral,
+                                                 new ValidatedFeatures(region, lateralSource));
             }
         }
 
@@ -91,25 +93,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// Validates that all hydrolinks between catchments and laterals are of type realtime.
         /// </summary>
         /// <param name="region"> The region of the hydro links. </param>
-        /// <param name="lateralSourceDataLookup">Lateral source data lookup.</param>
+        /// <param name="lateralSourceDatas">The lateral source data from the model.</param>
         /// <returns>A collection of validation issues.</returns>
         private static IEnumerable<ValidationIssue> ValidateThatHydroLinksBetweenCatchmentAndLateralHaveRealtimeLaterals(
             IHydroRegion region,
-            IReadOnlyDictionary<string, Model1DLateralSourceData> lateralSourceDataLookup)
+            IEnumerable<Model1DLateralSourceData> lateralSourceDatas)
         {
+            var lateralSourceDataLookup = new Dictionary<string, Model1DLateralSourceData>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (Model1DLateralSourceData model1DLateralSourceData in lateralSourceDatas.Distinct())
+            {
+                string featureName = model1DLateralSourceData.Feature.Name;
+                if (lateralSourceDataLookup.ContainsKey(featureName))
+                {
+                    continue;
+                }
+
+                lateralSourceDataLookup.Add(featureName, model1DLateralSourceData);
+            }
+
             foreach (HydroLink hydroLink in region.Links)
             {
-                if (!(hydroLink.Source is Catchment) 
+                if (!(hydroLink.Source is Catchment)
                     || !(hydroLink.Target is LateralSource lateralSource)
                     || !lateralSourceDataLookup.TryGetValue(lateralSource.Name, out Model1DLateralSourceData lateralSourceData))
                 {
                     continue;
                 }
-                
+
                 if (lateralSourceData.DataType != Model1DLateralDataType.FlowRealTime)
                 {
-                    const string errorMessage = "A hydrolink between a catchment and a lateral must be of type realtime.";
-                    yield return new ValidationIssue(hydroLink, ValidationSeverity.Error, errorMessage, new ValidatedFeatures(region, hydroLink));
+                    yield return new ValidationIssue(hydroLink,
+                                                     ValidationSeverity.Error,
+                                                     Resources.WaterFlowFMHydroLinksValidator_Hydrolink_between_catchment_and_lateral_must_be_realtime,
+                                                     new ValidatedFeatures(region, hydroLink));
                 }
             }
         }
