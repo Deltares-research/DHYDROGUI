@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Link1d2d;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 
@@ -12,14 +14,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public static class Links1D2DHelper
     {
         public const int MISSING_INDEX = -1;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Links1D2DHelper));
 
-        public static void SetGeometry1D2DLinks(IEnumerable<ILink1D2D> listOfLinks, DelftTools.Functions.Generic.IVariable<INetworkLocation> networkLocations, IList<Cell> gridCells)
+       public static void SetGeometry1D2DLinks(IEnumerable<ILink1D2D> listOfLinks, DelftTools.Functions.Generic.IVariable<INetworkLocation> networkLocations, IList<Cell> gridCells)
         {
-            if (!networkLocations.Values.Any() || !gridCells.Any()) return;
-
+            var networkLocationsValues = networkLocations.Values.ToArray();
+            if (!networkLocationsValues.Any() || !gridCells.Any()) return;
             foreach (var link in listOfLinks)
             {
-                var fromNode = networkLocations.Values[link.DiscretisationPointIndex];
+                if (link.DiscretisationPointIndex > networkLocationsValues.Length - 1)
+                {
+                    Log.Error(Resources.Links1D2DHelper_SetGeometry1D2DLinks__1d2d_link_discretization_point_problem_ + Resources.Links1D2DHelper_SetGeometry1D2DLinks__Cannot_create_geometry_of_1d2d_link__link_Name__from_network_discretization_point__link_DiscretisationPointIndex__to_grid_cell__link_FaceIndex_);
+                    continue;
+                }
+                var fromNode = networkLocationsValues[link.DiscretisationPointIndex];
+                if (link.FaceIndex > gridCells.Count -1)
+                {
+                    Log.Error(Resources.Links1D2DHelper_SetGeometry1D2DLinks__1d2d_link_grid_cell_problem_ + Resources.Links1D2DHelper_SetGeometry1D2DLinks__Cannot_create_geometry_of_1d2d_link__link_Name__from_network_discretization_point__link_DiscretisationPointIndex__to_grid_cell__link_FaceIndex_);
+                    continue;
+                }
                 var toCell = gridCells[link.FaceIndex];
                 link.Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toCell.Center });
             }

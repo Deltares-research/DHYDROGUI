@@ -5,14 +5,17 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {
@@ -38,17 +41,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <returns>Data object with meta data</returns>
         public static FouFileMetaData ReadMetaData(string path)
         {
-            UnstructuredGrid grid = UGridFileHelper.ReadUnstructuredGrid(path, recreateCells: false);
-
+            var grid = new UnstructuredGrid();
             var hydroNetwork = new HydroNetwork();
             var discretization = new Discretization { Network = hydroNetwork };
-            UGridFileHelper.ReadNetworkAndDiscretisation(path, 
-                                                         discretization, 
-                                                         hydroNetwork, 
-                                                         Enumerable.Empty<CompartmentProperties>(), 
-                                                         Enumerable.Empty<BranchProperties>(), 
-                                                         true);
-
+            var links = new List<ILink1D2D>();
+            IConvertedUgridFileObjects convertedUgridFileObjects = new ConvertedUgridFileObjects
+            {
+                Discretization = discretization,
+                Grid = grid,
+                HydroNetwork = hydroNetwork,
+                Links1D2D = links
+            };
+            UGridFileHelper.ReadNetFileDataIntoModel(path, convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths: true);
+            
             string[] variables1D = GetMeshDependentVariables(path, MeshType.Mesh1d);
             string[] variables2D = GetMeshDependentVariables(path, MeshType.Mesh2d);
 

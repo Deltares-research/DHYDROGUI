@@ -107,61 +107,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 return Array.Empty<IFunction>();
             }
+            grid = new UnstructuredGrid();
+            network = new HydroNetwork();
+            discretization = new Discretization { Network = Network };
+            links = new List<ILink1D2D>();
 
-            grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true, false);
-            links = UGridFileHelper.Read1D2DLinks(netCdfFile.Path);
-            UpdateNetworkAndDiscretisation();
-            GenerateGeometriesForLinks();
+            discretization.Locations.IsAutoSorted = false;
+            IEnumerable<CompartmentProperties> compartmentProperties = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netCdfFile.Path);
+            IEnumerable<BranchProperties> branchProperties = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netCdfFile.Path);
+            IConvertedUgridFileObjects convertedUgridFileObjects = new ConvertedUgridFileObjects
+            {
+                Discretization = discretization,
+                Grid = grid,
+                HydroNetwork = network,
+                Links1D2D = links,
+                CompartmentProperties = compartmentProperties,
+                BranchProperties = branchProperties
+            };
+            UGridFileHelper.ReadNetFileDataIntoModel(netCdfFile.Path, convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths:true);
+
+            foreach (var hydroObject in network.AllHydroObjects)
+            {
+                hydroObject.Name += "_class_output";
+            }
+
+            foreach (var outputNetworkLocation in discretization.Locations.AllValues)
+            {
+                outputNetworkLocation.Name += "_class_output";
+            }
 
             IEnumerable<NetCdfVariableInfo> timeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1);
             IEnumerable<ICoverage> functions = timeDepVariables.Select(CreateCoverageForTimeDependentVariable).Where(c => c != null);
             return functions;
         }
-        private void GenerateGeometriesForLinks()
-        {
-            foreach (var link1D2D in Links)
-            {
-                var cell = Grid.Cells[link1D2D.FaceIndex];
-                var node = Discretization.Locations.Values[link1D2D.DiscretisationPointIndex];
 
-                link1D2D.Geometry = new LineString(new[] { cell.Center, node.Geometry.Coordinate });
-            }
-        }
-
-        private void UpdateNetworkAndDiscretisation()
-        {
-            var netFilePath = Path;
-            if (!File.Exists(netFilePath)) return;
-
-            int numberOfNetworks = UGridFileHelper.GetNumberOfNetworks(netFilePath);
-            if (numberOfNetworks != 1) return;
-
-            int numberOfNetworkDiscretisations = UGridFileHelper.GetNumberOfNetworkDiscretizations(netFilePath);
-            if (numberOfNetworkDiscretisations != 1) return;
-
-            using (ReconnectToMapFile())
-            {
-                if (!UGridFileHelper.IsUGridFile(netCdfFile.Path)) return;
-
-                IEnumerable<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
-                IEnumerable<CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
-                
-                network = new HydroNetwork();
-                discretization = new Discretization();
-                discretization.Locations.IsAutoSorted = false;
-                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, compartmentData, branchData, true);
-
-                foreach (var hydroObject in network.AllHydroObjects)
-                {
-                    hydroObject.Name += "_class_output";
-                }
-                
-                foreach (var outputNetworkLocation in discretization.Locations.AllValues)
-                {
-                    outputNetworkLocation.Name += "_class_output";
-                }
-            }
-        }
         /// <summary>
         /// Gets the variable values.
         /// </summary>

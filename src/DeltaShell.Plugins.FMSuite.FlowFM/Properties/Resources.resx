@@ -649,4 +649,25 @@ File import of structures file '{1}' has failed.</value>
   <data name="WaterFlowFMModel_OnLoad_Reading_1D2D_features" xml:space="preserve">
     <value>Reading 1D2D features</value>
   </data>
+  <data name="MduFile_Read_Reading_netFile" xml:space="preserve">
+    <value>Reading netFile</value>
+  </data>
+  <data name="WaterFlowFMModel_CreateUnstructuredGridVertexCoverage_Provided_grid_to_create_grid_vertex_coverage_for_is_null" xml:space="preserve">
+    <value>Provided grid to create grid vertex coverage for is null</value>
+  </data>
+  <data name="WaterFlowFMModel_CreateUnstructuredGridCellCoverage_Provided_grid_to_create_grid_cell_coverage_for_is_null" xml:space="preserve">
+    <value>Provided grid to create grid cell coverage for is null</value>
+  </data>
+  <data name="WaterFlowFMModel_CreateUnstructuredGridFlowLinkCoverage_Provided_grid_to_create_grid_flowlink_coverage_for_is_null" xml:space="preserve">
+    <value>Provided grid to create grid flowlink coverage for is null</value>
+  </data>
+  <data name="Links1D2DHelper_SetGeometry1D2DLinks__1d2d_link_discretization_point_problem_" xml:space="preserve">
+    <value>1d2d link discretization point problem.</value>
+  </data>
+  <data name="Links1D2DHelper_SetGeometry1D2DLinks__1d2d_link_grid_cell_problem_" xml:space="preserve">
+    <value>1d2d link grid cell problem.</value>
+  </data>
+  <data name="Links1D2DHelper_SetGeometry1D2DLinks__Cannot_create_geometry_of_1d2d_link__link_Name__from_network_discretization_point__link_DiscretisationPointIndex__to_grid_cell__link_FaceIndex_" xml:space="preserve">
+    <value> Cannot create geometry of 1d2d link {link.Name} from network discretization point {link.DiscretisationPointIndex} to grid cell {link.FaceIndex}</value>
+  </data>
 </root>

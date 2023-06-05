@@ -154,9 +154,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            var grid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
+            var grid = new UnstructuredGrid(); 
+            UGridFileHelper.SetUnstructuredGrid(netFilePath, grid);
 
-            Assert.NotNull(grid);
+            Assert.IsFalse(grid.IsEmpty);
 
             var values = grid.Vertices.Select(v => v.Z);
 
@@ -184,10 +185,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            var grid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
-
-            Assert.NotNull(grid);
-
+            var grid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(netFilePath, grid);
+            Assert.IsFalse(grid.IsEmpty);
+            
             var values = grid.Vertices.Select(v => v.Z);
 
             // build coverage and show on map

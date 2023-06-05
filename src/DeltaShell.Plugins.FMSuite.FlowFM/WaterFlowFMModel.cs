@@ -292,17 +292,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             linksToRemove.ForEach(l => Links.Remove(l));
         }
-
-        private void LoadLinks()
-        {
-            if (!File.Exists(NetFilePath)) return;
-            var loadedLinks = UGridFileHelper.Read1D2DLinks(NetFilePath);
-
-            if (NetworkDiscretization == null || Grid == null) return;
-            Links1D2DHelper.SetGeometry1D2DLinks(loadedLinks, NetworkDiscretization.Locations, Grid.Cells);
-            Links = new EventedList<ILink1D2D>(loadedLinks);
-        }
-
+        
         public override IBasicModelInterface BMIEngine
         {
             get { return runner.Api; }

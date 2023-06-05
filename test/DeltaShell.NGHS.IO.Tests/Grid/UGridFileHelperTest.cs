@@ -7,14 +7,11 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
-using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-using NSubstitute;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -35,8 +32,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.AreEqual(gridShouldLoad, File.Exists(testFilePath));
 
-            var grid = UGridFileHelper.ReadUnstructuredGrid(testFilePath);
-            Assert.AreEqual(gridShouldLoad, grid != null);
+            var grid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(testFilePath, grid);
+            Assert.AreEqual(gridShouldLoad, !grid.IsEmpty);
         }
 
         [Test]
@@ -146,7 +144,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UGridFileHelper.ReadUnstructuredGrid(localtestFile);
+            var grid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(localtestFile, grid);
 
             var zValues = new double[0];
 
@@ -203,7 +202,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UGridFileHelper.ReadUnstructuredGrid(localtestFile);
+            var grid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(localtestFile, grid);
 
             var location = UGridFileHelper.BedLevelLocation.CellEdges;
             var zValues = Enumerable.Repeat(123.456, grid.Edges.Count).ToArray();
@@ -293,7 +293,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UGridFileHelper.ReadUnstructuredGrid(localtestFile);
+            var grid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(localtestFile, grid);
 
             foreach (var coordinate in grid.Vertices)
             {
@@ -321,7 +322,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             
             var readNetwork = new HydroNetwork();
             var readMesh1d = new Discretization();
-            UGridFileHelper.ReadNetworkAndDiscretisation(path, readMesh1d, readNetwork, Enumerable.Empty<CompartmentProperties>(), Enumerable.Empty<BranchProperties>());
+            IConvertedUgridFileObjects convertedUGridFileObjects = new ConvertedUgridFileObjects()
+            {
+                Discretization = readMesh1d,
+                HydroNetwork = readNetwork
+            };
+
+            UGridFileHelper.ReadNetFileDataIntoModel(path, convertedUGridFileObjects);
 
             // Assert
             var networkBranch = network.Branches[0];
@@ -346,9 +353,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
             }
+            IConvertedUgridFileObjects convertedUGridFileObjects = new ConvertedUgridFileObjects()
+            {
+                Discretization = discretization,
+                HydroNetwork = network
+            };
 
             // Act
-            UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, network, Enumerable.Empty<CompartmentProperties>(), Enumerable.Empty<BranchProperties>());
+            UGridFileHelper.ReadNetFileDataIntoModel(path, convertedUGridFileObjects);
 
             // Assert
             Assert.NotNull(network.CoordinateSystem);
@@ -356,31 +368,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var branch = network.Branches[0];
             Assert.False(double.IsNaN(branch.GeodeticLength));
             Assert.AreNotEqual(branch.Geometry.Length, branch.GeodeticLength);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(ReadNetworkAndDiscretisationArgumentNullCases))]
-        public void ReadNetworkAndDiscretisation_ArgumentNullCases_ThrowsArgumentNullException(
-            IEnumerable<CompartmentProperties> compartmentPropertiesList,
-            IEnumerable<BranchProperties> branchPropertiesList,
-            string parameterName)
-        {
-            // Setup
-            var path = string.Empty;
-            var discretization = Substitute.For<IDiscretization>();
-            var network = Substitute.For<IHydroNetwork>();
-
-            // Call
-            void Action() => UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, network, compartmentPropertiesList, branchPropertiesList);
-            
-            // Assert
-            Assert.That(Action, Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(parameterName));
-        }
-
-        private static IEnumerable<TestCaseData> ReadNetworkAndDiscretisationArgumentNullCases()
-        {
-            yield return new TestCaseData(null, Enumerable.Empty<BranchProperties>(), "compartmentPropertiesList").SetName("CompartmentProperties null");
-            yield return new TestCaseData(Enumerable.Empty<CompartmentProperties>(), null, "branchPropertiesList").SetName("BranchProperties null");
         }
     }
 }

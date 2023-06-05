@@ -7,6 +7,7 @@ using DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileReaders.Structure;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
@@ -27,12 +28,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Structure
 
             IHydroNetwork network = new HydroNetwork();
             IDiscretization discretization = new Discretization();
-            UGridFileHelper.ReadNetworkAndDiscretisation(networkFilePath, 
-                                                         discretization, 
-                                                         network, 
-                                                         Enumerable.Empty<CompartmentProperties>(), 
-                                                         Enumerable.Empty<BranchProperties>());
-            var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath,crossSectionDefinitionFilePath, network, null);
+            IConvertedUgridFileObjects convertedUGridFileObjects = new ConvertedUgridFileObjects()
+            {
+                Discretization = discretization,
+                HydroNetwork = network
+            };
+
+            UGridFileHelper.ReadNetFileDataIntoModel(networkFilePath, convertedUGridFileObjects);
+                                                         
+            var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath, crossSectionDefinitionFilePath, network, null);
 
             // Act
             StructureFileReader.ReadFile(structureFilePath, definitions, network, DateTime.Today);

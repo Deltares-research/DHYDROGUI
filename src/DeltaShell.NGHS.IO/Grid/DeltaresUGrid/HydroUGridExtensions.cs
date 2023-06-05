@@ -1,13 +1,18 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Data;
 using DelftTools.Utils.Guards;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.Common.Logging;
@@ -22,9 +27,13 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.LinearReferencing;
 using SharpMap.Api;
 using SharpMap.Api.GridGeom;
+using SharpMap.Data.Providers.EGIS.ShapeFileLib;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 {
@@ -42,6 +51,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// Create a new <see cref="UnstructuredGrid"/> from <see cref="Disposable2DMeshGeometry"/>
         /// </summary>
         /// <param name="meshGeometry">Mesh geometry</param>
+        /// <param name="recreateCells">If needed we need to recreate the cells because the cell index administration of grid geom (or kernel output) is different.</param>
         /// <returns>Unstructured grid based on <see cref="meshGeometry"/></returns>
         public static UnstructuredGrid CreateUnstructuredGrid(this Disposable2DMeshGeometry meshGeometry, bool recreateCells)
         {
@@ -55,7 +65,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// </summary>
         /// <param name="grid">Grid to reset</param>
         /// <param name="meshGeometry">Mesh geometry to use</param>
-        public static void SetMesh2DGeometry(this UnstructuredGrid grid, Disposable2DMeshGeometry meshGeometry, bool recreateCells)
+        /// <param name="recreateCells">If needed we need to recreate the cells because the cell index administration of grid geom (or kernel output) is different.</param>
+        private static void SetMesh2DGeometry(this UnstructuredGrid grid, Disposable2DMeshGeometry meshGeometry, bool recreateCells)
         {
             if (!grid.IsEmpty)
             {
@@ -97,34 +108,38 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         private static IList<Coordinate> CreateVertices(this Disposable2DMeshGeometry mesh)
         {
-            return mesh?.NodesX == null || mesh.NodesX.Length == 0
-                ? new List<Coordinate>()
-                : mesh.NodesX.Select((t, i) => new Coordinate(t, mesh.NodesY[i])).ToList();
+            bool canNodeArraysBeUsedForCoordinateList = mesh?.NodesX == null 
+                                                        || mesh.NodesX.Length == 0 
+                                                        || mesh.NodesY == null 
+                                                        || mesh.NodesY.Length == 0 
+                                                        || mesh.NodesX.Length != mesh.NodesY.Length;
+            
+            return canNodeArraysBeUsedForCoordinateList
+                       ? new List<Coordinate>()
+                       : mesh.NodesX.Select((t, i) => new Coordinate(t, mesh.NodesY[i])).ToList();
         }
 
         private static void SetNodeArrays(this Disposable2DMeshGeometry mesh, IList<Coordinate> coordinates)
         {
-            mesh.NodesX = new double[coordinates.Count];
-            mesh.NodesY = new double[coordinates.Count];
-            
-            for (int index = 0; index < coordinates.Count; ++index)
-            {
-                var coordinate = coordinates[index];
-                mesh.NodesX[index] = coordinate.X;
-                mesh.NodesY[index] = coordinate.Y;
-            }
+            mesh.NodesX = coordinates.Select(c => c.X).ToArray();
+            mesh.NodesY = coordinates.Select(c => c.Y).ToArray();
         }
 
         private static IList<Edge> CreateEdges(this Disposable2DMeshGeometry mesh)
         {
-            var edgeList = new List<Edge>();
-            var numberOfEdges = mesh.EdgeNodes.Length / 2.0;
-            for (int blockIndex = 0; blockIndex < numberOfEdges; ++blockIndex)
+            var edgeList = new ConcurrentDictionary<int, Edge>();
+            if (mesh.EdgeNodes == null)
+            {
+                return edgeList.Values.ToList();
+            }
+
+            var numberOfEdges = (int) (mesh.EdgeNodes.Length / 2.0);
+            Parallel.For(0, numberOfEdges, blockIndex => 
             {
                 int[] blockFromArray = GetBlockFromArray(mesh.EdgeNodes, 2, blockIndex);
-                edgeList.Add(new Edge(blockFromArray[0], blockFromArray[1]));
-            }
-            return edgeList;
+                edgeList.AddOrUpdate(blockIndex, new Edge(blockFromArray[0], blockFromArray[1]), (i, edge) => edge);
+            });
+            return edgeList.Values.ToList();
         }
 
         private static void SetEdgeArrays(this Disposable2DMeshGeometry mesh, IList<Edge> gridEdges)
@@ -132,38 +147,37 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             mesh.EdgeNodes = gridEdges.SelectMany(e => new[] { e.VertexFromIndex, e.VertexToIndex}).ToArray();
         }
 
-        private static IList<Cell> CreateCells(this Disposable2DMeshGeometry mesh)
+        private static IList<Cell> CreateCells(this Disposable2DMeshGeometry mesh, int fillValueMesh2DFaceNodes = (int)UGridFileHelper.DefaultNoDataValue)
         {
-            var cellList = new List<Cell>();
+            var cellList = new ConcurrentDictionary<int,Cell>();
             if (mesh?.FaceNodes == null || 
                 mesh.FaceX == null || 
                 mesh.FaceY== null || 
                 mesh.MaxNumberOfFaceNodes == 0)
             {
-                return cellList;
+                return cellList.Values.ToList();
             }
 
-            var numberOfFaces = mesh.FaceX?.Length;
-
-            for (int blockIndex = 0; blockIndex < numberOfFaces; ++blockIndex)
+            var numberOfFaces = mesh.FaceX.Length;
+            Parallel.For(0, numberOfFaces, blockIndex =>
             {
                 int[] blockFromArray = GetBlockFromArray(mesh.FaceNodes, mesh.MaxNumberOfFaceNodes, blockIndex);
-                cellList.Add(new Cell(blockFromArray.Where(j => j != -999).ToArray())
+                cellList.AddOrUpdate(blockIndex, new Cell(blockFromArray.Where(j => j != fillValueMesh2DFaceNodes).ToArray())
                 {
                     CenterX = mesh.FaceX[blockIndex],
                     CenterY = mesh.FaceY[blockIndex]
-                });
-            }
-            return cellList;
+                }, (i, cell) => cell);
+            });
+            return cellList.Values.ToList();
         }
 
         private static void SetCellArrays(this Disposable2DMeshGeometry mesh, IList<Cell> gridCells)
         {
             mesh.MaxNumberOfFaceNodes = gridCells.Count > 0 ? gridCells.Max(c => c.VertexIndices.Length) : 0;
 
-            mesh.FaceNodes = Enumerable.Repeat(-999, mesh.MaxNumberOfFaceNodes * gridCells.Count).ToArray();
-            mesh.FaceX = new double[gridCells.Count];
-            mesh.FaceY = new double[gridCells.Count];
+            mesh.FaceNodes = Enumerable.Repeat((int)UGridFileHelper.DefaultNoDataValue, mesh.MaxNumberOfFaceNodes * gridCells.Count).ToArray();//USE Default (set in file)!
+            mesh.FaceX = gridCells.Select(c => c.CenterX).ToArray();
+            mesh.FaceY = gridCells.Select(c => c.CenterY).ToArray();
 
             for (var i = 0; i < gridCells.Count; i++)
             {
@@ -174,10 +188,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 {
                     mesh.FaceNodes[offset + j] = cell.VertexIndices[j];
                 }
-
-                mesh.FaceX[i] = cell.CenterX;
-                mesh.FaceY[i] = cell.CenterY;
             }
+
         }
 
         #endregion
@@ -200,7 +212,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         private static IEnumerable<INetworkLocation> GetNetworkLocations(Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates)
         {
             var numberOfNodes = meshGeometry.NodeIds.Length;
-            for (int i = 0; i < numberOfNodes; i++)
+            var networkLocations = new ConcurrentQueue<INetworkLocation>();
+            var networkLocationImportErrors = new ConcurrentQueue<string>();
+            const string indexOfVerticeInTheFile = "fileIndex";
+            
+            Parallel.For(0, numberOfNodes, i =>
             {
                 var networkBranch = network.Branches[meshGeometry.BranchIDs[i]];
                 var meshGeometryBranchChainage = meshGeometry.BranchOffsets[i];
@@ -208,28 +224,37 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 double chainage = Math.Abs(networkBranch.Length - meshGeometryBranchChainage) < 0.00001 ? networkBranch.Length : meshGeometryBranchChainage;
                 if (chainage < 0)
                 {
-                    Log.ErrorFormat(Resources.HydroUGridExtensions_Negative_chainage_of_network_location, networkBranch.Name);
-                    continue;
+                    networkLocationImportErrors.Enqueue(string.Format(Resources.HydroUGridExtensions_Negative_chainage_of_network_location, networkBranch.Name));
+                    return;
                 }
 
                 if (chainage > networkBranch.Length)
                 {
-                    Log.ErrorFormat(Resources.HydroUGridExtensions_Chainage_of_network_location_too_large, 
-                                    meshGeometryBranchChainage, networkBranch.Name, networkBranch.Length);
+                    networkLocationImportErrors.Enqueue(string.Format(Resources.HydroUGridExtensions_Chainage_of_network_location_too_large,
+                                                                      meshGeometryBranchChainage, networkBranch.Name, networkBranch.Length));
+
                     chainage = networkBranch.Length;
                 }
                 
-                yield return new NetworkLocation
+                var networkLocation = new NetworkLocation()
                 {
                     Branch = networkBranch,
                     Chainage = chainage,
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
-                    Geometry = canUseXYForMesh1DNodeCoordinates 
+                    Geometry = canUseXYForMesh1DNodeCoordinates
                                    ? new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
-                                   : HydroNetworkHelper.GetStructureGeometry(networkBranch, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage) 
+                                   : HydroNetworkHelper.GetStructureGeometry(networkBranch, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage)
                 };
+                networkLocation.Attributes[indexOfVerticeInTheFile] = i;
+                networkLocations.Enqueue(networkLocation);
+            });
+
+            if (networkLocationImportErrors.Any())
+            {
+                Log.Error(string.Format(Resources.HydroUGridExtensions_GetNetworkLocations_While_reading_1d_discretization___calculation_point_from_the_netfile_we_encountered_the_following_errors___0__1_, Environment.NewLine, string.Join(Environment.NewLine, networkLocationImportErrors)));
             }
+            return networkLocations.OrderBy(nl => nl.Attributes[indexOfVerticeInTheFile]);
         }
 
         /// <summary>
@@ -904,36 +929,319 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         #region Links
 
         /// <summary>
-        /// Creates a list of <see cref="ILink1D2D"/> from the provided <paramref name="linksGeometry"/>
+        /// Sets a list of <see cref="ILink1D2D"/> from the provided <paramref name="generatedObjectsForLinks"/> onto the <paramref name="link1D2Ds"/>
         /// </summary>
-        /// <param name="linksGeometry"><see cref="DisposableLinksGeometry"/> containing the link data</param>
+        /// <param name="link1D2Ds">A list of <see cref="ILink1D2D"/> to add the new links to</param>
+        /// <param name="generatedObjectsForLinks">All the objects needed to generate 1d2d links</param>
         /// <returns>A list of <see cref="ILink1D2D"/> objects based on the provided <see cref="DisposableLinksGeometry"/></returns>
-        public static IList<ILink1D2D> CreateLinks(this DisposableLinksGeometry linksGeometry)
+        public static void SetLinks(this IList<ILink1D2D> link1D2Ds, GeneratedObjectsForLinks generatedObjectsForLinks)
         {
-            var link1D2Ds = new List<ILink1D2D>();
-            link1D2Ds.SetLinks(linksGeometry);
-            return link1D2Ds;
+            link1D2Ds.Clear();
+            
+            var links = new ConcurrentQueue<ILink1D2D>();
+            
+            QuadTree treeDiscretizationPoints = GenerateQuadTreeOfDiscretizationPoints(generatedObjectsForLinks.Discretization);
+
+            double[] mesh1dNodesX = generatedObjectsForLinks.Mesh1d?.NodesX;
+            double[] mesh1dNodesY = generatedObjectsForLinks.Mesh1d?.NodesY;
+            bool valid1DMeshNodeXyCoordinatesInFile = mesh1dNodesX != null
+                                                      && mesh1dNodesY != null
+                                                      && Array.TrueForAll(mesh1dNodesX, nodeX => !nodeX.Equals(0.0))
+                                                      && Array.TrueForAll(mesh1dNodesY, nodeY => !nodeY.Equals(0.0)); 
+
+            Dictionary<string, IBranch> branchesLookup = generatedObjectsForLinks.Discretization?.Network?.Branches?.ToDictionary(b => b.Name);
+
+            var discretizationUGrid1D2DSearchIndexObject = new UGrid1D2DSearchIndexObject()
+            {
+                BranchesLookup = branchesLookup,
+                QuadTree = treeDiscretizationPoints,
+                ObjectInModel = generatedObjectsForLinks.Discretization,
+                ValidXyInFile = valid1DMeshNodeXyCoordinatesInFile,
+                MeshFromFile = generatedObjectsForLinks.Mesh1d
+            }; 
+            
+            QuadTree treeCells = GenerateQuadTreeOfUnstructuredGridCells(generatedObjectsForLinks.Grid);
+
+            double[] mesh2dFaceX = generatedObjectsForLinks.Mesh2d?.FaceX;
+            double[] mesh2dFaceY = generatedObjectsForLinks.Mesh2d?.FaceY;
+            bool valid2DMeshFaceXyCoordinatesInFile = mesh2dFaceX != null 
+                                                      && mesh2dFaceY != null 
+                                                      && Array.TrueForAll(mesh2dFaceX, faceX => !faceX.Equals(0.0)) 
+                                                      && Array.TrueForAll(mesh2dFaceY, faceY => !faceY.Equals(0.0));
+
+            var cellUGrid1D2DSearchIndexObject = new UGrid1D2DSearchIndexObject()
+            {
+                QuadTree = treeCells,
+                ObjectInModel = generatedObjectsForLinks.Grid,
+                ValidXyInFile = valid2DMeshFaceXyCoordinatesInFile,
+                MeshFromFile = generatedObjectsForLinks.Mesh2d
+            };
+            
+
+            Parallel.For(0, generatedObjectsForLinks.LinksGeometry.LinkId.Length, indexOfLinkInFile =>
+            {
+                //From:
+                int calcPointIdx = GetCalcPointIdx(generatedObjectsForLinks.LinksGeometry.Mesh1DFrom[indexOfLinkInFile], discretizationUGrid1D2DSearchIndexObject, generatedObjectsForLinks.NetworkGeometry, out Coordinate nodeCoordinateFromFile);
+
+                //To:
+                int cellIdx = GetCellIdx(generatedObjectsForLinks.LinksGeometry.Mesh2DTo[indexOfLinkInFile], cellUGrid1D2DSearchIndexObject, generatedObjectsForLinks.FillValueMesh2DFaceNodes, out Coordinate faceCoordinateFromFile);
+
+                links.Enqueue(new Link1D2D(calcPointIdx, cellIdx, generatedObjectsForLinks.LinksGeometry.LinkId[indexOfLinkInFile])
+                {
+                    Geometry = new LineString(new[] { nodeCoordinateFromFile, faceCoordinateFromFile }), 
+                    LongName = generatedObjectsForLinks.LinksGeometry.LinkLongName[indexOfLinkInFile],
+                    TypeOfLink = (LinkStorageType)generatedObjectsForLinks.LinksGeometry.LinkType[indexOfLinkInFile],
+                    Link1D2DIndex = indexOfLinkInFile
+                });
+            });
+            link1D2Ds.AddRange(links.OrderBy(l => l.Link1D2DIndex));
+        }
+
+        private struct UGrid1D2DSearchIndexObject
+        {
+            public IUnique<long> ObjectInModel { get; set; }
+            public QuadTree QuadTree { get; set; }
+            public Dictionary<string, IBranch> BranchesLookup { get; set; }
+            public bool ValidXyInFile { get; set; }
+            public DisposableMeshObject MeshFromFile { get; set; }
+        }
+        /// <summary>
+        /// This will create a QuadTree of the indices of the discretization points
+        /// with the depth of the tree determined my the max levels
+        /// which is dynamically sized by the amount of discretization points
+        /// </summary>
+        /// <param name="discretization"><see cref="IDiscretization"/>Contains calculation points for the DOM.</param>
+        /// <returns>QuadTree</returns>
+        private static QuadTree GenerateQuadTreeOfDiscretizationPoints(IDiscretization discretization)
+        {
+            QuadTree treeDiscretizationPoints = null;
+            if (discretization != null)
+            {
+                // see BuildQuadTree in Layer.cs of Framework which was used as base for this method
+                var maxLevels = (int)Math.Ceiling(0.4 * Math.Log(discretization.Locations.Values.Count, 2));
+                Envelope envelope = discretization.Geometry.EnvelopeInternal;
+                envelope.ExpandBy(50, 50);
+                treeDiscretizationPoints = new QuadTree(ToRectangleD(envelope), maxLevels, true);
+                discretization.Locations.Values.AsParallel().ForEach((location, index) => treeDiscretizationPoints.Insert(index, ToRectangleD(location.Geometry.EnvelopeInternal)));
+            }
+
+            return treeDiscretizationPoints;
         }
 
         /// <summary>
-        /// Sets a list of <see cref="ILink1D2D"/> from the provided <paramref name="linksGeometry"/> onto the <paramref name="link1D2Ds"/>
+        /// This will create a QuadTree of the indices of the UnstructuredGrid cells
+        /// with the depth of the tree determined my the max levels
+        /// which is dynamically sized by the amount of the UnstructuredGrid cells
         /// </summary>
-        /// <param name="link1D2Ds">A list of <see cref="ILink1D2D"/> to add the new links to</param>
-        /// <param name="linksGeometry"><see cref="DisposableLinksGeometry"/> containing the link data</param>
-        /// <returns>A list of <see cref="ILink1D2D"/> objects based on the provided <see cref="DisposableLinksGeometry"/></returns>
-        public static void SetLinks(this IList<ILink1D2D> link1D2Ds, DisposableLinksGeometry linksGeometry)
+        /// <param name="grid"><see cref="UnstructuredGrid"/>Contains cells (and indices) for the DOM.</param>
+        /// <returns>QuadTree of the indices of the UnstructuredGrid Cells</returns>
+        private static QuadTree GenerateQuadTreeOfUnstructuredGridCells(UnstructuredGrid grid)
         {
-            link1D2Ds.Clear();
-
-            var numberOfLinks = linksGeometry.LinkId.Length;
-            for (int i = 0; i < numberOfLinks; i++)
+            Envelope envelope = grid.GetExtents();
+            QuadTree treeCells = null;
+            if (grid != null)
             {
-                link1D2Ds.Add(new Link1D2D(linksGeometry.Mesh1DFrom[i], linksGeometry.Mesh2DTo[i], linksGeometry.LinkId[i])
-                {
-                    LongName = linksGeometry.LinkLongName[i],
-                    TypeOfLink = (LinkStorageType) linksGeometry.LinkType[i]
-                });
+                // see BuildQuadTree in Layer.cs of Framework which was used as base for this method
+                var maxLevels = (int)Math.Ceiling(0.4 * Math.Log(grid.Cells.Count, 2));
+                treeCells = new QuadTree(ToRectangleD(envelope), maxLevels, false);
+                grid.Cells.AsParallel().ForEach((cell, index) => treeCells.Insert(index, ToRectangleD(cell.ToPolygon(grid).EnvelopeInternal)));
             }
+
+            return treeCells;
+        }
+
+        private static int GetCalcPointIdx(int calcPointIdx, UGrid1D2DSearchIndexObject discretizationUGrid1D2DSearchIndexObject, DisposableNetworkGeometry networkGeometry, out Coordinate nodeCoordinateFromFile)
+        {
+            nodeCoordinateFromFile = new Coordinate(Coordinate.NullOrdinate, Coordinate.NullOrdinate);
+            if (!(discretizationUGrid1D2DSearchIndexObject.MeshFromFile is Disposable1DMeshGeometry mesh1d))
+            {
+                return calcPointIdx;
+            }
+            double x = double.NaN;
+            double y = double.NaN;
+            bool validXyInFile = discretizationUGrid1D2DSearchIndexObject.ValidXyInFile
+                                     && calcPointIdx < mesh1d.NodesX.Length
+                                     && calcPointIdx < mesh1d.NodesY.Length;
+            if (validXyInFile)
+            {
+                x = mesh1d.NodesX[calcPointIdx];
+                y = mesh1d.NodesY[calcPointIdx];
+            }
+            else if (CanGenerateMesh1DCalculationPointGeometry(discretizationUGrid1D2DSearchIndexObject, networkGeometry, mesh1d, calcPointIdx))
+            {
+                Point geometry = GenerateMesh1DCalculationPointGeometry(discretizationUGrid1D2DSearchIndexObject.BranchesLookup, networkGeometry, mesh1d, calcPointIdx);
+                x = geometry.Coordinate.X;
+                y = geometry.Coordinate.Y;
+            }
+
+            if (double.IsNaN(x) || double.IsNaN(y) || !(discretizationUGrid1D2DSearchIndexObject.ObjectInModel is IDiscretization discretization))
+            {
+                return calcPointIdx; // use calcPointIdx from 1d2d link administration of file
+            }
+
+            // Find calcPointIdx from provided discretization with the coordinates of the file
+            nodeCoordinateFromFile = new Coordinate(x, y);
+            var rectangleD = new RectangleD(x - 25, y - 25, 50, 50); //empirically chosen by Ralph
+            var calcPointIdxs = discretizationUGrid1D2DSearchIndexObject.QuadTree.GetIndices(ref rectangleD, 0.9f);
+            calcPointIdx = GetIndexNearestToCoordinate(nodeCoordinateFromFile, calcPointIdxs, discretization, calcPointIdx);
+
+            return calcPointIdx;
+        }
+
+        private static bool CanGenerateMesh1DCalculationPointGeometry(UGrid1D2DSearchIndexObject discretizationUGrid1D2DSearchIndexObject, DisposableNetworkGeometry networkGeometry, Disposable1DMeshGeometry mesh1d, int calcPointIdx)
+        {
+            return networkGeometry != null
+                   && mesh1d.BranchIDs != null
+                   && mesh1d.BranchOffsets != null
+                   && calcPointIdx < mesh1d.BranchIDs.Length
+                   && calcPointIdx < mesh1d.BranchOffsets.Length
+                   && discretizationUGrid1D2DSearchIndexObject.BranchesLookup != null;
+        }
+
+        private static int GetIndexNearestToCoordinate(Coordinate nodeCoordinateFromFile, IEnumerable<int> calcPointIdxs, IDiscretization discretization, int calcPointIdx)
+        {
+            double distance = double.MaxValue;
+            foreach (var idx in calcPointIdxs)
+            {
+                Coordinate geometryCoordinate = discretization.Locations.Values[idx].Geometry.Coordinate;
+                if (geometryCoordinate.Equals2D(nodeCoordinateFromFile))
+                {
+                    calcPointIdx = idx;
+                    break;
+                }
+
+                double distanceFileNodeCoordinateToInRangeCalLocation = geometryCoordinate.Distance(nodeCoordinateFromFile);
+                if (distanceFileNodeCoordinateToInRangeCalLocation < distance)
+                {
+                    distance = distanceFileNodeCoordinateToInRangeCalLocation;
+                    calcPointIdx = idx;
+                }
+            }
+
+            return calcPointIdx;
+        }
+
+        private static Point GenerateMesh1DCalculationPointGeometry(Dictionary<string, IBranch> branchesLookup, DisposableNetworkGeometry networkGeometry, Disposable1DMeshGeometry mesh1d, int calcPointIdx)
+        {
+            var branchId = networkGeometry.BranchIds[mesh1d.BranchIDs[calcPointIdx]];
+            var chainage = mesh1d.BranchOffsets[calcPointIdx];
+
+            Point geometry = null;
+            if (branchesLookup.TryGetValue(branchId, out var branch))
+            {
+                var lengthIndexedLine = new LengthIndexedLine(branch.Geometry);
+                double offset = branch.IsLengthCustom || !double.IsNaN(branch.GeodeticLength)
+                                    ? BranchFeature.SnapChainage(branch.Geometry.Length, (branch.Geometry.Length / branch.Length) * chainage)
+                                    : chainage;
+
+                // always copy: ExtractPoint will give either a new coordinate or a reference to an existing object
+                geometry = new Point(lengthIndexedLine.ExtractPoint(offset).Copy());
+            }
+
+            return geometry;
+        }
+
+        private static int GetCellIdx(int cellIdx, UGrid1D2DSearchIndexObject cellUGrid1D2DSearchIndexObject, int fillValueMesh2DFaceNodes, out Coordinate faceCoordinateFromFile)
+        {
+            faceCoordinateFromFile = new Coordinate(Coordinate.NullOrdinate, Coordinate.NullOrdinate); 
+            if (!(cellUGrid1D2DSearchIndexObject.MeshFromFile is Disposable2DMeshGeometry mesh2d))
+            {
+                return cellIdx;
+            }
+
+            // Using FaceX & FaceY is under the assumption the grid comes via our kernel team.
+            // It is the mass center of the cell and the correct location to find the new cell
+            // in the generated unstructured grid.
+
+            /*
+                If we cannot trust the source to have the mass center of the cell coordinates in the 2d mesh facex and facey coordinates we can use this but it is very slow
+            */
+            double x = double.NaN;
+            double y = double.NaN;
+            bool validXyInFile = cellUGrid1D2DSearchIndexObject.ValidXyInFile
+                                     && cellIdx < mesh2d.FaceX.Length
+                                     && cellIdx < mesh2d.FaceY.Length;
+            if (validXyInFile)
+            {
+                x = mesh2d.FaceX[cellIdx];
+                y = mesh2d.FaceY[cellIdx];
+            }
+            else if (CanGenerateMesh2DFaceCoordinateFromMesh2DVertices(cellIdx, mesh2d))
+            {
+                int[] verticesOfCellInFile = GetBlockFromArray(mesh2d.FaceNodes, mesh2d.MaxNumberOfFaceNodes, cellIdx);
+
+                var coordinatesOfVerticesOfCellInFile = verticesOfCellInFile
+                                                        .Where(verticesIndex => !verticesIndex.Equals((int)UGridFileHelper.DefaultNoDataValue)
+                                                                                && !verticesIndex.Equals(int.MinValue) 
+                                                                                && !verticesIndex.Equals(fillValueMesh2DFaceNodes)) // use fill value only! -999 is default of deltares / int.MinValue is default to other partner
+                                                        .Select(verticesIndex => new Coordinate(mesh2d.NodesX[verticesIndex], mesh2d.NodesY[verticesIndex])).ToArray();
+
+                var centroid = GetCentroid(coordinatesOfVerticesOfCellInFile);// converting to GeoApi object is very costly
+                x = centroid.X; 
+                y = centroid.Y;
+                
+            }
+
+            if (double.IsNaN(x) || double.IsNaN(y) || !(cellUGrid1D2DSearchIndexObject.ObjectInModel is UnstructuredGrid grid))
+            {
+                return cellIdx; // use cellIdx from 1d2d link administration of file
+            }
+            
+            // Find calcPointIdx from provided grid with the coordinates of the face in the file
+            faceCoordinateFromFile = new Coordinate(x, y);
+            var rectangleD = new RectangleD(x, y, 50, 50);
+            var cellIdxs = cellUGrid1D2DSearchIndexObject.QuadTree.GetIndices(ref rectangleD, 0);
+
+            cellIdx = GetCellIndexNearestToCoordinate(faceCoordinateFromFile, cellIdxs, grid, cellIdx);
+
+            return cellIdx;
+        }
+
+        private static int GetCellIndexNearestToCoordinate(Coordinate faceCoordinateFromFile, IEnumerable<int> cellIdxs, UnstructuredGrid grid, int cellIdx)
+        {
+            double distance = double.MaxValue;
+            foreach (var idx in cellIdxs)
+            {
+                if (grid.Cells[idx].Center.Equals2D(faceCoordinateFromFile))
+                {
+                    cellIdx = idx;
+                    break;
+                }
+
+                double distanceFileFaceCoordinateToInRangeCell = grid.Cells[idx].Center.Distance(faceCoordinateFromFile);
+                if (distanceFileFaceCoordinateToInRangeCell < distance)
+                {
+                    distance = distanceFileFaceCoordinateToInRangeCell;
+                    cellIdx = idx;
+                }
+            }
+
+            return cellIdx;
+        }
+
+        private static bool CanGenerateMesh2DFaceCoordinateFromMesh2DVertices(int cellIdx, Disposable2DMeshGeometry mesh2d)
+        {
+            return cellIdx < mesh2d.FaceNodes.Length / mesh2d.MaxNumberOfFaceNodes;
+        }
+
+        private static RectangleD ToRectangleD(Envelope envelope)
+        {
+            return new RectangleD(envelope.MinX, envelope.MinY, envelope.Width, envelope.Height);
+        }
+
+        private static Coordinate GetCentroid(Coordinate[] nodes)
+        {
+            double xSum = 0;
+            double ySum = 0;
+            int numberOfVertices = nodes.Length;
+
+            for (var cellVertexIndex = 0; cellVertexIndex < numberOfVertices; cellVertexIndex++)
+            {
+                Coordinate coordinate = nodes[cellVertexIndex];
+                xSum += coordinate.X;
+                ySum += coordinate.Y;
+            }
+            return new Coordinate(xSum / numberOfVertices, ySum / numberOfVertices);
         }
 
         /// <summary>

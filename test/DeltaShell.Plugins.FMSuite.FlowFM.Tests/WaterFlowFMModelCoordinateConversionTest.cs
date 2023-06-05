@@ -1,6 +1,7 @@
 ﻿using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -47,8 +48,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(UGridFileHelper.IsUGridFile(netFilePath));
 
             // get original grid
-            var grid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
-            Assert.NotNull(grid);
+            var grid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(netFilePath, grid);
+            Assert.IsFalse(grid.IsEmpty);
 
             // get original value
             grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
@@ -68,8 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             UGridFileHelper.RewriteGridCoordinates(netFilePath, grid);
 
             // read new grid
-            var adjustedGrid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
-            Assert.NotNull(adjustedGrid);
+            var adjustedGrid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(netFilePath, adjustedGrid);
+            Assert.IsFalse(adjustedGrid.IsEmpty);
 
             // compare to new value
             var reloadedX = adjustedGrid.Vertices[0].X;

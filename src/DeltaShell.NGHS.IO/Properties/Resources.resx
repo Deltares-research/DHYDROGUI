@@ -516,4 +516,22 @@
   <data name="File_version_in_general_category_is_empty" xml:space="preserve">
 	  <value>File version in general category is empty. branches.gui file will not be read.</value>
   </data>
+  <data name="UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_4_of_4" xml:space="preserve">
+    <value>Reading grid step 4 of 4</value>
+  </data>
+  <data name="UGridFileHelper_ApplyNetworkGeometry_Reading_grid_step_1_of_4" xml:space="preserve">
+    <value>Reading grid step 1 of 4</value>
+  </data>
+  <data name="UGridFileHelper_ApplyMesh1D_Reading_grid_step_2_of_4" xml:space="preserve">
+    <value>Reading grid step 2 of 4</value>
+  </data>
+  <data name="UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_3_of_4" xml:space="preserve">
+    <value>Reading grid step 3 of 4</value>
+  </data>
+  <data name="GeneratedObjectsForLinks_Read1D2DLinks_Could_not_load_links_from__0___This_is_not_a_UGrid_file_" xml:space="preserve">
+    <value>Could not load links from {0}. This is not a UGrid file.</value>
+  </data>
+  <data name="HydroUGridExtensions_GetNetworkLocations_While_reading_1d_discretization___calculation_point_from_the_netfile_we_encountered_the_following_errors___0__1_" xml:space="preserve">
+    <value>While reading 1d discretization / calculation point from the netfile we encountered the following errors: {0}{1}</value>
+  </data>
 </root>

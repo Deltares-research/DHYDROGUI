@@ -57,8 +57,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.IsTrue(UGridFileHelper.IsUGridFile(netFilePath));
 
             // get original grid
-            var grid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
-            Assert.NotNull(grid);
+            var grid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(netFilePath, grid);
+            Assert.IsFalse(grid.IsEmpty);
+            
 
             // generate new z values
             var currentZValues = UGridFileHelper.ReadZValues(netFilePath, UGridFileHelper.BedLevelLocation.NodesMeanLev);
@@ -68,8 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             UGridFileHelper.WriteZValues(netFilePath, UGridFileHelper.BedLevelLocation.NodesMaxLev, newZValues);
 
             // read new grid
-            var adjustedGrid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
-            Assert.NotNull(adjustedGrid);
+            var adjustedGrid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(netFilePath, adjustedGrid);
+            Assert.IsFalse(adjustedGrid.IsEmpty);
 
             // compare z values
             var zValues = UGridFileHelper.ReadZValues(netFilePath, UGridFileHelper.BedLevelLocation.NodesMeanLev);
@@ -85,8 +88,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.IsTrue(UGridFileHelper.IsUGridFile(netFilePath));
 
             // get original grid
-            var grid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
-            Assert.NotNull(grid);
+            var grid = new UnstructuredGrid();
+            UGridFileHelper.SetUnstructuredGrid(netFilePath, grid);
+            Assert.IsFalse(grid.IsEmpty);
 
             // generate new z values
             var newZValues = Enumerable.Repeat(123.456, grid.Cells.Count).ToArray();

@@ -273,6 +273,16 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not load links from {0}. This is not a UGrid file..
+        /// </summary>
+        public static string GeneratedObjectsForLinks_Read1D2DLinks_Could_not_load_links_from__0___This_is_not_a_UGrid_file_ {
+            get {
+                return ResourceManager.GetString("GeneratedObjectsForLinks_Read1D2DLinks_Could_not_load_links_from__0___This_is_not" +
+                        "_a_UGrid_file_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Level: {0}. message = {1}.
         /// </summary>
         public static string GridApi_Initialize_Level_0__Message_1_ {
@@ -323,6 +333,16 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string HydroUGridExtensions_CompartmentIdContext {
             get {
                 return ResourceManager.GetString("HydroUGridExtensions_CompartmentIdContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While reading 1d discretization / calculation point from the netfile we encountered the following errors: {0}{1}.
+        /// </summary>
+        public static string HydroUGridExtensions_GetNetworkLocations_While_reading_1d_discretization___calculation_point_from_the_netfile_we_encountered_the_following_errors___0__1_ {
+            get {
+                return ResourceManager.GetString("HydroUGridExtensions_GetNetworkLocations_While_reading_1d_discretization___calcul" +
+                        "ation_point_from_the_netfile_we_encountered_the_following_errors___0__1_", resourceCulture);
             }
         }
         
@@ -986,6 +1006,42 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string UGrid1D2DLinks_Write1D2DLinks_Couldn_t_write_1D2DLinks {
             get {
                 return ResourceManager.GetString("UGrid1D2DLinks_Write1D2DLinks_Couldn_t_write_1D2DLinks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading grid step 2 of 4.
+        /// </summary>
+        public static string UGridFileHelper_ApplyMesh1D_Reading_grid_step_2_of_4 {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ApplyMesh1D_Reading_grid_step_2_of_4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading grid step 1 of 4.
+        /// </summary>
+        public static string UGridFileHelper_ApplyNetworkGeometry_Reading_grid_step_1_of_4 {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ApplyNetworkGeometry_Reading_grid_step_1_of_4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading grid step 3 of 4.
+        /// </summary>
+        public static string UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_3_of_4 {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_3_of_4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading grid step 4 of 4.
+        /// </summary>
+        public static string UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_4_of_4 {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_4_of_4", resourceCulture);
             }
         }
         

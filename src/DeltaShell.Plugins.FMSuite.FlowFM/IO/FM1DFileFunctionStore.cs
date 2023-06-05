@@ -13,6 +13,7 @@ using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -20,6 +21,7 @@ using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -63,33 +65,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             get { return outputDiscretization; }
         }
-        
+
         private void UpdateNetworkAndDiscretisationAfterPathSet()
         {
             var netFilePath = Path;
             if (!File.Exists(netFilePath)) return;
-
-            int numberOfNetworks = UGridFileHelper.GetNumberOfNetworks(netFilePath);
-            if (numberOfNetworks != 1) return;
-
-            int numberOfNetworkDiscretisations = UGridFileHelper.GetNumberOfNetworkDiscretizations(netFilePath);
-            if (numberOfNetworkDiscretisations != 1) return;
-
-            using (ReconnectToMapFile())
+            IEnumerable<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
+            IEnumerable<CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
+            IConvertedUgridFileObjects convertedUgridFileObjects = new ConvertedUgridFileObjects
             {
-                if (!UGridFileHelper.IsUGridFile(netCdfFile.Path)) return;
+                Discretization = outputDiscretization,
+                HydroNetwork = outputNetwork,
+                BranchProperties = branchData,
+                CompartmentProperties = compartmentData
+            };
+            UGridFileHelper.ReadNetFileDataIntoModel(netFilePath, convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths:true);
 
-                IEnumerable<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
-                IEnumerable<CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
-                outputNetwork.Nodes.Clear();
-                outputNetwork.Branches.Clear();
-                outputDiscretization.Clear();
-
-                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, outputDiscretization, outputNetwork, compartmentData, branchData, true);
-
-                outputNetwork.AllHydroObjects.ForEach(o => o.Name += "_output");
-                outputDiscretization.Locations.AllValues.ForEach(l => l.Name += "_output");
-            }
+            outputNetwork.AllHydroObjects.ForEach(o => o.Name += "_output");
+            outputDiscretization.Locations.AllValues.ForEach(l => l.Name += "_output");
         }
 
         private bool HasValidFile

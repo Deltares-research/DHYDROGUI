@@ -21,6 +21,7 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -91,23 +92,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return Array.Empty<IFunction>();
             }
-
-            boundaryCellValues.Clear();
-
-            Grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true, false);
-            Links = UGridFileHelper.Read1D2DLinks(netCdfFile.Path);
+            Grid = new UnstructuredGrid();
             Network = new HydroNetwork();
             Discretization = new Discretization { Network = Network };
-
-            UGridFileHelper.ReadNetworkAndDiscretisation(netCdfFile.Path,
-                                                         Discretization,
-                                                         Network,
-                                                         Enumerable.Empty<CompartmentProperties>(),
-                                                         Enumerable.Empty<BranchProperties>(),
-                                                         true);
+            Links = new List<ILink1D2D>();
+            IConvertedUgridFileObjects convertedUgridFileObjects = new ConvertedUgridFileObjects
+            {
+                Discretization = Discretization,
+                Grid = Grid,
+                HydroNetwork = Network,
+                Links1D2D = Links
+            };
+            boundaryCellValues.Clear();
+            UGridFileHelper.ReadNetFileDataIntoModel(netCdfFile.Path, convertedUgridFileObjects, loadFlowLinksAndCells: true, recreateCells: false, forceCustomLengths:true);
             
-            GenerateGeometriesForLinks();
-
             var isUGrid = UGridFileHelper.IsUGridFile(netCdfFile.Path);
             
             var functions = GetFunctions(dataVariables, isUGrid);
@@ -670,18 +668,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 yield return sedCoverage;
             }
         }
-
-        private void GenerateGeometriesForLinks()
-        {
-            foreach (var link1D2D in Links)
-            {
-                var cell = Grid.Cells[link1D2D.FaceIndex];
-                var node = Discretization.Locations.Values[link1D2D.DiscretisationPointIndex];
-
-                link1D2D.Geometry = new LineString(new[] { cell.Center, node.Geometry.Coordinate });
-            }
-        }
-
+        
         #region Map file constants
 
         private const string NSedSusName = "nSedSus";

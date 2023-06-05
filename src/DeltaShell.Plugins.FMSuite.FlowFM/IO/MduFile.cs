@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
@@ -16,7 +17,9 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -29,7 +32,10 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Extensions.Networks;
 using SharpMap;
+using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using IOPath = System.IO.Path;
 
@@ -823,23 +829,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IDiscretization discretization, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
+        public void Read(string filePath, IConvertedFileObjectsForFMModel convertedFileObjectsForFMModel, Action<string> reportProgress = null)
         {
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_properties);
-            ReadProperties(filePath, modelDefinition);
+            ReadProperties(filePath, convertedFileObjectsForFMModel.ModelDefinition);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_morphology_properties);
-            MorphologyFile.Read(filePath, modelDefinition);
+            MorphologyFile.Read(filePath, convertedFileObjectsForFMModel.ModelDefinition);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_area_features);
-            ReadAreaFeatures(filePath, modelDefinition, hydroArea);
+            ReadAreaFeatures(filePath, convertedFileObjectsForFMModel.ModelDefinition, convertedFileObjectsForFMModel.HydroArea);
 
             //fix for fixed weirs
 
-            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            foreach (var fixedWeir in convertedFileObjectsForFMModel.HydroArea.FixedWeirs)
             {
                 var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() { Feature = fixedWeir };
-                var scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
+                var scheme = convertedFileObjectsForFMModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
                 modelFeatureCoordinateData.UpdateDataColumns(scheme);
 
                 var locationKeyFound = fixedWeir.Attributes.ContainsKey(Feature2D.LocationKey);
@@ -877,22 +883,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         break;
                     }
                 }
-                allFixedWeirsAndCorrespondingProperties.Add(modelFeatureCoordinateData);
+                convertedFileObjectsForFMModel.AllFixedWeirsAndCorrespondingProperties.Add(modelFeatureCoordinateData);
             }
 
-            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            foreach (var fixedWeir in convertedFileObjectsForFMModel.HydroArea.FixedWeirs)
             {
                 fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
             }
 
-            if (allBridgePillarsAndCorrespondingProperties != null)
+            if (convertedFileObjectsForFMModel.AllBridgePillarsAndCorrespondingProperties != null)
             {
-                foreach (var bridgePillar in hydroArea.BridgePillars)
+                foreach (var bridgePillar in convertedFileObjectsForFMModel.HydroArea.BridgePillars)
                 {
                     var modelFeatureCoordinateData =
                         new ModelFeatureCoordinateData<BridgePillar>() { Feature = bridgePillar };
 
-                    var bpFile = modelDefinition.GetModelProperty(KnownProperties.BridgePillarFile).GetValueAsString();
+                    var bpFile = convertedFileObjectsForFMModel.ModelDefinition.GetModelProperty(KnownProperties.BridgePillarFile).GetValueAsString();
                     modelFeatureCoordinateData.UpdateDataColumns();
 
                     var difference =
@@ -910,34 +916,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             string.Format(Resources.MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values, bpFile, bridgePillar?.Name, difference));
                     }
 
-                    SetBridgePillarDataModel(allBridgePillarsAndCorrespondingProperties, modelFeatureCoordinateData, bridgePillar);
+                    SetBridgePillarDataModel(convertedFileObjectsForFMModel.AllBridgePillarsAndCorrespondingProperties, modelFeatureCoordinateData, bridgePillar);
                 }
 
-                foreach (var bridgePillar in hydroArea.BridgePillars)
+                foreach (var bridgePillar in convertedFileObjectsForFMModel.HydroArea.BridgePillars)
                 {
                     bridgePillar.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
                 }
             }
-            string netFilePath = MduFileHelper.GetSubfilePath(filePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
+            string netFilePath = MduFileHelper.GetSubfilePath(filePath, convertedFileObjectsForFMModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile));
             if (!string.IsNullOrEmpty(netFilePath) && File.Exists(netFilePath))
-                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath), NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath));
+            {
+                IEnumerable<CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath); 
+                IEnumerable<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
+                convertedFileObjectsForFMModel.CompartmentProperties = compartmentData;
+                convertedFileObjectsForFMModel.BranchProperties = branchData;
+                UGridFileHelper.ReadNetFileDataIntoModel(netFilePath, convertedFileObjectsForFMModel, reportProgress: (progressText) =>  reportProgress?.Invoke(Resources.MduFile_Read_Reading_netFile + Environment.NewLine + progressText));
+            }
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_external_forcings_file);
-            var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
+            var extForceFileProperty = convertedFileObjectsForFMModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
             if (extForceFileProperty != null)
             {
                 var forceFilePath = MduFileHelper.GetSubfilePath(filePath,
-                    modelDefinition.GetModelProperty(KnownProperties.ExtForceFile));
+                                                                 convertedFileObjectsForFMModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile));
 
                 if (forceFilePath != null && File.Exists(forceFilePath))
                 {
                     ExternalForcingsFile = new ExtForceFile();
-                    ExternalForcingsFile.Read(forceFilePath, modelDefinition);
+                    ExternalForcingsFile.Read(forceFilePath, convertedFileObjectsForFMModel.ModelDefinition);
                 }
             }
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_boundary_external_forcings_file);
-            var bndExtForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
+            var bndExtForceFileProperty = convertedFileObjectsForFMModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             if (bndExtForceFileProperty != null)
             {
                 var forceFilePath = MduFileHelper.GetSubfilePath(filePath, bndExtForceFileProperty);
@@ -945,7 +957,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (forceFilePath != null && File.Exists(forceFilePath))
                 {
                     BoundaryExternalForcingsFile = new BndExtForceFile();
-                    BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition, network, hydroArea, boundaryConditions1D, lateralSourcesData);
+                    BoundaryExternalForcingsFile.Read(forceFilePath, convertedFileObjectsForFMModel.ModelDefinition, convertedFileObjectsForFMModel.HydroNetwork, convertedFileObjectsForFMModel.HydroArea, convertedFileObjectsForFMModel.BoundaryConditions1D, convertedFileObjectsForFMModel.LateralSourcesData);
                 }
             }
 
@@ -955,14 +967,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             string targetDir = System.IO.Path.GetDirectoryName(filePath);
             
-            var fouFileReader = new FouFileReader(modelDefinition);
+            var fouFileReader = new FouFileReader(convertedFileObjectsForFMModel.ModelDefinition);
 
             if (fouFileReader.CanReadFromDirectory(targetDir))
             {
                 fouFileReader.ReadFromDirectory(targetDir);
             }
-            
-            hydroArea.Embankments.AddRange(modelDefinition.Embankments);
+
+            convertedFileObjectsForFMModel.HydroArea.Embankments.AddRange(convertedFileObjectsForFMModel.ModelDefinition.Embankments);
         }
         
         private static void LoadAttributeIntoDataColumn(GeometryPointsSyncedList<double> loadedData, IDataColumn dataColumn)

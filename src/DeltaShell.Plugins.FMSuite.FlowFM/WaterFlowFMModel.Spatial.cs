@@ -11,6 +11,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
@@ -175,42 +176,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation, BedLevelZValues);
                 }
-                
-                var newGrid = UGridFileHelper.ReadUnstructuredGrid(NetFilePath); //may throw...
-                if (newGrid == null)
-                {
-                    Grid = new UnstructuredGrid();
-                }
-                else
-                {
-                    if (loadBathymetry)
-                    {
-                        var originalBathymetry = GetOriginalCoverage(Bathymetry);
-                        originalBathymetry.Arguments[0].Clear();
-                        originalBathymetry.Components[0].Clear(); //HACK: signals the interpolation method to use the grid node z-values...
-                        double ndv;
-                        if (!double.TryParse(originalBathymetry.Components[0].NoDataValue.ToString(), out ndv))
-                        {
-                            bathymetryNoDataValue = -999.0d;
-                        }
-                        else
-                        {
-                            bathymetryNoDataValue = ndv;
-                        }
-                    }
 
-                    bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(NetFilePath, BedLevelLocation);
-
-                    if (Grid != null)
+                var newGrid = new UnstructuredGrid();
+                UGridFileHelper.SetUnstructuredGrid(NetFilePath, newGrid); //may throw...
+                if (loadBathymetry)
+                {
+                    var originalBathymetry = GetOriginalCoverage(Bathymetry);
+                    originalBathymetry.Arguments[0].Clear();
+                    originalBathymetry.Components[0].Clear(); //HACK: signals the interpolation method to use the grid node z-values...
+                    double ndv;
+                    if (!double.TryParse(originalBathymetry.Components[0].NoDataValue.ToString(), out ndv))
                     {
-                        // Current grid object can be in use by other parts of the application (e.g. grid editor).
-                        // Instead of overwriting it, preserve the object and reset the state.
-                        Grid.ResetState(newGrid.Vertices, newGrid.Edges, newGrid.Cells, newGrid.FlowLinks);
+                        bathymetryNoDataValue = -999.0d;
                     }
                     else
                     {
-                        Grid = newGrid;
+                        bathymetryNoDataValue = ndv;
                     }
+                }
+
+                bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(NetFilePath, BedLevelLocation);
+
+                if (Grid != null)
+                {
+                    // Current grid object can be in use by other parts of the application (e.g. grid editor).
+                    // Instead of overwriting it, preserve the object and reset the state.
+                    Grid.ResetState(newGrid.Vertices, newGrid.Edges, newGrid.Cells, newGrid.FlowLinks);
+                }
+                else
+                {
+                    Grid = newGrid;
                 }
             }
             finally
@@ -404,6 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static UnstructuredGridVertexCoverage CreateUnstructuredGridVertexCoverage(string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
         {
+            Ensure.NotNull(grid, nameof(grid), Properties.Resources.WaterFlowFMModel_CreateUnstructuredGridVertexCoverage_Provided_grid_to_create_grid_vertex_coverage_for_is_null);
             return CreateUnstructuredGridCoverage(name, grid,
                 () => new UnstructuredGridVertexCoverage(new UnstructuredGrid(), false),
                 () => Enumerable.Range(0, grid.Vertices.Count),
@@ -412,6 +408,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static UnstructuredGridCellCoverage CreateUnstructuredGridCellCoverage(string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
         {
+            Ensure.NotNull(grid, nameof(grid), Properties.Resources.WaterFlowFMModel_CreateUnstructuredGridCellCoverage_Provided_grid_to_create_grid_cell_coverage_for_is_null);
             return CreateUnstructuredGridCoverage(name, grid,
                 () => new UnstructuredGridCellCoverage(new UnstructuredGrid(), false),
                 () => Enumerable.Range(0, grid.Cells.Count),
@@ -420,6 +417,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static UnstructuredGridFlowLinkCoverage CreateUnstructuredGridFlowLinkCoverage(string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
         {
+            Ensure.NotNull(grid, nameof(grid), Properties.Resources.WaterFlowFMModel_CreateUnstructuredGridFlowLinkCoverage_Provided_grid_to_create_grid_flowlink_coverage_for_is_null);
             return CreateUnstructuredGridCoverage(name, grid,
                 () => new UnstructuredGridFlowLinkCoverage(new UnstructuredGrid(), false),
                 () => Enumerable.Range(0, grid.FlowLinks.Count),

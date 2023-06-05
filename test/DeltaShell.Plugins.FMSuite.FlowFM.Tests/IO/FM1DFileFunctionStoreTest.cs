@@ -9,8 +9,8 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -270,12 +270,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 return null;
             }
 
-            IEnumerable<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
-            IEnumerable<CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
             var discretization = new Discretization();
             var network = new HydroNetwork();
-            UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, compartmentData,
-                                                         branchData, true);
+            IConvertedUgridFileObjects convertedUGridFileObjects = new ConvertedUgridFileObjects()
+            {
+                Discretization = discretization,
+                HydroNetwork = network
+            };
+
+            UGridFileHelper.ReadNetFileDataIntoModel(netFilePath, convertedUGridFileObjects, forceCustomLengths:true);
             switch (fm1DObjectType)
             {
                 case OutputFM1DObjectType.Network:

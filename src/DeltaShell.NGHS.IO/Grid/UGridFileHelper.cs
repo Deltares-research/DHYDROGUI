@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.Grid
     /// </summary>
     public static class UGridFileHelper
     {
-        private const double DefaultNoDataValue = -999.0;
+        public const double DefaultNoDataValue = -999.0;
         private static readonly ILog Log = LogManager.GetLogger(typeof(UGridFileHelper));
         public const int IdsSize = 40;
         private static string lastCheckedUGridPath;
@@ -217,13 +217,20 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Reads the first <see cref="UnstructuredGrid"/> in the UGrid file, or reads old NetFile
         /// </summary>
         /// <param name="path">Path to the UGrid file</param>
+        /// <param name="grid">Grid instance to fill.</param>
         /// <param name="loadFlowLinksAndCells">Also read flow links and cell information (Applies to NetFile only).
         ///     With a UGrid file the cell information is always read but not the flow links</param>
         /// <param name="recreateCells">Recreates the cell information by calling FindCells instead of reading it from file</param>
         /// <returns>The first <see cref="UnstructuredGrid"/> in the UGrid file</returns>
         /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
         /// returned from a native function</exception>
-        public static UnstructuredGrid ReadUnstructuredGrid(string path, bool loadFlowLinksAndCells = false, bool recreateCells = true)
+        public static void SetUnstructuredGrid(string path, UnstructuredGrid grid, bool loadFlowLinksAndCells = false, bool recreateCells = true)
+        {
+            var mesh2d = Read2DMesh(path);
+            grid.ApplyMesh2D(path, mesh2d, loadFlowLinksAndCells, recreateCells);
+        }
+
+        private static Disposable2DMeshGeometry Read2DMesh(string path)
         {
             if (!IsValidPath(path))
             {
@@ -244,45 +251,102 @@ namespace DeltaShell.NGHS.IO.Grid
                         return null;
                     }
 
-                    var unstructuredGrid = api.GetMesh2D(meshIds2d[0]).CreateUnstructuredGrid(recreateCells);
-                    unstructuredGrid.CoordinateSystem = GetCoordinateSystemFromApi(api);
-                    return unstructuredGrid;
+                    return api.GetMesh2D(meshIds2d[0]);
                 }
             }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Reads the first <see cref="UnstructuredGrid"/> in the UGrid file, or reads old NetFile
+        /// </summary>
+        /// <param name="grid">Grid instance to fill.</param>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="mesh2d">The 2d Mesh read from the file</param>
+        /// <param name="loadFlowLinksAndCells">Also read flow links and cell information (Applies to NetFile only).
+        ///     With a UGrid file the cell information is always read but not the flow links</param>
+        /// <param name="recreateCells">Recreates the cell information by calling FindCells instead of reading it from file</param>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        private static void ApplyMesh2D(this UnstructuredGrid grid, string path, Disposable2DMeshGeometry mesh2d, bool loadFlowLinksAndCells = false, bool recreateCells = true)
+        {
+            if (!IsValidPath(path))
+            {
+                Log.WarnFormat("Could not find grid file at \"{0}\", this is because you maybe just created this model. If this is not the case please check if the file with" +
+                               "the grid in it exists.", path);
+                return;
+            }
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+                if (mesh2d != null && api.IsUGridFile())
+                {
+                    var unstructuredGrid = mesh2d.CreateUnstructuredGrid(recreateCells);
+                    if (unstructuredGrid == null)
+                    {
+                        return;
+                    }
+                    
+                    if (grid == null)
+                    {
+                        grid = new UnstructuredGrid();
+                    }
+
+                    grid.ResetState(unstructuredGrid.Vertices, unstructuredGrid.Edges, unstructuredGrid.Cells, unstructuredGrid.FlowLinks);
+                    grid.CoordinateSystem = GetCoordinateSystemFromApi(api);
+                    return;
+                }
+            }
+
             Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
-            return loadFlowLinksAndCells
-                ? NetFileImporter.ImportModelGrid(path)
-                : NetFileImporter.ImportGrid(path);
+            ApplyLegacyGrid(path, grid, loadFlowLinksAndCells);
+        }
+
+        private static void ApplyLegacyGrid(string path, UnstructuredGrid grid, bool loadFlowLinksAndCells)
+        {
+            UnstructuredGrid legacyUnstructuredGrid = loadFlowLinksAndCells
+                                                                ? NetFileImporter.ImportModelGrid(path)
+                                                                : NetFileImporter.ImportGrid(path);
+            if (grid == null)
+            {
+                grid = new UnstructuredGrid();
+            }
+
+            if (legacyUnstructuredGrid != null)
+            {
+                grid.ResetState(legacyUnstructuredGrid.Vertices, legacyUnstructuredGrid.Edges, legacyUnstructuredGrid.Cells, legacyUnstructuredGrid.FlowLinks);
+                grid.CoordinateSystem = legacyUnstructuredGrid.CoordinateSystem;
+            }
         }
 
         /// <summary>
         /// Reads the first <see cref="IHydroNetwork"/> and <see cref="IDiscretization"/> in the UGrid file
         /// </summary>
         /// <param name="path">Path to the UGrid file</param>
-        /// <param name="discretization">Instance of a <see cref="IDiscretization"/> to clear and fill with newly read data</param>
         /// <param name="network">Instance of a <see cref="IHydroNetwork"/> to add the newly read data to</param>
-        /// <param name="compartmentPropertiesList">List of <see cref="BranchProperties"/> to use when constructing branches</param>
-        /// <param name="branchPropertiesList">List of <see cref="CompartmentProperties"/> to use when constructing compartments</param>
+        /// <param name="reportProgress">Action to report user feedback to.</param>
+        /// <param name="branchProperties">Additional branch properties</param>
+        /// <param name="compartmentProperties">Additional compartment properties</param>
         /// <param name="forceCustomLengths">Force all branches in the network to have custom lengths and use the lengths that are read from file</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="compartmentPropertiesList"/> or <paramref name="branchPropertiesList"/> is <c>null</c>.</exception>
         /// <exception cref="IoNetCdfNativeError">Thrown when an error code is returned from a native function.</exception>
-        public static void ReadNetworkAndDiscretisation(string path, 
-                                                        IDiscretization discretization,
-                                                        IHydroNetwork network,
-                                                        IEnumerable<CompartmentProperties> compartmentPropertiesList,
-                                                        IEnumerable<BranchProperties> branchPropertiesList, 
-                                                        bool forceCustomLengths = false)
+        private static DisposableNetworkGeometry ApplyNetworkGeometry(this IHydroNetwork network, string path,
+                                                                      Action<string> reportProgress, 
+                                                                      IEnumerable<CompartmentProperties> compartmentProperties, 
+                                                                      IEnumerable<BranchProperties> branchProperties,
+                                                                      bool forceCustomLengths = false)
         {
-            Ensure.NotNull(compartmentPropertiesList, nameof(compartmentPropertiesList));
-            Ensure.NotNull(branchPropertiesList, nameof(branchPropertiesList));
-            
-            var errorMessage = $"Could not load network and computational grid from {path}";
+            Ensure.NotNull(compartmentProperties, nameof(compartmentProperties));
+            Ensure.NotNull(branchProperties, nameof(branchProperties));
+            var errorMessage = $"Could not load network from {path}";
             if (network == null || !IsValidPath(path))
             {
                 Log.Error(errorMessage);
-                return;
+                return null;
             }
 
+            DisposableNetworkGeometry networkGeometry = null;
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
@@ -290,30 +354,58 @@ namespace DeltaShell.NGHS.IO.Grid
                 if (!api.IsUGridFile())
                 {
                     Log.Error(errorMessage);
-                    return;
+                    return null;
                 }
-
-                ReadNetwork(api, network, compartmentPropertiesList, branchPropertiesList, forceCustomLengths);
+                reportProgress?.Invoke(Resources.UGridFileHelper_ApplyNetworkGeometry_Reading_grid_step_1_of_4);
+                networkGeometry = ReadNetwork(api, network, compartmentProperties, branchProperties, forceCustomLengths);
 
                 network.CoordinateSystem = GetCoordinateSystemFromApi(api);
                 network.UpdateGeodeticDistancesOfChannels();
             }
 
-            if (discretization == null)
+            return networkGeometry;
+        }
+
+        /// <summary>
+        /// Reads the first <see cref="IHydroNetwork"/> and <see cref="IDiscretization"/> in the UGrid file
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="discretization">Instance of a <see cref="IDiscretization"/> to clear and fill with newly read data.</param>
+        /// <param name="network">Instance of a <see cref="IHydroNetwork"/> to add the newly read data to.</param>
+        /// <param name="reportProgress">Action to report user feedback to.</param>
+        /// <exception cref="IoNetCdfNativeError">Thrown when an error code is returned from a native function.</exception>
+        private static Disposable1DMeshGeometry ApplyMesh1D(this IDiscretization discretization, 
+                                                            string path,
+                                                            IHydroNetwork network,
+                                                            Action<string> reportProgress)
+        {
+            var errorMessage = $"Could not load computational grid from {path}";
+            if (discretization == null || !IsValidPath(path))
             {
-                return;
+                Log.Error(errorMessage);
+                return null;
             }
+            
             // check if can use x/y or get coordinate via branch/chainage
-            bool canUseXYForMesh1DNodeCoordinates = CanUseXYCoordinatePossibilitiesOfGridTypeOnLocation(path, UGridMeshType.Mesh1D, GridLocationType.Node);
+            bool canUseXyForMesh1DNodeCoordinates = CanUseXYCoordinatePossibilitiesOfGridTypeOnLocation(path, UGridMeshType.Mesh1D, GridLocationType.Node);
 
 
             // needs to be done with new api instance
             // otherwise leads to crashes
+            Disposable1DMeshGeometry mesh1d = null;
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
-                Read1DMesh(api, discretization, network, canUseXYForMesh1DNodeCoordinates);
+                if (!api.IsUGridFile())
+                {
+                    Log.Error(errorMessage);
+                    return null;
+                }
+                reportProgress?.Invoke(Resources.UGridFileHelper_ApplyMesh1D_Reading_grid_step_2_of_4);
+                mesh1d = Read1DMesh(api, discretization, network, canUseXyForMesh1DNodeCoordinates);
             }
+
+            return mesh1d;
         }
 
         private static bool CanUseXYCoordinatePossibilitiesOfGridTypeOnLocation(string path, UGridMeshType meshType, GridLocationType locationType)
@@ -371,37 +463,6 @@ namespace DeltaShell.NGHS.IO.Grid
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Reads the first set of 1d/2d links from the UGrid file
-        /// </summary>
-        /// <param name="path">Path to the UGrid file</param>
-        /// <returns>The first set of 1d/2d links from the UGrid file</returns>
-        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
-        /// returned from a native function</exception>
-        public static IList<ILink1D2D> Read1D2DLinks(string path)
-        {
-            if (!IsValidPath(path))
-            {
-                return new List<ILink1D2D>();
-            }
-
-            using (var api = CreateUGridApi())
-            {
-                api.Open(path);
-
-                if (!api.IsUGridFile())
-                {
-                    Log.Error($"Could not load links from {path}. This is not a UGrid file.");
-                    return new List<ILink1D2D>();
-                }
-
-                var linksId = api.GetLinksId();
-                return linksId != -1 
-                    ? api.GetLinks(linksId).CreateLinks() 
-                    : new List<ILink1D2D>();
-            }
         }
 
         /// <summary>
@@ -491,15 +552,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 if (api.IsUGridFile())
                 {
-                    var xValues = new double[unstructuredGrid.Vertices.Count];
-                    var yValues = new double[unstructuredGrid.Vertices.Count];
-
-                    for (int i = 0; i < unstructuredGrid.Vertices.Count; i++)
-                    {
-                        var vertex = unstructuredGrid.Vertices[i];
-                        xValues[i] = vertex.X;
-                        yValues[i] = vertex.Y;
-                    }
+                    var xValues = unstructuredGrid.Vertices.Select(v => v.X).ToArray();
+                    var yValues = unstructuredGrid.Vertices.Select(v => v.Y).ToArray();
                     
                     var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
                     if (meshIds.Length != 0)
@@ -619,28 +673,33 @@ namespace DeltaShell.NGHS.IO.Grid
                 : null;
         }
 
-        private static void Read1DMesh(IUGridApi api, IDiscretization discretization, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates)
+        private static Disposable1DMeshGeometry Read1DMesh(IUGridApi api, IDiscretization discretization, IHydroNetwork network, bool canUseXyForMesh1DNodeCoordinates)
         {
+            Disposable1DMeshGeometry mesh1d = null;
             var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh1D);
             if (meshIds.Length != 0)
             {
-                var mesh1D = api.GetMesh1D(meshIds[0]);
-                discretization.SetMesh1DGeometry(mesh1D, network, canUseXYForMesh1DNodeCoordinates);
+                mesh1d = api.GetMesh1D(meshIds[0]);
+                discretization.SetMesh1DGeometry(mesh1d, network, canUseXyForMesh1DNodeCoordinates);
             }
+
+            return mesh1d;
         }
 
-        private static void ReadNetwork(IUGridApi api, IHydroNetwork network, 
-                                        IEnumerable<CompartmentProperties> compartmentPropertiesList,
-                                        IEnumerable<BranchProperties> branchPropertiesList, 
-                                        bool forceCustomLengths = false)
+        private static DisposableNetworkGeometry ReadNetwork(IUGridApi api, IHydroNetwork network,
+                                                             IEnumerable<CompartmentProperties> compartmentPropertiesList,
+                                                             IEnumerable<BranchProperties> branchPropertiesList,
+                                                             bool forceCustomLengths = false)
         {
             var networkIds = api.GetNetworkIds();
             if (networkIds.Length == 0)
             {
-                return;
+                return null;
             }
 
-            network.SetNetworkGeometry(api.GetNetworkGeometry(networkIds[0]), branchPropertiesList, compartmentPropertiesList, forceCustomLengths);
+            DisposableNetworkGeometry networkGeometry = api.GetNetworkGeometry(networkIds[0]);
+            network.SetNetworkGeometry(networkGeometry, branchPropertiesList, compartmentPropertiesList, forceCustomLengths);
+            return networkGeometry;
         }
 
         private static void UpdateNodeZVariables(NetCdfFile file)
@@ -733,6 +792,63 @@ namespace DeltaShell.NGHS.IO.Grid
             return fileInfo.Exists && 
                    fileInfo.Length != 0 && 
                    (!string.IsNullOrEmpty(fileInfo.Name));
+        }
+
+        /// <summary>
+        /// Reads the ugrid file data into our DOM.
+        /// </summary>
+        /// <param name="netFilePath">Path to the UGrid file</param>
+        /// <param name="convertedUgridFileObjects">Object with the Grid, Network, Discretization and Links1D2D objects used in our DOM. This will be correctly filled</param>
+        /// <param name="reportProgress">Action to report user feedback to.</param>
+        /// <param name="loadFlowLinksAndCells">Also read flow links and cell information (Applies to NetFile only).
+        ///     With a UGrid file the cell information is always read but not the flow links</param>
+        /// <param name="recreateCells">Recreates the cell information by calling FindCells instead of reading it from file</param>
+        /// <param name="forceCustomLengths">Force all branches in the network to have custom lengths and use the lengths that are read from file</param>
+        public static void ReadNetFileDataIntoModel(string netFilePath, IConvertedUgridFileObjects convertedUgridFileObjects,
+                                                    Action<string> reportProgress = null, 
+                                                    bool loadFlowLinksAndCells = false, 
+                                                    bool recreateCells = true, 
+                                                    bool forceCustomLengths = false)
+        {
+            convertedUgridFileObjects.CompartmentProperties = convertedUgridFileObjects.CompartmentProperties ?? Enumerable.Empty<CompartmentProperties>();
+            convertedUgridFileObjects.BranchProperties = convertedUgridFileObjects.BranchProperties ?? Enumerable.Empty<BranchProperties>();
+            DisposableNetworkGeometry networkGeometry = convertedUgridFileObjects.HydroNetwork.ApplyNetworkGeometry(netFilePath, reportProgress, convertedUgridFileObjects.CompartmentProperties, convertedUgridFileObjects.BranchProperties, forceCustomLengths);
+            Disposable1DMeshGeometry mesh1d = convertedUgridFileObjects.Discretization.ApplyMesh1D(netFilePath, convertedUgridFileObjects.HydroNetwork, reportProgress);
+            
+            if (convertedUgridFileObjects.Grid != null)
+            {
+                reportProgress?.Invoke(Resources.UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_3_of_4);
+                Disposable2DMeshGeometry mesh2d = Read2DMesh(netFilePath);
+                convertedUgridFileObjects.Grid.ApplyMesh2D(netFilePath, mesh2d, loadFlowLinksAndCells, recreateCells);
+                
+                if (mesh2d != null
+                    && convertedUgridFileObjects.Discretization != null
+                    && mesh1d != null
+                    && networkGeometry != null)
+                {
+                    reportProgress?.Invoke(Resources.UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_4_of_4);
+                    var generatedObjectsForLinks = new GeneratedObjectsForLinks
+                    {
+                        Grid = convertedUgridFileObjects.Grid,
+                        Mesh2d = mesh2d,
+                        Discretization = convertedUgridFileObjects.Discretization,
+                        Mesh1d = mesh1d,
+                        NetworkGeometry = networkGeometry,
+                        Links1D2D = convertedUgridFileObjects.Links1D2D
+                    };
+                    if (!IsValidPath(netFilePath))
+                    {
+                        generatedObjectsForLinks.Links1D2D.Clear();
+                        return;
+                    }
+
+                    using (var api = CreateUGridApi())
+                    {
+                        generatedObjectsForLinks.Read1D2DLinks(netFilePath, api);
+                    }
+                }
+            }
+
         }
     }
 }

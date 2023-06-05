@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
+using NetTopologySuite.Algorithm;
+using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -96,9 +103,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var modelDefinition = new WaterFlowFMModelDefinition();
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 var property = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, propertyName, fileCategoryName);
-               
+                
+                var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = modelDefinition,
+                    HydroArea = new HydroArea(),
+                    Grid = new UnstructuredGrid(),
+                    HydroNetwork = new HydroNetwork(),
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
+
                 //Read
-                mduFile.Read(mduFilePath, modelDefinition, new HydroArea(), new HydroNetwork(), null, null, null,  allFixedWeirsAndCorrespondingProperties);
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
                 Assert.AreEqual(expectedValues, property.GetValueAsString());
 
                 //Write
@@ -131,12 +147,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 var mduFile = new MduFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-
+                var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = modelDefinition,
+                    HydroArea = new HydroArea(),
+                    Grid = new UnstructuredGrid(),
+                    HydroNetwork = new HydroNetwork(),
+                    AllFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>()
+                };
                 var property1 = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, property1Name, fileCategoryName);
                 var property2 = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, property2Name, fileCategoryName);
                 modelDefinition.GetModelProperty(KnownProperties.NetFile).Value = string.Concat(nameWithoutExtension, "_net.nc");
                 //Read
-                mduFile.Read(mduFilePath, modelDefinition, new HydroArea(), new HydroNetwork(), null,null,null, new List<ModelFeatureCoordinateData<FixedWeir>>());
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
                 Assert.AreEqual(property1Value, property1.GetValueAsString());
                 Assert.AreEqual(property2Value, property2.GetValueAsString());
             }
@@ -210,8 +233,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
 
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
 
             var property = modelDefinition.GetModelProperty(hydroAreaFileProperty);
             Assert.IsNotNull(property);
@@ -239,8 +269,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 var mduFile = new MduFile();
+                var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = modelDefinition,
+                    HydroArea = area,
+                    HydroNetwork = network,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
 
-                mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
 
                 //  2 groups per each feature
                 CheckFeatureWasReadCorrectly(area.ObservationPoints, "ObservationPoints", new List<string> { "ObsGroup1_obs.xyn", "ObsGroup2_obs.xyn" });
@@ -287,8 +324,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 var mduFile = new MduFile();
+                
+                var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = modelDefinition,
+                    HydroArea = area,
+                    HydroNetwork = network,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
 
-                mduFile.Read(mduFilePath, modelDefinition, area, network, null,null,null, allFixedWeirsAndCorrespondingProperties);
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
                 CheckFeatureWasReadCorrectly(area.DryPoints, "DryAreas (points)", new List<string> { "dryGroup1_dry.xyz", "dryGroup2_dry.xyz" });                
             }
             finally
@@ -391,7 +436,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var network = new HydroNetwork();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
+
+            mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
 
             Assert.That(area.DryPoints.Count, Is.EqualTo(6));
             Assert.That(area.DryAreas.Count, Is.EqualTo(2));
@@ -411,7 +465,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var network = new HydroNetwork();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
+
+            mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
 
             Assert.That(area.DryPoints.Count, Is.EqualTo(3));
             Assert.IsEmpty(area.DryAreas); //Check this, because dry areas and dry points are read in the same method (MduFile.ReadDryPointsAndDryAreas)
@@ -431,7 +494,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var network = new HydroNetwork();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
+
+            mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
 
             Assert.IsEmpty(area.DryPoints); //Check this, because dry areas and dry points are read in the same method (MduFile.ReadDryPointsAndDryAreas)
             Assert.That(area.DryAreas.Count, Is.EqualTo(1));
@@ -460,13 +532,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var originalNetwork = new HydroNetwork();
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-                mduFile.Read(mduFilePath, originalMD, originalArea, originalNetwork, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                var convertedFileObjectsForFMModelOriginal = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = originalMD,
+                    HydroArea = originalArea,
+                    HydroNetwork = originalNetwork,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
+
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModelOriginal);
                 mduFile.Write(savePath, originalMD, originalArea, null, null, null, null, null, null, allFixedWeirsAndCorrespondingProperties, switchTo: false);
 
                 var savedArea = new HydroArea();
                 var savedNetwork = new HydroNetwork();
                 var savedMD = new WaterFlowFMModelDefinition(newMduDir, newMduName);
-                mduFile.Read(savePath, savedMD, savedArea, savedNetwork, null, null, null, allFixedWeirsAndCorrespondingProperties);
+
+                var convertedFileObjectsForFMModelSaved = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = savedMD,
+                    HydroArea = savedArea,
+                    HydroNetwork = savedNetwork,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
+
+                mduFile.Read(savePath, convertedFileObjectsForFMModelSaved);
 
                 //Check MDU property.
                 var listOfProperties = new List<string>()
@@ -527,13 +616,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var network = new HydroNetwork();
                 var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-                mduFile.Read(mduFilePath, originalMd, originalArea, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                var convertedFileObjectsForFMModelOriginal = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = originalMd,
+                    HydroArea = originalArea,
+                    HydroNetwork = new HydroNetwork(),
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModelOriginal);
                 mduFile.Write(savePath, originalMd, originalArea, null, null, null, null, null, null, allFixedWeirsAndCorrespondingProperties, switchTo: false, writeExtForcings: false);
 
                 var savedArea = new HydroArea();
                 var savedNetwork = new HydroNetwork();
                 var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);
-                mduFile.Read(savePath, savedMd, savedArea, savedNetwork, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                var convertedFileObjectsForFMModelSaved = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = savedMd,
+                    HydroArea = savedArea,
+                    HydroNetwork = savedNetwork,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
+                mduFile.Read(savePath, convertedFileObjectsForFMModelSaved);
 
                 //Check MDU property.
                 CompareHydroAreaModelProperties(KnownProperties.DryPointsFile, savePath, originalMd, savedMd);
@@ -572,7 +675,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var network = new HydroNetwork();
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-                mduFile.Read(mduFilePath, originalMD, originalArea, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                var convertedFileObjectsForFMModelOriginal = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = originalMD,
+                    HydroArea = originalArea,
+                    HydroNetwork = network,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModelOriginal);
 
                 //Remove one of the selected group names to make it ' default' .
                 RemoveGroupNameFromGroupableFeature(originalArea.ObservationPoints);
@@ -591,7 +701,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var savedArea = new HydroArea();
                 var savedNetwork = new HydroNetwork();
                 var savedMD = new WaterFlowFMModelDefinition(newMduDir, newMduName);
-                mduFile.Read(savePath, savedMD, savedArea, savedNetwork, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                var convertedFileObjectsForFMModelSaved = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = savedMD,
+                    HydroArea = savedArea,
+                    HydroNetwork = savedNetwork,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                }; 
+                mduFile.Read(savePath, convertedFileObjectsForFMModelSaved);
 
                 CompareHydroAreaFeatures(originalArea, savedArea);
                 //Check default group was created.
@@ -637,7 +754,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var originalNetwork = new HydroNetwork();
                 var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-                mduFile.Read(mduFilePath, originalMd, originalArea, originalNetwork, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                var convertedFileObjectsForFMModelOriginal = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = originalMd,
+                    HydroArea = originalArea,
+                    HydroNetwork = originalNetwork,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModelOriginal);
 
                 RemoveGroupNameFromGroupableFeature(originalArea.DryPoints);
                 mduFile.Write(savePath, originalMd, originalArea, null, null, null, null,null, null, allFixedWeirsAndCorrespondingProperties, switchTo: false, writeExtForcings: false);
@@ -645,7 +769,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var savedArea = new HydroArea();
                 var savedNetwork = new HydroNetwork();
                 var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);
-                mduFile.Read(savePath, savedMd, savedArea, savedNetwork, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                var convertedFileObjectsForFMModelSaved = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = savedMd,
+                    HydroArea = savedArea,
+                    HydroNetwork = savedNetwork,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
+
+                mduFile.Read(savePath, convertedFileObjectsForFMModelSaved);
 
                 //Check MDU property.
                 CompareHydroAreaModelProperties("DryPointsFile", savePath, originalMd, savedMd);
@@ -683,8 +815,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 var mduFile = new MduFile();
+                var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+                {
+                    ModelDefinition = modelDefinition,
+                    HydroArea = area,
+                    HydroNetwork = network,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
 
-                mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
 
                 Assert.AreEqual(expectedEnclosures, area.Enclosures.Count);
             }
@@ -716,8 +855,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
 
-            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, convertedFileObjectsForFMModel);
 
             // Check if all features were read
             Assert.That(area.DryPoints.Count, Is.EqualTo(2));
@@ -754,8 +900,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
 
-            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, convertedFileObjectsForFMModel);
 
             // Check if all features were read
             Assert.That(area.DryPoints.Count, Is.EqualTo(2));
@@ -789,8 +942,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
 
-            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, convertedFileObjectsForFMModel);
 
             // Check if all features were read
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(1));
@@ -813,11 +973,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
             {
-                mduFile.Read(mduPath, modelDefinition, area, network, null, null, null,
-                        allFixedWeirsAndCorrespondingProperties);
+                mduFile.Read(mduPath, convertedFileObjectsForFMModel);
             }, "' does not exist, but is defined in MDU file at '");
 
             // Check if all features were read
@@ -844,8 +1010,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var mduFile = new MduFile();
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
 
-            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, convertedFileObjectsForFMModel);
 
             // Check if all features were read
             Assert.That(area.DryPoints.Count, Is.EqualTo(0));
@@ -910,7 +1083,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(groupName2FileCount, Is.EqualTo(0));
 
             area = new HydroArea();
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
+
+            mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
             Assert.IsTrue(area.ObservationPoints.Select(o => o.Name).Contains(name1));
             Assert.IsTrue(area.ObservationPoints.Select(o => o.Name).Contains(name2));
@@ -940,7 +1121,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var newArea = new HydroArea();
             var network = new HydroNetwork();
-            mduFile.Read(mduFilePath, modelDefinition, newArea, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = newArea,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
+            mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
             Assert.That(newArea.DryAreas.Count, Is.EqualTo(1));
             Assert.That(newArea.DryPoints.Count, Is.EqualTo(1));
 
@@ -1140,8 +1328,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
 
-            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, convertedFileObjectsForFMModel);
 
             // Check initial settings
             var thinDams = area.ThinDams;
@@ -1377,8 +1572,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(mduPath, Path.GetFileNameWithoutExtension(mduPath));
             var mduFile = new MduFile();
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties), "' is referenced in structures file '");
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => mduFile.Read(mduPath, convertedFileObjectsForFMModel), "' is referenced in structures file '");
             Assert.IsFalse(File.Exists(Path.Combine(testWorkingFolder, "FlowFM_structures.ini")));
             Assert.That(modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString(), Is.EqualTo(""));
         }
@@ -1395,10 +1596,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             
             var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
             var mduPath = Path.Combine(testWorkingFolder, relativePath);
-
-            new MduFile().Read(mduPath,
-                new WaterFlowFMModelDefinition(mduPath, Path.GetFileNameWithoutExtension(mduPath)),
-                new HydroArea(), new HydroNetwork(), null, null, null, new List<ModelFeatureCoordinateData<FixedWeir>>());
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = new WaterFlowFMModelDefinition(mduPath, Path.GetFileNameWithoutExtension(mduPath)),
+                HydroArea = new HydroArea(),
+                Grid = new UnstructuredGrid(),
+                HydroNetwork = new HydroNetwork(),
+                AllFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>()
+            };
+            new MduFile().Read(mduPath, convertedFileObjectsForFMModel);
         }
 
         [Test]
@@ -1419,9 +1625,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var network = new HydroNetwork();
             var modelDefinition = new WaterFlowFMModelDefinition(mduPath, Path.GetFileNameWithoutExtension(mduPath));
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-
+            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+            {
+                ModelDefinition = modelDefinition,
+                HydroArea = area,
+                HydroNetwork = network,
+                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+            };
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(0));
-            new MduFile().Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            new MduFile().Read(mduPath, convertedFileObjectsForFMModel);
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(1));
         }
         
@@ -1468,7 +1680,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 using (var newModel = new WaterFlowFMModel(mduFilePath) { Area = area })
                 {
                     var newModelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-                    newMduFile.Read(mduFilePath, newModelDefinition, area, null, null,null, null, allFixedWeirsAndCorrespondingProperties, null);
+                    var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
+                    {
+                        ModelDefinition = newModelDefinition,
+                        HydroArea = area,
+                        AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                    };
+                    newMduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
 
                     // Expect failing assertions for refDate, startTime and stopTime
                     Assert.Multiple(() =>
