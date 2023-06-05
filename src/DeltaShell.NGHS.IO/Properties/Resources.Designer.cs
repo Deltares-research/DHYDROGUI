@@ -219,46 +219,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No definition reader available for this cross section definition type {0}.
-        /// </summary>
-        public static string CrossSectionFileReader_CreateCrossSectionDefinitionFromCategory_No_definition_reader_available_for_this_cross_section_definition_type__0_ {
-            get {
-                return ResourceManager.GetString("CrossSectionFileReader_CreateCrossSectionDefinitionFromCategory_No_definition_rea" +
-                        "der_available_for_this_cross_section_definition_type__0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;. Total non-unique: {1}, in: {2}..
-        /// </summary>
-        public static string CrossSectionFileReader_DefinitionNameLookup___0____Total_non_unique___1___in___2__ {
-            get {
-                return ResourceManager.GetString("CrossSectionFileReader_DefinitionNameLookup___0____Total_non_unique___1___in___2_" +
-                        "_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The following cross section entries were not unique: .
-        /// </summary>
-        public static string CrossSectionFileReader_DefinitionNameLookup_The_following_cross_section_entries_were_not_unique__ {
-            get {
-                return ResourceManager.GetString("CrossSectionFileReader_DefinitionNameLookup_The_following_cross_section_entries_w" +
-                        "ere_not_unique__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The following cross section entries were not unique: &apos;{0}&apos;. Total non-unique: {1}, in: {2}..
-        /// </summary>
-        public static string CrossSectionFileReader_DefinitionNameLookup_The_following_cross_section_entries_were_not_unique____0____Total_non_unique___1___in___2__ {
-            get {
-                return ResourceManager.GetString("CrossSectionFileReader_DefinitionNameLookup_The_following_cross_section_entries_w" +
-                        "ere_not_unique____0____Total_non_unique___1___in___2__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The provided geometry type &apos;{0}&apos; is not supported..
         /// </summary>
         public static string CulvertDefinitionParser_Unsupported_culvert_geometry_type {

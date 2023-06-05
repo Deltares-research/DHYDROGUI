@@ -516,16 +516,4 @@
   <data name="File_version_in_general_category_is_empty" xml:space="preserve">
 	  <value>File version in general category is empty. branches.gui file will not be read.</value>
   </data>
-  <data name="CrossSectionFileReader_CreateCrossSectionDefinitionFromCategory_No_definition_reader_available_for_this_cross_section_definition_type__0_" xml:space="preserve">
-    <value>No definition reader available for this cross section definition type {0}</value>
-  </data>
-  <data name="CrossSectionFileReader_DefinitionNameLookup_The_following_cross_section_entries_were_not_unique____0____Total_non_unique___1___in___2__" xml:space="preserve">
-    <value>The following cross section entries were not unique: '{0}'. Total non-unique: {1}, in: {2}.</value>
-  </data>
-  <data name="CrossSectionFileReader_DefinitionNameLookup_The_following_cross_section_entries_were_not_unique__" xml:space="preserve">
-    <value>The following cross section entries were not unique: </value>
-  </data>
-  <data name="CrossSectionFileReader_DefinitionNameLookup___0____Total_non_unique___1___in___2__" xml:space="preserve">
-    <value>'{0}'. Total non-unique: {1}, in: {2}.</value>
-  </data>
 </root>
