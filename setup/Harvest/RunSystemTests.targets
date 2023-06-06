@@ -1170,6 +1170,16 @@
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
+      <_CheckDeltaresStartMenuFolderDWAQManualShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\D-Water Quality Sediment Water User Manual.lnk</_CheckDeltaresStartMenuFolderDWAQManualShortcut>
+      <_CheckDeltaresStartMenuFolderDWAQManualShortcutName>$(ProductName) Start Menu Folder D-Water Quality Sediment Water User Manual ShortCut</_CheckDeltaresStartMenuFolderDWAQManualShortcutName>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputShortcutCheck"
+             Properties="File=DeltaShell_Customizations_wxi;ShortCutName=$(_CheckDeltaresStartMenuFolderDWAQManualShortcutName);ShortCut=$(_CheckDeltaresStartMenuFolderDWAQManualShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
+             Condition="'$(MyCultureOutputFolder)' == 'fmwaq\' Or '$(MyCultureOutputFolder)' == 'rws\' "
+             ContinueOnError="WarnAndContinue"/>
+
+    <PropertyGroup>
       <_CheckDeltaresRgfGridShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\RGFGrid.lnk</_CheckDeltaresRgfGridShortcut>
       <_CheckDeltaresRgfGridShortcutName>$(ProductName) Start Menu Folder RGFGrid ShortCut</_CheckDeltaresRgfGridShortcutName>
     </PropertyGroup>

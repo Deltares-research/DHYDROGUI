@@ -6,6 +6,7 @@
   <File Id="DWater_Quality_Mass_Balances" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Mass_Balances.pdf"/>
   <File Id="DWater_Quality_Tools" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Tools.pdf"/>
   <File Id="DWater_Quality_Open_Proc_Lib_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Open_Proc_Lib_User_Manual.pdf"/>
+  <File Id="DWater_Quality_Sediment_Water_User_Manual" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Sediment_Water_User_Manual.pdf"/>
 
   <!-- PLCT -->
   <File Id="DWater_Quality_Processes_Library_Tables" Source="$(var.ProjectDir)\..\Waq\!(loc.Delft3DPackageName)_Manuals\D-Water_Quality_Processes_Library_Tables.pdf"/>
