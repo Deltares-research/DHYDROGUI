@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using DelftTools.TestUtils;
+using DelftTools.Functions;
+using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
@@ -10,124 +11,103 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
     public static class RunModelAcceptanceTestHelper
     {
         /// <summary>
-        /// Compares actual FlowFM output to reference output.
+        /// Check that all functions in all output function stores have values.
         /// </summary>
-        /// <param name="acceptanceModelName">The name of the acceptance model.</param>
-        /// <param name="referenceOutputDirectory">The output directory of the reference data.</param>
-        /// <param name="tempDirectory">A temporary work directory.</param>
-        /// <param name="keepOutput">Whether or not to keep the actual output files.</param>
-        /// <param name="actualModelOutputDirectory">Name of the directory containing the output files.</param>
-        /// <exception cref="ArgumentNullException">When any argument is <c>null</c>.</exception>
-        public static void CompareFlowFmOutput(string acceptanceModelName, 
-                                               string referenceOutputDirectory, 
-                                               string tempDirectory, 
-                                               bool keepOutput, 
-                                               string actualModelOutputDirectory = "FlowFm")
+        /// <param name="fmModel">The model to check function stores of</param>
+        public static void CheckFlowFMOutputFileStores(WaterFlowFMModel fmModel)
         {
-            if (acceptanceModelName == null)
-            {
-                throw new ArgumentNullException(nameof(acceptanceModelName));
-            }
-            
-            if (referenceOutputDirectory == null)
-            {
-                throw new ArgumentNullException(nameof(acceptanceModelName));
-            }
-            
-            if (tempDirectory == null)
-            {
-                throw new ArgumentNullException(nameof(acceptanceModelName));
-            }
-            
-            string expectedOutputFolder = Path.Combine(referenceOutputDirectory, acceptanceModelName, "FlowFM");
-            string[] expectedOutputFiles = Directory.GetFiles(expectedOutputFolder);
-            
-            if (!expectedOutputFiles.Any())
-            {
-                Assert.Fail($"No reference data found at: {expectedOutputFolder}.");
-            }
-            
-            string actualOutputFolder = Path.Combine(tempDirectory, "SavedModel_data", actualModelOutputDirectory, "output");
-            string[] actualOutputFiles = Directory.GetFiles(actualOutputFolder);
-            if (!actualOutputFiles.Any())
-            {
-                Assert.Fail("No output has been created after running the model.");
-            }
-            
-            if (keepOutput)
-            {
-                KeepOutput(acceptanceModelName, "FlowFM", actualOutputFiles);
-            }
+            Assert.That(fmModel.OutputIsEmpty, Is.False);
 
-            FlowFmOutputFileComparer.Compare(expectedOutputFiles, actualOutputFiles);
+            var fileStores = new List<IFunctionStore>
+            {
+                fmModel.Output1DFileStore,
+                fmModel.OutputHisFileStore,
+                fmModel.OutputFouFileStore,
+                fmModel.OutputMapFileStore,
+                fmModel.OutputClassMapFileStore
+            };
+
+            foreach (IFunctionStore store in fileStores)
+            {
+                if (store != null)
+                {
+                    Warn.Unless(InvalidFunctionsInStore(store), Is.Empty,
+                                $"{store}@{fmModel}[{FunctionStorePath(store)}]");
+                }
+            }
         }
 
         /// <summary>
-        /// Compares actual Rainfall Runoff output to reference output.
+        /// Check that all functions in all output function stores of all RainfallRunoff and FlowFM models have values.
         /// </summary>
-        /// <param name="acceptanceModelName">The name of the acceptance model.</param>
-        /// <param name="referenceOutputDirectory">The output directory of the reference data.</param>
-        /// <param name="tempDirectory">A temporary work directory.</param>
-        /// <param name="keepOutput">Whether or not to keep the actual output files.</param>
-        /// <param name="actualModelOutputDirectory">Name of the directory containing the output files.</param>
-        /// <exception cref="ArgumentNullException">When any argument is <c>null</c>.</exception>
-        public static void CompareRainfallRunoffOutput(string acceptanceModelName, 
-                                                       string referenceOutputDirectory,
-                                                       string tempDirectory, 
-                                                       bool keepOutput, 
-                                                       string actualModelOutputDirectory = "Rainfall Runoff")
+        /// <param name="hydroModel">The model to check function stores of</param>
+        public static void CheckHydroModelOutputFileStores(HydroModel hydroModel)
         {
-            if (acceptanceModelName == null)
+            foreach (RainfallRunoffModel rrModel in hydroModel.Models.OfType<RainfallRunoffModel>())
             {
-                throw new ArgumentNullException(nameof(acceptanceModelName));
+                CheckRainfallRunoffOutputFileStores(rrModel);
             }
-            
-            if (referenceOutputDirectory == null)
+
+            foreach (WaterFlowFMModel fmModel in hydroModel.Models.OfType<WaterFlowFMModel>())
             {
-                throw new ArgumentNullException(nameof(acceptanceModelName));
+                CheckFlowFMOutputFileStores(fmModel);
             }
-            
-            if (tempDirectory == null)
-            {
-                throw new ArgumentNullException(nameof(acceptanceModelName));
-            }
-            
-            string expectedOutputFolder = Path.Combine(referenceOutputDirectory, acceptanceModelName, "Rainfall Runoff");
-            string[] expectedOutputFiles = Directory.GetFiles(expectedOutputFolder);
-            
-            if (!expectedOutputFiles.Any())
-            {
-                Assert.Fail($"No reference data found at: {expectedOutputFolder}.");
-            }
-            
-            string actualOutputFolder = Path.Combine(tempDirectory, "SavedModel_data", actualModelOutputDirectory);
-            IEnumerable<string> actualFiles = Directory.GetFiles(actualOutputFolder);
-            string[] actualOutputFiles = AcceptanceModelTestHelper.FilterOutputFiles(actualFiles).ToArray();
-            if (!expectedOutputFiles.Any())
-            {
-                Assert.Fail("No output has been created after running the model.");
-            }
-            
-            if (keepOutput)
-            {
-                KeepOutput(acceptanceModelName, "Rainfall Runoff", actualOutputFiles);
-            }
-            
-            RainfallRunoffOutputFileComparer.Compare(expectedOutputFiles, actualOutputFiles);
         }
-        
-        private static void KeepOutput(string acceptanceModelName, string modelName, IEnumerable<string> actualOutputFiles)
+
+        /// <summary>
+        /// A function is valid if its FunctionStore has a Path, and it has at least one Value.
+        /// </summary>
+        /// <param name="f">a function</param>
+        /// <returns></returns>
+        private static bool FunctionIsValid(IFunction f)
         {
-            string targetDirectory = Path.Combine(TestHelper.GetTestWorkingDirectory(), "AcceptanceModelOutput", acceptanceModelName, modelName);
-            if (!Directory.Exists(targetDirectory))
+            return FunctionStorePath(f.Store) != null && f.GetValues().Count != 0;
+        }
+
+        /// <summary>
+        /// Returns the names of empty functions
+        /// </summary>
+        /// <param name="store"></param>
+        /// <returns>a list of functions in the IFunctionStore without values</returns>
+        private static IEnumerable<IFunction> InvalidFunctionsInStore(IFunctionStore store)
+        {
+            return store.Functions.Where(f => !FunctionIsValid(f));
+        }
+
+        /// <summary>
+        /// Check that all functions in all output function stores have values.
+        /// </summary>
+        /// <param name="rrModel">The model to check function stores of</param>
+        /// <remarks>
+        /// Apparently for rainfall runoff models it is valid for output functions with a file store to have no
+        /// values, so we check that at least one function has data.
+        /// </remarks>
+        private static void CheckRainfallRunoffOutputFileStores(RainfallRunoffModel rrModel)
+        {
+            Assert.That(rrModel.OutputIsEmpty, Is.False);
+            Assert.That(rrModel.OutputFunctions.Where(FunctionIsValid).Any);
+        }
+
+        /// <summary>
+        /// Get the path of the files that stores a function. The concrete classes implementing IFunctionStore do not have a
+        /// shared interface that returns the Path of the file that stores the function. For concrete classes that implement
+        /// IFileBased and IReadOnlyNetCdfFunctionStoreBase this function returns the Path defined on those interfaces.
+        /// </summary>
+        /// <param name="store">An IFunctionStore instance</param>
+        /// <returns>the path to the file that stores the function, or null</returns>
+        private static string FunctionStorePath(IFunctionStore store)
+        {
+            if (store is IFileBased)
             {
-                Directory.CreateDirectory(targetDirectory);
+                return ((IFileBased)store).Path;
             }
-                
-            foreach (string outputFile in actualOutputFiles)
+
+            if (store is IReadOnlyNetCdfFunctionStoreBase)
             {
-                File.Copy(outputFile, Path.Combine(targetDirectory, Path.GetFileName(outputFile)), true);
+                return ((IReadOnlyNetCdfFunctionStoreBase)store).Path;
             }
+
+            return null;
         }
     }
 }

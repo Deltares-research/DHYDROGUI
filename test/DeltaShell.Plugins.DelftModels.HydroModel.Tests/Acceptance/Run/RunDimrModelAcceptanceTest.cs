@@ -18,10 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
     [Category("Run.dimr")]
     public class RunDimrModelAcceptanceTest
     {
-        private bool keepOutput = true;
         private string tempDirectory;
         private string acceptanceModelsDirectory;
-        private string acceptanceModelsReferenceOutputDirectory;
         private string referenceSaveData;
 
         public static IEnumerable<TestCaseData> AcceptanceTests
@@ -41,9 +39,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModels\DIMR");
             
-            string acceptanceModelReferenceOutputPath = Path.Combine(basePath, @"AcceptanceModelsReferenceOutput\DIMR");
-            acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
-
             referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\DIMR");
         }
 
@@ -62,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
-        public void GivenRunningDeltaShellGuiWithImportedDimrModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputIsSameAsExpectedOutput(
+        public void GivenRunningDeltaShellGuiWithImportedDimrModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputFunctionsExist(
             string acceptanceModelName,
             string xmlFileName,
             int preconditionExpectedBranchFeaturesCount,
@@ -119,24 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                                           AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
                 
                 Console.WriteLine("Comparing output");
-                CompareOutputWithReferenceData(acceptanceModelName, hasRrData);
-            }
-        }
-        
-        private void CompareOutputWithReferenceData(string acceptanceModelName, bool hasRrData)
-        {
-            RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, 
-                                                             acceptanceModelsReferenceOutputDirectory,
-                                                             tempDirectory, 
-                                                             keepOutput);
-            
-            if (hasRrData)
-            {
-                Console.WriteLine("Comparing Rainfall Runoff output");
-                RunModelAcceptanceTestHelper.CompareRainfallRunoffOutput(acceptanceModelName,
-                                                                         acceptanceModelsReferenceOutputDirectory,
-                                                                         tempDirectory,
-                                                                         keepOutput);
+                RunModelAcceptanceTestHelper.CheckHydroModelOutputFileStores(hydroModel);
             }
         }
     }

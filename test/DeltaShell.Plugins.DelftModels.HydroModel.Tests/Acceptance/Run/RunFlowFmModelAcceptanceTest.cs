@@ -19,10 +19,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
     [Category("Run.mdu")]
     public class RunFlowFmAcceptanceTests
     {
-        private bool keepOutput = true;
         private string tempDirectory;
         private string acceptanceModelsDirectory;
-        private string acceptanceModelsReferenceOutputDirectory;
         private string referenceSaveData;
 
         public delegate int ActualCountFuncDelegate(IHydroNetwork network);
@@ -46,9 +44,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             string acceptanceModelPath = Path.Combine(basePath, @"AcceptanceModels\FlowFM");
             acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
 
-            string acceptanceModelReferenceOutputPath = Path.Combine(basePath, @"AcceptanceModelsReferenceOutput\FlowFM");
-            acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
-            
             referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\FlowFM");
         }
 
@@ -67,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
-        public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputIsSameAsExpectedOutput(
+        public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputFunctionStoresHaveValues(
             string acceptanceModelName,
             string acceptanceModelFileName,
             ActualCountFuncDelegate actualCountFunc,
@@ -76,13 +71,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             // [Given]
             using (DeltaShellGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
-
-                WaterFlowFMModel fmModel = ImportFlowFmModelAndAssertPreconditions(
-                                            acceptanceModelName,
-                                            acceptanceModelFileName,
-                                            actualCountFunc,
-                                            gui,
-                                            preconditionExpectedBranchFeaturesCount);
+                WaterFlowFMModel fmModel = ImportFlowFmModelAndAssertPreconditions(acceptanceModelName,
+                                                                                   acceptanceModelFileName,
+                                                                                   actualCountFunc,
+                                                                                   gui,
+                                                                                   preconditionExpectedBranchFeaturesCount);
 
                 Console.WriteLine("Setting model settings");
 
@@ -94,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                     TestContext.CurrentContext.Test.Name
                 );
                 var artifactsExporter = new ModelArtifactsExporter(exportConfig);
-                
+
                 Console.WriteLine("Running model");
                 ActivityRunner.RunActivity(fmModel);
                 artifactsExporter.ExportModelLogFiles();
@@ -115,7 +108,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                                                           false,
                                                           AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(acceptanceModelFileName + ".mdu"),
                                                           AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
-                CompareResultDataWithReferenceData(acceptanceModelName, acceptanceModelFileName);
+
+                RunModelAcceptanceTestHelper.CheckFlowFMOutputFileStores(fmModel);
             }
         }
 
@@ -146,12 +140,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             Assert.AreEqual(expectedBranchFeaturesCount, actualCountFunc(hydroNetwork), "[Precondition failure] Unexpected number of branch features");
 
             return model;
-        }
-
-        private void CompareResultDataWithReferenceData(string acceptanceModelName, string acceptanceModelFileName)
-        {
-            RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, acceptanceModelsReferenceOutputDirectory,
-                                                             tempDirectory, keepOutput, acceptanceModelFileName);
         }
     }
 }

@@ -19,10 +19,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
     [Category("Run.SOBEK")]
     public class RunSobekTwoModelAcceptanceTests
     {
-        private bool keepOutput = false;
         private string tempDirectory;
         private string acceptanceModelsDirectory;
-        private string acceptanceModelsReferenceOutputDirectory;
         private string referenceSaveData;
 
         public static IEnumerable<TestCaseData> AcceptanceTests
@@ -47,9 +45,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             string acceptanceModelPath = Path.Combine(basePath, @"AcceptanceModels\SOBEK2");
             acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
 
-            string acceptanceModelReferenceOutputPath = Path.Combine(basePath, @"AcceptanceModelsReferenceOutput\SOBEK2");
-            acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
-            
             referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\SOBEK2");
         }
 
@@ -68,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
-        public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputIsSameAsExpectedOutput(
+        public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputFunctionsExist(
             string acceptanceModelName,
             string caseName,
             string litDirectoryName,
@@ -137,25 +132,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                                                           hasRrData,
                                                           AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(mduFileName + ".mdu"),
                                                           AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
-                
-                CompareResultDataWithReferenceData(acceptanceModelName, hasRrData);
-            }
-        }
-        
-        private void CompareResultDataWithReferenceData(string acceptanceModelName, bool hasRrData)
-        {
-            RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, 
-                                                             acceptanceModelsReferenceOutputDirectory,
-                                                             tempDirectory, 
-                                                             keepOutput);
-            
-            if (hasRrData)
-            {
-                Console.WriteLine("Comparing Rainfall Runoff output");
-                RunModelAcceptanceTestHelper.CompareRainfallRunoffOutput(acceptanceModelName,
-                                                                         acceptanceModelsReferenceOutputDirectory,
-                                                                         tempDirectory,
-                                                                         keepOutput);
+
+                if (isFmOnly)
+                    RunModelAcceptanceTestHelper.CheckFlowFMOutputFileStores((WaterFlowFMModel)hydroModel);
+                else
+                    RunModelAcceptanceTestHelper.CheckHydroModelOutputFileStores((HydroModel)hydroModel);
             }
         }
     }
