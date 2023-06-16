@@ -33,6 +33,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 yield return new TestCaseData("FlowFM_Eindhoven", "FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 398).SetName("Eindhoven");
             }
         }
+        
+        public static IEnumerable<TestCaseData> SoftSupTests 
+        {
+            get
+            {
+                yield return new TestCaseData("Hooge_Raam", "DFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 1571).SetName("Hooge_Raam");//SOFTSUP-439
+            }
+        }
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()
@@ -68,6 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
+        [TestCaseSource(nameof(SoftSupTests))]
         public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
             string acceptanceModelName,
             string acceptanceModelFileName,

@@ -34,6 +34,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             }
         }
         
+        public static IEnumerable<TestCaseData> SoftSupTests 
+        {
+            get
+            {
+                yield return new TestCaseData("Hooge_Raam", "DFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 1571).SetName("Hooge_Raam");//SOFTSUP-439
+            }
+        }
+
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
@@ -62,6 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
+        [TestCaseSource(nameof(SoftSupTests))]
         public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputFunctionStoresHaveValues(
             string acceptanceModelName,
             string acceptanceModelFileName,
