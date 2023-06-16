@@ -7,11 +7,10 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
-using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 {
     [TestFixture]
     [Category(TestCategories.AcceptanceCategory)]
@@ -96,24 +95,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 artifactsExporter.ExportModelLogFiles();
                 Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
                 
-                Console.WriteLine("Saving model");
-                string savePath = Path.Combine(tempDirectory, "SavedModel");
-                gui.Application.SaveProjectAs(savePath);
-                
                 // [Then]
-                Console.WriteLine("Comparing saved input data with reference input data");
-                string saveDirectory = savePath + "_data";
-                string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
-                string mduFileName = "FlowFM";
-                InputFileComparer.CompareInputDirectories(referenceSaveDataDirectory,
-                                                          saveDirectory,
-                                                          mduFileName,
-                                                          tempDirectory,
-                                                          hasRrData,
-                                                          AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(mduFileName + ".mdu"),
-                                                          AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
-                
-                Console.WriteLine("Comparing output");
+                Console.WriteLine("Checking output");
                 RunModelAcceptanceTestHelper.CheckHydroModelOutputFileStores(hydroModel);
             }
         }

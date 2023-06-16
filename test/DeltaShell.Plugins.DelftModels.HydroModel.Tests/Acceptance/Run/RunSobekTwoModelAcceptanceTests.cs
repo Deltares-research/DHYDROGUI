@@ -116,23 +116,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 artifactsExporter.ExportModelLogFiles();
                 Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
                 
-                Console.WriteLine("Saving model");
-                string savePath = Path.Combine(tempDirectory, "SavedModel");
-                gui.Application.SaveProjectAs(savePath);
-
                 // [Then]
-                Console.WriteLine("Comparing saved input data with reference input data");
-                string saveDirectory = savePath + "_data";
-                string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
-                string mduFileName = "FlowFM";
-                InputFileComparer.CompareInputDirectories(referenceSaveDataDirectory,
-                                                          saveDirectory,
-                                                          mduFileName,
-                                                          tempDirectory,
-                                                          hasRrData,
-                                                          AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(mduFileName + ".mdu"),
-                                                          AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
-
+                Console.WriteLine("Checking output");
                 if (isFmOnly)
                     RunModelAcceptanceTestHelper.CheckFlowFMOutputFileStores((WaterFlowFMModel)hydroModel);
                 else
