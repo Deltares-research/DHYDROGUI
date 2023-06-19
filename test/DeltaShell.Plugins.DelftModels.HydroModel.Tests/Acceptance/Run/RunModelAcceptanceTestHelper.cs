@@ -27,14 +27,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 fmModel.OutputClassMapFileStore
             };
 
-            foreach (IFunctionStore store in fileStores)
-            {
-                if (store != null)
+            Assert.Multiple(() =>
                 {
-                    Warn.Unless(InvalidFunctionsInStore(store), Is.Empty,
-                                $"{store}@{fmModel}[{FunctionStorePath(store)}]");
+                    foreach (IFunctionStore store in fileStores)
+                    {
+                        if (store != null)
+                        {
+                            Assert.That(InvalidFunctionsInStore(store), Is.Not.Empty,
+                                        $"{store}@{fmModel}[{FunctionStorePath(store)}]");
+                        }
+                    }
                 }
-            }
+            );
         }
 
         /// <summary>
