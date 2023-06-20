@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                     {
                         if (store != null)
                         {
-                            Assert.That(InvalidFunctionsInStore(store), Is.Not.Empty,
+                            Assert.That(InvalidFunctionsInStore(store), Is.Empty,
                                         $"{store}@{fmModel}[{FunctionStorePath(store)}]");
                         }
                     }
