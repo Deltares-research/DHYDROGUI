@@ -5,14 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 {
     public static class FileComparerHelper
     {
         private static readonly string NcDumpExecutablePath;
-        
-        public static readonly string VerticalLine = $"==================================================================================={Environment.NewLine}";
         
         static FileComparerHelper()
         {
@@ -25,33 +24,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// <param name="filePathExpected">Filepath to the reference file.</param>
         /// <param name="filePathActual">Filepath to the actual file.</param>
         /// <param name="linesToIgnore">Lines to ignore.</param>
-        /// <param name="errorMessage">Reference to an error message.</param>
-        /// <returns>Returns <c>true</c> if the provided files are equal.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="filePathExpected"/>, <paramref name="filePathActual"/> or
         /// <paramref name="linesToIgnore"/> is <c>null</c>.</exception>
-        public static bool CompareFiles(
-            string filePathExpected,
-            string filePathActual,
-            string[] linesToIgnore,
-            out string errorMessage)
+        public static void CompareFiles(string filePathExpected, string filePathActual, string[] linesToIgnore)
         {
-            if (filePathExpected == null)
-            {
-                throw new ArgumentNullException(nameof(filePathExpected));
-            }
-            
-            if (filePathActual == null)
-            {
-                throw new ArgumentNullException(nameof(filePathExpected));
-            }
-            
-            if (linesToIgnore == null)
-            {
-                throw new ArgumentNullException(nameof(filePathExpected));
-            }
-            
-            errorMessage = string.Empty;
-
             ParseFile(filePathExpected, linesToIgnore, out var relevantLinesInExpectedText, out var ignoredLinesInExpectedText);
             ParseFile(filePathActual, linesToIgnore, out var relevantLinesInActualText, out var ignoredLinesInActualText);
             
@@ -61,47 +37,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             if (mismatchingLinesInExpected.Any())
             {
-                errorMessage = $"Mismatch for file '{Path.GetFileName(filePathExpected)}':" +
-                               $"{Environment.NewLine}" +
-                               $"{CreateErrorMessage(mismatchingLinesInExpected.First(), mismatchingLinesInActual.First(), ignoredLinesInExpectedText, ignoredLinesInActualText)}";
+                string message = $"Mismatch for file '{Path.GetFileName(filePathExpected)}':" +
+                                 $"{Environment.NewLine}" +
+                                 $"{CreateErrorMessage(mismatchingLinesInExpected.First(), mismatchingLinesInActual.First(), ignoredLinesInExpectedText, ignoredLinesInActualText)}";
 
-                return false;
+                Assert.Fail(message);
             }
-
-            return true;
-        }
-        
-        /// <summary>
-        /// Verifies that both the expected file and actual file are not null and updates an error message in case either is null. 
-        /// </summary>
-        /// <param name="fileName">The filename to check.</param>
-        /// <param name="expectedFile">The expected filename.</param>
-        /// <param name="actualFile">The actual filename.</param>
-        /// <param name="overallErrorMessage">A reference to an error message.</param>
-        /// <returns>Returns <c>true</c> if both the expected and actual filename are not <c>null</c>.</returns>
-        /// <exception cref="ArgumentNullException">When <paramref name="fileName"/> is <c>null</c>.</exception>
-        public static bool FileNameIsEqual(string fileName, string expectedFile, string actualFile, ref string overallErrorMessage)
-        {
-            if (fileName == null)
-            {
-                throw new ArgumentNullException(nameof(fileName));
-            }
-            
-            if (expectedFile == null)
-            {
-                overallErrorMessage += $"The actual file collection contains a file with name '{fileName}'; this file is not part of the expected collection of files.{Environment.NewLine}{VerticalLine}";
-
-                return false;
-            }
-
-            if (actualFile == null)
-            {
-                overallErrorMessage += $"The expected file collection contains a file with name '{fileName}'; this file is not part of the actual collection of files.{Environment.NewLine}{VerticalLine}";
-
-                return false;
-            }
-
-            return true;
         }
         
         /// <summary>

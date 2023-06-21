@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence.CustomComparers
 {
@@ -15,9 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         /// </summary>
         /// <param name="filePathExpected">File path of the expected 3BRUNOFF.TP file.</param>
         /// <param name="filePathActual">File path of the actual 3BRUNOFF.TP file. </param>
-        /// <param name="errorMessage">Reference to an error message.</param>
-        /// <returns>Returns <c>true</c> if the provided files are equal.</returns>
-        public static bool Compare(string filePathExpected, string filePathActual, out string errorMessage)
+        public static void Compare(string filePathExpected, string filePathActual)
         {
             if (filePathExpected == null)
             {
@@ -29,40 +27,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 throw new ArgumentNullException(nameof(filePathActual));
             }
             
-            errorMessage = string.Empty;
-
-            bool identical = CompareFiles(filePathExpected, filePathActual, ref errorMessage);
-            
-            return identical;
-        }
-
-        private static bool CompareFiles(string filePathExpected, string filePathActual, ref string errorMessage)
-        {
             var linesToIgnore = new string[0]; 
             FileComparerHelper.ParseFile(filePathExpected, linesToIgnore,out List<Tuple<int, string>> linesInExpectedText, out List<Tuple<int, string>> _);
             FileComparerHelper.ParseFile(filePathActual, linesToIgnore, out List<Tuple<int, string>> linesInActualText, out var _);
             
             FileComparerHelper.GetMismatchingLines(linesInExpectedText,linesInActualText, out List<Tuple<int, string>> mismatchingLinesInExpected, out List<Tuple<int, string>> mismatchingLinesInActual);
             FileComparerHelper.RemoveEquivalentLines(mismatchingLinesInExpected, mismatchingLinesInActual);
-
-            if (!mismatchingLinesInExpected.Any())
-            {
-                return true;
-            }
             
             for (var i = 0; i < mismatchingLinesInExpected.Count; i++)
             {
                 bool linesAreIdentical = CompareMismatchLine(mismatchingLinesInExpected[i], mismatchingLinesInActual[i]);
+             
                 if (!linesAreIdentical)
                 {
-                    errorMessage = $"Mismatch for file '{Path.GetFileName(filePathExpected)}':" +
-                                   $"{Environment.NewLine}" +
-                                   $"{FileComparerHelper.CreateErrorMessage(mismatchingLinesInExpected[i], mismatchingLinesInActual[i])}";
-                    return false;
+                    string message = $"Mismatch for file '{Path.GetFileName(filePathExpected)}':" +
+                                     $"{Environment.NewLine}" +
+                                     $"{FileComparerHelper.CreateErrorMessage(mismatchingLinesInExpected[i], mismatchingLinesInActual[i])}";
+                    
+                    Assert.Fail(message);
                 }
             }
-            
-            return true;
         }
         
         private static bool CompareMismatchLine(Tuple<int, string> expectedLine, Tuple<int, string> actualLine)

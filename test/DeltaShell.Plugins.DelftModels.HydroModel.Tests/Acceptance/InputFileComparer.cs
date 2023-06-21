@@ -85,7 +85,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 Assert.Fail($"No saved files (second save) could be found at {flowFmSecondSaveDirectory}.");
             }
             
-            FlowFmFileComparer.Compare(flowFmInitialSaveFiles, flowFmSecondSaveFiles, tempDirectory, flowFmLinesToIgnorePerFile);
+            Assert.Multiple(() =>
+            {
+                FlowFmFileComparer.Compare(flowFmInitialSaveFiles, flowFmSecondSaveFiles, tempDirectory, flowFmLinesToIgnorePerFile);
+            });
         }
 
         private static void CompareRainfallRunoffInputFiles(string rrInitialSaveDirectory,
@@ -104,9 +107,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 Assert.Fail($"No saved files (second save) could be found at {rrSecondSaveDirectory}.");
             }
 
-            RainfallRunoffFileComparer.Compare(AcceptanceModelTestHelper.FilterInputFiles(rrInitialSaveFiles).ToArray(),
-                                               AcceptanceModelTestHelper.FilterInputFiles(rrSecondSaveFiles).ToArray(),
-                                               rainfallRunoffLinesToIgnorePerFile);
+            Assert.Multiple(() =>
+            {
+                RainfallRunoffFileComparer.Compare(AcceptanceModelTestHelper.FilterInputFiles(rrInitialSaveFiles).ToArray(),
+                                                   AcceptanceModelTestHelper.FilterInputFiles(rrSecondSaveFiles).ToArray(),
+                                                   rainfallRunoffLinesToIgnorePerFile);
+            });
         }
     }
 }

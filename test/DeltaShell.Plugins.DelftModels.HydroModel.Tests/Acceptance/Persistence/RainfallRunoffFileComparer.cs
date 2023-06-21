@@ -22,9 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                    string[] actualRainfallRunoffFiles, 
                                    IReadOnlyDictionary<string, IEnumerable<string>> linesToIgnoreLookup)
         {
-            var identical = true;
-            var overallErrorMessage = $"{Environment.NewLine}{FileComparerHelper.VerticalLine}";
-            
             IEnumerable<string> actualRainfallRunoffFileNames = actualRainfallRunoffFiles.Select(Path.GetFileName);
             IEnumerable<string> expectedFlowFmFileNames = expectedRainfallRunoffFiles.Select(Path.GetFileName);
             string[] allFileNames = actualRainfallRunoffFileNames.Union(expectedFlowFmFileNames).ToArray();
@@ -41,33 +38,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 string expectedRainfallRunoffFile = expectedRainfallRunoffFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
                 string actualRainfallRunoffFile = actualRainfallRunoffFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
                 
-                if (!FileComparerHelper.FileNameIsEqual(fileName, expectedRainfallRunoffFile, actualRainfallRunoffFile, ref overallErrorMessage))
+                Assert.IsNotNull(expectedRainfallRunoffFile, $"The expected file collection contains a file with name '{fileName}'; this file is not part of the actual collection of files.{Environment.NewLine}");
+                Assert.IsNotNull(actualRainfallRunoffFile, $"The actual file collection contains a file with name '{fileName}'; this file is not part of the expected collection of files.{Environment.NewLine}");
+
+                if (string.Equals(fileName, "3brunoff.tp", StringComparison.InvariantCultureIgnoreCase) || 
+                    string.Equals(fileName, "3b_nod.tp", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    identical = false;
-                    continue;
-                }
-                
-                string errorMessage = string.Empty;
-                
-                if (string.Equals(fileName, "3brunoff.tp", StringComparison.InvariantCultureIgnoreCase)
-                || string.Equals(fileName, "3b_nod.tp", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    identical = RunoffTpFileComparer.Compare(expectedRainfallRunoffFile, actualRainfallRunoffFile, out errorMessage) && identical;
+                    RunoffTpFileComparer.Compare(expectedRainfallRunoffFile, actualRainfallRunoffFile);
                 }
                 else
                 {
-                    identical = FileComparerHelper.CompareFiles(expectedRainfallRunoffFile, actualRainfallRunoffFile, linesToIgnore, out errorMessage) && identical;                    
+                    FileComparerHelper.CompareFiles(expectedRainfallRunoffFile, actualRainfallRunoffFile, linesToIgnore);                    
                 }
-                
-                if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    overallErrorMessage += $"{errorMessage}{FileComparerHelper.VerticalLine}";
-                }
-            }
-            
-            if (!identical)
-            {
-                Assert.Fail(overallErrorMessage);
             }
         }
     }

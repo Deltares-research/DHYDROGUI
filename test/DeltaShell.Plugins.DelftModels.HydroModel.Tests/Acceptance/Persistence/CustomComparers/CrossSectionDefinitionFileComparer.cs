@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence.CustomComparers
 {
@@ -19,11 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         /// </summary>
         /// <param name="filePathExpected">File path of the expected crsdef.ini file.</param>
         /// <param name="filePathActual">File path of the actual crsdef.ini file. </param>
-        /// <param name="errorMessage">Reference to an error message.</param>
-        /// <returns>Returns <c>true</c> if the provided files are equal.</returns>
-        public static bool CompareFiles(string filePathExpected,
-                                        string filePathActual,
-                                        out string errorMessage)
+        public static void CompareFiles(string filePathExpected, string filePathActual)
         {
             if (filePathExpected == null)
             {
@@ -35,8 +32,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 throw new ArgumentNullException(nameof(filePathExpected));
             }
 
-            errorMessage = string.Empty;
-
             string[] coordinatesLineIdentifiers = new[]
             {
                 DefinitionPropertySettings.XCoors.Key, 
@@ -44,31 +39,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 DefinitionPropertySettings.ZCoors.Key
             };
 
-            bool identical = CompareNonCoordinateLines(filePathExpected, 
-                                                  filePathActual, 
-                                                  coordinatesLineIdentifiers, 
-                                                  ref errorMessage, 
-                                                  out var coordinatesLinesInExpectedText, 
-                                                  out var coordinatesLinesInActualText);
-
-            if (!identical)
-            {
-                return false;
-            }
-
-            identical = CompareCoordinateLines(coordinatesLinesInExpectedText, 
-                                               coordinatesLinesInActualText,
-                                               filePathExpected,
-                                               ref errorMessage);
-
-            return identical;
+            CompareNonCoordinateLines(filePathExpected, filePathActual, coordinatesLineIdentifiers, out var coordinatesLinesInExpectedText, out var coordinatesLinesInActualText);
+            CompareCoordinateLines(coordinatesLinesInExpectedText, coordinatesLinesInActualText, filePathExpected);
 
         }
 
-        private static bool CompareNonCoordinateLines(string filePathExpected, 
+        private static void CompareNonCoordinateLines(string filePathExpected, 
                                                       string filePathActual, 
                                                       string[] coordinatesLineIdentifiers, 
-                                                      ref string errorMessage, 
                                                       out List<Tuple<int, string>> coordinatesLinesInExpectedText, 
                                                       out List<Tuple<int, string>> coordinatesLinesInActualText)
         {
@@ -80,20 +58,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             if (mismatchingLinesInExpected.Any())
             {
-                errorMessage = $"Mismatch for file '{Path.GetFileName(filePathExpected)}':" +
-                               $"{Environment.NewLine}" +
-                               $"{FileComparerHelper.CreateErrorMessage(mismatchingLinesInExpected.First(), mismatchingLinesInActual.First())}";
-
-                return false;
+                string message = $"Mismatch for file '{Path.GetFileName(filePathExpected)}':" +
+                                 $"{Environment.NewLine}" +
+                                 $"{FileComparerHelper.CreateErrorMessage(mismatchingLinesInExpected.First(), mismatchingLinesInActual.First())}";
+                
+                Assert.Fail(message);
             }
-
-            return true;
         }
 
-        private static bool CompareCoordinateLines(IReadOnlyCollection<Tuple<int, string>> coordinatesLinesInExpectedText, 
+        private static void CompareCoordinateLines(IReadOnlyCollection<Tuple<int, string>> coordinatesLinesInExpectedText, 
                                                    IReadOnlyCollection<Tuple<int, string>> coordinatesLinesInActualText,
-                                                   string filePathExpected,
-                                                   ref string errorMessage)
+                                                   string filePathExpected)
         {
             FileComparerHelper.GetMismatchingLines(coordinatesLinesInExpectedText,
                                                    coordinatesLinesInActualText,
@@ -101,25 +76,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                                    out var mismatchingCoordinateLinesInActual);
             FileComparerHelper.RemoveEquivalentLines(mismatchingCoordinateLinesInExpected, mismatchingCoordinateLinesInActual);
 
-            if (!mismatchingCoordinateLinesInExpected.Any())
-            {
-                return true;
-            }
-
             for (var i = 0; i < mismatchingCoordinateLinesInExpected.Count; i++)
             {
                 bool equivalentLine = CompareMismatchLine(mismatchingCoordinateLinesInExpected[i], mismatchingCoordinateLinesInActual[i]);
+                
                 if (!equivalentLine)
                 {
-                    errorMessage = $"Mismatch for file '{Path.GetFileName(filePathExpected)}':" +
-                                   $"{Environment.NewLine}" +
-                                   $"{FileComparerHelper.CreateErrorMessage(mismatchingCoordinateLinesInExpected[i], mismatchingCoordinateLinesInActual[i])}";
+                    string message = $"Mismatch for file '{Path.GetFileName(filePathExpected)}':" +
+                                     $"{Environment.NewLine}" +
+                                     $"{FileComparerHelper.CreateErrorMessage(mismatchingCoordinateLinesInExpected[i], mismatchingCoordinateLinesInActual[i])}";
 
-                    return false;
+                    Assert.Fail(message);
                 }
             }
-            
-            return true;
         }
 
         private static bool CompareMismatchLine(Tuple<int, string> mismatchingCoordinateLineInExpected, 

@@ -50,11 +50,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         /// </remarks>
         public static void Compare(string[] expectedFlowFmFiles, string[] actualFlowFmFiles, string tempDirectory, IReadOnlyDictionary<string, IEnumerable<string>> linesToIgnoreLookup)
         {
-            var identical = true;
             var actualFlowFmFileNames = actualFlowFmFiles.Select(Path.GetFileName);
             var expectedFlowFmFileNames = expectedFlowFmFiles.Select(Path.GetFileName);
             var allFileNames = actualFlowFmFileNames.Union(expectedFlowFmFileNames).ToArray();
-            var overallErrorMessage = $"{Environment.NewLine}{FileComparerHelper.VerticalLine}";
 
             foreach (var fileName in allFileNames)
             {
@@ -72,12 +70,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
                 string expectedFlowFmFile = expectedFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
                 string actualFlowFmFile = actualFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
-
-                if (!FileComparerHelper.FileNameIsEqual(fileName, expectedFlowFmFile, actualFlowFmFile, ref overallErrorMessage))
-                {
-                    identical = false;
-                    continue;
-                }
+                
+                Assert.IsNotNull(expectedFlowFmFile, $"The expected file collection contains a file with name '{fileName}'; this file is not part of the actual collection of files.{Environment.NewLine}");
+                Assert.IsNotNull(actualFlowFmFile, $"The actual file collection contains a file with name '{fileName}'; this file is not part of the expected collection of files.{Environment.NewLine}");
 
                 switch (Path.GetExtension(expectedFlowFmFile))
                 {
@@ -103,27 +98,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
                 SortScrambledFiles(expectedFlowFmFile, actualFlowFmFile);
 
-                string errorMessage = string.Empty;
-
                 // crsdef.ini requires custom comparison because of rounding errors for coordinates when saving and loading
                 if (IsCrossSectionDefinitionFile(actualFlowFmFile))
                 {
-                    identical = CrossSectionDefinitionFileComparer.CompareFiles(expectedFlowFmFile, actualFlowFmFile, out errorMessage) && identical;
+                    CrossSectionDefinitionFileComparer.CompareFiles(expectedFlowFmFile, actualFlowFmFile);
                 }
                 else
                 {
-                    identical = FileComparerHelper.CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore.ToArray(), out errorMessage) && identical;
+                    FileComparerHelper.CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore.ToArray());
                 }
-                
-                if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    overallErrorMessage += $"{errorMessage}{FileComparerHelper.VerticalLine}";
-                }
-            }
-
-            if (!identical)
-            {
-                Assert.Fail(overallErrorMessage);
             }
         }
 
