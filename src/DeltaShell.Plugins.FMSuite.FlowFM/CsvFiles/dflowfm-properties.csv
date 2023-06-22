@@ -130,7 +130,7 @@ physics,Backgroundwatertemperature,physics,Temperature,Background temperature,Do
 physics,SecondaryFlow,processes,Processes,Secondary flow,0|1,0,,,,,,,,,"Secondary flow (0: no, 1: yes)"
 physics,EffectSpiral,physics,Secondary flow,Spiral flow effect factor,Double,0,,,FALSE,SecondaryFlow,SecondaryFlow,,,,Weight factor of the spiral flow intensity on transport angle, -
 physics,BetaSpiral,physics,Secondary flow,Spiral flow beta factor,Double,0,,,FALSE,SecondaryFlow,SecondaryFlow,,,,Weight factor of the spiral flow intensity on flow dispersion stresses, -
-wind,ICdtyp,wind,Wind,Wind drag coefficient type: Constant|Smith & Banks (2 break points)|Smith & Banks (3 break points)|Charnock 1955|Whang 2005,1|2|3|4|5,2,1,5,FALSE,,,,,,"Wind drag coefficient type (1: constant, 2: S&B 2 breakpoints, 3: S&B 3 breakpoints, 4: Charnock constant, 5: Whang)",-
+wind,ICdtyp,wind,Wind,Wind drag coefficient type: Constant|Smith & Banks (2 break points)|Smith & Banks (3 break points)|Charnock 1955|Whang 2005|Wuest 2005,1|2|3|4|5|6,2,1,6,FALSE,,,,,,"Wind drag coefficient type (1: constant, 2: S&B 2 breakpoints, 3: S&B 3 breakpoints, 4: Charnock constant, 5: Whang, 6: Wuest)",-
 wind,Cdbreakpoints,wind,Wind,Break points wind drag coefficient,DoubleArray,6.3d-4 7.23d-3,,,FALSE,ICdtyp=2|3|4,,,,,Wind drag coefficient break points, m/s
 wind,Windspeedbreakpoints,wind,Wind,Break points wind speed,DoubleArray,0. 100.,,,FALSE,ICdtyp=2|3,,,,,Wind speed break points, m/s
 wind,Rhoair,wind,Wind,Air density,Double,1.2,,,FALSE,,,wind,,,Air density, kg/m3
