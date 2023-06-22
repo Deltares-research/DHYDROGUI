@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Reflection;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -21,6 +22,9 @@ using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
+using SharpMap;
+using SharpMap.CoordinateSystems.Transformations;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DelftTools.Hydro.Tests.Helpers
 {
@@ -456,6 +460,31 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(result);
             Assert.IsNull(network.CurrentEditAction);
             Assert.AreEqual(numberOfChannels, network.Channels.Count());
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void SplitBranchResultsInCorrectGeodeticLength()
+        {
+            ICoordinateSystemFactory coordinateSystemFactory = new OgrCoordinateSystemFactory();
+            ICoordinateSystem coordinateSystem = coordinateSystemFactory.CreateFromEPSG(28992);
+            Map.CoordinateSystemFactory = coordinateSystemFactory;
+            
+            IHydroNetwork network = CreateTestNetwork();
+            network.CoordinateSystem = coordinateSystem;
+
+            IChannel branch1 = network.Channels.First();
+            double length = branch1.Geometry.Length;
+
+            HydroNetworkHelper.SplitChannelAtNode(branch1, length / 2);
+
+            IChannel branch2 = network.Channels.Skip(1).First();
+
+            double expectedGeodeticLengthBranch1 = GeodeticDistance.Length(coordinateSystem, branch1.Geometry);
+            double expectedGeodeticLengthBranch2 = GeodeticDistance.Length(coordinateSystem, branch2.Geometry);
+            
+            Assert.AreEqual(expectedGeodeticLengthBranch1, branch1.GeodeticLength);
+            Assert.AreEqual(expectedGeodeticLengthBranch2, branch2.GeodeticLength);
         }
 
         [Test]
