@@ -369,5 +369,31 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.False(double.IsNaN(branch.GeodeticLength));
             Assert.AreNotEqual(branch.Geometry.Length, branch.GeodeticLength);
         }
+        
+        [Test]
+        public void GivenUGridFileHelper_ReadingNetworkWithChainageBeyondBranch_ShouldSetChainageToGeodeticLength()
+        {
+            //Arrange
+            var path = TestHelper.GetTestFilePath(@"ugrid\ChainageBeyondBranch.nc");
+            var network = new HydroNetwork();
+            var discretization = new Discretization();
+
+            if (Map.CoordinateSystemFactory == null)
+            {
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
+            IConvertedUgridFileObjects convertedUGridFileObjects = new ConvertedUgridFileObjects()
+            {
+                Discretization = discretization,
+                HydroNetwork = network
+            };
+
+            // Act
+            UGridFileHelper.ReadNetFileDataIntoModel(path, convertedUGridFileObjects);
+
+            // Assert
+            Assert.NotNull(discretization.Locations);
+            Assert.IsFalse(discretization.Locations.Values.Any(x => x.Chainage > x.Branch.Length));
+        }
     }
 }

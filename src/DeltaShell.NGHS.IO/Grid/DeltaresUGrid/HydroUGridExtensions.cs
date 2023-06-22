@@ -254,7 +254,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 Log.Error(string.Format(Resources.HydroUGridExtensions_GetNetworkLocations_While_reading_1d_discretization___calculation_point_from_the_netfile_we_encountered_the_following_errors___0__1_, Environment.NewLine, string.Join(Environment.NewLine, networkLocationImportErrors)));
             }
-            return networkLocations.OrderBy(nl => nl.Attributes[indexOfVerticeInTheFile]);
+            return networkLocations.Distinct().OrderBy(nl => nl.Attributes[indexOfVerticeInTheFile]);
         }
 
         /// <summary>

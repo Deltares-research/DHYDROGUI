@@ -9,6 +9,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Editing;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -19,6 +20,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
+using SharpMap.CoordinateSystems.Transformations;
 
 namespace DelftTools.Hydro.Helpers
 {
@@ -30,7 +32,7 @@ namespace DelftTools.Hydro.Helpers
         private const string Unique1DPostFixId = "_1D_";
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
 
-        public static void UpdateChannelNames(IChannel splittedChannel, IChannel newChannel) 
+        public static void UpdateChannelNames(IChannel splittedChannel, IChannel newChannel)
         {
             newChannel.Name = splittedChannel.Name + "_B";
             splittedChannel.Name = splittedChannel.Name + "_A";
@@ -58,6 +60,8 @@ namespace DelftTools.Hydro.Helpers
                 var result = NetworkHelper.SplitBranchAtNode(channel, geometryOffset);
 
                 UpdateChannelNames(channel, (IChannel) result.NewBranch);
+                UpdateGeodeticDistance(channel);
+                UpdateGeodeticDistance(result.NewBranch);
 
                 //update the action before calling endedit..other entities might use the data.
                 channelSplitAction.SplittedBranch = channel;
@@ -68,6 +72,17 @@ namespace DelftTools.Hydro.Helpers
             }
             return null;
         }
+        
+        private static void UpdateGeodeticDistance(IBranch branch)
+        {
+            ICoordinateSystem coordinateSystem = branch.Network.CoordinateSystem;
+
+            if (coordinateSystem != null)
+            {
+                branch.GeodeticLength = GeodeticDistance.Length(coordinateSystem, branch.Geometry);
+            }
+        }
+        
         public static IManhole SplitPipeAtNode(IPipe pipe, double geometryOffset)
         {
             if (geometryOffset != pipe.Geometry.Length && geometryOffset != 0)
