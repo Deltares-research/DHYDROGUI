@@ -935,6 +935,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                                                "- Could not find meteo file for 'x_wind'" + Environment.NewLine +
                                                "- Could not find meteo file for 'y_wind'"));
         }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_WithSwanFileSettings_LoadsSwanFileSettingsCorrectly()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string testFilePath = Path.Combine(testDataPath, "Swan.mdw");
+                string mdwPath = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(testFilePath);
+                
+                // Call
+                MdwFileDTO dto = new MdwFile().Load(mdwPath);
+                WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
+
+                WaveModelProperty waveModelProperty = modelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.KeepINPUT);
+
+                // Assert
+                Assert.IsNotNull(waveModelProperty);
+                Assert.IsTrue((bool)waveModelProperty.Value);
+            }
+        }
 
         [Test]
         [TestCase(true)]
@@ -1200,6 +1222,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 Assert.That(meteoFileLines.Length, Is.EqualTo(2));
                 AssertPropertyLine(meteoFileLines[0], KnownWaveProperties.MeteoFile, "xwind.wnd");
                 AssertPropertyLine(meteoFileLines[1], KnownWaveProperties.MeteoFile, "ywind.wnd");
+            }
+        }
+
+        [Test]
+        [TestCase(true, true)]
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        [TestCase(false, false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_WithSwanFileSettings_MdwFileShouldContainSwanFileSettings(bool switchTo, bool keepInput)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+            modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyName == KnownWaveProperties.KeepINPUT).Value = keepInput;
+
+            var timeFrameData = new TimeFrameData();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
+
+                // Call
+                new MdwFile { MdwFilePath = saveFilePath }.SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+
+                string[] meteoFileLines = File.ReadAllLines(saveFilePath).Where(l => l.Contains(KnownWaveProperties.KeepINPUT)).ToArray();
+                Assert.That(meteoFileLines.Length, Is.EqualTo(1));
+                AssertPropertyLine(meteoFileLines[0], KnownWaveProperties.KeepINPUT, keepInput.ToString().ToLower());
             }
         }
 
