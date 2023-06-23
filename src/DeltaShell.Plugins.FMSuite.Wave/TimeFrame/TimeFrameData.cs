@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.TimeFrame
     /// </summary>
     /// <seealso cref="ITimeFrameData" />
     [Entity]
-    public sealed class TimeFrameData : ITimeFrameData
+    public class TimeFrameData : ITimeFrameData
     {
         /// <summary>
         /// Creates a new <see cref="TimeFrameData"/>.
