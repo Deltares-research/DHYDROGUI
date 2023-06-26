@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
@@ -11,7 +10,6 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
-using Newtonsoft.Json;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -56,9 +54,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             hydroModel.BeginEdit(new ImportingFullModelAction("Importing full Dimr model"));
             try
             {
-                AddModels(hydroModel, fileImporters, dimrObject, rootFolder);
+                IDimrModel[] subModels = GetSubModels(fileImporters, dimrObject, rootFolder).ToArray();
 
-                List<IDimrModel> subModels = hydroModel.Activities.OfType<IDimrModel>().ToList();
+                foreach (IDimrModel subModel in subModels)
+                {
+                    AddModelSubRegion(hydroModel, subModel);
+                }
+                
+                ModelTimers modelTimers = GetModelTimers(subModels);
+                hydroModel.Activities.AddRange(subModels);
+                
+                if (modelTimers != null)
+                {
+                    hydroModel.StartTime = modelTimers.StartTime;
+                    hydroModel.TimeStep = modelTimers.TimeStep;
+                    hydroModel.StopTime = modelTimers.StopTime;
+                }
+                
                 if (dimrObject.coupler != null)
                 {
                     CoupleSubModels(dimrObject, subModels);
@@ -72,7 +84,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return hydroModel;
         }
 
-        private void AddModels(HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
+        private static ModelTimers GetModelTimers(IEnumerable<IDimrModel> subModels)
+        {
+            foreach (IDimrModel subModel in subModels)
+            {
+                if (subModel.IsMasterTimeStep)
+                {
+                    return new ModelTimers(subModel.StartTime, subModel.TimeStep, subModel.StopTime);
+                }
+            }
+
+            return null;
+        }
+
+        private IEnumerable<IDimrModel> GetSubModels(ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
         {
             foreach (dimrComponentXML component in dimrObject.component)
             {
@@ -102,39 +127,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                     object importedItem = importer.ImportItem(filePath);
 
-                    if (!(importedItem is IActivity subModel))
+                    if (!(importedItem is IDimrModel subModel))
                     {
                         logHandler.ReportErrorFormat(Resources.HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_, filePath);
                         continue;
                     }
 
                     RenameSubModelWhenNeeded(subModel, component.name);
-                    SetHydroModelProperties(hydroModel, subModel, dimrObject);
+                    yield return subModel;
                 }
             }
         }
-        
-        private bool TryGetTimeValue(dimrXML dimrObject, out string time)
-        {
-            time = null;
-            
-            dimrParallelXML dimrParallel = dimrObject.control.OfType<dimrParallelXML>().FirstOrDefault();
-            if (dimrParallel == null)
-            {
-                return false;
-            } 
-            
-            dimrStartGroupXML startGroupObject = dimrParallel.Items.OfType<dimrStartGroupXML>().FirstOrDefault();
-            if (startGroupObject == null)
-            {
-                logHandler.ReportError(Resources.HydroModelConverter_The_startGroup_element_is_missing);
-                return false;
-            }
 
-            time = startGroupObject.time;
-            return true;
-        }
-        
         private static void ValidateComponent(dimrComponentXML component)
         {
             if (string.IsNullOrEmpty(component.workingDir))
@@ -167,7 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             logHandler.ReportInfo($"No importer found for extension: {extension}");
         }
 
-        private void RenameSubModelWhenNeeded(IActivity subModel, string componentName)
+        private void RenameSubModelWhenNeeded(IDimrModel subModel, string componentName)
         {
             if (subModel.Name == componentName)
             {
@@ -178,25 +182,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             subModel.Name = componentName;
         }
 
-        private void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel, dimrXML dimrObject)
+        private static void AddModelSubRegion(HydroModel hydroModel, IDimrModel subModel)
         {
             if (subModel is IHydroModel hydroModelSubModel && hydroModelSubModel.Region != null)
             {
                 hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
-            }
-
-            hydroModel.Activities.Add(subModel);
-            
-            if (!(subModel is IDimrModel dimrModel))
-            {
-                logHandler.ReportErrorFormat(Resources.HydroModelConverter_The_imported_model_is_not_a_dimr_model, subModel.Name);
-            }
-            else if (dimrModel.IsMasterTimeStep && TryGetTimeValue(dimrObject, out string timeStr) && 
-                     DimrXmlTimeParser.TryParse(dimrModel.StartTime, timeStr, logHandler, out ModelTimers timers)) 
-            {
-                hydroModel.StartTime = timers.StartTime;
-                hydroModel.TimeStep = timers.TimeStep;
-                hydroModel.StopTime = timers.StopTime;
             }
         }
 

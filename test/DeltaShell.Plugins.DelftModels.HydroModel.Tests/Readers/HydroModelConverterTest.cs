@@ -333,7 +333,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         public void ConvertingDimrXmlOfAHydroModelWithSubModelRegionIsNull_ThenTheHydroModelShouldBeReturnedAndRegionOfSubModelIsNotAddedToRegionOfHydroModel()
         {
             // Given
-            var modelWithNullRegion = Substitute.For<IHydroModel>();
+            var modelWithNullRegion = Substitute.For<IHydroModel, IDimrModel>();
             modelWithNullRegion.Region.ReturnsNull();
 
             var dimrFileImporter = Substitute.For<IDimrModelFileImporter>();
@@ -366,13 +366,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
-        public void Convert_SetsTheCorrectTimesOnTheHydroModel()
+        public void Convert_SetsTheTimesFromTheMasterModelOnTheHydroModel()
         {
             // Setup
             const string masterFileExtension = "some_extension";
             const string timeElementValue = "86400 1200 172800";
 
-            IDimrModel model = CreateDimrModel(DateTime.Today);
+            var startTime = new DateTime(2023, 6, 22);
+            var timeStep = new TimeSpan(0, 1, 0);
+            var stopTime = startTime.AddDays(1);
+            IDimrModel model = CreateDimrModel(startTime, timeStep, stopTime);
 
             IDimrModelFileImporter dimrImporter = CreateDimrImporter(masterFileExtension, model);
 
@@ -385,97 +388,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             HydroModel hydroModel = converter.Convert(dimrXml, "path/to/the/dimr/config.xml", new List<IDimrModelFileImporter> {dimrImporter});
 
             // Assert
-            Assert.That(hydroModel.StartTime, Is.EqualTo(DateTime.Today.AddSeconds(86400)));
-            Assert.That(hydroModel.TimeStep, Is.EqualTo(TimeSpan.FromSeconds(1200)));
-            Assert.That(hydroModel.StopTime, Is.EqualTo(DateTime.Today.AddSeconds(172800)));
+            Assert.That(hydroModel.StartTime, Is.EqualTo(startTime));
+            Assert.That(hydroModel.TimeStep, Is.EqualTo(timeStep));
+            Assert.That(hydroModel.StopTime, Is.EqualTo(stopTime));
 
             Assert.That(loggingHandler.ReceivedCalls(), Is.Empty);
         }
 
-        [Test]
-        public void Convert_ImportedModelNotADimrModel_LogsError()
-        {
-            // Setup
-            const string masterFileExtension = "some_extension";
-            const string timeElementValue = "86400 1200 172800";
-
-            var model = Substitute.For<IActivity>();
-            model.Name = "some_name";
-
-            IDimrModelFileImporter dimrImporter = CreateDimrImporter(masterFileExtension, model);
-
-            dimrXML dimrXml = CreateDimrXml(masterFileExtension, timeElementValue);
-
-            var loggingHandler = Substitute.For<ILogHandler>();
-            var converter = new HydroModelConverter(loggingHandler);
-
-            // Call
-            converter.Convert(dimrXml, "path/to/the/dimr/config.xml", new List<IDimrModelFileImporter> {dimrImporter});
-
-            // Assert
-            Assert.That(loggingHandler.ReceivedCalls(), Has.Length.EqualTo(1));
-            loggingHandler.Received(1).ReportErrorFormat("The imported model '{0}' is not a dimr model.", model.Name);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(Convert_MissingElement_Cases))]
-        public void Convert_MissingElement_HandlesErrorCorrectly(object[] controlElement, Action<ILogHandler> assertAction)
-        {
-            // Setup
-            const string masterFileExtension = "some_extension";
-
-            IDimrModel model = CreateDimrModel(DateTime.Today);
-
-            IDimrModelFileImporter dimrImporter = CreateDimrImporter(masterFileExtension, model);
-
-            var dimrXml = new dimrXML
-            {
-                component = new[]
-                {
-                    new dimrComponentXML
-                    {
-                        workingDir = "some_dir",
-                        inputFile = $"model_file.{masterFileExtension}"
-                    }
-                },
-                control = controlElement
-            };
-
-            var loggingHandler = Substitute.For<ILogHandler>();
-            var converter = new HydroModelConverter(loggingHandler);
-
-            // Call
-            converter.Convert(dimrXml, "path/to/the/dimr/config.xml", new List<IDimrModelFileImporter> {dimrImporter});
-
-            // Assert
-            assertAction.Invoke(loggingHandler);
-        }
-
-        private static IEnumerable<TestCaseData> Convert_MissingElement_Cases()
-        {
-            void ValidateReportsMissingStartGroup(ILogHandler logHandlerMock)
-            {
-                const string expectedError = "The <startGroup> element is missing from the dimr config.";
-                Assert.That(logHandlerMock.ReceivedCalls(), Has.Length.EqualTo(1));
-                logHandlerMock.Received(1).ReportError(expectedError);
-
-            }
-            yield return new TestCaseData(
-                new object[] { new dimrParallelXML {Items = new object[0]} },
-                (Action<ILogHandler>) ValidateReportsMissingStartGroup);
-
-            void ValidateReportsNoErrorWhenMissingParallelElement(ILogHandler logHandlerMock) =>
-                logHandlerMock.DidNotReceiveWithAnyArgs().ReportError("");
-            yield return new TestCaseData(
-                new object[0],
-                (Action<ILogHandler>) ValidateReportsNoErrorWhenMissingParallelElement);
-        }
-
-        private static IDimrModel CreateDimrModel(DateTime startTime)
+        private static IDimrModel CreateDimrModel(DateTime startTime, TimeSpan timeStep, DateTime stopTime)
         {
             IDimrModel model = Substitute.For<IDimrModel, IActivity>();
             model.IsMasterTimeStep.Returns(true);
             model.StartTime.Returns(startTime);
+            model.TimeStep.Returns(timeStep);
+            model.StopTime.Returns(stopTime);
             return model;
         }
 

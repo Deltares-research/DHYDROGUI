@@ -296,24 +296,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The imported model &apos;{0}&apos; is not a dimr model..
-        /// </summary>
-        internal static string HydroModelConverter_The_imported_model_is_not_a_dimr_model {
-            get {
-                return ResourceManager.GetString("HydroModelConverter_The_imported_model_is_not_a_dimr_model", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The &lt;startGroup&gt; element is missing from the dimr config..
-        /// </summary>
-        internal static string HydroModelConverter_The_startGroup_element_is_missing {
-            get {
-                return ResourceManager.GetString("HydroModelConverter_The_startGroup_element_is_missing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Start time must be earlier than stop time.
         /// </summary>
         public static string HydroModelTimeSettingsViewModel_DetermineErrorText_Start_time_must_be_earlier_than_stop_time {

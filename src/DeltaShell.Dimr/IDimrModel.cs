@@ -11,7 +11,7 @@ namespace DeltaShell.Dimr
     /// model which can be run with the <see cref="DimrRunner"/>.
     /// </summary>
     /// <seealso cref="IModel" />
-    public interface IDimrModel : IModel
+    public interface IDimrModel : ITimeDependentModel
     {
         /// <summary>
         /// Gets the name of the library.
@@ -62,12 +62,7 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// Gets or sets the current time.
         /// </summary>
-        DateTime CurrentTime { get; set; }
-
-        /// <summary>
-        /// Gets the start time.
-        /// </summary>
-        DateTime StartTime { get; }
+        new DateTime CurrentTime { get; set; }
 
         /// <summary>
         /// Gets or sets the status of the <see cref="IDimrModel"/>.
