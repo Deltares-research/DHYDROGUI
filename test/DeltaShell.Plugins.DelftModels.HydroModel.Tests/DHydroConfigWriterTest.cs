@@ -74,6 +74,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        public void CreateConfigDocument_ExportsStopTimeAsDummyValueInTimeElement()
+        {
+            // Setup
+            var writer = new DHydroConfigWriter();
+            HydroModel hydroModel = BuildCoupledDemoModel();
+            
+            // Call
+            XDocument xmlDocument = writer.CreateConfigDocument(hydroModel);
+            
+            // Assert
+            XElement timeElement = GetXElement(xmlDocument, "control", "parallel", "startGroup", "time");
+            Assert.That(timeElement.Value, Is.EqualTo("0 300 99999999"));
+        }
+
+        [Test]
         public void WriteDocument_RTC_FM_HasLoggerElement()
         {
             HydroModel hydroModel = BuildCoupledDemoModel();
@@ -276,6 +291,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 return false;
             }
+        }
+
+        private static XElement GetXElement(XDocument document, params string[] path)
+        {
+            var pathQueue = new Queue<string>(path);
+            string name = pathQueue.Dequeue();
+            XElement element = document.Descendants().Single(desc => desc.Name.LocalName == name);
+            return GetXElement(element, pathQueue);
+        }
+
+        private static XElement GetXElement(XElement root, Queue<string> path)
+        {
+            if (!path.Any())
+            {
+                return root;
+            }
+
+            string name = path.Dequeue();
+            XElement element = root.Descendants().Single(d => d.Name.LocalName == name);
+            return GetXElement(element, path);
         }
 
         #endregion

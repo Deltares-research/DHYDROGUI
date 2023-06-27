@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         private static readonly XNamespace DHyd = "http://schemas.deltares.nl/dimr";
 
         private static readonly XName RootName = "dimrConfig";
+        private const double stopTimeDummy = 99999999; // the stop time in the dimr configuration is never used by the kernel or the GUI.
 
         public DHydroConfigWriter()
         {
@@ -254,7 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                             {
                                 var timeElement = new XElement(DHyd + "time");
                                 double startTime = (timeDependentModel.StartTime - refTime.Value).TotalSeconds;
-                                double stopTime = (timeDependentModel.StopTime - refTime.Value).TotalSeconds;
+                                double stopTime = stopTimeDummy;
                                 double timeStep = timeDependentModel.TimeStep.TotalSeconds;
                                 timeElement.Add(string.Join(" ", new[]
                                 {
