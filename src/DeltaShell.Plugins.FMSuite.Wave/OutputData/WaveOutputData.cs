@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
         public IEventedList<ReadOnlyTextFileData> DiagnosticFiles { get; } = new EventedList<ReadOnlyTextFileData>();
         public IEventedList<ReadOnlyTextFileData> SpectraFiles { get; } = new EventedList<ReadOnlyTextFileData>();
+        public IEventedList<ReadOnlyTextFileData> SwanFiles { get; } = new EventedList<ReadOnlyTextFileData>();
         public IEventedList<IWavmFileFunctionStore> WavmFileFunctionStores { get; } = new EventedList<IWavmFileFunctionStore>();
         public IEventedList<IWavhFileFunctionStore> WavhFileFunctionStores { get; } = new EventedList<IWavhFileFunctionStore>();
 
@@ -60,6 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
            
             ConnectDiagnosticFiles(dataSourceInfo, logHandler);
             ConnectSpectraFiles(dataSourceInfo, logHandler);
+            ConnectSwanFiles(dataSourceInfo, logHandler);
             ConnectWavmFileFunctionStores(dataSourceInfo, logHandler);
             ConnectWavhFileFunctionStores(dataSourceInfo, logHandler);
         }
@@ -102,6 +104,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
         private void ConnectSpectraFiles(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
             SpectraFiles.AddRange(harvester.HarvestSpectraFiles(dataSourceInfo, logHandler));
+        
+        private void ConnectSwanFiles(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
+            SwanFiles.AddRange(harvester.HarvestSwanFiles(dataSourceInfo, logHandler));
 
         private void ConnectWavmFileFunctionStores(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
             WavmFileFunctionStores.AddRange(harvester.HarvestWavmFileFunctionStores(dataSourceInfo, logHandler));
@@ -114,6 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             // Validate text files
             RemoveTextFileDataWithoutFiles(DiagnosticFiles);
             RemoveTextFileDataWithoutFiles(SpectraFiles);
+            RemoveTextFileDataWithoutFiles(SwanFiles);
 
             // Validate function stores
             WavmFileFunctionStores.RemoveAllWhere(fs => !File.Exists(Path.Combine(DataSourcePath, Path.GetFileName(fs.Path))));
@@ -139,6 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             DiagnosticFiles.Clear();
             SpectraFiles.Clear();
+            SwanFiles.Clear();
 
             foreach (IWavmFileFunctionStore store in WavmFileFunctionStores)
             {

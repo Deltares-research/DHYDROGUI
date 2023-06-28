@@ -119,6 +119,54 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             IEnumerable<ReadOnlyTextFileData> children = outputFolder.ChildItems.Cast<ReadOnlyTextFileData>();
             Assert.That(children, Is.EquivalentTo(spectraFiles));
         }
+        
+        [Test]
+        public void GetChildNodeObjects_SwanFilesEmpty_ReturnsNoSwanOutputFolder()
+        {
+            // Setup
+            var nodePresenter = new WaveOutputDataNodePresenter();
+            var node = Substitute.For<ITreeNode>();
+            var nodeData = Substitute.For<IWaveOutputData>();
+
+            nodeData.SwanFiles.Returns(new EventedList<ReadOnlyTextFileData>());
+
+            // Call
+            List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
+                                               .Cast<object>()
+                                               .ToList();
+
+            // Assert
+            object outputFolder = result.FirstOrDefault(x => x is TreeFolder tf && tf.Text == "SWAN input files");
+            Assert.That(outputFolder, Is.Null);
+        }
+
+        [Test]
+        public void GetChildNodeObjects_SwanFilesNotEmpty_ReturnsSwanOutputFolder()
+        {
+            // Setup
+            var nodePresenter = new WaveOutputDataNodePresenter();
+            var node = Substitute.For<ITreeNode>();
+            var nodeData = Substitute.For<IWaveOutputData>();
+
+            var swanFiles = new EventedList<ReadOnlyTextFileData>
+            {
+                new ReadOnlyTextFileData("INPUT_1_20060105_000000", "PROJECT 1", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("INPUT_1_20060105_000000", "PROJECT 2", ReadOnlyTextFileDataType.Default)
+            };
+            nodeData.SwanFiles.Returns(swanFiles);
+
+            // Call
+            List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
+                                               .Cast<object>()
+                                               .ToList();
+
+            // Assert
+            var outputFolder = result.FirstOrDefault(x => x is TreeFolder tf && tf.Text == "SWAN input files") as TreeFolder;
+            Assert.That(outputFolder, Is.Not.Null);
+
+            IEnumerable<ReadOnlyTextFileData> children = outputFolder.ChildItems.Cast<ReadOnlyTextFileData>();
+            Assert.That(children, Is.EquivalentTo(swanFiles));
+        }
 
         [Test]
         public void GetChildNodeObjects_WavmFileFunctionStoresEmpty_ReturnsNoMapFilesOutputFolder()

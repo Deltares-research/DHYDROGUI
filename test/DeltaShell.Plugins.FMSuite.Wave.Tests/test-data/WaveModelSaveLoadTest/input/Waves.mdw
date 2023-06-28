@@ -41,6 +41,7 @@
     TraceCalls            = false               
     MapWriteNetCDF        = true                
     NetCDFSinglePrecision = false               
+    KeepINPUT             = true                
 [Constants]
     WaterLevelCorrection  = 0                   
     Gravity               = 9.81                

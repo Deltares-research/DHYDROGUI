@@ -136,6 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
             OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
+            OutputSwanFiles = new EventedList<ReadOnlyTextFileData>();
             OutputWavmFileFunctionStores = new EventedList<IWavmFileFunctionStore>();
             OutputWavhFileFunctionStores = new EventedList<IWavhFileFunctionStore>();
 
@@ -146,6 +147,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 SyncHelper.GetSyncNotifyCollectionChangedEventHandler(OutputDiagnosticFiles);
             WaveOutputData.SpectraFiles.CollectionChanged +=
                 SyncHelper.GetSyncNotifyCollectionChangedEventHandler(OutputSpectraFiles);
+            WaveOutputData.SwanFiles.CollectionChanged +=
+                SyncHelper.GetSyncNotifyCollectionChangedEventHandler(OutputSwanFiles);
             WaveOutputData.WavmFileFunctionStores.CollectionChanged +=
                 SyncHelper.GetSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
             WaveOutputData.WavhFileFunctionStores.CollectionChanged +=
@@ -421,6 +424,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </remarks>
         [Aggregation]
         public IEventedList<ReadOnlyTextFileData> OutputSpectraFiles { get; private set; }
+        
+        /// <summary>
+        /// Gets the output SWAN files.
+        /// </summary>
+        /// <remarks>
+        /// This <see cref="IEventedList{ReadOnlyTextFileData}"/> is synced
+        /// with <see cref="WaveOutputData"/> SWAN files. However any
+        /// changes to this evented list will *not* be reflected in the
+        /// output data. As such it is strongly recommended to use the
+        /// <see cref="WaveOutputData"/> directly.
+        /// </remarks>
+        [Aggregation]
+        public IEventedList<ReadOnlyTextFileData> OutputSwanFiles { get; private set; }
 
         /// <summary>
         /// Gets the output <see cref="WavmFileFunctionStore"/> objects.
@@ -825,6 +841,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             foreach (ReadOnlyTextFileData spectraFile in WaveOutputData.SpectraFiles)
             {
                 yield return spectraFile;
+            }
+            
+            foreach (ReadOnlyTextFileData swanFile in WaveOutputData.SwanFiles)
+            {
+                yield return swanFile;
             }
 
             foreach (IWavmFileFunctionStore wavmFileFunctionStore in WaveOutputData.WavmFileFunctionStores)

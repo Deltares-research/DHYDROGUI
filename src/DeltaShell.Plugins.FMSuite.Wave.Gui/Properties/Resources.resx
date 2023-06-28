@@ -262,4 +262,7 @@
   <data name="WaveOutputDataNodePresenter_His_Files" xml:space="preserve">
     <value>His Files</value>
   </data>
+  <data name="WaveOutputDataNodePresenter_Swan_Input_Files" xml:space="preserve">
+    <value>SWAN input files</value>
+  </data>
 </root>

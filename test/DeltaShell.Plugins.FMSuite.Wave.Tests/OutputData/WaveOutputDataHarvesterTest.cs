@@ -302,6 +302,83 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 Assert.That(result, Is.EquivalentTo(expectedDiagnosticFiles).Using(new ReadOnlyTextFileDataEqualityComparer()));
             }
         }
+        
+        [Test]
+        public void HarvestSwanFiles_DirectoryInfoNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
+
+            // Call | Assert
+            void Call() => harvester.HarvestSwanFiles(null);
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("outputDataDirectory"));
+        }
+
+        public static IEnumerable<TestCaseData> GetHarvestSwanFilesData()
+        {
+            List<ReadOnlyTextFileData> swanFiles1 =
+                Enumerable.Range(0, 3)
+                          .Select(i => new ReadOnlyTextFileData($"INPUT_1_20060105_0{i}0000", $"PROJECT {i}", ReadOnlyTextFileDataType.Default))
+                          .ToList();
+            List<ReadOnlyTextFileData> swanFiles2 =
+                Enumerable.Range(0, 3)
+                          .Select(i => new ReadOnlyTextFileData($"INPUT_2_20060105_0{i}0000", $"PROJECT {i}", ReadOnlyTextFileDataType.Default))
+                          .ToList();
+            
+            var invalidFiles = new[]
+            {
+                new ReadOnlyTextFileData("INPUT_1_20060105_000000.swan", "PROJECT", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("INPUT1_20060105_000000", "PROJECT", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("input_1_20060105_000000", "PROJECT", ReadOnlyTextFileDataType.Default)
+            };
+
+            var otherFiles = new[]
+            {
+                new ReadOnlyTextFileData("swan_bat.log", "Some log data.", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("swn-diag.Waves", "Some diagnostic data", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("waves.mdw", "Swoosh swash", ReadOnlyTextFileDataType.Default),
+            };
+            
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>(), 
+                                          new List<ReadOnlyTextFileData>());
+            yield return new TestCaseData(invalidFiles, 
+                                          new List<ReadOnlyTextFileData>());
+            yield return new TestCaseData(otherFiles, 
+                                          new List<ReadOnlyTextFileData>());
+            yield return new TestCaseData(swanFiles1,
+                                          swanFiles1);
+            yield return new TestCaseData(swanFiles2,
+                                          swanFiles2);
+            yield return new TestCaseData(swanFiles1.Concat(swanFiles2).ToList(),
+                                          swanFiles1.Concat(swanFiles2).ToList());
+            yield return new TestCaseData(swanFiles1.Concat(swanFiles2)
+                                                  .Concat(otherFiles)
+                                                  .ToList(),
+                                          swanFiles1.Concat(swanFiles2).ToList());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetHarvestSwanFilesData))]
+        public void HarvestSwanFiles_ExpectedResults(IList<ReadOnlyTextFileData> inputFiles, 
+                                                     IList<ReadOnlyTextFileData> expectedFiles)
+        {
+            // Setup
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
+            using (var tempDir = new TemporaryDirectory())
+            {
+                BuildFiles(tempDir, inputFiles);
+                var outputDir = new DirectoryInfo(tempDir.Path);
+
+                // Call
+                IReadOnlyList<ReadOnlyTextFileData> result = harvester.HarvestSwanFiles(outputDir);
+
+                // Assert
+                Assert.That(result, Is.EquivalentTo(expectedFiles).Using(new ReadOnlyTextFileDataEqualityComparer()));
+            }
+        }
 
         [Test]
         public void HarvestWavmFileFunctionStores_DirectoryInfoNull_ThrowsArgumentNullException()

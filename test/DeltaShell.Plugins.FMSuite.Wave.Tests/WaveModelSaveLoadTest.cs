@@ -327,6 +327,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     Assert.That(waveModel.WaveOutputData.WavhFileFunctionStores.Any(), Is.True);
                     Assert.That(waveModel.WaveOutputData.DiagnosticFiles.Any(), Is.True);
                     Assert.That(waveModel.WaveOutputData.SpectraFiles.Any(), Is.True);
+                    Assert.That(waveModel.WaveOutputData.SwanFiles.Any(), Is.True);
 
                     string saveModelDir = tempDirectory.CreateDirectory("NewSaveLocation");
 
@@ -335,8 +336,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     waveModel.ModelSaveTo(Path.Combine(saveModelDir, "input", "Waves.mdw"), true);
 
                     // Assert
-                    Assert.That(new DirectoryInfo(Path.Combine(saveModelDir, "output")).EnumerateFileSystemInfos(), 
-                                Is.Empty);
+                    Assert.That(new DirectoryInfo(Path.Combine(saveModelDir, "output")).EnumerateFileSystemInfos(), Is.Empty);
                 }
             }
         }
@@ -374,16 +374,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     model.ModelSaveTo(Path.Combine(saveDirectory, "input", "Waves.mdw"), switchTo);
 
                     // Assert
-                    var expectedSavedWavmFile = 
-                        new FileInfo(Path.Combine(saveDirectory, "output", "wavm-Waves.nc"));
+                    var expectedSavedWavmFile = new FileInfo(Path.Combine(saveDirectory, "output", "wavm-Waves.nc"));
                     // If we do not switch to the directory, we export the model.
                     // Output data is never copied upon exporting, as such we 
                     // expect the saved wavm file function store to only exist
                     // if we switch to the folder.
                     Assert.That(expectedSavedWavmFile.Exists, Is.EqualTo(switchTo));
 
-                    var expectedOriginalWavmFile = 
-                        new FileInfo(Path.Combine(localTestDataDirectory, "output", "wavm-Waves.nc"));
+                    var expectedSavedSwanFile = new FileInfo(Path.Combine(saveDirectory, "output", "INPUT_1_20201026_000000"));
+                    Assert.That(expectedSavedSwanFile.Exists, Is.EqualTo(switchTo));
+
+                    var expectedOriginalWavmFile = new FileInfo(Path.Combine(localTestDataDirectory, "output", "wavm-Waves.nc"));
                     Assert.That(expectedOriginalWavmFile.Exists, Is.True);
 
                     string expectedWavmPath = switchTo ? expectedSavedWavmFile.FullName : expectedOriginalWavmFile.FullName;

@@ -51,6 +51,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// disconnected, then an empty list is returned.
         /// </remarks>
         IEventedList<ReadOnlyTextFileData> SpectraFiles { get; }
+        
+        /// <summary>
+        /// Gets the SWAN input files.
+        /// </summary>
+        /// <remarks>
+        /// This is guaranteed to never be null. If no SWAN files
+        /// currently exist, or the <see cref="IWaveOutputData"/> is
+        /// disconnected, then an empty list is returned.
+        /// </remarks>
+        IEventedList<ReadOnlyTextFileData> SwanFiles { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="WavmFileFunctionStore"/> objects.

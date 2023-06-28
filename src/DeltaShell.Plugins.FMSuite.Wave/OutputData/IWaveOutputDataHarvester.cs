@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
         /// Thrown when the specified <paramref name="outputDataDirectory"/>
-        /// does not exists.
+        /// does not exist.
         /// </exception>
         IReadOnlyList<ReadOnlyTextFileData> HarvestDiagnosticFiles(DirectoryInfo outputDataDirectory,
                                                                    ILogHandler logHandler = null);
@@ -44,10 +44,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
         /// Thrown when the specified <paramref name="outputDataDirectory"/>
-        /// does not exists.
+        /// does not exist.
         /// </exception>
         IReadOnlyList<ReadOnlyTextFileData> HarvestSpectraFiles(DirectoryInfo outputDataDirectory,
                                                                 ILogHandler logHandler = null);
+        
+        /// <summary>
+        /// Harvests the SWAN input files.
+        /// </summary>
+        /// <param name="outputDataDirectory">The output data directory.</param>
+        /// <param name="logHandler">Log handler to note any mistakes.</param>
+        /// <returns>
+        /// A collection of SWAN input files obtained from the specified folder.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="outputDataDirectory"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        /// Thrown when the specified <paramref name="outputDataDirectory"/>
+        /// does not exist.
+        /// </exception>
+        IReadOnlyList<ReadOnlyTextFileData> HarvestSwanFiles(DirectoryInfo outputDataDirectory,
+                                                             ILogHandler logHandler = null);
 
         /// <summary>
         /// Harvests the wave map (wavm) file function stores.
@@ -63,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
         /// Thrown when the specified <paramref name="outputDataDirectory"/>
-        /// does not exists.
+        /// does not exist.
         /// </exception>
         IReadOnlyList<IWavmFileFunctionStore> HarvestWavmFileFunctionStores(DirectoryInfo outputDataDirectory,
                                                                             ILogHandler logHandler = null);
@@ -82,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// </exception>
         /// <exception cref="DirectoryNotFoundException">
         /// Thrown when the specified <paramref name="outputDataDirectory"/>
-        /// does not exists.
+        /// does not exist.
         /// </exception>
         IReadOnlyList<IWavhFileFunctionStore> HarvestWavhFileFunctionStores(DirectoryInfo outputDataDirectory,
                                                                             ILogHandler logHandler = null);

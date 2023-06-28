@@ -36,6 +36,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
             Assert.That(outputData.SpectraFiles, Is.Not.Null);
             Assert.That(outputData.SpectraFiles, Is.Empty);
+            
+            Assert.That(outputData.SwanFiles, Is.Not.Null);
+            Assert.That(outputData.SwanFiles, Is.Empty);
 
             Assert.That(outputData.WavmFileFunctionStores, Is.Not.Null);
             Assert.That(outputData.WavmFileFunctionStores, Is.Empty);
@@ -133,6 +136,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 harvester.HarvestSpectraFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
                                               logHandler)
                          .Returns(spectraFiles);
+                
+                var swanFiles = new List<ReadOnlyTextFileData> { new ReadOnlyTextFileData("name", "content", ReadOnlyTextFileDataType.Default) };
+                harvester.HarvestSwanFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
+                                              logHandler)
+                         .Returns(swanFiles);
 
                 var wavmFileFunctionStores = new List<WavmFileFunctionStore> { null };
                 harvester.HarvestWavmFileFunctionStores(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
@@ -152,6 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 // Assert
                 Assert.That(outputData.DiagnosticFiles, Is.EquivalentTo(diagFiles));
                 Assert.That(outputData.SpectraFiles, Is.EquivalentTo(spectraFiles));
+                Assert.That(outputData.SwanFiles, Is.EquivalentTo(swanFiles));
                 Assert.That(outputData.WavmFileFunctionStores, Is.EquivalentTo(wavmFileFunctionStores));
                 Assert.That(outputData.WavhFileFunctionStores, Is.EquivalentTo(wavhFileFunctionStores));
                 Assert.That(logHandler.ReceivedCalls(), Is.Empty);
@@ -181,6 +190,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 harvester.HarvestSpectraFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
                                               logHandler)
                          .Returns(spectraFiles);
+                
+                var swanFiles = new List<ReadOnlyTextFileData>();
+                harvester.HarvestSwanFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
+                                              logHandler)
+                         .Returns(swanFiles);
 
                 var wavmFileFunctionStores = new List<WavmFileFunctionStore>();
                 harvester.HarvestWavmFileFunctionStores(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
@@ -206,6 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 Assert.That(outputData.DiagnosticFiles, Is.Empty);
                 Assert.That(outputData.SpectraFiles, Is.Empty);
+                Assert.That(outputData.SwanFiles, Is.Empty);
                 Assert.That(outputData.WavmFileFunctionStores, Is.Empty);
                 Assert.That(outputData.WavhFileFunctionStores, Is.Empty);
 
@@ -260,6 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 Assert.That(outputData.DiagnosticFiles, Is.Empty);
                 Assert.That(outputData.SpectraFiles, Is.Empty);
+                Assert.That(outputData.SwanFiles, Is.Empty);
                 Assert.That(outputData.WavmFileFunctionStores, Is.Empty);
                 Assert.That(outputData.WavhFileFunctionStores, Is.Empty);
 
@@ -321,6 +337,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 tempDir.CreateFile(Path.Combine(targetDirectoryName, spectraFileName));
                 var spectraFile = new ReadOnlyTextFileData(spectraFileName, "", ReadOnlyTextFileDataType.Default);
                 outputData.SpectraFiles.Add(spectraFile);
+                
+                const string swanFileName = "INPUT_1_20060105_000000";
+                tempDir.CreateFile(Path.Combine(targetDirectoryName, swanFileName));
+                var swanFile = new ReadOnlyTextFileData(swanFileName, "", ReadOnlyTextFileDataType.Default);
+                outputData.SwanFiles.Add(swanFile);
 
                 // Call
                 outputData.SwitchTo(dataTargetPath, logHandler);
@@ -344,6 +365,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 Assert.That(outputData.SpectraFiles, Has.Member(spectraFile));
                 Assert.That(outputData.SpectraFiles.Count, Is.EqualTo(1));
+                
+                Assert.That(outputData.SwanFiles, Has.Member(swanFile));
+                Assert.That(outputData.SwanFiles.Count, Is.EqualTo(1));
 
                 Assert.That(outputData.WavmFileFunctionStores, Has.Member(ncWavmStore));
                 Assert.That(outputData.WavmFileFunctionStores.Count, Is.EqualTo(1));
@@ -391,6 +415,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 outputData.DiagnosticFiles.Add(new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default));
                 outputData.SpectraFiles.Add(new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default));
+                outputData.SwanFiles.Add(new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default));
 
                 // Call
                 outputData.SwitchTo(dataTargetPath, logHandler);
@@ -411,6 +436,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 Assert.That(outputData.DiagnosticFiles, Is.Empty);
                 Assert.That(outputData.SpectraFiles, Is.Empty);
+                Assert.That(outputData.SwanFiles, Is.Empty);
                 Assert.That(outputData.WavmFileFunctionStores, Is.Empty);
                 Assert.That(outputData.WavhFileFunctionStores, Is.Empty);
 
@@ -494,6 +520,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             // Assert
             Assert.That(outputData.SpectraFiles, Is.SameAs(prevSpectraFiles));
             Assert.That(outputData.SpectraFiles, Is.Empty);
+        }
+        
+        [Test]
+        public void Disconnect_ResetsSwanFilesToAnEmptyList()
+        {
+            var copyHandler = Substitute.For<IWaveOutputDataCopyHandler>();
+            var harvester = Substitute.For<IWaveOutputDataHarvester>();
+
+            var outputData = new WaveOutputData(harvester, copyHandler);
+            outputData.SwanFiles.Add(new ReadOnlyTextFileData("test", "content", ReadOnlyTextFileDataType.Default));
+
+            IEventedList<ReadOnlyTextFileData> prevSwanFiles = outputData.SwanFiles;
+
+            // Call
+            outputData.Disconnect();
+
+            // Assert
+            Assert.That(outputData.SwanFiles, Is.SameAs(prevSwanFiles));
+            Assert.That(outputData.SwanFiles, Is.Empty);
         }
 
         [Test]

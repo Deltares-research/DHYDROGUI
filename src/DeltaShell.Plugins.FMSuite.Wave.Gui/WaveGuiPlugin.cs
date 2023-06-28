@@ -493,6 +493,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Gui.CommandHandler.RemoveAllViewsForItem(spectraFile);
             }
+            
+            foreach (ReadOnlyTextFileData swanFile in outputData.SwanFiles)
+            {
+                Gui.CommandHandler.RemoveAllViewsForItem(swanFile);
+            }
         }
 
         private void ConfigureWpfSettingsView(WpfSettingsView view, WaveModel waveModel)

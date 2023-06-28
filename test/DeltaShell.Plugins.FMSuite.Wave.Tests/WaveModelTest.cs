@@ -630,6 +630,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.That(result, Has.Member(spectraFile2));
             }
         }
+        
+        [Test]
+        public void GetDirectChildren_ContainsSwanFiles()
+        {
+            // Setup
+            var swanFile1 = new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default);
+            var swanFile2 = new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default);
+            using (var model = new WaveModel())
+            {
+
+                model.WaveOutputData.SwanFiles.Add(swanFile1);
+                model.WaveOutputData.SwanFiles.Add(swanFile2);
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(swanFile1));
+                Assert.That(result, Has.Member(swanFile2));
+            }
+        }
 
         [Test]
         public void GetDirectChildren_ContainsWavmFileFunctionStores()

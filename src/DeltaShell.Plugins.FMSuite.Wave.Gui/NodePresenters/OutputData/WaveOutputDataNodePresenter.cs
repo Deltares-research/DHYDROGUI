@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
                 yield return readOnlyTextFileData;
             }
 
-            if (parentNodeData.SpectraFiles.Count > 0)
+            if (parentNodeData.SpectraFiles.Any())
             {
                 yield return new TreeFolder(parentNodeData,
                                             parentNodeData.SpectraFiles,
@@ -52,6 +52,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
                 yield return new TreeFolder(parentNodeData, 
                                             parentNodeData.WavhFileFunctionStores.Where(x => x.Functions.Any()),
                                             Properties.Resources.WaveOutputDataNodePresenter_His_Files,
+                                            FolderImageType.None);
+            }
+            
+            if (parentNodeData.SwanFiles.Any())
+            {
+                yield return new TreeFolder(parentNodeData,
+                                            parentNodeData.SwanFiles,
+                                            Properties.Resources.WaveOutputDataNodePresenter_Swan_Input_Files,
                                             FolderImageType.None);
             }
         }

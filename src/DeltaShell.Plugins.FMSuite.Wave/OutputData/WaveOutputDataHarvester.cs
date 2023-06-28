@@ -45,6 +45,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         {
             return HarvestTextFiles(IsSpectraFile, outputDataDirectory, logHandler);
         }
+        
+        public IReadOnlyList<ReadOnlyTextFileData> HarvestSwanFiles(DirectoryInfo outputDataDirectory,
+                                                                    ILogHandler logHandler = null)
+        {
+            return HarvestTextFiles(IsSwanFile, outputDataDirectory, logHandler);
+        }
 
         public IReadOnlyList<IWavmFileFunctionStore> HarvestWavmFileFunctionStores(DirectoryInfo outputDataDirectory,
                                                                                    ILogHandler logHandler = null)
@@ -121,6 +127,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         {
             return fileInfo.Extension == WaveOutputConstants.sp1Extension ||
                    fileInfo.Extension == WaveOutputConstants.sp2Extension;
+        }
+        
+        private static bool IsSwanFile(FileInfo fileInfo)
+        {
+            return fileInfo.Name.StartsWith(WaveOutputConstants.SwanInputFilePrefix) &&
+                   fileInfo.Extension == string.Empty;
         }
 
         private static bool IsWavmFileFunctionStore(FileInfo fileInfo)

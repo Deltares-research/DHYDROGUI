@@ -17,6 +17,11 @@
         public const string SwanDiagnosticFilePrefix = "swn-diag.";
 
         /// <summary>
+        /// The prefix of the SWAN input file produced by the D-Waves kernel.
+        /// </summary>
+        public const string SwanInputFilePrefix = "INPUT_";
+
+        /// <summary>
         /// The .sp1 extension, used by spectra files produced by the SWAN kernel.
         /// </summary>
         public const string sp1Extension = ".sp1";
