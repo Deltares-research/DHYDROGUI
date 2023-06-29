@@ -8,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
@@ -340,6 +341,43 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 }
             }
         }
+        
+        [Test]
+        public void LoadWaveModel_WithOutput_ThenOutputIsConnected()
+        {
+            // Setup
+            string testDataDirectory = TestHelper.GetTestFilePath("WaveModelSaveLoadTest");
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string localTestDataDirectory = tempDirectory.CopyDirectoryToTempDirectory(testDataDirectory);
+
+                string mdwFilePath = Path.Combine(localTestDataDirectory, "input", "Waves.mdw");
+
+                // Call
+                using (var waveModel = new WaveModel(mdwFilePath))
+                {
+
+                    // Assert
+                    string outputDirectory = Path.Combine(localTestDataDirectory, "output");
+                    Assert.That(waveModel.WaveOutputData.IsConnected, Is.True);
+
+                    Assert.That(waveModel.WaveOutputData.WavmFileFunctionStores.Any(), Is.True);
+                    Assert.That(waveModel.WaveOutputData.WavmFileFunctionStores.Single().Path, Is.EqualTo(Path.Combine(outputDirectory, "wavm-Waves.nc")));
+
+                    Assert.That(waveModel.WaveOutputData.WavhFileFunctionStores.Any(), Is.True);
+                    Assert.That(waveModel.WaveOutputData.WavhFileFunctionStores.Single().Path, Is.EqualTo(Path.Combine(outputDirectory, "wavh-Waves.nc")));
+
+                    Assert.That(waveModel.WaveOutputData.DiagnosticFiles.Any(), Is.True);
+                    AssertReadOnlyTextFileData(waveModel.WaveOutputData.DiagnosticFiles, "swan_bat.log", "swn-diag.Waves");
+
+                    Assert.That(waveModel.WaveOutputData.SpectraFiles.Any(), Is.True);
+                    AssertReadOnlyTextFileData(waveModel.WaveOutputData.SpectraFiles, "Waves.sp1", "Waves.sp2");
+
+                    Assert.That(waveModel.WaveOutputData.SwanFiles.Any(), Is.True);
+                    AssertReadOnlyTextFileData(waveModel.WaveOutputData.SwanFiles, "INPUT_1_20201026_000000");
+                }
+            }
+        }
 
         [Test]
         public void ModelSaveTo_MdwFilePathUnderRoot_ThrowsInvalidOperationException()
@@ -409,6 +447,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Plugins.Add(new NetworkEditorApplicationPlugin());
             app.Plugins.Add(new WaveApplicationPlugin());
+        }
+
+        private static void AssertReadOnlyTextFileData(IEnumerable<ReadOnlyTextFileData> files, params string[] expDocumentNames)
+        {
+            Assert.That(files, Has.Count.EqualTo(expDocumentNames.Length));
+            Assert.That(files.Select(f => f.DocumentName), Is.EquivalentTo(expDocumentNames));
         }
     }
 }
