@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(typeof(double), FMParser.GetClrType(null, "Double", ref captionField, null, 0));
             Assert.AreEqual(typeof(IList<double>), FMParser.GetClrType(null, "DoubleArray", ref captionField, null, 0));
             Assert.AreEqual(typeof(DateTime), FMParser.GetClrType(null, "DateTime", ref captionField, null, 0));
+            Assert.AreEqual(typeof(DateOnly), FMParser.GetClrType(null, "DateOnly", ref captionField, null, 0));
             Assert.AreEqual(typeof(string), FMParser.GetClrType(null, "String", ref captionField, null, 0));
             Assert.AreEqual(typeof(string), FMParser.GetClrType(null, "FileName", ref captionField, null, 0));
             Assert.AreEqual(typeof(IList<string>), FMParser.GetClrType(null, "MultipleEntriesFileName", ref captionField, null, 0));
@@ -182,6 +183,78 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             steerable.Mode = SteerableMode.External;
 
             Assert.AreEqual("REALTIME", FMParser.ToString(steerable, typeof(Steerable)));
+        }
+
+        [TestCaseSource(nameof(DateTimeConversionSuccess))]
+        public void DateTimeFromString_WhenInputIsValid_ReturnsDateTime(string input, object expectedOutput)
+        {
+            Assert.AreEqual(expectedOutput, FMParser.FromString(input, typeof(DateTime)));
+        }
+
+        [Test]
+        public static void DateTimeFromString_WhenInputIsNullOrEmpty_ReturnsNow()
+        {
+            var now = DateTime.Now;
+            var result = FMParser.ParseFMDateTime("");
+            var timeLapsed = result - now;
+            Assert.Less( timeLapsed.Seconds, 0.5d );
+        }
+
+        [TestCaseSource(nameof(DateTimeConversionFailure))]
+        public void DateTimeFromStringTest_WhenInputNotValid_ThrowsFormatException(string input)
+        {
+            Assert.Throws<FormatException>(() => FMParser.FromString(input, typeof(DateTime)));
+        }
+
+        [TestCaseSource(nameof(DateOnlyConversionSuccess))]
+        public void DateOnlyFromString_WhenInputIsValid_ReturnsDateOnly(string input, object expectedOutput)
+        {
+            Assert.AreEqual(expectedOutput, FMParser.FromString(input, typeof(DateOnly)));
+        }
+
+        [Test]
+        public static void DateOnlyFromString_WhenInputIsNullOrEmpty_ReturnsNow()
+        {
+            var now = DateOnly.FromDateTime(DateTime.Now);
+            var result = FMParser.ParseFMDateOnly("");
+            var timeLapsed = result.ToDateTime(TimeOnly.MinValue) - now.ToDateTime(TimeOnly.MinValue);
+            Assert.Less( timeLapsed.Days, 0.5d );
+        }
+
+        [TestCaseSource(nameof(DateOnlyConversionFailure))]
+        public void DateOnlyFromStringTest_WhenInputNotValid_ThrowsFormatException(string input)
+        {
+            Assert.Throws<FormatException>(() => FMParser.FromString(input, typeof(DateOnly)));
+        }
+
+        public static IEnumerable<TestCaseData> DateTimeConversionSuccess()
+        {
+            yield return new TestCaseData("20230509000000", new DateTime(2023, 05, 09));
+            yield return new TestCaseData("20221231", new DateTime(2022, 12, 31));
+            yield return new TestCaseData("20230101", new DateTime(2023, 01, 01));
+            yield return new TestCaseData("2023-05-09",new DateTime(2023,05,09));
+            yield return new TestCaseData("20230509012345", new DateTime(2023, 05, 09, 01, 23, 45));
+        }
+
+        public static IEnumerable<TestCaseData> DateTimeConversionFailure()
+        {
+            yield return new TestCaseData("20230509240000");
+            yield return new TestCaseData("20230231000000");
+            yield return new TestCaseData("2023-05-09 00:00:00");
+        }
+
+        public static IEnumerable<TestCaseData> DateOnlyConversionSuccess()
+        {
+            yield return new TestCaseData("20221231", new DateOnly(2022, 12, 31));
+            yield return new TestCaseData("20230101", new DateOnly(2023, 01, 01));
+            yield return new TestCaseData("2023-05-09",new DateOnly(2023,05,09));
+            yield return new TestCaseData("20230509000000",new DateOnly(2023,05,09));
+        }
+
+        public static IEnumerable<TestCaseData> DateOnlyConversionFailure()
+        {
+            yield return new TestCaseData("InvalidDateTime");
+            yield return new TestCaseData("20230231");
         }
 
         [Test]

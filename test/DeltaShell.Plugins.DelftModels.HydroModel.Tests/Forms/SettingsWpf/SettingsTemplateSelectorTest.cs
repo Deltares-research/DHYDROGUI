@@ -60,6 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [TestCase(typeof(double), "TextBoxTemplate")]
         [TestCase(typeof(int), "TextBoxTemplate")]
         [TestCase(typeof(DateTime), "DateTimeTemplate")]
+        [TestCase(typeof(DateOnly), "DateOnlyTemplate")]
         [TestCase(typeof(bool), "CheckboxTemplate")]
         [TestCase(typeof(TimeSpan), "TimeSpanTemplate")]
         [TestCase(typeof(IList<double>), "ListTemplate")]

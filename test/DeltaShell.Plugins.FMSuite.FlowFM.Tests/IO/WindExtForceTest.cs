@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
             var refDate = new DateTime(1981, 8, 29);
-            modelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
+            modelDefinition.SetReferenceDateAsDateTime(refDate);
 
             var windXField = UniformWindField.CreateWindXSeries();
             windXField.Data.Arguments[0].SetValues(new[]
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             writer.Write("testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
-            loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
+            loadedModelDefinition.SetReferenceDateAsDateTime(refDate);
             writer.Read("testmodel", loadedModelDefinition, "testmodel");
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
             var refDate = new DateTime(1981, 8, 29);
-            modelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
+            modelDefinition.SetReferenceDateAsDateTime(refDate);
 
             modelDefinition.WindFields.Add(GriddedWindField.CreateXField(windXFile));
             modelDefinition.WindFields.Add(GriddedWindField.CreateYField(windYFile));
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             writer.Write("testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
-            loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
+            loadedModelDefinition.SetReferenceDateAsDateTime(refDate);
             writer.Read("testmodel", loadedModelDefinition, "testmodel");
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
             var refDate = new DateTime(1981, 8, 29);
-            modelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
+            modelDefinition.SetReferenceDateAsDateTime(refDate);
 
             var windXYField = UniformWindField.CreateWindXYSeries();
             windXYField.Data.Arguments[0].SetValues(new[]
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             writer.Write("testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
-            loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
+            loadedModelDefinition.SetReferenceDateAsDateTime(refDate);
             writer.Read("testmodel", loadedModelDefinition, "testmodel");
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);

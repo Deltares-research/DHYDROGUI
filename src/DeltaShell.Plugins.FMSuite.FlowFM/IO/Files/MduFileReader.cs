@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static void ExecutePostReadActions(WaterFlowFMModelDefinition definition)
         {
             definition.GetModelProperty(KnownProperties.RefDate).Value =
-                FMParser.ParseFMDateTime(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
+                FMParser.ParseFMDateOnly(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
             definition.SetGuiTimePropertiesFromMduProperties();
             definition.UpdateHeatFluxModel();
             definition.UpdateWriteOutputSnappedFeatures();

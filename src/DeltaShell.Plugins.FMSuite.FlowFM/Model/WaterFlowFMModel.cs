@@ -307,8 +307,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public DateTime ReferenceTime
         {
-            get => (DateTime)ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
-            set => ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = value;
+            get => ModelDefinition.GetReferenceDateAsDateTime();
+            set => ModelDefinition.SetReferenceDateAsDateTime(value);
         }
 
         public IEventedList<IWindField> WindFields { get; private set; }

@@ -936,8 +936,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (structuresFileWriter != null)
             {
                 structuresFileWriter.StructureSchema = modelDefinition.StructureSchema;
-                structuresFileWriter.ReferenceDate =
-                    (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+                structuresFileWriter.ReferenceDate = modelDefinition.GetReferenceDateAsDateTime();
             }
 
             return fileWriter;
@@ -1489,7 +1488,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 var fileReader = new StructuresFile
                 {
                     StructureSchema = modelDefinition.StructureSchema,
-                    ReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+                    ReferenceDate = modelDefinition.GetReferenceDateAsDateTime()
                 };
 
                 List<StructureDAO> featuresToAdd = fileReader.ReadStructuresFromFile(structureFilePath).ToList();

@@ -55,6 +55,9 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Portable.System.DateTimeOnly">
+      <HintPath>..\..\bin\Debug\plugins\DeltaShell.Plugins.DelftModels.HydroModel.Gui\Portable.System.DateTimeOnly.dll</HintPath>
+    </Reference>
     <Reference Include="ProtoBufRemote">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
@@ -103,6 +106,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="PostSharp.Redist">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Portable.System.DateTimeOnly">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

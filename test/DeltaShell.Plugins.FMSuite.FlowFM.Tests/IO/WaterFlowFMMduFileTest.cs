@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -20,6 +21,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -1420,6 +1422,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(0));
             new MduFile().Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(1));
+        }
+        
+        [Test]
+        public void GivenNonZeroStartAndStopDateTimes_StartTimeAndStopTimeRelativeToReferenceDateAreSavedAndRestoredCorrectly()
+        {
+            var pathWithoutExtension = Path.GetTempFileName();
+            var mduFilePath = string.Concat(pathWithoutExtension, ".mdu");
+            var mduFile = new MduFile();
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            Assert.NotNull(mduDir);
+
+            using (var model = new WaterFlowFMModel(){ Area = new HydroArea(),})
+            {
+                var area = model.Area;
+
+                var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var allFixedWeirsAndCorrespondingProperties = Substitute.For<IEnumerable<ModelFeatureCoordinateData<FixedWeir>>>();
+                var allFixedWeirsAndCorrespondingPropertiesDict = Substitute.For<IDictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>>();
+                
+
+                DateOnly refDate = new DateOnly(1966, 12, 10);
+                DateTime startTime = new DateTime(1966,12,10,0,02,00);
+                long relativeStartTimeInSeconds = 2 * 60;
+                DateTime stopTime = new DateTime(1966,12,10,0,04,00);
+                long relativeStopTimeInSeconds = 4 * 60;
+                modelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
+                modelDefinition.GetModelProperty(GuiProperties.StartTime).Value = startTime;
+                modelDefinition.GetModelProperty(GuiProperties.StopTime).Value = stopTime;
+
+                // Mimic what MduFile.Write does to calculate the TStart and TStop
+                modelDefinition.SetMduTimePropertiesFromGuiProperties();
+                Assert.Multiple(() =>
+                    {
+                        Assert.AreEqual(relativeStartTimeInSeconds, modelDefinition.GetModelProperty(KnownProperties.TStart).Value);
+                        Assert.AreEqual(relativeStopTimeInSeconds, modelDefinition.GetModelProperty(KnownProperties.TStop).Value);
+                    }
+                );
+
+                // Write the stuff to file and read it back into another model
+                mduFile.Write(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
+
+                var newMduFile = new MduFile();
+                using (var newModel = new WaterFlowFMModel() { Area = area })
+                {
+                    var newModelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+                    newMduFile.Read(mduFilePath, newModelDefinition, area, allFixedWeirsAndCorrespondingPropertiesDict);
+
+                    // Expect failing assertions for refDate, startTime and stopTime
+                    Assert.Multiple(() =>
+                    {
+                        Assert.AreEqual(refDate, newModelDefinition.GetModelProperty(KnownProperties.RefDate).Value);
+                        Assert.AreEqual(relativeStartTimeInSeconds, newModelDefinition.GetModelProperty(KnownProperties.TStart).Value);
+                        Assert.AreEqual(relativeStopTimeInSeconds, newModelDefinition.GetModelProperty(KnownProperties.TStop).Value);
+                        Assert.AreEqual(startTime,newModelDefinition.GetModelProperty(GuiProperties.StartTime).Value);
+                        Assert.AreEqual(stopTime,newModelDefinition.GetModelProperty(GuiProperties.StopTime).Value);
+                    });
+                }
+            }
+            FileUtils.DeleteIfExists(mduFilePath);
         }
 
         #region TestHelpers

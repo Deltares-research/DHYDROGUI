@@ -96,6 +96,10 @@
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Portable.System.DateTimeOnly">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="PostSharp">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

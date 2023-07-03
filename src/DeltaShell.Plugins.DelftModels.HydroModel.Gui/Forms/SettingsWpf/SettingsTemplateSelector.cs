@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         private const string subCategoryCustomTemplateKey = "SubCategoryCustomTemplate";
         private const string textBoxTemplateKey = "TextBoxTemplate";
         private const string dateTemplateKey = "DateTemplate";
+        private const string dateOnlyTemplateKey = "DateOnlyTemplate";
         private const string dateTimeTemplateKey = "DateTimeTemplate";
         private const string checkboxTemplateKey = "CheckboxTemplate";
         private const string timeSpanTemplateKey = "TimeSpanTemplate";
@@ -29,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {typeof(double), textBoxTemplateKey},
             {typeof(int), textBoxTemplateKey},
             {typeof(DateTime), dateTimeTemplateKey},
+            {typeof(DateOnly),dateOnlyTemplateKey},
             {typeof(bool), checkboxTemplateKey},
             {typeof(TimeSpan), timeSpanTemplateKey},
             {typeof(IList<double>), listTemplateKey},
@@ -75,6 +77,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 {
                     return fe.FindResource(dateTemplateKey) as DataTemplate;
                 }
+            }
+
+            if (type == typeof(DateOnly))
+            {
+                return fe.FindResource(dateOnlyTemplateKey) as DataTemplate;
             }
 
             if (type.BaseType == typeof(Enum))

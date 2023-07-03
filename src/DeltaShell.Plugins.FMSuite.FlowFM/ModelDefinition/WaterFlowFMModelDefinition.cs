@@ -300,6 +300,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                                                     StringComparison.InvariantCultureIgnoreCase));
         }
 
+        public DateTime GetReferenceDateAsDateTime()
+        {
+            object value = GetModelProperty(KnownProperties.RefDate).Value;
+            var refDate = (DateOnly)value;
+            return refDate.ToDateTime(TimeOnly.MinValue);
+        }
+
+        public void SetReferenceDateAsDateTime(DateTime value)
+        {
+            DateOnly refDate = DateOnly.FromDateTime(value);
+            if (refDate.ToDateTime(TimeOnly.MinValue) != value)
+            {
+                throw new ArgumentException($"Unexpected non-zero time in ReferenceTime value {value}");
+            }
+            GetModelProperty(KnownProperties.RefDate).Value = refDate;
+
+        }
+
         public void SetMapFormatPropertyValue()
         {
             if (!UseMorphologySediment || MapFormat == MapFormatType.Ugrid)
@@ -925,8 +943,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
 
             var ticks = (long)(TimeSpan.TicksPerSecond * relativeTime * timeUnitInSeconds);
-            var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
-            return referenceDate.AddTicks(ticks);
+            var referenceDateTime = GetReferenceDateAsDateTime();
+            return referenceDateTime.AddTicks(ticks);
         }
 
         private double GetRelativeDateTime(DateTime dateTime, bool useTUnit)
@@ -946,7 +964,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 }
             }
 
-            var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
+            var referenceDate = GetReferenceDateAsDateTime();
             double ticks = dateTime.Ticks - referenceDate.Ticks;
             return ticks / TimeSpan.TicksPerSecond / numSecondsInTimeStep;
         }

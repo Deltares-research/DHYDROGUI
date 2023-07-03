@@ -133,10 +133,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public DateTime ModelReferenceDateTime
         {
-            get => (DateTime)GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate)
-                .Value;
-            set => GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value =
-                       value;
+            get => GetReferenceDateAsDateTime();
+            set => SetReferenceDateAsDateTime(value);
+        }
+
+        private DateTime GetReferenceDateAsDateTime()
+        {
+            object value = GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value;
+            var refDate = (DateOnly)value;
+            return refDate.ToDateTime(TimeOnly.MinValue);
+        }
+
+        private void SetReferenceDateAsDateTime(DateTime value)
+        {
+            DateOnly refDate = DateOnly.FromDateTime(value);
+            if (refDate.ToDateTime(TimeOnly.MinValue) != value)
+            {
+                throw new ArgumentException($"Unexpected non-zero time in ReferenceTime value {value}");
+            }
+            GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value = refDate;
+
         }
 
         public WaveDirectionalSpaceType DefaultDirectionalSpaceType =>

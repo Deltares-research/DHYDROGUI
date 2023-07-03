@@ -164,6 +164,7 @@
     <PackageReference Include="NUnit" />
     <PackageReference Include="PostSharp" GeneratePathProperty="true" />
     <PackageReference Include="PostSharp.Redist" GeneratePathProperty="true" />
+    <PackageReference Include="Portable.System.DateTimeOnly" />
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="System.Threading.Tasks.Extensions" />
   </ItemGroup>

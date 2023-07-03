@@ -21,10 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             {
                 return (bool) Value ? "true" : "false";
             }
-
-            if (PropertyDefinition.DataType == typeof(DateTime))
+            
+            if (PropertyDefinition.DataType == typeof(DateOnly))
             {
-                return ((DateTime) Value).ToString("yyyy-MM-dd");
+                return ((DateOnly) Value).ToString("yyyy-MM-dd");
             }
 
             return base.GetValueAsString();

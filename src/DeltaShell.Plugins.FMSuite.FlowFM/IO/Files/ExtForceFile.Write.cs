@@ -268,7 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IDictionary<SourceAndSink, ExtForceFileItem> sourceAndSinkItemsToWrite =
                 ExtForceFileItemFactory.GetSourceAndSinkItems(modelDefinition, PolyLineForceFileItems);
 
-            var referenceTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var referenceTime = modelDefinition.GetReferenceDateAsDateTime();
 
             foreach (KeyValuePair<SourceAndSink, ExtForceFileItem> sourceAndSink in sourceAndSinkItemsToWrite)
             {
@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
             }
 
-            var referenceTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var referenceTime = modelDefinition.GetReferenceDateAsDateTime();
 
             foreach (KeyValuePair<FlowBoundaryCondition, ExtForceFileItem> boundaryCondition in boundaryConditionsToWrite)
             {
@@ -489,7 +489,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private IEnumerable<ExtForceFileItem> WriteWindItems(WaterFlowFMModelDefinition modelDefinition)
         {
-            var referenceTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var referenceTime = modelDefinition.GetReferenceDateAsDateTime();
             string directory = GetDirectoryName();
 
             IDictionary<IWindField, ExtForceFileItem> items =
@@ -544,7 +544,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     {
                         string path = GetOtherFilePathInSameDirectory(extFilePath, extForceFileItem.FileName);
                         new TimFile().Write(path, heatFluxModel.MeteoData,
-                                            (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value);
+                                            modelDefinition.GetReferenceDateAsDateTime());
                     }
                 }
 

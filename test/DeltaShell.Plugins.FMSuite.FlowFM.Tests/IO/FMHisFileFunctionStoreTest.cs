@@ -625,7 +625,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             model.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = new TimeSpan(0, 6, 0, 0);
             model.ModelDefinition.GetModelProperty(KnownProperties.DtMax).Value = 60 * 60 * 6 * 1d;
 
-            model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = DateTime.Today;
+            model.ReferenceTime = DateTime.Today;
             model.StartTime = DateTime.Today;
             model.StopTime = DateTime.Today.AddDays(1);
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NUnit.Framework;
 
@@ -9,16 +8,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
     [TestFixture]
     public class ModelDefinitionReferenceDateTimeProviderTest
     {
-        private readonly Random random = new Random();
-
         [Test]
         public void Constructor_ExpectedResults()
         {
             // Setup
-            DateTime expectedReferenceTime = random.NextDateTime();
+            var expectedReferenceTime = new DateTime(2023, 6, 30);
 
-            var waveModelDefinition = new WaveModelDefinition();
-            waveModelDefinition.ModelReferenceDateTime = expectedReferenceTime;
+            var waveModelDefinition = new WaveModelDefinition { ModelReferenceDateTime = expectedReferenceTime };
 
             // Call
             var referenceTimeProvider = new ModelDefinitionReferenceDateTimeProvider(waveModelDefinition);
@@ -33,11 +29,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
         public void GivenAModelDefinitionReferenceDateTimeProvider_WhenTheDateIsChangedInTheModelDefinition_ThenTheTimeProviderReturnsTheNewValue()
         {
             // Given
-            DateTime initialDateTime = random.NextDateTime();
+            var initialDateTime = new DateTime(2023, 6, 29);
             var waveModelDefinition = new WaveModelDefinition {ModelReferenceDateTime = initialDateTime};
             var referenceTimeProvider = new ModelDefinitionReferenceDateTimeProvider(waveModelDefinition);
 
-            DateTime newDateTime = random.NextDateTime();
+            var newDateTime = new DateTime(2023, 6, 30);
 
             // Precondition
             Assert.That(referenceTimeProvider.ModelReferenceDateTime, Is.EqualTo(initialDateTime));

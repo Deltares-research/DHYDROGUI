@@ -191,7 +191,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         private static IEnumerable<TestCaseData> GetTestStepsForChangingModelDefinitionInputData() =>
             GetTestStepsForChangingModelDefinitionBySettingValueAsString()
                 .Concat(GetTestStepsForChangingDateTimeObjectsInModelDefinition())
-                .Concat(GetTestStepsForChangingTimeSpanObjectsInModelDefinition());
+                .Concat(GetTestStepsForChangingTimeSpanObjectsInModelDefinition())
+                .Concat(GetTestStepsForChangingDateOnlyObjectsInModelDefinition());
 
         private static IEnumerable<TestCaseData> GetTestStepsForChangingModelDefinitionBySettingValueAsString()
         {
@@ -257,7 +258,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             yield return GetTestCaseData(GuiProperties.StartTime);
             yield return GetTestCaseData(GuiProperties.StopTime);
-            yield return GetTestCaseData(KnownProperties.RefDate);
             yield return GetTestCaseData(GuiProperties.HisOutputStartTime);
             yield return GetTestCaseData(GuiProperties.HisOutputStopTime);
             yield return GetTestCaseData(GuiProperties.MapOutputStartTime);
@@ -279,6 +279,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             yield return GetTestCaseData(GuiProperties.ClassMapOutputDeltaT);
             yield return GetTestCaseData(GuiProperties.RstOutputDeltaT);
             yield return GetTestCaseData(GuiProperties.WaqOutputDeltaT);
+        }
+        
+        private static IEnumerable<TestCaseData> GetTestStepsForChangingDateOnlyObjectsInModelDefinition()
+        {
+            TestCaseData GetTestCaseData(string propertyName) =>
+                new TestCaseData(new ModelDefinitionSetValueDirectlyTestSteps(propertyName, new DateOnly()), true)
+                    .SetName($"Modifying the DateTime property '{propertyName}' should mark the output out of sync.");
+            
+            yield return GetTestCaseData(KnownProperties.RefDate);
         }
 
         private static IEnumerable<TestCaseData> GetTestStepsForHydroAreaObjects()

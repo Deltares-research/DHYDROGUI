@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition)
         {
-            var refDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var refDate = modelDefinition.GetReferenceDateAsDateTime();
 
             ModelProperty modelProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             bndExtFilePath = filePath;

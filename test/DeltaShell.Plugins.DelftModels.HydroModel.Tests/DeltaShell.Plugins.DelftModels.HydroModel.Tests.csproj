@@ -191,6 +191,7 @@
     <PackageReference Include="NUnit" />
     <PackageReference Include="PostSharp" />
     <PackageReference Include="PostSharp.Redist" />
+    <PackageReference Include="Portable.System.DateTimeOnly" />
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="SharpTestsEx" />
     <PackageReference Include="System.Threading.Tasks.Extensions" />
