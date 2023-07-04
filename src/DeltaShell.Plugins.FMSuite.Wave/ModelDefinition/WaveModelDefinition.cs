@@ -233,11 +233,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             set => GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).SetValueAsString(value);
         }
 
+        /// <summary>
+        /// Gets or sets the value of the INPUTTemplateFile property of the model definition.
+        /// The INPUTTemplateFile property defines a path to a pre-existing SWAN input file. 
+        /// </summary>
+        public string InputTemplateFilePath
+        {
+            get => InputTemplateFileProperty.GetValueAsString();
+            set => InputTemplateFileProperty.SetValueAsString(value);
+        }
+
         public bool WaveSetup
         {
             get => (bool)GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value;
             set => GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value = value;
         }
+
+        private WaveModelProperty InputTemplateFileProperty => GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.InputTemplateFile);
 
         #endregion
     }

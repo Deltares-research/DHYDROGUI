@@ -50,6 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string ReferenceDate = "ReferenceDate";
         public const string SimulationMode = "SimMode";
         public const string WaveSetup = "WaveSetup";
+        public const string InputTemplateFile = "INPUTTemplateFile";
 
         public const string LocationFile = "LocationFile";
         public const string CurveFile = "CurveFile";

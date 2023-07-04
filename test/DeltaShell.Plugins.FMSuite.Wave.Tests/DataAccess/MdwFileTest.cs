@@ -1249,9 +1249,77 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 // Assert
                 Assert.That(saveFilePath, Does.Exist);
 
-                string[] meteoFileLines = File.ReadAllLines(saveFilePath).Where(l => l.Contains(KnownWaveProperties.KeepINPUT)).ToArray();
-                Assert.That(meteoFileLines.Length, Is.EqualTo(1));
-                AssertPropertyLine(meteoFileLines[0], KnownWaveProperties.KeepINPUT, keepInput.ToString().ToLower());
+                string[] keepInputLines = File.ReadAllLines(saveFilePath).Where(l => l.Contains(KnownWaveProperties.KeepINPUT)).ToArray();
+                Assert.That(keepInputLines.Length, Is.EqualTo(1));
+                AssertPropertyLine(keepInputLines[0], KnownWaveProperties.KeepINPUT, keepInput.ToString().ToLower());
+            }
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_WithInputTemplateFile_MdwFileShouldContainCorrectInputTemplateFileNameAndFileIsCopied(bool switchTo)
+        {
+            // Setup
+            var modelDefinition = new WaveModelDefinition();
+            var timeFrameData = new TimeFrameData();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string sourceDir = tempDirectory.CreateDirectory("source");
+                string targetDir = tempDirectory.CreateDirectory("target");
+
+                const string fileName = "INPUT_1_20181018_000000";
+                string sourceFilePath = Path.Combine(sourceDir, fileName);
+                string targetFilePath = Path.Combine(targetDir, fileName);
+
+                File.WriteAllText(sourceFilePath, "");
+
+                modelDefinition.InputTemplateFilePath = sourceFilePath;
+
+                string saveFilePath = Path.Combine(targetDir, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+                Assert.That(sourceFilePath, Does.Exist);
+                Assert.That(targetFilePath, Does.Exist);
+
+                string[] inputTemplateFileLines = File.ReadAllLines(saveFilePath).Where(l => l.Contains(KnownWaveProperties.InputTemplateFile)).ToArray();
+                Assert.That(inputTemplateFileLines.Length, Is.EqualTo(1));
+                AssertPropertyLine(inputTemplateFileLines[0], KnownWaveProperties.InputTemplateFile, fileName);
+
+                Assert.That(modelDefinition.InputTemplateFilePath, Is.EqualTo(switchTo ? targetFilePath : sourceFilePath));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_WithInputTemplateFile_ModelDefinitionShouldContainInputTemplateFilePath()
+        {
+            // Setup
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                const string inputTemplateFileName = "INPUT_1_20181018_000000";
+                string[] mdwFileLines =
+                {
+                    "[General]",
+                    $"INPUTTemplateFile = {inputTemplateFileName}",
+                    "[Domain]",
+                    "[Output]",
+                };
+                string mdwFileContent = string.Join(Environment.NewLine, mdwFileLines);
+                string mdwFilePath = tempDirectory.CreateFile("waves.mdw", mdwFileContent);
+
+                // Call
+                MdwFileDTO mdwFileDTO = new MdwFile().Load(mdwFilePath);
+
+                // Assert
+                string expInputTemplateFilePath = Path.Combine(tempDirectory.Path, inputTemplateFileName);
+                Assert.That(mdwFileDTO.WaveModelDefinition.InputTemplateFilePath, Is.EqualTo(expInputTemplateFilePath));
             }
         }
 

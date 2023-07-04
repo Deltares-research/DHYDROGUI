@@ -85,5 +85,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.That(waveModelDefinition.FeatureContainer, Is.Not.Null);
             Assert.That(waveModelDefinition.BoundaryContainer, Is.Not.Null);
         }
+
+        [Test]
+        public void SetInputTemplateFilePath_SetsTheValueOfTheInputTemplateFileProperty()
+        {
+            // Setup
+            var waveModelDefinition = new WaveModelDefinition();
+            const string value = "some_path";
+
+            // Call
+            waveModelDefinition.InputTemplateFilePath = value;
+
+            // Assert
+            WaveModelProperty property = waveModelDefinition.GetModelProperty("General", "INPUTTemplateFile");
+            Assert.That(property.Value, Is.EqualTo(value));
+        }
+
+        [Test]
+        public void GetInputTemplateFilePath_GetsTheValueOfTheInputTemplateFileProperty()
+        {
+            // Setup
+            var waveModelDefinition = new WaveModelDefinition();
+            const string value = "some_path";
+            WaveModelProperty property = waveModelDefinition.GetModelProperty("General", "INPUTTemplateFile");
+            property.Value = value;
+            
+            // Call
+            string result = waveModelDefinition.InputTemplateFilePath;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(value));
+        }
     }
 }

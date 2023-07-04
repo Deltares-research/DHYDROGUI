@@ -141,6 +141,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 CopyGridFiles(allDomains.Select(d => d.GridFileName), sourceDir, targetDir);
             }
 
+            HandleInputTemplateFile(modelDefinition, filesManager, mdwCategories);
+
             DelftIniCategory outputCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory);
             outputCategory.SetProperty(KnownWaveProperties.COMFile, modelDefinition.CommunicationsFilePath.Replace('\\', '/'));
 
@@ -240,6 +242,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 modelDefinition.FeatureContainer.ObservationCrossSections.Clear();
                 modelDefinition.FeatureContainer.ObservationCrossSections.AddRange(new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile))));
             }
+
+            SetInputTemplateFile(mdwCategories, modelDefinition, mdwDir);
 
             logHandler.LogReport();
 
@@ -1082,6 +1086,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             log.WarnFormat(Resources.MdwFile_Parsing_error_in_file__0__can_not_convert__1__to_double_property__2__has_default__3__,
                            fileName, input, property, defaultValue);
             return defaultValue;
+        }
+
+        private static void HandleInputTemplateFile(WaveModelDefinition modelDefinition, IFilesManager filesManager, List<DelftIniCategory> mdwCategories)
+        {
+            if (string.IsNullOrEmpty(modelDefinition.InputTemplateFilePath))
+            {
+                return;
+            }
+
+            DelftIniCategory generalCategory = mdwCategories.GetByName(KnownWaveCategories.GeneralCategory);
+            string fileName = Path.GetFileName(modelDefinition.InputTemplateFilePath);
+            generalCategory.SetProperty(KnownWaveProperties.InputTemplateFile, fileName);
+
+            filesManager.Add(modelDefinition.InputTemplateFilePath, s => modelDefinition.InputTemplateFilePath = s);
+        }
+
+        private static void SetInputTemplateFile(IEnumerable<DelftIniCategory> mdwCategories, WaveModelDefinition modelDefinition, string mdwDir)
+        {
+            string inputTemplateFile = mdwCategories.GetByName(KnownWaveCategories.GeneralCategory)
+                                                    .GetPropertyValue(KnownWaveProperties.InputTemplateFile);
+
+            if (!string.IsNullOrEmpty(inputTemplateFile))
+            {
+                modelDefinition.InputTemplateFilePath = Path.Combine(mdwDir, inputTemplateFile);
+            }
         }
     }
 }

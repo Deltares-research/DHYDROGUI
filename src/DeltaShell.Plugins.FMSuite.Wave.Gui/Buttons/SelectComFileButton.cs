@@ -1,4 +1,6 @@
-﻿using DelftTools.Controls;
+﻿using System;
+using DelftTools.Controls;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -24,15 +26,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
         /// We will not cover the code in this class with tests, as we cannot
         /// automate the behavior in this method, due to the OpenFileDialog.
         /// </remarks>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="input"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="input"/> is not a <see cref="WaveModel"/>.
+        /// </exception>
         public static void ButtonAction(object input)
         {
+            Ensure.NotNull(input, nameof(input));
+            
             var waveModel = input as WaveModel;
             if (waveModel == null)
             {
-                return;
+                throw new ArgumentException(string.Format(Resources.Expected_argument_0_to_be_of_type_1_, nameof(input), typeof(WaveModel)));
             }
 
-            string selectedFilePath = new FileDialogService().SelectFile(string.Format(Resources.SelectComFileButton_ButtonAction_Communication_files___0_, FileConstants.ComFileExtension));
+            string selectedFilePath = new FileDialogService().SelectFile(string.Format(Resources.ComFileFilter_0_, FileConstants.ComFileExtension));
             if (selectedFilePath == null)
             {
                 return;

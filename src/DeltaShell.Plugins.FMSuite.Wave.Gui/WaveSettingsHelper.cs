@@ -38,9 +38,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         private static void ModifyWaveSettings(IEnumerable<WpfGuiCategory> wpfGuiCategories)
         {
-            WpfGuiProperty comFileGuiProperty = wpfGuiCategories.SelectMany(c => c.Properties)
-                                                                .Single(p => p.Name == KnownWaveProperties.COMFile);
-            comFileGuiProperty.CustomCommand.ButtonFunction = SelectComFileButton.ButtonAction;
+            SetButtonFunction(wpfGuiCategories, KnownWaveProperties.COMFile, SelectComFileButton.ButtonAction);
+            SetButtonFunction(wpfGuiCategories, KnownWaveProperties.InputTemplateFile, SelectInputTemplateFileButton.ButtonAction);
+        }
+
+        private static void SetButtonFunction(IEnumerable<WpfGuiCategory> wpfGuiCategories, string propertyName, Action<object> buttonAction)
+        {
+            WpfGuiProperty property = wpfGuiCategories.SelectMany(c => c.Properties)
+                                                                          .Single(p => p.Name == propertyName);
+            property.CustomCommand.ButtonFunction = buttonAction;
         }
 
         private static void AddCustomWaveSettings(WaveModel model, IGui gui, IEnumerable<WpfGuiCategory> wpfCategories)

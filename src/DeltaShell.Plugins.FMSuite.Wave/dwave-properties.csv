@@ -21,6 +21,7 @@ General,ProjectName,General,General Settings,Project name,String,,,,,,,,,,,
 General,ProjectNr,General,General Settings,Project number,String,,,,,,,,,,,
 General,ReferenceDate,General,General Settings,Reference date,DateOnly,2000-01-01,,,,,,,,,, [YYYY-MM-DD]
 General,DirConvention,General,General Settings,Directional convention:nautical|cartesian,nautical|cartesian,nautical,,,,,,,,,Direction specification convention,
+General,INPUTTemplateFile,General,General Settings,INPUT template file,FileName,,,,,,,,,,Path to pre-existing SWAN INPUT file,
 Output,COMFile,General,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
 Output,WriteCOM,General,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),
 Output,COMWriteInterval,General,Communication,Communication interval,Double,60.0,,,,WriteCOM,,,,,Interval for writing data to communication file(s) in minutes, min

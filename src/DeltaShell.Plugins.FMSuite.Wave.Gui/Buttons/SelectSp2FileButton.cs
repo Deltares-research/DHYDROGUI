@@ -1,4 +1,6 @@
-﻿using DelftTools.Controls;
+﻿using System;
+using DelftTools.Controls;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 
@@ -19,15 +21,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
         /// The selected file location value will be set with
         /// forward slashes as file separators.
         /// </remarks>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="input"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="input"/> is not a <see cref="WaveModel"/>.
+        /// </exception>
         public static void ButtonAction(object input)
         {
+            Ensure.NotNull(input, nameof(input));
+            
             var waveModel = input as WaveModel;
             if (waveModel == null)
             {
-                return;
+                throw new ArgumentException(string.Format(Resources.Expected_argument_0_to_be_of_type_1_, nameof(input), typeof(WaveModel)));
             }
 
-            string selectedFilePath = new FileDialogService().SelectFile(string.Format(Resources.SelectSp2FileButton_ButtonAction_Spectrum_Files___0_, FileConstants.SpectrumFileExtension));
+            string selectedFilePath = new FileDialogService().SelectFile(string.Format(Resources.Sp2FileFilter_0_, FileConstants.SpectrumFileExtension));
             if (selectedFilePath != null)
             {
                 string fileLocation = selectedFilePath.Replace('\\', '/');
