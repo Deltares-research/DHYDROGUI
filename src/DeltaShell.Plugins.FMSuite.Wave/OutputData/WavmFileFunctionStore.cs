@@ -25,6 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         private const string columnArgumentName = "N";
         private const string rowArgumentName = "M";
 
+        private const string fillValueAttributeName = "_FillValue";
+
         /// <summary>
         /// Creates a new <see cref="WavmFileFunctionStore"/>.
         /// </summary>
@@ -106,14 +108,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             int sizeN = netCdfFile.GetDimensionLength(nSizeDimensionName);
             int sizeM = netCdfFile.GetDimensionLength(mSizeDimensionName);
 
-            using (var nc = new NetCdfFileWrapper(netCdfFile.Path))
-            {
-                IList<double> x = nc.GetValues1D<double>(xCoordinateVariableName);
-                IList<double> y = nc.GetValues1D<double>(yCoordinateVariableName);
-                grid.Resize(sizeN, sizeM, x, y);
-            }
+            IEnumerable<double> xCoordinates = GetCoordinates(xCoordinateVariableName);
+            IEnumerable<double> yCoordinates = GetCoordinates(yCoordinateVariableName);
+
+            grid.Resize(sizeN, sizeM, xCoordinates, yCoordinates);
 
             return grid;
+        }
+
+        private IEnumerable<double> GetCoordinates(string coordinateVariableName)
+        {
+            NetCdfVariable coordinateVariable = netCdfFile.GetVariableByName(coordinateVariableName);
+            NetCdfAttribute fillValueAttribute = netCdfFile.GetAttribute(coordinateVariable, fillValueAttributeName);
+        
+            double fillValue = fillValueAttribute != null ? (double)fillValueAttribute.Value : double.NaN;
+
+            using (var nc = new NetCdfFileWrapper(netCdfFile.Path))
+            {
+                return nc.GetValues1D<double>(coordinateVariableName)
+                         .Select(val => val.Equals(fillValue) ? double.NaN : val)
+                         .ToArray();
+            }
         }
     }
 }
