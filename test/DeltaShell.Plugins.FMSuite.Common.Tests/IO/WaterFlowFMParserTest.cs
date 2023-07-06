@@ -186,6 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [TestCaseSource(nameof(DateTimeConversionSuccess))]
+        [TestCaseSource(nameof(DateTimesAndStrings))]
         public void DateTimeFromString_WhenInputIsValid_ReturnsDateTime(string input, object expectedOutput)
         {
             Assert.AreEqual(expectedOutput, FMParser.FromString(input, typeof(DateTime)));
@@ -194,16 +195,47 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public static void DateTimeFromString_WhenInputIsNullOrEmpty_ReturnsNow()
         {
-            var now = DateTime.Now;
-            var result = FMParser.ParseFMDateTime("");
-            var timeLapsed = result - now;
-            Assert.Less( timeLapsed.Seconds, 0.5d );
+            DateTime now = DateTime.Now;
+            DateTime result = (DateTime)FMParser.FromString("", typeof(DateTime));
+            TimeSpan timeLapsed = result - now;
+            Assert.Less(timeLapsed.Seconds, 0.5d);
         }
 
         [TestCaseSource(nameof(DateTimeConversionFailure))]
-        public void DateTimeFromStringTest_WhenInputNotValid_ThrowsFormatException(string input)
+        public void DateTimeFromString_WhenInputNotValid_ThrowsFormatException(string input)
         {
             Assert.Throws<FormatException>(() => FMParser.FromString(input, typeof(DateTime)));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(DateTimesAndStrings))]
+        public void DateTimeToString_WhenInputIsValid_ReturnsDateTimeAsString(string expectedDateTime, DateTime givenDateTime)
+        {
+            Assert.That(FMParser.ToString(givenDateTime, typeof(DateTime)), Is.EqualTo(expectedDateTime));
+        }
+
+        public static IEnumerable<TestCaseData> DateTimeConversionSuccess()
+        {
+            yield return new TestCaseData("20230509000000", new DateTime(2023, 05, 09));
+            yield return new TestCaseData("20221231", new DateTime(2022, 12, 31));
+            yield return new TestCaseData("20230101", new DateTime(2023, 01, 01));
+            yield return new TestCaseData("2023-05-09", new DateTime(2023, 05, 09));
+            yield return new TestCaseData("20230509012345", new DateTime(2023, 05, 09, 01, 23, 45));
+        }
+
+        public static IEnumerable<TestCaseData> DateTimeConversionFailure()
+        {
+            yield return new TestCaseData("20230509240000");
+            yield return new TestCaseData("20230231000000");
+            yield return new TestCaseData("2023-05-09 00:00:00");
+            yield return new TestCaseData("NonDateTimeString");
+        }
+
+        private static IEnumerable<TestCaseData> DateTimesAndStrings()
+        {
+            yield return new TestCaseData("20230612121314", new DateTime(2023, 06, 12, 12, 13, 14));
+            yield return new TestCaseData("20230612000000", new DateTime(2023, 06, 12));
+            yield return new TestCaseData("20230612000000", new DateTime(2023, 06, 12, 0, 0, 0));
         }
 
         [TestCaseSource(nameof(DateOnlyConversionSuccess))]
@@ -216,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public static void DateOnlyFromString_WhenInputIsNullOrEmpty_ReturnsNow()
         {
             var now = DateOnly.FromDateTime(DateTime.Now);
-            var result = FMParser.ParseFMDateOnly("");
+            var result = (DateOnly)FMParser.FromString("", typeof(DateOnly));
             var timeLapsed = result.ToDateTime(TimeOnly.MinValue) - now.ToDateTime(TimeOnly.MinValue);
             Assert.Less( timeLapsed.Days, 0.5d );
         }
@@ -226,21 +258,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             Assert.Throws<FormatException>(() => FMParser.FromString(input, typeof(DateOnly)));
         }
-
-        public static IEnumerable<TestCaseData> DateTimeConversionSuccess()
+        
+        [TestCaseSource(nameof(DateOnlyToStringConversionSuccess))]
+        public void DateOnlyToString_WhenInputIsValid_ReturnsDateOnly(string expectedDateTime, DateOnly givenDateTime)
         {
-            yield return new TestCaseData("20230509000000", new DateTime(2023, 05, 09));
-            yield return new TestCaseData("20221231", new DateTime(2022, 12, 31));
-            yield return new TestCaseData("20230101", new DateTime(2023, 01, 01));
-            yield return new TestCaseData("2023-05-09",new DateTime(2023,05,09));
-            yield return new TestCaseData("20230509012345", new DateTime(2023, 05, 09, 01, 23, 45));
-        }
-
-        public static IEnumerable<TestCaseData> DateTimeConversionFailure()
-        {
-            yield return new TestCaseData("20230509240000");
-            yield return new TestCaseData("20230231000000");
-            yield return new TestCaseData("2023-05-09 00:00:00");
+            Assert.That(FMParser.ToString(givenDateTime, typeof(DateOnly)), Is.EqualTo(expectedDateTime));
         }
 
         public static IEnumerable<TestCaseData> DateOnlyConversionSuccess()
@@ -249,6 +271,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             yield return new TestCaseData("20230101", new DateOnly(2023, 01, 01));
             yield return new TestCaseData("2023-05-09",new DateOnly(2023,05,09));
             yield return new TestCaseData("20230509000000",new DateOnly(2023,05,09));
+        }
+        
+        public static IEnumerable<TestCaseData> DateOnlyToStringConversionSuccess()
+        {
+            yield return new TestCaseData("20221231", new DateOnly(2022, 12, 31));
+            yield return new TestCaseData("20230101", new DateOnly(2023, 01, 01));
+            yield return new TestCaseData("20230509",new DateOnly(2023,05,09));
         }
 
         public static IEnumerable<TestCaseData> DateOnlyConversionFailure()

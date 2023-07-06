@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
 
             if (dataType == typeof(DateTime))
             {
-                return ((DateTime) obj).ToString("yyyyMMdd");
+                return ((DateTime) obj).ToString("yyyyMMddHHmmss");
             }
             if (dataType == typeof(DateOnly))
             {
@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
         /// When <paramref name="valueAsString"/> does not represent a supported date-time
         /// format.
         /// </exception>
-        public static DateTime ParseFMDateTime(string valueAsString)
+        private static DateTime ParseFMDateTime(string valueAsString)
         {
             if (string.IsNullOrEmpty(valueAsString))
             {
@@ -400,12 +400,12 @@ namespace DeltaShell.Plugins.FMSuite.Common
         }
 
         /// <summary>
-        /// Parses a string to <see cref="DateTime"/> expecting 'yyyyMMdd', 'yyyy-MM-dd' or 'yyyyMMddHHmmss' format.
+        /// Parses a string to <see cref="DateOnly"/> expecting 'yyyyMMdd', 'yyyy-MM-dd' or 'yyyyMMddHHmmss' format.
         /// </summary>
         /// <param name="valueAsString">Value to be parsed.</param>
         /// <returns>Parsed date-time, or the date part of <see cref="DateTime.Now"/> when <paramref name="valueAsString"/> empty or null.</returns>
         /// <exception cref="FormatException">When <paramref name="valueAsString"/> does not represent a supported date-only format.</exception>
-        public static DateOnly ParseFMDateOnly(string valueAsString)
+        private static DateOnly ParseFMDateOnly(string valueAsString)
         {
             if (String.IsNullOrEmpty(valueAsString))
             {
