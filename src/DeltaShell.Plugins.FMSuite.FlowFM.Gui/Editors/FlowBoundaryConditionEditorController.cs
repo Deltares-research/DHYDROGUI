@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -16,43 +15,54 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
-    public class FlowBoundaryConditionEditorController : BoundaryConditionEditorController
+    public sealed class FlowBoundaryConditionEditorController : IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryConditionEditorController));
         private WaterFlowFMModel model;
+        private BoundaryConditionEditor editor;
 
-        public override BoundaryConditionEditor Editor
+        public IEnumerable<BoundaryConditionDataType> AllSupportedDataTypes
         {
-            protected get
+            get
             {
-                return base.Editor;
+                return SupportedProcessNames.SelectMany(GetVariablesForProcess)
+                                            .SelectMany(GetSupportedDataTypesForVariable)
+                                            .Distinct();
+            }
+        }
+
+        public BoundaryConditionEditor Editor
+        {
+            private get
+            {
+                return editor;
             }
             set
             {
-                base.Editor = value;
-                if (Editor != null)
+                editor = value;
+                if (editor != null)
                 {
-                    Editor.SupportedVerticalProfileTypes = SupportedVerticalProfileTypes.BoundaryConditionProfileTypes;
-                    Editor.SupportPointListBoxContextMenuItems = new ToolStripItem[]
+                    editor.SupportedVerticalProfileTypes = SupportedVerticalProfileTypes.BoundaryConditionProfileTypes;
+                    editor.SupportPointListBoxContextMenuItems = new ToolStripItem[]
                     {
                         new ToolStripMenuItem("Properties...", null, OnLocationPropertiesClick)
                     };
                     if (Model != null)
                     {
-                        Editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
-                        Editor.DepthLayerControlVisible = Model.UseDepthLayers;
+                        editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
+                        editor.DepthLayerControlVisible = Model.UseDepthLayers;
                     }
                 }
             }
         }
 
-        public override IEnumerable<string> SupportedProcessNames
+        public IEnumerable<string> SupportedProcessNames
         {
             get
             {
                 return SupportedFlowQuantities.Select(FlowBoundaryCondition.GetProcessNameForQuantity)
-                                              .Where(IsActiveProcess)
-                                              .ToList().Distinct();
+                                 .Where(IsActiveProcess)
+                                 .ToList().Distinct();
             }
         }
 
@@ -108,7 +118,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public override void OnBoundaryConditionSelectionChanged(IBoundaryCondition boundaryCondition)
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void OnBoundaryConditionSelectionChanged(IBoundaryCondition boundaryCondition)
         {
             var previousView = Editor.BoundaryConditionDataView as FlowBoundaryConditionDataView;
             if (previousView != null)
@@ -134,19 +150,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             Editor.ChildViews.Add(view);
         }
 
-        public override IEnumerable<string> GetVariablesForProcess(string category)
+        public IEnumerable<string> GetVariablesForProcess(string category)
         {
             return GetQuantitiesForProcess(category).Select(FlowBoundaryCondition.GetVariableNameForQuantity);
         }
 
-        public override IEnumerable<string> GetAllowedVariablesFor(string category, BoundaryConditionSet boundaryConditions)
+        public IEnumerable<string> GetAllowedVariablesFor(string category, BoundaryConditionSet boundaryConditions)
         {
             return
                 GetAllowedQuantitiesFor(category, boundaryConditions).Intersect(SupportedFlowQuantities)
                                                                      .SelectMany(GetVariableNamesForQuantity);
         }
 
-        public override string GetVariableDescription(string variable, string category = null)
+        public string GetVariableDescription(string variable, string category = null)
         {
             FlowBoundaryQuantityType flowBoundaryQuantityType;
 
@@ -156,11 +172,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return FlowBoundaryCondition.GetDescription(flowBoundaryQuantityType);
             }
-
-            return base.GetVariableDescription(variable, category);
+            return variable ?? "";
         }
 
-        public override IEnumerable<BoundaryConditionDataType> GetSupportedDataTypesForVariable(string variable)
+        public IEnumerable<BoundaryConditionDataType> GetSupportedDataTypesForVariable(string variable)
         {
             FlowBoundaryQuantityType flowBoundaryQuantityType;
 
@@ -193,12 +208,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return Enumerable.Empty<BoundaryConditionDataType>();
         }
 
-        public override void InsertBoundaryCondition(BoundaryConditionSet boundaryConditions, IBoundaryCondition boundaryCondition)
+        // Keep the 'correct' ordering: first flow bc's, then salinity and temperature.
+        public void InsertBoundaryCondition(BoundaryConditionSet boundaryConditions, IBoundaryCondition boundaryCondition)
         {
             var flowBoundaryCondition = boundaryCondition as FlowBoundaryCondition;
             if (flowBoundaryCondition == null)
             {
-                base.InsertBoundaryCondition(boundaryConditions, boundaryCondition);
+                boundaryConditions.BoundaryConditions.Add(boundaryCondition);
             }
             else
             {
@@ -226,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        protected override void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
