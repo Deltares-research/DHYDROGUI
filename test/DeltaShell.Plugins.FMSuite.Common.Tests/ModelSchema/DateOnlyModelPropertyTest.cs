@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.ModelSchema
     {
         static readonly string validDateAsString = "20231231";
         static readonly string invalidDateAsString = "20231131"; // November has only 30 days 
-        static readonly string validDateTimeAsString = "20231231235959";
+        static readonly string notSupportedDateTimeAsString = "2023-12-31T23:59:59"; 
 
         [Test]
         public void ModelPropertyCreatedSuccessfullyWithValidDateAsString()
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.ModelSchema
         {
             var property = new TestModelProperty(new TestModelPropertyDefinition { DataType = typeof(DateOnly) },
                                                  validDateAsString);
-            Assert.Throws<FormatException>(() => property.SetValueAsString(validDateTimeAsString));
+            Assert.Throws<FormatException>(() => property.SetValueAsString(notSupportedDateTimeAsString));
         }
     }
 }

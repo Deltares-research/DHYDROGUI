@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.ModelSchema
     [TestFixture]
     public class DateTimeModelPropertyTest
     {
-        static readonly string validDateAsString = "20231231";
+        static readonly string notSupportedDateAsString = "2023-12-31T";
         static readonly string validDateTimeAsString = "20231231235959";
         static readonly string invalidDateTimeAsString = "20231130000060"; // Seconds must be <60 
 
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.ModelSchema
         {
             var property = new TestModelProperty(new TestModelPropertyDefinition { DataType = typeof(DateTime) },
                                                  validDateTimeAsString);
-            Assert.Throws<FormatException>(() => property.SetValueAsString(validDateAsString));
+            Assert.Throws<FormatException>(() => property.SetValueAsString(notSupportedDateAsString));
         }
     }
 }

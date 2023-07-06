@@ -188,7 +188,7 @@ time,TStop,,,Stop time,Double,86400,0,,TRUE,,,,,,,,Stop  time w.r.t. RefDate (in
 time,AutoTimestepNoStruct,timeframe,Time step analysis,Autotimestep exclude structure links,0|1,1,0,1,FALSE,,,,,,,,"Exclude structure links (and neighbours) from time step limitation, (0: no, 1: yes)",,,
 time,AutoTimestepNoQout,timeframe,Time step analysis,Exclude negative qin,0|1,1,0,1,FALSE,,,,,,,,"Exclude negative qin terms from time step limitation (1: yes, 0: no)",,,
 restart,RestartFile,initial,,Restart file,FileName,,,,FALSE,,,,,,,,"Restart netcdf-file, name format: <name>_yyyymmdd_hhmmss_rst.nc",,,
-restart,RestartDateTime,,,Restart time,String,,,,TRUE,,,,,,,,Restart date and time when restarting from *_map.nc (not supported yet),,,
+restart,RestartDateTime,,,Restart time,DateTime,,,,TRUE,,,,,,,,Restart date and time when restarting from *_map.nc (not supported yet),,,
 external forcing,ExtForceFile,,,,FileName,,,,TRUE,,,,,,,,"Old format for external forcings file *.ext, link with tim/cmp-format boundary conditions specification",,,
 external forcing,ExtForceFileNew,,,,FileName,,,,TRUE,,,,,,,,"New format for external forcings file *.ext, link with bc-format boundary conditions specification",,,
 external forcing,QExt,numerics,Numerical Parameters,Include user Qin/out,0|1,0,0,1,FALSE,,,,,,,,"Include user Qin/out, externally provided, (0=no, 1=yes)",,,

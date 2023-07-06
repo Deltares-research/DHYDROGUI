@@ -1096,7 +1096,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             definition.GetModelProperty(KnownProperties.RefDate).Value =
-                DataTypeValueParser.ParseFMDateOnly(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
+                DataTypeValueParser.FromString<DateOnly>(definition.GetModelProperty(KnownProperties.RefDate).GetValueAsString());
 
             definition.SetGuiTimePropertiesFromMduProperties();
 

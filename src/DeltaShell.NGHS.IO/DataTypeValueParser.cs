@@ -12,6 +12,13 @@ namespace DeltaShell.NGHS.IO
     public static class DataTypeValueParser
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (DataTypeValueParser));
+        
+        private static readonly string[] stringDateFormatsFrom =
+        {
+            "yyyyMMddHHmmss",
+            "yyyyMMdd",
+            "yyyy-MM-dd"
+        };
 
         /// <summary>
         /// Returns the C# value <see cref="Type"/> for a property in the schema csv file.
@@ -144,7 +151,7 @@ namespace DeltaShell.NGHS.IO
             }
             if (dataType == typeof(DateTime))
             {
-                return ((DateTime)obj).ToString("yyyyMMdd");
+                return ((DateTime)obj).ToString("yyyyMMddHHmmss");
             }
             if (dataType == typeof(DateOnly))
             {
@@ -299,14 +306,34 @@ namespace DeltaShell.NGHS.IO
 
             return (T) FromString(str, type);
         }
+        
+        /// <summary>
+        /// Parses a string to <see cref="DateTime"/> expecting 'yyyyMMdd', 'yyyy-MM-dd' or 'yyyyMMddHHmmss' format.
+        /// </summary>
+        /// <param name="valueAsString">Value to be parsed.</param>
+        /// <returns>Parsed date-time, or <see cref="DateTime.Now"/> when <paramref name="valueAsString"/> empty or null.</returns>
+        /// <exception cref="FormatException">When <paramref name="valueAsString"/> does not represent a supported date-time format.</exception>
+        private static DateTime ParseFMDateTime(string valueAsString)
+        {
+            if (string.IsNullOrEmpty(valueAsString))
+            {
+                return DateTime.Now;
+            }
+            
+            if (!DateTime.TryParseExact(valueAsString, stringDateFormatsFrom, null, DateTimeStyles.None, out DateTime value))
+            {
+                throw new FormatException("Unexpected date time format");
+            }
+            return value;
+        }
 
         /// <summary>
-        /// Parses a string to <see cref="DateTime"/> expecting 'yyyyMMdd' or 'yyyyMMddHHmmss' format.
+        /// Parses a string to <see cref="DateOnly"/> expecting 'yyyyMMdd', 'yyyy-MM-dd' or 'yyyyMMddHHmmss' format.
         /// </summary>
         /// <param name="valueAsString">Value to be parsed.</param>
         /// <returns>Parsed date-time, or the date part of <see cref="DateTime.Now"/> when <paramref name="valueAsString"/> empty or null.</returns>
         /// <exception cref="FormatException">When <paramref name="valueAsString"/> does not represent a supported date-only format.</exception>
-        public static DateOnly ParseFMDateOnly(string valueAsString)
+        private static DateOnly ParseFMDateOnly(string valueAsString)
         {
             if (String.IsNullOrEmpty(valueAsString))
             {
@@ -314,27 +341,9 @@ namespace DeltaShell.NGHS.IO
                 return new DateOnly(now.Year, now.Month, now.Day);
             }
 
-            if (!DateOnly.TryParseExact(valueAsString, "yyyyMMdd", null, DateTimeStyles.None, out var value) && 
-                !DateOnly.TryParseExact(valueAsString, "yyyy-MM-dd", null, DateTimeStyles.None, out value))
+            if (!DateOnly.TryParseExact(valueAsString, stringDateFormatsFrom, null, DateTimeStyles.None, out var value))
             {
                 throw new FormatException("Unexpected date format");
-            }
-            return value;
-        }
-
-        /// <summary>
-        /// Parses a string to <see cref="DateTime"/> expecting 'yyyyMMddHHmmss' format.
-        /// </summary>
-        /// <param name="valueAsString">Value to be parsed.</param>
-        /// <returns>Parsed date-time, or <see cref="DateTime.Now"/> when <paramref name="valueAsString"/> empty or null.</returns>
-        /// <exception cref="FormatException">When <paramref name="valueAsString"/> does not represent a supported date-time format.</exception>
-        public static DateTime ParseFMDateTime(string valueAsString)
-        {
-            if (String.IsNullOrEmpty(valueAsString)) return DateTime.Now;
-            
-            if (!DateTime.TryParseExact(valueAsString, "yyyyMMddHHmmss", null, DateTimeStyles.None, out var value))
-            {
-                throw new FormatException("Unexpected date time format");
             }
             return value;
         }
