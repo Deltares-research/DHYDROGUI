@@ -1,61 +1,63 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<ItemGroup>
-		<PackageReference Include="AutoFixture.AutoNSubstitute" />
-		<PackageReference Include="AutoFixture.NUnit3" />
-		<PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
-		<PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
-		<PackageReference Include="NUnit" />
-		<PackageReference Include="NSubstitute" />
-		<PackageReference Include="RhinoMocks" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoFixture.AutoNSubstitute" />
+    <PackageReference Include="AutoFixture.NUnit3" />
+    <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
+    <PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.ConsoleRunner" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="RhinoMocks" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
-		<ProjectReference Include="..\..\src\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Reference Include="DelftTools.Functions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="DelftTools.Shell.Core">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="DelftTools.Units">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Units.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="DeltaShell.Core">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Core.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="DelftTools.Utils">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="GeoAPI.CoordinateSystems">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="GeoAPI.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="NetTopologySuite.Extensions">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="QuickGraph">
-			<HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\QuickGraph.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="System" />
-		<Reference Include="System.Core" />
-	</ItemGroup>
+  <ItemGroup>
+    <Reference Include="DelftTools.Functions">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Core">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Units">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Core">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.CoordinateSystems">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.Extensions">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.Extensions">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Properties\" />
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 </Project>
