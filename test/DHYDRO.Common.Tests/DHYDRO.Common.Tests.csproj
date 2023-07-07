@@ -35,6 +35,8 @@
     <ItemGroup>
         <PackageReference Include="NSubstitute"/>
         <PackageReference Include="NUnit"/>
+        <PackageReference Include="NUnit.ConsoleRunner" />
+        <PackageReference Include="NUnit3TestAdapter" />
     </ItemGroup>
 
     <ItemGroup>
