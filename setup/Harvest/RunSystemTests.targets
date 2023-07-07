@@ -13,18 +13,20 @@
       <Using Namespace="System.Diagnostics" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
-            Version = FileVersionInfo.GetVersionInfo(AssemblyPath).FileVersion;  
+            Version = FileVersionInfo.GetVersionInfo(AssemblyPath).FileVersion;
         ]]>
       </Code>
     </Task>
   </UsingTask>
-  
+
   <Target Name="TargetSystemTests">
     <!-- Check (system test) -->
     <Message Text="Checking MSI at state : $(Status)" Importance="high"/>
     <Message Text="My product name : $(ProductName)" Importance="high"/>
+    <Message Text="My application name : $(ApplicationName)" Importance="high"/>
+    <Message Text="My distribution name : $(DistributionName)" Importance="high"/>
 
-    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetFilesAndFoldersSystemTests" Properties="Status=$(Status);ProductName=$(ProductName);ConditionState=$(ConditionState);CheckingFor=$(CheckingFor)" ContinueOnError="WarnAndContinue"/>
+    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetFilesAndFoldersSystemTests" Properties="Status=$(Status);ProductName=$(ProductName);ApplicationName=$(ApplicationName);DistributionName=$(DistributionName);ConditionState=$(ConditionState);CheckingFor=$(CheckingFor)" ContinueOnError="WarnAndContinue"/>
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetShortCutsSystemTests" Properties="Status=$(Status);ProductName=$(ProductName);ConditionState=$(ConditionState);CheckingFor=$(CheckingFor)" ContinueOnError="WarnAndContinue" />
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TargetRegistrySystemTests" Properties="ProductCode=$(ProductCode);Status=$(Status);ProductName=$(ProductName);ConditionState=$(ConditionState);CheckingFor=$(CheckingFor)" ContinueOnError="WarnAndContinue" />
 
@@ -53,7 +55,7 @@
 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TargetDeltaShellFilesAndFoldersSystemTests"
-             Properties=" _CheckDeltaShellFolder=$(_CheckDeltaShellFolder);"                          
+             Properties=" _CheckDeltaShellFolder=$(_CheckDeltaShellFolder);"
              Condition="'$(ConditionState)' == 'false'"
              ContinueOnError="WarnAndContinue"/>
 
@@ -93,11 +95,11 @@
       <_VersionsFile>FM_Properties</_VersionsFile>
     </PropertyGroup>
 
-	
+
     <PropertyGroup>
       <_CheckKernelsFolder>$(_CheckPluginsFolder)\DeltaShell.Dimr\kernels\x64</_CheckKernelsFolder>
       <_OpenCondition Condition="Exists('$(_CheckKernelsFolder)')">true</_OpenCondition>
-      <_OpenCondition Condition="!Exists('$(_CheckKernelsFolder)')">false</_OpenCondition>	
+      <_OpenCondition Condition="!Exists('$(_CheckKernelsFolder)')">false</_OpenCondition>
     </PropertyGroup>
 	<MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
@@ -108,9 +110,9 @@
 						  Condition=$(_OpenCondition)"
              ContinueOnError="WarnAndContinue"/>
 
-    
 
-    
+
+
     <PropertyGroup>
       <_CheckGridGeomStatefulFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.GridEditor\Lib</_CheckGridGeomStatefulFolder>
     </PropertyGroup>
@@ -121,14 +123,14 @@
                           Key=GridGeomStateful folder;
                           KeyValue=$(_CheckGridGeomStatefulFolder)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckRgfGridFolder>$(_CheckPluginsFolder)\DeltaShell.Plugins.FMSuite.Common.Gui\plugins-qt\x64\bin</_CheckRgfGridFolder>
 	    <_OpenCondition Condition="Exists('$(_CheckRgfGridFolder)')">true</_OpenCondition>
-      <_OpenCondition Condition="!Exists('$(_CheckRgfGridFolder)')">false</_OpenCondition>	
+      <_OpenCondition Condition="!Exists('$(_CheckRgfGridFolder)')">false</_OpenCondition>
     </PropertyGroup>
-	
-	
+
+
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
@@ -137,7 +139,7 @@
                           KeyValue=$(_CheckRgfGridFolder);
 						  Condition=$(_OpenCondition)"
              ContinueOnError="WarnAndContinue"/>
-    
+
         <PropertyGroup>
       <_CheckNGHS_IOFolder>$(_CheckPluginsFolder)\DeltaShell.NGHS.IO</_CheckNGHS_IOFolder>
     </PropertyGroup>
@@ -191,7 +193,7 @@
                           Key=MeshKernelApi exp file;
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiExpFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
@@ -199,7 +201,7 @@
                           Key=MeshKernelApi lib file;
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiLibFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for these files too in the _CheckGridGeomStatefulFolder -->
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
@@ -229,7 +231,7 @@
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiDllFile);
                           FileVersion=$(_CheckMeshKernelApiDllFileVersion)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for this file too in the _CheckGridGeomStatefulFolder -->
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
@@ -274,7 +276,7 @@
     <PropertyGroup>
       <_CheckDimrDllFile>dimr_dll.dll</_CheckDimrDllFile>
     </PropertyGroup>
-    
+
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
@@ -282,7 +284,7 @@
                           TestTypeName=fileversion;
                           Key=$(_CheckDimrDllFile);
                           KeyValue=$(_CheckDimrFolder)\$(_CheckDimrDllFile);
-                          FileVersion=$(_CheckDimrDllFileVersion)"                          
+                          FileVersion=$(_CheckDimrDllFileVersion)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -293,7 +295,7 @@
              Properties=" Package=$(_Package);
                           File=$(_File);
                           Key=Fm kernel folder;
-                          KeyValue=$(_CheckFmFolder)"                          
+                          KeyValue=$(_CheckFmFolder)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -309,7 +311,7 @@
                           KeyValue=$(_CheckFmFolder)\$(_CheckFmDllFile);
                           FileVersion=$(_CheckFmDllFileVersion)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckRtcFolder>$(_CheckKernelsFolder)\drtc\bin</_CheckRtcFolder>
     </PropertyGroup>
@@ -335,7 +337,7 @@
                           FileVersion=$(_CheckRtcDllFileVersion)"
              ContinueOnError="WarnAndContinue"/>
 
-    
+
     <PropertyGroup>
       <_CheckRrFolder>$(_CheckKernelsFolder)\drr\bin</_CheckRrFolder>
     </PropertyGroup>
@@ -407,7 +409,7 @@
                           Key=RgfGrid folder;
                           KeyValue=$(_CheckRgfGridFolder)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckRgfGridDllFile>rgfgrid.dll</_CheckRgfGridDllFile>
     </PropertyGroup>
@@ -444,7 +446,7 @@
                           Key=$(_CheckNGHS_IO_NetCDFDllFile);
                           KeyValue=$(_CheckNGHS_IOFolder)\$(_CheckNGHS_IO_NetCDFDllFile);
                           FileVersion=$(_CheckNGHS_IO_NetCDFDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>			 
+             ContinueOnError="WarnAndContinue"/>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
              Properties=" Package=$(_Package);
@@ -474,7 +476,7 @@
                           Key=MeshKernelApi exp file;
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiExpFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
@@ -482,7 +484,7 @@
                           Key=MeshKernelApi lib file;
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiLibFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for these files too in the _CheckGridGeomStatefulFolder -->
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
@@ -512,7 +514,7 @@
                           KeyValue=$(_CheckMeshKernelApiFolder)\$(_CheckMeshKernelApiDllFile);
                           FileVersion=$(_CheckMeshKernelApiDllFileVersion)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <!-- because gridgeomStateful_dll.dll is redundant (?) and also using MeshKernelApi Check for this file too in the _CheckGridGeomStatefulFolder -->
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithComparison"
@@ -565,7 +567,7 @@
                           Key=DeltaShell Exe Gui config file;
                           KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckDeltaShellGuiPluginIconFile>FM.ico</_CheckDeltaShellGuiPluginIconFile>
     </PropertyGroup>
@@ -576,11 +578,11 @@
                           Key=DeltaShell Exe Gui plugin icon file;
                           KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiPluginIconFile)"
              ContinueOnError="WarnAndContinue"/>
-    
-    <CallTarget Targets="CheckDeltaShellExeStartAndRunAndClose" 
+
+    <CallTarget Targets="CheckDeltaShellExeStartAndRunAndClose"
 				Condition="Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeFile)))) AND Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile))))"
 				ContinueOnError="WarnAndContinue"/>
-	<CallTarget Targets="CheckDeltaShelGuiExeConfigXML" 
+	<CallTarget Targets="CheckDeltaShelGuiExeConfigXML"
 				Condition="Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile))))"
 				ContinueOnError="WarnAndContinue"/>
 
@@ -660,7 +662,7 @@
                           FileVersion=$(_CheckNetCDF4DllFileVersion)"
              ContinueOnError="WarnAndContinue"/>-->
 
-    
+
     <PropertyGroup>
       <_CheckDelftToolsHydroDllFile>DelftTools.Hydro.dll</_CheckDelftToolsHydroDllFile>
     </PropertyGroup>
@@ -671,7 +673,7 @@
                           Key=DelftTools Hydro dll file;
                           KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDelftToolsHydroDllFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckDeltaShellNghsUtilsDllFile>DeltaShell.NGHS.Utils.dll</_CheckDeltaShellNghsUtilsDllFile>
     </PropertyGroup>
@@ -682,7 +684,7 @@
                           Key=DeltaShell NGHS Utils dll file;
                           KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellNghsUtilsDllFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckDeltaShellNGHSCommonGuiDllFile>DeltaShell.NGHS.Common.Gui.dll</_CheckDeltaShellNGHSCommonGuiDllFile>
     </PropertyGroup>
@@ -703,7 +705,7 @@
                           File=$(_File);
                           Key=DeltaShell NGHS Common dll file;
                           KeyValue=$(_CheckDeltaShellFolder)\\$(_CheckDeltaShellNGHSCommonDllFile)"
-             ContinueOnError="WarnAndContinue"/>    
+             ContinueOnError="WarnAndContinue"/>
   </Target>
 
   <Target Name="CheckDeltaShellExeStartAndRunAndClose">
@@ -713,45 +715,45 @@
       <_CheckDeltaShellGuiTmpLogFile>DeltaShell.Gui.exe.log</_CheckDeltaShellGuiTmpLogFile>
       <_ValueToCheck>All is fine</_ValueToCheck>
     </PropertyGroup>
-    <Delete Files="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)" 
+    <Delete Files="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)"
 			ContinueOnError="true" />
-	<Message Importance="high" 
+	<Message Importance="high"
 			Text="Copy original $(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile) to $(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile).org"/>
-    <Copy 	SourceFiles="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)" 
-			DestinationFiles="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile).org" 
+    <Copy 	SourceFiles="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)"
+			DestinationFiles="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile).org"
 			ContinueOnError="true" />
 
-    <Message Importance="high" 
+    <Message Importance="high"
 			Text="Update log location of deltashell logfile in $(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile) to $(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)"/>
     <XmlPoke
       XmlInputPath="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)"
       Value="&lt;file value='$(_CheckDeltaShellGuiTmpLogFile)' type='log4net.Util.PatternString'/&gt;&lt;layout type='log4net.Layout.PatternLayout'&gt;&lt;conversionPattern value=&quot;%25date [%thread] %-5level %logger.%M - %message%newline&quot; /&gt;&lt;/layout&gt; "
       Query="/configuration/log4net/appender[@name='fileAppender']"
-      />	  
-    <Message Importance="high" 
+      />
+    <Message Importance="high"
 			Text="When starting DeltaShell do not show splashscreen"/>
     <XmlPoke
       XmlInputPath="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)"
       Value="False"
       Query="/configuration/userSettings/DeltaShell.Gui.Properties.Settings/setting[@name='ShowStartUpScreen']/value"
-      />	  
+      />
 	<XmlPoke
       XmlInputPath="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)"
       Value="False"
       Query="/configuration/userSettings/DeltaShell.Gui.Properties.Settings/setting[@name='showSplashScreen']/value"
-      />	  
-    <Message Importance="high" 
+      />
+    <Message Importance="high"
 			Text="Start $(_CheckDeltaShellGuiExeFile), run/execute a command line script and exit with timeout of 25sec (without changing the key for licensecheck)"
 			Condition=" '$(BUILD_NUMBER)' != '' "/>
-			
-    <Exec 	Command="$(_CheckDeltaShellGuiExeFile) -c &quot;print('$(_ValueToCheck)');Gui.Exit();&quot;" 
-			Timeout="25000" 
-			ContinueOnError="ErrorAndContinue" 
-			WorkingDirectory="$(_CheckDeltaShellFolder)" 
+
+    <Exec 	Command="$(_CheckDeltaShellGuiExeFile) -c &quot;print('$(_ValueToCheck)');Gui.Exit();&quot;"
+			Timeout="25000"
+			ContinueOnError="ErrorAndContinue"
+			WorkingDirectory="$(_CheckDeltaShellFolder)"
 			IgnoreStandardErrorWarningFormat="true"
-			Condition=" '$(BUILD_NUMBER)' != '' " 
+			Condition=" '$(BUILD_NUMBER)' != '' "
 			/>
-			
+
     <ReadLinesFromFile File="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)" ContinueOnError="WarnAndContinue">
       <Output TaskParameter="Lines" ItemName="FileContents" />
     </ReadLinesFromFile>
@@ -772,15 +774,15 @@
 						 ExpectedValue=false"
             ContinueOnError="WarnAndContinue"
 			Condition=" '$(BUILD_NUMBER)' != '' "/>
-	
-	<Message Importance="high" 
+
+	<Message Importance="high"
 			Text="Failed DeltaShell exe run action because : $(AllLines)"
 			Condition=" '$(BUILD_NUMBER)' != '' AND $(AllLines.Contains($(ErrorText)))"/>
-	
+
     <!-- <Error 	Condition="$(AllLines.Contains($(ErrorText)))"  -->
 			<!-- Text="Execution returned with an error."  -->
 			<!-- ContinueOnError="ErrorAndContinue" /> -->
-			
+
 	<CreateProperty Value="true"
                     Condition="'@(FileContents->Count())' &lt; 3 AND '$(BUILD_NUMBER)' != ''" ContinueOnError="ErrorAndContinue">
       <Output TaskParameter="Value" PropertyName="_LicenseIsNotPresent" />
@@ -808,14 +810,14 @@
       Value="false"
       Query="/configuration/appSettings/add[@key='checkForRegistration']/@value"
     />
-    <Delete Files="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)" 
+    <Delete Files="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)"
 			ContinueOnError="ErrorAndContinue"/>
-    <Message Importance="high" 
+    <Message Importance="high"
 			Text="Start $(_CheckDeltaShellGuiExeFile), run/execute a command line script and exit with timeout of 10sec (with changing the key for licensecheck to false)"/>
-	<Exec 	Command="$(_CheckDeltaShellGuiExeFile) -c &quot;print('$(_ValueToCheck)');Gui.Exit();&quot;" 
-			Timeout="25000" 
-			ContinueOnError="ErrorAndContinue" 
-			WorkingDirectory="$(_CheckDeltaShellFolder)" 
+	<Exec 	Command="$(_CheckDeltaShellGuiExeFile) -c &quot;print('$(_ValueToCheck)');Gui.Exit();&quot;"
+			Timeout="25000"
+			ContinueOnError="ErrorAndContinue"
+			WorkingDirectory="$(_CheckDeltaShellFolder)"
 			IgnoreStandardErrorWarningFormat="true"/>
     <ReadLinesFromFile File="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)" ContinueOnError="WarnAndContinue">
       <Output TaskParameter="Lines" ItemName="FileContents2" />
@@ -833,8 +835,8 @@
 						 TestTypeName=Functioning;
 						 ExpectedValue=false"
             ContinueOnError="WarnAndContinue"/>
-			
-	<Message Importance="high" 
+
+	<Message Importance="high"
 			Text="Failed DeltaShell exe run action 2 because : $(AllLines)"
 			Condition=" '$(BUILD_NUMBER)' != '' AND $(AllLines.Contains($(ErrorText)))"/>
 
@@ -857,9 +859,9 @@
 						 TestTypeName=Functioning;
 						 ExpectedValue=false"
             ContinueOnError="WarnAndContinue"/>
-    
+
     <!-- <Error Text="Error! License not installed or something with this file?" Condition="'@(FileContents2->Count())' &lt; 3" ContinueOnError="ErrorAndContinue"/> -->
-	
+
 	<!-- <CreateProperty Value="true" -->
                     <!-- Condition="'$(AllLines.Contains($(_ValueToCheck)))'" ContinueOnError="ErrorAndContinue"> -->
       <!-- <Output TaskParameter="Value" PropertyName="_ValueIsPresent" /> -->
@@ -876,31 +878,31 @@
 						 TestTypeName=Functioning;
 						 ExpectedValue=true"
             ContinueOnError="WarnAndContinue"/>
-	
+
     <!-- <XmlPoke -->
       <!-- XmlInputPath="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)" -->
       <!-- Value="true" -->
       <!-- Query="/configuration/appSettings/add[@key='checkForRegistration']/@value" -->
     <!-- /> -->
-    
-	
-	<Message Importance="high" 
+
+
+	<Message Importance="high"
 			Text="Deleting custom modified $(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile) which will be replaced by ORIGINAL $(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile).org"/>
-	<Delete Files="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)" 
-			ContinueOnError="ErrorAndContinue" 
+	<Delete Files="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiExeConfigFile)"
+			ContinueOnError="ErrorAndContinue"
 			Condition="Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile).org)))" />
-	<Move 
+	<Move
       SourceFiles="$([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile).org))"
-      DestinationFiles="$([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile)))" 
-      ContinueOnError="ErrorAndContinue" 
+      DestinationFiles="$([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile)))"
+      ContinueOnError="ErrorAndContinue"
       Condition="Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile).org)))" />
-	
-	<Delete Files="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)" 
+
+	<Delete Files="$(_CheckDeltaShellFolder)\$(_CheckDeltaShellGuiTmpLogFile)"
 			ContinueOnError="ErrorAndContinue" />
-	
+
 
   </Target>
-  
+
   <Target Name="CheckDeltaShelGuiExeConfigXML">
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigFile>$(_CheckDeltaShellFolder)\DeltaShell.Gui.exe.config</_CheckDeltaShellGuiExeConfigFile>
@@ -908,15 +910,26 @@
 
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigSetting>applicationName</_CheckDeltaShellGuiExeConfigSetting>
-      <_CheckDeltaShellGuiExeConfigExpectedValue>$(ProductName)</_CheckDeltaShellGuiExeConfigExpectedValue>
+      <_CheckDeltaShellGuiExeConfigExpectedValue>$(ApplicationName)</_CheckDeltaShellGuiExeConfigExpectedValue>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"
              Properties=" xmlKey=$(_CheckDeltaShellGuiExeConfigSetting);
                           xmlKeyExpectedValue=$(_CheckDeltaShellGuiExeConfigExpectedValue);
-                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)" 
+                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
+    <PropertyGroup>
+      <_CheckDeltaShellGuiExeConfigSetting>distributionName</_CheckDeltaShellGuiExeConfigSetting>
+      <_CheckDeltaShellGuiExeConfigExpectedValue>$(DistributionName)</_CheckDeltaShellGuiExeConfigExpectedValue>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"
+             Properties=" xmlKey=$(_CheckDeltaShellGuiExeConfigSetting);
+                          xmlKeyExpectedValue=$(_CheckDeltaShellGuiExeConfigExpectedValue);
+                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)"
+             ContinueOnError="WarnAndContinue"/>
+
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigSetting>applicationIcon</_CheckDeltaShellGuiExeConfigSetting>
       <_CheckDeltaShellGuiExeConfigExpectedValue>$(_CheckDeltaShellFolder)\FM.ico</_CheckDeltaShellGuiExeConfigExpectedValue>
@@ -927,7 +940,7 @@
                           xmlKeyExpectedValue=$(_CheckDeltaShellGuiExeConfigExpectedValue);
                           CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigSetting>checkForRegistration</_CheckDeltaShellGuiExeConfigSetting>
       <_CheckDeltaShellGuiExeConfigExpectedValue>true</_CheckDeltaShellGuiExeConfigExpectedValue>
@@ -940,7 +953,7 @@
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
-      <_CheckDeltaShellGuiExeConfigSetting>fullVersion</_CheckDeltaShellGuiExeConfigSetting>
+      <_CheckDeltaShellGuiExeConfigSetting>publicReleaseVersion</_CheckDeltaShellGuiExeConfigSetting>
       <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">2024.01.$(BUILD_NUMBER)</_CheckDeltaShellGuiExeConfigExpectedValue>
       <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">2024.01</_CheckDeltaShellGuiExeConfigExpectedValue>
     </PropertyGroup>
@@ -948,7 +961,7 @@
              Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"
              Properties=" xmlKey=$(_CheckDeltaShellGuiExeConfigSetting);
                           xmlKeyExpectedValue=$(_CheckDeltaShellGuiExeConfigExpectedValue);
-                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)" 
+                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -959,7 +972,7 @@
              Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"
              Properties=" xmlKey=$(_CheckDeltaShellGuiExeConfigSetting);
                           xmlKeyExpectedValue=$(_CheckDeltaShellGuiExeConfigExpectedValue);
-                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)" 
+                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -972,7 +985,7 @@
              Properties=" xmlKey=$(_CheckDeltaShellGuiExeConfigSetting);
                           xmlKeyExpectedValue=$(_CheckDeltaShellGuiExeConfigExpectedValue);
                           Query=$(_CheckDeltaShellGuiExeConfigQuery);
-                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)" 
+                          CheckDeltaShellGuiExeConfigFile=$(_CheckDeltaShellGuiExeConfigFile)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -1008,11 +1021,11 @@
              ContinueOnError="WarnAndContinue"/>
 
 
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputShortcutCheck" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputShortcutCheck"
              Properties=" File=Product_wxs;
                           ShortCutName=$(_CheckDeltaShellStartMenuFolderDeltaShellExeShortCutName);
-                          ShortCut=$(_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut)" 
+                          ShortCut=$(_CheckDeltaShellStartMenuFolderDeltaShellExeShortCut)"
              ContinueOnError="WarnAndContinue"/>
 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
@@ -1021,7 +1034,7 @@
                           ShortCutName=$(_CheckDeltaShellDesktopShortCutName);
                           ShortCut=$(_CheckDeltaShellDesktopShortCut)"
              ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckDeltaresStartMenuFolderUninstallProductShortCut Condition=" '$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">$(_CheckDeltaShellStartMenuFolderShortCut)\Uninstall $(ProductName).lnk</_CheckDeltaresStartMenuFolderUninstallProductShortCut>
       <_CheckDeltaresStartMenuFolderUninstallProductShortCut Condition=" '$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">$(_CheckDeltaShellStartMenuFolderShortCut)\Uninstall $(ProductName) ($(BUILD_NUMBER)).lnk</_CheckDeltaresStartMenuFolderUninstallProductShortCut>
@@ -1040,7 +1053,7 @@
       <_CheckDeltaresStartMenuFolderFMUserManualNameShortcutName>$(ProductName) Start Menu Folder D-Flow Flexible Mesh Technical Reference Manual ShortCut</_CheckDeltaresStartMenuFolderFMUserManualNameShortcutName>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputShortcutCheck" Properties="File=FMManualShortcuts_wxi;ShortCutName=$(_CheckDeltaresStartMenuFolderFMUserManualNameShortcutName);ShortCut=$(_CheckDeltaresStartMenuFolderFMUserManualNameShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckDeltaresStartMenuFolderFMUserManualName1D2DShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\D-Flow Flexible Mesh 1D2D User Manual.lnk</_CheckDeltaresStartMenuFolderFMUserManualName1D2DShortcut>
       <_CheckDeltaresStartMenuFolderFMUserManualName1D2DShortcutName>$(ProductName) Start Menu Folder D-Flow Flexible Mesh 1D2D User Manual ShortCut</_CheckDeltaresStartMenuFolderFMUserManualName1D2DShortcutName>
@@ -1087,9 +1100,9 @@
       <_CheckDeltaresRgfGridShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\RGFGrid.lnk</_CheckDeltaresRgfGridShortcut>
       <_CheckDeltaresRgfGridShortcutName>$(ProductName) Start Menu Folder RGFGrid ShortCut</_CheckDeltaresRgfGridShortcutName>
     </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputShortcutCheck" 
-             Properties="File=UtilityShortcuts_wxi;ShortCutName=$(_CheckDeltaresRgfGridShortcutName);ShortCut=$(_CheckDeltaresRgfGridShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputShortcutCheck"
+             Properties="File=UtilityShortcuts_wxi;ShortCutName=$(_CheckDeltaresRgfGridShortcutName);ShortCut=$(_CheckDeltaresRgfGridShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              Condition="'$(MyCultureOutputFolder)' != 'fmo\'"
              ContinueOnError="WarnAndContinue"/>
 
@@ -1097,9 +1110,9 @@
       <_CheckDeltaresDimrScriptFolderShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\DimrScripts.lnk</_CheckDeltaresDimrScriptFolderShortcut>
       <_CheckDeltaresDimrScriptFolderShortcutName>$(ProductName) Start Menu Folder DimrScripts ShortCut</_CheckDeltaresDimrScriptFolderShortcutName>
     </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputShortcutCheck" 
-             Properties="File=UtilityShortcuts_wxi;ShortCutName=$(_CheckDeltaresDimrScriptFolderShortcutName);ShortCut=$(_CheckDeltaresDimrScriptFolderShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputShortcutCheck"
+             Properties="File=UtilityShortcuts_wxi;ShortCutName=$(_CheckDeltaresDimrScriptFolderShortcutName);ShortCut=$(_CheckDeltaresDimrScriptFolderShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              Condition="'$(MyCultureOutputFolder)' != 'fmo\'"
              ContinueOnError="WarnAndContinue"/>
   </Target>
@@ -1146,7 +1159,7 @@
       <_Check_DeltaShellRegistryKey7Name>FriendlyTypeName</_Check_DeltaShellRegistryKey7Name>
       <_Check_DeltaShellRegistryKey7>$([MSBuild]::GetRegistryValueFromView('$(_DeltaShellRegistryKey6)', '$(_Check_DeltaShellRegistryKey7Name)', null, RegistryView.Registry64, RegistryView.Registry32))</_Check_DeltaShellRegistryKey7>
       <_Check_DeltaShellRegistryKey7ExpectedValue>$(_Check_DeltaShellRegistryKey1ExpectedValue)</_Check_DeltaShellRegistryKey7ExpectedValue>
-      
+
       <_DeltaShellRegistryKey7>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\DeltaShell.Gui.exe</_DeltaShellRegistryKey7>
       <_Check_DeltaShellRegistryKey8Name>Path</_Check_DeltaShellRegistryKey8Name>
       <_Check_DeltaShellRegistryKey8>$([MSBuild]::GetRegistryValueFromView('$(_DeltaShellRegistryKey7)', '$(_Check_DeltaShellRegistryKey8Name)', null, RegistryView.Registry64, RegistryView.Registry32))</_Check_DeltaShellRegistryKey8>
@@ -1157,110 +1170,110 @@
       <_Check_DeltaShellRegistryKey10Name>Class root projectfile</_Check_DeltaShellRegistryKey10Name>
       <_Check_DeltaShellRegistryKey10>$(registry:HKEY_CLASSES_ROOT\DeltaShell.dsproj)</_Check_DeltaShellRegistryKey10>
       <_Check_DeltaShellRegistryKey10ExpectedValue>DeltaShell data project file</_Check_DeltaShellRegistryKey10ExpectedValue>
-      
+
       <_Check_DeltaShellRegistryKey11Name>Class root projectfile ext</_Check_DeltaShellRegistryKey11Name>
       <_Check_DeltaShellRegistryKey11>$(registry:HKEY_CLASSES_ROOT\.dsproj)</_Check_DeltaShellRegistryKey11>
       <_Check_DeltaShellRegistryKey11ExpectedValue>DeltaShell.dsproj</_Check_DeltaShellRegistryKey11ExpectedValue>
     </PropertyGroup>
-    
+
     <!--<Message Text="##teamcity[testStarted name='Detecting Registry of DeltaShell ApplicationDescription $(CheckingFor)']" Importance="high" />
     <Message Importance="high" Text="Registry key DeltaShell Registry of ApplicationDescription is $(CheckingFor) with value '$(_Check_DeltaShellRegistryKey)'"/>
     <Message Text="##teamcity[testFailed name='Detecting Registry of DeltaShell ApplicationDescription $(CheckingFor)' message='Registry key DeltaShell ApplicationDescription is $(CheckingFor) with value $(_Check_DeltaShellRegistryKey)']" Importance="high" Condition="!('$(_Check_DeltaShellRegistryKey)' != '' AND $(_Check_DeltaShellRegistryKey) == 'DeltaShell' AND !$(ConditionState)) AND !('$(_Check_DeltaShellRegistryKey)' == '' AND '$(ConditionState)')" />
     <Message Text="##teamcity[testFinished name='Detecting Registry of DeltaShell ApplicationDescription $(CheckingFor)']" Importance="high" />-->
 
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey1Name);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_Check_DeltaShellRegistryKey1);ExpectedValue=$(_Check_DeltaShellRegistryKey1ExpectedValue);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
-    
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey2Name);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_Check_DeltaShellRegistryKey2);ExpectedValue=$(_Check_DeltaShellRegistryKey2ExpectedValue);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
-    
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey3Name);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_Check_DeltaShellRegistryKey3);ExpectedValue=$(_Check_DeltaShellRegistryKey3ExpectedValue);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
-    
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey4Name);
                           Package=$(_Package);
                           File=$(_File);
                           RegistryKeyValue=$(_Check_DeltaShellRegistryKey4);
                           ExpectedValue=$(_Check_DeltaShellRegistryKey4ExpectedValue);
-                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              ContinueOnError="WarnAndContinue"/>
 
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey5Name);
                           Package=$(_Package);
                           File=$(_File);
                           RegistryKeyValue=$(_Check_DeltaShellRegistryKey5);
                           ExpectedValue=$(_Check_DeltaShellRegistryKey5ExpectedValue);
-                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              ContinueOnError="WarnAndContinue"/>
 
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey6Name);
                           Package=$(_Package);
                           File=$(_File);
                           RegistryKeyValue=$(_Check_DeltaShellRegistryKey6);
                           ExpectedValue=$(_Check_DeltaShellRegistryKey6ExpectedValue);
-                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              ContinueOnError="WarnAndContinue"/>
 
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey7Name);
                           Package=$(_Package);
                           File=$(_File);
                           RegistryKeyValue=$(_Check_DeltaShellRegistryKey7);
                           ExpectedValue=$(_Check_DeltaShellRegistryKey7ExpectedValue);
-                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              ContinueOnError="WarnAndContinue"/>
 
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey8Name);
                           Package=$(_Package);
                           File=$(_File);
                           RegistryKeyValue=$(_Check_DeltaShellRegistryKey8);
                           ExpectedValue=$(_Check_DeltaShellRegistryKey8ExpectedValue);
-                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              ContinueOnError="WarnAndContinue"/>
 
     <!-- What happened to key 9?
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey9Name);
                           Package=$(_Package);
                           File=$(_File);
                           RegistryKeyValue=$(_Check_DeltaShellRegistryKey9);
                           ExpectedValue=$(_Check_DeltaShellRegistryKey9ExpectedValue);
-                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              ContinueOnError="WarnAndContinue"/>-->
 
-    
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey10Name);
                           Package=$(_Package);
                           File=$(_File);
                           RegistryKeyValue=$(_Check_DeltaShellRegistryKey10);
                           ExpectedValue=$(_Check_DeltaShellRegistryKey10ExpectedValue);
-                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              ContinueOnError="WarnAndContinue"/>
     <!-- I don't know why this not works....
 
-    <MsBuild Projects="$(MSBuildProjectFullPath)" 
-             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation" 
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputRegistryCheckWithExpectation"
              Properties="RegistryKey=$(_Check_DeltaShellRegistryKey11Name);
                           Package=$(_Package);
                           File=$(_File);
                           RegistryKeyValue=$(_Check_DeltaShellRegistryKey11);
                           ExpectedValue=$(_Check_DeltaShellRegistryKey11ExpectedValue);
-                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
+                          CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
              ContinueOnError="WarnAndContinue"/>-->
 
     <Message Text="Checking registry using HKEY_LOCAL_MACHINE\SOFTWARE\Deltares\$(ProductName)\$(MyProductCode)." Importance="high" />
@@ -1292,10 +1305,10 @@
       <_CheckRegKeyinstalledUtilitiesShortcutFolderKey>installedUtilitiesShortcutFolder</_CheckRegKeyinstalledUtilitiesShortcutFolderKey>
       <_CheckRegKeyinstalledUtilitiesShortcutFolder>$([MSBuild]::GetRegistryValueFromView('$(_BaseRegistryKey)', '$(_CheckRegKeyinstalledUtilitiesShortcutFolderKey)', null, RegistryView.Registry64, RegistryView.Registry32))</_CheckRegKeyinstalledUtilitiesShortcutFolder>
     </PropertyGroup>
-    <MsBuild 	Projects="$(MSBuildProjectFullPath)" 
-				Targets="TeamcityTemplateOutputRegistryCheck" 
-				Properties="RegistryKey=$(_CheckRegKeyinstalledUtilitiesShortcutFolderKey);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_CheckRegKeyinstalledUtilitiesShortcutFolder);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" 
-				Condition="'$(MyCultureOutputFolder)' != 'fmo\'"             
+    <MsBuild 	Projects="$(MSBuildProjectFullPath)"
+				Targets="TeamcityTemplateOutputRegistryCheck"
+				Properties="RegistryKey=$(_CheckRegKeyinstalledUtilitiesShortcutFolderKey);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_CheckRegKeyinstalledUtilitiesShortcutFolder);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)"
+				Condition="'$(MyCultureOutputFolder)' != 'fmo\'"
 				ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -1311,13 +1324,13 @@
     <PropertyGroup>
       <_File>Product_wxi</_File>
     </PropertyGroup>
-    
+
     <PropertyGroup>
       <_CheckRegKeyinstalledDeltaresShortcutFolderKey>installedDeltaresShortcutFolder</_CheckRegKeyinstalledDeltaresShortcutFolderKey>
       <_CheckRegKeyinstalledDeltaresShortcutFolder>$([MSBuild]::GetRegistryValueFromView('$(_BaseRegistryKey)', '$(_CheckRegKeyinstalledDeltaresShortcutFolderKey)', null, RegistryView.Registry64, RegistryView.Registry32))</_CheckRegKeyinstalledDeltaresShortcutFolder>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputRegistryCheck" Properties="RegistryKey=$(_CheckRegKeyinstalledDeltaresShortcutFolderKey);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_CheckRegKeyinstalledDeltaresShortcutFolder);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
-    
+
     <PropertyGroup>
       <_CheckRegKeyinstalledDeltaShellGuiExeConfigKey>installedDeltaShellGuiExeConfig</_CheckRegKeyinstalledDeltaShellGuiExeConfigKey>
       <_CheckRegKeyinstalledDeltaShellGuiExeConfig>$([MSBuild]::GetRegistryValueFromView('$(_BaseRegistryKey)', '$(_CheckRegKeyinstalledDeltaShellGuiExeConfigKey)', null, RegistryView.Registry64, RegistryView.Registry32))</_CheckRegKeyinstalledDeltaShellGuiExeConfig>
@@ -1340,19 +1353,19 @@
     <XmlPeek XmlInputPath="$(CheckDeltaShellGuiExeConfigFile)" Query="$(_Query)" Condition="Exists('$(CheckDeltaShellGuiExeConfigFile)')" ContinueOnError="WarnAndContinue">
       <Output TaskParameter="Result" ItemName="xmlKeyValue" />
     </XmlPeek>
-    
+
     <Message Text="Using check for setting $(xmlKey) in $(CheckDeltaShellGuiExeConfigFile)." Importance="high" />
     <Message Text="##teamcity[testStarted name='XMLFileContent.GuiConfigXml_wxi.DeltaShellGuiExe config file $(xmlKey) value']" Importance="high" />
     <Message Text="Detecting DeltaShell.Gui.exe.config file $(xmlKey) value at $(CheckDeltaShellGuiExeConfigFile) with value = @(xmlKeyValue)." Importance="high" />
     <Error Text="Detected DeltaShell.Gui.exe.config file $(xmlKey) value at $(CheckDeltaShellGuiExeConfigFile) with value @(xmlKeyValue) but expected was $(xmlKeyExpectedValue)." Condition="'@(xmlKeyValue)' != '$(xmlKeyExpectedValue)'" ContinueOnError="ErrorAndContinue"/>
-    <Message Text="##teamcity[testFailed 
-             name='XMLFileContent.GuiConfigXml_wxi.DeltaShellGuiExe config file $(xmlKey) value' 
+    <Message Text="##teamcity[testFailed
+             name='XMLFileContent.GuiConfigXml_wxi.DeltaShellGuiExe config file $(xmlKey) value'
              message='The key check for $(xmlKey) should be $(xmlKeyExpectedValue) but is @(xmlKeyValue)']"
              Importance="high"
              Condition="'@(xmlKeyValue)' != '$(xmlKeyExpectedValue)'"/>
     <Message Text="##teamcity[testFinished name='XMLFileContent.GuiConfigXml_wxi.DeltaShellGuiExe config file $(xmlKey) value']" Importance="high" />
   </Target>
-  
+
   <Target Name="TeamcityTemplateOutputShortcutCheck">
     <Message Text="##teamcity[testStarted name='Shortcuts.$(File).$(ShortCutName) $(CheckingFor)']" Importance="high" />
     <Message Text="Detecting $(ShortCutName) $(CheckingFor) at $(ShortCut)." Importance="high" />
@@ -1360,7 +1373,7 @@
     <Message Text="##teamcity[testFailed name='Shortcuts.$(File).$(ShortCut) $(CheckingFor)' message='The shortcut $(ShortCut) should be $(CheckingFor)']" Importance="high" Condition="Exists('$(ShortCut)') == $(ConditionState)"/>
     <Message Text="##teamcity[testFinished name='Shortcuts.$(File).$(ShortCutName) $(CheckingFor)']" Importance="high" />
   </Target>
-  
+
   <Target Name="TeamcityTemplateOutputRegistryCheck">
     <PropertyGroup>
       <_Condition Condition="!('$(RegistryKeyValue)' != '' AND $(RegistryKeyValue) == '1' AND !$(ConditionState)) AND !('$(RegistryKeyValue)' == '' AND '$(ConditionState)')">true</_Condition>
@@ -1370,11 +1383,11 @@
     <Message Text="##teamcity[testStarted name='$(Package).$(File).Checking Registry key $(RegistryKey) is $(CheckingFor)']" Importance="high" />
     <Message Importance="high" Text="Registry key $(RegistryKey) is not $(CheckingFor) with value '$(RegistryKeyValue)'"/>
     <Error Text="Registry key $(RegistryKey) is not $(CheckingFor) with value '$(RegistryKeyValue)'" Condition="$(_Condition)" ContinueOnError="ErrorAndContinue"/>
-    <Message Text="##teamcity[testFailed name='$(Package).$(File).Checking Registry key $(RegistryKey) is $(CheckingFor)' message='Registry key $(RegistryKey) is $(CheckingFor)']" Importance="high" 
+    <Message Text="##teamcity[testFailed name='$(Package).$(File).Checking Registry key $(RegistryKey) is $(CheckingFor)' message='Registry key $(RegistryKey) is $(CheckingFor)']" Importance="high"
              Condition="$(_Condition)" />
     <Message Text="##teamcity[testFinished name='$(Package).$(File).Checking Registry key $(RegistryKey) is $(CheckingFor)']" Importance="high" />
   </Target>
- 
+
   <Target Name="TeamcityTemplateOutputRegistryCheckWithExpectation">
     <PropertyGroup>
       <_Condition Condition="!('$(RegistryKeyValue)' != '' AND $(RegistryKeyValue) == '$(ExpectedValue)' AND !$(ConditionState)) AND !('$(RegistryKeyValue)' == '' AND '$(ConditionState)')">true</_Condition>
@@ -1383,7 +1396,7 @@
     <Message Text="##teamcity[testStarted name='$(Package).$(File).Checking Registry key $(RegistryKey) is $(CheckingFor)']" Importance="high" />
     <Message Importance="high" Text="Registry key $(RegistryKey) is not $(CheckingFor) has value '$(RegistryKeyValue)'"/>
     <Error Text="Registry key $(RegistryKey) is not $(CheckingFor) has value '$(RegistryKeyValue)'" Condition="$(_Condition)" ContinueOnError="ErrorAndContinue"/>
-    <Message Text="##teamcity[testFailed name='$(Package).$(File).Checking Registry key $(RegistryKey) is $(CheckingFor)' message='Registry key $(RegistryKey) is $(CheckingFor)' value $(ExpectedValue)]" Importance="high" 
+    <Message Text="##teamcity[testFailed name='$(Package).$(File).Checking Registry key $(RegistryKey) is $(CheckingFor)' message='Registry key $(RegistryKey) is $(CheckingFor)' value $(ExpectedValue)]" Importance="high"
              Condition="$(_Condition)" />
     <Message Text="##teamcity[testFinished name='$(Package).$(File).Checking Registry key $(RegistryKey) is $(CheckingFor)']" Importance="high" />
   </Target>
@@ -1402,9 +1415,9 @@
     <Message Text="##teamcity[testStarted name='$(Package).$(File).$(_TestTypeName) $(Key) is $(CheckingFor)']" Importance="high" />
     <Message Importance="high" Text="$(_TestTypeName) is $(CheckingFor) with value '$(KeyValue)'"/>
     <Error Text="$(_TestTypeName) $(Key) ($(KeyValue)) is $(CheckingFor) with value '$(_ExpectedValue)' check file : $(File)" Condition="$(_Condition)" ContinueOnError="ErrorAndContinue"/>
-    <Message Text="##teamcity[testFailed 
-              name='$(Package).$(File).$(_TestTypeName) $(Key) is $(CheckingFor)' 
-              message='$(_TestTypeName) $(Key) is not $(CheckingFor)']" 
+    <Message Text="##teamcity[testFailed
+              name='$(Package).$(File).$(_TestTypeName) $(Key) is $(CheckingFor)'
+              message='$(_TestTypeName) $(Key) is not $(CheckingFor)']"
              Importance="high"
              Condition="$(_Condition)" />
     <Message Text="##teamcity[testFinished name='$(Package).$(File).$(_TestTypeName) $(Key) is $(CheckingFor)']" Importance="high" />
@@ -1419,18 +1432,18 @@
     <Message Importance="high" Text="$(TestTypeName) is $(_AssemblyFileVersion)'" Condition="Exists('$(KeyValue)')"/>
     <Error Text="$(TestTypeName) of $(Key) ($(KeyValue)) is not $(FileVersion) but is '$(_AssemblyFileVersion)' check file : $(File) or $(Key)" Condition="Exists('$(KeyValue)') AND $(FileVersion) != $(_AssemblyFileVersion)" ContinueOnError="ErrorAndContinue"/>
     <Message Text="##teamcity[testFailed
-              type='comparisonFailure' 
-              name='$(Package).$(File).$(Key) $(TestTypeName)' 
-              message='$(Key) ($(KeyValue)) $(TestTypeName) is not $(FileVersion) but is $(_AssemblyFileVersion)' 
-              expected='$(FileVersion)' 
-              actual='$(_AssemblyFileVersion)']" 
-             Importance="high" 
+              type='comparisonFailure'
+              name='$(Package).$(File).$(Key) $(TestTypeName)'
+              message='$(Key) ($(KeyValue)) $(TestTypeName) is not $(FileVersion) but is $(_AssemblyFileVersion)'
+              expected='$(FileVersion)'
+              actual='$(_AssemblyFileVersion)']"
+             Importance="high"
              Condition="Exists('$(KeyValue)') AND $(FileVersion) != $(_AssemblyFileVersion)"/>
     <Error Text="$(Key) ($(KeyValue)) does not Exist" Condition="!Exists('$(KeyValue)')" ContinueOnError="ErrorAndContinue"/>
     <Message Text="##teamcity[testFailed
-              name='$(Package).$(File).$(Key) $(TestTypeName)' 
-              message='$(Key) ($(KeyValue)) does not exist, can not do version check']" 
-             Importance="high" 
+              name='$(Package).$(File).$(Key) $(TestTypeName)'
+              message='$(Key) ($(KeyValue)) does not exist, can not do version check']"
+             Importance="high"
              Condition="!Exists('$(KeyValue)')"/>
     <Message Text="##teamcity[testFinished name='$(Package).$(File).$(Key) $(TestTypeName)']" Importance="high" />
   </Target>

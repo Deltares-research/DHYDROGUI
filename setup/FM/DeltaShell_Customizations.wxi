@@ -7,7 +7,7 @@
       <Icon Id="icon.ico" SourceFile="$(var.pluginicon)"/>
     <?endif?>
   </Fragment>
-  
+
   <Fragment Id="OptionalExtraOrAdditionalFilesToIncludeInTheBinFolderInTheMainFeature">
     <DirectoryRef Id="BINDIR">
       <!-- optional extra files to include in the bin folder in the main feature -->
@@ -60,14 +60,14 @@
       </DirectoryRef>
     <?endif?>
   </Fragment>
- 
+
   <Fragment Id="SetDeltaresUINeededForOurFMPackage">
     <Property Id="SetDeltaShellUI" Hidden="yes"/>
     <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)" />
     <Binary Id="StartUpImage" SourceFile="$(var.ProjectDir)!(loc.Delft3DPackageName)_Resources\!(loc.StartUpImage)" />
     <Binary Id="UIBannerBmp" SourceFile="$(var.ProjectDir)!(loc.Delft3DPackageName)_Resources\setup_banner.jpg" />
     <Binary Id="UIDialogBmp" SourceFile="$(var.ProjectDir)!(loc.Delft3DPackageName)_Resources\setup_start.jpg" />
-    
+
     <?ifdef plugin_wixUIDeltares?>
     <UIRef Id="$(var.plugin_wixUIDeltares)"/>
     <?else?>
@@ -111,14 +111,14 @@
     <?ifdef plugin_utilityshortcuts ?>
       <DirectoryRef Id="ProgramGroupMenuDir">
         <Component Id="UtilitiesMenuShortcuts" Guid="$(var.UtilitiesMenuShortcutsGUID)">
-          <Condition><![CDATA[(INSTALLER_VARIANT <> "fmo")]]></Condition> <!-- NO UTILITIES WHEN INSTALLING OPEN --> 
+          <Condition><![CDATA[(INSTALLER_VARIANT <> "fmo")]]></Condition> <!-- NO UTILITIES WHEN INSTALLING OPEN -->
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedUtilitiesShortcutFolder" Type="integer" Value="1"/>
           <?include $(var.plugin_utilityshortcuts)?>
         </Component>
       </DirectoryRef>
     <?endif?>
   </Fragment>
-  
+
   <Fragment Id="IncludeAndAssociateCustom">
     <?ifdef programassociations?>
       <?include $(var.programassociations)?>
@@ -136,7 +136,7 @@
     <!--check for version of operating system-->
     <?include ..\OSVersionCheck.wxi?>
   </Fragment>
-  
+
   <Fragment Id="OurLaunchConditionsCheck">
     <Property Id="CheckOurLaunchConditions" Hidden="yes"/>
     <!-- Launch conditions -->
@@ -173,6 +173,8 @@
     <Property Id ='INSTALLER_VARIANT' Value='!(loc.INSTALLER_VARIANT)'/>
     <Property Id ='DeltaresProductName' Value='!(loc.ProductName)'/>
     <Property Id ='PublicReleaseVersion' Value='!(loc.PublicReleaseVersion)'/>
+    <Property Id ='ApplicationName' Value='!(loc.ApplicationName)'/>
+    <Property Id ='DistributionName' Value='!(loc.DistributionName)'/>
     <MediaTemplate EmbedCab="yes" MaximumUncompressedMediaSize="10"  CompressionLevel="high" />
     <PropertyRef Id="SetDeltaShellCustomizations"/>
 
