@@ -193,6 +193,8 @@
     <Property Id ='INSTALLER_VARIANT' Value='!(loc.INSTALLER_VARIANT)'/>
     <Property Id ='DeltaresProductName' Value='!(loc.ProductName)'/>
     <Property Id ='PublicReleaseVersion' Value='!(loc.PublicReleaseVersion)'/>
+    <Property Id ='ApplicationName' Value='!(loc.ApplicationName)'/>
+    <Property Id ='DistributionName' Value='!(loc.DistributionName)'/>
     <MediaTemplate EmbedCab="yes" MaximumUncompressedMediaSize="10"  CompressionLevel="high" />
     <PropertyRef Id="SetDeltaShellCustomizations"/>
 

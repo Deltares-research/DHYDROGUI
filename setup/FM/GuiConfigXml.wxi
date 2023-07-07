@@ -1,14 +1,20 @@
 <Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  
+
   <util:XmlFile Id="SetKey2$(var.GUICONFIGFILE)"
                 Action="setValue"
                 ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationName&quot;[\]]/@value"
                 File="[#$(var.GUICONFIGFILE)]"
-                Value="!(loc.ProductName)"/>
+                Value="!(loc.ApplicationName)"/>
 
-  <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
+  <util:XmlFile Id="SetKeyDistributionName$(var.GUICONFIGFILE)"
                 Action="setValue"
-                ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;distributionName&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="!(loc.DistributionName)"/>
+
+  <util:XmlFile Id="SetKeyPublicReleaseVersion$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;publicReleaseVersion&quot;[\]]/@value"
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="[FullProductNameVersion]"/>
 
@@ -19,7 +25,7 @@
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="$(var.ShowStartUpScreen)"/>
   <?endif?>
-  
+
   <?ifdef CheckOriginOfProject?>
   <util:XmlFile Id="SetKey22$(var.GUICONFIGFILE)"
                 Action="setValue"
@@ -27,7 +33,7 @@
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="$(var.CheckOriginOfProject)"/>
   <?endif?>
-  
+
   <?ifdef StartNamesCompatibleProducts?>
   <util:XmlFile Id="SetKey23$(var.GUICONFIGFILE)"
                 Action="setValue"
@@ -49,53 +55,45 @@
                 ElementPath="/configuration/appSettings/add[\[]@key=&quot;copyright&quot;[\]]/@value"
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="© Deltares 2008-2015"/>
-  
+
   <util:XmlFile Id="SetKey7$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/log4net/root/level/@value"
     File="[#$(var.GUICONFIGFILE)]"
     Value="INFO"/>
-  
-  
+
+
   <util:XmlFile Id="SetKey8$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;supportEmail&quot;[\]]/@value"
     File="[#$(var.GUICONFIGFILE)]"
     Value="!(loc.SupportEmail)"/>
-  
+
 
   <util:XmlFile Id="SetKey9$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;supportPhone&quot;[\]]/@value"
     File="[#$(var.GUICONFIGFILE)]"
     Value="!(loc.SupportPhone)"/>
-  
 
-  <util:XmlFile Id="SetKey10$(var.GUICONFIGFILE)"
-    Action="setValue"
-    ElementPath="/configuration/appSettings/add[\[]@key=&quot;mainWindowTitle&quot;[\]]/@value"
-    File="[#$(var.GUICONFIGFILE)]"
-    Value="!(loc.ProductName)"/>
-
-  
   <util:XmlFile Id="SetKey11$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;splashScreenLogoImageFilePath&quot;[\]]/@value"
     File="[#$(var.GUICONFIGFILE)]"
     Value="!(loc.SplashScreenLogoImageFilePath)"/>
-  
+
   <util:XmlFile Id="SetKey12$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;company&quot;[\]]/@value"
     File="[#$(var.GUICONFIGFILE)]"
     Value="!(loc.SplashScreenCompany)"/>
-  
+
   <util:XmlFile Id="SetKey13$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;license&quot;[\]]/@value"
     File="[#$(var.GUICONFIGFILE)]"
     Value="!(loc.SplashScreenLicense)"/>
-  
+
   <?ifdef splashScreenCopyright?>
   <util:XmlFile Id="SetKey14$(var.GUICONFIGFILE)"
     Action="setValue"
@@ -103,7 +101,7 @@
     File="[#$(var.GUICONFIGFILE)]"
     Value="$(var.splashScreenCopyright)"/>
   <?endif?>
-  
+
   <?ifdef checkForRegistration?>
   <util:XmlFile Id="SetKey15$(var.GUICONFIGFILE)"
     Action="setValue"
@@ -121,7 +119,7 @@
     File="[#$(var.GUICONFIGFILE)]"
     Value="!(loc.RegistrationVersion)"/>
   <?endif?>
-  
+
   <util:XmlFile Id="SetKey18$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;language&quot;[\]]/@value"
@@ -133,5 +131,5 @@
       ElementPath="/configuration/appSettings/add[\[]@key=&quot;manualFileName&quot;[\]]/@value"
       File="[#$(var.GUICONFIGFILE)]"
       Value="[BINDIR]\!(loc.ManualFileName)"/>
-  
+
 </Include>
