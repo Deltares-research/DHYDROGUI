@@ -162,6 +162,8 @@
     <PackageReference Include="Mono.Addins" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.ConsoleRunner" />
+    <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="PostSharp" GeneratePathProperty="true" />
     <PackageReference Include="PostSharp.Redist" GeneratePathProperty="true" />
     <PackageReference Include="Portable.System.DateTimeOnly" />
