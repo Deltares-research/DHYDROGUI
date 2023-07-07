@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
@@ -18,6 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
     public static class WaveSettingsHelper
     {
+        private static readonly IFileDialogService fileDialogService = new FileDialogService();
+
         public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaveModel data, IGui gui)
         {
             Ensure.NotNull(data, nameof(data));
@@ -38,15 +41,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         private static void ModifyWaveSettings(IEnumerable<WpfGuiCategory> wpfGuiCategories)
         {
-            SetButtonFunction(wpfGuiCategories, KnownWaveProperties.COMFile, SelectComFileButton.ButtonAction);
-            SetButtonFunction(wpfGuiCategories, KnownWaveProperties.InputTemplateFile, SelectInputTemplateFileButton.ButtonAction);
+            SetButtonBehaviour(wpfGuiCategories, KnownWaveProperties.COMFile, new SelectComFileButton(fileDialogService));
+            SetButtonBehaviour(wpfGuiCategories, KnownWaveProperties.InputTemplateFile, new SelectInputTemplateFileButton(fileDialogService));
         }
 
-        private static void SetButtonFunction(IEnumerable<WpfGuiCategory> wpfGuiCategories, string propertyName, Action<object> buttonAction)
+        private static void SetButtonBehaviour(IEnumerable<WpfGuiCategory> wpfGuiCategories, string propertyName,IButtonBehaviour buttonBehaviour)
         {
             WpfGuiProperty property = wpfGuiCategories.SelectMany(c => c.Properties)
                                                                           .Single(p => p.Name == propertyName);
-            property.CustomCommand.ButtonFunction = buttonAction;
+            property.CustomCommand.ButtonBehaviour = buttonBehaviour;
         }
 
         private static void AddCustomWaveSettings(WaveModel model, IGui gui, IEnumerable<WpfGuiCategory> wpfCategories)
@@ -67,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         HasMinValue = false
                     });
                 coordSys.CustomCommand.TextBoxEnabled = false;
-                coordSys.CustomCommand.ButtonFunction = o => SetCoordinateSystemButton.ButtonAction(o, gui, WaveModel.IsValidCoordinateSystem);
+                coordSys.CustomCommand.ButtonBehaviour = new SetCoordinateSystemButton(gui, WaveModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
 
@@ -93,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     ToolTip = string.Empty
                 });
                 waveBoundariesPerFileName.CustomCommand.TextBoxEnabled = false;
-                waveBoundariesPerFileName.CustomCommand.ButtonFunction = SelectSp2FileButton.ButtonAction;
+                waveBoundariesPerFileName.CustomCommand.ButtonBehaviour = new SelectSp2FileButton(fileDialogService);
                 generalCategory.AddWpfGuiProperty(waveBoundariesPerFileName);
             }
         }

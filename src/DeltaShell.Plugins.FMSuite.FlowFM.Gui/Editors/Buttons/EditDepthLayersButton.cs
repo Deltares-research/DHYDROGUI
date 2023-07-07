@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Windows.Forms;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
@@ -8,13 +9,13 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
 {
-    public static class EditDepthLayersHelper
+    public class EditDepthLayersHelper : IButtonBehaviour
     {
         public const string ToolTip = "Adjust layers";
         public const string Label = "Layer";
         public static readonly Bitmap ButtonImage = Resources.waterLayers;
 
-        public static void ButtonAction(object inputObject)
+        public void Execute(object inputObject)
         {
             var model = inputObject as WaterFlowFMModel;
             if (model == null)

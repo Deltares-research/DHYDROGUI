@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
                 new List<WpfGuiCategory> {wpfGuiCategory});
 
             Assert.IsNotNull(prop);
-            prop.CustomCommand.ButtonFunction = (o) => EditDepthLayersHelper.ButtonAction(o);
+            prop.CustomCommand.ButtonBehaviour = new EditDepthLayersHelper();
             prop.CustomCommand.ButtonImage = EditDepthLayersHelper.ButtonImage;
             WpfTestHelper.ShowModal(fmViewWpf);
 

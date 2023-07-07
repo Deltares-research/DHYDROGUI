@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             };
 
             // add a command for a property
-            wpfSettingsViewModel.SettingsCategories[0].SubCategories[2].Properties.ElementAt(1).CustomCommand = new CommandHelper(() => {}) {ButtonFunction = o => {}};
+            wpfSettingsViewModel.SettingsCategories[0].SubCategories[2].Properties.ElementAt(1).CustomCommand = new CommandHelper(() => {});
 
             // add a sub category with custom control
 

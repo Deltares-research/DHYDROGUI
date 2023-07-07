@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 });
 
                 depthlayers.CustomCommand.TextBoxEnabled = false;
-                depthlayers.CustomCommand.ButtonFunction = (o) => EditDepthLayersHelper.ButtonAction(o);
+                depthlayers.CustomCommand.ButtonBehaviour = new EditDepthLayersHelper();
                 depthlayers.CustomCommand.ButtonImage = EditDepthLayersHelper.ButtonImage;
                 generalCategory.AddWpfGuiProperty(depthlayers);
 
@@ -99,8 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 });
 
                 coordSys.CustomCommand.TextBoxEnabled = false;
-                coordSys.CustomCommand.ButtonFunction =
-                    (o) => SetCoordinateSystemButton.ButtonAction(o, gui, WaterFlowFMModel.IsValidCoordinateSystem);
+                coordSys.CustomCommand.ButtonBehaviour = new SetCoordinateSystemButton(gui, WaterFlowFMModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
             }

@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             get
             {
-                return ButtonFunction != null;
+                return ButtonBehaviour != null;
             }
         }
 
@@ -46,12 +46,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public Action UpdateAction { get; set; }
 
-        public Action<object> ButtonFunction { get; set; }
+        public IButtonBehaviour ButtonBehaviour { get; set; }
 
         private void ExecuteAction(object dummyObject)
         {
             object model = GetModel?.Invoke();
-            ButtonFunction?.Invoke(model);
+            ButtonBehaviour?.Execute(model);
             UpdateAction?.Invoke();
         }
     }
