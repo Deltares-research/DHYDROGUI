@@ -6,9 +6,9 @@
     <PackageVersion Include="AutoFixture.AutoNSubstitute" Version="4.18.0" />
     <PackageVersion Include="AutoFixture.NUnit3" Version="4.18.0" />
     <PackageVersion Include="Deltares.UGrid" Version="1.0.142702" />
-    <PackageVersion Include="DeltaShell.Framework" Version="2.0.0.2322" />
+    <PackageVersion Include="DeltaShell.Framework" Version="2.0.0.2330" />
     <PackageVersion Include="DeltaShell.Plugins.GridEditor" Version="1.1.0.143-beta" />
-    <PackageVersion Include="DeltaShell.TestProject" Version="2.0.0.2322" />
+    <PackageVersion Include="DeltaShell.TestProject" Version="2.0.0.2330" />
     <PackageVersion Include="DHYDRO.Common" Version="1.1.0.47" />
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="4.0.0.8" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="4.0.0.8" />
