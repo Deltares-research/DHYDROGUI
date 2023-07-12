@@ -117,6 +117,8 @@ physics,TidalForcing,processes,Processes,Tide generating forces,0|1,0,0,1,FALSE,
 physics,Doodsonstart,,,Doodson start,Double,55.565,,,TRUE,,,,,,"TRIWAQ: 55.565, D3D: 57.555"
 physics,Doodsonstop,,,Doodson stop,Double,375.575,,,TRUE,,,,,,"TRIWAQ: 375.575, D3D: 275.555"
 physics,Doodsoneps,,,Doodson epsilon,Double,0,,,TRUE,,,,,,"TRIWAQ = 0.0  400 cmps , D3D = 0.03   60 cmps"
+physics,VillemonteCD1,numerics,Fixed weir parameters,,Double,1.0,,,FALSE,,,,,,Calibration coefficient CD1 for Villemonte,
+physics,VillemonteCD2,numerics,Fixed weir parameters,,Double,10.0,,,FALSE,,,,,,Calibration coefficient CD2 for Villemonte,
 physics,Salinity,processes,Processes,Salinity,0|1,0,0,1,FALSE,,,,,,"Include salinity, (0: no, 1: yes)"
 physics,InitialSalinity,initial,Salinity,Initial salinity,Double,0,0,,FALSE,Salinity,,,,,Uniform initial salinity concentration, ppt
 physics,Sal0abovezlev,physics,,Salt water level threshold,Double,-999,,,TRUE,,,,,,Vertical level above which salinity is set 0,m
