@@ -12,10 +12,11 @@
     <Version>$(DhydroCommon).$(BuildNumber)</Version>
     <FileVersion>$(Version)</FileVersion>
     <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
     <LangVersion>7.3</LangVersion>
     <TargetFramework>net48</TargetFramework>
-
+    
     <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
     <TargetsPath>$(SolutionDir)Build\targets\</TargetsPath>
 

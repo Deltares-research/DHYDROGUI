@@ -1,28 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <BuildNumber>0</BuildNumber>
-        <GitHash>DEV</GitHash>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <OutputPath>$(SolutionDir)\bin\$(Configuration)\test\</OutputPath>
-        <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-        <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <TargetFramework>net48</TargetFramework>
-        <LangVersion>7.3</LangVersion>
-        <Company>Deltares</Company>
-        <Copyright>Copyright © Deltares 2023</Copyright>
-        <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
-        <Product>$(AssemblyName)</Product>
-        <DHYDROFileVersion>1.1.0</DHYDROFileVersion>
-        <Version>$(DHYDROFileVersion).$(BuildNumber)</Version>
-        <FileVersion>$(Version)</FileVersion>
-        <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
-        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    </PropertyGroup>
-
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <DebugType>full</DebugType>
     </PropertyGroup>
