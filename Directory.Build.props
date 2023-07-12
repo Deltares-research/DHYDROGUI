@@ -24,6 +24,9 @@
 
     <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
 
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   
