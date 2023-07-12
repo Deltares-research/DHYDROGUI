@@ -32,7 +32,7 @@ General,MeteoFile,General,,Meteo File,FileName,,,,,False,,,,,,
 General,SimMode,General,Simulation mode,Simulation mode:stationary|non-stationary,stationary|non-stationary,stationary,,,,,,,,,,
 General,TimeStep,General,Simulation mode,D-Waves time step,Double,10,1,,,SimMode=1,,,,,Time step in case of non-stationary simulation, min
 General,TimeInterval,General,Simulation mode,D-Waves time interval,Double,60,,,,SimMode=1,,,,,Time interval in case of non-stationary simulation, min
-General,OnlyInputVerify,General,Simulation mode,Verify input,true|false,false,,,,,,,,,Switch for input validation or simulation run: false = simulation run; true = input validation only,
+General,OnlyInputVerify,General,Simulation mode,Verify input,true|false,false,,,True,,,,,,Switch for input validation or simulation run: false = simulation run; true = input validation only,
 General,FlowBedLevel,General,Default domain data,Bed level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of bed level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
 General,FlowWaterLevel,General,Default domain data,Water level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of water level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
 General,FlowVelocity,General,Default domain data,Velocity:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of velocity from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
