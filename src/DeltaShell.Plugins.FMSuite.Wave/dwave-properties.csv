@@ -65,7 +65,7 @@ Processes,Triads,Physical Processes,Triads,Triads,true|false,false,,,,,,,,,Inclu
 Processes,TriadsAlpha,Physical Processes,Triads,TrFac,Double,0.05,,,,,Triads,,,,Alpha coefficient for triads, -
 Processes,TriadsBeta,Physical Processes,Triads,CutFr,Double,2.5,,,,,Triads,,,,Beta coefficient for triads, -
 Processes,BedFriction,Physical Processes,Bed friction,Bed friction:none|JONSWAP|Collins|Madsen et al.,none|jonswap|collins|madsen et al.,jonswap,,,,,,,,,Bed friction type,
-Processes,BedFricCoef,Physical Processes,Bed friction,Bed friction coef.,Double,BedFriction:0|0.038|0.015|0.05,,,,,BedFriction=1|2|3,,,,Bed friction coefficient (default: 0.067 for JONSWAP; 0.015 for Collings: 0.05 for Madsen et al.),
+Processes,BedFricCoef,Physical Processes,Bed friction,Bed friction coef.,Double,BedFriction:0|0.038|0.015|0.05,,,,,BedFriction=1|2|3,,,,Bed friction coefficient (default: 0.067 for JONSWAP; 0.015 for Collings: 0.05 for Madsen et al.), m2/s3
 Processes,Diffraction,Physical Processes,Diffraction,Diffraction,true|false,false,,,,,,,,,Diffraction,
 Processes,DiffracSteps,Physical Processes,Diffraction,Diffraction steps,Integer,0,,,,,Diffraction,,,,Number of diffraction smoothing steps
 Processes,DiffracProp,Physical Processes,Diffraction,Diffraction prop.,true|false,true,,,,,Diffraction,,,,Include adaption of propagation velocities due to diffraction,

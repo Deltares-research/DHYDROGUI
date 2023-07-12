@@ -92,6 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             };
             Assert.AreEqual(expectedDefaultValues, propertyDefinitionBedFrictionCoef.Value.MultipleDefaultValues);
             Assert.AreEqual("BedFriction:0|0.038|0.015|0.05", propertyDefinitionBedFrictionCoef.Value.DefaultValueAsString);
+            Assert.AreEqual( "m2/s3", propertyDefinitionBedFrictionCoef.Value.Unit);
         }
 
         [Test]
