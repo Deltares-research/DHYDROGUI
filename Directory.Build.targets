@@ -1,0 +1,22 @@
+<Project>
+
+  <ItemGroup Condition="Exists('Properties\Resources.resx')">
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup Condition="'@(InternalsVisibleTo->Count())' &gt; 0">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>%(InternalsVisibleTo.Identity)</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+</Project>
