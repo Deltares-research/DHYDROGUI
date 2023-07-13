@@ -8,7 +8,7 @@
     <GitHash>DEV</GitHash>
     <BuildNumber>0</BuildNumber>
 
-    <DhydroCommon>1.1.0</DhydroCommon>
+    <DhydroCommon>1.2.0</DhydroCommon>
     <Version>$(DhydroCommon).$(BuildNumber)</Version>
     <FileVersion>$(Version)</FileVersion>
     <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
