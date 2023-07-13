@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-
-
     <PropertyGroup Condition="'$(BUILD_SERVER)' == 'true'">
         <!--Set to true with a build server build to normalize stored file paths. Should be false during local dev or the debugger won’t be able to find the local source files.-->
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
