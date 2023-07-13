@@ -1,14 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <!--Source Link-->
-    <PropertyGroup>
-        <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <!-- Embed source files that are not tracked by the source control manager in the PDB -->
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
-        <DebugType>embedded</DebugType>
-    </PropertyGroup>
+
 
     <PropertyGroup Condition="'$(BUILD_SERVER)' == 'true'">
         <!--Set to true with a build server build to normalize stored file paths. Should be false during local dev or the debugger won’t be able to find the local source files.-->
@@ -20,27 +12,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <BuildNumber>0</BuildNumber>
-        <GitHash>DEV</GitHash>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <OutputPath>$(SolutionDir)\bin\$(Configuration)\src\</OutputPath>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-        <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-        <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <TargetFramework>net48</TargetFramework>
-        <LangVersion>7.3</LangVersion>
-        <Company>Deltares</Company>
-        <Copyright>Copyright © Deltares 2023</Copyright>
-        <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
-        <Product>$(AssemblyName)</Product>
-        <DHYDROFileVersion>1.1.0</DHYDROFileVersion>
-        <Version>$(DHYDROFileVersion).$(BuildNumber)</Version>
-        <FileVersion>$(Version)</FileVersion>
-        <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
-        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
