@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
 
             Properties = new ObservableCollection<WpfGuiProperty>(properties.Select(p => new WpfGuiProperty(p)));
+            Properties.CollectionChanged += (sender, args) => UpdateIsVisible();
             UpdateIsVisible();
         }
 
