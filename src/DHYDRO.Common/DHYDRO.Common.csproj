@@ -14,15 +14,6 @@
         <OutputPath>$(SolutionDir)bin\$(Configuration)\src</OutputPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DebugType>full</DebugType>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <DebugSymbols>True</DebugSymbols>
-    </PropertyGroup>
-
     <ItemGroup>
         <Resource Include="Resources\**" />
     </ItemGroup>
