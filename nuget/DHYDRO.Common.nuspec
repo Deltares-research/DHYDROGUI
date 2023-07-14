@@ -4,9 +4,9 @@
     <id>DHYDRO.Common</id>
     <title>DHYDRO.Common</title>
     <description>A shared D-HYDRO Suite code library.</description>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
     <authors>Deltares</authors>
-    <copyright>Deltares 2022</copyright>
+    <copyright>Deltares 2023</copyright>
     <dependencies>
       <group targetFramework=".NETFramework4.8" />
     </dependencies>

@@ -1,22 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DebugType>full</DebugType>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <DebugSymbols>True</DebugSymbols>
+    
+    <PropertyGroup>
+        <OutputPath>$(SolutionDir)bin\$(Configuration)\tests</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NSubstitute"/>
-        <PackageReference Include="NUnit"/>
+        <PackageReference Include="NSubstitute" />
+        <PackageReference Include="NUnit" />
         <PackageReference Include="NUnit.ConsoleRunner" />
         <PackageReference Include="NUnit3TestAdapter" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\DHYDRO.Common\DHYDRO.Common.csproj"/>
+        <ProjectReference Include="..\..\src\DHYDRO.Common\DHYDRO.Common.csproj" />
     </ItemGroup>
 </Project>
