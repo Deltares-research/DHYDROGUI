@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public static class WaterFlowFmSettingsHelper
     {
+        private const string layersTabName = "3D Layers";
+
         /// <summary>
         /// Get the WPF GUI categories <seealso cref="WpfGuiCategory"/>.
         /// </summary>
@@ -40,12 +42,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                                              .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
                                              .ToList();
 
+            AddCustomCategories(wpfGuiCategories);
+
             wpfGuiCategories.SelectMany(gp => gp.Properties).Distinct()
                             .ForEach(p => p.GetModel = () => model);
 
             SetFlowFmExtraSettings(model, gui, wpfGuiCategories);
 
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
+        }
+
+        private static void AddCustomCategories(List<WpfGuiCategory> wpfGuiCategories)
+        {
+            wpfGuiCategories.Add(new WpfGuiCategory(layersTabName, new List<FieldUIDescription>()));
         }
 
         private static ObjectUIDescription GetWaterFlowFmSettings(WaterFlowFMModel model)
@@ -65,27 +74,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
 
             var fmModel = model as WaterFlowFMModel;
-            //General settings
+
+            AddCoordinateSystemPropertyToGeneralSettingsCategory(gui, wpfCategories, fmModel);
+            AddLayerPropertyTo3DLayerCategory(wpfCategories, fmModel);
+            AddAdditionalCategories(wpfCategories, fmModel);
+        }
+
+        private static void AddAdditionalCategories(IList<WpfGuiCategory> wpfCategories, WaterFlowFMModel fmModel)
+        {
+            AddSedimentCategory(wpfCategories, fmModel);
+            AddTracerCategory(wpfCategories, fmModel);
+        }
+
+        private static void AddTracerCategory(IList<WpfGuiCategory> wpfCategories, WaterFlowFMModel fmModel)
+        {
+            WpfGuiCategory morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
+            if (morphologyCategory != null)
+            {
+                morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
+            }
+
+            var tracersCategory = new WpfGuiSubCategory("Tracers", new List<FieldUIDescription> { new FieldUIDescription(null, null, o => true, o => true) }) { CustomControl = new TracerDefinitionsEditorWpf { Tracers = fmModel.TracerDefinitions } };
+
+            WpfGuiCategory processesCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("processes"));
+            processesCategory?.SubCategories.Add(tracersCategory);
+        }
+
+        private static void AddSedimentCategory(IList<WpfGuiCategory> wpfCategories, WaterFlowFMModel fmModel)
+        {
+            Func<object, bool> isEnabledFunc = o => true;
+            Func<object, bool> isVisibleFunc = o => o is WaterFlowFMModel && (o as WaterFlowFMModel).UseMorSed;
+            var fieldUi = new FieldUIDescription(null, null, isEnabledFunc, isVisibleFunc);
+            var fieldUiDescriptions = new List<FieldUIDescription>();
+            fieldUiDescriptions.Add(fieldUi);
+
+            var sedimentCategory = new WpfGuiCategory("Sediment", fieldUiDescriptions)
+            {
+                CategoryVisibility = () => fmModel.UseMorSed,
+                CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties)
+            };
+
+            wpfCategories.Add(sedimentCategory);
+        }
+
+        private static void AddCoordinateSystemPropertyToGeneralSettingsCategory(IGui gui, IList<WpfGuiCategory> wpfCategories, WaterFlowFMModel fmModel)
+        {
+            // Gui Coordinate
             WpfGuiCategory generalCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
             if (generalCategory != null)
             {
-                var depthlayers = new WpfGuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => true, o => true)
-                {
-                    Category = "General",
-                    SubCategory = "Layers",
-                    ToolTip = EditDepthLayersHelper.ToolTip,
-                    Label = EditDepthLayersHelper.Label,
-                    ValueType = typeof(string),
-                    HasMaxValue = false,
-                    HasMinValue = false
-                });
-
-                depthlayers.CustomCommand.TextBoxEnabled = false;
-                depthlayers.CustomCommand.ButtonBehaviour = new EditDepthLayersHelper();
-                depthlayers.CustomCommand.ButtonImage = EditDepthLayersHelper.ButtonImage;
-                generalCategory.AddWpfGuiProperty(depthlayers);
-
-                //Gui Coordinate
                 var coordSys = new WpfGuiProperty(new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(fmModel), null)
                 {
                     Category = "General",
@@ -103,33 +140,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
             }
+        }
 
-            //Add more settings
-            //Use the FieldUIDescription to generate the getters and the enable / disable functions.
-            Func<object, bool> isEnabledFunc = o => true;
-            Func<object, bool> isVisibleFunc = o => o is WaterFlowFMModel && (o as WaterFlowFMModel).UseMorSed;
-            var fieldUi = new FieldUIDescription(null, null, isEnabledFunc, isVisibleFunc);
-            var fieldUiDescriptions = new List<FieldUIDescription>();
-            fieldUiDescriptions.Add(fieldUi);
-
-            var sedimentCategory = new WpfGuiCategory("Sediment", fieldUiDescriptions)
+        private static void AddLayerPropertyTo3DLayerCategory(IEnumerable<WpfGuiCategory> wpfCategories, WaterFlowFMModel fmModel)
+        {
+            WpfGuiCategory layerCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.Equals(layersTabName));
+            if (layerCategory is null)
             {
-                CategoryVisibility = () => fmModel.UseMorSed,
-                CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties)
-            };
-
-            wpfCategories.Add(sedimentCategory);
-
-            WpfGuiCategory morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
-            if (morphologyCategory != null)
-            {
-                morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
+                return;
             }
 
-            var tracersCategory = new WpfGuiSubCategory("Tracers", new List<FieldUIDescription> {new FieldUIDescription(null, null, o => true, o => true)}) {CustomControl = new TracerDefinitionsEditorWpf {Tracers = fmModel.TracerDefinitions}};
+            var layerProperty = new WpfGuiProperty(
+                new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description,
+                                       null,
+                                       o => true,
+                                       o => true)
+                {
+                    Category = layersTabName,
+                    SubCategory = "Layers",
+                    ToolTip = EditDepthLayersHelper.ToolTip,
+                    Label = EditDepthLayersHelper.Label,
+                    ValueType = typeof(string),
+                    HasMaxValue = false,
+                    HasMinValue = false,
+                });
 
-            WpfGuiCategory processesCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("processes"));
-            processesCategory?.SubCategories.Add(tracersCategory);
+            layerProperty.CustomCommand.TextBoxEnabled = false;
+            layerProperty.CustomCommand.ButtonBehaviour = new EditDepthLayersHelper();
+            layerProperty.CustomCommand.ButtonImage = EditDepthLayersHelper.ButtonImage;
+            layerProperty.GetModel = () => fmModel;
+            layerCategory.AddWpfGuiProperty(layerProperty);
         }
 
         /*Extracted from WaterFlowFMModelView.cs */
@@ -144,16 +184,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             FieldUIDescription[] cachedFieldDescriptions = objectDescription.FieldDescriptions.ToArray();
 
             // Map description to the model
-            MapDataOntoProperty(o => data.StopTime, (o, v) => data.StopTime = (DateTime) v, cachedFieldDescriptions, GuiProperties.StopTime);
-            MapDataOntoProperty(o => data.StartTime, (o, v) => data.StartTime = (DateTime) v, cachedFieldDescriptions, GuiProperties.StartTime);
-            MapDataOntoProperty(o => data.TimeStep, (o, v) => data.TimeStep = (TimeSpan) v, cachedFieldDescriptions, KnownProperties.DtUser);
+            MapDataOntoProperty(o => data.StopTime, (o, v) => data.StopTime = (DateTime)v, cachedFieldDescriptions, GuiProperties.StopTime);
+            MapDataOntoProperty(o => data.StartTime, (o, v) => data.StartTime = (DateTime)v, cachedFieldDescriptions, GuiProperties.StartTime);
+            MapDataOntoProperty(o => data.TimeStep, (o, v) => data.TimeStep = (TimeSpan)v, cachedFieldDescriptions, KnownProperties.DtUser);
 
             // Restore the fieldDescription
             objectDescription.FieldDescriptions = cachedFieldDescriptions;
 
             objectDescription.FieldDescriptions.First(f => f.Name == "StopTime").ValidationMethod =
                 (m, t) =>
-                    ((WaterFlowFMModel) m).StartTime < (DateTime) t
+                    ((WaterFlowFMModel)m).StartTime < (DateTime)t
                         ? ""
                         : "Start time must be smaller than stop time";
 
