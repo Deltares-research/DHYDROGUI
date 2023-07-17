@@ -702,23 +702,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void LoadingEmptyGridNetFileShouldNotLockIt()
         {
-            string mduPath =
-                TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
+            string testDataDir = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input");
 
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string tempTestDataDir = tempDir.CopyDirectoryToTempDirectory(testDataDir);
+                string mduPath = Path.Combine(tempTestDataDir, "bendprof.mdu");
+                
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(mduPath);
+                
+                // make grid file corrupt
+                File.WriteAllText(model.NetFilePath, "");
 
-            string gridFile = model.NetFilePath;
+                // attempt to reload grid
+                model.ReloadGrid();
 
-            // make grid file corrupt
-            File.WriteAllText(gridFile, "");
-
-            // attempt to reload grid
-            model.ReloadGrid();
-
-            // make sure we can still delete the file (not locked by mistake)
-            File.Delete(gridFile);
+                // make sure we can still delete the file (not locked by mistake)
+                File.Delete(model.NetFilePath);
+            }
         }
 
         [Test]
