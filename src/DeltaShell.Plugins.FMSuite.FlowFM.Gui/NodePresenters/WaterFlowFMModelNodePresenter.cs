@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             yield return model.RestartInput;
 
-            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model, model.SpatialData.InitialWaterLevel, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLevel, model, model.SpatialData.InitialWaterLevel, ShortCutType.SpatialCoverage);
 
             if (model.UseSalinity)
             {
