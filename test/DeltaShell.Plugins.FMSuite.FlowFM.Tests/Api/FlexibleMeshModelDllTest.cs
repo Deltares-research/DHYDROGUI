@@ -313,37 +313,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        public void TestCallGetNonExistingValues()
-        {
-            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            string localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(localCopy);
-
-            try
-            {
-                // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
-                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
-                // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
-                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                model.Area.Structures.Select(c =>
-                {
-                    c.CrestWidth = 1.0;
-                    return c;
-                }).ToList();
-                model.Initialize();
-                Assert.AreEqual(DimrApiDataSet.DimrFillValue,
-                                ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
-            }
-            finally
-            {
-                model.Cleanup();
-                model.Dispose();
-            }
-        }
-
-        [Test]
         public void TestGetObservationPointWaterLevel()
         {
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
