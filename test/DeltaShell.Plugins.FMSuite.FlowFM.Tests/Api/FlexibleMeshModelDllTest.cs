@@ -238,17 +238,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        public void TestCallGetNonExistingValues()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            DoWithLocalModelVersion(mduPath, (model) =>
-            {
-                model.Initialize();
-                Assert.AreEqual(Dimr.DimrApiDataSet.DimrFillValue, ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
-            });
-        }
-
-        [Test]
         public void TestGetObservationPointWaterLevel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

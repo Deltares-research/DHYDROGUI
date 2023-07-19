@@ -26,11 +26,6 @@ namespace DeltaShell.Dimr
         /// </summary>
         public const string LogFileLevelKey = "debugLevel";
 
-        /// <summary>
-        /// The DIMR fill value
-        /// </summary>
-        public const double DimrFillValue = -999000.0d;
-
         private const string standardBinFolderName = "bin";
         private const string standardScriptFolderName = "scripts";
         private const string shareFolderName = "share";
