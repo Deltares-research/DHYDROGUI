@@ -30,11 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 ValidationReport validationReport = WavePropertiesValidator.Validate(model);
                 if (warningAlert)
                 {
-                    Assert.IsTrue(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Warning && i.Message == windWarningMessage));
+                    Assert.IsTrue(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Error && i.Message == windWarningMessage));
                 }
                 else
                 {
-                    Assert.IsFalse(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Warning && i.Message == windWarningMessage));
+                    Assert.IsFalse(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Error && i.Message == windWarningMessage));
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 // Assert
                 ValidationReport processesReport = validationReport.SubReports.Single(r => r.Category == "Processes");
                 ValidationIssue validationIssue = processesReport.Issues.Single(i => i.Message == "Wind speed should be greater than zero when the option of quadruplets is activated.");
-                Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Warning));
+                Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
             }
         }
 
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 // Assert
                 ValidationReport processesReport = validationReport.SubReports.Single(r => r.Category == "Processes");
                 ValidationIssue validationIssue = processesReport.Issues.Single(i => i.Message == "Wind speed should be greater than zero when the option of quadruplets is activated.");
-                Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Warning));
+                Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
             }
         }
 
@@ -239,32 +239,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             30.0,
             30.0
-        }, false, false, TestName = "TimeseriesGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        }, false, false, TestName = "TimeseriesGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoError")]
         [TestCase(new[]
         {
             30.0,
             0.0
-        }, false, false, TestName = "TimeseriesNotAllGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        }, false, false, TestName = "TimeseriesNotAllGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoError")]
         [TestCase(new[]
         {
             0.0,
             0.0
-        }, false, false, TestName = "TimeseriesZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        }, false, false, TestName = "TimeseriesZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoError")]
         [TestCase(new[]
         {
             30.0,
             30.0
-        }, true, false, TestName = "TimeseriesGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_NoWarning")]
+        }, true, false, TestName = "TimeseriesGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_NoError")]
         [TestCase(new[]
         {
             30.0,
             0.0
-        }, true, true, TestName = "TimeSeriesNotAllGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
+        }, true, true, TestName = "TimeSeriesNotAllGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_ErrorMustBeThere")]
         [TestCase(new[]
         {
             0.0,
             0.0
-        }, true, true, TestName = "TimeSeriesZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
+        }, true, true, TestName = "TimeSeriesZero_QuadrupletsTrue_ForTimeSeriesWindCase_ErrorMustBeThere")]
         public void CheckWavePropertiesWithFlowModel_TimeVaryingWindSpeed(double[] windSpeedTimeSeries, bool quadruplets, bool warningAlert)
         {
             using (WaveModel model = WaveModelForPropertiesValidationBuilder.Start()
@@ -275,11 +275,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 ValidationReport validationReport = WavePropertiesValidator.Validate(model);
                 if (warningAlert)
                 {
-                    Assert.IsTrue(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Warning && i.Message == windWarningMessage));
+                    Assert.IsTrue(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Error && i.Message == windWarningMessage));
                 }
                 else
                 {
-                    Assert.IsFalse(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Warning && i.Message == windWarningMessage));
+                    Assert.IsFalse(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Error && i.Message == windWarningMessage));
                 }
             }
         }

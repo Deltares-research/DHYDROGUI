@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (waveModel.TimeFrameData.WindInputDataType == WindInputDataType.Constant &&
                     Math.Abs(waveModel.TimeFrameData.WindConstantData.Speed) <= double.Epsilon)
                 {
-                    yield return new ValidationIssue(waveModel, ValidationSeverity.Warning,
+                    yield return new ValidationIssue(waveModel, ValidationSeverity.Error,
                                                      Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_);
                 }
                 else if (waveModel.TimeFrameData.WindInputDataType == WindInputDataType.TimeVarying &&
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                          windSpeedValueTimeSeries.Values.Cast<double>()
                                                  .Any(windSpeedValue => Math.Abs(windSpeedValue) < double.Epsilon))
                 {
-                    yield return new ValidationIssue(waveModel, ValidationSeverity.Warning,
+                    yield return new ValidationIssue(waveModel, ValidationSeverity.Error,
                                                      Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_);
                 }
             }
