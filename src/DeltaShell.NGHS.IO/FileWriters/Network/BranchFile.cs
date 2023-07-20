@@ -172,12 +172,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 return new List<BranchProperties>();
             }
 
-            return ReadBranchProperties(branchCategories, netFilePath);
+            return ReadBranchProperties(branchCategories, netFilePath).Values.ToList();
         }
 
-        private static IList<BranchProperties> ReadBranchProperties(IEnumerable<DelftIniCategory> branchCategories, string netFilePath)
+        private static IDictionary<string, BranchProperties> ReadBranchProperties(IEnumerable<DelftIniCategory> branchCategories, string netFilePath)
         {
-            var propertiesPerBranch = new List<BranchProperties>();
+            var propertiesPerBranch = new Dictionary<string, BranchProperties>();
 
             foreach (var category in branchCategories)
             {
@@ -191,7 +191,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                     SourceCompartmentName = category.ReadProperty<string>(NetworkRegion.SourceCompartmentName.Key, true),
                     TargetCompartmentName = category.ReadProperty<string>(NetworkRegion.TargetCompartmentName.Key, true)
                 };
-                propertiesPerBranch.Add(branchProperties);
+                propertiesPerBranch.Add(branchProperties.Name, branchProperties);
             }
             
             if (!File.Exists(netFilePath)) return propertiesPerBranch;
@@ -213,9 +213,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 if (branchIdValues.Length != branchTypeValues.Length) return propertiesPerBranch;
                 for (int i = 0; i < branchIdValues.Length; i++)
                 {
-                    var branchProperty = propertiesPerBranch.FirstOrDefault(bp => bp.Name == branchIdValues[i]);
-                    if (branchProperty == null) continue;
-                    branchProperty.WaterType = ConvertBranchTypeToWaterType(branchTypeValues[i]);
+                    if (propertiesPerBranch.TryGetValue(branchIdValues[i], out BranchProperties branchProperty))
+                    {
+                        branchProperty.WaterType = ConvertBranchTypeToWaterType(branchTypeValues[i]);
+                    }
                 }
 
             }
