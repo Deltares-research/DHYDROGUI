@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
@@ -87,26 +86,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void UpdateDataItemNames(WaterFlowFMModel model)
+        private static void UpdateDataItemNames(WaterFlowFMModel model)
         {
             foreach (var dataItem in model.AllDataItems)
             {
-                var dataItemName = dataItem.Name;
-                if (updatedDataItemNames.ContainsKey(dataItemName))
+                if (updatedDataItemNames.TryGetValue(dataItem.Name, out string name))
                 {
-                    dataItem.Name = updatedDataItemNames[dataItemName];
+                    dataItem.Name = name;
                 }
             }
         }
 
-        private static bool SynchronizeDataItemValue(WaterFlowFMModel model, string name, object value)
+        private static void SynchronizeDataItemValue(WaterFlowFMModel model, string name, object value)
         {
             var dataItem = model.DataItems.FirstOrDefault(di => di.Name == name);
 
-            if (dataItem == null) return false;
+            if (dataItem == null) return;
 
-            var spatialOperationSetValueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
-            if (spatialOperationSetValueConverter != null)
+            if (dataItem.ValueConverter is SpatialOperationSetValueConverter spatialOperationSetValueConverter)
             {
                 SpatialOperationHelper.MakeNamesUniquePerSet(spatialOperationSetValueConverter.SpatialOperationSet);
                 
@@ -130,20 +127,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 dataItem.Value = value;
             }
-
-            return true;
         }
 
-        private static bool SynchronizeDataItemValues(WaterFlowFMModel model, string baseName,
-            CoverageDepthLayersList coverageDepthLayersList)
+        private static void SynchronizeDataItemValues(WaterFlowFMModel model, string baseName,
+                                                      CoverageDepthLayersList coverageDepthLayersList)
         {
             if (coverageDepthLayersList.Coverages.Count == 1)
             {
-                return SynchronizeDataItemValue(model, baseName, coverageDepthLayersList.Coverages.First());
+                SynchronizeDataItemValue(model, baseName, coverageDepthLayersList.Coverages[0]);
             }
-            return
-                !coverageDepthLayersList.Coverages.Where(
-                    (t, i) => !SynchronizeDataItemValue(model, baseName + "_" + (i + 1), t)).Any();
+            else
+            {
+                for (var i = 0; i < coverageDepthLayersList.Coverages.Count; i++)
+                {
+                    SynchronizeDataItemValue(model, baseName + "_" + (i + 1), coverageDepthLayersList.Coverages[i]);
+                }
+            }
         }
 
         private static void LoadSpatialData(WaterFlowFMModel waterFlowFMModel)
