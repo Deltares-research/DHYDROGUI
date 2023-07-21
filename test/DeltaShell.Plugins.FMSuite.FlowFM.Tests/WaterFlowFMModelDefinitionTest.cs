@@ -9,6 +9,7 @@ using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
@@ -130,6 +131,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsFalse(writeWaqFile);
             var waqOutputInterval = (TimeSpan) modelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value;
             Assert.IsTrue(new TimeSpan(0, 0, 0, 0).Equals(waqOutputInterval));
+        }
+        
+        [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_PropertySortingIndicesHaveDefaultValue()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            Assert.IsTrue(modelDefinition.Properties.All(p => p.PropertyDefinition.SortIndex == -1));
+        }
+        
+        [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_PropertySortingIndicesAreReset()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            
+            modelDefinition.Properties.ForEach(p => p.PropertyDefinition.SortIndex = 10);
+            modelDefinition = new WaterFlowFMModelDefinition();
+            
+            Assert.IsTrue(modelDefinition.Properties.All(p => p.PropertyDefinition.SortIndex == -1));
         }
 
         [Test]

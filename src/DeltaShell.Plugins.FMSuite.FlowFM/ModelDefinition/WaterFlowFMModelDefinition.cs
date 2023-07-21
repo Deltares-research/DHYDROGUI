@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
@@ -115,6 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             };
 
             SetDefaultGuiTimeProperties();
+            ClearPropertySortIndices();
 
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
@@ -733,6 +734,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                      GuiProperties.RstOutputStartTime, GuiProperties.RstOutputStopTime);
             SetDefaultTimeProperties(KnownProperties.WaqInterval, GuiProperties.WaqOutputDeltaT,
                                      GuiProperties.WaqOutputStartTime, GuiProperties.WaqOutputStopTime);
+        }
+        
+        private void ClearPropertySortIndices()
+        {
+            Properties.ForEach(p => p.PropertyDefinition.SortIndex = -1);
         }
 
         private void SetDefaultTimeProperties(string intervalPropertyName,

@@ -14,6 +14,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -39,6 +40,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class WaterFlowFMImportExportTest
     {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportExportPreservesPropertyOrder()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mduPath = TestHelper.GetTestFilePath(@"ImportMDUFile\property-order.mdu");
+                string mduImportPath = tempDir.CopyTestDataFileToTempDirectory(mduPath);
+                string mduExportPath = Path.Combine(tempDir.Path, "export.mdu");
+                
+                var model = new WaterFlowFMModel();
+                
+                model.ImportFromMdu(mduImportPath);
+                model.ExportTo(mduExportPath);
+
+                List<string> lines = File.ReadLines(mduExportPath).ToList();
+
+                int generalSectionLineNr = lines.FindIndex(x => x.ContainsCaseInsensitive("[General]"));
+                int geometrySectionLineNr = lines.FindIndex(x => x.ContainsCaseInsensitive("[Geometry]"));
+                int numericsSectionLineNr = lines.FindIndex(x => x.ContainsCaseInsensitive("[Numerics]"));
+                int physicsSectionLineNr = lines.FindIndex(x => x.ContainsCaseInsensitive("[Physics]"));
+                int windSectionLineNr = lines.FindIndex(x => x.ContainsCaseInsensitive("[Wind]"));
+                int wavesSectionLineNr = lines.FindIndex(x => x.ContainsCaseInsensitive("[Waves]"));
+                int timeSectionLineNr = lines.FindIndex(x => x.ContainsCaseInsensitive("[Time]"));
+                int outputSectionLineNr = lines.FindIndex(x => x.ContainsCaseInsensitive("[Output]"));
+                
+                Assert.IsTrue(lines[generalSectionLineNr + 1].ContainsCaseInsensitive("CustomGeneralProperty"));
+                Assert.IsTrue(lines[geometrySectionLineNr + 1].ContainsCaseInsensitive("CustomGeometryProperty"));
+                Assert.IsTrue(lines[numericsSectionLineNr + 1].ContainsCaseInsensitive("CustomNumericsProperty"));
+                Assert.IsTrue(lines[physicsSectionLineNr + 1].ContainsCaseInsensitive("CustomPhysicsProperty"));
+                Assert.IsTrue(lines[windSectionLineNr + 1].ContainsCaseInsensitive("CustomWindProperty"));
+                Assert.IsTrue(lines[wavesSectionLineNr + 1].ContainsCaseInsensitive("CustomWavesProperty"));
+                Assert.IsTrue(lines[timeSectionLineNr + 1].ContainsCaseInsensitive("CustomTimeProperty"));
+                Assert.IsTrue(lines[outputSectionLineNr + 1].ContainsCaseInsensitive("CustomOutputProperty"));
+            };
+        }
+        
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]

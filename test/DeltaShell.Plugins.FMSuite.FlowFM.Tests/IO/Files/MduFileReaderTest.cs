@@ -15,6 +15,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
     public class MduFileReaderTest
     {
         [Test]
+        public void Read_KnownProperty_ThenPropertySortIndexHasChanged()
+        {
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "Program = MyProgram # Program name";
+
+            ReadWithAssert(fileContent, definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("Program");
+                Assert.AreEqual(2, property.PropertyDefinition.SortIndex);
+            });
+        }
+        
+        [Test]
         public void Read_KnownPropertyNonDefaultValue_ThenPropertyValueHasChanged()
         {
             string fileContent = "[General]"
@@ -87,6 +101,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
                 AssertPropertyValues(property, "General", "MyValue", "MyDescription");
+            });
+        }
+        
+        [Test]
+        public void Read_CustomProperty_ThenPropertySortIndexHasChanged()
+        {
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "MyCustomProperty = MyValue # MyDescription";
+
+            ReadWithAssert(fileContent, definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty("MyCustomProperty");
+                Assert.AreEqual(2, property.PropertyDefinition.SortIndex);
             });
         }
 
