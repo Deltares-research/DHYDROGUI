@@ -170,6 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             Dependencies.CompileDefaultValueIndexerDependencies(Properties);
             SetDefaultReferenceDate();
             SetGuiTimePropertiesFromMduProperties();
+            ClearPropertySortIndices();
 
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
@@ -610,6 +611,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             SetGuiStartStopDeltaTFromMdu(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile,
                                          GuiProperties.ClassMapOutputDeltaT);
 
+        }
+        
+        private void ClearPropertySortIndices()
+        {
+            Properties.ForEach(p => p.PropertyDefinition.SortIndex = -1);
         }
 
         private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName)

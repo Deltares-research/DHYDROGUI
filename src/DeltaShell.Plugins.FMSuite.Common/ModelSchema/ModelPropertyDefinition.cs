@@ -60,6 +60,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// Display text for this property.
         /// </summary>
         public string Caption { get; set; }
+        
+        /// <summary>
+        /// The sorting index of this property in the Delft .ini file. A value of -1 indicates that the property
+        /// is not included in the sorting. The default value is -1.
+        /// </summary>
+        public int SortIndex { get; set; } = -1;
 
         /// <summary>
         /// The default value of this property, represented in string format.

@@ -456,26 +456,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                 }
 
-        private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures)
-            {
+        private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(
+            IList<WaterFlowFMProperty> properties, bool writeExtForcings, bool writeFeatures)
+        {
             WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
-                      FMDllVersion);
-            SetValueToPropertyIfExists(modelDefinition, KnownProperties.Version, FMDllVersion);
-            SetValueToPropertyIfExists(modelDefinition, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
-            var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
-                                                               && p.PropertyDefinition.FileCategoryName !=
-                                                               MorphologyFile
-                                                                   .MorphologyUnknownProperty /*Remove morphology unknown properties*/
-                                                               && p.PropertyDefinition.FileCategoryName !=
-                                                               SedimentFile
-                                                                   .SedimentUnknownProperty) /*Remove sediment unknown properties that should be located on the sediment file*/
-                .GroupBy(p => p.PropertyDefinition.FileCategoryName);
+            WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + 
+                      ", D-Flow FM Version " + FMDllVersion);
+            SetValueToPropertyIfExists(properties, KnownProperties.Version, FMDllVersion);
+            SetValueToPropertyIfExists(properties, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
+            
+            IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup = 
+                properties.Where(IsMduFileProperty)
+                          .OrderBy(GetPropertySortIndex)
+                          .GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
-            propertiesByGroup =
-                RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, modelDefinition, writeExtForcings, writeFeatures);
-            return propertiesByGroup;
-            }
+            return RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, properties, writeExtForcings, writeFeatures);
+        }
+        
+        private static bool IsMduFileProperty(WaterFlowFMProperty property)
+        {
+            return property.PropertyDefinition.FileCategoryName != "GUIOnly"
+                   // remove unknown properties that should be located on the sed/mor files
+                   && property.PropertyDefinition.FileCategoryName != MorphologyFile.MorphologyUnknownProperty
+                   && property.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty;
+        }
+        
+        private static int GetPropertySortIndex(WaterFlowFMProperty property)
+        {
+            int sortIndex = property.PropertyDefinition.SortIndex;
+            return sortIndex != -1 
+                       ? sortIndex 
+                       : int.MaxValue;
+        }
 
         private void WriteMduLine(WaterFlowFMProperty prop, string pathValue)
         {
@@ -1067,11 +1079,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(currentGroupName,
                                     mduPropertyName, mduComment);
 
-                            definition.AddProperty(new WaterFlowFMProperty(propDef, mduPropertyValue));
+                            var waterFlowFmProperty = new WaterFlowFMProperty(propDef, mduPropertyValue);
+                            definition.AddProperty(waterFlowFmProperty);
                         }
+                        
+                        WaterFlowFMProperty property = definition.GetModelProperty(mduPropertyLowerCase);
+                        property.PropertyDefinition.SortIndex = LineNumber;
+                        
                         if (!string.IsNullOrEmpty(mduPropertyValue))
                         {
-                            var property = definition.GetModelProperty(mduPropertyLowerCase);
                             if (mduPropertyValue.EndsWith(@"\"))
                             {
                                 mduPropertyValue = GetMduPropertyMultipleLineValueRecursive(mduPropertyName, mduPropertyValue, ref line, ref readNextLine);

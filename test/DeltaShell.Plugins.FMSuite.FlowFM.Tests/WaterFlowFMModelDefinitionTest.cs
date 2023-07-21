@@ -65,6 +65,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value);
             Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value);
         }
+        
+        [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_PropertySortingIndicesHaveDefaultValue()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            Assert.IsTrue(modelDefinition.Properties.All(p => p.PropertyDefinition.SortIndex == -1));
+        }
+        
+        [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_PropertySortingIndicesAreReset()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            
+            modelDefinition.Properties.ForEach(p => p.PropertyDefinition.SortIndex = 10);
+            modelDefinition = new WaterFlowFMModelDefinition();
+            
+            Assert.IsTrue(modelDefinition.Properties.All(p => p.PropertyDefinition.SortIndex == -1));
+        }
 
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
