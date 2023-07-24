@@ -177,6 +177,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 case ExtForceFileConstants.FileNameKey:
                     SetFileName(extForceFileItem);
                     break;
+                case ExtForceFileConstants.VarNameKey:
+                    SetVarName(extForceFileItem);
+                    break;
                 case ExtForceFileConstants.FileTypeKey:
                     SetFileType(extForceFileItem);
                     break;
@@ -931,6 +934,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             else
             {
                 LogWarningQuantityPropertyAlreadySet(ExtForceFileConstants.FileNameKey);
+            }
+        }
+        
+        private void SetVarName(ExtForceFileItem extForceFileItem)
+        {
+            if (string.IsNullOrEmpty(extForceFileItem.VarName))
+            {
+                extForceFileItem.VarName = GetValuePart(currentLine);
             }
         }
 

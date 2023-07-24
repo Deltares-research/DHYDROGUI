@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString(string.Empty);
             }
         }
-
+        
         private void WriteExtForceFile(IEnumerable<ExtForceFileItem> extForceFileItems)
         {
             OpenOutputFile(extFilePath);
@@ -95,40 +95,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
                 {
-                    WriteLine("");
-                    WriteLine((extForceFileItem.Enabled ? ExtForceFileConstants.QuantityKey : disabledQuantityKey) +
-                              "=" + extForceFileItem.Quantity);
-                    WriteLine(ExtForceFileConstants.FileNameKey + "=" + extForceFileItem.FileName);
-                    WriteLine(ExtForceFileConstants.FileTypeKey + "=" + extForceFileItem.FileType);
-                    WriteLine(ExtForceFileConstants.MethodKey + "=" + extForceFileItem.Method);
-                    WriteLine(ExtForceFileConstants.OperandKey + "=" + extForceFileItem.Operand);
-                    if (!double.IsNaN(extForceFileItem.Value))
-                    {
-                        WriteLine(valueKey + "=" + extForceFileItem.Value);
-                    }
-
-                    if (!double.IsNaN(extForceFileItem.Factor))
-                    {
-                        WriteLine(factorKey + "=" + extForceFileItem.Factor);
-                    }
-
-                    if (!double.IsNaN(extForceFileItem.Offset))
-                    {
-                        WriteLine(offsetKey + "=" + extForceFileItem.Offset);
-                    }
-
-                    if (extForceFileItem.ModelData != null)
-                    {
-                        foreach (KeyValuePair<string, object> modelData in extForceFileItem.ModelData)
-                        {
-                            WriteLine(modelData.Key + "=" + modelData.Value);
-                        }
-                    }
+                    WriteExtForceFileItem(extForceFileItem);
                 }
             }
             finally
             {
                 CloseOutputFile();
+            }
+        }
+        private void WriteExtForceFileItem(ExtForceFileItem extForceFileItem)
+        {
+            WriteMandatoryExtForceFileItemData(extForceFileItem);
+            WriteOptionalExtForceFileItemData(extForceFileItem);
+        }
+
+        private void WriteMandatoryExtForceFileItemData(ExtForceFileItem extForceFileItem)
+        {
+            WriteLine("");
+            WriteLine((extForceFileItem.Enabled ? ExtForceFileConstants.QuantityKey : disabledQuantityKey) +
+                      "=" + extForceFileItem.Quantity);
+            WriteLine(ExtForceFileConstants.FileNameKey + "=" + extForceFileItem.FileName);
+            WriteLine(ExtForceFileConstants.FileTypeKey + "=" + extForceFileItem.FileType);
+            WriteLine(ExtForceFileConstants.MethodKey + "=" + extForceFileItem.Method);
+            WriteLine(ExtForceFileConstants.OperandKey + "=" + extForceFileItem.Operand);
+        }
+
+        private void WriteOptionalExtForceFileItemData(ExtForceFileItem extForceFileItem)
+        {
+            if (!string.IsNullOrEmpty(extForceFileItem.VarName))
+            {
+                WriteLine(ExtForceFileConstants.VarNameKey + "=" + extForceFileItem.VarName);   
+            }
+            
+            if (!double.IsNaN(extForceFileItem.Value))
+            {
+                WriteLine(valueKey + "=" + extForceFileItem.Value);
+            }
+
+            if (!double.IsNaN(extForceFileItem.Factor))
+            {
+                WriteLine(factorKey + "=" + extForceFileItem.Factor);
+            }
+
+            if (!double.IsNaN(extForceFileItem.Offset))
+            {
+                WriteLine(offsetKey + "=" + extForceFileItem.Offset);
+            }
+            
+            if (extForceFileItem.ModelData != null)
+            {
+                foreach (KeyValuePair<string, object> modelData in extForceFileItem.ModelData)
+                {
+                    WriteLine(modelData.Key + "=" + modelData.Value);
+                }
             }
         }
 

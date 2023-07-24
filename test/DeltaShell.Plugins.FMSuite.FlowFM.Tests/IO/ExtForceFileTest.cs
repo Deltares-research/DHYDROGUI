@@ -221,6 +221,80 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
         }
+        
+        [Test]
+        public void Read_ExtFileWithVarName()
+        {
+            // Given
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            string extPath =
+                TestHelper.GetTestFilePath(@"ExtFileTest\with_varname.ext");
+            Assert.IsTrue(File.Exists(extPath));
+
+            extPath = TestHelper.CreateLocalCopy(extPath);
+            Assert.IsTrue(File.Exists(extPath));
+            
+            Assert.IsFalse(modelDefinition.UnsupportedFileBasedExtForceFileItems.Any());
+            
+            //action read
+            var extForceFile = new ExtForceFile();
+            var expectedMessage = @"Quantity 'solarradiation' detected in the external force file and will be passed to the computational core. This may affect your simulation.";
+            TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, modelDefinition, ""), expectedMessage);
+
+            // check read
+            Assert.IsTrue(modelDefinition.UnsupportedFileBasedExtForceFileItems.Any());
+            var unsupportedExternalForceItem = modelDefinition.UnsupportedFileBasedExtForceFileItems.First();
+            Assert.IsNotNull(unsupportedExternalForceItem.UnsupportedExtForceFileItem);
+            Assert.AreEqual("solarradiation", unsupportedExternalForceItem.UnsupportedExtForceFileItem.Quantity);
+            Assert.AreEqual("ssr", unsupportedExternalForceItem.UnsupportedExtForceFileItem.VarName);
+        }
+
+        
+        [Test]
+        public void Write_ExtFileWithVarName()
+        {
+            //action write
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                //given
+               
+                var quantity = "solarradiation";
+                var filename = @"/p/1204257-dcsmzuno/data/meteo/ERA5/nc/ERA5_2005-2021_dfm_ssr_strd.nc";
+                var varname = "ssr";
+                var filetype = 11;
+                var method = 3;
+                var operation = "O";
+                
+                var extForceFileItem = new ExtForceFileItem(quantity)
+                {
+                    FileName = filename,
+                    VarName = varname,
+                    FileType = filetype,
+                    Method = method,
+                    Operand = operation
+                };
+                
+                //setup model
+                var writeExtPath = Path.Combine(temporaryDirectory.Path, Path.GetFileName("with_varname_written.ext"));
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var extForceFile = new ExtForceFile();
+                modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(new UnsupportedFileBasedExtForceFileItem(writeExtPath,extForceFileItem));
+
+                //write
+                extForceFile.Write(writeExtPath, modelDefinition, false, false);
+
+                // check written file
+                var writtenModelDefinition = new WaterFlowFMModelDefinition();
+                var writtenExtForceFile = new ExtForceFile();
+                writtenExtForceFile.Read(writeExtPath, writtenModelDefinition, "");
+
+                Assert.IsTrue(writtenModelDefinition.UnsupportedFileBasedExtForceFileItems.Any());
+                var writtenUnsupportedExternalForceItem = writtenModelDefinition.UnsupportedFileBasedExtForceFileItems.First();
+                Assert.IsNotNull(writtenUnsupportedExternalForceItem.UnsupportedExtForceFileItem);
+                Assert.AreEqual(quantity, writtenUnsupportedExternalForceItem.UnsupportedExtForceFileItem.Quantity);
+                Assert.AreEqual(varname, writtenUnsupportedExternalForceItem.UnsupportedExtForceFileItem.VarName);
+            }
+        }
 
         [Test]
         public void ReadCorrectSpatialVaryingPropertiesShouldBeOk()

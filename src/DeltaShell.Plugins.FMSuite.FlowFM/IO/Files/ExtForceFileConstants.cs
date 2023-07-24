@@ -49,5 +49,10 @@
         /// The operand key.
         /// </summary>
         public const string OperandKey = "OPERAND";
+        
+        /// <summary>
+        /// The varname key.
+        /// </summary>
+        public const string VarNameKey = "VARNAME";
     }
 }

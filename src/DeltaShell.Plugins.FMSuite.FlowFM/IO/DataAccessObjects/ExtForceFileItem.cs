@@ -22,6 +22,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
         // general data
         public string Quantity { get; set; }
         public string FileName { get; set; }
+        
+        /// <summary>
+        /// Optional property for variable name of data set
+        /// Note: not used in the GUI
+        /// </summary>
+        public string VarName { get; set; }
         public int FileType { get; set; }
         public int Method { get; set; }
         public string Operand { get; set; }
@@ -35,5 +41,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
 
         // optional additional data, e.g. for friction type
         public Dictionary<string, object> ModelData { get; set; }
+
     }
 }
