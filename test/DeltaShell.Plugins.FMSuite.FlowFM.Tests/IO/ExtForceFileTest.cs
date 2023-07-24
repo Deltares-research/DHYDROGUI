@@ -1107,6 +1107,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        [Test]
+        public void GivenOldExtForceFileWithExtraPolTol_WhenReadOldExtForceFile_ThenWrittenDataContainsExpectedDataWithExtraPolTol()
+        {
+            double expectedExtraPolTol = 40;
+            var def = new WaterFlowFMModelDefinition();
+            string originalTestDirectory = TestHelper.GetTestFilePath(Path.Combine("ExtFileTest", "OptionalExtraPolTol"));
+            string extPath = Path.Combine(originalTestDirectory, "WithExtraPolTol.ext");
+            string extSubFilesReferenceFilePath = Path.Combine(originalTestDirectory, "FlowFM.mdu");
+
+            var extForceFile = new ExtForceFile();
+            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+
+            var unsupportedExtForceFileItem = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
+
+            Assert.That(unsupportedExtForceFileItem, Is.Not.Null);
+            Assert.That(unsupportedExtForceFileItem.ExtraPolTol, Is.EqualTo(expectedExtraPolTol));
+        }
+
+        [Test]
+        public void GivenOldExtForceFileWithExtraPolTol_WhenReadAndWriteOldExtForceFile_ThenWrittenDataContainsExpectedDataWithExtraPolTol()
+        {
+            const string quantity = "initialvelocityx";
+            const string filename = @"rijn_beno19_6_v2a_waal_ucx_S16000.xyz";
+            const int filetype = 7;
+            const int method = 5;
+            const string operation = "O";
+            const int extrapoltol = 40;
+
+            var extForceFileItem = new ExtForceFileItem(quantity)
+            {
+                FileName = filename,
+                FileType = filetype,
+                Method = method,
+                Operand = operation,
+                ExtraPolTol = extrapoltol
+            };
+
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                var writeExtPath = Path.Combine(temporaryDirectory.Path, Path.GetFileName("with_extrapoltol_written.ext"));
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var extForceFile = new ExtForceFile();
+                modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(new UnsupportedFileBasedExtForceFileItem(writeExtPath,extForceFileItem));
+                
+                //write
+                extForceFile.Write(writeExtPath, modelDefinition, false, false);
+
+                // check written file
+                string extForceFileContent = File.ReadAllText(writeExtPath);
+                Assert.IsTrue(extForceFileContent.Contains($"QUANTITY={quantity}"), $"QUANTITY={quantity} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"FILENAME={filename}"), $"FILENAME={filename} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"FILETYPE={filetype}"), $"FILETYPE={filetype} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"METHOD={method}"), $"METHOD={method} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"OPERAND={operation}"), $"OPERAND={operation} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"EXTRAPOLTOL={extrapoltol}"), $"EXTRAPOLTOL={extrapoltol} not found");
+            }
+        }
+
         private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)
         {
             Assert.AreEqual(2, def.UnsupportedFileBasedExtForceFileItems.Count,

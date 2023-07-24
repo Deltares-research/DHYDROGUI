@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
             Value = double.NaN;
             Factor = double.NaN;
             Offset = double.NaN;
+            ExtraPolTol = double.NaN;
         }
 
         // general data
@@ -41,6 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
 
         // optional additional data, e.g. for friction type
         public Dictionary<string, object> ModelData { get; set; }
-
+        
+        // optional additional data
+        public double ExtraPolTol { get; set; }
     }
 }

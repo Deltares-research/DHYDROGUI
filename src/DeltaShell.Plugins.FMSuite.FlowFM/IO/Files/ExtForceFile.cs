@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private const string valueKey = "VALUE";
         private const string factorKey = "FACTOR";
         private const string offsetKey = "OFFSET";
+        private const string extrapoltolKey = "EXTRAPOLTOL";
 
         private static readonly string[] unsupportedQuantityKeys =
         {

@@ -142,6 +142,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 WriteLine(offsetKey + "=" + extForceFileItem.Offset);
             }
             
+            if (!double.IsNaN(extForceFileItem.ExtraPolTol))
+            {
+                WriteLine(extrapoltolKey + "=" + extForceFileItem.ExtraPolTol);
+            }
+            
             if (extForceFileItem.ModelData != null)
             {
                 foreach (KeyValuePair<string, object> modelData in extForceFileItem.ModelData)

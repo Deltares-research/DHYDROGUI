@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string propertyName = GetKeyPart(currentLine);
             var extForceFileItem = new ExtForceFileItem(GetValuePart(currentLine));
 
-            if (propertyName != ExtForceFileConstants.QuantityKey)
+            if (propertyName.ToUpper() != ExtForceFileConstants.QuantityKey)
             {
                 //something other than QUANTITY must be disabled
                 extForceFileItem.Enabled = false;
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string propertyName = GetKeyPart(currentLine);
 
-            switch (propertyName)
+            switch (propertyName.ToUpper())
             {
                 case ExtForceFileConstants.FileNameKey:
                     SetFileName(extForceFileItem);
@@ -209,6 +209,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     break;
                 case frictionTypeKey:
                     SetFrictionType(extForceFileItem);
+                    break;
+                case extrapoltolKey:
+                    SetExtraPolTol(extForceFileItem);
                     break;
                 default:
                     log.WarnFormat(
@@ -1099,6 +1102,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             extForceFileItem.ModelData[frictionTypeKey] = GetIntegerPropertyValue(currentLine);
+        }
+        
+        private void SetExtraPolTol(ExtForceFileItem extForceFileItem)
+        {
+            if (double.IsNaN(extForceFileItem.ExtraPolTol))
+            {
+                extForceFileItem.ExtraPolTol = GetDouble(GetValuePart(currentLine));
+            }
+            else
+            {
+                LogWarningQuantityPropertyAlreadySet(extrapoltolKey);
+            }
         }
 
         private void LogWarningQuantityPropertyAlreadySet(string quantityName)
