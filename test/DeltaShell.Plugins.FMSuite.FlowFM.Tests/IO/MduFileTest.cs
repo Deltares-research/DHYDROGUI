@@ -70,6 +70,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportMduFileWithCustomPropertiesShouldLogInfoMessage()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mduPath = TestHelper.GetTestFilePath(@"ImportMDUFile\CustomProperties.mdu");
+                string mduImportPath = tempDir.CopyTestDataFileToTempDirectory(mduPath);
+
+                void ImportModel()
+                {
+                    var _ = new WaterFlowFMModel(mduImportPath);
+                }
+
+                List<string> messages = TestHelper.GetAllRenderedMessages(ImportModel).ToList();
+                
+                Assert.IsTrue(messages.Contains("An unrecognized keyword *UnknownKeywordA* has been detected. The setting will be preserved and written back to the MDU file on export."));
+                Assert.IsTrue(messages.Contains("An unrecognized keyword *ProflocFile* has been detected. The setting will be preserved and written back to the MDU file on export."));
+                Assert.IsTrue(messages.Contains("An unrecognized keyword *ProfdefFile* has been detected. The setting will be preserved and written back to the MDU file on export."));
+                Assert.IsTrue(messages.Contains("An unrecognized keyword *UnknownKeywordB* has been detected. The setting will be preserved and written back to the MDU file on export."));
+                Assert.IsTrue(messages.Contains("An unrecognized keyword *FixedWeirRelaxationcoef* has been detected. The setting will be preserved and written back to the MDU file on export."));
+                Assert.IsTrue(messages.Contains("An unrecognized keyword *UnknownKeywordC* has been detected. The setting will be preserved and written back to the MDU file on export."));
+                Assert.IsTrue(messages.Contains("An unrecognized keyword *UnknownKeywordD* has been detected. The setting will be preserved and written back to the MDU file on export."));
+            }
+        }
+
+        [Test]
         public void WriteExternalForcingsFiles()
         {
 

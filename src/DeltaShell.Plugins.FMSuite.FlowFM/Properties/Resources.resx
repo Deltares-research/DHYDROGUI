@@ -670,4 +670,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="Links1D2DHelper_SetGeometry1D2DLinks__Cannot_create_geometry_of_1d2d_link__link_Name__from_network_discretization_point__link_DiscretisationPointIndex__to_grid_cell__link_FaceIndex_" xml:space="preserve">
     <value> Cannot create geometry of 1d2d link {link.Name} from network discretization point {link.DiscretisationPointIndex} to grid cell {link.FaceIndex}</value>
   </data>
+  <data name="MduFile_ReadProperties_An_unrecognized_keyword___0___has_been_detected" xml:space="preserve">
+    <value>An unrecognized keyword *{0}* has been detected. The setting will be preserved and written back to the MDU file on export.</value>
+  </data>
 </root>

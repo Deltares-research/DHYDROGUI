@@ -1081,6 +1081,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                             var waterFlowFmProperty = new WaterFlowFMProperty(propDef, mduPropertyValue);
                             definition.AddProperty(waterFlowFmProperty);
+                            
+                            Log.InfoFormat(Resources.MduFile_ReadProperties_An_unrecognized_keyword___0___has_been_detected, propDef.Caption);
                         }
                         
                         WaterFlowFMProperty property = definition.GetModelProperty(mduPropertyLowerCase);
