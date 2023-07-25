@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 }
             }).ToArray();
             
-            Assert.That(renderedMessages[3].Contains(structureFactoryException));
+            Assert.That(renderedMessages[4].Contains(structureFactoryException));
 
         }
 
@@ -137,10 +137,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }).ToArray();
 
             // Then
-            Assert.That(renderedMessages[1].Contains(convertStructureError), Is.True, $"Not found error message: {convertStructureError}\n Log messages: {renderedMessages[1]}");
-            Assert.That(renderedMessages[2].Contains(structuresFileError), Is.True, $"Not found error message: {structuresFileError}\n Log messages: {renderedMessages[2]}");
-            Assert.That(renderedMessages[3].Contains(waterFlowFmFileImporterError), Is.True, $"Not found error message: {waterFlowFmFileImporterError}\n Log messages: {renderedMessages[3]}");
-            Assert.That(renderedMessages[3].Contains(structureFactoryException), Is.True, $"Not found error message: {structureFactoryException}\n Log messages: {renderedMessages[3]}");
+            Assert.That(renderedMessages[2].Contains(convertStructureError), Is.True, $"Not found error message: {convertStructureError}\n Log messages: {renderedMessages[2]}");
+            Assert.That(renderedMessages[3].Contains(structuresFileError), Is.True, $"Not found error message: {structuresFileError}\n Log messages: {renderedMessages[3]}");
+            Assert.That(renderedMessages[4].Contains(waterFlowFmFileImporterError), Is.True, $"Not found error message: {waterFlowFmFileImporterError}\n Log messages: {renderedMessages[4]}");
+            Assert.That(renderedMessages[4].Contains(structureFactoryException), Is.True, $"Not found error message: {structureFactoryException}\n Log messages: {renderedMessages[4]}");
         }
 
 

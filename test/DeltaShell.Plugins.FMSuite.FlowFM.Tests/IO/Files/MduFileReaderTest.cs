@@ -105,6 +105,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
         
         [Test]
+        public void Read_CustomProperty_ThenInfoMessageIsLogged()
+        {
+            string fileContent = "[General]"
+                                 + Environment.NewLine
+                                 + "MyCustomProperty = MyValue # MyDescription";
+
+            var filePath = "FlowFM.mdu";
+
+            string expectedMessage = $"During reading the {filePath} file the following infos were reported:"
+                                     + Environment.NewLine
+                                     + "- An unrecognized keyword *MyCustomProperty* has been detected. The setting will be preserved and written back to the MDU file on export.";
+
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
+            var definition = new WaterFlowFMModelDefinition();
+
+            void Call() => MduFileReader.Read(stream, filePath, definition);
+            
+            TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
+        }
+        
+        [Test]
         public void Read_CustomProperty_ThenPropertySortIndexHasChanged()
         {
             string fileContent = "[General]"

@@ -700,4 +700,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="MduFile_MduFile_Unknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
+  <data name="MduFileReader_AddNewPropertyToDefinition_An_unrecognized_keyword_has_been_detected" xml:space="preserve">
+    <value>An unrecognized keyword *{0}* has been detected. The setting will be preserved and written back to the MDU file on export.</value>
+  </data>
 </root>

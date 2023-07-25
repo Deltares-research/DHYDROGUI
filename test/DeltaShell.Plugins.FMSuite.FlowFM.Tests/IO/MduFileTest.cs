@@ -859,9 +859,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 List<string> msgs = TestHelper.GetAllRenderedMessages(testAction).ToList();
 
                 // Then
-                Assert.That(msgs, Has.Count.EqualTo(1), "Expected a single grouped warning message:");
+                Assert.That(msgs, Has.Count.EqualTo(2), "Expected two grouped warning message:");
 
-                string msg = msgs.First();
+                string msg = msgs.Last();
 
                 const string expectedMsgHeader = "During reading the Fixed Weirs the following warnings were reported:";
                 Assert.That(msg, Does.StartWith(expectedMsgHeader), "Expected the header of the message to be different:");

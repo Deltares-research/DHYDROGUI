@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     if (!definition.ContainsProperty(property.Name))
                     {
-                        AddNewPropertyToDefinition(definition, category, property);
+                        AddNewPropertyToDefinition(definition, category, property, logHandler);
                     }
                     else if (!string.IsNullOrEmpty(property.Value))
                     {
@@ -80,10 +80,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void AddNewPropertyToDefinition(WaterFlowFMModelDefinition definition, DelftIniCategory category, DelftIniProperty property)
+        private static void AddNewPropertyToDefinition(WaterFlowFMModelDefinition definition, DelftIniCategory category, DelftIniProperty property, ILogHandler logHandler)
         {
             WaterFlowFMProperty newFmProperty = CreateNewProperty(property, category.Name);
             definition.AddProperty(newFmProperty);
+            
+            logHandler.ReportInfoFormat(Resources.MduFileReader_AddNewPropertyToDefinition_An_unrecognized_keyword_has_been_detected,
+                                        newFmProperty.PropertyDefinition.Caption);
         }
 
         private static WaterFlowFMProperty CreateNewProperty(DelftIniProperty property, string categoryName)
