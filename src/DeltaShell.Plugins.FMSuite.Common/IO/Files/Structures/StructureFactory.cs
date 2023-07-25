@@ -323,10 +323,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             var gsWeirFormula = new GeneralStructureFormula()
             {
                 // Set default values for Structure2D general structures.
-                WidthStructureLeftSide = double.NaN,
-                WidthStructureRightSide = double.NaN,
-                WidthLeftSideOfStructure = double.NaN,
-                WidthRightSideOfStructure = double.NaN
+                Upstream2Width = double.NaN,
+                Downstream1Width = double.NaN,
+                Upstream1Width = double.NaN,
+                Downstream2Width = double.NaN
             };
 
             foreach (KnownGeneralStructureProperties property in 
@@ -351,27 +351,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 }
             }
 
-            ModelProperty horizontalDoorOpeningDirectionProperty =
+            ModelProperty gateOpeningHorizontalDirectionProperty =
                 structureDao.GetProperty(KnownGeneralStructureProperties.GateOpeningHorizontalDirection);
-            if (horizontalDoorOpeningDirectionProperty != null)
+            if (gateOpeningHorizontalDirectionProperty != null)
             {
-                gsWeirFormula.HorizontalDoorOpeningDirection =
-                    (GateOpeningDirection) horizontalDoorOpeningDirectionProperty.Value;
+                gsWeirFormula.GateOpeningHorizontalDirection =
+                    (GateOpeningDirection) gateOpeningHorizontalDirectionProperty.Value;
             }
 
             SetTimeSeriesPropertyInsideWeirFormula(structureDao,
                                                    KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
                                                    structuresSubFilesReferenceFilePath, refDate, gsWeirFormula,
-                                                   nameof(gsWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
-                                                   nameof(gsWeirFormula.HorizontalDoorOpeningWidth),
-                                                   nameof(gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
+                                                   nameof(gsWeirFormula.UseHorizontalGateOpeningWidthTimeSeries),
+                                                   nameof(gsWeirFormula.HorizontalGateOpeningWidth),
+                                                   nameof(gsWeirFormula.HorizontalGateOpeningWidthTimeSeries));
 
             SetTimeSeriesPropertyInsideWeirFormula(structureDao,
                                                    KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
                                                    structuresSubFilesReferenceFilePath, refDate, gsWeirFormula,
-                                                   nameof(gsWeirFormula.UseLowerEdgeLevelTimeSeries),
-                                                   nameof(gsWeirFormula.LowerEdgeLevel),
-                                                   nameof(gsWeirFormula.LowerEdgeLevelTimeSeries));
+                                                   nameof(gsWeirFormula.UseGateLowerEdgeLevelTimeSeries),
+                                                   nameof(gsWeirFormula.GateLowerEdgeLevel),
+                                                   nameof(gsWeirFormula.GateLowerEdgeLevelTimeSeries));
 
             return gsWeirFormula;
         }
@@ -448,7 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             ModelProperty gateHeightProperty = structureDataAccessObject.GetProperty(KnownStructureProperties.GateHeight);
             if (gateHeightProperty != null)
             {
-                gateWeirFormula.DoorHeight = FMParser.FromString<double>(gateHeightProperty.GetValueAsString());
+                gateWeirFormula.GateHeight = FMParser.FromString<double>(gateHeightProperty.GetValueAsString());
             }
 
             ModelProperty openingDirectionProperty = structureDataAccessObject.GetProperty(KnownStructureProperties.GateOpeningHorizontalDirection);
@@ -462,16 +462,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 switch (displayName)
                 {
                     case "symmetric":
-                        gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric;
+                        gateWeirFormula.GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric;
                         break;
                     case "from_left":
-                        gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft;
+                        gateWeirFormula.GateOpeningHorizontalDirection = GateOpeningDirection.FromLeft;
                         break;
                     case "from_right":
-                        gateWeirFormula.HorizontalDoorOpeningDirection = GateOpeningDirection.FromRight;
+                        gateWeirFormula.GateOpeningHorizontalDirection = GateOpeningDirection.FromRight;
                         break;
                     default:
-                        throw new ArgumentException("Could not parse horizontal_opening_direction of type: " + displayName);
+                        throw new ArgumentException("Could not parse horizontal gate opening direction of type: " + displayName);
                 }
             }
 
@@ -479,17 +479,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                    KnownStructureProperties.GateLowerEdgeLevel,
                                                    structuresSubFilesReferenceFilePath, refDate,
                                                    gateWeirFormula,
-                                                   nameof(gateWeirFormula.UseLowerEdgeLevelTimeSeries),
-                                                   nameof(gateWeirFormula.LowerEdgeLevel),
-                                                   nameof(gateWeirFormula.LowerEdgeLevelTimeSeries));
+                                                   nameof(gateWeirFormula.UseGateLowerEdgeLevelTimeSeries),
+                                                   nameof(gateWeirFormula.GateLowerEdgeLevel),
+                                                   nameof(gateWeirFormula.GateLowerEdgeLevelTimeSeries));
 
             SetTimeSeriesPropertyInsideWeirFormula(structureDataAccessObject,
                                                    KnownStructureProperties.GateOpeningWidth,
                                                    structuresSubFilesReferenceFilePath, refDate,
                                                    gateWeirFormula,
-                                                   nameof(gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
-                                                   nameof(gateWeirFormula.HorizontalDoorOpeningWidth),
-                                                   nameof(gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
+                                                   nameof(gateWeirFormula.UseHorizontalGateOpeningWidthTimeSeries),
+                                                   nameof(gateWeirFormula.HorizontalGateOpeningWidth),
+                                                   nameof(gateWeirFormula.HorizontalGateOpeningWidthTimeSeries));
 
             return gateWeirFormula;
         }

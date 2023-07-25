@@ -253,17 +253,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var dictionary = new Dictionary<KnownGeneralStructureProperties, object>
             {
-                {KnownGeneralStructureProperties.Upstream2Width, weirFormula.WidthLeftSideOfStructure},
-                {KnownGeneralStructureProperties.Upstream1Width, weirFormula.WidthStructureLeftSide},
-                {KnownGeneralStructureProperties.CrestWidth, weirFormula.WidthStructureCentre},
-                {KnownGeneralStructureProperties.Downstream1Width, weirFormula.WidthStructureRightSide},
-                {KnownGeneralStructureProperties.Downstream2Width, weirFormula.WidthRightSideOfStructure},
-                {KnownGeneralStructureProperties.Upstream2Level, weirFormula.BedLevelLeftSideOfStructure},
-                {KnownGeneralStructureProperties.Upstream1Level, weirFormula.BedLevelLeftSideStructure},
-                {KnownGeneralStructureProperties.CrestLevel, weirFormula.BedLevelStructureCentre},
-                {KnownGeneralStructureProperties.Downstream1Level, weirFormula.BedLevelRightSideStructure},
-                {KnownGeneralStructureProperties.Downstream2Level, weirFormula.BedLevelRightSideOfStructure},
-                {KnownGeneralStructureProperties.GateHeight, weirFormula.DoorHeight},
+                {KnownGeneralStructureProperties.Upstream1Width, weirFormula.Upstream1Width},
+                {KnownGeneralStructureProperties.Upstream2Width, weirFormula.Upstream2Width},
+                {KnownGeneralStructureProperties.CrestWidth, weirFormula.CrestWidth},
+                {KnownGeneralStructureProperties.Downstream1Width, weirFormula.Downstream1Width},
+                {KnownGeneralStructureProperties.Downstream2Width, weirFormula.Downstream2Width},
+                {KnownGeneralStructureProperties.Upstream1Level, weirFormula.Upstream1Level},
+                {KnownGeneralStructureProperties.Upstream2Level, weirFormula.Upstream2Level},
+                {KnownGeneralStructureProperties.CrestLevel, weirFormula.CrestLevel},
+                {KnownGeneralStructureProperties.Downstream1Level, weirFormula.Downstream1Level},
+                {KnownGeneralStructureProperties.Downstream2Level, weirFormula.Downstream2Level},
+                {KnownGeneralStructureProperties.GateHeight, weirFormula.GateHeight},
                 {KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, weirFormula.PositiveFreeGateFlow},
                 {KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, weirFormula.PositiveDrownedGateFlow},
                 {KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, weirFormula.PositiveFreeWeirFlow},
@@ -275,8 +275,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, weirFormula.NegativeDrownedWeirFlow},
                 {KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, weirFormula.NegativeContractionCoefficient},
                 {KnownGeneralStructureProperties.ExtraResistance, weirFormula.ExtraResistance},
-                {KnownGeneralStructureProperties.GateOpeningWidth, weirFormula.HorizontalDoorOpeningWidth},
-                {KnownGeneralStructureProperties.GateLowerEdgeLevel, weirFormula.LowerEdgeLevel}
+                {KnownGeneralStructureProperties.GateOpeningWidth, weirFormula.HorizontalGateOpeningWidth},
+                {KnownGeneralStructureProperties.GateLowerEdgeLevel, weirFormula.GateLowerEdgeLevel}
             };
             return dictionary;
         }
@@ -378,13 +378,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsFalse(gate.UseCrestLevelTimeSeries);
             Assert.AreEqual(2.0, gate.CrestLevel);
             Assert.AreEqual(55.7, gate.CrestWidth);
-            Assert.IsFalse(gateWeirFormula.UseLowerEdgeLevelTimeSeries);
-            Assert.AreEqual(2.8, gateWeirFormula.LowerEdgeLevel);
-            Assert.AreEqual(0, gateWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);
-            Assert.IsFalse(gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries);
-            Assert.AreEqual(1.0, gateWeirFormula.HorizontalDoorOpeningWidth);
-            Assert.AreEqual(0, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Count);
-            Assert.AreEqual(GateOpeningDirection.FromRight, gateWeirFormula.HorizontalDoorOpeningDirection);
+            Assert.IsFalse(gateWeirFormula.UseGateLowerEdgeLevelTimeSeries);
+            Assert.AreEqual(2.8, gateWeirFormula.GateLowerEdgeLevel);
+            Assert.AreEqual(0, gateWeirFormula.GateLowerEdgeLevelTimeSeries.Time.Values.Count);
+            Assert.IsFalse(gateWeirFormula.UseHorizontalGateOpeningWidthTimeSeries);
+            Assert.AreEqual(1.0, gateWeirFormula.HorizontalGateOpeningWidth);
+            Assert.AreEqual(0, gateWeirFormula.HorizontalGateOpeningWidthTimeSeries.Time.Values.Count);
+            Assert.AreEqual(GateOpeningDirection.FromRight, gateWeirFormula.GateOpeningHorizontalDirection);
         }
 
         [Test]
@@ -430,19 +430,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(3.4, gate.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
             Assert.AreEqual(double.NaN, gate.CrestWidth);
 
-            Assert.IsTrue(gateWeirFormula.UseLowerEdgeLevelTimeSeries);
-            Assert.AreEqual(2, gateWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);
-            Assert.AreEqual(1.2, gateWeirFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(3.4, gateWeirFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
+            Assert.IsTrue(gateWeirFormula.UseGateLowerEdgeLevelTimeSeries);
+            Assert.AreEqual(2, gateWeirFormula.GateLowerEdgeLevelTimeSeries.Time.Values.Count);
+            Assert.AreEqual(1.2, gateWeirFormula.GateLowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(3.4, gateWeirFormula.GateLowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
 
-            Assert.IsTrue(gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries);
-            Assert.AreEqual(2, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Count);
+            Assert.IsTrue(gateWeirFormula.UseHorizontalGateOpeningWidthTimeSeries);
+            Assert.AreEqual(2, gateWeirFormula.HorizontalGateOpeningWidthTimeSeries.Time.Values.Count);
             Assert.AreEqual(
-                5.6, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+                5.6, gateWeirFormula.HorizontalGateOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
             Assert.AreEqual(
-                7.8, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
+                7.8, gateWeirFormula.HorizontalGateOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
 
-            Assert.AreEqual(GateOpeningDirection.FromRight, gateWeirFormula.HorizontalDoorOpeningDirection);
+            Assert.AreEqual(GateOpeningDirection.FromRight, gateWeirFormula.GateOpeningHorizontalDirection);
         }
 
         #endregion Gate
@@ -661,39 +661,39 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                         bool isConstLowerEdgeLevel,
                                         bool isConstHorizontalOpeningWidth)
         {
-            // LowerEdgeLevel
-            string lowerEdgeLevelProperty =
+            // GateLowerEdgeLevel
+            string gateLowerEdgeLevelProperty =
                 propertyNameMap[structureType][KnownStructureProperties.GateLowerEdgeLevel];
             string lowerEdgeLevelValue =
                 isConstLowerEdgeLevel
                     ? constValLookUpTable[KnownStructureProperties.GateLowerEdgeLevel].ToString()
                     : timeSeriesLookUpTable[KnownStructureProperties.GateLowerEdgeLevel];
 
-            result.AddProperty(lowerEdgeLevelProperty, typeof(Steerable), lowerEdgeLevelValue);
+            result.AddProperty(gateLowerEdgeLevelProperty, typeof(Steerable), lowerEdgeLevelValue);
 
-            // Horizontal door opening width
-            string horizontalDoorOpeningWidthProperty =
+            // Horizontal gate opening width
+            string horizontalGateOpeningWidthProperty =
                 propertyNameMap[structureType][KnownStructureProperties.GateOpeningWidth];
-            string horizontalDoorOpeningWidthValue =
+            string horizontalGateOpeningWidthValue =
                 isConstHorizontalOpeningWidth
                     ? constValLookUpTable[KnownStructureProperties.GateOpeningWidth].ToString()
                     : timeSeriesLookUpTable[KnownStructureProperties.GateOpeningWidth];
 
-            result.AddProperty(horizontalDoorOpeningWidthProperty,
+            result.AddProperty(horizontalGateOpeningWidthProperty,
                                typeof(Steerable),
-                               horizontalDoorOpeningWidthValue);
+                               horizontalGateOpeningWidthValue);
 
             // Opening direction
             StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
             ModelPropertyDefinition openingDirectionDefinition = schema.GetDefinition(structureType, KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
             result.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, openingDirectionDefinition.DataType, "symmetric");
 
-            // door height
-            string gateDoorHeightProperty =
+            // gate height
+            string gateHeight =
                 propertyNameMap[structureType][KnownStructureProperties.GateHeight];
-            var gateDoorHeightValue =
+            var gateHeightValue =
                 constValLookUpTable[KnownStructureProperties.GateHeight].ToString();
-            result.AddProperty(gateDoorHeightProperty, typeof(double), gateDoorHeightValue);
+            result.AddProperty(gateHeight, typeof(double), gateHeightValue);
         }
 
         #endregion
@@ -738,15 +738,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructureFormula = weir.Formula as GeneralStructureFormula;
             Assert.That(generalStructureFormula, Is.Not.Null, "Expected the weir formula to be a general structure:");
 
-            Assert.That(generalStructureFormula.WidthLeftSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Width.GetDescription()]));
-            Assert.That(generalStructureFormula.WidthStructureLeftSide, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Width.GetDescription()]));
-            Assert.That(generalStructureFormula.WidthStructureRightSide, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Width.GetDescription()]));
-            Assert.That(generalStructureFormula.WidthRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Width.GetDescription()]));
+            Assert.That(generalStructureFormula.Upstream1Width, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Width.GetDescription()]));
+            Assert.That(generalStructureFormula.Upstream2Width, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Width.GetDescription()]));
+            Assert.That(generalStructureFormula.Downstream1Width, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Width.GetDescription()]));
+            Assert.That(generalStructureFormula.Downstream2Width, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Width.GetDescription()]));
 
-            Assert.That(generalStructureFormula.BedLevelLeftSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Level.GetDescription()]));
-            Assert.That(generalStructureFormula.BedLevelLeftSideStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Level.GetDescription()]));
-            Assert.That(generalStructureFormula.BedLevelRightSideStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Level.GetDescription()]));
-            Assert.That(generalStructureFormula.BedLevelRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Level.GetDescription()]));
+            Assert.That(generalStructureFormula.Upstream1Level, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Level.GetDescription()]));
+            Assert.That(generalStructureFormula.Upstream2Level, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Level.GetDescription()]));
+            Assert.That(generalStructureFormula.Downstream1Level, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Level.GetDescription()]));
+            Assert.That(generalStructureFormula.Downstream2Level, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Level.GetDescription()]));
 
             Assert.That(generalStructureFormula.PositiveFreeGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()]));
             Assert.That(generalStructureFormula.PositiveDrownedGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription()]));
@@ -795,30 +795,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             if (isConstLowerEdgeLevel)
             {
-                Assert.That(weirFormula.UseLowerEdgeLevelTimeSeries, Is.False, "Expected lower edge level time-series to be false.");
-                Assert.That(weirFormula.LowerEdgeLevel, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateLowerEdgeLevel]), "Expected lower edge level to be a different value:");
+                Assert.That(weirFormula.UseGateLowerEdgeLevelTimeSeries, Is.False, "Expected gate lower edge level time-series to be false.");
+                Assert.That(weirFormula.GateLowerEdgeLevel, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateLowerEdgeLevel]), "Expected lower edge level to be a different value:");
             }
             else
             {
                 VerifyTimeSeries(KnownStructureProperties.GateLowerEdgeLevel,
-                                 weirFormula.UseLowerEdgeLevelTimeSeries,
-                                 weirFormula.LowerEdgeLevelTimeSeries);
+                                 weirFormula.UseGateLowerEdgeLevelTimeSeries,
+                                 weirFormula.GateLowerEdgeLevelTimeSeries);
             }
 
             if (isConstHorizontalOpeningWidth)
             {
-                Assert.That(weirFormula.UseHorizontalDoorOpeningWidthTimeSeries, Is.False, "Expected horizontal door opening width time-series time-series to be false.");
-                Assert.That(weirFormula.HorizontalDoorOpeningWidth, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateOpeningWidth]), "Expected horizontal door opening width to be a different value:");
+                Assert.That(weirFormula.UseHorizontalGateOpeningWidthTimeSeries, Is.False, "Expected horizontal gate opening width time-series time-series to be false.");
+                Assert.That(weirFormula.HorizontalGateOpeningWidth, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateOpeningWidth]), "Expected horizontal gate opening width to be a different value:");
             }
             else
             {
                 VerifyTimeSeries(KnownStructureProperties.GateOpeningWidth,
-                                 weirFormula.UseHorizontalDoorOpeningWidthTimeSeries,
-                                 weirFormula.HorizontalDoorOpeningWidthTimeSeries);
+                                 weirFormula.UseHorizontalGateOpeningWidthTimeSeries,
+                                 weirFormula.HorizontalGateOpeningWidthTimeSeries);
             }
 
-            Assert.That(weirFormula.DoorHeight, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateHeight]), "Expected door height to be a different value:");
-            Assert.That(weirFormula.HorizontalDoorOpeningDirection, Is.EqualTo(GateOpeningDirection.Symmetric));
+            Assert.That(weirFormula.GateHeight, Is.EqualTo(constValLookUpTable[KnownStructureProperties.GateHeight]), "Expected gate height to be a different value:");
+            Assert.That(weirFormula.GateOpeningHorizontalDirection, Is.EqualTo(GateOpeningDirection.Symmetric));
         }
 
         private void VerifyTimeSeries(string timeSeriesName, bool isActive, TimeSeries timeSeries)

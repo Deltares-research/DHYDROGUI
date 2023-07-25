@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const string relativeFilePath = @"c071_generalstructure_door_closing_at_sill\dflowfm\t2.mdu";
             string testFilePath = TestHelper.GetTestFilePath(relativeFilePath);
             Assert.That(File.Exists(testFilePath));
-            const string propertyName = "Horizontal opening width: REALTIME (generalstructure)";
+            const string propertyName = "Horizontal gate opening width: REALTIME (generalstructure)";
             var structureFactoryException = $"Trying to generate Time series for 2D Structure: Maeslantkering, property: {propertyName} mapped as GateOpeningWidth, type: External which is not yet supported.";
 
             // When
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             string structureFilePath = TestHelper.GetTestFilePath(Path.Combine(relativeFilePath, "tst-1_structures.ini"));
             Assert.That(File.Exists(iniFilePath));
             Assert.That(File.Exists(structureFilePath));
-            const string propertyName = "Horizontal opening width: REALTIME (generalstructure)";
+            const string propertyName = "Horizontal gate opening width: REALTIME (generalstructure)";
             const string structureName = "Maeslantkering";
             const string propertyFileName = "GateOpeningWidth";
             const string expectedMappedTime = "External";

@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double? Upstream1Width
         {
-            get => ToNullableValue(formula.WidthStructureLeftSide);
+            get => ToNullableValue(formula.Upstream1Width);
             set
             {
                 // The floating point values are provided by the user in an entry
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.WidthStructureLeftSide = value ?? double.NaN;
+                formula.Upstream1Width = value ?? double.NaN;
                 OnPropertyChanged();
             }
         }
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double Upstream1Level
         {
-            get => formula.BedLevelLeftSideStructure;
+            get => formula.Upstream1Level;
             set
             {
                 if (value == Upstream1Level)
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.BedLevelLeftSideStructure = value;
+                formula.Upstream1Level = value;
                 OnPropertyChanged();
             }
         }
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double? Upstream2Width
         {
-            get => ToNullableValue(formula.WidthLeftSideOfStructure);
+            get => ToNullableValue(formula.Upstream2Width);
             set
             {
                 if (value == Upstream2Width)
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.WidthLeftSideOfStructure = value ?? double.NaN;
+                formula.Upstream2Width = value ?? double.NaN;
                 OnPropertyChanged();
             }
         }
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double Upstream2Level
         {
-            get => formula.BedLevelLeftSideOfStructure;
+            get => formula.Upstream2Level;
             set
             {
                 if (value == Upstream2Level)
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.BedLevelLeftSideOfStructure = value;
+                formula.Upstream2Level = value;
                 OnPropertyChanged();
             }
         }
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double? Downstream1Width
         {
-            get => ToNullableValue(formula.WidthStructureRightSide);
+            get => ToNullableValue(formula.Downstream1Width);
             set
             {
                 if (value == Downstream1Width)
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.WidthStructureRightSide = value ?? double.NaN;
+                formula.Downstream1Width = value ?? double.NaN;
                 OnPropertyChanged();
             }
         }
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double Downstream1Level
         {
-            get => formula.BedLevelRightSideStructure;
+            get => formula.Downstream1Level;
             set
             {
                 if (value == Downstream1Level)
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.BedLevelRightSideStructure = value;
+                formula.Downstream1Level = value;
                 OnPropertyChanged();
             }
         }
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double? Downstream2Width
         {
-            get => ToNullableValue(formula.WidthRightSideOfStructure);
+            get => ToNullableValue(formula.Downstream2Width);
             set
             {
                 if (value == Downstream2Width)
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.WidthRightSideOfStructure = value ?? double.NaN;
+                formula.Downstream2Width = value ?? double.NaN;
                 OnPropertyChanged();
             }
         }
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double Downstream2Level
         {
-            get => formula.BedLevelRightSideOfStructure;
+            get => formula.Downstream2Level;
             set
             {
                 if (value == Downstream2Level)
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.BedLevelRightSideOfStructure = value;
+                formula.Downstream2Level = value;
                 OnPropertyChanged();
             }
         }

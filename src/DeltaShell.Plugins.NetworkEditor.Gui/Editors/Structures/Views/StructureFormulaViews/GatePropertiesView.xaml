@@ -54,12 +54,12 @@
                                                                  IsUsingGateLowerEdgeLevelTimeSeries="{Binding Path=UseGateLowerEdgeLevelTimeSeries}" />
                 <components:LabeledTimeSeriesView StructureName="{Binding Path=StructurePropertiesViewModel.StructureName}"
                                                   Label="Horizontal opening width"
-                                                  SingleValueContent="{Binding HorizontalOpeningWidth}"
-                                                  TimeSeries="{Binding HorizontalOpeningWidthTimeSeries}"
-                                                  IsTimeSeries="{Binding UseHorizontalOpeningWidthTimeSeries}"
+                                                  SingleValueContent="{Binding HorizontalGateOpeningWidth}"
+                                                  TimeSeries="{Binding HorizontalGateOpeningWidthTimeSeries}"
+                                                  IsTimeSeries="{Binding UseHorizontalGateOpeningWidthTimeSeries}"
                                                   Unit="m" />
                 <components:StructuresComboBox Label="Horizontal opening direction"
-                                               SelectedItem="{Binding Path=GateOpeningDirection}"
+                                               SelectedItem="{Binding Path=GateOpeningHorizontalDirection}"
                                                ItemsSource="{Binding Source={StaticResource GateOpeningDirections}}"
                                                ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}"
                                                IsEnabled="{Binding Path=CanChooseGateOpeningDirection}" />

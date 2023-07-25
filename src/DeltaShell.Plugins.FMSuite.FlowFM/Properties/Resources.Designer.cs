@@ -1851,62 +1851,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: door height must be greater than or equal to 0..
+        ///   Looks up a localized string similar to &apos;{0}&apos;: gate height must be greater than or equal to 0..
         /// </summary>
-        public static string WeirValidator_ValidateDoorHeight___0____door_height_must_be_greater_than_or_equal_to_0_ {
+        public static string WeirValidator_ValidateGateHeight___0____gate_height_must_be_greater_than_or_equal_to_0_ {
             get {
-                return ResourceManager.GetString("WeirValidator_ValidateDoorHeight___0____door_height_must_be_greater_than_or_equal" +
+                return ResourceManager.GetString("WeirValidator_ValidateGateHeight___0____gate_height_must_be_greater_than_or_equal" +
                         "_to_0_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: only symmetric horizontal door opening direction is supported for general structures..
+        ///   Looks up a localized string similar to &apos;{0}&apos;: gate lower edge level time series does not contain any values..
         /// </summary>
-        public static string WeirValidator_ValidateHorizontalDoorOpeningDirection___0____only_symmetric_horizontal_door_opening_direction_is_supported_for_general_structures_ {
+        public static string WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series_does_not_contain_any_values_ {
             get {
-                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningDirection___0____only_symmetric_horizo" +
-                        "ntal_door_opening_direction_is_supported_for_general_structures_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: opening width must be greater than or equal to 0..
-        /// </summary>
-        public static string WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_must_be_greater_than_or_equal_to_0_ {
-            get {
-                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_must_be_gre" +
-                        "ater_than_or_equal_to_0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: opening width time series does not contain any values..
-        /// </summary>
-        public static string WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_contain_any_values_ {
-            get {
-                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series" +
+                return ResourceManager.GetString("WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series" +
                         "_does_not_contain_any_values_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: opening width time series does not span the model run interval..
+        ///   Looks up a localized string similar to &apos;{0}&apos;: gate lower edge level time series does not span the model run interval..
         /// </summary>
-        public static string WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_span_the_model_run_interval_ {
+        public static string WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series_does_not_span_the_model_run_interval_ {
             get {
-                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series" +
+                return ResourceManager.GetString("WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series" +
                         "_does_not_span_the_model_run_interval_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: opening width time series values must be greater than or equal to 0..
+        ///   Looks up a localized string similar to &apos;{0}&apos;: only symmetric gate opening horizontal direction is supported for general structures..
         /// </summary>
-        public static string WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_values_must_be_greater_than_or_equal_to_0_ {
+        public static string WeirValidator_ValidateHorizontalGateOpeningDirection___0____only_symmetric_gate_opening_horizontal_direction_is_supported_for_general_structures_ {
             get {
-                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series" +
-                        "_values_must_be_greater_than_or_equal_to_0_", resourceCulture);
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalGateOpeningDirection___0____only_symmetric_gate_o" +
+                        "pening_horizontal_direction_is_supported_for_general_structures_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: gate opening width must be greater than or equal to 0..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_must_be_greater_than_or_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_must_b" +
+                        "e_greater_than_or_equal_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: gate opening width time series does not contain any values..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_does_not_contain_any_values_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_s" +
+                        "eries_does_not_contain_any_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: gate opening width time series does not span the model run interval..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_does_not_span_the_model_run_interval_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_s" +
+                        "eries_does_not_span_the_model_run_interval_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: gate opening width time series values must be greater than or equal to 0..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_values_must_be_greater_than_or_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_s" +
+                        "eries_values_must_be_greater_than_or_equal_to_0_", resourceCulture);
             }
         }
         
@@ -1917,26 +1937,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WeirValidator_ValidateLateralContraction___0____lateral_contraction_coefficient_m" +
                         "ust_be_greater_than_or_equal_to_zero_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: lower edge level time series does not contain any values..
-        /// </summary>
-        public static string WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_contain_any_values_ {
-            get {
-                return ResourceManager.GetString("WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not" +
-                        "_contain_any_values_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos;: lower edge level time series does not span the model run interval..
-        /// </summary>
-        public static string WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_span_the_model_run_interval_ {
-            get {
-                return ResourceManager.GetString("WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not" +
-                        "_span_the_model_run_interval_", resourceCulture);
             }
         }
         

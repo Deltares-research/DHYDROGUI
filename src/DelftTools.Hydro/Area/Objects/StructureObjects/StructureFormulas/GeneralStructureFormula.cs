@@ -15,14 +15,14 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
             SetKnownGeneralStructureProperty =
                 new Dictionary<KnownGeneralStructureProperties, Action<GeneralStructureFormula, double>>
                 {
-                    {KnownGeneralStructureProperties.Upstream2Width, (f, v) => f.WidthLeftSideOfStructure = v},
-                    {KnownGeneralStructureProperties.Upstream1Width, (f, v) => f.WidthStructureLeftSide = v},
-                    {KnownGeneralStructureProperties.Downstream1Width, (f, v) => f.WidthStructureRightSide = v},
-                    {KnownGeneralStructureProperties.Downstream2Width, (f, v) => f.WidthRightSideOfStructure = v},
-                    {KnownGeneralStructureProperties.Upstream2Level, (f, v) => f.BedLevelLeftSideOfStructure = v},
-                    {KnownGeneralStructureProperties.Upstream1Level, (f, v) => f.BedLevelLeftSideStructure = v},
-                    {KnownGeneralStructureProperties.Downstream1Level, (f, v) => f.BedLevelRightSideStructure = v},
-                    {KnownGeneralStructureProperties.Downstream2Level, (f, v) => f.BedLevelRightSideOfStructure = v},
+                    {KnownGeneralStructureProperties.Upstream1Width, (f, v) => f.Upstream1Width = v},
+                    {KnownGeneralStructureProperties.Upstream2Width, (f, v) => f.Upstream2Width = v},
+                    {KnownGeneralStructureProperties.Downstream1Width, (f, v) => f.Downstream1Width = v},
+                    {KnownGeneralStructureProperties.Downstream2Width, (f, v) => f.Downstream2Width = v},
+                    {KnownGeneralStructureProperties.Upstream1Level, (f, v) => f.Upstream1Level = v},
+                    {KnownGeneralStructureProperties.Upstream2Level, (f, v) => f.Upstream2Level = v},
+                    {KnownGeneralStructureProperties.Downstream1Level, (f, v) => f.Downstream1Level = v},
+                    {KnownGeneralStructureProperties.Downstream2Level, (f, v) => f.Downstream2Level = v},
                     {KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, (f, v) => f.PositiveFreeGateFlow = v},
                     {KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, (f, v) => f.PositiveDrownedGateFlow = v},
                     {KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, (f, v) => f.PositiveFreeWeirFlow = v},
@@ -43,12 +43,12 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
                             }
                         }
                     },
-                    {KnownGeneralStructureProperties.GateHeight, (f, v) => f.DoorHeight = v}
+                    {KnownGeneralStructureProperties.GateHeight, (f, v) => f.GateHeight = v}
                 };
 
-        private bool useHorizontalDoorOpeningWidthTimeSeries;
+        private bool useHorizontalGateOpeningWidthTimeSeries;
 
-        private bool useLowerEdgeLevelTimeSeries;
+        private bool useGateLowerEdgeLevelTimeSeries;
 
         public GeneralStructureFormula()
         {
@@ -108,52 +108,52 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
         /// <summary>
         /// w1
         /// </summary>
-        public virtual double WidthLeftSideOfStructure { get; set; }
+        public virtual double Upstream1Width { get; set; }
 
         /// <summary>
         /// wl
         /// </summary>
-        public virtual double WidthStructureLeftSide { get; set; }
+        public virtual double Upstream2Width { get; set; }
 
         /// <summary>
         /// ws
         /// </summary>
-        public virtual double WidthStructureCentre { get; set; }
+        public virtual double CrestWidth { get; set; }
 
         /// <summary>
         /// wr
         /// </summary>
-        public virtual double WidthStructureRightSide { get; set; }
+        public virtual double Downstream1Width { get; set; }
 
         /// <summary>
         /// w2
         /// </summary>
-        public virtual double WidthRightSideOfStructure { get; set; }
+        public virtual double Downstream2Width { get; set; }
 
         /// <summary>
         /// z1
         /// </summary>
-        public virtual double BedLevelLeftSideOfStructure { get; set; }
+        public virtual double Upstream1Level { get; set; }
 
         /// <summary>
         /// zl
         /// </summary>
-        public virtual double BedLevelLeftSideStructure { get; set; }
+        public virtual double Upstream2Level { get; set; }
 
         /// <summary>
         /// zs
         /// </summary>
-        public virtual double BedLevelStructureCentre { get; set; }
+        public virtual double CrestLevel { get; set; }
 
         /// <summary>
         /// zr
         /// </summary>
-        public virtual double BedLevelRightSideStructure { get; set; }
+        public virtual double Downstream1Level { get; set; }
 
         /// <summary>
         /// z2
         /// </summary>
-        public virtual double BedLevelRightSideOfStructure { get; set; }
+        public virtual double Downstream2Level { get; set; }
 
         /// <summary>
         /// Is extra resistance used? Used to bind to the view.
@@ -167,43 +167,43 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 
         public virtual string Name => "General Structure";
 
-        public virtual double DoorHeight { get; set; }
+        public virtual double GateHeight { get; set; }
 
-        public virtual GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }
-        public virtual double HorizontalDoorOpeningWidth { get; set; }
+        public virtual GateOpeningDirection GateOpeningHorizontalDirection { get; set; }
+        public virtual double HorizontalGateOpeningWidth { get; set; }
 
-        public virtual bool UseHorizontalDoorOpeningWidthTimeSeries
+        public virtual bool UseHorizontalGateOpeningWidthTimeSeries
         {
-            get => useHorizontalDoorOpeningWidthTimeSeries;
+            get => useHorizontalGateOpeningWidthTimeSeries;
             set
             {
-                useHorizontalDoorOpeningWidthTimeSeries = value;
+                useHorizontalGateOpeningWidthTimeSeries = value;
                 
-                if (useHorizontalDoorOpeningWidthTimeSeries && HorizontalDoorOpeningWidthTimeSeries == null)
+                if (useHorizontalGateOpeningWidthTimeSeries && HorizontalGateOpeningWidthTimeSeries == null)
                 {
-                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
-                        GuiParameterNames.HorizontalOpeningWidth, GuiParameterNames.HorizontalOpeningWidth, "m AD");
+                    HorizontalGateOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
+                        GuiParameterNames.HorizontalGateOpeningWidth, GuiParameterNames.HorizontalGateOpeningWidth, "m AD");
                 }
             }
         }
 
-        public virtual TimeSeries HorizontalDoorOpeningWidthTimeSeries { get; set; }
+        public virtual TimeSeries HorizontalGateOpeningWidthTimeSeries { get; set; }
 
-        public virtual double LowerEdgeLevel { get; set; }
+        public virtual double GateLowerEdgeLevel { get; set; }
 
         /// <summary>
-        /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
+        /// When true, use <see cref="GateLowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
         /// </summary>
-        public virtual bool UseLowerEdgeLevelTimeSeries
+        public virtual bool UseGateLowerEdgeLevelTimeSeries
         {
-            get => useLowerEdgeLevelTimeSeries;
+            get => useGateLowerEdgeLevelTimeSeries;
             set
             {
-                useLowerEdgeLevelTimeSeries = value;
+                useGateLowerEdgeLevelTimeSeries = value;
                 
-                if (useLowerEdgeLevelTimeSeries && LowerEdgeLevelTimeSeries == null)
+                if (useGateLowerEdgeLevelTimeSeries && GateLowerEdgeLevelTimeSeries == null)
                 {
-                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
+                    GateLowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
                         GuiParameterNames.GateLowerEdgeLevel, GuiParameterNames.GateLowerEdgeLevel, "m AD");
                 }
             }
@@ -212,7 +212,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
         /// <summary>
         /// Time dependent Lower edge level
         /// </summary>
-        public virtual TimeSeries LowerEdgeLevelTimeSeries { get; set; }
+        public virtual TimeSeries GateLowerEdgeLevelTimeSeries { get; set; }
 
         /// <summary>
         /// Gateopening = GateHeight (gle) - level at crest
@@ -264,36 +264,36 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
                 NegativeDrownedWeirFlow = NegativeDrownedWeirFlow,
                 NegativeFreeGateFlow = NegativeFreeGateFlow,
                 NegativeFreeWeirFlow = NegativeFreeWeirFlow,
-                BedLevelLeftSideOfStructure = BedLevelLeftSideOfStructure,
-                BedLevelLeftSideStructure = BedLevelLeftSideStructure,
-                BedLevelStructureCentre = BedLevelStructureCentre,
-                BedLevelRightSideStructure = BedLevelRightSideStructure,
-                BedLevelRightSideOfStructure = BedLevelRightSideOfStructure,
-                WidthLeftSideOfStructure = WidthLeftSideOfStructure,
-                WidthStructureLeftSide = WidthStructureLeftSide,
-                WidthStructureCentre = WidthStructureCentre,
-                WidthStructureRightSide = WidthStructureRightSide,
-                WidthRightSideOfStructure = WidthRightSideOfStructure,
+                Upstream1Level = Upstream1Level,
+                Upstream2Level = Upstream2Level,
+                CrestLevel = CrestLevel,
+                Downstream1Level = Downstream1Level,
+                Downstream2Level = Downstream2Level,
+                Upstream1Width = Upstream1Width,
+                Upstream2Width = Upstream2Width,
+                CrestWidth = CrestWidth,
+                Downstream1Width = Downstream1Width,
+                Downstream2Width = Downstream2Width,
                 UseExtraResistance = UseExtraResistance,
                 ExtraResistance = ExtraResistance,
                 GateOpening = GateOpening,
-                DoorHeight = DoorHeight,
-                HorizontalDoorOpeningDirection = HorizontalDoorOpeningDirection,
-                HorizontalDoorOpeningWidth = HorizontalDoorOpeningWidth,
-                UseHorizontalDoorOpeningWidthTimeSeries = UseHorizontalDoorOpeningWidthTimeSeries,
-                LowerEdgeLevel = LowerEdgeLevel,
-                UseLowerEdgeLevelTimeSeries = UseLowerEdgeLevelTimeSeries
+                GateHeight = GateHeight,
+                GateOpeningHorizontalDirection = GateOpeningHorizontalDirection,
+                HorizontalGateOpeningWidth = HorizontalGateOpeningWidth,
+                UseHorizontalGateOpeningWidthTimeSeries = UseHorizontalGateOpeningWidthTimeSeries,
+                GateLowerEdgeLevel = GateLowerEdgeLevel,
+                UseGateLowerEdgeLevelTimeSeries = UseGateLowerEdgeLevelTimeSeries
             };
 
-            if (clone.UseLowerEdgeLevelTimeSeries)
+            if (clone.UseGateLowerEdgeLevelTimeSeries)
             {
-                clone.LowerEdgeLevelTimeSeries = (TimeSeries) LowerEdgeLevelTimeSeries.Clone(true);
+                clone.GateLowerEdgeLevelTimeSeries = (TimeSeries) GateLowerEdgeLevelTimeSeries.Clone(true);
             }
 
-            if (clone.UseHorizontalDoorOpeningWidthTimeSeries)
+            if (clone.UseHorizontalGateOpeningWidthTimeSeries)
             {
-                clone.HorizontalDoorOpeningWidthTimeSeries =
-                    (TimeSeries) HorizontalDoorOpeningWidthTimeSeries.Clone(true);
+                clone.HorizontalGateOpeningWidthTimeSeries =
+                    (TimeSeries) HorizontalGateOpeningWidthTimeSeries.Clone(true);
             }
 
             return clone;
@@ -318,17 +318,17 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 
             GateOpening = 1.0;
 
-            DoorHeight = 0.0;
+            GateHeight = 0.0;
 
-            HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric;
-            HorizontalDoorOpeningWidth = 0.0;
+            GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric;
+            HorizontalGateOpeningWidth = 0.0;
 
-            UseHorizontalDoorOpeningWidthTimeSeries = false;
-            HorizontalDoorOpeningWidthTimeSeries = null;
+            UseHorizontalGateOpeningWidthTimeSeries = false;
+            HorizontalGateOpeningWidthTimeSeries = null;
 
-            LowerEdgeLevel = 0.0;
-            UseLowerEdgeLevelTimeSeries = false;
-            LowerEdgeLevelTimeSeries = null;
+            GateLowerEdgeLevel = 0.0;
+            UseGateLowerEdgeLevelTimeSeries = false;
+            GateLowerEdgeLevelTimeSeries = null;
         }
     }
 }

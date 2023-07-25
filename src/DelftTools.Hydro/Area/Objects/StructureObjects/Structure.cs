@@ -71,7 +71,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
         public double CrestWidth
         {
             get => Formula is GeneralStructureFormula formula 
-                       ? formula.WidthStructureCentre
+                       ? formula.CrestWidth
                        : crestWidth;
             set
             {
@@ -79,7 +79,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
 
                 if (Formula is GeneralStructureFormula formula)
                 {
-                    formula.WidthStructureCentre = value;
+                    formula.CrestWidth = value;
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
         public double CrestLevel
         {
             get => Formula is GeneralStructureFormula formula
-                       ? formula.BedLevelStructureCentre
+                       ? formula.CrestLevel
                        : crestLevel;
             set
             {
@@ -98,7 +98,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
 
                 if (Formula is GeneralStructureFormula formula)
                 {
-                    formula.BedLevelStructureCentre = value;
+                    formula.CrestLevel = value;
                 }
             }
         }

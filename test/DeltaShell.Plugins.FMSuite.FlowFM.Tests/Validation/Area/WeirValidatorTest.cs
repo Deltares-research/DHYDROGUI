@@ -167,19 +167,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         }
 
         [Test]
-        public void GivenAGeneralStructureWithAnInvalidHorizontalDoorOpeningDirection_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        public void GivenAGeneralStructureWithAnInvalidHorizontalGateOpeningDirection_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
             var weir = new Structure
             {
                 Formula = new GeneralStructureFormula
                 {
-                    WidthStructureCentre = 1.0,
-                    WidthLeftSideOfStructure = 1.0,
-                    WidthStructureLeftSide = 1.0,
-                    WidthRightSideOfStructure = 1.0,
-                    WidthStructureRightSide = 1.0,
-                    HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft
+                    CrestWidth = 1.0,
+                    Upstream1Width = 1.0,
+                    Upstream2Width = 1.0,
+                    Downstream2Width = 1.0,
+                    Downstream1Width = 1.0,
+                    GateOpeningHorizontalDirection = GateOpeningDirection.FromLeft
                 }
             };
             weirs.Add(weir);
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
-            string expectedMessage = string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningDirection___0____only_symmetric_horizontal_door_opening_direction_is_supported_for_general_structures_,
+            string expectedMessage = string.Format(Resources.WeirValidator_ValidateHorizontalGateOpeningDirection___0____only_symmetric_gate_opening_horizontal_direction_is_supported_for_general_structures_,
                                                    weir.Name);
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
         }
@@ -204,11 +204,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             {
                 Formula = new GeneralStructureFormula
                 {
-                    WidthStructureCentre = -1.0d,
-                    WidthLeftSideOfStructure = -1.0d,
-                    WidthStructureLeftSide = -1.0d,
-                    WidthRightSideOfStructure = -1.0d,
-                    WidthStructureRightSide = -1.0d
+                    CrestWidth = -1.0d,
+                    Upstream1Width = -1.0d,
+                    Upstream2Width = -1.0d,
+                    Downstream2Width = -1.0d,
+                    Downstream1Width = -1.0d
                 }
             };
             weirs.Add(weir);
@@ -226,13 +226,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         }
 
         [Test]
-        public void GivenAGatedWeirWithAnInvalidDoorHeight_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        public void GivenAGatedWeirWithAnInvalidGateHeight_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
             var weir = new Structure
             {
                 CrestWidth = 1.0d,
-                Formula = new SimpleGateFormula {DoorHeight = -1.0d}
+                Formula = new SimpleGateFormula {GateHeight = -1.0d}
             };
             weirs.Add(weir);
 
@@ -243,19 +243,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
-            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateDoorHeight___0____door_height_must_be_greater_than_or_equal_to_0_, weir.Name),
+            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateGateHeight___0____gate_height_must_be_greater_than_or_equal_to_0_, weir.Name),
                             issue.Message,
                             MessageDifferentLogMessageExpected);
         }
 
         [Test]
-        public void GivenAGatedWeirWithAnInvalidHorizontalDoorOpeningWidth_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        public void GivenAGatedWeirWithAnInvalidHorizontalGateOpeningWidth_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
             var weir = new Structure
             {
                 CrestWidth = 1.0d,
-                Formula = new SimpleGateFormula {HorizontalDoorOpeningWidth = -1.0d}
+                Formula = new SimpleGateFormula {HorizontalGateOpeningWidth = -1.0d}
             };
             weirs.Add(weir);
 
@@ -266,22 +266,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
-            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_must_be_greater_than_or_equal_to_0_, weir.Name),
+            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_must_be_greater_than_or_equal_to_0_, weir.Name),
                             issue.Message,
                             MessageDifferentLogMessageExpected);
         }
 
         [Test]
-        public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesWithAtLeastOneValueSmallerThanZero_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        public void GivenAGatedWeirWithHorizontalGateOpeningWidthTimeSeriesWithAtLeastOneValueSmallerThanZero_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var gatedWeirFormula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.AddValues(new[]
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseHorizontalGateOpeningWidthTimeSeries = true};
+            gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries.Time.AddValues(new[]
             {
                 modelStartTime,
                 modelStopTime
             });
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.SetValues(new[]
+            gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries.SetValues(new[]
             {
                 -1.0d,
                 1.0d
@@ -301,19 +301,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
-            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_values_must_be_greater_than_or_equal_to_0_, weir.Name),
+            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_values_must_be_greater_than_or_equal_to_0_, weir.Name),
                             issue.Message,
                             MessageDifferentLogMessageExpected);
         }
 
         [Test]
-        public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesWithoutValues_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        public void GivenAGatedWeirWithHorizontalGateOpeningWidthTimeSeriesWithoutValues_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
             var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                Formula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true}
+                Formula = new SimpleGateFormula(true) {UseHorizontalGateOpeningWidthTimeSeries = true}
             };
             weirs.Add(weir);
 
@@ -324,43 +324,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
-            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_contain_any_values_, weir.Name),
+            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_does_not_contain_any_values_, weir.Name),
                             issue.Message,
                             MessageDifferentLogMessageExpected);
         }
 
         [Test]
-        public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        public void GivenAGatedWeirWithHorizontalGateOpeningWidthTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var gatedWeirFormula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
-
-            var weir = new Structure()
-            {
-                CrestWidth = 1.0d,
-                Formula = gatedWeirFormula
-            };
-            weirs.Add(weir);
-
-            // When
-            List<ValidationIssue> issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
-
-            // Then
-            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
-            ValidationIssue issue = issues.Single();
-            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
-            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_span_the_model_run_interval_, weir.Name),
-                            issue.Message,
-                            MessageDifferentLogMessageExpected);
-        }
-
-        [Test]
-        public void GivenAGatedWeirWithLowerEdgeLevelTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
-        {
-            // Given
-            var gatedWeirFormula = new SimpleGateFormula(true) {UseLowerEdgeLevelTimeSeries = true};
-            gatedWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseHorizontalGateOpeningWidthTimeSeries = true};
+            gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
 
             var weir = new Structure()
             {
@@ -376,19 +350,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
-            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_span_the_model_run_interval_, weir.Name),
+            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_does_not_span_the_model_run_interval_, weir.Name),
                             issue.Message,
                             MessageDifferentLogMessageExpected);
         }
 
         [Test]
-        public void GivenAGatedWeirWithLowerEdgeLevelTimeSeriesWithoutValues_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        public void GivenAGatedWeirWithGateLowerEdgeLevelTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseGateLowerEdgeLevelTimeSeries = true};
+            gatedWeirFormula.GateLowerEdgeLevelTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
+
             var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                Formula = new SimpleGateFormula(true) {UseLowerEdgeLevelTimeSeries = true}
+                Formula = gatedWeirFormula
             };
             weirs.Add(weir);
 
@@ -399,7 +376,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
-            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_contain_any_values_, weir.Name),
+            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series_does_not_span_the_model_run_interval_, weir.Name),
+                            issue.Message,
+                            MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGatedWeirWithGateLowerEdgeLevelTimeSeriesWithoutValues_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var weir = new Structure()
+            {
+                CrestWidth = 1.0d,
+                Formula = new SimpleGateFormula(true) {UseGateLowerEdgeLevelTimeSeries = true}
+            };
+            weirs.Add(weir);
+
+            // When
+            List<ValidationIssue> issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            ValidationIssue issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual(string.Format(Resources.WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series_does_not_contain_any_values_, weir.Name),
                             issue.Message,
                             MessageDifferentLogMessageExpected);
         }
@@ -438,11 +438,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             // Given
             var formula = new GeneralStructureFormula
             {
-                HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
-                WidthStructureLeftSide = validUpstream2 ? 1.0 : -1.0,
-                WidthLeftSideOfStructure = validUpstream1 ? 1.0 : -1.0,
-                WidthStructureRightSide = validDownstream1 ? 1.0 : -1.0,
-                WidthRightSideOfStructure = validDownstream2 ? 1.0 : -1.0
+                GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric,
+                Upstream2Width = validUpstream2 ? 1.0 : -1.0,
+                Upstream1Width = validUpstream1 ? 1.0 : -1.0,
+                Downstream1Width = validDownstream1 ? 1.0 : -1.0,
+                Downstream2Width = validDownstream2 ? 1.0 : -1.0
             };
 
             var weir = new Structure()
@@ -512,11 +512,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             // Given
             var formula = new GeneralStructureFormula
             {
-                HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
-                WidthStructureLeftSide = emptyUpstream2 ? double.NaN : 1.0,
-                WidthLeftSideOfStructure = emptyUpstream1 ? double.NaN : 1.0,
-                WidthStructureRightSide = emptyDownstream1 ? double.NaN : 1.0,
-                WidthRightSideOfStructure = emptyDownstream2 ? double.NaN : 1.0
+                GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric,
+                Upstream2Width = emptyUpstream2 ? double.NaN : 1.0,
+                Upstream1Width = emptyUpstream1 ? double.NaN : 1.0,
+                Downstream1Width = emptyDownstream1 ? double.NaN : 1.0,
+                Downstream2Width = emptyDownstream2 ? double.NaN : 1.0
             };
 
             var weir = new Structure()

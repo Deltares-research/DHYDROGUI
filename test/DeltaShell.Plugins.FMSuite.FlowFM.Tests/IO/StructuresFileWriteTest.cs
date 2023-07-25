@@ -32,19 +32,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Name = "weir01",
                 Formula = new GeneralStructureFormula
                 {
-                    WidthLeftSideOfStructure = 1.0,
-                    WidthStructureLeftSide = 2.0,
-                    WidthStructureCentre = 3.0,
-                    WidthStructureRightSide = 4.0,
-                    WidthRightSideOfStructure = 5.0,
-                    BedLevelLeftSideOfStructure = 6.0,
-                    BedLevelLeftSideStructure = 7.0,
-                    BedLevelStructureCentre = 8.0,
-                    BedLevelRightSideStructure = 9.0,
-                    BedLevelRightSideOfStructure = 10.0,
-                    DoorHeight = 11.0,
-                    HorizontalDoorOpeningWidth = 30.0,
-                    LowerEdgeLevel = 31.0,
+                    Upstream1Width = 1.0,
+                    Upstream2Width = 2.0,
+                    CrestWidth = 3.0,
+                    Downstream1Width = 4.0,
+                    Downstream2Width = 5.0,
+                    Upstream1Level = 6.0,
+                    Upstream2Level = 7.0,
+                    CrestLevel = 8.0,
+                    Downstream1Level = 9.0,
+                    Downstream2Level = 10.0,
+                    GateHeight = 11.0,
+                    HorizontalGateOpeningWidth = 30.0,
+                    GateLowerEdgeLevel = 31.0,
                     PositiveFreeGateFlow = 12.0,
                     PositiveDrownedGateFlow = 13.0,
                     PositiveFreeWeirFlow = 14.0,
@@ -88,16 +88,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "[structure]" + Environment.NewLine +
                     "    type                  = generalstructure    \t# Type of structure" + Environment.NewLine +
                     "    id                    = weir01              \t# Name of the structure" + Environment.NewLine +
-                    "    Upstream2Width        = 1                   \t# Width left side of structure (m)" + Environment.NewLine +
-                    "    Upstream1Width        = 2                   \t# Width structure left side (m)" + Environment.NewLine +
-                    "    CrestWidth            = 3                   \t# Width structure centre (m)" + Environment.NewLine +
-                    "    Downstream1Width      = 4                   \t# Width structure right side (m)" + Environment.NewLine +
-                    "    Downstream2Width      = 5                   \t# Width right side of structure (m)" + Environment.NewLine +
-                    "    Upstream2Level        = 6                   \t# Bed level left side of structure (m AD)" + Environment.NewLine +
-                    "    Upstream1Level        = 7                   \t# Bed level left side structure (m AD)" + Environment.NewLine +
-                    "    CrestLevel            = 8                   \t# Bed level at centre of structure (m AD)" + Environment.NewLine +
-                    "    Downstream1Level      = 9                   \t# Bed level right side structure (m AD)" + Environment.NewLine +
-                    "    Downstream2Level      = 10                  \t# Bed level right side of structure (m AD)" + Environment.NewLine +
+                    "    Upstream1Width        = 1                   \t# Upstream width 1 (m)" + Environment.NewLine +
+                    "    Upstream2Width        = 2                   \t# Upstream width 2 (m)" + Environment.NewLine +
+                    "    CrestWidth            = 3                   \t# Crest width (m)" + Environment.NewLine +
+                    "    Downstream1Width      = 4                   \t# Downstream width 1 (m)" + Environment.NewLine +
+                    "    Downstream2Width      = 5                   \t# Downstream width 2 (m)" + Environment.NewLine +
+                    "    Upstream1Level        = 6                   \t# Upstream level 1 (m AD)" + Environment.NewLine +
+                    "    Upstream2Level        = 7                   \t# Upstream level 2 (m AD)" + Environment.NewLine +
+                    "    CrestLevel            = 8                   \t# Crest level (m AD)" + Environment.NewLine +
+                    "    Downstream1Level      = 9                   \t# Downstream level 1 (m AD)" + Environment.NewLine +
+                    "    Downstream2Level      = 10                  \t# Downstream level 2 (m AD)" + Environment.NewLine +
                     "    GateLowerEdgeLevel    = 31                  \t# Gate lower edge level (m AD)" + Environment.NewLine +
                     "    pos_freegateflowcoeff = 12                  \t# Positive free gate flow (-)" + Environment.NewLine +
                     "    pos_drowngateflowcoeff= 13                  \t# Positive drowned gate flow (-)" + Environment.NewLine +
@@ -111,8 +111,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    neg_contrcoeffreegate = 21                  \t# Negative flow contraction coefficient (-)" + Environment.NewLine +
                     "    extraresistance       = 22                  \t# Extra resistance (-)" + Environment.NewLine +
                     "    GateHeight            = 11                  \t# Vertical gate door height (m)" + Environment.NewLine +
-                    "    GateOpeningWidth      = 30                  \t# Horizontal opening width between the doors (m)" + Environment.NewLine +
-                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" + Environment.NewLine +
+                    "    GateOpeningWidth      = 30                  \t# Horizontal opening width between the gates (m)" + Environment.NewLine +
+                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening gates" + Environment.NewLine +
                     "[structure]" + Environment.NewLine +
                     "    type                  = weir                \t# Type of structure" + Environment.NewLine +
                     "    id                    = weir02              \t# Name of the structure" + Environment.NewLine +
@@ -220,11 +220,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // - simple weir with an empty crest width
             var generalStructureFormula = new GeneralStructureFormula()
             {
-                WidthLeftSideOfStructure = double.NaN,
-                WidthRightSideOfStructure = double.NaN,
-                WidthStructureCentre = double.NaN,
-                WidthStructureLeftSide = double.NaN,
-                WidthStructureRightSide = double.NaN
+                Upstream1Width = double.NaN,
+                Downstream2Width = double.NaN,
+                CrestWidth = double.NaN,
+                Upstream2Width = double.NaN,
+                Downstream1Width = double.NaN
             };
 
             var generalWeir = new Structure()

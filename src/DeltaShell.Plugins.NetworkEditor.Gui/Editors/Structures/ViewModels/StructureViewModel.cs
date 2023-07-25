@@ -150,12 +150,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
             {
                 return new GeneralStructureFormula()
                 {
-                    BedLevelStructureCentre = structure.CrestLevel,
-                    WidthStructureCentre = structure.CrestWidth,
-                    WidthStructureLeftSide = double.NaN,
-                    WidthStructureRightSide = double.NaN,
-                    WidthLeftSideOfStructure = double.NaN,
-                    WidthRightSideOfStructure = double.NaN
+                    CrestLevel = structure.CrestLevel,
+                    CrestWidth = structure.CrestWidth,
+                    Upstream2Width = double.NaN,
+                    Downstream1Width = double.NaN,
+                    Upstream1Width = double.NaN,
+                    Downstream2Width = double.NaN
                 };
             }
 

@@ -62,12 +62,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                     case SelectableWeirFormulaType.GeneralStructure:
                         var generalStructureWeirFormula = new GeneralStructureFormula()
                         {
-                            BedLevelStructureCentre = data.CrestLevel,
-                            WidthStructureCentre = data.CrestWidth,
-                            WidthStructureLeftSide = double.NaN,
-                            WidthStructureRightSide = double.NaN,
-                            WidthLeftSideOfStructure = double.NaN,
-                            WidthRightSideOfStructure = double.NaN
+                            CrestLevel = data.CrestLevel,
+                            CrestWidth = data.CrestWidth,
+                            Upstream2Width = double.NaN,
+                            Downstream1Width = double.NaN,
+                            Upstream1Width = double.NaN,
+                            Downstream2Width = double.NaN
                         };
                         data.Formula = generalStructureWeirFormula;
                         break;

@@ -98,15 +98,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 if (writtenWeir.Formula is GeneralStructureFormula writtenGSFormula)
                 {
                     var readGSFormula = readWeir.Formula as GeneralStructureFormula;
-                    Assert.That(readGSFormula.BedLevelLeftSideOfStructure, Is.EqualTo(writtenGSFormula.BedLevelLeftSideOfStructure));
-                    Assert.That(readGSFormula.BedLevelRightSideOfStructure, Is.EqualTo(writtenGSFormula.BedLevelRightSideOfStructure));
-                    Assert.That(readGSFormula.BedLevelLeftSideStructure, Is.EqualTo(writtenGSFormula.BedLevelLeftSideStructure));
-                    Assert.That(readGSFormula.BedLevelRightSideStructure, Is.EqualTo(writtenGSFormula.BedLevelRightSideStructure));
+                    Assert.That(readGSFormula.Upstream1Level, Is.EqualTo(writtenGSFormula.Upstream1Level));
+                    Assert.That(readGSFormula.Downstream2Level, Is.EqualTo(writtenGSFormula.Downstream2Level));
+                    Assert.That(readGSFormula.Upstream2Level, Is.EqualTo(writtenGSFormula.Upstream2Level));
+                    Assert.That(readGSFormula.Downstream1Level, Is.EqualTo(writtenGSFormula.Downstream1Level));
 
-                    Assert.That(readGSFormula.WidthLeftSideOfStructure, Is.EqualTo(writtenGSFormula.WidthLeftSideOfStructure));
-                    Assert.That(readGSFormula.WidthRightSideOfStructure, Is.EqualTo(writtenGSFormula.WidthRightSideOfStructure));
-                    Assert.That(readGSFormula.WidthStructureLeftSide, Is.EqualTo(writtenGSFormula.WidthStructureLeftSide));
-                    Assert.That(readGSFormula.WidthStructureRightSide, Is.EqualTo(writtenGSFormula.WidthStructureRightSide));
+                    Assert.That(readGSFormula.Upstream1Width, Is.EqualTo(writtenGSFormula.Upstream1Width));
+                    Assert.That(readGSFormula.Downstream2Width, Is.EqualTo(writtenGSFormula.Downstream2Width));
+                    Assert.That(readGSFormula.Upstream2Width, Is.EqualTo(writtenGSFormula.Upstream2Width));
+                    Assert.That(readGSFormula.Downstream1Width, Is.EqualTo(writtenGSFormula.Downstream1Width));
                 }
             }
         }
@@ -115,11 +115,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var generalStructureFormula = new GeneralStructureFormula()
             {
-                WidthLeftSideOfStructure = double.NaN,
-                WidthRightSideOfStructure = double.NaN,
-                WidthStructureCentre = double.NaN,
-                WidthStructureLeftSide = double.NaN,
-                WidthStructureRightSide = double.NaN
+                Upstream1Width = double.NaN,
+                Downstream2Width = double.NaN,
+                CrestWidth = double.NaN,
+                Upstream2Width = double.NaN,
+                Downstream1Width = double.NaN
             };
 
             return new Structure()

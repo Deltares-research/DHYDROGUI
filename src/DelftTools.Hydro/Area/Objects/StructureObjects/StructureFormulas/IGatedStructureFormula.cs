@@ -14,54 +14,54 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
         /// </summary>
         double GateOpening { get; set; }
 
-        /// Door height
+        /// Gate height
         /// <summary>
-        /// The Door height value
+        /// The gate height value
         /// </summary>
-        double DoorHeight { get; set; }
+        double GateHeight { get; set; }
 
-        /// Gate.Door opening width 
+        /// Gate opening horizontal direction 
         /// <summary>
-        /// The direction in which the door will open.
+        /// The direction in which the gate will open.
         /// Left and right are defined by the flow direction of the gate,
         /// indicated in the gui by a small arrow.
         /// </summary>
-        GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }
+        GateOpeningDirection GateOpeningHorizontalDirection { get; set; }
 
-        // Horizontal opening width
+        // Horizontal gate opening width
         /// <summary>
-        /// The Door Horizontal opening width 
+        /// The gate horizontal opening width 
         /// </summary>
-        double HorizontalDoorOpeningWidth { get; set; }
+        double HorizontalGateOpeningWidth { get; set; }
 
-        // Use Horizontal opening width
+        // Use horizontal gate opening width
         /// <summary>
-        /// Flag to enable the use of the Horizontal door opening 
+        /// Flag to enable the use of the horizontal gate opening 
         /// </summary>
-        bool UseHorizontalDoorOpeningWidthTimeSeries { get; set; }
+        bool UseHorizontalGateOpeningWidthTimeSeries { get; set; }
 
-        // Horizontal door opening width Time Series (T)
+        // Horizontal gate opening width Time Series (T)
         /// <summary>
-        /// The Time series for the Horizontal door opening width
+        /// The Time series for the Horizontal gate opening width
         /// </summary>
-        TimeSeries HorizontalDoorOpeningWidthTimeSeries { get; set; }
+        TimeSeries HorizontalGateOpeningWidthTimeSeries { get; set; }
 
-        /// Lower edge level
+        /// Gate lower edge level
         /// <summary>
-        /// The lower edge level value
+        /// The gate lower edge level value
         /// </summary>
-        double LowerEdgeLevel { get; set; }
+        double GateLowerEdgeLevel { get; set; }
 
-        /// Use lower edge level time series
+        /// Use gate lower edge level time series
         /// <summary>
-        /// Flag to set the use of the Time series for the lower edge level
+        /// Flag to set the use of the Time series for the gate lower edge level
         /// </summary>
-        bool UseLowerEdgeLevelTimeSeries { get; set; }
+        bool UseGateLowerEdgeLevelTimeSeries { get; set; }
 
-        /// Lower edge level Time series
+        /// Gate lower edge level Time series
         /// <summary>
-        /// Value of the time series for the lower level edge
+        /// Value of the time series for the gate lower level edge
         /// </summary>
-        TimeSeries LowerEdgeLevelTimeSeries { get; set; }
+        TimeSeries GateLowerEdgeLevelTimeSeries { get; set; }
     }
 }

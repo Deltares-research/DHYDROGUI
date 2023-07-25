@@ -32,10 +32,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         {
             {"levelcenter", KnownStructureProperties.CrestLevel},
             {"widthcenter", KnownStructureProperties.CrestWidth},
-            {"widthleftWsdl", KnownGeneralStructureProperties.Upstream1Width.GetDescription()},
-            {"levelleftZbsl", KnownGeneralStructureProperties.Upstream1Level.GetDescription()},
-            {"widthleftW1", KnownGeneralStructureProperties.Upstream2Width.GetDescription()},
-            {"levelleftZb1", KnownGeneralStructureProperties.Upstream2Level.GetDescription()},
+            {"widthleftWsdl", KnownGeneralStructureProperties.Upstream2Width.GetDescription()},
+            {"levelleftZbsl", KnownGeneralStructureProperties.Upstream2Level.GetDescription()},
+            {"widthleftW1", KnownGeneralStructureProperties.Upstream1Width.GetDescription()},
+            {"levelleftZb1", KnownGeneralStructureProperties.Upstream1Level.GetDescription()},
             {"widthrightWsdr", KnownGeneralStructureProperties.Downstream1Width.GetDescription()},
             {"levelrightZbsr", KnownGeneralStructureProperties.Downstream1Level.GetDescription()},
             {"widthrightW2", KnownGeneralStructureProperties.Downstream2Width.GetDescription()},
@@ -499,69 +499,69 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             // Width
             AddDoubleOrEmptyPropertyConditionally(properties,
-                                                  StructureRegion.WidthLeftW1.Key,
-                                                  generalStructureFormula.WidthLeftSideOfStructure,
+                                                  StructureRegion.Upstream1Width.Key,
+                                                  generalStructureFormula.Upstream1Width,
                                                   structureType);
             AddDoubleOrEmptyPropertyConditionally(properties,
-                                                  StructureRegion.WidthLeftWsdl.Key,
-                                                  generalStructureFormula.WidthStructureLeftSide,
+                                                  StructureRegion.Upstream2Width.Key,
+                                                  generalStructureFormula.Upstream2Width,
                                                   structureType);
             AddDoubleOrEmptyPropertyConditionally(properties,
-                                                  StructureRegion.WidthCenter.Key,
+                                                  StructureRegion.CrestWidth.Key,
                                                   structure.CrestWidth,
                                                   structureType);
             AddDoubleOrEmptyPropertyConditionally(properties,
-                                                  StructureRegion.WidthRightWsdr.Key,
-                                                  generalStructureFormula.WidthStructureRightSide,
+                                                  StructureRegion.Downstream1Width.Key,
+                                                  generalStructureFormula.Downstream1Width,
                                                   structureType);
             AddDoubleOrEmptyPropertyConditionally(properties,
-                                                  StructureRegion.WidthRightW2.Key,
-                                                  generalStructureFormula.WidthRightSideOfStructure,
+                                                  StructureRegion.Downstream2Width.Key,
+                                                  generalStructureFormula.Downstream2Width,
                                                   structureType);
 
             // Level
-            properties.Add(ConstructProperty(StructureRegion.LevelLeftZb1.Key,
-                                             generalStructureFormula.BedLevelLeftSideOfStructure, structureType));
-            properties.Add(ConstructProperty(StructureRegion.LevelLeftZbsl.Key,
-                                             generalStructureFormula.BedLevelLeftSideStructure, structureType));
+            properties.Add(ConstructProperty(StructureRegion.Upstream1Level.Key,
+                                             generalStructureFormula.Upstream1Level, structureType));
+            properties.Add(ConstructProperty(StructureRegion.Upstream2Level.Key,
+                                             generalStructureFormula.Upstream2Level, structureType));
 
             if (structure.UseCrestLevelTimeSeries)
             {
                 ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
-                                            StructureRegion.LevelCenter.Key,
+                                            StructureRegion.CrestLevel.Key,
                                             structureType,
                                             structure.CrestLevelTimeSeries,
                                             refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(StructureRegion.LevelCenter.Key,
-                                                 generalStructureFormula.BedLevelStructureCentre,
+                properties.Add(ConstructProperty(StructureRegion.CrestLevel.Key,
+                                                 generalStructureFormula.CrestLevel,
                                                  structureType));
             }
 
-            properties.Add(ConstructProperty(StructureRegion.LevelRightZbsr.Key,
-                                             generalStructureFormula.BedLevelRightSideStructure, structureType));
-            properties.Add(ConstructProperty(StructureRegion.LevelRightZb2.Key,
-                                             generalStructureFormula.BedLevelRightSideOfStructure, structureType));
+            properties.Add(ConstructProperty(StructureRegion.Downstream1Level.Key,
+                                             generalStructureFormula.Downstream1Level, structureType));
+            properties.Add(ConstructProperty(StructureRegion.Downstream2Level.Key,
+                                             generalStructureFormula.Downstream2Level, structureType));
 
-            // LowerEdgeLevel
-            if (generalStructureFormula.UseLowerEdgeLevelTimeSeries)
+            // GateLowerEdgeLevel
+            if (generalStructureFormula.UseGateLowerEdgeLevelTimeSeries)
             {
                 ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
-                                            StructureRegion.GateHeight.Key,
+                                            StructureRegion.GateLowerEdgeLevel.Key,
                                             structureType,
-                                            generalStructureFormula.LowerEdgeLevelTimeSeries,
+                                            generalStructureFormula.GateLowerEdgeLevelTimeSeries,
                                             refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(StructureRegion.GateHeight.Key,
-                                                 generalStructureFormula.LowerEdgeLevel,
+                properties.Add(ConstructProperty(StructureRegion.GateLowerEdgeLevel.Key,
+                                                 generalStructureFormula.GateLowerEdgeLevel,
                                                  structureType));
             }
 
@@ -594,33 +594,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                          : 0.0;
             properties.Add(ConstructProperty(StructureRegion.ExtraResistance.Key, extraResistance, structureType));
 
-            properties.Add(ConstructProperty(StructureRegion.GateDoorHeight.Key, generalStructureFormula.DoorHeight,
+            properties.Add(ConstructProperty(StructureRegion.GateHeight.Key, generalStructureFormula.GateHeight,
                                              structureType));
 
-            // Horizontal door opening
-            if (generalStructureFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+            // Horizontal gate opening
+            if (generalStructureFormula.UseHorizontalGateOpeningWidthTimeSeries)
             {
                 ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
                                             structureType,
-                                            generalStructureFormula.HorizontalDoorOpeningWidthTimeSeries,
+                                            generalStructureFormula.HorizontalGateOpeningWidthTimeSeries,
                                             refDate);
             }
             else
             {
                 properties.Add(ConstructProperty(KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
-                                                 generalStructureFormula.HorizontalDoorOpeningWidth,
+                                                 generalStructureFormula.HorizontalGateOpeningWidth,
                                                  structureType));
             }
 
-            string horizontalDoorOpeningDirection =
-                GateOpeningDirectionToString(generalStructureFormula.HorizontalDoorOpeningDirection);
+            string gateOpeningHorizontalDirection =
+                GateOpeningDirectionToString(generalStructureFormula.GateOpeningHorizontalDirection);
 
             properties.Add(ConstructProperty(
                                KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription(),
-                               horizontalDoorOpeningDirection,
+                               gateOpeningHorizontalDirection,
                                structureType));
 
             return properties;
@@ -752,49 +752,49 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                  structureType));
             }
 
-            if (gatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+            if (gatedWeirFormula.UseGateLowerEdgeLevelTimeSeries)
             {
                 ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             KnownStructureProperties.GateLowerEdgeLevel,
                                             structureType,
-                                            gatedWeirFormula.LowerEdgeLevelTimeSeries,
+                                            gatedWeirFormula.GateLowerEdgeLevelTimeSeries,
                                             refDate);
             }
             else
             {
                 properties.Add(ConstructProperty(KnownStructureProperties.GateLowerEdgeLevel,
-                                                 gatedWeirFormula.LowerEdgeLevel,
+                                                 gatedWeirFormula.GateLowerEdgeLevel,
                                                  structureType));
             }
 
-            if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+            if (gatedWeirFormula.UseHorizontalGateOpeningWidthTimeSeries)
             {
                 ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             KnownStructureProperties.GateOpeningWidth,
                                             structureType,
-                                            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries,
+                                            gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries,
                                             refDate);
             }
             else
             {
                 properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningWidth,
-                                                 gatedWeirFormula.HorizontalDoorOpeningWidth,
+                                                 gatedWeirFormula.HorizontalGateOpeningWidth,
                                                  structureType));
             }
 
             properties.Add(ConstructProperty(KnownStructureProperties.GateHeight,
-                                             gatedWeirFormula.DoorHeight,
+                                             gatedWeirFormula.GateHeight,
                                              structureType));
 
-            string horizontalDoorOpeningDirection =
-                GateOpeningDirectionToString(gatedWeirFormula.HorizontalDoorOpeningDirection);
+            string gateOpeningHorizontalDirection =
+                GateOpeningDirectionToString(gatedWeirFormula.GateOpeningHorizontalDirection);
 
             properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningHorizontalDirection,
-                                             horizontalDoorOpeningDirection,
+                                             gateOpeningHorizontalDirection,
                                              structureType));
 
             AddDoubleOrEmptyPropertyConditionally(properties,

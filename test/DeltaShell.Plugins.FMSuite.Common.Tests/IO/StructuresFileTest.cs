@@ -28,18 +28,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
     {
         private const string ExpectedCrestLevelValue = "    CrestLevel            = 10                  \t# Weir crest height (in [m])";
         private const string ExpectedCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim\t# Weir crest height (in [m])";
-        private const string ExpectedSillLevelValue = "    CrestLevel            = 10                  \t# Gate sill level (in [m])";
-        private const string ExpectedSillLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim\t# Gate sill level (in [m])";
-        private const string ExpectedLowerEdgeLevelValueGatedFormula = "    GateLowerEdgeLevel    = 40                  \t# Gate lower edge level (in [m])";
-        private const string ExpectedLowerEdgeLevelTimeSeriesGatedFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim\t# Gate lower edge level (in [m])";
-        private const string ExpectedDoorOpeningValueGatedFormula = "    GateOpeningWidth      = 30                  \t# Gate opening width (in [m])";
-        private const string ExpectedDoorOpeningTimeSeriesGatedFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim\t# Gate opening width (in [m])";
-        private const string ExpectedGSCrestLevelValue = "    CrestLevel            = 10                  \t# Bed level at centre of structure (m AD)";
-        private const string ExpectedGSCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim\t# Bed level at centre of structure (m AD)";
-        private const string ExpectedLowerEdgeLevelValueGeneralStructureFormula = "    GateLowerEdgeLevel    = 40                  \t# Gate lower edge level (m AD)";
-        private const string ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim\t# Gate lower edge level (m AD)";
-        private const string ExpectedDoorOpeningValueGeneralStructureFormula = "    GateOpeningWidth      = 30                  \t# Horizontal opening width between the doors (m)";
-        private const string ExpectedDoorOpeningTimeSeriesGeneralStructureFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim\t# Horizontal opening width between the doors (m)";
+        private const string ExpectedGateCrestLevelValue = "    CrestLevel            = 10                  \t# Gate crest level (in [m])";
+        private const string ExpectedGateCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim\t# Gate crest level (in [m])";
+        private const string ExpectedGateLowerEdgeLevelValueGatedFormula = "    GateLowerEdgeLevel    = 40                  \t# Gate lower edge level (in [m])";
+        private const string ExpectedGateLowerEdgeLevelTimeSeriesGatedFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim\t# Gate lower edge level (in [m])";
+        private const string ExpectedGateOpeningValueGatedFormula = "    GateOpeningWidth      = 30                  \t# Gate opening width (in [m])";
+        private const string ExpectedGateOpeningTimeSeriesGatedFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim\t# Gate opening width (in [m])";
+        private const string ExpectedGSCrestLevelValue = "    CrestLevel            = 10                  \t# Crest level (m AD)";
+        private const string ExpectedGSCrestLevelTimeSeries = "    CrestLevel            = TestStructure_CrestLevel.tim\t# Crest level (m AD)";
+        private const string ExpectedGateLowerEdgeLevelValueGeneralStructureFormula = "    GateLowerEdgeLevel    = 40                  \t# Gate lower edge level (m AD)";
+        private const string ExpectedGateLowerEdgeLevelTimeSeriesGeneralStructureFormula = "    GateLowerEdgeLevel    = TestStructure_GateLowerEdgeLevel.tim\t# Gate lower edge level (m AD)";
+        private const string ExpectedGateOpeningValueGeneralStructureFormula = "    GateOpeningWidth      = 30                  \t# Horizontal opening width between the gates (m)";
+        private const string ExpectedGateOpeningTimeSeriesGeneralStructureFormula = "    GateOpeningWidth      = TestStructure_GateOpeningWidth.tim\t# Horizontal opening width between the gates (m)";
         private StructureSchema<ModelPropertyDefinition> schema;
 
         [SetUp]
@@ -315,23 +315,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 NegativeFreeWeirFlow = 8,
                 NegativeDrownedWeirFlow = 9,
                 NegativeContractionCoefficient = 10,
-                WidthLeftSideOfStructure = 11,
-                WidthStructureLeftSide = 12,
-                WidthStructureCentre = 13,
-                WidthStructureRightSide = 14,
-                WidthRightSideOfStructure = 15,
-                BedLevelLeftSideOfStructure = 16,
-                BedLevelLeftSideStructure = 17,
-                BedLevelStructureCentre = 18,
-                BedLevelRightSideStructure = 19,
-                BedLevelRightSideOfStructure = 20,
+                Upstream1Width = 11,
+                Upstream2Width = 12,
+                CrestWidth = 13,
+                Downstream1Width = 14,
+                Downstream2Width = 15,
+                Upstream1Level = 16,
+                Upstream2Level = 17,
+                CrestLevel = 18,
+                Downstream1Level = 19,
+                Downstream2Level = 20,
                 UseExtraResistance = true,
                 ExtraResistance = 40,
-                DoorHeight = 50,
-                UseHorizontalDoorOpeningWidthTimeSeries = false,
-                HorizontalDoorOpeningWidth = 60,
-                UseLowerEdgeLevelTimeSeries = false,
-                LowerEdgeLevel = 70
+                GateHeight = 50,
+                UseHorizontalGateOpeningWidthTimeSeries = false,
+                HorizontalGateOpeningWidth = 60,
+                UseGateLowerEdgeLevelTimeSeries = false,
+                GateLowerEdgeLevel = 70
             };
             var initialGeneralStructure = new Structure()
             {
@@ -375,23 +375,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                     initialFormula.NegativeDrownedWeirFlow == resultingFormula.NegativeDrownedWeirFlow &&
                                     initialFormula.NegativeFreeGateFlow == resultingFormula.NegativeFreeGateFlow &&
                                     initialFormula.NegativeFreeWeirFlow == resultingFormula.NegativeFreeWeirFlow &&
-                                    initialFormula.BedLevelLeftSideOfStructure == resultingFormula.BedLevelLeftSideOfStructure &&
-                                    initialFormula.BedLevelLeftSideStructure == resultingFormula.BedLevelLeftSideStructure &&
-                                    initialFormula.BedLevelStructureCentre == resultingFormula.BedLevelStructureCentre &&
-                                    initialFormula.BedLevelRightSideStructure == resultingFormula.BedLevelRightSideStructure &&
-                                    initialFormula.BedLevelRightSideOfStructure == resultingFormula.BedLevelRightSideOfStructure &&
-                                    initialFormula.WidthLeftSideOfStructure == resultingFormula.WidthLeftSideOfStructure &&
-                                    initialFormula.WidthStructureLeftSide == resultingFormula.WidthStructureLeftSide &&
-                                    initialFormula.WidthStructureCentre == resultingFormula.WidthStructureCentre &&
-                                    initialFormula.WidthStructureRightSide == resultingFormula.WidthStructureRightSide &&
-                                    initialFormula.WidthRightSideOfStructure == resultingFormula.WidthRightSideOfStructure &&
+                                    initialFormula.Upstream1Level == resultingFormula.Upstream1Level &&
+                                    initialFormula.Upstream2Level == resultingFormula.Upstream2Level &&
+                                    initialFormula.CrestLevel == resultingFormula.CrestLevel &&
+                                    initialFormula.Downstream1Level == resultingFormula.Downstream1Level &&
+                                    initialFormula.Downstream2Level == resultingFormula.Downstream2Level &&
+                                    initialFormula.Upstream1Width == resultingFormula.Upstream1Width &&
+                                    initialFormula.Upstream2Width == resultingFormula.Upstream2Width &&
+                                    initialFormula.CrestWidth == resultingFormula.CrestWidth &&
+                                    initialFormula.Downstream1Width == resultingFormula.Downstream1Width &&
+                                    initialFormula.Downstream2Width == resultingFormula.Downstream2Width &&
                                     initialFormula.UseExtraResistance == resultingFormula.UseExtraResistance &&
                                     initialFormula.ExtraResistance == resultingFormula.ExtraResistance &&
-                                    initialFormula.DoorHeight == resultingFormula.DoorHeight &&
-                                    initialFormula.UseHorizontalDoorOpeningWidthTimeSeries == resultingFormula.UseHorizontalDoorOpeningWidthTimeSeries &&
-                                    initialFormula.HorizontalDoorOpeningWidth == resultingFormula.HorizontalDoorOpeningWidth &&
-                                    initialFormula.UseLowerEdgeLevelTimeSeries == resultingFormula.UseLowerEdgeLevelTimeSeries &&
-                                    initialFormula.LowerEdgeLevel == resultingFormula.LowerEdgeLevel &&
+                                    initialFormula.GateHeight == resultingFormula.GateHeight &&
+                                    initialFormula.UseHorizontalGateOpeningWidthTimeSeries == resultingFormula.UseHorizontalGateOpeningWidthTimeSeries &&
+                                    initialFormula.HorizontalGateOpeningWidth == resultingFormula.HorizontalGateOpeningWidth &&
+                                    initialFormula.UseGateLowerEdgeLevelTimeSeries == resultingFormula.UseGateLowerEdgeLevelTimeSeries &&
+                                    initialFormula.GateLowerEdgeLevel == resultingFormula.GateLowerEdgeLevel &&
                                     initialFormula.GateOpening == resultingFormula.GateOpening;
 
             Assert.IsTrue(weirPropertiesAreEqual && formulasAreEqual);
@@ -576,12 +576,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                 }, generalStructure.CrestLevelTimeSeries.Components[0].Values,
                                 "The tim file for the crest level is not correctly read");
 
-                Assert.IsTrue(weirFormula.UseLowerEdgeLevelTimeSeries, "The tim file for the lower edge level is not correctly read");
+                Assert.IsTrue(weirFormula.UseGateLowerEdgeLevelTimeSeries, "The tim file for the lower edge level is not correctly read");
                 Assert.AreEqual(new[]
                                 {
                                     3,
                                     4
-                                }, weirFormula.LowerEdgeLevelTimeSeries.Components[0].Values,
+                                }, weirFormula.GateLowerEdgeLevelTimeSeries.Components[0].Values,
                                 "The tim file for the lower edge level is not correctly read");
 
                 Assert.AreEqual(2, generalStructure.Geometry.Coordinates.Length, "The pli file for the geometry is not correctly read");
@@ -680,35 +680,35 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             });
         }
 
-        [TestCase(false, ExpectedSillLevelValue,
-                  false, ExpectedLowerEdgeLevelValueGatedFormula,
-                  false, ExpectedDoorOpeningValueGatedFormula)]
-        [TestCase(false, ExpectedSillLevelValue,
-                  false, ExpectedLowerEdgeLevelValueGatedFormula,
-                  true, ExpectedDoorOpeningTimeSeriesGatedFormula)]
-        [TestCase(false, ExpectedSillLevelValue,
-                  true, ExpectedLowerEdgeLevelTimeSeriesGatedFormula,
-                  false, ExpectedDoorOpeningValueGatedFormula)]
-        [TestCase(false, ExpectedSillLevelValue,
-                  true, ExpectedLowerEdgeLevelTimeSeriesGatedFormula,
-                  true, ExpectedDoorOpeningTimeSeriesGatedFormula)]
-        [TestCase(true, ExpectedSillLevelTimeSeries,
-                  false, ExpectedLowerEdgeLevelValueGatedFormula,
-                  false, ExpectedDoorOpeningValueGatedFormula)]
-        [TestCase(true, ExpectedSillLevelTimeSeries,
-                  false, ExpectedLowerEdgeLevelValueGatedFormula,
-                  true, ExpectedDoorOpeningTimeSeriesGatedFormula)]
-        [TestCase(true, ExpectedSillLevelTimeSeries,
-                  true, ExpectedLowerEdgeLevelTimeSeriesGatedFormula,
-                  false, ExpectedDoorOpeningValueGatedFormula)]
-        [TestCase(true, ExpectedSillLevelTimeSeries,
-                  true, ExpectedLowerEdgeLevelTimeSeriesGatedFormula,
-                  true, ExpectedDoorOpeningTimeSeriesGatedFormula)]
+        [TestCase(false, ExpectedGateCrestLevelValue,
+                  false, ExpectedGateLowerEdgeLevelValueGatedFormula,
+                  false, ExpectedGateOpeningValueGatedFormula)]
+        [TestCase(false, ExpectedGateCrestLevelValue,
+                  false, ExpectedGateLowerEdgeLevelValueGatedFormula,
+                  true, ExpectedGateOpeningTimeSeriesGatedFormula)]
+        [TestCase(false, ExpectedGateCrestLevelValue,
+                  true, ExpectedGateLowerEdgeLevelTimeSeriesGatedFormula,
+                  false, ExpectedGateOpeningValueGatedFormula)]
+        [TestCase(false, ExpectedGateCrestLevelValue,
+                  true, ExpectedGateLowerEdgeLevelTimeSeriesGatedFormula,
+                  true, ExpectedGateOpeningTimeSeriesGatedFormula)]
+        [TestCase(true, ExpectedGateCrestLevelTimeSeries,
+                  false, ExpectedGateLowerEdgeLevelValueGatedFormula,
+                  false, ExpectedGateOpeningValueGatedFormula)]
+        [TestCase(true, ExpectedGateCrestLevelTimeSeries,
+                  false, ExpectedGateLowerEdgeLevelValueGatedFormula,
+                  true, ExpectedGateOpeningTimeSeriesGatedFormula)]
+        [TestCase(true, ExpectedGateCrestLevelTimeSeries,
+                  true, ExpectedGateLowerEdgeLevelTimeSeriesGatedFormula,
+                  false, ExpectedGateOpeningValueGatedFormula)]
+        [TestCase(true, ExpectedGateCrestLevelTimeSeries,
+                  true, ExpectedGateLowerEdgeLevelTimeSeriesGatedFormula,
+                  true, ExpectedGateOpeningTimeSeriesGatedFormula)]
         [Category(TestCategory.DataAccess)]
         public void GivenAStructuresFileAndAValidFilePathAndASetOfStructuresContainingOnlyAGatedWeirWhenWriteIsCalledOnStructuresFileWithTheFilePathAndStructuresThenTheCorrectFileIsWritten(
-            bool useSillLevelTimeSeries, string expectedSillLevelVal,
-            bool useLowerEdgeLevelTimeSeries, string expectedLowerEdgeLevelVal,
-            bool useHorizontalDoorOpeningWidthTimeSeries, string expectedHorizontalDoorOpeningWidthVal)
+            bool useCrestLevelTimeSeries, string expectedCrestLevelVal,
+            bool useGateLowerEdgeLevelTimeSeries, string expectedGateLowerEdgeLevelVal,
+            bool useHorizontalGateOpeningWidthTimeSeries, string expectedHorizontalGateOpeningWidthVal)
         {
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -721,17 +721,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     Name = "TestStructure",
                     Formula = new SimpleGateFormula(true)
                     {
-                        DoorHeight = 50.0,
-                        HorizontalDoorOpeningWidth = 30.0,
-                        HorizontalDoorOpeningWidthTimeSeries = new TimeSeries(),
-                        UseHorizontalDoorOpeningWidthTimeSeries = useHorizontalDoorOpeningWidthTimeSeries,
-                        LowerEdgeLevel = 40.0,
-                        LowerEdgeLevelTimeSeries = new TimeSeries(),
-                        UseLowerEdgeLevelTimeSeries = useLowerEdgeLevelTimeSeries
+                        GateHeight = 50.0,
+                        HorizontalGateOpeningWidth = 30.0,
+                        HorizontalGateOpeningWidthTimeSeries = new TimeSeries(),
+                        UseHorizontalGateOpeningWidthTimeSeries = useHorizontalGateOpeningWidthTimeSeries,
+                        GateLowerEdgeLevel = 40.0,
+                        GateLowerEdgeLevelTimeSeries = new TimeSeries(),
+                        UseGateLowerEdgeLevelTimeSeries = useGateLowerEdgeLevelTimeSeries
                     },
                     CrestWidth = 20.0,
                     CrestLevel = 10.0,
-                    UseCrestLevelTimeSeries = useSillLevelTimeSeries
+                    UseCrestLevelTimeSeries = useCrestLevelTimeSeries
                 };
 
                 IStructure[] structures = {weir};
@@ -744,12 +744,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     "[structure]" + Environment.NewLine +
                     "    type                  = gate                \t# Type of structure" + Environment.NewLine +
                     "    id                    = TestStructure       \t# Name of the structure" + Environment.NewLine +
-                    expectedSillLevelVal + Environment.NewLine +
-                    expectedLowerEdgeLevelVal + Environment.NewLine +
-                    expectedHorizontalDoorOpeningWidthVal + Environment.NewLine +
+                    expectedCrestLevelVal + Environment.NewLine +
+                    expectedGateLowerEdgeLevelVal + Environment.NewLine +
+                    expectedHorizontalGateOpeningWidthVal + Environment.NewLine +
                     "    GateHeight            = 50                  \t# Gate door height (in [m])" + Environment.NewLine +
-                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" + Environment.NewLine +
-                    "    CrestWidth            = 20                  \t# Gate sill width (in [m])" + Environment.NewLine;
+                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening gates" + Environment.NewLine +
+                    "    CrestWidth            = 20                  \t# Gate crest width (in [m])" + Environment.NewLine;
 
                 string fileContents = File.ReadAllText(writePath);
 
@@ -758,34 +758,34 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [TestCase(false, ExpectedGSCrestLevelValue,
-                  false, ExpectedLowerEdgeLevelValueGeneralStructureFormula,
-                  false, ExpectedDoorOpeningValueGeneralStructureFormula)]
+                  false, ExpectedGateLowerEdgeLevelValueGeneralStructureFormula,
+                  false, ExpectedGateOpeningValueGeneralStructureFormula)]
         [TestCase(false, ExpectedGSCrestLevelValue,
-                  false, ExpectedLowerEdgeLevelValueGeneralStructureFormula,
-                  true, ExpectedDoorOpeningTimeSeriesGeneralStructureFormula)]
+                  false, ExpectedGateLowerEdgeLevelValueGeneralStructureFormula,
+                  true, ExpectedGateOpeningTimeSeriesGeneralStructureFormula)]
         [TestCase(false, ExpectedGSCrestLevelValue,
-                  true, ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula,
-                  false, ExpectedDoorOpeningValueGeneralStructureFormula)]
+                  true, ExpectedGateLowerEdgeLevelTimeSeriesGeneralStructureFormula,
+                  false, ExpectedGateOpeningValueGeneralStructureFormula)]
         [TestCase(false, ExpectedGSCrestLevelValue,
-                  true, ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula,
-                  true, ExpectedDoorOpeningTimeSeriesGeneralStructureFormula)]
+                  true, ExpectedGateLowerEdgeLevelTimeSeriesGeneralStructureFormula,
+                  true, ExpectedGateOpeningTimeSeriesGeneralStructureFormula)]
         [TestCase(true, ExpectedGSCrestLevelTimeSeries,
-                  false, ExpectedLowerEdgeLevelValueGeneralStructureFormula,
-                  false, ExpectedDoorOpeningValueGeneralStructureFormula)]
+                  false, ExpectedGateLowerEdgeLevelValueGeneralStructureFormula,
+                  false, ExpectedGateOpeningValueGeneralStructureFormula)]
         [TestCase(true, ExpectedGSCrestLevelTimeSeries,
-                  false, ExpectedLowerEdgeLevelValueGeneralStructureFormula,
-                  true, ExpectedDoorOpeningTimeSeriesGeneralStructureFormula)]
+                  false, ExpectedGateLowerEdgeLevelValueGeneralStructureFormula,
+                  true, ExpectedGateOpeningTimeSeriesGeneralStructureFormula)]
         [TestCase(true, ExpectedGSCrestLevelTimeSeries,
-                  true, ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula,
-                  false, ExpectedDoorOpeningValueGeneralStructureFormula)]
+                  true, ExpectedGateLowerEdgeLevelTimeSeriesGeneralStructureFormula,
+                  false, ExpectedGateOpeningValueGeneralStructureFormula)]
         [TestCase(true, ExpectedGSCrestLevelTimeSeries,
-                  true, ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula,
-                  true, ExpectedDoorOpeningTimeSeriesGeneralStructureFormula)]
+                  true, ExpectedGateLowerEdgeLevelTimeSeriesGeneralStructureFormula,
+                  true, ExpectedGateOpeningTimeSeriesGeneralStructureFormula)]
         [Category(TestCategory.DataAccess)]
         public void GivenAStructuresFileAndAValidFilePathAndASetOfStructuresContainingOnlyAGeneralStructureWhenWriteIsCalledOnStructuresFileWithTheFilePathAndStructuresThenTheCorrectFileIsWritten(
             bool useCrestLevelTimeSeries, string expectedCrestLevelVal,
-            bool useLowerEdgeLevelTimeSeries, string expectedLowerEdgeLevelVal,
-            bool useHorizontalDoorOpeningWidthTimeSeries, string expectedHorizontalDoorOpeningWidthVal)
+            bool useGateLowerEdgeLevelTimeSeries, string expectedGateLowerEdgeLevelVal,
+            bool useHorizontalGateOpeningWidthTimeSeries, string expectedHorizontalGateOpeningWidthVal)
         {
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -798,21 +798,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     Name = "TestStructure",
                     Formula = new GeneralStructureFormula
                     {
-                        DoorHeight = 50.0,
-                        HorizontalDoorOpeningWidth = 30.0,
-                        HorizontalDoorOpeningWidthTimeSeries = new TimeSeries(),
-                        UseHorizontalDoorOpeningWidthTimeSeries = useHorizontalDoorOpeningWidthTimeSeries,
-                        LowerEdgeLevel = 40.0,
-                        LowerEdgeLevelTimeSeries = new TimeSeries(),
-                        UseLowerEdgeLevelTimeSeries = useLowerEdgeLevelTimeSeries,
-                        WidthLeftSideOfStructure = 1.0,
-                        WidthStructureLeftSide = 2.0,
-                        WidthStructureRightSide = 3.0,
-                        WidthRightSideOfStructure = 4.0,
-                        BedLevelLeftSideOfStructure = 5.0,
-                        BedLevelLeftSideStructure = 6.0,
-                        BedLevelRightSideStructure = 7.0,
-                        BedLevelRightSideOfStructure = 8.0,
+                        GateHeight = 50.0,
+                        HorizontalGateOpeningWidth = 30.0,
+                        HorizontalGateOpeningWidthTimeSeries = new TimeSeries(),
+                        UseHorizontalGateOpeningWidthTimeSeries = useHorizontalGateOpeningWidthTimeSeries,
+                        GateLowerEdgeLevel = 40.0,
+                        GateLowerEdgeLevelTimeSeries = new TimeSeries(),
+                        UseGateLowerEdgeLevelTimeSeries = useGateLowerEdgeLevelTimeSeries,
+                        Upstream1Width = 1.0,
+                        Upstream2Width = 2.0,
+                        Downstream1Width = 3.0,
+                        Downstream2Width = 4.0,
+                        Upstream1Level = 5.0,
+                        Upstream2Level = 6.0,
+                        Downstream1Level = 7.0,
+                        Downstream2Level = 8.0,
                         PositiveFreeGateFlow = 9.0,
                         PositiveDrownedGateFlow = 11.0,
                         PositiveFreeWeirFlow = 12.0,
@@ -841,17 +841,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     "[structure]" + Environment.NewLine +
                     "    type                  = generalstructure    \t# Type of structure" + Environment.NewLine +
                     "    id                    = TestStructure       \t# Name of the structure" + Environment.NewLine +
-                    "    Upstream2Width        = 1                   \t# Width left side of structure (m)" + Environment.NewLine +
-                    "    Upstream1Width        = 2                   \t# Width structure left side (m)" + Environment.NewLine +
-                    "    CrestWidth            = 20                  \t# Width structure centre (m)" + Environment.NewLine +
-                    "    Downstream1Width      = 3                   \t# Width structure right side (m)" + Environment.NewLine +
-                    "    Downstream2Width      = 4                   \t# Width right side of structure (m)" + Environment.NewLine +
-                    "    Upstream2Level        = 5                   \t# Bed level left side of structure (m AD)" + Environment.NewLine +
-                    "    Upstream1Level        = 6                   \t# Bed level left side structure (m AD)" + Environment.NewLine +
+                    "    Upstream1Width        = 1                   \t# Upstream width 1 (m)" + Environment.NewLine +
+                    "    Upstream2Width        = 2                   \t# Upstream width 2 (m)" + Environment.NewLine +
+                    "    CrestWidth            = 20                  \t# Crest width (m)" + Environment.NewLine +
+                    "    Downstream1Width      = 3                   \t# Downstream width 1 (m)" + Environment.NewLine +
+                    "    Downstream2Width      = 4                   \t# Downstream width 2 (m)" + Environment.NewLine +
+                    "    Upstream1Level        = 5                   \t# Upstream level 1 (m AD)" + Environment.NewLine +
+                    "    Upstream2Level        = 6                   \t# Upstream level 2 (m AD)" + Environment.NewLine +
                     expectedCrestLevelVal + Environment.NewLine +
-                    "    Downstream1Level      = 7                   \t# Bed level right side structure (m AD)" + Environment.NewLine +
-                    "    Downstream2Level      = 8                   \t# Bed level right side of structure (m AD)" + Environment.NewLine +
-                    expectedLowerEdgeLevelVal + Environment.NewLine +
+                    "    Downstream1Level      = 7                   \t# Downstream level 1 (m AD)" + Environment.NewLine +
+                    "    Downstream2Level      = 8                   \t# Downstream level 2 (m AD)" + Environment.NewLine +
+                    expectedGateLowerEdgeLevelVal + Environment.NewLine +
                     "    pos_freegateflowcoeff = 9                   \t# Positive free gate flow (-)" + Environment.NewLine +
                     "    pos_drowngateflowcoeff= 11                  \t# Positive drowned gate flow (-)" + Environment.NewLine +
                     "    pos_freeweirflowcoeff = 12                  \t# Positive free weir flow (-)" + Environment.NewLine +
@@ -864,8 +864,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     "    neg_contrcoeffreegate = 19                  \t# Negative flow contraction coefficient (-)" + Environment.NewLine +
                     "    extraresistance       = 21                  \t# Extra resistance (-)" + Environment.NewLine +
                     "    GateHeight            = 50                  \t# Vertical gate door height (m)" + Environment.NewLine +
-                    expectedHorizontalDoorOpeningWidthVal + Environment.NewLine +
-                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" + Environment.NewLine;
+                    expectedHorizontalGateOpeningWidthVal + Environment.NewLine +
+                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening gates" + Environment.NewLine;
                 string fileContents = File.ReadAllText(writePath);
 
                 Assert.That(fileContents, Is.EqualTo(expectedFileContents));
@@ -925,13 +925,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var gatedWeirFormula = weir.Formula as IGatedStructureFormula;
             Assert.NotNull(gatedWeirFormula,
                            "Expected a gated weir formula for weir.");
-            Assert.AreEqual(3, gatedWeirFormula.LowerEdgeLevel,
+            Assert.AreEqual(3, gatedWeirFormula.GateLowerEdgeLevel,
                             "Lower edge level of weir was different than expected.");
-            Assert.AreEqual(4, gatedWeirFormula.HorizontalDoorOpeningWidth,
+            Assert.AreEqual(4, gatedWeirFormula.HorizontalGateOpeningWidth,
                             "Horizontal gate opening width of weir was different than expected.");
-            Assert.AreEqual(5, gatedWeirFormula.DoorHeight,
+            Assert.AreEqual(5, gatedWeirFormula.GateHeight,
                             "Gate height of weir was different than expected.");
-            Assert.AreEqual(GateOpeningDirection.Symmetric, gatedWeirFormula.HorizontalDoorOpeningDirection,
+            Assert.AreEqual(GateOpeningDirection.Symmetric, gatedWeirFormula.GateOpeningHorizontalDirection,
                             "Gate opening direction of weir was different than expected.");
         }
 
@@ -942,21 +942,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructureFormula = weir.Formula as GeneralStructureFormula;
             Assert.NotNull(generalStructureFormula,
                            "Expected a general structure weir formula for weir.");
-            Assert.AreEqual(6, generalStructureFormula.WidthLeftSideOfStructure,
-                            "Upstream 2 Width of weir was different than expected.");
-            Assert.AreEqual(7, generalStructureFormula.WidthStructureLeftSide,
+            Assert.AreEqual(6, generalStructureFormula.Upstream1Width,
                             "Upstream 1 Width of weir was different than expected.");
-            Assert.AreEqual(8, generalStructureFormula.WidthStructureRightSide,
+            Assert.AreEqual(7, generalStructureFormula.Upstream2Width,
+                            "Upstream 2 Width of weir was different than expected.");
+            Assert.AreEqual(8, generalStructureFormula.Downstream1Width,
                             "Downstream 1 Width of weir was different than expected.");
-            Assert.AreEqual(9, generalStructureFormula.WidthRightSideOfStructure,
+            Assert.AreEqual(9, generalStructureFormula.Downstream2Width,
                             "Downstream 2 Width of weir was different than expected.");
-            Assert.AreEqual(10, generalStructureFormula.BedLevelLeftSideOfStructure,
-                            "Upstream 2 Level of weir was different than expected.");
-            Assert.AreEqual(11, generalStructureFormula.BedLevelLeftSideStructure,
+            Assert.AreEqual(10, generalStructureFormula.Upstream1Level,
                             "Upstream 1 Level of weir was different than expected.");
-            Assert.AreEqual(12, generalStructureFormula.BedLevelRightSideStructure,
+            Assert.AreEqual(11, generalStructureFormula.Upstream2Level,
+                            "Upstream 2 Level of weir was different than expected.");
+            Assert.AreEqual(12, generalStructureFormula.Downstream1Level,
                             "Downstream 1 Level of weir was different than expected.");
-            Assert.AreEqual(13, generalStructureFormula.BedLevelRightSideOfStructure,
+            Assert.AreEqual(13, generalStructureFormula.Downstream2Level,
                             "Downstream 2 Level of weir was different than expected.");
         }
 
@@ -991,12 +991,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         private void ValidateGeneralStructureIniProperties(DelftIniCategory category)
         {
-            ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Width.GetDescription(), "6");
-            ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Width.GetDescription(), "7");
+            ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Width.GetDescription(), "6");
+            ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Width.GetDescription(), "7");
             ValidateProperty(category, KnownGeneralStructureProperties.Downstream1Width.GetDescription(), "8");
             ValidateProperty(category, KnownGeneralStructureProperties.Downstream2Width.GetDescription(), "9");
-            ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Level.GetDescription(), "10");
-            ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Level.GetDescription(), "11");
+            ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Level.GetDescription(), "10");
+            ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Level.GetDescription(), "11");
             ValidateProperty(category, KnownGeneralStructureProperties.Downstream1Level.GetDescription(), "12");
             ValidateProperty(category, KnownGeneralStructureProperties.Downstream2Level.GetDescription(), "13");
         }
@@ -1194,12 +1194,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var gateFormula = gate.Formula as SimpleGateFormula;
             Assert.NotNull(gateFormula);
 
-            Assert.AreEqual(2, gateFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);
-            Assert.AreEqual(1.2, gateFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(3.4, gateFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
-            Assert.AreEqual(2, gateFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Count);
-            Assert.AreEqual(5.6, gateFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(7.8, gateFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
+            Assert.AreEqual(2, gateFormula.GateLowerEdgeLevelTimeSeries.Time.Values.Count);
+            Assert.AreEqual(1.2, gateFormula.GateLowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(3.4, gateFormula.GateLowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
+            Assert.AreEqual(2, gateFormula.HorizontalGateOpeningWidthTimeSeries.Time.Values.Count);
+            Assert.AreEqual(5.6, gateFormula.HorizontalGateOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(7.8, gateFormula.HorizontalGateOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
         }
 
         #endregion

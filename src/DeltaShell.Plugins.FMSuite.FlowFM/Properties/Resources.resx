@@ -499,11 +499,11 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not_span_the_model_run_interval_" xml:space="preserve">
     <value>source/sink '{0}': discharge time series does not span the model run interval.</value>
   </data>
-  <data name="WeirValidator_ValidateDoorHeight___0____door_height_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
-    <value>'{0}': door height must be greater than or equal to 0.</value>
+  <data name="WeirValidator_ValidateGateHeight___0____gate_height_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>'{0}': gate height must be greater than or equal to 0.</value>
   </data>
-  <data name="WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
-    <value>'{0}': opening width must be greater than or equal to 0.</value>
+  <data name="WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>'{0}': gate opening width must be greater than or equal to 0.</value>
   </data>
   <data name="WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_" xml:space="preserve">
     <value>{0} for '{1}' structure type: {2}, will be calculated by the computational core.</value>
@@ -523,23 +523,23 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WeirValidator_ValidateLateralContraction___0____lateral_contraction_coefficient_must_be_greater_than_or_equal_to_zero_" xml:space="preserve">
     <value>'{0}': lateral contraction coefficient must be greater than or equal to zero.</value>
   </data>
-  <data name="WeirValidator_ValidateHorizontalDoorOpeningDirection___0____only_symmetric_horizontal_door_opening_direction_is_supported_for_general_structures_" xml:space="preserve">
-    <value>'{0}': only symmetric horizontal door opening direction is supported for general structures.</value>
+  <data name="WeirValidator_ValidateHorizontalGateOpeningDirection___0____only_symmetric_gate_opening_horizontal_direction_is_supported_for_general_structures_" xml:space="preserve">
+    <value>'{0}': only symmetric gate opening horizontal direction is supported for general structures.</value>
   </data>
-  <data name="WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_span_the_model_run_interval_" xml:space="preserve">
-    <value>'{0}': lower edge level time series does not span the model run interval.</value>
+  <data name="WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series_does_not_span_the_model_run_interval_" xml:space="preserve">
+    <value>'{0}': gate lower edge level time series does not span the model run interval.</value>
   </data>
-  <data name="WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_contain_any_values_" xml:space="preserve">
-    <value>'{0}': lower edge level time series does not contain any values.</value>
+  <data name="WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series_does_not_contain_any_values_" xml:space="preserve">
+    <value>'{0}': gate lower edge level time series does not contain any values.</value>
   </data>
-  <data name="WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_values_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
-    <value>'{0}': opening width time series values must be greater than or equal to 0.</value>
+  <data name="WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_values_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>'{0}': gate opening width time series values must be greater than or equal to 0.</value>
   </data>
-  <data name="WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_span_the_model_run_interval_" xml:space="preserve">
-    <value>'{0}': opening width time series does not span the model run interval.</value>
+  <data name="WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_does_not_span_the_model_run_interval_" xml:space="preserve">
+    <value>'{0}': gate opening width time series does not span the model run interval.</value>
   </data>
-  <data name="WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_contain_any_values_" xml:space="preserve">
-    <value>'{0}': opening width time series does not contain any values.</value>
+  <data name="WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_does_not_contain_any_values_" xml:space="preserve">
+    <value>'{0}': gate opening width time series does not contain any values.</value>
   </data>
   <data name="FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_" xml:space="preserve">
     <value>fixed weir '{0}' not within grid extent.</value>

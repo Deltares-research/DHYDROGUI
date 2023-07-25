@@ -297,11 +297,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void AssertThatAdditionalGeneralStructureIsCorrect(GeneralStructureFormula formula)
         {
-            Assert.That(formula.WidthRightSideOfStructure, Is.NaN, "Expected general structure's Downstream 2 width to be Empty:");
-            Assert.That(formula.WidthStructureRightSide, Is.NaN, "Expected general structure's Downstream 1 width to be Empty:");
+            Assert.That(formula.Downstream2Width, Is.NaN, "Expected general structure's Downstream 2 width to be Empty:");
+            Assert.That(formula.Downstream1Width, Is.NaN, "Expected general structure's Downstream 1 width to be Empty:");
 
-            Assert.That(formula.WidthLeftSideOfStructure, Is.NaN, "Expected general structure's Upstream 1 width to be Empty:");
-            Assert.That(formula.WidthStructureLeftSide, Is.NaN, "Expected general structure's Upstream 2 width to be Empty:");
+            Assert.That(formula.Upstream1Width, Is.NaN, "Expected general structure's Upstream 1 width to be Empty:");
+            Assert.That(formula.Upstream2Width, Is.NaN, "Expected general structure's Upstream 2 width to be Empty:");
         }
 
         #endregion

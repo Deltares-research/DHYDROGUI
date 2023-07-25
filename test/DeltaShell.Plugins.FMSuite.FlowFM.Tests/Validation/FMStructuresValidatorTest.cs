@@ -107,12 +107,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void GivenAWaterFlowFMModelContainingAGatedWeirWithANegativeDoorHeightWhenValidateIsCalledThenTheCorrectIssueIsAdded()
+        public void GivenAWaterFlowFMModelContainingAGatedWeirWithANegativeGateHeightWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
             var weir = new Structure()
             {
-                Formula = new SimpleGateFormula {DoorHeight = -1.0},
+                Formula = new SimpleGateFormula {GateHeight = -1.0},
                 CrestWidth = 1.0
             };
 
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"'{weir.Name}': door height must be greater than or equal to 0.";
+            var expectedIssue = $"'{weir.Name}': gate height must be greater than or equal to 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingAGatedWeirWhereTheOpeningWidthTimeSeriesContainsNegativeValuesWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var formula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            var formula = new SimpleGateFormula(true) {UseHorizontalGateOpeningWidthTimeSeries = true};
             var weir = new Structure()
             {
                 Formula = formula,
@@ -143,8 +143,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             };
 
             DateTime t = DateTime.Today;
-            formula.HorizontalDoorOpeningWidthTimeSeries[t] = -100.0;
-            formula.HorizontalDoorOpeningWidthTimeSeries[t.AddDays(7)] = 700.0;
+            formula.HorizontalGateOpeningWidthTimeSeries[t] = -100.0;
+            formula.HorizontalGateOpeningWidthTimeSeries[t.AddDays(7)] = 700.0;
 
             model.StartTime = t;
             model.StopTime = t.AddDays(7);
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"'{weir.Name}': opening width time series values must be greater than or equal to 0.";
+                $"'{weir.Name}': gate opening width time series values must be greater than or equal to 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingAGatedWeirWhereTheOpeningWidthTimeSeriesValuesAreSmallerThanTheModelTimeSeriesWhileUsingOpeningWidthTimeSeriesWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var formula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            var formula = new SimpleGateFormula(true) {UseHorizontalGateOpeningWidthTimeSeries = true};
             var weir = new Structure()
             {
                 Formula = formula,
@@ -177,8 +177,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             };
 
             DateTime t = DateTime.Today;
-            formula.HorizontalDoorOpeningWidthTimeSeries[t.AddDays(1)] = 100.0;
-            formula.HorizontalDoorOpeningWidthTimeSeries[t.AddDays(7)] = 700.0;
+            formula.HorizontalGateOpeningWidthTimeSeries[t.AddDays(1)] = 100.0;
+            formula.HorizontalGateOpeningWidthTimeSeries[t.AddDays(7)] = 700.0;
 
             model.StartTime = t;
 
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"'{weir.Name}': opening width time series does not span the model run interval.";
+            var expectedIssue = $"'{weir.Name}': gate opening width time series does not span the model run interval.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingAGatedWeirWhichDoesNotContainOpeningWidthTimeSeriesValuesWhileUsingOpeningWidthTimeSeriesWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var formula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            var formula = new SimpleGateFormula(true) {UseHorizontalGateOpeningWidthTimeSeries = true};
             var weir = new Structure()
             {
                 Formula = formula,
@@ -215,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"'{weir.Name}': opening width time series does not contain any values.";
+            var expectedIssue = $"'{weir.Name}': gate opening width time series does not contain any values.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingAGatedWeirWithANegativeConstantOpeningWidthWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var formula = new SimpleGateFormula(true) {HorizontalDoorOpeningWidth = -1.0};
+            var formula = new SimpleGateFormula(true) {HorizontalGateOpeningWidth = -1.0};
             var weir = new Structure()
             {
                 Formula = formula,
@@ -240,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"'{weir.Name}': opening width must be greater than or equal to 0.";
+            var expectedIssue = $"'{weir.Name}': gate opening width must be greater than or equal to 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -248,10 +248,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void GivenAWaterFlowFMModelContainingAGatedWeirWhereTheLowerEdgeLevelTimeSeriesValuesAreSmallerThanTheModelTimeSeriesWhileUsingLowerEdgeLevelTimeSeriesWhenValidateIsCalledThenTheCorrectIssueIsAdded()
+        public void GivenAWaterFlowFMModelContainingAGatedWeirWhereTheGateLowerEdgeLevelTimeSeriesValuesAreSmallerThanTheModelTimeSeriesWhileUsingGateLowerEdgeLevelTimeSeriesWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var formula = new SimpleGateFormula(true) {UseLowerEdgeLevelTimeSeries = true};
+            var formula = new SimpleGateFormula(true) {UseGateLowerEdgeLevelTimeSeries = true};
             var weir = new Structure()
             {
                 Formula = formula,
@@ -259,8 +259,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             };
 
             DateTime t = DateTime.Today;
-            formula.LowerEdgeLevelTimeSeries[t.AddDays(1)] = 100.0;
-            formula.LowerEdgeLevelTimeSeries[t.AddDays(7)] = 700.0;
+            formula.GateLowerEdgeLevelTimeSeries[t.AddDays(1)] = 100.0;
+            formula.GateLowerEdgeLevelTimeSeries[t.AddDays(7)] = 700.0;
 
             model.StartTime = t;
 
@@ -272,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"'{weir.Name}': lower edge level time series does not span the model run interval.";
+            var expectedIssue = $"'{weir.Name}': gate lower edge level time series does not span the model run interval.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -283,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingAGatedWeirWhichDoesNotContainLowerEdgeLevelTimeSeriesValuesWhileUsingLowerEdgeLevelTimeSeriesWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var formula = new SimpleGateFormula(true) {UseLowerEdgeLevelTimeSeries = true};
+            var formula = new SimpleGateFormula(true) {UseGateLowerEdgeLevelTimeSeries = true};
             var weir = new Structure()
             {
                 Formula = formula,
@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"'{weir.Name}': lower edge level time series does not contain any values.";
+            var expectedIssue = $"'{weir.Name}': gate lower edge level time series does not contain any values.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -330,15 +330,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void GivenAWaterFlowFMModelContainingAGeneralStructureWithANonSymmetricDoorOpeningDirectionWhenValidateIsCalledThenTheCorrectValiditionIssueIsReturned()
+        public void GivenAWaterFlowFMModelContainingAGeneralStructureWithANonSymmetricGateOpeningDirectionWhenValidateIsCalledThenTheCorrectValiditionIssueIsReturned()
         {
             var formula = new GeneralStructureFormula()
             {
-                HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft,
-                WidthStructureLeftSide = 1.0,
-                WidthStructureRightSide = 1.0,
-                WidthLeftSideOfStructure = 1.0,
-                WidthRightSideOfStructure = 1.0
+                GateOpeningHorizontalDirection = GateOpeningDirection.FromLeft,
+                Upstream2Width = 1.0,
+                Downstream1Width = 1.0,
+                Upstream1Width = 1.0,
+                Downstream2Width = 1.0
             };
             var weir = new Structure()
             {
@@ -353,7 +353,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"'{weir.Name}': only symmetric horizontal door opening direction is supported for general structures.";
+            var expectedIssue = $"'{weir.Name}': only symmetric gate opening horizontal direction is supported for general structures.";
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
             Assert.That(numberOfMessages, Is.EqualTo(1));
@@ -364,11 +364,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var formula = new GeneralStructureFormula()
             {
-                HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
-                WidthStructureLeftSide = -1.0,
-                WidthStructureRightSide = 1.0,
-                WidthLeftSideOfStructure = 1.0,
-                WidthRightSideOfStructure = 1.0
+                GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric,
+                Upstream2Width = -1.0,
+                Downstream1Width = 1.0,
+                Upstream1Width = 1.0,
+                Downstream2Width = 1.0
             };
             var weir = new Structure()
             {
@@ -396,11 +396,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var formula = new GeneralStructureFormula()
             {
-                HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
-                WidthStructureLeftSide = 1.0,
-                WidthStructureRightSide = 1.0,
-                WidthLeftSideOfStructure = -1.0,
-                WidthRightSideOfStructure = 1.0
+                GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric,
+                Upstream2Width = 1.0,
+                Downstream1Width = 1.0,
+                Upstream1Width = -1.0,
+                Downstream2Width = 1.0
             };
             var weir = new Structure()
             {
@@ -428,11 +428,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var formula = new GeneralStructureFormula()
             {
-                HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
-                WidthStructureLeftSide = 1.0,
-                WidthStructureRightSide = -1.0,
-                WidthLeftSideOfStructure = 1.0,
-                WidthRightSideOfStructure = 1.0
+                GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric,
+                Upstream2Width = 1.0,
+                Downstream1Width = -1.0,
+                Upstream1Width = 1.0,
+                Downstream2Width = 1.0
             };
             var weir = new Structure()
             {
@@ -460,11 +460,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var formula = new GeneralStructureFormula()
             {
-                HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
-                WidthStructureLeftSide = 1.0,
-                WidthStructureRightSide = 1.0,
-                WidthLeftSideOfStructure = 1.0,
-                WidthRightSideOfStructure = -1.0
+                GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric,
+                Upstream2Width = 1.0,
+                Downstream1Width = 1.0,
+                Upstream1Width = 1.0,
+                Downstream2Width = -1.0
             };
             var weir = new Structure()
             {

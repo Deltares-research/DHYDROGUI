@@ -35,17 +35,17 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects.StructureFormulas
             Assert.That(formula.ExtraResistance, Is.EqualTo(0.0));
 
             Assert.That(formula.GateOpening, Is.EqualTo(1.0));
-            Assert.That(formula.DoorHeight, Is.EqualTo(0.0));
+            Assert.That(formula.GateHeight, Is.EqualTo(0.0));
 
-            Assert.That(formula.HorizontalDoorOpeningDirection, 
+            Assert.That(formula.GateOpeningHorizontalDirection, 
                         Is.EqualTo(GateOpeningDirection.Symmetric));
-            Assert.That(formula.HorizontalDoorOpeningWidth, Is.EqualTo(0.0));
-            Assert.That(formula.UseHorizontalDoorOpeningWidthTimeSeries, Is.False);
-            Assert.That(formula.HorizontalDoorOpeningWidthTimeSeries, Is.Null);
+            Assert.That(formula.HorizontalGateOpeningWidth, Is.EqualTo(0.0));
+            Assert.That(formula.UseHorizontalGateOpeningWidthTimeSeries, Is.False);
+            Assert.That(formula.HorizontalGateOpeningWidthTimeSeries, Is.Null);
 
-            Assert.That(formula.LowerEdgeLevel, Is.EqualTo(0.0));
-            Assert.That(formula.UseLowerEdgeLevelTimeSeries, Is.False);
-            Assert.That(formula.LowerEdgeLevelTimeSeries, Is.Null);
+            Assert.That(formula.GateLowerEdgeLevel, Is.EqualTo(0.0));
+            Assert.That(formula.UseGateLowerEdgeLevelTimeSeries, Is.False);
+            Assert.That(formula.GateLowerEdgeLevelTimeSeries, Is.Null);
 
             Assert.That(formula.Name, Is.EqualTo("General Structure"));
         }
@@ -66,25 +66,25 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects.StructureFormulas
                 NegativeDrownedWeirFlow = 9.8,
                 NegativeFreeGateFlow = 10.9,
                 NegativeFreeWeirFlow = 11.1,
-                BedLevelLeftSideOfStructure = 12.11,
-                BedLevelLeftSideStructure = 13.12,
-                BedLevelStructureCentre = 14.13,
-                BedLevelRightSideStructure = 15.14,
-                BedLevelRightSideOfStructure = 16.15,
-                WidthLeftSideOfStructure = 17.16,
-                WidthStructureLeftSide = 18.17,
-                WidthStructureCentre = 19.18,
-                WidthStructureRightSide = 20.19,
-                WidthRightSideOfStructure = 21.2,
+                Upstream1Level = 12.11,
+                Upstream2Level = 13.12,
+                CrestLevel = 14.13,
+                Downstream1Level = 15.14,
+                Downstream2Level = 16.15,
+                Upstream1Width = 17.16,
+                Upstream2Width = 18.17,
+                CrestWidth = 19.18,
+                Downstream1Width = 20.19,
+                Downstream2Width = 21.2,
                 UseExtraResistance = true,
                 ExtraResistance = 22.3,
                 GateOpening = 23.4,
-                DoorHeight = 24.5,
-                HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
-                HorizontalDoorOpeningWidth = 25.6,
-                LowerEdgeLevel = 26.7,
-                UseHorizontalDoorOpeningWidthTimeSeries = true,
-                UseLowerEdgeLevelTimeSeries =true 
+                GateHeight = 24.5,
+                GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric,
+                HorizontalGateOpeningWidth = 25.6,
+                GateLowerEdgeLevel = 26.7,
+                UseHorizontalGateOpeningWidthTimeSeries = true,
+                UseGateLowerEdgeLevelTimeSeries =true 
             };
 
             // Call
@@ -105,74 +105,74 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects.StructureFormulas
             Assert.That(clonedFormula.NegativeDrownedWeirFlow, Is.EqualTo(formula.NegativeDrownedWeirFlow));
             Assert.That(clonedFormula.NegativeFreeGateFlow, Is.EqualTo(formula.NegativeFreeGateFlow));
             Assert.That(clonedFormula.NegativeFreeWeirFlow, Is.EqualTo(formula.NegativeFreeWeirFlow));
-            Assert.That(clonedFormula.BedLevelLeftSideOfStructure, Is.EqualTo(formula.BedLevelLeftSideOfStructure));
-            Assert.That(clonedFormula.BedLevelLeftSideStructure, Is.EqualTo(formula.BedLevelLeftSideStructure));
-            Assert.That(clonedFormula.BedLevelStructureCentre, Is.EqualTo(formula.BedLevelStructureCentre));
-            Assert.That(clonedFormula.BedLevelRightSideStructure, Is.EqualTo(formula.BedLevelRightSideStructure));
-            Assert.That(clonedFormula.BedLevelRightSideOfStructure, Is.EqualTo(formula.BedLevelRightSideOfStructure));
-            Assert.That(clonedFormula.WidthLeftSideOfStructure, Is.EqualTo(formula.WidthLeftSideOfStructure));
-            Assert.That(clonedFormula.WidthStructureLeftSide, Is.EqualTo(formula.WidthStructureLeftSide));
-            Assert.That(clonedFormula.WidthStructureCentre, Is.EqualTo(formula.WidthStructureCentre));
-            Assert.That(clonedFormula.WidthStructureRightSide, Is.EqualTo(formula.WidthStructureRightSide));
-            Assert.That(clonedFormula.WidthRightSideOfStructure, Is.EqualTo(formula.WidthRightSideOfStructure));
+            Assert.That(clonedFormula.Upstream1Level, Is.EqualTo(formula.Upstream1Level));
+            Assert.That(clonedFormula.Upstream2Level, Is.EqualTo(formula.Upstream2Level));
+            Assert.That(clonedFormula.CrestLevel, Is.EqualTo(formula.CrestLevel));
+            Assert.That(clonedFormula.Downstream1Level, Is.EqualTo(formula.Downstream1Level));
+            Assert.That(clonedFormula.Downstream2Level, Is.EqualTo(formula.Downstream2Level));
+            Assert.That(clonedFormula.Upstream1Width, Is.EqualTo(formula.Upstream1Width));
+            Assert.That(clonedFormula.Upstream2Width, Is.EqualTo(formula.Upstream2Width));
+            Assert.That(clonedFormula.CrestWidth, Is.EqualTo(formula.CrestWidth));
+            Assert.That(clonedFormula.Downstream1Width, Is.EqualTo(formula.Downstream1Width));
+            Assert.That(clonedFormula.Downstream2Width, Is.EqualTo(formula.Downstream2Width));
             Assert.That(clonedFormula.UseExtraResistance, Is.EqualTo(formula.UseExtraResistance));
             Assert.That(clonedFormula.ExtraResistance, Is.EqualTo(formula.ExtraResistance));
             Assert.That(clonedFormula.GateOpening, Is.EqualTo(formula.GateOpening));
-            Assert.That(clonedFormula.DoorHeight, Is.EqualTo(formula.DoorHeight));
-            Assert.That(clonedFormula.HorizontalDoorOpeningDirection, Is.EqualTo(formula.HorizontalDoorOpeningDirection));
-            Assert.That(clonedFormula.HorizontalDoorOpeningWidth, Is.EqualTo(formula.HorizontalDoorOpeningWidth));
-            Assert.That(clonedFormula.UseHorizontalDoorOpeningWidthTimeSeries, Is.EqualTo(formula.UseHorizontalDoorOpeningWidthTimeSeries));
-            Assert.That(clonedFormula.LowerEdgeLevel, Is.EqualTo(formula.LowerEdgeLevel));
-            Assert.That(clonedFormula.UseLowerEdgeLevelTimeSeries, Is.EqualTo(formula.UseLowerEdgeLevelTimeSeries));
+            Assert.That(clonedFormula.GateHeight, Is.EqualTo(formula.GateHeight));
+            Assert.That(clonedFormula.GateOpeningHorizontalDirection, Is.EqualTo(formula.GateOpeningHorizontalDirection));
+            Assert.That(clonedFormula.HorizontalGateOpeningWidth, Is.EqualTo(formula.HorizontalGateOpeningWidth));
+            Assert.That(clonedFormula.UseHorizontalGateOpeningWidthTimeSeries, Is.EqualTo(formula.UseHorizontalGateOpeningWidthTimeSeries));
+            Assert.That(clonedFormula.GateLowerEdgeLevel, Is.EqualTo(formula.GateLowerEdgeLevel));
+            Assert.That(clonedFormula.UseGateLowerEdgeLevelTimeSeries, Is.EqualTo(formula.UseGateLowerEdgeLevelTimeSeries));
 
-            Assert.That(clonedFormula.HorizontalDoorOpeningWidthTimeSeries, Is.Not.Null);
-            Assert.That(clonedFormula.HorizontalDoorOpeningWidthTimeSeries, 
-                        Is.Not.SameAs(formula.HorizontalDoorOpeningWidthTimeSeries));
-            Assert.That(clonedFormula.LowerEdgeLevelTimeSeries, Is.Not.Null);
-            Assert.That(clonedFormula.LowerEdgeLevelTimeSeries, 
-                        Is.Not.SameAs(formula.LowerEdgeLevelTimeSeries));
+            Assert.That(clonedFormula.HorizontalGateOpeningWidthTimeSeries, Is.Not.Null);
+            Assert.That(clonedFormula.HorizontalGateOpeningWidthTimeSeries, 
+                        Is.Not.SameAs(formula.HorizontalGateOpeningWidthTimeSeries));
+            Assert.That(clonedFormula.GateLowerEdgeLevelTimeSeries, Is.Not.Null);
+            Assert.That(clonedFormula.GateLowerEdgeLevelTimeSeries, 
+                        Is.Not.SameAs(formula.GateLowerEdgeLevelTimeSeries));
         }
 
         [Test]
-        public void UseHorizontalDoorOpeningWidthTimeSeries_SetToTrue_CreatesTimeSeries()
+        public void UseHorizontalGateOpeningWidthTimeSeries_SetToTrue_CreatesTimeSeries()
         {
             // Setup
             var formula = new GeneralStructureFormula();
 
-            Assert.That(formula.HorizontalDoorOpeningWidthTimeSeries, Is.Null);
+            Assert.That(formula.HorizontalGateOpeningWidthTimeSeries, Is.Null);
 
             // Call
-            formula.UseHorizontalDoorOpeningWidthTimeSeries = true;
+            formula.UseHorizontalGateOpeningWidthTimeSeries = true;
 
             // Assert
-            Assert.That(formula.HorizontalDoorOpeningWidthTimeSeries, Is.Not.Null);
+            Assert.That(formula.HorizontalGateOpeningWidthTimeSeries, Is.Not.Null);
         }
 
         [Test]
-        public void UseLowerEdgeLevelTimeSeries_SetToTrue_CreatesTimeSeries()
+        public void UseGateLowerEdgeLevelTimeSeries_SetToTrue_CreatesTimeSeries()
         {
             // Setup
             var formula = new GeneralStructureFormula();
 
-            Assert.That(formula.LowerEdgeLevelTimeSeries, Is.Null);
+            Assert.That(formula.GateLowerEdgeLevelTimeSeries, Is.Null);
 
             // Call
-            formula.UseLowerEdgeLevelTimeSeries= true;
+            formula.UseGateLowerEdgeLevelTimeSeries= true;
 
             // Assert
-            Assert.That(formula.LowerEdgeLevelTimeSeries, Is.Not.Null);
+            Assert.That(formula.GateLowerEdgeLevelTimeSeries, Is.Not.Null);
         }
 
         public static IEnumerable<TestCaseData> GetSetPropertyData()
         {
-            yield return new TestCaseData(KnownGeneralStructureProperties.Upstream2Width, new Func<GeneralStructureFormula, double>(f => f.WidthLeftSideOfStructure));
-            yield return new TestCaseData(KnownGeneralStructureProperties.Upstream1Width, new Func<GeneralStructureFormula, double>(f => f.WidthStructureLeftSide));
-            yield return new TestCaseData(KnownGeneralStructureProperties.Downstream1Width, new Func<GeneralStructureFormula, double>(f => f.WidthStructureRightSide));
-            yield return new TestCaseData(KnownGeneralStructureProperties.Downstream2Width, new Func<GeneralStructureFormula, double>(f => f.WidthRightSideOfStructure));
-            yield return new TestCaseData(KnownGeneralStructureProperties.Upstream2Level, new Func<GeneralStructureFormula, double>(f => f.BedLevelLeftSideOfStructure));
-            yield return new TestCaseData(KnownGeneralStructureProperties.Upstream1Level, new Func<GeneralStructureFormula, double>(f => f.BedLevelLeftSideStructure));
-            yield return new TestCaseData(KnownGeneralStructureProperties.Downstream1Level, new Func<GeneralStructureFormula, double>(f => f.BedLevelRightSideStructure));
-            yield return new TestCaseData(KnownGeneralStructureProperties.Downstream2Level, new Func<GeneralStructureFormula, double>(f => f.BedLevelRightSideOfStructure));
+            yield return new TestCaseData(KnownGeneralStructureProperties.Upstream1Width, new Func<GeneralStructureFormula, double>(f => f.Upstream1Width));
+            yield return new TestCaseData(KnownGeneralStructureProperties.Upstream2Width, new Func<GeneralStructureFormula, double>(f => f.Upstream2Width));
+            yield return new TestCaseData(KnownGeneralStructureProperties.Downstream1Width, new Func<GeneralStructureFormula, double>(f => f.Downstream1Width));
+            yield return new TestCaseData(KnownGeneralStructureProperties.Downstream2Width, new Func<GeneralStructureFormula, double>(f => f.Downstream2Width));
+            yield return new TestCaseData(KnownGeneralStructureProperties.Upstream1Level, new Func<GeneralStructureFormula, double>(f => f.Upstream1Level));
+            yield return new TestCaseData(KnownGeneralStructureProperties.Upstream2Level, new Func<GeneralStructureFormula, double>(f => f.Upstream2Level));
+            yield return new TestCaseData(KnownGeneralStructureProperties.Downstream1Level, new Func<GeneralStructureFormula, double>(f => f.Downstream1Level));
+            yield return new TestCaseData(KnownGeneralStructureProperties.Downstream2Level, new Func<GeneralStructureFormula, double>(f => f.Downstream2Level));
             yield return new TestCaseData(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, new Func<GeneralStructureFormula, double>(f => f.PositiveFreeGateFlow));
             yield return new TestCaseData(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, new Func<GeneralStructureFormula, double>(f => f.PositiveDrownedGateFlow));
             yield return new TestCaseData(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, new Func<GeneralStructureFormula, double>(f => f.PositiveFreeWeirFlow));
@@ -184,7 +184,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects.StructureFormulas
             yield return new TestCaseData(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, new Func<GeneralStructureFormula, double>(f => f.NegativeDrownedWeirFlow));
             yield return new TestCaseData(KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, new Func<GeneralStructureFormula, double>(f => f.NegativeContractionCoefficient));
             yield return new TestCaseData(KnownGeneralStructureProperties.ExtraResistance, new Func<GeneralStructureFormula, double>(f => f.ExtraResistance));
-            yield return new TestCaseData(KnownGeneralStructureProperties.GateHeight, new Func<GeneralStructureFormula, double>(f => f.DoorHeight));
+            yield return new TestCaseData(KnownGeneralStructureProperties.GateHeight, new Func<GeneralStructureFormula, double>(f => f.GateHeight));
         }
 
         [Test]

@@ -165,9 +165,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         {
             var issues = new List<ValidationIssue>();
 
-            issues.AddRange(structure.ValidateDoorHeight(gatedStructureFormula));
-            issues.AddRange(structure.ValidateHorizontalDoorOpeningWidth(gatedStructureFormula));
-            issues.AddRange(structure.ValidateLowerEdgeLevel(gatedStructureFormula));
+            issues.AddRange(structure.ValidateGateHeight(gatedStructureFormula));
+            issues.AddRange(structure.ValidateHorizontalGateOpeningWidth(gatedStructureFormula));
+            issues.AddRange(structure.ValidateGateLowerEdgeLevel(gatedStructureFormula));
 
             return issues;
         }
@@ -177,54 +177,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         {
             var issues = new List<ValidationIssue>();
 
-            issues.AddRange(structure.ValidateHorizontalDoorOpeningDirection(generalStructureFormula));
-            issues.AddRange(structure.ValidateCrestWidth(generalStructureFormula.WidthStructureLeftSide,
+            issues.AddRange(structure.ValidateGateOpeningHorizontalDirection(generalStructureFormula));
+            issues.AddRange(structure.ValidateCrestWidth(generalStructureFormula.Upstream2Width,
                                                     Upstream2WidthPropertyName));
-            issues.AddRange(structure.ValidateCrestWidth(generalStructureFormula.WidthLeftSideOfStructure,
+            issues.AddRange(structure.ValidateCrestWidth(generalStructureFormula.Upstream1Width,
                                                     Upstream1WidthPropertyName));
-            issues.AddRange(structure.ValidateCrestWidth(generalStructureFormula.WidthStructureRightSide,
+            issues.AddRange(structure.ValidateCrestWidth(generalStructureFormula.Downstream1Width,
                                                     Downstream1WidthPropertyName));
-            issues.AddRange(structure.ValidateCrestWidth(generalStructureFormula.WidthRightSideOfStructure,
+            issues.AddRange(structure.ValidateCrestWidth(generalStructureFormula.Downstream2Width,
                                                     Downstream2WidthPropertyName));
 
             return issues;
         }
 
-        private static IEnumerable<ValidationIssue> ValidateHorizontalDoorOpeningDirection(this IStructure structure, 
+        private static IEnumerable<ValidationIssue> ValidateGateOpeningHorizontalDirection(this IStructure structure, 
                                                                                            GeneralStructureFormula generalStructureFormula)
         {
-            if (generalStructureFormula.HorizontalDoorOpeningDirection
+            if (generalStructureFormula.GateOpeningHorizontalDirection
                 != GateOpeningDirection.Symmetric)
             {
                 yield return new ValidationIssue(structure,
                                                  ValidationSeverity.Error,
                                                  string.Format(
-                                                     Resources.WeirValidator_ValidateHorizontalDoorOpeningDirection___0____only_symmetric_horizontal_door_opening_direction_is_supported_for_general_structures_,
+                                                     Resources.WeirValidator_ValidateHorizontalGateOpeningDirection___0____only_symmetric_gate_opening_horizontal_direction_is_supported_for_general_structures_,
                                                      structure.Name),
                                                  structure);
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateLowerEdgeLevel(this IStructure structure, 
+        private static IEnumerable<ValidationIssue> ValidateGateLowerEdgeLevel(this IStructure structure, 
                                                                            IGatedStructureFormula gatedStructureFormula)
         {
-            if (!gatedStructureFormula.UseLowerEdgeLevelTimeSeries)
+            if (!gatedStructureFormula.UseGateLowerEdgeLevelTimeSeries)
             {
                 yield break;
             }
 
-            TimeSeries lowerEdgeLevelTimeSeries = gatedStructureFormula.LowerEdgeLevelTimeSeries;
-            if (lowerEdgeLevelTimeSeries.Time.Values.Any())
+            TimeSeries gateLowerEdgeLevelTimeSeries = gatedStructureFormula.GateLowerEdgeLevelTimeSeries;
+            if (gateLowerEdgeLevelTimeSeries.Time.Values.Any())
             {
-                DateTime startTime = lowerEdgeLevelTimeSeries.Time.Values.First();
-                DateTime stopTime = lowerEdgeLevelTimeSeries.Time.Values.Last();
+                DateTime startTime = gateLowerEdgeLevelTimeSeries.Time.Values.First();
+                DateTime stopTime = gateLowerEdgeLevelTimeSeries.Time.Values.Last();
 
                 if (startTime > modelStartTime || stopTime < modelStopTime)
                 {
                     yield return new ValidationIssue(structure,
                                                      ValidationSeverity.Error,
                                                      string.Format(
-                                                         Resources.WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_span_the_model_run_interval_,
+                                                         Resources.WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series_does_not_span_the_model_run_interval_,
                                                          structure.Name),
                                                      structure);
                 }
@@ -234,35 +234,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                 yield return new ValidationIssue(structure,
                                                  ValidationSeverity.Error,
                                                  string.Format(
-                                                     Resources.WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_contain_any_values_,
+                                                     Resources.WeirValidator_ValidateGateLowerEdgeLevel___0____gate_lower_edge_level_time_series_does_not_contain_any_values_,
                                                      structure.Name),
                                                  structure);
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateHorizontalDoorOpeningWidth(
+        private static IEnumerable<ValidationIssue> ValidateHorizontalGateOpeningWidth(
             this IStructure structure, IGatedStructureFormula gatedStructureFormula)
         {
-            if (gatedStructureFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+            if (gatedStructureFormula.UseHorizontalGateOpeningWidthTimeSeries)
             {
-                TimeSeries doorOpeningTimeSeries =
-                    gatedStructureFormula.HorizontalDoorOpeningWidthTimeSeries;
-                if (doorOpeningTimeSeries.Components[0].Values.Cast<object>()
+                TimeSeries gateOpeningTimeSeries =
+                    gatedStructureFormula.HorizontalGateOpeningWidthTimeSeries;
+                if (gateOpeningTimeSeries.Components[0].Values.Cast<object>()
                                          .Any(value => (double) value < 0.0))
                 {
                     yield return new ValidationIssue(structure,
                                                      ValidationSeverity.Error,
                                                      string.Format(
                                                          Resources
-                                                             .WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_values_must_be_greater_than_or_equal_to_0_,
+                                                             .WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_values_must_be_greater_than_or_equal_to_0_,
                                                          structure.Name),
                                                      structure);
                 }
 
-                if (doorOpeningTimeSeries.Time.Values.Any())
+                if (gateOpeningTimeSeries.Time.Values.Any())
                 {
-                    DateTime startTime = doorOpeningTimeSeries.Time.Values.First();
-                    DateTime stopTime = doorOpeningTimeSeries.Time.Values.Last();
+                    DateTime startTime = gateOpeningTimeSeries.Time.Values.First();
+                    DateTime stopTime = gateOpeningTimeSeries.Time.Values.Last();
 
                     if (startTime > modelStartTime || stopTime < modelStopTime)
                     {
@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                                                          ValidationSeverity.Error,
                                                          string.Format(
                                                              Resources
-                                                                 .WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_span_the_model_run_interval_,
+                                                                 .WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_does_not_span_the_model_run_interval_,
                                                              structure.Name),
                                                          structure);
                     }
@@ -281,33 +281,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                                                      ValidationSeverity.Error,
                                                      string.Format(
                                                          Resources
-                                                             .WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_contain_any_values_,
+                                                             .WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_time_series_does_not_contain_any_values_,
                                                          structure.Name),
                                                      structure);
                 }
             }
-            else if (gatedStructureFormula.HorizontalDoorOpeningWidth < 0.0)
+            else if (gatedStructureFormula.HorizontalGateOpeningWidth < 0.0)
             {
                 yield return new ValidationIssue(structure,
                                                  ValidationSeverity.Error,
                                                  string.Format(
                                                      Resources
-                                                         .WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_must_be_greater_than_or_equal_to_0_,
+                                                         .WeirValidator_ValidateHorizontalGateOpeningWidth___0____gate_opening_width_must_be_greater_than_or_equal_to_0_,
                                                      structure.Name),
                                                  structure);
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateDoorHeight(this IStructure structure,
+        private static IEnumerable<ValidationIssue> ValidateGateHeight(this IStructure structure,
                                                                        IGatedStructureFormula gatedStructureFormula)
         {
-            if (gatedStructureFormula.DoorHeight < 0.0)
+            if (gatedStructureFormula.GateHeight < 0.0)
             {
                 yield return new ValidationIssue(structure,
                                                  ValidationSeverity.Error,
                                                  string.Format(
                                                      Resources
-                                                         .WeirValidator_ValidateDoorHeight___0____door_height_must_be_greater_than_or_equal_to_0_,
+                                                         .WeirValidator_ValidateGateHeight___0____gate_height_must_be_greater_than_or_equal_to_0_,
                                                      structure.Name),
                                                  structure);
             }

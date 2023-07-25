@@ -22,14 +22,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         private readonly IReadOnlyDictionary<string, string> propertyMapping =
             new Dictionary<string, string>()
             {
-                {nameof(SimpleGateFormula.DoorHeight), nameof(GateHeight)},
-                {nameof(SimpleGateFormula.HorizontalDoorOpeningDirection), nameof(GateOpeningDirection)},
-                {nameof(SimpleGateFormula.HorizontalDoorOpeningWidth), nameof(HorizontalOpeningWidth)},
-                {nameof(SimpleGateFormula.UseHorizontalDoorOpeningWidthTimeSeries), nameof(UseHorizontalOpeningWidthTimeSeries)},
-                {nameof(SimpleGateFormula.HorizontalDoorOpeningWidthTimeSeries), nameof(HorizontalOpeningWidthTimeSeries)},
-                {nameof(SimpleGateFormula.LowerEdgeLevel), nameof(GateLowerEdgeLevel)},
-                {nameof(SimpleGateFormula.UseLowerEdgeLevelTimeSeries), nameof(UseGateLowerEdgeLevelTimeSeries)},
-                {nameof(SimpleGateFormula.LowerEdgeLevelTimeSeries), nameof(GateLowerEdgeLevelTimeSeries)}
+                {nameof(SimpleGateFormula.GateHeight), nameof(GateHeight)},
+                {nameof(SimpleGateFormula.GateOpeningHorizontalDirection), nameof(GateOpeningHorizontalDirection)},
+                {nameof(SimpleGateFormula.HorizontalGateOpeningWidth), nameof(HorizontalGateOpeningWidth)},
+                {nameof(SimpleGateFormula.UseHorizontalGateOpeningWidthTimeSeries), nameof(UseHorizontalGateOpeningWidthTimeSeries)},
+                {nameof(SimpleGateFormula.HorizontalGateOpeningWidthTimeSeries), nameof(HorizontalGateOpeningWidthTimeSeries)},
+                {nameof(SimpleGateFormula.GateLowerEdgeLevel), nameof(GateLowerEdgeLevel)},
+                {nameof(SimpleGateFormula.UseGateLowerEdgeLevelTimeSeries), nameof(UseGateLowerEdgeLevelTimeSeries)},
+                {nameof(SimpleGateFormula.GateLowerEdgeLevelTimeSeries), nameof(GateLowerEdgeLevelTimeSeries)}
             };
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public double GateLowerEdgeLevel
         {
-            get => formula.LowerEdgeLevel;
+            get => formula.GateLowerEdgeLevel;
             set
             {
                 // The floating point values are provided by the user in an entry
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.LowerEdgeLevel = value;
+                formula.GateLowerEdgeLevel = value;
             }
         }
 
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// </summary>
         public bool UseGateLowerEdgeLevelTimeSeries
         {
-            get => formula.UseLowerEdgeLevelTimeSeries;
+            get => formula.UseGateLowerEdgeLevelTimeSeries;
             set
             {
                 if (value == UseGateLowerEdgeLevelTimeSeries)
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.UseLowerEdgeLevelTimeSeries = value;
+                formula.UseGateLowerEdgeLevelTimeSeries = value;
             }
         }
 
@@ -100,14 +100,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// Gets the gate lower edge level time series.
         /// </summary>
         public TimeSeries GateLowerEdgeLevelTimeSeries =>
-            formula.LowerEdgeLevelTimeSeries;
+            formula.GateLowerEdgeLevelTimeSeries;
 
         /// <summary>
         /// Gets or sets the height of the gate.
         /// </summary>
         public double GateHeight
         {
-            get => formula.DoorHeight;
+            get => formula.GateHeight;
             set
             {
                 if (value == GateHeight)
@@ -115,24 +115,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
                     return;
                 }
 
-                formula.DoorHeight = value;
+                formula.GateHeight = value;
             }
         }
 
         /// <summary>
-        /// Gets or sets the width of the horizontal opening.
+        /// Gets or sets the width of the horizontal gate opening.
         /// </summary>
-        public double HorizontalOpeningWidth
+        public double HorizontalGateOpeningWidth
         {
-            get => formula.HorizontalDoorOpeningWidth;
+            get => formula.HorizontalGateOpeningWidth;
             set
             {
-                if (value == HorizontalOpeningWidth)
+                if (value == HorizontalGateOpeningWidth)
                 {
                     return;
                 }
 
-                formula.HorizontalDoorOpeningWidth = value;
+                formula.HorizontalGateOpeningWidth = value;
             }
         }
 
@@ -140,40 +140,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Str
         /// Gets or sets a value indicating whether the horizontal opening width
         /// time series should be used.
         /// </summary>
-        public bool UseHorizontalOpeningWidthTimeSeries
+        public bool UseHorizontalGateOpeningWidthTimeSeries
         {
-            get => formula.UseHorizontalDoorOpeningWidthTimeSeries;
+            get => formula.UseHorizontalGateOpeningWidthTimeSeries;
             set
             {
-                if (value == UseHorizontalOpeningWidthTimeSeries)
+                if (value == UseHorizontalGateOpeningWidthTimeSeries)
                 {
                     return;
                 }
 
-                formula.UseHorizontalDoorOpeningWidthTimeSeries = value;
+                formula.UseHorizontalGateOpeningWidthTimeSeries = value;
             }
         }
 
         /// <summary>
-        /// Gets the horizontal opening width time series.
+        /// Gets the horizontal gate opening width time series.
         /// </summary>
-        public TimeSeries HorizontalOpeningWidthTimeSeries =>
-            formula.HorizontalDoorOpeningWidthTimeSeries;
+        public TimeSeries HorizontalGateOpeningWidthTimeSeries =>
+            formula.HorizontalGateOpeningWidthTimeSeries;
 
         /// <summary>
-        /// Gets or sets the gate opening direction.
+        /// Gets or sets the gate opening horizontal direction.
         /// </summary>
-        public GateOpeningDirection GateOpeningDirection
+        public GateOpeningDirection GateOpeningHorizontalDirection
         {
-            get => formula.HorizontalDoorOpeningDirection;
+            get => formula.GateOpeningHorizontalDirection;
             set
             {
-                if (value == GateOpeningDirection)
+                if (value == GateOpeningHorizontalDirection)
                 {
                     return;
                 }
 
-                formula.HorizontalDoorOpeningDirection = value;
+                formula.GateOpeningHorizontalDirection = value;
             }
         }
 

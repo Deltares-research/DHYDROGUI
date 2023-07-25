@@ -387,8 +387,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     }),
                     Formula = new SimpleGateFormula(true)
                     {
-                        UseHorizontalDoorOpeningWidthTimeSeries = true,
-                        UseLowerEdgeLevelTimeSeries = true
+                        UseHorizontalGateOpeningWidthTimeSeries = true,
+                        UseGateLowerEdgeLevelTimeSeries = true
                     },
                     CrestLevel = 102.0,
                     CrestWidth = 42.0
@@ -398,15 +398,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.NotNull(gatedWeirFormula);
 
-                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime] = 0.0;
-                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
-                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
-                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
+                gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries[model.StartTime] = 0.0;
+                gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
+                gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
+                gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
 
-                gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
-                gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
-                gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
-                gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
+                gatedWeirFormula.GateLowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
+                gatedWeirFormula.GateLowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
+                gatedWeirFormula.GateLowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
+                gatedWeirFormula.GateLowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
                 model.Area.Structures.Add(gate);
 
                 var pump = new Pump()
@@ -588,12 +588,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }),
                 Formula = new GeneralStructureFormula
                 {
-                    HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
-                    WidthStructureCentre = 0.5d,
-                    WidthStructureLeftSide = 0.2,
-                    WidthStructureRightSide = 1.0,
-                    WidthLeftSideOfStructure = 1.0,
-                    WidthRightSideOfStructure = 1.0,
+                    GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric,
+                    CrestWidth = 0.5d,
+                    Upstream2Width = 0.2,
+                    Downstream1Width = 1.0,
+                    Upstream1Width = 1.0,
+                    Downstream2Width = 1.0,
                 }
             });
             model.Area.Pumps.Add(new Pump()

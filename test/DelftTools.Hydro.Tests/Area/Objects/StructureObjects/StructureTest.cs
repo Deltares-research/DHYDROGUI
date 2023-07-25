@@ -138,7 +138,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects
 
             // Assert
             Assert.That(structure.CrestLevel, Is.EqualTo(crestLevel));
-            Assert.That(formula.BedLevelStructureCentre, Is.EqualTo(crestLevel));
+            Assert.That(formula.CrestLevel, Is.EqualTo(crestLevel));
 
             // Set formula to null to ensure we query the value on the Structure.
             structure.Formula = null;
@@ -159,7 +159,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects
 
             // Assert
             Assert.That(structure.CrestWidth, Is.EqualTo(crestWidth));
-            Assert.That(formula.WidthStructureCentre, Is.EqualTo(crestWidth));
+            Assert.That(formula.CrestWidth, Is.EqualTo(crestWidth));
 
             // Set formula to null to ensure we query the value on the Structure.
             structure.Formula = null;

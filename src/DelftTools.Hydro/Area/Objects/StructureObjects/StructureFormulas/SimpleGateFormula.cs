@@ -12,24 +12,24 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
     public class SimpleGateFormula : Unique<long>, IGatedStructureFormula
     {
         private bool canBeTimedependent;
-        private bool useLowerEdgeLevelTimeSeries;
-        private bool useHorizontalDoorOpeningWidthTimeSeries;
+        private bool useGateLowerEdgeLevelTimeSeries;
+        private bool useHorizontalGateOpeningWidthTimeSeries;
 
         public SimpleGateFormula() : this(false) {}
 
         public SimpleGateFormula(bool canBeTimeDependent)
         {
-            DoorHeight = 0.0;
+            GateHeight = 0.0;
 
-            HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric;
+            GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric;
 
-            HorizontalDoorOpeningWidth = 0.0;
-            UseHorizontalDoorOpeningWidthTimeSeries = false;
-            HorizontalDoorOpeningWidthTimeSeries = null;
+            HorizontalGateOpeningWidth = 0.0;
+            UseHorizontalGateOpeningWidthTimeSeries = false;
+            HorizontalGateOpeningWidthTimeSeries = null;
 
-            LowerEdgeLevel = 0.0;
-            UseLowerEdgeLevelTimeSeries = false;
-            LowerEdgeLevelTimeSeries = null;
+            GateLowerEdgeLevel = 0.0;
+            UseGateLowerEdgeLevelTimeSeries = false;
+            GateLowerEdgeLevelTimeSeries = null;
 
             GateOpening = 0.0;
             ContractionCoefficient = 0.63;
@@ -87,44 +87,44 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
         /// Gate opening (openlevel)
         /// </summary>
         public virtual double
-            GateOpening { get; set; } // LowerEdgeLevel, this should be replaced with LowerEdgeLevel value, see LowerEdgeLevelTimeSeries documentation
+            GateOpening { get; set; } // GateLowerEdgeLevel, this should be replaced with GateLowerEdgeLevel value, see GateLowerEdgeLevelTimeSeries documentation
 
-        public virtual double DoorHeight { get; set; }
+        public virtual double GateHeight { get; set; }
 
         /// <summary>
-        /// The direction in which the door will open.
+        /// The direction in which the gate will open.
         /// Left and right are defined by the flow direction of the gate,
         /// indicated in the gui by a small arrow.
         /// </summary>
-        public virtual GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }
+        public virtual GateOpeningDirection GateOpeningHorizontalDirection { get; set; }
 
-        public virtual double HorizontalDoorOpeningWidth { get; set; }
+        public virtual double HorizontalGateOpeningWidth { get; set; }
 
-        public virtual bool UseHorizontalDoorOpeningWidthTimeSeries
+        public virtual bool UseHorizontalGateOpeningWidthTimeSeries
         {
-            get => useHorizontalDoorOpeningWidthTimeSeries;
+            get => useHorizontalGateOpeningWidthTimeSeries;
             set
             {
                 if (!canBeTimedependent && value)
                 {
                     throw new InvalidOperationException(
-                        "Cannot use time series for gate horizontal door opening width when time varying data is not allowed.");
+                        "Cannot use time series for gate horizontal gate opening width when time varying data is not allowed.");
                 }
 
-                useHorizontalDoorOpeningWidthTimeSeries = value;
+                useHorizontalGateOpeningWidthTimeSeries = value;
             }
         }
 
-        public virtual TimeSeries HorizontalDoorOpeningWidthTimeSeries { get; set; }
+        public virtual TimeSeries HorizontalGateOpeningWidthTimeSeries { get; set; }
 
-        public virtual double LowerEdgeLevel { get; set; }
+        public virtual double GateLowerEdgeLevel { get; set; }
 
         /// <summary>
-        /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
+        /// When true, use <see cref="GateLowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
         /// </summary>
-        public virtual bool UseLowerEdgeLevelTimeSeries
+        public virtual bool UseGateLowerEdgeLevelTimeSeries
         {
-            get => useLowerEdgeLevelTimeSeries;
+            get => useGateLowerEdgeLevelTimeSeries;
             set
             {
                 if (!canBeTimedependent && value)
@@ -133,14 +133,14 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
                         "Cannot use time series for gate opening when time varying data is not allowed.");
                 }
 
-                useLowerEdgeLevelTimeSeries = value;
+                useGateLowerEdgeLevelTimeSeries = value;
             }
         }
 
         /// <summary>
-        /// Time dependent Lower edge level
+        /// Time dependent gate lower edge level
         /// </summary>
-        public virtual TimeSeries LowerEdgeLevelTimeSeries { get; set; }
+        public virtual TimeSeries GateLowerEdgeLevelTimeSeries { get; set; }
 
         public virtual object Clone()
         {
@@ -153,23 +153,23 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
                 MaxFlowPos = MaxFlowPos,
                 UseMaxFlowNeg = UseMaxFlowNeg,
                 UseMaxFlowPos = UseMaxFlowPos,
-                DoorHeight = DoorHeight,
-                HorizontalDoorOpeningDirection = HorizontalDoorOpeningDirection,
-                HorizontalDoorOpeningWidth = HorizontalDoorOpeningWidth,
-                UseHorizontalDoorOpeningWidthTimeSeries = UseHorizontalDoorOpeningWidthTimeSeries,
-                LowerEdgeLevel = LowerEdgeLevel,
-                UseLowerEdgeLevelTimeSeries = UseLowerEdgeLevelTimeSeries
+                GateHeight = GateHeight,
+                GateOpeningHorizontalDirection = GateOpeningHorizontalDirection,
+                HorizontalGateOpeningWidth = HorizontalGateOpeningWidth,
+                UseHorizontalGateOpeningWidthTimeSeries = UseHorizontalGateOpeningWidthTimeSeries,
+                GateLowerEdgeLevel = GateLowerEdgeLevel,
+                UseGateLowerEdgeLevelTimeSeries = UseGateLowerEdgeLevelTimeSeries
             };
 
-            if (gateFormula.UseLowerEdgeLevelTimeSeries)
+            if (gateFormula.UseGateLowerEdgeLevelTimeSeries)
             {
-                gateFormula.LowerEdgeLevelTimeSeries = (TimeSeries) LowerEdgeLevelTimeSeries.Clone(true);
+                gateFormula.GateLowerEdgeLevelTimeSeries = (TimeSeries) GateLowerEdgeLevelTimeSeries.Clone(true);
             }
 
-            if (gateFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+            if (gateFormula.UseHorizontalGateOpeningWidthTimeSeries)
             {
-                gateFormula.HorizontalDoorOpeningWidthTimeSeries =
-                    (TimeSeries) HorizontalDoorOpeningWidthTimeSeries.Clone(true);
+                gateFormula.HorizontalGateOpeningWidthTimeSeries =
+                    (TimeSeries) HorizontalGateOpeningWidthTimeSeries.Clone(true);
             }
 
             return gateFormula;
@@ -181,25 +181,25 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
             if (canBeTimedependent)
             {
                 // For Performance: initialize lazy
-                if (LowerEdgeLevelTimeSeries == null)
+                if (GateLowerEdgeLevelTimeSeries == null)
                 {
-                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
+                    GateLowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
                         GuiParameterNames.GateLowerEdgeLevel, GuiParameterNames.GateLowerEdgeLevel, "m AD");
                 }
 
-                if (HorizontalDoorOpeningWidthTimeSeries == null)
+                if (HorizontalGateOpeningWidthTimeSeries == null)
                 {
-                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
-                        GuiParameterNames.HorizontalOpeningWidth, GuiParameterNames.HorizontalOpeningWidth, "m AD");
+                    HorizontalGateOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
+                        GuiParameterNames.HorizontalGateOpeningWidth, GuiParameterNames.HorizontalGateOpeningWidth, "m AD");
                 }
             }
             else
             {
-                UseLowerEdgeLevelTimeSeries = false;
-                LowerEdgeLevelTimeSeries = null;
+                UseGateLowerEdgeLevelTimeSeries = false;
+                GateLowerEdgeLevelTimeSeries = null;
 
-                UseHorizontalDoorOpeningWidthTimeSeries = false;
-                HorizontalDoorOpeningWidthTimeSeries = null;
+                UseHorizontalGateOpeningWidthTimeSeries = false;
+                HorizontalGateOpeningWidthTimeSeries = null;
             }
         }
     }

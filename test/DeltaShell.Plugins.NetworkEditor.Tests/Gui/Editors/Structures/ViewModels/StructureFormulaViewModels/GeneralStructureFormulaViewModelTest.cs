@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             GeneralStructureFormula formula = 
                 fixture.Build<GeneralStructureFormula>()
-                       .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
-                       .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
+                       .With(f => f.HorizontalGateOpeningWidthTimeSeries, new TimeSeries())
+                       .With(f => f.GateLowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
             var weir = new Structure { Formula = formula };
 
@@ -39,17 +39,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(viewModel, Is.InstanceOf(typeof(INotifyPropertyChanged)));
                 Assert.That(viewModel.StructurePropertiesViewModel, Is.SameAs(weirPropertiesViewModel));
 
-                Assert.That(viewModel.Upstream1Width, Is.EqualTo(formula.WidthStructureLeftSide));
-                Assert.That(viewModel.Upstream1Level, Is.EqualTo(formula.BedLevelLeftSideStructure));
+                Assert.That(viewModel.Upstream1Width, Is.EqualTo(formula.Upstream1Width));
+                Assert.That(viewModel.Upstream1Level, Is.EqualTo(formula.Upstream1Level));
 
-                Assert.That(viewModel.Upstream2Width, Is.EqualTo(formula.WidthLeftSideOfStructure));
-                Assert.That(viewModel.Upstream2Level, Is.EqualTo(formula.BedLevelLeftSideOfStructure));
+                Assert.That(viewModel.Upstream2Width, Is.EqualTo(formula.Upstream2Width));
+                Assert.That(viewModel.Upstream2Level, Is.EqualTo(formula.Upstream2Level));
 
-                Assert.That(viewModel.Downstream1Width, Is.EqualTo(formula.WidthStructureRightSide));
-                Assert.That(viewModel.Downstream1Level, Is.EqualTo(formula.BedLevelRightSideStructure));
+                Assert.That(viewModel.Downstream1Width, Is.EqualTo(formula.Downstream1Width));
+                Assert.That(viewModel.Downstream1Level, Is.EqualTo(formula.Downstream1Level));
 
-                Assert.That(viewModel.Downstream2Width, Is.EqualTo(formula.WidthRightSideOfStructure));
-                Assert.That(viewModel.Downstream2Level, Is.EqualTo(formula.BedLevelRightSideOfStructure));
+                Assert.That(viewModel.Downstream2Width, Is.EqualTo(formula.Downstream2Width));
+                Assert.That(viewModel.Downstream2Level, Is.EqualTo(formula.Downstream2Level));
 
                 Assert.That(viewModel.FreeGateFlowPositive, Is.EqualTo(formula.PositiveFreeGateFlow));
                 Assert.That(viewModel.FreeGateFlowNegative, Is.EqualTo(formula.NegativeFreeGateFlow));
@@ -102,35 +102,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Stream fields
             yield return new TestCaseData(new Action<GeneralStructureFormulaViewModel, double>((f, v) => f.Upstream1Width = v), 
                                           new Func<GeneralStructureFormulaViewModel,   double>((f)    => f.Upstream1Width ?? double.NaN),
-                                          new Func<GeneralStructureFormula, double>((f)    => f.WidthStructureLeftSide),
+                                          new Func<GeneralStructureFormula, double>((f)    => f.Upstream1Width),
                                           nameof(GeneralStructureFormulaViewModel.Upstream1Width));
             yield return new TestCaseData(new Action<GeneralStructureFormulaViewModel, double>((f, v) => f.Upstream2Width = v), 
                                           new Func<GeneralStructureFormulaViewModel,   double>((f)    => f.Upstream2Width ?? double.NaN),
-                                          new Func<GeneralStructureFormula, double>((f)    => f.WidthLeftSideOfStructure),
+                                          new Func<GeneralStructureFormula, double>((f)    => f.Upstream2Width),
                                           nameof(GeneralStructureFormulaViewModel.Upstream2Width));
             yield return new TestCaseData(new Action<GeneralStructureFormulaViewModel, double>((f, v) => f.Upstream1Level= v), 
                                           new Func<GeneralStructureFormulaViewModel,   double>((f)    => f.Upstream1Level),
-                                          new Func<GeneralStructureFormula, double>((f)    => f.BedLevelLeftSideStructure),
+                                          new Func<GeneralStructureFormula, double>((f)    => f.Upstream1Level),
                                           nameof(GeneralStructureFormulaViewModel.Upstream1Level));
             yield return new TestCaseData(new Action<GeneralStructureFormulaViewModel, double>((f, v) => f.Upstream2Level = v), 
                                           new Func<GeneralStructureFormulaViewModel,   double>((f)    => f.Upstream2Level),
-                                          new Func<GeneralStructureFormula, double>((f)    => f.BedLevelLeftSideOfStructure),
+                                          new Func<GeneralStructureFormula, double>((f)    => f.Upstream2Level),
                                           nameof(GeneralStructureFormulaViewModel.Upstream2Level));
             yield return new TestCaseData(new Action<GeneralStructureFormulaViewModel, double>((f, v) => f.Downstream1Width = v), 
                                           new Func<GeneralStructureFormulaViewModel,   double>((f)    => f.Downstream1Width ?? double.NaN),
-                                          new Func<GeneralStructureFormula, double>((f)    => f.WidthStructureRightSide),
+                                          new Func<GeneralStructureFormula, double>((f)    => f.Downstream1Width),
                                           nameof(GeneralStructureFormulaViewModel.Downstream1Width));
             yield return new TestCaseData(new Action<GeneralStructureFormulaViewModel, double>((f, v) => f.Downstream2Width = v), 
                                           new Func<GeneralStructureFormulaViewModel,   double>((f)    => f.Downstream2Width ?? double.NaN),
-                                          new Func<GeneralStructureFormula, double>((f)    => f.WidthRightSideOfStructure),
+                                          new Func<GeneralStructureFormula, double>((f)    => f.Downstream2Width),
                                           nameof(GeneralStructureFormulaViewModel.Downstream2Width));
             yield return new TestCaseData(new Action<GeneralStructureFormulaViewModel, double>((f, v) => f.Downstream1Level= v), 
                                           new Func<GeneralStructureFormulaViewModel,   double>((f)    => f.Downstream1Level),
-                                          new Func<GeneralStructureFormula, double>((f)    => f.BedLevelRightSideStructure),
+                                          new Func<GeneralStructureFormula, double>((f)    => f.Downstream1Level),
                                           nameof(GeneralStructureFormulaViewModel.Downstream1Level));
             yield return new TestCaseData(new Action<GeneralStructureFormulaViewModel, double>((f, v) => f.Downstream2Level = v), 
                                           new Func<GeneralStructureFormulaViewModel,   double>((f)    => f.Downstream2Level),
-                                          new Func<GeneralStructureFormula, double>((f)    => f.BedLevelRightSideOfStructure),
+                                          new Func<GeneralStructureFormula, double>((f)    => f.Downstream2Level),
                                           nameof(GeneralStructureFormulaViewModel.Downstream2Level));
 
             // Coefficients
@@ -199,8 +199,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var value = fixture.Create<double>();
             GeneralStructureFormula formula = 
                 fixture.Build<GeneralStructureFormula>()
-                       .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
-                       .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
+                       .With(f => f.HorizontalGateOpeningWidthTimeSeries, new TimeSeries())
+                       .With(f => f.GateLowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
             var weir = new Structure { Formula = formula };
             
@@ -240,8 +240,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var value = fixture.Create<double>();
             GeneralStructureFormula formula = 
                 fixture.Build<GeneralStructureFormula>()
-                       .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
-                       .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
+                       .With(f => f.HorizontalGateOpeningWidthTimeSeries, new TimeSeries())
+                       .With(f => f.GateLowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
             var weir = new Structure { Formula = formula };
             
