@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 return Feature.Attributes[Feature2D.LocationKey] as IList<string>;
             }
         }
-
+        
         public IEventedList<IBoundaryCondition> BoundaryConditions
         {
             get => boundaryConditions;

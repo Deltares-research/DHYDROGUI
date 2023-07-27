@@ -129,16 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    synchronizing = true;
-                    try
-                    {
-                        Features.Remove((TFeat) featureData.Feature);
-                    }
-                    finally
-                    {
-                        synchronizing = false;
-                    }
-
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     synchronizing = true;
