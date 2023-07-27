@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Logging;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.NGHS.Common.IO
 {

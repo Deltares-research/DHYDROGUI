@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.CommonTools.TextData;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {

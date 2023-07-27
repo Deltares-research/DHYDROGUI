@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {

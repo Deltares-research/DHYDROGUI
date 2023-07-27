@@ -1,6 +1,6 @@
 ﻿using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.CommonTools.TextData;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {

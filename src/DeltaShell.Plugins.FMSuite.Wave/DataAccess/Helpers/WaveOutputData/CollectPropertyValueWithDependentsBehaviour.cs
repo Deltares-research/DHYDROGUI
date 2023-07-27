@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
 {

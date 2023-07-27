@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {

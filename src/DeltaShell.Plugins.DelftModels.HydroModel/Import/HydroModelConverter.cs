@@ -7,8 +7,8 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
+using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import

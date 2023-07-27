@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.Dimr.RtcXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DHYDRO.Common.Logging;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             });
 
             // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Contains(expectedMessage),
                           "The collected log messages did not contain the expected message.");
         }
 
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 intervalRule.Name, RealTimeControlXmlFiles.XmlTimeSeries);
 
             // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+            Assert.IsTrue(logHandler.LogMessages.WarningMessages.Contains(expectedMessage),
                           "The collected log messages did not contain the expected message.");
         }
 
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
                 locationId, RealTimeControlXmlFiles.XmlTimeSeries);
 
-            Assert.That(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+            Assert.That(logHandler.LogMessages.WarningMessages.Contains(expectedMessage),
                         "The collected log messages did not contain the expected message.");
         }
 
@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
                 locationId, RealTimeControlXmlFiles.XmlTimeSeries);
 
-            Assert.That(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+            Assert.That(logHandler.LogMessages.WarningMessages.Contains(expectedMessage),
                         "The collected log messages did not contain the expected message.");
         }
 

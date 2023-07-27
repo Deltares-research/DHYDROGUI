@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DHYDRO.Common.Logging;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // Then
             Assert.AreEqual(null, resultedControlGroup);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage), "The collected log messages did not contain the expected message.");
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Contains(expectedMessage), "The collected log messages did not contain the expected message.");
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // Then
             Assert.IsNull(resultedControlGroup);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Contains(expectedMessage),
                           "The collected log messages did not contain the expected message.");
         }
 
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // Then
             Assert.IsNull(rule);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(expectedMessage)),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Any(m => m.Contains(expectedMessage)),
                           "The collected log messages did not contain the expected message.");
         }
 
@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // Then
             Assert.AreEqual(null, resultedRule);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Contains(expectedMessage),
                           "The collected log messages did not contain the expected message.");
         }
 
@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // Then
             Assert.AreEqual(null, resultedCondition);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Contains(expectedMessage),
                           "The collected log messages did not contain the expected message.");
         }
 

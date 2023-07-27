@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.IO;
-using DeltaShell.NGHS.Common.Logging;
+using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

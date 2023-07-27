@@ -1,5 +1,5 @@
 ﻿using System;
-using DeltaShell.NGHS.Common.Logging;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.NGHS.Common.IO
 {

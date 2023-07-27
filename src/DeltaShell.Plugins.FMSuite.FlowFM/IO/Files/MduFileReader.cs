@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
@@ -10,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files

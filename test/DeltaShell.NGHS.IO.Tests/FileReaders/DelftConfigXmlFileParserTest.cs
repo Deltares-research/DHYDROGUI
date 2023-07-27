@@ -4,8 +4,8 @@ using System.Linq;
 using System.Xml;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr.DimrXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
+using DHYDRO.Common.Logging;
 using NUnit.Framework;
 using Rhino.Mocks;
 

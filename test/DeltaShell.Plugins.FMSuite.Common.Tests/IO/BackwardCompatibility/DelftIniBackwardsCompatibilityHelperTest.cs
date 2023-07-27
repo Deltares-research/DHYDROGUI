@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
+using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

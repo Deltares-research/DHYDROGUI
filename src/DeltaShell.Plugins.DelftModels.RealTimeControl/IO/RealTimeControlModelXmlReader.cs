@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DHYDRO.Common.Logging;
 using Newtonsoft.Json;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO

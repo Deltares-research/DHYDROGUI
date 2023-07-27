@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using DeltaShell.NGHS.Common.Logging;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {

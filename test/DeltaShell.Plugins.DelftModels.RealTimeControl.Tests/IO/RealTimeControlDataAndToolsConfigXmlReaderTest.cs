@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DHYDRO.Common.Logging;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             IList<IControlGroup> controlGroups = dataAndToolsConfigReader.Read(invalidDataConfigFilePath, validToolsConfigFilePath, timeSpan);
 
             // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(invalidDataConfigFilePath)),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Any(m => m.Contains(invalidDataConfigFilePath)),
                           AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
             AssertNotNullAndEmpty(controlGroups);
         }
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             IList<IControlGroup> controlGroups = dataAndToolsConfigReader.Read(validDataConfigFilePath, invalidToolsConfigFilePath, timeSpan);
 
             // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(invalidToolsConfigFilePath)),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Any(m => m.Contains(invalidToolsConfigFilePath)),
                           AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
             AssertNotNullAndEmpty(controlGroups);
         }
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             IList<IControlGroup> controlGroups = dataAndToolsConfigReader.Read(validDataConfigFilePath, toolsConfigFilePath, timeSpan);
 
             // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+            Assert.IsTrue(logHandler.LogMessages.AllMessages.Contains(expectedMessage),
                           AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
             AssertNotNullAndEmpty(controlGroups);
         }

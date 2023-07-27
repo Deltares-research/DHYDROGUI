@@ -18,6 +18,9 @@
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="DHYDRO.Common">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="log4net">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

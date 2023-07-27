@@ -5,9 +5,9 @@ using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
