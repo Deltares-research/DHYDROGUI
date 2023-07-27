@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="log4net" />
         <PackageReference Include="NSubstitute" />
         <PackageReference Include="NUnit" />
         <PackageReference Include="NUnit.ConsoleRunner" />

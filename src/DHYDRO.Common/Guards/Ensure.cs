@@ -23,5 +23,23 @@ namespace DHYDRO.Common.Guards
                 throw new ArgumentNullException(paramName);
             }
         }
+        
+        /// <summary>
+        /// Ensure that the <paramref name="value"/> is not negative. If it is,
+        /// then an <see cref="ArgumentOutOfRangeException"/> is thrown.
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <param name="paramName">The actual name of the parameter</param>
+        /// <param name="message">Optional message</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when the <paramref name="value"/> is negative.
+        /// </exception>
+        public static void NotNegative(double value, string paramName, string message = null)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(paramName, message);
+            }
+        }
     }
 }
