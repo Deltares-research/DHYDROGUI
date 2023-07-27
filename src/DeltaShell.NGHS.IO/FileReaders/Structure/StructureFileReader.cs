@@ -7,7 +7,6 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
@@ -15,6 +14,7 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DHYDRO.Common.IO.BackwardCompatibility;
+using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Structure

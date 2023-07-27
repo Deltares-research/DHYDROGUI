@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Helpers.CopyHandlers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;

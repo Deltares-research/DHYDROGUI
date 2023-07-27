@@ -27,7 +27,6 @@ using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.CommonTools.TextData;

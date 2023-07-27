@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
