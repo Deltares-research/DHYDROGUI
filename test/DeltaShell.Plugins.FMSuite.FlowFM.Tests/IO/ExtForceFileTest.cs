@@ -998,6 +998,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [TestCase("uniform", @"heatFluxFiles\UniformHeatFluxModel\htccase.ext", @"heatFluxFiles\UniformHeatFluxModel\meteo.tim")]
+        [TestCase("uniform", @"heatFluxFiles\UniformHeatFluxModel\htccase-foo.ext", @"heatFluxFiles\UniformHeatFluxModel\meteo.foo")] // unconventional file extension
         [TestCase("gridded", @"heatFluxFiles\GriddedHeatFluxModel\htccase.ext", @"heatFluxFiles\GriddedHeatFluxModel\meteo.htc", @"heatFluxFiles\GriddedHeatFluxModel\meteo.grd")]
         public void GivenAHeatFluxModel_WhenReadingAndWriting_ThenAllDataShouldRemain(string heatFluxModelVersion, params string[] relativeTestDataFilePaths)
         {

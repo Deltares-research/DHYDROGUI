@@ -438,6 +438,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             ExtForceFileItem forceFileItem = extForceFileItems.LastOrDefault(e => e.Quantity == ExtForceQuantNames.MeteoData ||
                                                                                   e.Quantity == ExtForceQuantNames.MeteoDataWithRadiation);
+
+            // File types supported (E.1.8 - time series for the heat model parameters):
+            // - curvilinear time series (6) (see manual C.12.2)
+            // - uniform time series (1) (see manual C.4) 
+            const int curvilinear_data = 6;  
+            const int timeseries = 1;
             try
             {
                 if (forceFileItem == null)
@@ -449,15 +455,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 heatFluxModel.ContainsSolarRadiation =
                     forceFileItem.Quantity == ExtForceQuantNames.MeteoDataWithRadiation;
-                string extension = Path.GetExtension(forceFileItem.FileName);
 
                 string filePath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, forceFileItem.FileName);
-                if (extension == FileConstants.TimFileExtension)
+                if ( forceFileItem.FileType == timeseries)
                 {
                     new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
                     ExistingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
                 }
-                else if (extension == FileConstants.GriddedHeatFluxModelFileExtension)
+                else if (forceFileItem.FileType == curvilinear_data)
                 {
                     string gridFilePath = HeatFluxModel.GetCorrespondingGridFilePath(filePath);
 
