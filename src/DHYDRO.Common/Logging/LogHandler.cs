@@ -24,7 +24,10 @@ namespace DHYDRO.Common.Logging
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when <paramref name="maxMessages"/> is a negative integer.
         /// </exception>
-        public LogHandler(string activityName, int maxMessages = int.MaxValue) : this(activityName, typeof(LogHandler), maxMessages) {}
+        public LogHandler(string activityName, int maxMessages = int.MaxValue)
+            : this(activityName, typeof(LogHandler), maxMessages)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogHandler"/> class.
@@ -35,7 +38,10 @@ namespace DHYDRO.Common.Logging
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when <paramref name="maxMessages"/> is a negative integer.
         /// </exception>
-        public LogHandler(string activityName, Type type, int maxMessages = int.MaxValue) : this(activityName, LogManager.GetLogger(type), maxMessages) {}
+        public LogHandler(string activityName, Type type, int maxMessages = int.MaxValue)
+            : this(activityName, LogManager.GetLogger(type), maxMessages)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogHandler"/> class.
@@ -53,9 +59,8 @@ namespace DHYDRO.Common.Logging
             this.activityName = activityName;
             this.maxMessages = maxMessages;
             this.log = log;
-            
-            LogMessages = new LogMessages();
 
+            LogMessages = new LogMessages();
         }
 
         /// <inheritdoc/>
