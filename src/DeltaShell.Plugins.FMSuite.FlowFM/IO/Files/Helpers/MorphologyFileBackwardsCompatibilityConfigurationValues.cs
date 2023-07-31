@@ -17,7 +17,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             "eqmbc"
         };
 
-        public IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; } = new Dictionary<string, string>() {{"bslhd", "Bshld"}};
+        public IReadOnlyDictionary<string, string> ConditionalObsoleteProperties { get; } = new Dictionary<string, string>();
+
+        public IReadOnlyDictionary<string, NewPropertyData> LegacyPropertyMapping { get; } = new Dictionary<string, NewPropertyData>()
+        {
+            {"bslhd", new NewPropertyData("Bshld", new DefaultPropertyUpdater())}
+        };
 
         public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } = new Dictionary<string, string>();
     }

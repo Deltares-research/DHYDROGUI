@@ -5,6 +5,7 @@ using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DHYDRO.Common.Logging;
+using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
 {
@@ -46,6 +47,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         {
             Ensure.NotNull(propertyName, nameof(propertyName));
             return configurationValues.ObsoleteProperties.Contains(propertyName.ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Determines whether the provided <paramref name="propertyName"/> is currently considered obsolete.
+        /// </summary>
+        /// <param name="propertyName">The property name to check.</param>
+        /// <param name="category">The category the property belongs to.</param>
+        /// <returns>
+        /// <c>true</c> if the specified property name is obsolete; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
+        /// <remarks>
+        /// Note that property names are case-insensitive and will be matched as such.
+        /// </remarks>
+        public bool IsConditionalObsoletePropertyName(string propertyName, DelftIniCategory category)
+        {
+            Ensure.NotNull(propertyName, nameof(propertyName));
+            Ensure.NotNull(category, nameof(category));
+
+            if (configurationValues.ConditionalObsoleteProperties.TryGetValue(propertyName.ToLowerInvariant(), out string conditionalProperty))
+            {
+                return category.Properties.Any(property => property.Name.EqualsCaseInsensitive(conditionalProperty));
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -110,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
 
             foreach (DelftIniProperty property in category.Properties.ToArray())
             {
-                if (!IsObsoletePropertyName(property.Name))
+                if (!IsObsoletePropertyName(property.Name) && !IsConditionalObsoletePropertyName(property.Name, category))
                 {
                     continue;
                 }
@@ -118,6 +144,37 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
                 logHandler.ReportWarning(string.Format(Resources.Key_0_is_deprecated_and_automatically_removed_from_model, property.Name));
                 category.RemoveProperty(property);
             }
+        }
+
+        /// <summary>
+        /// Updates a property to its latest version.
+        /// </summary>
+        /// <param name="property">The <see cref="DelftIniProperty"/> to update.</param>
+        /// <param name="propertyCategory">The <see cref="DelftIniCategory"/> the property belongs to.</param>
+        /// <param name="logHandler">The log handler to log messages with.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
+        public void UpdateProperty(DelftIniProperty property, DelftIniCategory propertyCategory, ILogHandler logHandler)
+        {
+            Ensure.NotNull(property, nameof(property));
+            Ensure.NotNull(propertyCategory, nameof(propertyCategory));
+            Ensure.NotNull(logHandler, nameof(logHandler));
+
+            if (!IsLegacyProperty(property))
+            {
+                return;
+            }
+
+            NewPropertyData newData = configurationValues.LegacyPropertyMapping[property.Name.ToLower()];
+
+            string newName = GetUpdatedPropertyName(property.Name);
+
+            IPropertyUpdater updater = newData.Updater;
+            updater.UpdateProperty(property, newName, propertyCategory, logHandler);
+        }
+
+        private bool IsLegacyProperty(DelftIniProperty property)
+        {
+            return configurationValues.LegacyPropertyMapping.ContainsKey(property.Name.ToLower());
         }
 
         private static string GetUpdatedName(string propertyName,
@@ -132,6 +189,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
             }
 
             string mappedName = mapping[propertyNameLower];
+            logHandler?.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
+                                            propertyName,
+                                            mappedName);
+
+            return mappedName;
+        }
+
+        private static string GetUpdatedName(string propertyName,
+                                             IReadOnlyDictionary<string, NewPropertyData> mapping,
+                                             ILogHandler logHandler)
+        {
+            string propertyNameLower = propertyName.ToLower();
+
+            if (!mapping.ContainsKey(propertyNameLower))
+            {
+                return null;
+            }
+
+            string mappedName = mapping[propertyNameLower].Name;
             logHandler?.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
                                             propertyName,
                                             mappedName);

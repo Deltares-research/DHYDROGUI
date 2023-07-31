@@ -17,8 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
             var groupReports = new List<ValidationReport>();
-            string timerCategory =
-                modelDefinition.GetModelProperty(GuiProperties.StartTime).PropertyDefinition.Category;
+            string timerCategory = modelDefinition.GetModelProperty(KnownProperties.StartDateTime).PropertyDefinition.Category;
             WaterFlowFMProperty solverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
             WaterFlowFMProperty bedLevelTypeProperty = modelDefinition.GetModelProperty(KnownProperties.BedlevType);
             WaterFlowFMProperty conveyanceTypeProperty = modelDefinition.GetModelProperty(KnownProperties.Conveyance2d);

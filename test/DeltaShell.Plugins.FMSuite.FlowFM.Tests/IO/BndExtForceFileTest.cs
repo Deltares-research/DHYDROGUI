@@ -61,8 +61,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Add(firstBoundaryCondition);
 
-            var startTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            var stopTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            var startTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            var stopTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
             IFunction data = firstBoundaryCondition.GetDataAtPoint(0);
             FillTimeSeries(data, i => 0.5 * Math.Sin(0.2 * Math.PI * i), startTime, stopTime, 5);
@@ -118,8 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Add(firstBoundaryCondition);
 
-            var startTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            var stopTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            var startTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            var stopTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
             IFunction data = firstBoundaryCondition.GetDataAtPoint(0);
             FillTimeSeries(data, i => 0.5 * Math.Sin(0.2 * Math.PI * i), startTime, stopTime, 5);
@@ -171,8 +171,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Add(firstBoundaryCondition);
 
-            var startTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            var stopTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            var startTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            var stopTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
             IFunction data = firstBoundaryCondition.GetDataAtPoint(1);
             FillTimeSeries(data, i => 0.5 * Math.Sin(0.2 * Math.PI * i), startTime, stopTime, 5);
@@ -238,8 +238,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Add(firstBoundaryCondition);
 
-            var startTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            var stopTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            var startTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            var stopTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
             IFunction data = firstBoundaryCondition.GetDataAtPoint(0);
             FillTimeSeries(data, i => 0.5 * Math.Sin(0.2 * Math.PI * i), startTime, stopTime, 5);
@@ -425,8 +425,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 bc2
             });
 
-            var startTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            var stopTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            var startTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            var stopTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
             IFunction data = bc1.GetDataAtPoint(0);
             FillTimeSeries(data, i => 0.5 * Math.Sin(0.2 * Math.PI * i), startTime, stopTime, 5);
@@ -707,8 +707,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries) { Feature = modelDefinition.Boundaries[0] };
-            var startTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            var stopTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            var startTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            var stopTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
             bc2.AddPoint(0);
             data = bc2.GetDataAtPoint(0);

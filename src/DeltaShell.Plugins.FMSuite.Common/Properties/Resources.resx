@@ -171,4 +171,7 @@
   <data name="Key_0_is_deprecated_and_automatically_removed_from_model" xml:space="preserve">
 	  <value>Key {0} is deprecated and automatically removed from model.</value>
   </data>
+  <data name="DelftIniBackwardsCompatibilityHelper_Value_for_0_has_been_updated_from_1_to_2" xml:space="preserve">
+    <value>Backwards Compatibility: Value for '{0}' has been updated from '{1}' to '{2}'</value>
+  </data>
 </root>

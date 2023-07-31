@@ -149,8 +149,8 @@ time,DtNodal,timeframe,Time Frame,Nodal update interval,Interval,21600,0,,FALSE,
 time,DtMax,timeframe,Time Frame,Max. time step,Double,30,,,FALSE,,,,,,Maximal computation timestep, s
 time,DtInit,timeframe,Time Frame,Initial time step,Double,1,,,FALSE,,,,,,Initial computation timestep, s
 time,Tunit,,,Time unit:hours|minutes|seconds,H|M|S,S,,,TRUE,,,,,,"Time unit for start/stop times (H, M or S)"
-time,TStart,,,Start time,Double,0,0,,TRUE,,,,,,Start time w.r.t. RefDate (in TUnit)
-time,TStop,,,Stop time,Double,86400,0,,TRUE,,,,,,Stop  time w.r.t. RefDate (in TUnit)
+time,StartDateTime,timeframe,Time Frame,Start datetime,DateTime,20010101000000,,,FALSE,,,,,,Computation start datetime [yyyymmddhhmmss]
+time,StopDateTime,timeframe,Time Frame,Stop datetime,DateTime,20010102000000,,,FALSE,,,,,,Computation stop datetime [yyyymmddhhmmss]
 restart,RestartFile,,,,FileName,,,,TRUE,,,,,,"Restart netcdf-file, either *_rst.nc or *_map.nc"
 restart,RestartDateTime,,,Restart Time,DateTime,,,,TRUE,,,,,,Restart date and time when restarting from *_map.nc [YYYY-MM-DD HH:MM:SS]
 external forcing,ExtForceFile,,,,FileName,,,,TRUE,,,,,,"Old format for external forcings file *.ext, link with tim/cmp-format boundary conditions specification"
@@ -161,8 +161,6 @@ trachytopes,TrtL,,,,FileName,,,,TRUE,,,,,,File (*.arl) containing distribution o
 trachytopes,DtTrt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time interval, s
 ****,,,,,,,,,,,,,,,
 *,,,,,,,,,,,,,,,
-GUIOnly,StartTime,timeframe,Time Frame,Start time,DateTime,,,,FALSE,,,,,,Begin of simulation period [YYYY-MM-DD HH:MM:SS]
-GUIOnly,StopTime,timeframe,Time Frame,Stop time,DateTime,,,,FALSE,,,,,,End of simulation period [YYYY-MM-DD HH:MM:SS]
 physics,Temperature,processes,Processes,Temperature:None|Transport only|Excess temperature|Composite model,0|1|3|5,0,0,5,FALSE,,,,,,"Include temperature (0: no, 1: only transport, 3: excess model of D3D, 5: composite (ocean) model)"
 GUIOnly,UseMorSed,processes,Processes,Sediment/Morphology,0|1,0,0,1,FALSE,,,,,,Include Sediment/Morphology
 *,,,,,,,,,,,,,,,

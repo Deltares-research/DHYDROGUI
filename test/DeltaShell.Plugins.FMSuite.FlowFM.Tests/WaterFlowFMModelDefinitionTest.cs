@@ -39,7 +39,6 @@ using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
@@ -450,8 +449,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadAndWriteOutputSettings()
         {
-            string mduDir =
-                Path.Combine(TestHelper.GetTestDataDirectory(), "simpleBox");
+            string mduDir = Path.Combine(TestHelper.GetTestDataDirectory(), "simpleBox");
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "simplebox");
@@ -459,8 +457,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFile = new MduFile();
             mduFile.Read(Path.Combine(mduDir, "simplebox.mdu"), modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-            var modelStartTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            var modelStopTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            var modelStartTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            var modelStopTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
             Assert.AreEqual(new DateTime(2001, 01, 01, 0, 2, 0), modelStartTime);
             Assert.AreEqual(new DateTime(2001, 01, 01, 0, 12, 0), modelStopTime);
@@ -533,7 +531,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Write(mduFileSaveToPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
             string mduContent = File.ReadAllText(mduFileSaveToPath);
-            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "TStart", "504");
+            WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "StartDateTime", "19830122");
             WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "HisInterval", "600");
 
             string pliFileSaveToPath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "versie2_01.pli");
@@ -1841,7 +1839,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IList<ISpatialOperation> operations = modelDefinition.SpatialOperations["initial_condition"];
             Assert.That(operations, Is.Empty);
         }
-        
+
         private static UnstructuredGridCellCoverage CreateGridCoverageWithValue(double value)
         {
             UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 1, 1);

@@ -828,6 +828,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The keyword `{0}` is missing in the mdu file..
+        /// </summary>
+        public static string PropertyUpdater_Required_keyword_0_is_missing {
+            get {
+                return ResourceManager.GetString("PropertyUpdater_Required_keyword_0_is_missing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value for the required keyword `{0}` is missing in the mdu file..
+        /// </summary>
+        public static string PropertyUpdater_Required_value_for_keyword_0_is_missing {
+            get {
+                return ResourceManager.GetString("PropertyUpdater_Required_value_for_keyword_0_is_missing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap PumpSmall {

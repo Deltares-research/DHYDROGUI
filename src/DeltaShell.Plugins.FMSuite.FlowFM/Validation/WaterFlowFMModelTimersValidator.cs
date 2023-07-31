@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             Resolution = new TimeSpan(0, 0, 0, 1);
 
-            string timerCategory = waterFlowFmModel.ModelDefinition.GetModelProperty(GuiProperties.StartTime)
+            string timerCategory = waterFlowFmModel.ModelDefinition.GetModelProperty(KnownProperties.StartDateTime)
                                                    .PropertyDefinition.Category;
             List<ValidationIssue> baseTimeIssues = base.ValidateModelTimers(model, outputTimeStep, viewData).ToList();
             if (timerCategory != null)

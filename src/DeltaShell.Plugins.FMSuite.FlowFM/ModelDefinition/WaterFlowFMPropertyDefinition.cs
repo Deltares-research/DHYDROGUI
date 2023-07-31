@@ -49,9 +49,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string DtUser = "dtuser";
         public const string DtMax = "dtmax";
         public const string RefDate = "refdate";
-        public const string TStart = "tstart";
-        public const string TStop = "tstop";
         public const string Tunit = "tunit";
+        public const string StartDateTime = "startdatetime";
+        public const string StopDateTime = "stopdatetime";
         public const string Version = "version";
         public const string GuiVersion = "guiversion";
         public const string WaqInterval = "waqinterval";
@@ -108,9 +108,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     public static class GuiProperties
     {
         public const string GUIonly = "GUIOnly"; // recognize GUI group name when writing writing MDU
-
-        public const string StartTime = "starttime";
-        public const string StopTime = "stoptime";
 
         public const string WriteHisFile = "writehisfile";
         public const string HisOutputDeltaT = "hisoutputdeltat";

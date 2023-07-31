@@ -22,10 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public override DateTime StartTime
         {
-            get => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
+            get => (DateTime) ModelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
             set
             {
-                ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value = value;
+                ModelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value = value;
                 // This base model setting is made to make the base logic right
                 base.StartTime = value;
             }
@@ -41,10 +41,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public override DateTime StopTime
         {
-            get => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            get => (DateTime) ModelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
             set
             {
-                ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value = value;
+                ModelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value = value;
                 // This base model setting is made to make the base logic right
                 base.StopTime = value;
             }

@@ -133,12 +133,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             if (!(bool) GetModelProperty(specifyStartPropName).Value)
             {
-                GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+                GetModelProperty(startTimePropName).Value = GetModelProperty(KnownProperties.StartDateTime).Value;
             }
 
             if (!(bool) GetModelProperty(specifyStopPropName).Value)
             {
-                GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+                GetModelProperty(stopTimePropName).Value = GetModelProperty(KnownProperties.StopDateTime).Value;
             }
         }
     }

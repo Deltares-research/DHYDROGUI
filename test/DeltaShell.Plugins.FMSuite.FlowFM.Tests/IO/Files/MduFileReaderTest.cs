@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
@@ -449,6 +450,95 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
                 Assert.That(time.Seconds, Is.EqualTo(9));
                 Assert.That(time.Milliseconds, Is.EqualTo(600));
+            });
+        }
+        
+        [Test]
+        public void GivenMduFileContentWithStartDateTimeAndStopDateTime_CorrectlyReadsTheseKeywords()
+        {
+            // Setup
+            string fileContent = "[time]"                           + Environment.NewLine
+                                 + "StartDateTime = 20230622123000" + Environment.NewLine
+                                 + "StopDateTime = 20230623000000";
+            
+            ReadWithAssert(fileContent, definition =>
+            {
+                var startDateTime = (DateTime)definition.GetModelProperty(KnownProperties.StartDateTime).Value;
+                var stopDateTime = (DateTime)definition.GetModelProperty(KnownProperties.StopDateTime).Value;
+                
+                var expectedStartDateTime = new DateTime(2023, 06, 22, 12, 30, 0);
+                Assert.That(startDateTime, Is.EqualTo(expectedStartDateTime));
+                
+                var expectedStopDateTime = new DateTime(2023, 06, 23, 0, 0, 0);
+                Assert.That(stopDateTime, Is.EqualTo(expectedStopDateTime));
+            });
+
+        }
+
+        [Test]
+        public void GivenMduFileContentWithOnlyOldKeywordsForComputationStartTime_WhenReading_ConvertsToNewKeywords()
+        {
+            string fileContent = "[time]"                     + Environment.NewLine
+                                 + "RefDate = 20230622000000" + Environment.NewLine
+                                 + "TStart = 1"               + Environment.NewLine // old keyword
+                                 + "TStop = 2"                + Environment.NewLine // old keyword
+                                 + "TUnit = S";
+            ReadWithAssert(fileContent, definition =>
+            {
+                var startDateTime = (DateTime)definition.GetModelProperty(KnownProperties.StartDateTime).Value; // new keyword
+                var stopDateTime = (DateTime)definition.GetModelProperty(KnownProperties.StopDateTime).Value; // new keyword
+                
+                var expectedStartDateTime = new DateTime(2023, 06, 22, 0, 0, 1); // ref date + 1s
+                Assert.That(startDateTime, Is.EqualTo(expectedStartDateTime));
+                
+                var expectedStopDateTime = new DateTime(2023, 06, 22, 0, 0, 2); // ref date + 2s
+                Assert.That(stopDateTime, Is.EqualTo(expectedStopDateTime));
+
+            });
+        }
+
+        [Test]
+        public void GivenMduFileContentWithBothOldAndNewKeywordsForComputationStartTime_WhenReading_NewKeywordsAreUsed()
+        {
+            string fileContent = "[time]"                           + Environment.NewLine
+                                 + "RefDate = 19900718"             + Environment.NewLine
+                                 + "TStart = 1"                     + Environment.NewLine // old keyword
+                                 + "TStop = 2"                      + Environment.NewLine // old keyword
+                                 + "TUnit = S"                      + Environment.NewLine
+                                 + "StartDateTime = 20230622123000" + Environment.NewLine // new keyword
+                                 + "StopDateTime = 20230623000000";                       // new keyword
+            ReadWithAssert(fileContent, definition =>
+            {
+                var startDateTime = (DateTime)definition.GetModelProperty(KnownProperties.StartDateTime).Value; // new keyword
+                var stopDateTime = (DateTime)definition.GetModelProperty(KnownProperties.StopDateTime).Value;   // new keyword
+                
+                var expectedStartDateTime = new DateTime(2023, 06, 22, 12, 30, 0);
+                Assert.That(startDateTime, Is.EqualTo(expectedStartDateTime));
+                
+                var expectedStopDateTime = new DateTime(2023, 06, 23, 0, 0, 0);
+                Assert.That(stopDateTime, Is.EqualTo(expectedStopDateTime));
+
+            });
+        }
+        
+        [Test]
+        public void GivenMduFileContentWithBothOldAndNewKeywordsForComputationStartTime_WhenReading_RemovesOldKeywords()
+        {
+            string fileContent = "[time]"                           + Environment.NewLine
+                                                                    + "RefDate = 19900718"             + Environment.NewLine
+                                                                    + "TStart = 1"                     + Environment.NewLine // old keyword
+                                                                    + "TStop = 2"                      + Environment.NewLine // old keyword
+                                                                    + "TUnit = S"                      + Environment.NewLine
+                                                                    + "StartDateTime = 20230622123000" + Environment.NewLine // new keyword
+                                                                    + "StopDateTime = 20230623000000";                       // new keyword
+            ReadWithAssert(fileContent, definition =>
+            {
+                WaterFlowFMProperty tStart = definition.GetModelProperty(KnownLegacyProperties.TStart);
+                Assert.That(tStart, Is.Null);
+
+                WaterFlowFMProperty tStop = definition.GetModelProperty(KnownLegacyProperties.TStop);
+                Assert.That(tStop, Is.Null);
+
             });
         }
 

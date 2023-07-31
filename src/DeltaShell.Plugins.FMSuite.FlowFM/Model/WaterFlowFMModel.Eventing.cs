@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
@@ -468,10 +467,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapFile__Obsolete,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.HisFile__Obsolete,
-                                                           StringComparison.InvariantCultureIgnoreCase) ||
-            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TStart,
-                                                           StringComparison.InvariantCultureIgnoreCase) ||
-            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TStop,
                                                            StringComparison.InvariantCultureIgnoreCase);
 
         private void TriggerPropertyChanged(string defaultEditActionName, string propertyName,

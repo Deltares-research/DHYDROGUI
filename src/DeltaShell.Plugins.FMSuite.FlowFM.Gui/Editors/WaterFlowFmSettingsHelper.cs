@@ -184,14 +184,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             FieldUIDescription[] cachedFieldDescriptions = objectDescription.FieldDescriptions.ToArray();
 
             // Map description to the model
-            MapDataOntoProperty(o => data.StopTime, (o, v) => data.StopTime = (DateTime)v, cachedFieldDescriptions, GuiProperties.StopTime);
-            MapDataOntoProperty(o => data.StartTime, (o, v) => data.StartTime = (DateTime)v, cachedFieldDescriptions, GuiProperties.StartTime);
-            MapDataOntoProperty(o => data.TimeStep, (o, v) => data.TimeStep = (TimeSpan)v, cachedFieldDescriptions, KnownProperties.DtUser);
+            MapDataOntoProperty(o => data.StopTime, (o, v) => data.StopTime = (DateTime) v, cachedFieldDescriptions, KnownProperties.StopDateTime);
+            MapDataOntoProperty(o => data.StartTime, (o, v) => data.StartTime = (DateTime) v, cachedFieldDescriptions, KnownProperties.StartDateTime);
+            MapDataOntoProperty(o => data.TimeStep, (o, v) => data.TimeStep = (TimeSpan) v, cachedFieldDescriptions, KnownProperties.DtUser);
 
             // Restore the fieldDescription
             objectDescription.FieldDescriptions = cachedFieldDescriptions;
 
-            objectDescription.FieldDescriptions.First(f => f.Name == "StopTime").ValidationMethod =
+            objectDescription.FieldDescriptions.First(f => f.Name.Equals(KnownProperties.StopDateTime, StringComparison.InvariantCultureIgnoreCase)).ValidationMethod =
                 (m, t) =>
                     ((WaterFlowFMModel)m).StartTime < (DateTime)t
                         ? ""

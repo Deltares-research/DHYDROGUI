@@ -108,8 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             waterFlowFmPropertyChangedHandler = new Dictionary<string, Action<WaterFlowFMProperty>>
             {
                 {KnownProperties.ICdtyp.ToLower(), OnIcdTypePropertyChanged},
-                {GuiProperties.StopTime.ToLower(), OnTimePropertyChanged},
-                {GuiProperties.StartTime.ToLower(), OnTimePropertyChanged},
+                {KnownProperties.StopDateTime.ToLower(), OnTimePropertyChanged},
+                {KnownProperties.StartDateTime.ToLower(), OnTimePropertyChanged},
                 {KnownProperties.RefDate.ToLower(), OnTimePropertyChanged},
                 {KnownProperties.Temperature.ToLower(), OnTemperaturePropertyChanged},
                 {GuiProperties.UseMorSed.ToLower(), OnMorphologySedimentPropertyChanged},
@@ -343,20 +343,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// </summary>
         public void SetMduTimePropertiesFromGuiProperties()
         {
-            DateTime originalStartTime =
-                GetAbsoluteDateTime((double)GetModelProperty(KnownProperties.TStart).Value, true);
-            DateTime originalStopTime =
-                GetAbsoluteDateTime((double)GetModelProperty(KnownProperties.TStop).Value, true);
-            var modelStartTime = (DateTime)GetModelProperty(GuiProperties.StartTime).Value;
-            var modelStopTime = (DateTime)GetModelProperty(GuiProperties.StopTime).Value;
-
-            if (modelStartTime != originalStartTime
-                || modelStopTime != originalStopTime)
-            {
-                GetModelProperty(KnownProperties.TStart).Value = GetRelativeDateTime(modelStartTime, true);
-                GetModelProperty(KnownProperties.TStop).Value = GetRelativeDateTime(modelStopTime, true);
-            }
-
             SetMduStartStopDeltaTFromGui(KnownProperties.HisInterval, GuiProperties.WriteHisFile,
                                          GuiProperties.HisOutputDeltaT, GuiProperties.SpecifyHisStart,
                                          GuiProperties.HisOutputStartTime, GuiProperties.SpecifyHisStop,
@@ -386,12 +372,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// </summary>
         public void SetGuiTimePropertiesFromMduProperties()
         {
-            var mduStartTime = (double)GetModelProperty(KnownProperties.TStart).Value;
-            var mduStopTime = (double)GetModelProperty(KnownProperties.TStop).Value;
-
-            GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(mduStartTime, true);
-            GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(mduStopTime, true);
-
             SetGuiStartStopDeltaTFromMdu(KnownProperties.HisInterval, GuiProperties.WriteHisFile,
                                          GuiProperties.HisOutputDeltaT, GuiProperties.SpecifyHisStart,
                                          GuiProperties.HisOutputStartTime, GuiProperties.SpecifyHisStop,
@@ -724,12 +704,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// <summary> Sets the default GUI time properties that are derived from the properties (.csv) file. </summary>
         private void SetDefaultGuiTimeProperties()
         {
-            var modelStartTime = (double)GetModelProperty(KnownProperties.TStart).Value;
-            GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(modelStartTime, true);
-
-            var modelStopTime = (double)GetModelProperty(KnownProperties.TStop).Value;
-            GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(modelStopTime, true);
-
             SetDefaultTimeProperties(KnownProperties.HisInterval, GuiProperties.HisOutputDeltaT,
                                      GuiProperties.HisOutputStartTime, GuiProperties.HisOutputStopTime);
             SetDefaultTimeProperties(KnownProperties.MapInterval, GuiProperties.MapOutputDeltaT,
@@ -760,12 +734,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             if (startTimePropertyName != null)
             {
-                GetModelProperty(startTimePropertyName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+                GetModelProperty(startTimePropertyName).Value = GetModelProperty(KnownProperties.StartDateTime).Value;
             }
 
             if (stopTimePropertyName != null)
             {
-                GetModelProperty(stopTimePropertyName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+                GetModelProperty(stopTimePropertyName).Value = GetModelProperty(KnownProperties.StopDateTime).Value;
             }
         }
 
@@ -908,7 +882,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             else
             {
                 // output start time not specified, set to model start time
-                GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+                GetModelProperty(startTimePropName).Value = GetModelProperty(KnownProperties.StartDateTime).Value;
             }
 
             if (timeFrame.Count > 2)
@@ -920,7 +894,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             else
             {
                 // output start time not specified, set to model stop time
-                GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+                GetModelProperty(stopTimePropName).Value = GetModelProperty(KnownProperties.StopDateTime).Value;
             }
         }
 
@@ -936,6 +910,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             // 0 = off (for backward compatibility only)
         }
 
+        /// <summary>
+        /// Get the absolute date and time based on the model reference date, a relative time and a time unit.
+        /// </summary>
+        /// <param name="relativeTime">The relative time from the model reference date.</param>
+        /// <param name="useTUnit">The time unit the relative time is specified in.</param>
+        /// <returns>DateTime that represents the model reference date plus the provided relative time.</returns>
         private DateTime GetAbsoluteDateTime(double relativeTime, bool useTUnit)
         {
             string unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();

@@ -262,8 +262,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var morbc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
                                                        BoundaryConditionDataType.TimeSeries) {Feature = modelDefinition.Boundaries[0]};
 
-                var startTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-                var stopTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+                var startTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+                var stopTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
                 morbc1.AddPoint(0);
                 IFunction data = morbc1.GetDataAtPoint(0);
@@ -329,8 +329,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var morbc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
                                                        BoundaryConditionDataType.TimeSeries) {Feature = modelDefinition.Boundaries[0]};
-                var startTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-                var stopTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+                var startTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+                var stopTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
                 morbc1.AddPoint(0);
                 IFunction data = morbc1.GetDataAtPoint(0);

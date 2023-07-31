@@ -277,8 +277,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
                 SedimentFractionNames = model.SedimentFractions.Select(sf => sf.Name).ToList()
             };
 
-            var startTime = (DateTime) model.ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-            var stopTime = (DateTime) model.ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            var startTime = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            var stopTime = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
 
             flowBoundaryCondition.AddPoint(0);
             IFunction data = flowBoundaryCondition.GetDataAtPoint(0);

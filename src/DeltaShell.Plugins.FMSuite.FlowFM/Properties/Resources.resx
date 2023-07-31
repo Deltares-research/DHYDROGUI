@@ -703,4 +703,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="MduFileReader_AddNewPropertyToDefinition_An_unrecognized_keyword_has_been_detected" xml:space="preserve">
     <value>An unrecognized keyword *{0}* has been detected. The setting will be preserved and written back to the MDU file on export.</value>
   </data>
+  <data name="PropertyUpdater_Required_keyword_0_is_missing" xml:space="preserve">
+    <value>The keyword `{0}` is missing in the mdu file.</value>
+  </data>
+  <data name="PropertyUpdater_Required_value_for_keyword_0_is_missing" xml:space="preserve">
+    <value>The value for the required keyword `{0}` is missing in the mdu file.</value>
+  </data>
 </root>

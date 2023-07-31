@@ -15,16 +15,19 @@ using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
+using DHYDRO.Common.Extensions;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
@@ -830,7 +833,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [TestCaseSource(nameof(WeirWarningMessageTestCaseData))]
         [Category(TestCategory.DataAccess)]
-        public void GivenAMduFileWithADifferentNumberOfColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged(string mduName, string fixedWeirPlizFileName, int weirScheme, int columnDifference, string expectedSubMsgFormat)
+        public void GivenAMduFileWithADifferentNumberOfColumnsThanNeeded_WhenReadIsCalled_ThenAnErrorMessageIsLogged(
+            string mduName, 
+            string fixedWeirPlizFileName, 
+            int weirScheme, 
+            int columnDifference, 
+            string expectedSubMsgFormat
+            )
         {
             using (var tempDir = new TemporaryDirectory())
             {
@@ -859,12 +868,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 List<string> msgs = TestHelper.GetAllRenderedMessages(testAction).ToList();
 
                 // Then
-                Assert.That(msgs, Has.Count.EqualTo(2), "Expected two grouped warning message:");
-
-                string msg = msgs.Last();
-
+                Assert.That(msgs, Has.Count.EqualTo(3), "Expected three grouped warning message:");
+                
                 const string expectedMsgHeader = "During reading the Fixed Weirs the following warnings were reported:";
-                Assert.That(msg, Does.StartWith(expectedMsgHeader), "Expected the header of the message to be different:");
+                string msg = msgs.FirstOrDefault(m => m.StartsWith(expectedMsgHeader));
+                Assert.That(msg, Is.Not.Null, "Expected the header of the message to be different:");
 
                 List<string> subMsgs = msg.Split(new[]
                 {
@@ -1264,6 +1272,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var result = TypeUtils.CallPrivateMethod<bool>(mduFile, "IsNetfileCoordinateSystemUpToDate", modelDefinition, netFilePath);
 
             Assert.That(result, Is.EqualTo(expected));
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WritingAnMduFileShouldNotWriteTStartOrTStopKeywords_ButShouldWriteOnlyStartDateTimeAndStopDateTime()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var config = Substitute.For<IMduFileWriteConfig>();
+
+            string[] lines;
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                const string fileName = "FlowFM.mdu";
+                string writeFilePath = Path.Combine(tempDirectory.Path, fileName);
+
+                // Call
+                mduFile.Write(writeFilePath,
+                              modelDefinition,
+                              null,
+                              Enumerable.Empty<ModelFeatureCoordinateData<FixedWeir>>(),
+                              config);
+
+                lines = File.ReadAllLines(writeFilePath);
+            }
+
+            // Assert
+            Assert.That(lines, Has.None.Matches<string>(line => LineStartsWith(line, KnownLegacyProperties.TStart)));
+            Assert.That(lines, Has.None.Matches<string>(line => LineStartsWith(line, KnownLegacyProperties.TStop)));
+            Assert.That(lines, Has.One.Matches<string>(line => LineStartsWith(line, KnownProperties.StartDateTime)));
+            Assert.That(lines, Has.One.Matches<string>(line => LineStartsWith(line, KnownProperties.StopDateTime)));
+        }
+
+        private static bool LineStartsWith(string line, string substring)
+        {
+            string key = line.Split('=')[0].Trim();
+            
+            return key.EqualsCaseInsensitive(substring);
         }
 
         private static HydroArea GetHydroAreaWithManyFixedWeirs()

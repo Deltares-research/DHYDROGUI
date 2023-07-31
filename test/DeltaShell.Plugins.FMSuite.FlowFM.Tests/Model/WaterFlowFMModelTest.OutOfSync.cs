@@ -10,6 +10,7 @@ using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
@@ -61,8 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [TestCase(KnownProperties.TrtL, "test")]
         [TestCase(KnownProperties.MapFile__Obsolete, "test")]
         [TestCase(KnownProperties.HisFile__Obsolete, "test")]
-        [TestCase(KnownProperties.TStart, "0")]
-        [TestCase(KnownProperties.TStop, "0")]
         public void GivenAModelDefinitionPropertyChanged_ForADataAccessInputProperty_ShouldNotMarkOutputOutOfSync(string propertyName, string value)
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -256,8 +255,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 new TestCaseData(new ModelDefinitionSetValueDirectlyTestSteps(propertyName, new DateTime()), true)
                     .SetName($"Modifying the DateTime property '{propertyName}' should mark the output out of sync.");
 
-            yield return GetTestCaseData(GuiProperties.StartTime);
-            yield return GetTestCaseData(GuiProperties.StopTime);
+            yield return GetTestCaseData(KnownProperties.StartDateTime);
+            yield return GetTestCaseData(KnownProperties.StopDateTime);
             yield return GetTestCaseData(GuiProperties.HisOutputStartTime);
             yield return GetTestCaseData(GuiProperties.HisOutputStopTime);
             yield return GetTestCaseData(GuiProperties.MapOutputStartTime);

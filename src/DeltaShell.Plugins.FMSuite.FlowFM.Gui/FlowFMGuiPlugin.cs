@@ -979,8 +979,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             WpfGuiProperty[] propertiesToSynchronize =
             {
                 guiProperties.Single(prop => string.Equals(prop.Name, KnownProperties.DtUser, StringComparison.OrdinalIgnoreCase)),
-                guiProperties.Single(prop => string.Equals(prop.Name, GuiProperties.StopTime, StringComparison.OrdinalIgnoreCase)),
-                guiProperties.Single(prop => string.Equals(prop.Name, GuiProperties.StartTime, StringComparison.OrdinalIgnoreCase))
+                guiProperties.Single(prop => string.Equals(prop.Name, KnownProperties.StopDateTime, StringComparison.OrdinalIgnoreCase)),
+                guiProperties.Single(prop => string.Equals(prop.Name, KnownProperties.StartDateTime, StringComparison.OrdinalIgnoreCase))
             };
 
             view.SettingsCategories = wpfGuiCategories;

@@ -12,8 +12,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers
     {
         public ISet<string> ObsoleteProperties { get; } = new HashSet<string>();
 
-        public IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; } =
-            new Dictionary<string, string> {{"tscale", "TimeInterval"}};
+        public IReadOnlyDictionary<string, string> ConditionalObsoleteProperties { get; } = 
+            new Dictionary<string, string>();
+
+        public IReadOnlyDictionary<string, NewPropertyData> LegacyPropertyMapping { get; } =
+            new Dictionary<string, NewPropertyData>
+            {
+                {"tscale", new NewPropertyData("TimeInterval", new DefaultPropertyUpdater())}
+            };
 
         public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } =
             new Dictionary<string, string>();

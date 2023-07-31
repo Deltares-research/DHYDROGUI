@@ -89,8 +89,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 // Assert
                 List<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
-                Assert.That(messages, Has.Count.EqualTo(1));
-                Assert.That(messages[0], Is.EqualTo($"Restart file not found: {restartFilePath}."));
+
+                var expectedWarningMessage = $"Restart file not found: {restartFilePath}.";
+                string expectedMessage = messages.FirstOrDefault(message => message.Equals(expectedWarningMessage));
+                Assert.That(expectedMessage, Is.Not.Null);
 
                 Assert.That(model.UseRestart, Is.False);
                 Assert.That(model.RestartInput.IsEmpty);

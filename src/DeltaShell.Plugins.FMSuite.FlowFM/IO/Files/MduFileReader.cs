@@ -34,10 +34,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IList<DelftIniCategory> categories = new MduDelftIniReader().ReadDelftIniFile(stream, filePath);
 
             RemoveObsoleteProperties(categories, logHandler);
-            UpdateLegacyNames(categories);
-
+            UpdateLegacyCategoriesAndProperties(categories, logHandler);
             AddOrUpdateProperties(definition, categories, logHandler);
-
             ExecutePostReadActions(definition);
 
             logHandler.LogReport();
@@ -49,14 +47,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             categories.ForEach(category => backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(category, logHandler));
         }
 
-        private static void UpdateLegacyNames(IEnumerable<DelftIniCategory> categories)
+        private static void UpdateLegacyCategoriesAndProperties(IEnumerable<DelftIniCategory> categories, LogHandler logHandler)
         {
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
 
             categories.ForEach(category =>
             {
-                category.Name = backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name) ?? category.Name;
-                category.Properties.ForEach(property => property.Name = backwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name) ?? property.Name);
+                category.Name =
+                    backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name) ??
+                    category.Name;
+                category.Properties.ForEach(property =>
+                {
+                    backwardsCompatibilityHelper.UpdateProperty(property, category, logHandler);
+                });
             });
         }
         

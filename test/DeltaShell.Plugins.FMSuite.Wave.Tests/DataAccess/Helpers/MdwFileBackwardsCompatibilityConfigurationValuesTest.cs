@@ -12,8 +12,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers
         protected override IEnumerable<string> ObsoleteProperties { get; } =
             new HashSet<string>();
 
-        protected override IEnumerable<KeyValuePair<string, string>> LegacyPropertyMapping { get; } =
-            new Dictionary<string, string> {{"tscale", "TimeInterval"}};
+        protected override IReadOnlyDictionary<string, string> ConditionalObsoleteProperties { get; } = 
+            new Dictionary<string, string>();
+
+        protected override IReadOnlyDictionary<string, NewPropertyData> LegacyPropertyMapping { get; } =
+            new Dictionary<string, NewPropertyData>
+            {
+                {"tscale", new NewPropertyData("TimeInterval", new DefaultPropertyUpdater())}
+            };
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping { get; } =
             new Dictionary<string, string>();

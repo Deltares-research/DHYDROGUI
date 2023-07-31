@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             app.Project.RootFolder.Add(model);
 
-            var newStartTime = new DateTime(2000, 1, 2, 11, 15, 5, 2); //time with milliseconds!
+            var newStartTime = new DateTime(2000, 1, 2, 11, 15, 5);
             model.StartTime = newStartTime;
 
             var dtUserTimeSpan = new TimeSpan(0, 1, 0, 1, 430);

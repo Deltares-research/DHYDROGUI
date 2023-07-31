@@ -16,8 +16,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
             "eqmbc"
         };
 
-        protected override IEnumerable<KeyValuePair<string, string>> LegacyPropertyMapping =>
-            new Dictionary<string, string> {{"bslhd", "Bshld"}};
+        protected override IReadOnlyDictionary<string, string> ConditionalObsoleteProperties { get; } = 
+            new Dictionary<string, string>();
+
+        protected override IReadOnlyDictionary<string, NewPropertyData> LegacyPropertyMapping =>
+            new Dictionary<string, NewPropertyData>
+            {
+                {"bslhd", new NewPropertyData("Bshld", new DefaultPropertyUpdater())}
+            };
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping =>
             new Dictionary<string, string>();
