@@ -322,6 +322,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 yield return model.SpatialData.Roughness;
                 yield return model.SpatialData.Viscosity;
                 yield return model.SpatialData.Diffusivity;
+                yield return model.ModelDefinition.InitialVelocityX;
+                yield return model.ModelDefinition.InitialVelocityY;
 
                 if (model.HeatFluxModelType != HeatFluxModelType.None)
                 {

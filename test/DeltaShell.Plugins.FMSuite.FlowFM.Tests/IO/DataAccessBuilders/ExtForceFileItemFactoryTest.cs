@@ -8,10 +8,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -91,6 +93,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Assert.That(boundariesExtForceFileItems.ContainsKey(flowBoundaryCondition), Is.True);
                 Assert.That(boundariesExtForceFileItems[flowBoundaryCondition], Is.SameAs(polyLineForceFileItem.Value));
             }
+        }
+
+        [Test]
+        public void GivenMultipleItemsAndInitialVelocities_WhenGetVelocityItem_ThenRetrieveExpectedForceFileItem()
+        {
+            //Arrange
+            var extForceFileItem = new ExtForceFileItem("quantity");
+            var initialVelocity = Substitute.For<IPointCloud>();
+            IDictionary<ExtForceFileItem, object> existingForceFileItems = new Dictionary<ExtForceFileItem, object>();
+            existingForceFileItems[extForceFileItem] = initialVelocity;
+            existingForceFileItems[new ExtForceFileItem("otherquantityone")] = Substitute.For<IPointCloud>();
+            existingForceFileItems[new ExtForceFileItem("otherquantitytwo")] = Substitute.For<IPointCloud>();
+
+            //Act
+            ExtForceFileItem retrievedExtForceFileItem = ExtForceFileItemFactory.GetVelocityItem(initialVelocity, existingForceFileItems);
+            
+            //Assert
+            Assert.That(retrievedExtForceFileItem, Is.EqualTo(extForceFileItem));
         }
 
         private static void AddBoundaryCondition(WaterFlowFMModelDefinition modelDefinition, FlowBoundaryCondition bc)

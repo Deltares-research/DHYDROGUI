@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -15,6 +16,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -68,7 +71,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             ReadWindItems(forceFileItems, modelDefinition);
             ReadHeatFluxModelData(forceFileItems, modelDefinition);
             ReadSpatialData(forceFileItems, modelDefinition);
+            ReadInitialVelocityData(forceFileItems, modelDefinition);
             StoreUnknownQuantities(forceFileItems, modelDefinition);
+        }
+
+        private void ReadInitialVelocityData(IList<ExtForceFileItem> forceFileItems, WaterFlowFMModelDefinition modelDefinition)
+        {
+            var importer = new PointCloudImporter<GroupablePointFeature>();
+
+            foreach (ExtForceFileItem forceFileItem in forceFileItems)
+            {
+                if (string.Equals(forceFileItem.Quantity, ExtForceQuantNames.initialVelocityXQuantity, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string path = GetPath(forceFileItem.FileName);
+                    modelDefinition.InitialVelocityX = ReadDataFromFile(WaterFlowFMModelDefinition.InitialVelocityXName, path, importer);
+                    AddInitialVelocityToForcingFileItems(forceFileItem, modelDefinition.InitialVelocityX);
+                }
+
+                if (string.Equals(forceFileItem.Quantity, ExtForceQuantNames.initialVelocityYQuantity, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string path = GetPath(forceFileItem.FileName);
+                    modelDefinition.InitialVelocityY = ReadDataFromFile(WaterFlowFMModelDefinition.InitialVelocityYName, path, importer);
+                    AddInitialVelocityToForcingFileItems(forceFileItem, modelDefinition.InitialVelocityY);
+                }
+            }
+        }
+
+        private IPointCloud ReadDataFromFile(string velocityName, string path, PointCloudImporter<GroupablePointFeature> importer)
+        {
+            var initialVelocity = (IPointCloud)importer.ImportItem(path);
+            initialVelocity.Name = velocityName;
+            return initialVelocity;
+        }
+
+        private string GetPath(string filePath)
+        {
+            string dirPath = Path.GetDirectoryName(extFilePath);
+            return Path.Combine(dirPath, filePath);
+        }
+
+        private void AddInitialVelocityToForcingFileItems(ExtForceFileItem forceFileItem, IPointCloud initialVelocity)
+        {
+            supportedExtForceFileItems.Add(forceFileItem);
+            ExistingForceFileItems[forceFileItem] = initialVelocity;
         }
 
         private IEnumerable<ExtForceFileItem> GetUnknownExtForceFileItems(IEnumerable<ExtForceFileItem> allExtForceFileItems) =>

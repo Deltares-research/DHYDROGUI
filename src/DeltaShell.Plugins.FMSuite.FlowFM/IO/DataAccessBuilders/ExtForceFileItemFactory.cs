@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
@@ -281,6 +282,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
 
             return dictionary;
+        }
+
+        /// <summary>
+        /// Get the matching existing <see cref="ExtForceFileItem"/>.
+        /// </summary>
+        /// <param name="initialVelocity">Initial velocity to match for <see cref="ExtForceFileItem"/>.</param>
+        /// <param name="existingForceFileItems">The existing external force file items.</param>
+        /// <returns>Matching existing <see cref="ExtForceFileItem"/>.</returns>
+        public static ExtForceFileItem GetVelocityItem(IPointCloud initialVelocity, IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            return GetExistingItem(initialVelocity, existingForceFileItems);
         }
 
         /// <summary>

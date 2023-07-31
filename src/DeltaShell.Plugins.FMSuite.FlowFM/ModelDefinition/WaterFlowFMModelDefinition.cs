@@ -47,6 +47,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string ClassMapFilePropertyName = "ClassMapFile";
         public const string HisFilePropertyName = "HisFile";
         public const string MapFilePropertyName = "MapFile";
+        public const string InitialVelocityXName = "Initial velocity X";
+        public const string InitialVelocityYName = "Initial velocity Y";
 
         public static readonly string[] SpatialDataItemNames =
         {
@@ -164,6 +166,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public string ModelName { get; set; }
         public ICoordinateSystem CoordinateSystem { get; set; }
         public UnstructuredGridCoverage Bathymetry { get; set; }
+
+        public IPointCloud InitialVelocityX { get; set; }
+        public IPointCloud InitialVelocityY { get; set; }
 
         public IEventedList<IWindField> WindFields { get; private set; }
 

@@ -39,6 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string InitialSalinity = "initialsalinity";
         public const string InitialSalinityTop = "initialsalinitytop";
         public const string InitialTemperature = "initialtemperature";
+        public const string initialVelocityXQuantity = "initialvelocityx";
+        public const string initialVelocityYQuantity = "initialvelocityy";
+        
 
         // quantity names for filetype=1,2,4,7,8 method=1,2,3
         public const string WindX = "windx";

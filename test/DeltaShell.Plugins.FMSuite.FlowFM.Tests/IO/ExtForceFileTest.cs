@@ -1120,10 +1120,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var extForceFile = new ExtForceFile();
             extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
 
-            var unsupportedExtForceFileItem = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
+            var supportedExtForceFileItem = extForceFile.ExistingForceFileItems.First().Key;
 
-            Assert.That(unsupportedExtForceFileItem, Is.Not.Null);
-            Assert.That(unsupportedExtForceFileItem.ExtraPolTol, Is.EqualTo(expectedExtraPolTol));
+            Assert.That(supportedExtForceFileItem, Is.Not.Null);
+            Assert.That(supportedExtForceFileItem.ExtraPolTol, Is.EqualTo(expectedExtraPolTol));
         }
 
         [Test]
@@ -1165,6 +1165,79 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsTrue(extForceFileContent.Contains($"EXTRAPOLTOL={extrapoltol}"), $"EXTRAPOLTOL={extrapoltol} not found");
             }
         }
+
+        [Test]
+        [TestCase(@"ExtFileTest\InitialVelocity\beno19_6_20m_initial_velocity_S16000.ext")]
+        [TestCase(@"ExtFileTest\InitialVelocity\beno19_6_20m_initial_velocity_S16000_Case_Insensitive_Quantity.ext")]
+        public void GivenOldExternalFileWithInitialVelocities_WhenReadingFiles_ThenExtForceFileItemsWithExpectedNamesAndQuantitiesExist(string extForcingFile)
+        {
+            const string expectedFileNameX = "rijn_beno19_6_v2a_waal_ucx_S16000.xyz";
+            const string expectedQuantityX = "initialvelocityx";
+            const string expectedFileNameY = "rijn_beno19_6_v2a_waal_ucy_S16000.xyz";
+            const string expectedQuantityY = "initialvelocityy";
+            
+            var def = new WaterFlowFMModelDefinition();
+            string extPath = TestHelper.GetTestFilePath(@"ExtFileTest\InitialVelocity\beno19_6_20m_initial_velocity_S16000.ext");
+            string extSubFilesReferenceFilePath = TestHelper.GetTestFilePath(@"ExtFileTest\InitialVelocity\flowFM.mdu");
+
+            var extForceFile = new ExtForceFile();
+            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+            
+            var extForceFileItems = extForceFile.ExistingForceFileItems.ToList();
+            var extForceFileItemX = extForceFileItems[0].Key;
+            var extForceFileItemY = extForceFileItems[1].Key;
+
+            Assert.That(extForceFileItemX, Is.Not.Null);
+            Assert.That(extForceFileItemX.Quantity, Is.EqualTo(expectedQuantityX));
+            Assert.That(extForceFileItemX.FileName, Is.EqualTo(expectedFileNameX));
+            
+            Assert.That(extForceFileItemY, Is.Not.Null);
+            Assert.That(extForceFileItemY.Quantity, Is.EqualTo(expectedQuantityY));
+            Assert.That(extForceFileItemY.FileName, Is.EqualTo(expectedFileNameY));
+        }
+        
+        [Test]
+        public void GivenInitialVelocity_WhenWritingFiles_ThenOldExtForceFileAndSubFileExist()
+        {
+            const string quantity = "initialvelocityx";
+            const string filename = @"rijn_beno19_6_v2a_waal_ucx_S16000.xyz";
+            const int filetype = 7;
+            const int method = 5;
+            const string operation = "O";
+
+            var extForceFileItem = new ExtForceFileItem(quantity)
+            {
+                FileName = filename,
+                FileType = filetype,
+                Method = method,
+                Operand = operation,
+            };
+
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string writeExtPath = Path.Combine(temporaryDirectory.Path, Path.GetFileName("with_initialvelocity_written.ext"));
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                modelDefinition.InitialVelocityX = new PointCloud();
+                var extForceFile = new ExtForceFile();
+                extForceFile.ExistingForceFileItems[extForceFileItem] = modelDefinition.InitialVelocityX;
+                
+                //write
+                extForceFile.Write(writeExtPath, modelDefinition, false, false);
+
+                // check written file
+                string extForceFileContent = File.ReadAllText(writeExtPath);
+                Assert.IsTrue(extForceFileContent.Contains($"QUANTITY={quantity}"), $"QUANTITY={quantity} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"FILENAME={filename}"), $"FILENAME={filename} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"FILETYPE={filetype}"), $"FILETYPE={filetype} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"METHOD={method}"), $"METHOD={method} not found");
+                Assert.IsTrue(extForceFileContent.Contains($"OPERAND={operation}"), $"OPERAND={operation} not found");
+
+                string expectedVelocityPath = Path.Combine(temporaryDirectory.Path, filename);
+                Assert.That(File.Exists(expectedVelocityPath), Is.True);
+            }
+        }
+        
+        
 
         private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)
         {
