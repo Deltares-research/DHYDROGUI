@@ -680,52 +680,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return boundaryCondition;
         }
 
-        private static DateTime ConvertToTime(string offsetValue, long offsetFactor, DateTime startDate)
-        {
-            // 1 Tick is 100 nanoseconds, as such there are 10 million ticks in a second.
-            const long nTicksPerSecond = 10000000;
-            long nTicks = nTicksPerSecond * offsetFactor * Convert.ToInt64(double.Parse(offsetValue));
-            return startDate + new TimeSpan(nTicks);
-        }
-
         protected virtual IEnumerable<object> ParseValues(BcQuantityData quantityData, Type type, string supportPointName)
         {
             IEnumerable<string> stringValues = quantityData.Values;
             string format = quantityData.Unit;
             if (type == typeof(DateTime))
             {
-                if (string.IsNullOrEmpty(format) || format == "-")
-                {
-                    return stringValues.Select(s => DateTime.ParseExact(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture))
-                                       .Cast<object>();
-                }
-
-                List<string> splitFormat = format.Split().ToList();
-                if (splitFormat[1] == "since")
-                {
-                    string dateString = string.Join(" ", splitFormat.Skip(2));
-                    DateTime startDate = TryParseDate(dateString, supportPointName);
-
-                    switch (splitFormat[0].ToLower())
-                    {
-                        case "seconds":
-                            return stringValues
-                                   .Select(s => ConvertToTime(s, 1L, startDate))
-                                   .Cast<object>();
-                        case "minutes":
-                            return stringValues
-                                   .Select(s => ConvertToTime(s, 60L, startDate))
-                                   .Cast<object>();
-                        case "hours":
-                            return stringValues
-                                   .Select(s => ConvertToTime(s, 60L * 60L, startDate))
-                                   .Cast<object>();
-                        case "days":
-                            return stringValues
-                                   .Select(s => ConvertToTime(s, 60L * 60L * 24L, startDate))
-                                   .Cast<object>();
-                    }
-                }
+                return BcQuantityDataParsingHelper.ParseDateTimes(supportPointName, quantityData).Cast<object>();
             }
 
             if (type == typeof(string))
@@ -810,39 +771,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 variable.GetValues<DateTime>()
                         .Select(d => (d - referenceTime.Value).TotalSeconds)
                         .Select(m => m.ToString(CultureInfo.InvariantCulture));
-        }
-
-        private static DateTime TryParseDate(string dateString, string supportPointName)
-        {
-            bool dateParsed = DateTime.TryParseExact(dateString, new[]
-                                                     {
-                                                         "yyyy-MM-dd",
-                                                         "yyyy-MM-dd HH:mm:ss",
-                                                         "yyyy-MM-dd HH:mm:ss zzz"
-                                                     },
-                                                     CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal,
-                                                     out DateTime startDate);
-
-            if (!dateParsed)
-            {
-                throw new FormatException("Time format '" + dateString + "' in support point '" + supportPointName + "' is not supported by bc file parser");
-            }
-
-            CheckForTimezoneOffset(dateString, supportPointName);
-
-            return startDate;
-        }
-
-        private static void CheckForTimezoneOffset(string dateString, string supportPointName)
-        {
-            bool offsetParsed = DateTimeOffset.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss zzz",
-                                                             CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
-                                                             out DateTimeOffset dateTimeOffset);
-
-            if (offsetParsed && dateTimeOffset.Offset.Ticks != 0)
-            {
-                Log.Warn(string.Format(Resources.BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset, supportPointName));
-            }
         }
 
         private string ParseQuantityName(string[] componentKeys, string quantityName,
@@ -1119,24 +1047,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
-        private static InterpolationType ParseTimeInterpolationType(BcBlockData dataBlock)
-        {
-            if (string.IsNullOrEmpty(dataBlock.TimeInterpolationType) ||
-                dataBlock.TimeInterpolationType.ToLower() == "linear")
-            {
-                return InterpolationType.Linear;
-            }
-
-            if (dataBlock.TimeInterpolationType.ToLower().Contains("block"))
-            {
-                return InterpolationType.Constant;
-            }
-
-            LogWarningParsePropertyFailed(dataBlock, "time interpolation type",
-                                          dataBlock.TimeInterpolationType);
-            throw new NotSupportedException($"Not able to map {dataBlock.TimeInterpolationType} to any valid type.");
-        }
-
         private static void LogWarningParsePropertyFailed(BcBlockData dataBlock, string propertyName,
                                                           string propertyValue)
         {
@@ -1409,7 +1319,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     ForcingTypeDefinition = ParseForcingType(dataBlock),
                     VerticalProfileDefinition = ParseDepthLayerDefinition(dataBlock),
                     VerticalInterpolationType = ParseVerticalInterpolationType(dataBlock),
-                    InterpolationType = ParseTimeInterpolationType(dataBlock),
+                    InterpolationType = BcQuantityDataParsingHelper.ParseTimeInterpolationType(dataBlock),
                     SeriesIndex = ParseSeriesIndex(dataBlock),
                     Offset = ParseOffset(dataBlock),
                     Factor = ParseFactor(dataBlock)
