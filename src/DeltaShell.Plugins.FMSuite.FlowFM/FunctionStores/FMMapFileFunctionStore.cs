@@ -564,13 +564,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                                                             bool isUgridConvention)
         {
             // Construct UnstructuredGridCoverages from file
-            Func<NetCdfVariableInfo, bool> timeDepVarSelectionCriteria = isUgridConvention
-                                                                             ? (Func<NetCdfVariableInfo, bool>)
-                                                                             (v => v.IsTimeDependent &&
-                                                                                   v.NumDimensions > 1)
-                                                                             : v => v.IsTimeDependent &&
-                                                                                    v.NumDimensions > 1 &&
-                                                                                    v.NumDimensions <= 2;
+            Func<NetCdfVariableInfo, bool> timeDepVarSelectionCriteria = 
+                isUgridConvention 
+                    ? (Func<NetCdfVariableInfo, bool>)(v => v.IsTimeDependent && v.NumDimensions > 1) 
+                    : (Func<NetCdfVariableInfo, bool>)(v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
             List<NetCdfVariableInfo> timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
             List<UnstructuredGridCoverage> functions =
                 timeDepVariables.SelectMany(v => ProcessTimeDependentVariable(v, isUgridConvention))
