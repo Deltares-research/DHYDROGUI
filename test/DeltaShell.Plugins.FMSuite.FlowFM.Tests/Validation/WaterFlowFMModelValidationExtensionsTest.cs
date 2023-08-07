@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using NetTopologySuite.Extensions.Coverages;
@@ -279,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ValidateRestartInput_WhenRestartInputFileDoesNotExist_ShouldReportErrorInValidationReport()
         {
             // Given
-            var fmModel = new WaterFlowFMModel {RestartInput = new RestartFile("test")};
+            var fmModel = new WaterFlowFMModel {RestartInput = new WaterFlowFMRestartFile("test")};
 
             // When
             ValidationReport validationReport = WaterFlowFmModelValidationExtensions.Validate(fmModel);
@@ -309,7 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
                 File.WriteAllText(restartFilePath, "test");
 
-                var fmModel = new WaterFlowFMModel {RestartInput = new RestartFile(restartFilePath)};
+                var fmModel = new WaterFlowFMModel {RestartInput = new WaterFlowFMRestartFile(restartFilePath)};
 
                 // When
                 ValidationReport validationReport = WaterFlowFmModelValidationExtensions.Validate(fmModel);

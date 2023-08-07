@@ -13,7 +13,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -23,6 +22,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
@@ -451,7 +451,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 string restartFilePath = tempDir.CreateFile("restart.file");
                 string exportDir = tempDir.CreateDirectory("export_dir");
 
-                model.RestartInput = new RestartFile(restartFilePath);
+                model.RestartInput = new WaterFlowFMRestartFile(restartFilePath);
 
                 // Precondition
                 Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo(string.Empty));

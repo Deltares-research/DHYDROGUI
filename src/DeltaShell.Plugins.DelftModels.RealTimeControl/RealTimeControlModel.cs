@@ -25,7 +25,6 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
@@ -76,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private bool suspendUpdateFeatureAndParameter;
 
-        private RealTimeControlRestartFile restartInput = new RealTimeControlRestartFile();
+        private RealTimeControlRestartFile restartInput;
 
         public RealTimeControlModel() : this("RTC Model") { }
 
@@ -97,7 +96,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             SaveStateStopTime = StopTime;
             SaveStateTimeStep = TimeStep;
 
-            InitializeOutputData();
+            restartInput = new RealTimeControlRestartFile();
+            ListOfOutputRestartFiles = new List<RealTimeControlRestartFile>();
+            OutputDocuments = new EventedList<ReadOnlyTextFileData>();
 
             runner = new DimrRunner(this, new DimrApiFactory());
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
@@ -165,33 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// Gets or sets the output text documents.
         /// </summary>
         public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; protected set; }
-
-        public virtual bool UseRestart => !RestartInput.IsEmpty;
-
-        public virtual bool WriteRestart { get; set; }
-
-        /// <summary>
-        /// Gets or sets the input restart file.
-        /// </summary>
-        public virtual RealTimeControlRestartFile RestartInput
-        {
-            get => restartInput;
-            set
-            {
-                if (value == null)
-                {
-                    return;
-                }
-
-                restartInput = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the restart output files.
-        /// </summary>
-        public virtual IEventedList<RestartFile> RestartOutput { get; protected set; }
-
+        
         public override bool CanRun => false;
 
         [NoNotifyPropertyChange]
@@ -551,12 +526,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             disposed = true;
         }
 
-        private void InitializeOutputData()
-        {
-            RestartOutput = new EventedList<RestartFile>();
-            OutputDocuments = new EventedList<ReadOnlyTextFileData>();
-        }
-
         // This is no edit action...
         private void ResubscribeToOwner()
         {
@@ -867,6 +836,41 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
+        #region IRestartModel
+      
+        /// <inheritdoc cref="IRestartModel{TRestartFile}.UseRestart"/>
+        public virtual bool UseRestart => !RestartInput.IsEmpty;
+
+        /// <inheritdoc cref="IRestartModel{TRestartFile}.WriteRestart"/>
+        public virtual bool WriteRestart { get; set; }
+
+        /// <inheritdoc cref="IRestartModel{TRestartFile}.RestartInput"/>
+        public virtual RealTimeControlRestartFile RestartInput
+        {
+            get => restartInput;
+            set
+            {
+                Ensure.NotNull(value,nameof(value));
+                restartInput = value;
+            }
+        }
+
+        /// <summary>
+        /// non-public property for manipulating the list of output restart files
+        /// </summary>
+        protected List<RealTimeControlRestartFile> ListOfOutputRestartFiles { get; set; }
+
+        /// <inheritdoc cref="IRestartModel{TRestartFile}.RestartOutput"/>
+        public virtual IEnumerable<RealTimeControlRestartFile> RestartOutput => ListOfOutputRestartFiles;
+
+        /// <inheritdoc cref="IRestartModel{TRestartFile}.SetRestartInputToDuplicateOf"/>
+        public virtual void SetRestartInputToDuplicateOf(RealTimeControlRestartFile source)
+        {
+            Ensure.NotNull(source,nameof(source));
+            RestartInput = new RealTimeControlRestartFile(source);
+        }
+        #endregion
+
         #region IDimrModel
 
         #region Overrides of TimeDependentModelBase
@@ -972,7 +976,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public virtual void DisconnectOutput()
         {
             DisconnectOutputFileFunctionStore();
-            RestartOutput.Clear();
+            ListOfOutputRestartFiles.Clear();
         }
 
         protected override void OnClearOutput()
@@ -980,7 +984,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             BeginEdit(new DefaultEditAction("Clearing all real time control output"));
 
             DisconnectOutputFileFunctionStore();
-            RestartOutput.Clear();
+            ListOfOutputRestartFiles.Clear();
             ClearOutputDocuments();
 
             EndEdit();
@@ -1125,8 +1129,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFilePaths)
         {
-            List<RestartFile> outputRestartFiles = restartFilePaths.Select(p => new RestartFile(p)).ToList();
-            RestartOutput = new EventedList<RestartFile>(outputRestartFiles);
+            ListOfOutputRestartFiles.Clear();
+            ListOfOutputRestartFiles.AddRange( restartFilePaths.Select(RealTimeControlRestartFile.CreateFromFile) );
         }
 
         private void ReconnectRtcToFmOutputFile(string outputFilePath)

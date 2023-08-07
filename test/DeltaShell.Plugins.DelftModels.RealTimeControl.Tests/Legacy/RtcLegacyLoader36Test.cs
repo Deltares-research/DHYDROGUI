@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
 
                 Assert.That(model.RestartOutput, Is.Not.Empty);
                 Assert.That(model.RestartOutput, Has.Count.EqualTo(5));
-                Assert.That(model.RestartOutput.Select(r => r.Path), Is.EquivalentTo(restartFiles));
+                Assert.That(model.RestartOutput.Select(r => r.Name), Is.EquivalentTo(restartFiles.Select(Path.GetFileName)));
             }
         }
     }

@@ -19,7 +19,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Restart;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -27,6 +27,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
@@ -47,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     [Entity]
     public partial class WaterFlowFMModel : TimeDependentModelBase,
                                             IFileBased,
-                                            IRestartModel,
+                                            IRestartModel<WaterFlowFMRestartFile>,
                                             IGridOperationApi,
                                             IDisposable,
                                             IHydroModel,

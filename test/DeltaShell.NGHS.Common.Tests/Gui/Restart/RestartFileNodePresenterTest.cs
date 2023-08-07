@@ -2,7 +2,6 @@
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DeltaShell.NGHS.Common.Gui.Restart;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
 using NSubstitute;
 using NUnit.Framework;
@@ -19,7 +18,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             var guiPlugin = Substitute.For<GuiPlugin>();
 
             // Call
-            var nodePresenter = new RestartFileNodePresenter(guiPlugin);
+            var nodePresenter = new RestartFileNodePresenter<RestartFileStub>(guiPlugin);
 
             // Assert
             Assert.That(nodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
@@ -29,7 +28,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
         public void Constructor_GuiPluginNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new RestartFileNodePresenter(null);
+            void Call() => new RestartFileNodePresenter<RestartFileStub>(null);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -40,9 +39,9 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
         public void UpdateNode_ForEmptyRestartFile()
         {
             // Setup
-            var nodePresenter = Create.For<RestartFileNodePresenter>();
+            var nodePresenter = Create.For<RestartFileNodePresenter<RestartFileStub>>();
             var node = Substitute.For<ITreeNode>();
-            var nodeData = new RestartFile();
+            var nodeData = new RestartFileStub();
 
             // Call
             nodePresenter.UpdateNode(null, node, nodeData);
@@ -55,9 +54,9 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
         public void UpdateNode_ForNotEmptyRestartFile()
         {
             // Setup
-            var nodePresenter = Create.For<RestartFileNodePresenter>();
+            var nodePresenter = Create.For<RestartFileNodePresenter<RestartFileStub>>();
             var node = Substitute.For<ITreeNode>();
-            var nodeData = new RestartFile("path/to/restart.file");
+            var nodeData = new RestartFileStub("restart.file");
 
             // Call
             nodePresenter.UpdateNode(null, node, nodeData);
@@ -70,8 +69,8 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
         public void UpdateNode_NodeNull_ThrowsArgumentNullException()
         {
             // Setup
-            var nodePresenter = Create.For<RestartFileNodePresenter>();
-            var nodeData = new RestartFile();
+            var nodePresenter = Create.For<RestartFileNodePresenter<RestartFileStub>>();
+            var nodeData = new RestartFileStub();
 
             // Call
             void Call() => nodePresenter.UpdateNode(null, null, nodeData);
@@ -85,7 +84,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
         public void UpdateNode_NodeDataNull_ThrowsArgumentNullException()
         {
             // Setup
-            var nodePresenter = Create.For<RestartFileNodePresenter>();
+            var nodePresenter = Create.For<RestartFileNodePresenter<RestartFileStub>>();
             var node = Substitute.For<ITreeNode>();
 
             // Call

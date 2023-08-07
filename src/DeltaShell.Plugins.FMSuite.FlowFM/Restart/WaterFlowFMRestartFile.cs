@@ -1,25 +1,44 @@
 ﻿using System;
 using System.IO;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Common.Restart;
 
-namespace DeltaShell.NGHS.Common.IO.RestartFiles
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Restart
 {
     /// <summary>
     /// Represents a restart file.
     /// </summary>
-    public sealed class RestartFile
+    public sealed class WaterFlowFMRestartFile : IRestartFile
     {
         // used to retrieve the original value that Path was set with.
         private string path;
         private FileInfo pathInfo;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RestartFile"/> class.
+        /// Initializes a new instance of the <see cref="WaterFlowFMRestartFile"/> class.
         /// </summary>
-        public RestartFile() : this(null) {}
+        public WaterFlowFMRestartFile()
+        {
+        }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RestartFile"/> class.
+        /// Creates a new instance of the <see cref="WaterFlowFMRestartFile"/> class which is a copy of the source instance.
+        /// </summary>
+        /// <param name="source"> The source to clone the new instance from. </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="source"/> is <c>null</c>.
+        /// </exception>
+        public WaterFlowFMRestartFile(WaterFlowFMRestartFile source)
+        {
+            Ensure.NotNull(source, nameof(source));
+
+            path = source.path;
+            pathInfo = source.pathInfo;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaterFlowFMRestartFile"/> class.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <exception cref="ArgumentException">
@@ -37,7 +56,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// <exception cref="NotSupportedException">
         /// Thrown when <paramref name="path"/> contains a colon (:) in the middle of the string.
         /// </exception>
-        public RestartFile(string path) => Path = path;
+        public WaterFlowFMRestartFile(string path) => Path = path;
 
         /// <summary>
         /// Gets the path.
@@ -96,7 +115,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// </exception>
         /// <remarks>
         /// If <paramref name="directoryPath"/> is <c>null</c> or empty, the destination file path equals the current file path
-        /// or this <see cref="RestartFile"/> does not exist, the method returns.
+        /// or this <see cref="WaterFlowFMRestartFile"/> does not exist, the method returns.
         /// </remarks>
         /// <remarks>The <paramref name="directoryPath"/> will be created without overwriting the existing one.</remarks>
         public void CopyToDirectory(string directoryPath, bool switchTo)
@@ -113,14 +132,6 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
             CopyTo(targetFilePath, switchTo);
         }
 
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns>
-        /// A new copied instance of this instance.
-        /// </returns>
-        public RestartFile Clone() => new RestartFile(Path);
-
         public override string ToString() => Name;
 
         /// <summary>
@@ -136,7 +147,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// </exception>
         /// <remarks>
         /// If <paramref name="destinationPath"/> is <c>null</c> or empty, equals the current file path
-        /// or this <see cref="RestartFile"/> does not exist, the method returns.
+        /// or this <see cref="WaterFlowFMRestartFile"/> does not exist, the method returns.
         /// </remarks>
         /// <remarks>
         /// The target directory of <paramref name="destinationPath"/> will be created without

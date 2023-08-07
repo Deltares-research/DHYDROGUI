@@ -15,12 +15,13 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Helpers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
@@ -220,8 +221,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new RtcOutputFileFunctionStoreNodePresenter();
             yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
             yield return new ControlGroupNodePresenter(this);
-            yield return new RealTimeControlInputRestartFileNodePresenter(this);
-            yield return new RealTimeControlOutputRestartFileNodePresenter(this);
+            yield return new RestartFileNodePresenter<RealTimeControlRestartFile>(this);
             yield return new OutputTreeFolderNodePresenter();
         }
 

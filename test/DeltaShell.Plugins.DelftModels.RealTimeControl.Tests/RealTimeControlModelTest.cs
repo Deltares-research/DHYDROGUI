@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Functions;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -20,7 +19,7 @@ using DelftTools.Units.Generics;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Restart;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -368,36 +367,67 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // Assert
                 Assert.That(model.OutputIsEmpty, Is.False);
 
-                RestartFile[] restartOutput = model.RestartOutput.ToArray();
+                var restartOutput = model.RestartOutput.ToArray();
                 Assert.That(restartOutput, Has.Length.EqualTo(5));
 
                 for (var i = 0; i < 5; i++)
                 {
-                    Assert.That(restartOutput[i].Path, Is.EqualTo(restartFiles[i]));
+                    Assert.That(restartOutput[i].Name, Is.EqualTo(Path.GetFileName(restartFiles[i])));
                 }
             }
         }
 
         [Test]
-        public void GivenRealTimeControlModel_WhenSetRestartInputToNull_RestartInputNotChanged()
+        public void GivenRealTimeControlModel_WhenSetRestartInputToNull_ThrowsArgumentNullException()
         {
             // Given
             var model = new RealTimeControlModel();
-            RealTimeControlRestartFile originalRestartFile = model.RestartInput;
 
             // When
-            model.RestartInput = null;
+            void Call() => model.RestartInput = null;
 
             // Then
-            Assert.That(model.RestartInput, Is.SameAs(originalRestartFile));
+            Assert.Throws<ArgumentNullException>(Call);
         }
+        
+        [Test]
+        public void SetRestartInputToDuplicateOf_ThrowsOnNullArgument()
+        {
+            // Setup
+            var model = new RealTimeControlModel();
+
+            // Call
+            void Call() => model.SetRestartInputToDuplicateOf(null);
+
+            // Assert
+            Assert.Throws<ArgumentNullException>(Call);
+        }
+
+        [Test]
+        public void SetRestartInputToDuplicateOf_CreatesCopyOfInput()
+        {
+            // Setup
+            var model = new RealTimeControlModel();
+            var restartFile = new RealTimeControlRestartFile( "file.ext", @"hello world" );
+            Assert.That(model.RestartInput.Content, Is.Not.EqualTo(restartFile.Content));
+
+            // Call
+            model.SetRestartInputToDuplicateOf(restartFile);
+
+            // Assert
+            Assert.That(model.RestartInput, Is.Not.SameAs(restartFile));
+            Assert.That(model.RestartInput.Content, Is.EqualTo(restartFile.Content));
+            Assert.That(model.RestartInput.Name, Is.EqualTo(restartFile.Name));
+            Assert.That(model.RestartInput.IsEmpty, Is.EqualTo(restartFile.IsEmpty));
+        }
+
+
 
         [Test]
         public void ClearOutput_WithRestartOutput_ThenRestartOutputIsEmpty()
         {
             // Setup
-            var realTimeControlModel = new RealTimeControlModel();
-            realTimeControlModel.RestartOutput.Add(new RestartFile());
+            var realTimeControlModel = new RealTimeControlModelForTestingRestartOutput( new List<RealTimeControlRestartFile>(){ new RealTimeControlRestartFile() } );
 
             // Call
             realTimeControlModel.ClearOutput(true);
@@ -1331,6 +1361,58 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        public void SetRestartInput_PropertyReferencesAssignedInstance()
+        {
+            var rtcRestartFile = new RealTimeControlRestartFile();
+            var model = new RealTimeControlModel();
+            Assert.That( model.RestartInput, Is.Not.SameAs(rtcRestartFile) );
+            
+            model.RestartInput = rtcRestartFile;
+            
+            Assert.That( model.RestartInput, Is.SameAs(rtcRestartFile) );
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void SetRestartInputFromFile_CreatesInputRealTimeControlRestartFileWithNameAndContent()
+        {
+            var model = new RealTimeControlModel();
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
+                const string content = @"foo";
+                File.WriteAllText(restartFilePath, content);
+
+                Assert.That(model.RestartInput.IsEmpty, Is.True);
+                Assert.That(string.IsNullOrEmpty(model.RestartInput.Name), Is.True);
+
+                // Call
+                model.RestartInput = RealTimeControlRestartFile.CreateFromFile(restartFilePath);
+
+                // Assert
+                Assert.That(model.RestartInput.IsEmpty, Is.False);
+                Assert.That(model.RestartInput.Name, Is.EqualTo(Path.GetFileName(restartFilePath)));
+                Assert.That(model.RestartInput.Content, Is.EqualTo(content));
+            }
+        }
+
+        [Test]
+        public void UpgradeOfOldRestartInput_InvokingRestartInput_SetsInputRealTimeControlRestartFile()
+        {
+            // Setup
+            var model = new RealTimeControlModelWithAccessibleRestartInput();
+            var restartFile = new RealTimeControlRestartFile("dummy.path", "content");
+
+            // Call
+            model.InvokeProtectedRestartInput(restartFile);
+
+            // Assert
+            Assert.That(model.RestartInput, Is.SameAs(restartFile));
+        }
+
+
+        [Test]
         public void Constructor_RealTimeControlModelShouldBeInstanceOfICoupledModel()
         {
             // Arrange, Act
@@ -1461,6 +1543,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void CopyTo_ForCurrentOutputDirectoryIsNull_ShouldDoNothing()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -1623,8 +1706,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
-                Assert.AreEqual(1, rtcModel.RestartOutput.Count);
-                Assert.AreEqual(Path.Combine(projectDirectoryAfterSave, rtcModel.Name, DirectoryNameConstants.OutputDirectoryName, workingDirectoryOutputRestartFileName), rtcModel.RestartOutput[0].Path);
+                Assert.AreEqual(1, rtcModel.RestartOutput.Count());
+                Assert.AreEqual(workingDirectoryOutputRestartFileName, rtcModel.RestartOutput.First().Name);
             }
         }
 
@@ -1659,8 +1742,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
-                Assert.AreEqual(1, rtcModel.RestartOutput.Count);
-                Assert.AreEqual(Path.Combine(projectDirectoryAfterSave, rtcModel.Name, DirectoryNameConstants.OutputDirectoryName, workingDirectoryOutputRestartFileName), rtcModel.RestartOutput[0].Path);
+                Assert.AreEqual(1, rtcModel.RestartOutput.Count());
+                Assert.AreEqual(workingDirectoryOutputRestartFileName, rtcModel.RestartOutput.First().Name);
             }
         }
 
@@ -1699,8 +1782,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
-                Assert.AreEqual(1, rtcModel.RestartOutput.Count);
-                Assert.AreEqual(Path.Combine(projectDirectoryAfterSaveAs, rtcModel.Name, DirectoryNameConstants.OutputDirectoryName, workingDirectoryOutputRestartFileName), rtcModel.RestartOutput[0].Path);
+                Assert.AreEqual(1, rtcModel.RestartOutput.Count());
+                Assert.AreEqual(workingDirectoryOutputRestartFileName, rtcModel.RestartOutput.First().Name);
             }
         }
 
@@ -1726,8 +1809,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(pathPersistentFolder, ((IFileBased) rtcModel).Path);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
-                Assert.AreEqual(1, rtcModel.RestartOutput.Count);
-                Assert.AreEqual(Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, DirectoryNameConstants.OutputDirectoryName, persistentOutputRestartFileName), rtcModel.RestartOutput[0].Path);
+                Assert.AreEqual(1, rtcModel.RestartOutput.Count());
+                Assert.AreEqual(persistentOutputRestartFileName, rtcModel.RestartOutput.First().Name);
             }
         }
 
@@ -2425,6 +2508,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             gui.Plugins.Add(new RealTimeControlGuiPlugin());
 
             gui.Run();
+        }
+
+        /// <summary>
+        /// This class allows to invoke the protected setter for RestartInput which is called when upgrading the model to v3.9.0.0
+        /// </summary>
+        internal class RealTimeControlModelWithAccessibleRestartInput : RealTimeControlModel
+        {
+            public void InvokeProtectedRestartInput(RealTimeControlRestartFile restartFile)
+            {
+                RestartInput = restartFile;
+            }
         }
 
         # endregion

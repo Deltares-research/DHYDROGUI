@@ -11,6 +11,7 @@ using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using GeoAPI.Extensions.CoordinateSystems;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
@@ -79,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var classMapFileNodePresenter = Contains<FMClassMapFileFunctionStoreNodePresenter>(nodePresenters);
             Assert.That(classMapFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
 
-            var restartFileNodePresenter = Contains<RestartFileNodePresenter>(nodePresenters);
+            var restartFileNodePresenter = Contains<RestartFileNodePresenter<WaterFlowFMRestartFile>>(nodePresenters);
             Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
         }
 

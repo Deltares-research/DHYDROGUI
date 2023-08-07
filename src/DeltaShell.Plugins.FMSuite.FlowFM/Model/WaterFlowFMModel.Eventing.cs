@@ -13,7 +13,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -901,7 +900,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 OutputClassMapFileStore = null;
             }
 
-            RestartOutput = Enumerable.Empty<RestartFile>();
+            listOfOutputRestartFiles.Clear();
             RemoveOutputTextDocumentDataItem();
         }
 

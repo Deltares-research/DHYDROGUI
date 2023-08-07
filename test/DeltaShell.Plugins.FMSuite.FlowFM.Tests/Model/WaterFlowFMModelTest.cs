@@ -20,7 +20,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
@@ -35,6 +34,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
@@ -1762,13 +1762,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Setup
             var model = new WaterFlowFMModel();
-            var restartFile = new RestartFile();
+            var restartFile = new WaterFlowFMRestartFile();
 
             // Call
             model.RestartInput = restartFile;
 
             // Assert
             Assert.That(model.RestartInput, Is.SameAs(restartFile));
+        }
+
+        [Test]
+        public void SetRestartInputToDuplicateOf_ThrowsOnNullArgument()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+
+            // Call
+            void Call() => model.SetRestartInputToDuplicateOf(null);
+
+            // Assert
+            Assert.Throws<ArgumentNullException>(Call);
+        }
+
+        [Test]
+        public void SetRestartInputToDuplicateOf_CreatesCopyOfInput()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartFile = new WaterFlowFMRestartFile( "path/to/file.ext" );
+            Assert.That(model.RestartInput.Path, Is.Not.EqualTo(restartFile.Path));
+
+            // Call
+            model.SetRestartInputToDuplicateOf(restartFile);
+
+            // Assert
+            Assert.That(model.RestartInput, Is.Not.SameAs(restartFile));
+            Assert.That(model.RestartInput.Path, Is.EqualTo(restartFile.Path));
+            Assert.That(model.RestartInput.Name, Is.EqualTo(restartFile.Name));
+            Assert.That(model.RestartInput.IsEmpty, Is.EqualTo(restartFile.IsEmpty));
         }
 
         [Test]
@@ -2062,7 +2093,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void GetUseRestart_ReturnsCorrectResult(string filePath, bool expected)
         {
             // Setup
-            var model = new WaterFlowFMModel {RestartInput = new RestartFile(filePath)};
+            var model = new WaterFlowFMModel {RestartInput = new WaterFlowFMRestartFile(filePath)};
 
             // Call
             bool result = model.UseRestart;

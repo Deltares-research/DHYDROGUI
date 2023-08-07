@@ -113,11 +113,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
             }
 
             IRealTimeControlModel model = GetRealTimeControlModelWithRestartInput(target);
-
-            RealTimeControlRestartFile restartFile = model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(path), File.ReadAllText(path));
+            
+            model.RestartInput = RealTimeControlRestartFile.CreateFromFile(path);
             model.MarkOutputOutOfSync();
             
-            return restartFile;
+            return model.RestartInput;
         }
 
         private IRealTimeControlModel GetRealTimeControlModelWithRestartInput(object obj)

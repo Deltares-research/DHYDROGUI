@@ -4,7 +4,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -12,7 +12,7 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
-    public interface IRealTimeControlModel : ITimeDependentModel, IEditableObject
+    public interface IRealTimeControlModel : IRestartModel<RealTimeControlRestartFile>, ITimeDependentModel, IEditableObject
     {
         IEventedList<ControlGroup> ControlGroups { get; set; }
 
@@ -23,11 +23,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         DateTime SaveStateStartTime { get; set; }
         TimeSpan SaveStateTimeStep { get; set; }
         DateTime SaveStateStopTime { get; set; }
-
-        bool WriteRestart { get; set; }
-        bool UseRestart { get; }
-        RealTimeControlRestartFile RestartInput { get; set; }
-        IEventedList<RestartFile> RestartOutput { get; }
 
         /// <summary>
         /// Query connectable locations from controlled models.

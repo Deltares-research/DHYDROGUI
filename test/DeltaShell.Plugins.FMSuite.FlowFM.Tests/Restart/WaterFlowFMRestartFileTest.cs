@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using NUnit.Framework;
 
-namespace DeltaShell.NGHS.Common.Tests.IO.Restart
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
 {
     [TestFixture]
-    public class RestartFileTest
+    public class WaterFlowFMRestartFileTest
     {
         [Test]
         public void Constructor_Default_InitializesInstanceCorrectly()
         {
             // Call
-            var restartFile = new RestartFile();
+            var restartFile = new WaterFlowFMRestartFile();
 
             // Assert
             Assert.That(restartFile.Path, Is.EqualTo(null));
@@ -28,7 +27,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
         public void Constructor_InitializesInstanceCorrectly(string argPath, string expPath, string expName, bool expIsEmpty)
         {
             // Call
-            var restartFile = new RestartFile(argPath);
+            var restartFile = new WaterFlowFMRestartFile(argPath);
 
             // Assert
             Assert.That(restartFile.Path, Is.EqualTo(expPath));
@@ -43,7 +42,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             string path = $"c:/{invalidCharacter}folder_path";
 
             // Call
-            void Call() => new RestartFile(path);
+            void Call() => new WaterFlowFMRestartFile(path);
 
             // Assert
             Assert.Throws<ArgumentException>(Call);
@@ -56,7 +55,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             string path = "c:/:folder_path";
 
             // Call
-            void Call() => new RestartFile(path);
+            void Call() => new WaterFlowFMRestartFile(path);
 
             // Assert
             Assert.Throws<NotSupportedException>(Call);
@@ -66,7 +65,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
         public void Constructor_EmptyString_ThrowsArgumentException()
         {
             // Call
-            void Call() => new RestartFile(string.Empty);
+            void Call() => new WaterFlowFMRestartFile(string.Empty);
 
             // Assert
             Assert.Throws<ArgumentException>(Call);
@@ -82,7 +81,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             using (var tempDir = new TemporaryDirectory())
             {
                 string origFile = tempDir.CreateFile("the.file");
-                var restartFile = new RestartFile(origFile);
+                var restartFile = new WaterFlowFMRestartFile(origFile);
 
                 // Call
                 restartFile.CopyToDirectory(targetDir, switchTo);
@@ -100,7 +99,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
         public void CopyToDirectory_FileDoesNotExist_Returns(string path, bool switchTo)
         {
             // Setup
-            var restartFile = new RestartFile(path);
+            var restartFile = new WaterFlowFMRestartFile(path);
 
             // Call
             restartFile.CopyToDirectory("some/folder", switchTo);
@@ -118,7 +117,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             {
                 string origFile = tempDir.CreateFile("the.file");
 
-                var restartFile = new RestartFile(origFile);
+                var restartFile = new WaterFlowFMRestartFile(origFile);
 
                 string targetDir = Path.Combine(tempDir.Path, "target_dir");
 
@@ -141,7 +140,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             {
                 string origFile = tempDir.CreateFile("the.file");
 
-                var restartFile = new RestartFile(origFile);
+                var restartFile = new WaterFlowFMRestartFile(origFile);
 
                 string targetDir = tempDir.CreateDirectory("target_dir");
 
@@ -155,26 +154,11 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             }
         }
 
-        [TestCase(null)]
-        [TestCase("path/to/the.file")]
-        public void Clone_ReturnsCorrectClone(string path)
-        {
-            // Setup
-            var restartFile = new RestartFile(path);
-
-            // Call
-            RestartFile clone = restartFile.Clone();
-
-            // Assert
-            Assert.That(clone, Is.Not.SameAs(restartFile));
-            Assert.That(clone.Path, Is.EqualTo(path));
-        }
-
         [Test]
         public void Exists_ShouldReturnFalseIfFileDoesNotExistCurrently()
         {
             // Setup
-            var restartFile = new RestartFile("NotExistingRestartFile_rst.nc");
+            var restartFile = new WaterFlowFMRestartFile("NotExistingRestartFile_rst.nc");
 
             // Call
             bool fileExists = restartFile.Exists;
@@ -192,7 +176,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
                 string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
                 File.WriteAllText(restartFilePath, "test");
 
-                var restartFile = new RestartFile(restartFilePath);
+                var restartFile = new WaterFlowFMRestartFile(restartFilePath);
 
                 // Call
                 bool fileExists = restartFile.Exists;
@@ -210,9 +194,9 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
                 // Setup
                 string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
                 File.WriteAllText(restartFilePath, "test");
-                
-                var restartFile = new RestartFile(restartFilePath);
-                
+
+                var restartFile = new WaterFlowFMRestartFile(restartFilePath);
+
                 // Call
                 File.Delete(restartFilePath);
                 bool fileExists = restartFile.Exists;
@@ -229,8 +213,8 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             {
                 // Setup
                 string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
-                
-                var restartFile = new RestartFile(restartFilePath);
+
+                var restartFile = new WaterFlowFMRestartFile(restartFilePath);
 
                 // Call
                 File.WriteAllText(restartFilePath, "test");
@@ -241,8 +225,35 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             }
         }
 
+        [Test]
+        public void CopyConstructor_ArgNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new WaterFlowFMRestartFile((WaterFlowFMRestartFile)null);
 
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
 
+        [Test]
+        public void CopyConstructor_FromInstance_CreatesCopy()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                string path = Path.Combine(temp.Path, "some_file_rst.nc");
+                var source = new WaterFlowFMRestartFile(path);
+
+                // Call
+                var copy = new WaterFlowFMRestartFile(source);
+
+                // Assert
+                Assert.That(copy.Name, Is.EqualTo(source.Name));
+                Assert.That(copy.IsEmpty, Is.EqualTo(source.IsEmpty));
+                Assert.That(copy.Exists, Is.EqualTo(source.Exists));
+                Assert.That(copy.Path, Is.EqualTo(source.Path));
+            }
+        }
+        
         private static IEnumerable<TestCaseData> GetPathTestCases()
         {
             yield return new TestCaseData(null, null, string.Empty, true);

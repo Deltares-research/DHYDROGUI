@@ -5,11 +5,12 @@ using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Restart;
 using DeltaShell.NGHS.Common.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -138,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Coordinate System", issues);
         }
 
-        private static ValidationReport ValidateRestartInput(IRestartModel model)
+        private static ValidationReport ValidateRestartInput(IRestartModel<WaterFlowFMRestartFile> model)
         {
             if (!model.UseRestart)
             {

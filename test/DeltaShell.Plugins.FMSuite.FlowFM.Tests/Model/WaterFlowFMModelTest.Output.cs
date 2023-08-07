@@ -8,9 +8,9 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DHYDRO.TestModels.DFlowFM;
 using NUnit.Framework;
 
@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 model.ConnectOutput(tempDir.Path);
 
                 // Assert
-                RestartFile[] restartOutput = model.RestartOutput.ToArray();
+                WaterFlowFMRestartFile[] restartOutput = model.RestartOutput.ToArray();
                 Assert.That(restartOutput, Has.Length.EqualTo(5));
 
                 for (var i = 0; i < 5; i++)

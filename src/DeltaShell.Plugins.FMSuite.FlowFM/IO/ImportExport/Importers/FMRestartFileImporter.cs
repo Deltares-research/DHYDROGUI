@@ -6,28 +6,30 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
+using WaterFlowFMRestartModel = DeltaShell.NGHS.Common.Restart.IRestartModel<DeltaShell.Plugins.FMSuite.FlowFM.Restart.WaterFlowFMRestartFile>;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
+    
     /// <summary>
     /// Importer for importing restart files for D-Flow FM models.
     /// </summary>
     /// <seealso cref="IFileImporter"/>
     public class FMRestartFileImporter : IFileImporter
     {
-        private readonly Func<IEnumerable<IRestartModel>> getModels;
+        private readonly Func<IEnumerable<WaterFlowFMRestartModel>> getModels;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMRestartFileImporter"/> class.
         /// </summary>
-        /// <param name="getModels">Func to retrieve the available collection of <seealso cref="IRestartModel"/>.</param>
+        /// <param name="getModels">Func to retrieve the available collection of <seealso cref="WaterFlowFMRestartModel"/>.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="getModels"/> is <c>null</c>.
         /// </exception>
-        public FMRestartFileImporter(Func<IEnumerable<IRestartModel>> getModels)
+        public FMRestartFileImporter(Func<IEnumerable<WaterFlowFMRestartModel>> getModels)
         {
             Ensure.NotNull(getModels, nameof(getModels));
 
@@ -51,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         {
             get
             {
-                yield return typeof(RestartFile);
+                yield return typeof(WaterFlowFMRestartFile);
             }
         }
 
@@ -78,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// </summary>
         /// <param name="targetObject">Target object to check.</param>
         /// <returns>
-        /// <c>true</c> when the <paramref name="targetObject"/> is a <see cref="RestartFile"/>;
+        /// <c>true</c> when the <paramref name="targetObject"/> is a <see cref="WaterFlowFMRestartFile"/>;
         /// otherwise, <c>false</c>.
         /// </returns>
         public bool CanImportOn(object targetObject) => GetModel(targetObject) != null;
@@ -89,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// <param name="path"> The path of the restart file. </param>
         /// <param name="target"> The target restart file. </param>
         /// <returns>
-        /// The imported <seealso cref="RestartFile"/>.
+        /// The imported <seealso cref="WaterFlowFMRestartFile"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="target"/> is <c>null</c>.
@@ -114,9 +116,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 throw new FileNotFoundException($"Restart file does not exist: {path}");
             }
 
-            IRestartModel model = GetModel(target);
+            WaterFlowFMRestartModel model = GetModel(target);
 
-            model.RestartInput = new RestartFile(path);
+            model.RestartInput = new WaterFlowFMRestartFile(path);
 
             if (model is ITimeDependentModel timeDependentModel)
             {
@@ -126,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             return model.RestartInput;
         }
 
-        private IRestartModel GetModel(object obj)
+        private WaterFlowFMRestartModel GetModel(object obj)
         {
             return getModels().FirstOrDefault(m => m.RestartInput == obj);
         }

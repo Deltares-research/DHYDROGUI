@@ -7,7 +7,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Grid;
@@ -20,6 +19,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NetTopologySuite.Extensions.Grids;
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (string.IsNullOrEmpty(restartFilePath))
             {
-                RestartInput = new RestartFile();
+                RestartInput = new WaterFlowFMRestartFile();
                 return;
             }
 
@@ -245,7 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return;
             }
 
-            RestartInput = new RestartFile(restartFilePath);
+            RestartInput = new WaterFlowFMRestartFile(restartFilePath);
         }
 
         private void ImportSpatialOperationsAfterCreating()

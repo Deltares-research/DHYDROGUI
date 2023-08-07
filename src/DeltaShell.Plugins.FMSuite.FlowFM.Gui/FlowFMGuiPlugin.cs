@@ -26,7 +26,6 @@ using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
-using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -41,6 +40,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new HeatFluxModelNodePresenter { GuiPlugin = this };
             yield return new WindItemListNodePresenter { GuiPlugin = this };
             yield return new WindItemNodePresenter { GuiPlugin = this };
-            yield return new RestartFileNodePresenter(this);
+            yield return new RestartFileNodePresenter<WaterFlowFMRestartFile>(this);
 
             yield return new Feature2DPolygonTreeViewNodePresenter { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroAreaLayerNames.LandBoundariesPluralName, Properties.Resources.landboundary) { GuiPlugin = this };
