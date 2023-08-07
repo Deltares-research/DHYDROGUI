@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DHYDRO.Common.Guards;
 
 namespace DHYDRO.Common.Extensions
@@ -80,6 +81,21 @@ namespace DHYDRO.Common.Extensions
             }
 
             return source.Substring(startIndex + 1, endIndex - startIndex - 1);
+        }
+
+        /// <summary>
+        /// Determines whether the given string contains any whitespace character.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns>
+        /// <c>True</c> if any character in the given string is a whitespace character. <c>False</c> otherwise.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> is <c>null</c>.</exception>
+        public static bool ContainsWhitespace(this string source)
+        {
+            Ensure.NotNull(source, nameof(source));
+            
+            return source.Any(char.IsWhiteSpace);
         }
     }
 }

@@ -151,6 +151,40 @@ namespace DHYDRO.Common.Tests.Extensions
             Assert.That(result, Is.EqualTo("def"));
         }
 
+        [Test]
+        public void ContainsWhitespace_ArgumentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            string source = null;
+
+            // Call
+            void Call() => source.ContainsWhitespace();
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetContainsWhitespaceCases))]
+        public void ContainsWhitespace_ReturnsExpectedResult(string input, bool expectedResult)
+        {
+            // Call
+            bool result = input.ContainsWhitespace();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        private static IEnumerable<TestCaseData> GetContainsWhitespaceCases()
+        {
+            yield return new TestCaseData(string.Empty, false).SetName("Empty string");
+            yield return new TestCaseData("StringWithNoWhitespace", false).SetName("Without whitespace");
+            yield return new TestCaseData("String with whitespace", true).SetName("With spaces");
+            yield return new TestCaseData(" ", true).SetName("Regular whitespace");
+            yield return new TestCaseData("\t", true).SetName("Tab");
+            yield return new TestCaseData("\n", true).SetName("New line");
+        }
+
         private static IEnumerable<TestCaseData> SplitOnEmptySpaceSplitStringCorrectlyCases()
         {
             yield return new TestCaseData("", Array.Empty<string>());
