@@ -466,14 +466,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten.Contains(SedimentFile.GeneralHeader));
-                Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
+                Assert.That(sedWritten, Is.Not.Contains("SedConc"));
                 Assert.That(sedWritten.Contains("#mysedimentName#"));
-                Assert.That(sedWritten, Is.Not.StringContaining("#mysedimentName_SedConc#"));
-                Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
+                Assert.That(sedWritten, Is.Not.Contains("#mysedimentName_SedConc#"));
+                Assert.That(sedWritten, Is.Not.Contains("12.3"));
 
                 Assert.That(sedWritten.Contains("IniSedThick"));
                 Assert.That(sedWritten.Contains("#mysedimentName_IniSedThick.xyz#"));
-                Assert.That(sedWritten, Is.Not.StringContaining("80.1"));
+                Assert.That(sedWritten, Is.Not.Contains("80.1"));
 
                 Assert.IsFalse(File.Exists(generatedXyzFile));
                 
@@ -853,14 +853,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(sedWritten.Contains("#mysedimentName#"));
                 
                 /* Sed conc is in ExtForceFile */
-                Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
-                Assert.That(sedWritten, Is.Not.StringContaining("#mysedimentName_SedConc#"));
+                Assert.That(sedWritten, Is.Not.Contains("SedConc"));
+                Assert.That(sedWritten, Is.Not.Contains("#mysedimentName_SedConc#"));
                 
                 /* Custom property */
                 Assert.That(sedWritten.Contains("IniSed"));
                 Assert.That(sedWritten.Contains("#mysedimentName_IniSedThick.xyz#"));
 
-                Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
+                Assert.That(sedWritten, Is.Not.Contains("12.3"));
 
                 Assert.IsTrue(File.Exists(generatedXyzFile));
             }

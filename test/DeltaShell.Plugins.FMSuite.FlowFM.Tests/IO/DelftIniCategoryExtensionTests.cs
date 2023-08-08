@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             category.AddSedimentProperty(SedimentFile.Name.Key,"MyValue","","");
             var addedProperty = category.Properties.FirstOrDefault();
             Assert.IsNotNull(addedProperty);
-            Assert.That(addedProperty.Value, Is.Not.StringContaining("#")); // Don't automaticlly add hashes, responsibility of caller!
+            Assert.That(addedProperty.Value, Is.Not.Contains("#")); // Don't automaticlly add hashes, responsibility of caller!
             Assert.AreEqual("MyValue", addedProperty.Value);
         }
     }
