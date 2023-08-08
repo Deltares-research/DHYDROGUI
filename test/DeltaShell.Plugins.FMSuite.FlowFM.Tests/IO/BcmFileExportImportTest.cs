@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists("sedimentBedLoadTransport.bcm"));
 
             string fileText = File.ReadAllText("sedimentBedLoadTransport.bcm");
-            Assert.That(fileText, Does.Contain("frac1").And.StringContaining("frac2"));
+            Assert.That(fileText, Does.Contain("frac1").And.Contains("frac2"));
 
             //Import
             var importer = new BcmFileImporter

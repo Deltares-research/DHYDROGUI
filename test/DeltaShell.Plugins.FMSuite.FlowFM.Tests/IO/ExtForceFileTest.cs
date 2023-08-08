@@ -469,8 +469,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(extWritten, Does.Contain("QUANTITY=initialsedfracmysedimentName"));
                 Assert.That(extWritten, Does.Contain("FILENAME=mysedimentName_SedConc.xyz"));
                 /* Nothing related to the customProp */
-                Assert.That(extWritten, Is.Not.StringContaining("mysedimentName_IniSedThick"));
-                Assert.That(extWritten, Is.Not.StringContaining("IniSedThick"));
+                Assert.That(extWritten, Is.Not.Contains("mysedimentName_IniSedThick"));
+                Assert.That(extWritten, Is.Not.Contains("IniSedThick"));
 
                 Assert.IsTrue(File.Exists(sedConcXyzFile));
                 Assert.IsFalse(File.Exists(customPropXyzFile));

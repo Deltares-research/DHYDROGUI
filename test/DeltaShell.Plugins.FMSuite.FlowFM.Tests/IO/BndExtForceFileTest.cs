@@ -944,9 +944,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists(extFileName));
             string fileText = File.ReadAllText(extFileName);
             Assert.That(fileText, Does.Contain(BndExtForceFileConstants.BoundaryBlockKey)
-                                    .And.StringContaining(BndExtForceFileConstants.QuantityKey + "=" + ExtForceQuantNames.ConcentrationAtBound + "frac1")
-                                    .And.StringContaining(BndExtForceFileConstants.LocationFileKey + "=" + "L1.pli")
-                                    .And.StringContaining(BndExtForceFileConstants.ForcingFileKey + "=" + "frac1.bc"));
+                                    .And.Contains(BndExtForceFileConstants.QuantityKey + "=" + ExtForceQuantNames.ConcentrationAtBound + "frac1")
+                                    .And.Contains(BndExtForceFileConstants.LocationFileKey + "=" + "L1.pli")
+                                    .And.Contains(BndExtForceFileConstants.ForcingFileKey + "=" + "frac1.bc"));
 
             //check to see if only 2 boundaries are written
             Assert.AreEqual(2, new Regex(Regex.Escape(BndExtForceFileConstants.BoundaryBlockKey)).Matches(fileText).Count);
@@ -955,10 +955,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             fileText = File.ReadAllText("frac1.bc");
             Assert.That(fileText, Does.Contain(ExtForceQuantNames.ConcentrationAtBound + "frac1")
-                                    .And.StringContaining("bound_0001")
-                                    .And.StringContaining(BcFile.BlockKey)
-                                    .And.StringContaining(BcFile.QuantityKey)
-                                    .And.StringContaining("36").And.StringContaining("18"));
+                                    .And.Contains("bound_0001")
+                                    .And.Contains(BcFile.BlockKey)
+                                    .And.Contains(BcFile.QuantityKey)
+                                    .And.Contains("36").And.Contains("18"));
         }
 
         [Test]
