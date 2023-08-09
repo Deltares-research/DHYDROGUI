@@ -414,7 +414,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string exportDirectory = System.IO.Path.GetDirectoryName(targetMduFilePath);
 
-            string extFileName = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
+            string extFilePath = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
+            string extFileName = System.IO.Path.GetFileName(extFilePath);
             if (string.IsNullOrEmpty(extFileName))
             {
                 extFileName = modelDefinition.ModelName + FileConstants.ExternalForcingFileExtension;
