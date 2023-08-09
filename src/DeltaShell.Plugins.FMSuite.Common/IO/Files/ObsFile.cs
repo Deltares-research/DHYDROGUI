@@ -6,7 +6,6 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
-using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
@@ -17,20 +16,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             using (CultureUtils.SwitchToInvariantCulture())
             {
                 OpenOutputFile(obsFilePath);
-                
                 try
                 {
                     foreach (T observationPoint in observationPoints)
                     {
                         if (includeName)
                         {
-                            var stringFormat = "{0,24} {1,24} {2}";
-                            if (ContainsCommaOrWhiteSpace(observationPoint.Name))
-                            {
-                                stringFormat = "{0,24} {1,24} '{2}'";
-                            }
-
-                            WriteLine(string.Format(stringFormat,
+                            WriteLine(string.Format("{0,24} {1,24} '{2}'",
                                                     observationPoint.X, observationPoint.Y,
                                                     observationPoint.Name));
                         }
@@ -46,12 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     CloseOutputFile();
                 }
             }
-        }
-
-        private static bool ContainsCommaOrWhiteSpace(string observationPointName)
-        {
-            return observationPointName.Contains(',')
-                   || observationPointName.ContainsWhitespace();
         }
 
         public IEventedList<T> Read(string obsFilePath, bool includeName = true)
