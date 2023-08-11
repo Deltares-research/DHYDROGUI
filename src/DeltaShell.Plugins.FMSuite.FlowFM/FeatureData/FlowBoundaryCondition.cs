@@ -571,7 +571,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             Factor = 1;
             ThatcherHarlemanTimeLag = TimeSpan.Zero;
             verticalInterpolationType = SupportedVerticalInterpolationTypes.First();
+            TimeZone = TimeSpan.Zero;
         }
+
+
+        /// <summary>
+        /// Gets and Sets the timezone of the <see cref="FlowBoundaryCondition"/>.
+        /// </summary>
+        public TimeSpan TimeZone { get; set; }
 
         /// <summary>
         /// Gets the name of the flow boundary quantity type.

@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             quantityNameToTypeDictionary;
 
         protected override BcQuantityData CreateBcQuantityDataForArgument(
-            string quantity, IVariable argument, DateTime? referenceTime)
+            string quantity, IVariable argument, DateTime? referenceTime, TimeSpan timeZone)
         {
             var refTime = "";
             Func<double, double> converter = null;

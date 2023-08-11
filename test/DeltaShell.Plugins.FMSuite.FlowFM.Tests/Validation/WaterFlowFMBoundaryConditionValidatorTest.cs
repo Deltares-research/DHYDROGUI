@@ -7,6 +7,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
@@ -97,6 +98,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             ValidationReport report = WaterFlowFMBoundaryConditionValidator.Validate(model);
 
             Assert.AreEqual(1, report.ErrorCount);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TimeSeriesSpansModelTimeSeriesWithTimeZones))]
+        public void GivenTimeSeriesThatSpansModelTimeSeriesWithTimeZones_whenValidating_ThenReturnNoErrors(TimeSpan modelTimeZone, TimeSpan boundaryConditionTimeZone)
+        {
+            WaterFlowFMModel model = CreateModelWithTimeZones(boundaryConditionTimeZone, modelTimeZone);
+
+            ValidationReport report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+
+            Assert.AreEqual(0, report.ErrorCount);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TimeSeriesDoesNotSpanModelTimeSeriesWithTimeZones))]
+        public void GivenTimeSeriesThatDoesNotSpanModelTimeSeriesWithTimeZones_whenValidating_ThenReturnOneError(TimeSpan modelTimeZone, TimeSpan boundaryConditionTimeZone)
+        {
+            WaterFlowFMModel model = CreateModelWithTimeZones(boundaryConditionTimeZone, modelTimeZone);
+
+            ValidationReport report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+
+            string expectedMessage = string.Format(
+                "Time series does not span model run interval for {0} at point {1}.",
+                model.BoundaryConditions.First().VariableDescription, "boundary_0002");
+
+            Assert.AreEqual(1, report.ErrorCount);
+            Assert.AreEqual(report.Issues.First().Message, expectedMessage);
+        }
+
+        private static WaterFlowFMModel CreateModelWithTimeZones(TimeSpan boundaryConditionTimeZone, TimeSpan modelTimeZone)
+        {
+            WaterFlowFMModel model = CreateValidModel();
+
+            var boundary = new Feature2D
+            {
+                Name = "boundary",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+            model.Boundaries.Add(boundary);
+
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries) { Feature = boundary };
+
+            model.BoundaryConditionSets[0].BoundaryConditions.Add(flowBoundaryCondition);
+            model.BoundaryConditions.First().AddPoint(1);
+            flowBoundaryCondition.TimeZone = boundaryConditionTimeZone;
+            SetModelTimeZone(model, modelTimeZone);
+
+            IFunction timeSeries = model.BoundaryConditions.First().GetDataAtPoint(1);
+            timeSeries[model.StartTime] = 0.5;
+            timeSeries[model.StopTime] = 0.5;
+            return model;
+        }
+
+        private static void SetModelTimeZone(WaterFlowFMModel model, TimeSpan modelTimeZone)
+        {
+            model.ModelDefinition.GetModelProperty(KnownProperties.TZone).Value = modelTimeZone.TotalHours;
         }
 
         [Test]
@@ -520,6 +577,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         Is.EqualTo(string.Format(
                                        Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_,
                                        model.BoundaryConditionSets[0].SupportPointNames[0], expectedName)));
+        }
+        
+        
+        [Test]
+        [TestCaseSource(nameof(TimeZonesOutSideOfRange))]
+        public void GivenTimeZoneOutSideRange_WhenValidating_ThenReturnMessageTimeZoneOutSideOfRange(TimeSpan timeZoneOutOfRange)
+        {
+            //Arrange
+            WaterFlowFMModel model = CreateValidModel();
+
+            var boundary = new Feature2D
+            {
+                Name = "boundary",
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 0)
+                })
+            };
+            model.Boundaries.Add(boundary);
+            
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries) {Feature = boundary};
+            AddPointDataToBoundaryCondition(flowBoundaryCondition, model);
+            flowBoundaryCondition.TimeZone = timeZoneOutOfRange;
+            SetModelTimeZone(model, timeZoneOutOfRange);
+            
+            
+            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[]
+            {
+                flowBoundaryCondition
+            });
+
+            string expectedReportMessage = string.Format(Resources.WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00, flowBoundaryCondition.VariableDescription);
+            
+            //Act
+            ValidationReport report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            
+            //Assert
+            Assert.AreEqual(1, report.ErrorCount);
+            Assert.That(report.Issues.First().Message, Is.EqualTo(expectedReportMessage));
+        }
+
+        private static IEnumerable<TestCaseData> TimeSeriesSpansModelTimeSeriesWithTimeZones()
+        {
+            yield return new TestCaseData(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 0));
+            yield return new TestCaseData(new TimeSpan(-1, 0, 0), new TimeSpan(-1, 0, 0));
+            yield return new TestCaseData(new TimeSpan(1, 0, 0), new TimeSpan(1, 0, 0));
+        }
+
+        private static IEnumerable<TestCaseData> TimeSeriesDoesNotSpanModelTimeSeriesWithTimeZones()
+        {
+            yield return new TestCaseData(new TimeSpan(0, 0, 0), new TimeSpan(-1, 0, 0));
+            yield return new TestCaseData(new TimeSpan(0, 0, 0), new TimeSpan(1, 0, 0));
+            yield return new TestCaseData(new TimeSpan(-1, 0, 0), new TimeSpan(0, 0, 0));
+            yield return new TestCaseData(new TimeSpan(1, 0, 0), new TimeSpan(0, 0, 0));
+            yield return new TestCaseData(new TimeSpan(1, 0, 0), new TimeSpan(-1, 0, 0));
+            yield return new TestCaseData(new TimeSpan(-1, 0, 0), new TimeSpan(1, 0, 0));
+        }
+        
+        private static IEnumerable<TestCaseData> TimeZonesOutSideOfRange()
+        {
+            yield return new TestCaseData(new TimeSpan(12,1,0));
+            yield return new TestCaseData(new TimeSpan(-12,-1,0));
         }
 
         private static WaterFlowFMModel CreateValidModel()

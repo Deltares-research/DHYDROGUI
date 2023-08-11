@@ -101,15 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Support point &apos;{0}&apos; contains a time zone offset, the time points will be adjusted to their equivalents in UTC..
-        /// </summary>
-        public static string BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset {
-            get {
-                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Morphology boundary condition bcm-file importer could not import data onto given target.
         /// </summary>
         public static string BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target {
@@ -1324,6 +1315,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_se" +
                         "ries_contains_forbidden_negative_values_for__0__at_point__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time zone of boundary condition &apos;{0}&apos; falls outside of allowed range -12:00 and +12:00.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00 {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone" +
+                        "_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00", resourceCulture);
             }
         }
         

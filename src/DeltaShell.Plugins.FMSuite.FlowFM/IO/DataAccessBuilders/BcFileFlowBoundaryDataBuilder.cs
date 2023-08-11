@@ -539,6 +539,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                     {
                                         variable.InterpolationType = daoDataBlock.InterpolationType;
                                     }
+
+                                    if (variable.ValueType == typeof(DateTime))
+                                    {
+                                        boundaryCondition.TimeZone = BcQuantityDataParsingHelper.ParseTimeZone(arg.Value.Unit, dataBlock.SupportPoint);
+                                    }
                                 }
 
                                 foreach (KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData> comp
@@ -721,13 +726,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         }
 
         protected virtual BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument,
-                                                                         DateTime? referenceTime)
+                                                                         DateTime? referenceTime, TimeSpan timeZone)
         {
             string unit = argument.Unit?.Symbol;
             Func<double, double> converter = null;
             if (argument.ValueType == typeof(DateTime) && referenceTime != null)
             {
-                unit = "seconds since " + referenceTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                unit = BcQuantityDataParsingHelper.GetDateTimeUnit(referenceTime.Value, timeZone);
             }
 
             if (argument.ValueType != typeof(double) || unit?.ToLower() != "deg/h")
@@ -1170,7 +1175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             foreach (IVariable argument in function.Arguments)
             {
                 string quantity = forcingTypeDefinition.ArgumentDefinitions[i++];
-                dataBlock.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime));
+                dataBlock.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime, boundaryCondition.TimeZone));
             }
 
             bool skipCorrection = BcFile.IsCorrectionType(((IBoundaryCondition)boundaryCondition).DataType) &&

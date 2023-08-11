@@ -31,6 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             verticalInterpolationComboBox.Items.AddRange(
                 Enum.GetValues(typeof(VerticalInterpolationType)).Cast<object>().ToArray());
             SubscribeEventHandlers();
+            TimeZoneTextBox.Text = TimeSpan.Zero.ToString();
         }
 
         public FlowBoundaryCondition BoundaryCondition
@@ -47,6 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 }
 
                 boundaryCondition = value;
+                UpdateTimeZoneTextBoxForBoundaryCondition();
                 UpdateDataTypeComboBoxForBoundaryCondition();
 
                 if (BoundaryCondition != null)
@@ -56,6 +58,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                 UpdateView();
             }
+        }
+
+        private void UpdateTimeZoneTextBoxForBoundaryCondition()
+        {
+            TimeZoneTextBox.Text = boundaryCondition == null ? TimeSpan.Zero.ToString() : boundaryCondition.TimeZone.ToString();
         }
 
         private void UpdateDataTypeComboBoxForBoundaryCondition()

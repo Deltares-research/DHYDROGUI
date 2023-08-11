@@ -7,6 +7,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Features;
 
@@ -132,7 +133,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                             boundaryConditionName);
                     }
                 }
+
+                ValidateBoundaryConditionTimeZone(issues, boundaryCondition, boundaryConditionName);
             }
+        }
+
+        private static void ValidateBoundaryConditionTimeZone(List<ValidationIssue> issues, FlowBoundaryCondition boundaryCondition, string boundaryConditionName)
+        {
+            if(OutsideAllowedTimeZoneRange(boundaryCondition))
+            {
+                issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
+                                               string.Format(Resources.WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00, boundaryConditionName),
+                                               boundaryCondition));
+            }
+        }
+
+        private static bool OutsideAllowedTimeZoneRange(FlowBoundaryCondition boundaryCondition)
+        {
+            return boundaryCondition.TimeZone > new TimeSpan(12, 0, 0) || boundaryCondition.TimeZone < new TimeSpan(-12, 0, 0);
         }
 
         private static void ValidateBoundaryConditionPointIndex(WaterFlowFMModel model, List<ValidationIssue> issues,
@@ -152,10 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         function.Arguments.First(a => a.ValueType == typeof(DateTime)).GetValues<DateTime>();
                     if (timeValues.Any())
                     {
-                        DateTime lowerBound = timeValues.First();
-                        DateTime upperBound = timeValues.Last();
-
-                        if (lowerBound > model.StartTime || upperBound < model.StopTime)
+                        if(!GivenTimeSeriesSpansModelTimeRange(model, boundaryCondition, timeValues))
                         {
                             issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
                                                            string.Format(
@@ -220,6 +235,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                                                  depthProfile, boundaryCondition,
                                                                                  supportPointName));
             }
+        }
+
+        private static bool GivenTimeSeriesSpansModelTimeRange(WaterFlowFMModel model, FlowBoundaryCondition boundaryCondition, IMultiDimensionalArray<DateTime> timeValues)
+        {
+            TimeSpan modelTimeZone = GetModelTimeZone(model); 
+            
+            DateTime modelStartTime = model.StartTime.Subtract(modelTimeZone); 
+            DateTime modelStopTime = model.StopTime.Subtract(modelTimeZone); 
+            
+            DateTime lowerBound = timeValues[0].Subtract(boundaryCondition.TimeZone); 
+            DateTime upperBound = timeValues[timeValues.Count-1].Subtract(boundaryCondition.TimeZone); 
+            
+            return lowerBound <= modelStartTime && upperBound >= modelStopTime;
+        }
+
+        private static TimeSpan GetModelTimeZone(WaterFlowFMModel model)
+        {
+            var tZone = (double)model.ModelDefinition.GetModelProperty(KnownProperties.TZone).Value;
+            TimeSpan timeZone = TimeSpan.FromHours(tZone);
+            return timeZone;
         }
 
         // Remove whenever the ec-module supports custom boundary point names

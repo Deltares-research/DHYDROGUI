@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
@@ -15,7 +14,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
     public static class BcQuantityDataParsingHelper
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(BcQuantityDataParsingHelper));
+
+        private const string dateFormat = "yyyy-MM-dd";
+        private const string dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        private const string dateTimeTimeZoneFormat = "yyyy-MM-dd HH:mm:ss zzz";
         
+        private static readonly string[] dateTimeFormats = { dateFormat, dateTimeFormat, dateTimeTimeZoneFormat };
+
         /// <summary>
         /// Parses the values of a time quantity/unit to a collection of <see cref="DateTime"/>.
         /// </summary>
@@ -40,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             if (splitFormat[1] == "since")
             {
                 string dateString = string.Join(" ", splitFormat.Skip(2));
-                DateTime startDate = TryParseDate(dateString, locationName);
+                DateTime startDate = TryParseDate(dateString, locationName).DateTime;
 
                 switch (splitFormat[0].ToLower())
                 {
@@ -65,7 +70,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             return Enumerable.Empty<DateTime>();
         }
-        
+
+        /// <summary>
+        /// Parses the values of a time quantity/unit to a timezone as <see cref="TimeSpan"/>.
+        /// </summary>
+        /// <param name="timeFormat">Time format from which a timezone is parsed.</param>
+        /// <param name="locationName">The data location name.</param>
+        /// <returns>
+        /// Timezone as <see cref="TimeSpan"/>, if an incorrect time format is given, <see cref="TimeSpan.Zero"/> is
+        /// returned.
+        /// </returns>
+        /// <exception cref="FormatException">Thrown when the time format is correct but the date time in this format is incorrect.</exception>
+        /// <example>An example of <paramref name="timeFormat"/> is <c>"seconds since 2000-01-01 00:00:00 +01:00"</c>.</example>
+        public static TimeSpan ParseTimeZone(string timeFormat, string locationName)
+        {
+            if (IncorrectTimeUnitFormat(timeFormat))
+            {
+                return TimeSpan.Zero;
+            }
+
+            List<string> splitTimeFormat = timeFormat.Split().ToList();
+            string dateString = string.Join(" ", splitTimeFormat.Skip(2));
+            TimeSpan timeZone = TryParseDate(dateString, locationName).Offset;
+
+            return timeZone;
+        }
+
+        /// <summary>
+        /// Gets the time quantity unit string based on the provided reference date time and time zone.
+        /// </summary>
+        /// <param name="referenceTime"><see cref="DateTime"/> used for the unit.</param>
+        /// <param name="timeZone"><see cref="TimeSpan"/> which is added as timezone.</param>
+        /// <returns>Expected DateTime Unit.</returns>
+        public static string GetDateTimeUnit(DateTime referenceTime, TimeSpan timeZone)
+        {
+            if (timeZone == TimeSpan.Zero)
+            {
+                return "seconds since " + referenceTime.ToString(dateTimeFormat);
+            }
+
+            var timeWithTimeZone = new DateTimeOffset(referenceTime, timeZone);
+            return "seconds since " + timeWithTimeZone.ToString(dateTimeTimeZoneFormat);
+        }
+
         public static InterpolationType ParseTimeInterpolationType(BcBlockData dataBlock)
         {
             if (string.IsNullOrEmpty(dataBlock.TimeInterpolationType) ||
@@ -83,28 +130,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                           dataBlock.TimeInterpolationType);
             throw new NotSupportedException($"Not able to map {dataBlock.TimeInterpolationType} to any valid type.");
         }
-        
-        private static DateTime TryParseDate(string dateString, string supportPointName)
-        {
-            bool dateParsed = DateTime.TryParseExact(dateString, new[]
-                                                     {
-                                                         "yyyy-MM-dd",
-                                                         "yyyy-MM-dd HH:mm:ss",
-                                                         "yyyy-MM-dd HH:mm:ss zzz"
-                                                     },
-                                                     CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal,
-                                                     out DateTime startDate);
 
+        private static bool IncorrectTimeUnitFormat(string format)
+        {
+            return string.IsNullOrEmpty(format) || format == "-" || !format.Contains("since");
+        }
+
+        private static DateTimeOffset TryParseDate(string dateString, string supportPointName)
+        {
+
+            bool dateParsed = DateTimeOffset.TryParseExact(dateString, dateTimeFormats,
+                                                          CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
+                                                          out DateTimeOffset dateTimeOffset);
+            
             if (!dateParsed)
             {
                 throw new FormatException("Time format '" + dateString + "' in support point '" + supportPointName + "' is not supported by bc file parser");
             }
-
-            CheckForTimezoneOffset(dateString, supportPointName);
-
-            return startDate;
+            
+            return dateTimeOffset;
         }
-        
+
         private static DateTime ConvertToTime(string offsetValue, long offsetFactor, DateTime startDate)
         {
             // 1 Tick is 100 nanoseconds, as such there are 10 million ticks in a second.
@@ -112,19 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             long nTicks = nTicksPerSecond * offsetFactor * Convert.ToInt64(double.Parse(offsetValue));
             return startDate + new TimeSpan(nTicks);
         }
-        
-        private static void CheckForTimezoneOffset(string dateString, string supportPointName)
-        {
-            bool offsetParsed = DateTimeOffset.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss zzz",
-                                                             CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
-                                                             out DateTimeOffset dateTimeOffset);
 
-            if (offsetParsed && dateTimeOffset.Offset.Ticks != 0)
-            {
-                Log.Warn(string.Format(Resources.BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset, supportPointName));
-            }
-        }
-        
         private static void LogWarningParsePropertyFailed(BcBlockData dataBlock, string propertyName,
                                                           string propertyValue)
         {

@@ -1318,9 +1318,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
         }
 
         [Test]
-        [TestCase("seconds since 1992-09-01 18:00:00 +04:40")]
-        [TestCase("seconds since 1992-09-01 18:00:00 -10:12")]
-        public void GivenABoundaryConditionSetAndABcBlockDataWithTimeZoneOffset_WhenInsertBoundaryDataIsCalled_ThenWarningLogged(string timeUnit)
+        [TestCaseSource(nameof(BcBlockDataWithTimeZoneOffset))]
+        public void GivenABoundaryConditionSetAndABcBlockDataWithTimeZoneOffset_WhenInsertBoundaryDataIsCalled_ThenTimeZoneIsExpectedTimeZone(string timeUnit, TimeSpan expectedTimeZone)
         {
             // Given
             const string boundaryName = "tfl_01_0001";
@@ -1331,16 +1330,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSetWithFlowBoundaryCondition(boundaryName, "sand");
 
             // When
-            void TestAction()
+            builder.InsertBoundaryData(new[]
             {
-                builder.InsertBoundaryData(new[]
-                {
-                    boundaryConditionSet
-                }, dataBlock);
-            }
+                boundaryConditionSet
+            }, dataBlock);
 
             // Then
-            TestHelper.AssertLogMessageIsGenerated(TestAction, "Support point 'tfl_01_0001_0001' contains a time zone offset, the time points will be adjusted to their equivalents in UTC.");
+            var flowBoundaryCondition = boundaryConditionSet.BoundaryConditions[1] as FlowBoundaryCondition;
+            Assert.That(flowBoundaryCondition, Is.Not.Null);
+            Assert.That(flowBoundaryCondition.TimeZone, Is.EqualTo(expectedTimeZone));
         }
 
         [TestCase("sand", "sand", 1)]
@@ -1374,6 +1372,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                           NoBoundaryWithSedimentFractionMessage(firstSedimentFractionName));
             Assert.IsTrue(sedimentFractionNames.Contains(secondSedimentFractionName),
                           NoBoundaryWithSedimentFractionMessage(secondSedimentFractionName));
+        }
+        
+        public static IEnumerable<TestCaseData> BcBlockDataWithTimeZoneOffset()
+        {
+            yield return new TestCaseData("seconds since 1992-09-01 18:00:00 +04:40", new TimeSpan(4,40,0));
+            yield return new TestCaseData("seconds since 1992-09-01 18:00:00 -10:12", new TimeSpan(-10,-12,0));
         }
 
         public static IEnumerable<TestCaseData> GetLongValueTestData()

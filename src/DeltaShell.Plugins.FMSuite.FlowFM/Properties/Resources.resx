@@ -625,9 +625,6 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="FMImporters_Category_D_Flow_FM_2D_3D" xml:space="preserve">
     <value>D-Flow FM 2D/3D</value>
   </data>
-  <data name="BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset" xml:space="preserve">
-    <value>Support point '{0}' contains a time zone offset, the time points will be adjusted to their equivalents in UTC.</value>
-  </data>
   <data name="WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart" xml:space="preserve">
     <value>Input restart file does not exist; cannot restart.</value>
   </data>
@@ -708,5 +705,8 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="PropertyUpdater_Required_value_for_keyword_0_is_missing" xml:space="preserve">
     <value>The value for the required keyword `{0}` is missing in the mdu file.</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00" xml:space="preserve">
+    <value>Time zone of boundary condition '{0}' falls outside of allowed range -12:00 and +12:00</value>
   </data>
 </root>

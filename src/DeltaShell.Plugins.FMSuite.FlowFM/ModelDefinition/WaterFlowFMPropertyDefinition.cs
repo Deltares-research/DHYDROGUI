@@ -49,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string DtUser = "dtuser";
         public const string DtMax = "dtmax";
         public const string RefDate = "refdate";
+        public const string TZone = "Tzone";
         public const string Tunit = "tunit";
         public const string StartDateTime = "startdatetime";
         public const string StopDateTime = "stopdatetime";
