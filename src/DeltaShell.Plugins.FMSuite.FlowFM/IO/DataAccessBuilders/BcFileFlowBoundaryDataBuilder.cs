@@ -6,10 +6,13 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -214,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         public IFeature LocationFilter { private get; set; }
 
         public void InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets,
-                                       IEnumerable<BcBlockData> dataBlock, string thatcherHarlemanTimeLag = null)
+                                       IEnumerable<BcBlockData> dataBlock, double? thatcherHarlemanTimeLag = null)
         {
             List<BoundaryConditionSet> bcSets = boundaryConditionSets.ToList();
             foreach (BcBlockData bcBlockData in dataBlock)
@@ -224,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         }
 
         public bool InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets, BcBlockData dataBlock,
-                                       string thatcherHarlemanTimeLag = null)
+                                       double? thatcherHarlemanTimeLag = null)
         {
             if (dataBlock == null)
             {
@@ -236,9 +239,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 GetMatchingBoundaryConditionSet(boundaryConditionSets, dataBlock.SupportPoint);
             if (matchingBoundaryConditionSet == null)
             {
-                Log.WarnFormat(
-                    "File {0}, block starting at line {1}: support point {2} was not found in boundaries; omitting dataBlock block.",
-                    dataBlock.FilePath, dataBlock.LineNumber, dataBlock.SupportPoint);
+                if (dataBlock.Quantities.All(q => q.QuantityName != BcFileConstants.LateralDischargeQuantityName))
+                {
+                    Log.WarnFormat(
+                        "File {0}, block starting at line {1}: support point {2} was not found in boundaries; omitting dataBlock block.",
+                        dataBlock.FilePath, dataBlock.LineNumber, dataBlock.SupportPoint);
+                }
+                
                 return false;
             }
 
@@ -379,10 +386,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         if (CanCreateNewBoundaryCondition && !isCorrection)
                         {
                             TimeSpan timelag = TimeSpan.Zero;
-                            if (thatcherHarlemanTimeLag != null &&
-                                double.TryParse(thatcherHarlemanTimeLag, out double timelagdouble))
+                            if (thatcherHarlemanTimeLag != null)
                             {
-                                timelag = TimeSpan.FromSeconds(timelagdouble);
+                                timelag = TimeSpan.FromSeconds(thatcherHarlemanTimeLag.Value);
                             }
 
                             boundaryCondition = CreateNewBoundaryCondition(quantity.Value.QuantityName, flowQuantityEnum,
@@ -605,6 +611,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
+        /// <summary>
+        /// Creates a <see cref="BcBlockData"/> from the lateral time series data.
+        /// </summary>
+        /// <param name="lateral"> The lateral. </param>
+        /// <param name="referenceDate"> The reference date. </param>
+        /// <returns>
+        /// The <see cref="BcBlockData"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="lateral"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the provided lateral discharge type is not time series.
+        /// </exception>
+        public BcBlockData CreateBcBlockForLateral(Lateral lateral, DateTime? referenceDate)
+        {
+            Ensure.NotNull(lateral, nameof(lateral));
+            
+            if (lateral.Data.Discharge.Type != LateralDischargeType.TimeSeries)
+            {
+                throw new ArgumentException($"Lateral discharge type should be {LateralDischargeType.TimeSeries}.");
+            }
+
+            LateralDischargeFunction dischargeFunction = lateral.Data.Discharge.TimeSeries;
+            
+            var block = new BcBlockData();
+            block.SupportPoint = lateral.Name;
+            block.FunctionType = BcFileConstants.TimeSeriesFunctionName;
+            block.TimeInterpolationType = TimeInterpolationString(dischargeFunction.Time.InterpolationType);
+            BcQuantityData timeQuantity = CreateLateralDischargeTimesQuantityData(lateral, referenceDate);
+            BcQuantityData dischargeQuantity = CreateLateralDischargeValuesQuantityData(lateral);
+
+            block.Quantities.Add(timeQuantity);
+            block.Quantities.Add(dischargeQuantity);
+
+            return block;
+        }
+
+        private BcQuantityData CreateLateralDischargeTimesQuantityData(Lateral lateral, DateTime? referenceDate)
+        {
+            const string quantity = "time";
+            return CreateBcQuantityDataForArgument(quantity, lateral.Data.Discharge.TimeSeries.Time, referenceDate, TimeSpan.Zero);
+        }
+
+        private static BcQuantityData CreateLateralDischargeValuesQuantityData(Lateral lateral)
+        {
+            IVariable dischargeComponent = lateral.Data.Discharge.TimeSeries.DischargeComponent;
+            string unit = dischargeComponent.Unit.Symbol;
+            List<string> values = dischargeComponent.GetValues<double>().Select(DoubleToString).ToList();
+
+            return new BcQuantityData
+            {
+                QuantityName = BcFileConstants.LateralDischargeQuantityName,
+                Unit = unit,
+                Values = values
+            };
+        }
+
         public void InsertEmptyBoundaryData(List<BoundaryConditionSet> bcSets,
                                             FlowBoundaryQuantityType flowBoundaryQuantityType)
         {
@@ -757,9 +821,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             if (variable.ValueType == typeof(double))
             {
                 return converter == null
-                           ? variable.GetValues<double>().Select(d => d.ToString(CultureInfo.InvariantCulture))
+                           ? variable.GetValues<double>().Select(DoubleToString)
                            : variable.GetValues<double>()
-                                     .Select(d => converter(d).ToString(CultureInfo.InvariantCulture));
+                                     .Select(d => DoubleToString(converter(d)));
             }
 
             if (variable.ValueType != typeof(DateTime))
@@ -775,8 +839,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return
                 variable.GetValues<DateTime>()
                         .Select(d => (d - referenceTime.Value).TotalSeconds)
-                        .Select(m => m.ToString(CultureInfo.InvariantCulture));
+                        .Select(DoubleToString);
         }
+
+        private static string DoubleToString(double value) => value.ToString(CultureInfo.InvariantCulture);
 
         private string ParseQuantityName(string[] componentKeys, string quantityName,
                                          ForcingTypeDefinition forcingTypeDefinition)

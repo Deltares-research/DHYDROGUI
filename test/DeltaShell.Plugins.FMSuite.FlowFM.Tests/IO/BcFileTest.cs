@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -197,6 +201,118 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 "0",
                 "0"
             }, quantity.Values);
+        }
+
+        [Test]
+        public void WriteLateralData_LateralsNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var bcFile = new BcFile();
+            const string filePath = "some_file_path";
+            var bcFileDataBuilder = new BcFileFlowBoundaryDataBuilder();
+            DateTime referenceDate = DateTime.Today;
+
+            // Call
+            void Call() => bcFile.WriteLateralData(null, filePath, bcFileDataBuilder, referenceDate);
+            
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        public void WriteLateralData_BoundaryDataBuilderNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var bcFile = new BcFile();
+            IEnumerable<Lateral> laterals = Enumerable.Empty<Lateral>();
+            const string filePath = "some_file_path";
+            DateTime referenceDate = DateTime.Today;
+
+            // Call
+            void Call() => bcFile.WriteLateralData(laterals, filePath, null, referenceDate);
+            
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void WriteLateralData_FilePathNullOrWhiteSpace_ThrowsArgumentException(string filePath)
+        {
+            // Setup
+            var bcFile = new BcFile();
+            IEnumerable<Lateral> laterals = Enumerable.Empty<Lateral>();
+            var bcFileDataBuilder = new BcFileFlowBoundaryDataBuilder();
+            DateTime referenceDate = DateTime.Today;
+
+            // Call
+            void Call() => bcFile.WriteLateralData(laterals, filePath, bcFileDataBuilder, referenceDate);
+            
+            // Assert
+            Assert.That(Call, Throws.ArgumentException);
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteLateralData_WritesCorrectFile()
+        {
+            // Setup
+            var bcFile = new BcFile();
+            
+            var referenceDate = new DateTime(2023, 7, 31);
+            
+            var feature = new Feature2D { Name = "some_name" };
+            var lateral = new Lateral { Feature = feature };
+            lateral.Data.Discharge.Type = LateralDischargeType.TimeSeries;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(60)] = 1.23;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(120)] = 2.34;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(180)] = 3.45;
+            lateral.Data.Discharge.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
+
+            IEnumerable<Lateral> laterals = new[] { lateral };
+            var bcFileDataBuilder = new BcFileFlowBoundaryDataBuilder();
+            
+            string[] fileLines; 
+            
+            using (var temp = new TemporaryDirectory())
+            {
+                string filePath = System.IO.Path.Combine(temp.Path, "lateral_discharge.bc");
+                
+                // Call
+                bcFile.WriteLateralData(laterals, filePath, bcFileDataBuilder, referenceDate);
+
+                fileLines = System.IO.File.ReadAllLines(filePath).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
+            }
+            
+            // Assert
+            Assert.That(fileLines, Has.Length.EqualTo(11));
+            Assert.That(fileLines[0], Is.EqualTo("[forcing]"));
+            AssertPropertyLine(fileLines[1], "Name", "some_name");
+            AssertPropertyLine(fileLines[2], "Function", "timeseries");
+            AssertPropertyLine(fileLines[3], "Time-interpolation", "linear");
+            AssertPropertyLine(fileLines[4], "Quantity", "time");
+            AssertPropertyLine(fileLines[5], "Unit", "seconds since 2023-07-31 00:00:00");
+            AssertPropertyLine(fileLines[6], "Quantity", "lateral_discharge");
+            AssertPropertyLine(fileLines[7], "Unit", "m3/s");
+            AssertDataLine(fileLines[8], "60", "1.23");
+            AssertDataLine(fileLines[9], "120", "2.34");
+            AssertDataLine(fileLines[10], "180", "3.45");
+        }
+
+        private static void AssertDataLine(string fileLine, string timeValue, string dataValue)
+        {
+            string[] parts = fileLine.Split(new char[] {}, StringSplitOptions.RemoveEmptyEntries);
+            Assert.That(parts[0].Trim(), Is.EqualTo(timeValue));
+            Assert.That(parts[1].Trim(), Is.EqualTo(dataValue));
+        }
+
+        private static void AssertPropertyLine(string line, string propertyName, string value)
+        {
+            string[] pair = line.Split('=');
+            Assert.That(pair[0].Trim(), Is.EqualTo(propertyName));
+            Assert.That(pair[1].Trim(), Is.EqualTo(value));
         }
     }
 }

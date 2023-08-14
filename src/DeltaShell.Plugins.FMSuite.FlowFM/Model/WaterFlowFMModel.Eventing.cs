@@ -17,6 +17,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -934,6 +935,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                             Pipes,
                             SourcesAndSinks,
                             feature => new SourceAndSink { Feature = feature }));
+            syncers.Add(new FeatureDataSyncer<Feature2D, Lateral>(
+                            LateralFeatures,
+                            Laterals,
+                            feature => new Lateral { Feature = feature }));
         }
 
         private void ClearSyncers()

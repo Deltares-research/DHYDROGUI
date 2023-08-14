@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
@@ -11,11 +10,16 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
@@ -24,6 +28,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
     public partial class BndExtForceFile
     {
         private string bndExtSubFilesReferenceFilePath;
+        private static readonly ILogHandler parserLogHandler = new LogHandler(Resources.The_parsing_of_the_boundary_external_forcing_file);
+        private readonly BndExtForceFileParser bndExtForceFileParser = new BndExtForceFileParser(parserLogHandler);
+        private readonly LateralFactory lateralFactory = new LateralFactory();
 
         public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition,
                          string bndExtForceSubFilesReferenceFilePath)
@@ -40,9 +47,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 UpdateLegacyNames(categories);
             }
 
-            ReadPolyLines(categories, modelDefinition);
+            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(categories);
 
-            ReadBoundaryConditions(categories, modelDefinition);
+            ReadPolyLines(bndExtForceFileDTO, modelDefinition);
+            List<BcBlockData> dataBlocks = GetBcBlockDataFromForcingFiles(bndExtForceFileDTO);
+            ReadBoundaryConditions(bndExtForceFileDTO, modelDefinition, dataBlocks);
+            ReadLaterals(bndExtForceFileDTO, modelDefinition, dataBlocks);
+            
+            parserLogHandler.LogReport();
+        }
+
+        private void ReadLaterals(BndExtForceFileDTO bndExtForceFileDTO, WaterFlowFMModelDefinition modelDefinition, IEnumerable<BcBlockData> dataBlocks)
+        {
+            var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(parserLogHandler, dataBlocks);
+            
+            foreach (LateralDTO lateralDTO in bndExtForceFileDTO.Laterals)
+            {
+                Lateral lateral = lateralFactory.CreateLateral(lateralDTO, lateralTimeSeriesSetter);
+                modelDefinition.Laterals.Add(lateral);
+                modelDefinition.LateralFeatures.Add(lateral.Feature);
+            }
         }
 
         private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
@@ -68,13 +92,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return Path.Combine(Path.GetDirectoryName(bndExtSubFilesReferenceFilePath), relativePath);
         }
 
-        private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
+        private void ReadPolyLines(BndExtForceFileDTO bndExtForceFileDTO, WaterFlowFMModelDefinition modelDefinition)
         {
             modelDefinition.Boundaries.ForEach(b => { existingPolyLineFiles[b] = b.Name + FileConstants.PliFileExtension; });
 
-            foreach (DelftIniCategory delftIniCategory in bndBlocks)
+            foreach (var locationFile in bndExtForceFileDTO.LocationFiles)
             {
-                string locationFile = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.LocationFileKey);
                 bool locationFileHasAlreadyBeenRead = existingPolyLineFiles.Values.Contains(locationFile);
                 if (locationFile == null || locationFileHasAlreadyBeenRead)
                 {
@@ -90,10 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 string pliFilePath = GetFullPathForReading(locationFile);
                 CheckFilePath(pliFilePath, $"Boundary location file {pliFilePath} not found");
 
-                if (!IsEmbankmentCategory(delftIniCategory))
-                {
-                    ReadPliFile(modelDefinition, pliFilePath, locationFile);
-                }
+                ReadPliFile(modelDefinition, pliFilePath, locationFile);
             }
         }
 
@@ -118,31 +138,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static bool IsEmbankmentCategory(DelftIniCategory delftIniCategory) =>
-            delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
-
-        private void ReadBoundaryConditions(IList<DelftIniCategory> delftIniCategories,
-                                            WaterFlowFMModelDefinition modelDefinition)
+        private void ReadBoundaryConditions(BndExtForceFileDTO bndExtForceFileDTO,
+                                            WaterFlowFMModelDefinition modelDefinition,
+                                            List<BcBlockData> dataBlocks)
         {
             List<string> correctionFunctionTypes = BcFileFlowBoundaryDataBuilder.CorrectionFunctionTypes.ToList();
-
-            IEnumerable<string> bcFilePaths = GetForcingFilePathsFromIniCategories(delftIniCategories);
-
-            List<BcBlockData> dataBlocks = ReadBoundaryConditionBlocks(bcFilePaths);
 
             List<BcBlockData> correctionBlocks =
                 dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
 
             List<BcBlockData> signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
 
-            foreach (DelftIniCategory delftIniCategory in delftIniCategories)
+            foreach (BoundaryDTO boundaryDTO in bndExtForceFileDTO.Boundaries)
             {
-                if (TryGetQuantityValue(delftIniCategory, out FlowBoundaryQuantityType quantity))
+                if (TryGetQuantityValue(boundaryDTO.Quantity, out FlowBoundaryQuantityType quantity))
                 {
                     continue;
                 }
 
-                string pliFile = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.LocationFileKey);
+                string pliFile = boundaryDTO.LocationFile;
 
                 Feature2D feature = existingPolyLineFiles.FirstOrDefault(kvp => kvp.Value == pliFile).Key;
 
@@ -157,27 +171,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 // first loading signals, then corrections
 
-                string timeLagString = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
-
                 var usedDataBlocks = new List<BcBlockData>();
                 usedDataBlocks.AddRange(signalBlocks
                                             .Where(dataBlock =>
-                                                       builder.InsertBoundaryData(bcSets, dataBlock, timeLagString)));
+                                                       builder.InsertBoundaryData(bcSets, dataBlock, boundaryDTO.ReturnTime)));
                 usedDataBlocks.AddRange(correctionBlocks
                                             .Where(dataBlock =>
-                                                       builder.InsertBoundaryData(bcSets, dataBlock, timeLagString)));
+                                                       builder.InsertBoundaryData(bcSets, dataBlock, boundaryDTO.ReturnTime)));
 
                 IBoundaryCondition newBoundaryCondition =
                     bcSets.SelectMany(bcs => bcs.BoundaryConditions).FirstOrDefault();
                 if (newBoundaryCondition != null)
                 {
-                    existingBndForceFileItems[newBoundaryCondition] = delftIniCategory;
+                    existingBndForceFileItems[newBoundaryCondition] = boundaryDTO;
                 }
 
                 RemoveUsedDataBlocks(usedDataBlocks, signalBlocks, correctionBlocks);
 
                 AddBoundaryConditionsToModelDefinition(modelDefinition, bcSets);
             }
+        }
+
+        private List<BcBlockData> GetBcBlockDataFromForcingFiles(BndExtForceFileDTO bndExtForceFileDTO)
+        {
+            IEnumerable<string> bcFilePaths = GetForcingFilePathsFromIniCategories(bndExtForceFileDTO);
+            return ReadBoundaryConditionBlocks(bcFilePaths);
         }
 
         private static void AddBoundaryConditionsToModelDefinition(WaterFlowFMModelDefinition modelDefinition,
@@ -227,10 +245,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return builder;
         }
 
-        private static bool TryGetQuantityValue(DelftIniCategory delftIniCategory,
+        private static bool TryGetQuantityValue(string quantityValue,
                                                 out FlowBoundaryQuantityType quantity)
         {
-            string quantityValue = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey);
             quantity = FlowBoundaryQuantityType.WaterLevel;
 
             if (string.IsNullOrEmpty(quantityValue)
@@ -250,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static List<BcBlockData> ReadBoundaryConditionBlocks(IEnumerable<string> bcFilePaths)
         {
             var dataBlocks = new List<BcBlockData>();
-            foreach (string bcFilePath in bcFilePaths.Distinct())
+            foreach (string bcFilePath in bcFilePaths)
             {
                 if (!File.Exists(bcFilePath))
                 {
@@ -270,17 +287,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return dataBlocks;
         }
 
-        private IEnumerable<string> GetForcingFilePathsFromIniCategories(IList<DelftIniCategory> bndBlocks)
+        private IEnumerable<string> GetForcingFilePathsFromIniCategories(BndExtForceFileDTO bndExtForceFileDTO)
         {
-            var bcFilePaths = new List<string>();
-
-            foreach (DelftIniCategory delftIniCategory in bndBlocks)
-            {
-                IEnumerable<string> bcFiles = delftIniCategory.GetPropertyValues(BndExtForceFileConstants.ForcingFileKey);
-                bcFilePaths.AddRange(bcFiles.Select(GetFullPathForReading));
-            }
-
-            return bcFilePaths;
+            return bndExtForceFileDTO.ForcingFiles.Select(GetFullPathForReading);
         }
 
         private static bool IsMorphologyRelatedProperty(FlowBoundaryQuantityType quantity)

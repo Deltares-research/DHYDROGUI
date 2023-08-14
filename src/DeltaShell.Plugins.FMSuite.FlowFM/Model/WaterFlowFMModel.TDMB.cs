@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
@@ -95,6 +96,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 yield return pipe;
             }
 
+            foreach (Feature2D lateralFeature in LateralFeatures)
+            {
+                yield return lateralFeature;
+            }
+
             foreach (BoundaryConditionSet boundaryConditionSet in BoundaryConditionSets)
             {
                 yield return boundaryConditionSet;
@@ -103,6 +109,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             foreach (SourceAndSink sourcesAndSink in SourcesAndSinks)
             {
                 yield return sourcesAndSink;
+            }
+
+            foreach (Lateral lateral in Laterals)
+            {
+                yield return lateral;
             }
 
             if (ModelDefinition.HeatFluxModel.MeteoData != null)

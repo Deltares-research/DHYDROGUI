@@ -24,6 +24,7 @@ using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -196,6 +197,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
             Pipes = ModelDefinition.Pipes;
             SourcesAndSinks = ModelDefinition.SourcesAndSinks;
+            LateralFeatures = ModelDefinition.LateralFeatures;
+            Laterals = ModelDefinition.Laterals;
 
             // read depth layer definition
             DepthLayerDefinition = ModelDefinition.Kmx == 0
@@ -243,6 +246,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IEventedList<Feature2D> pipes;
         private IEventedList<Feature2D> boundaries;
+        private IEventedList<Feature2D> lateralFeatures;
+        private IEventedList<Lateral> laterals;
         private IDataItem areaDataItem;
         private DepthLayerDefinition depthLayerDefinition;
 
@@ -650,6 +655,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 {
                     SourcesAndSinks.CollectionChanged += SourcesAndSinksCollectionChanged;
                     SourcesAndSinks.CollectionChanged += FMRegionCollectionChanged;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Get or set the collection of lateral features.
+        /// This collection contains the features of the laterals in <see cref="Laterals"/>.
+        /// </summary>
+        public IEventedList<Feature2D> LateralFeatures
+        {
+            get => lateralFeatures;
+            private set
+            {
+                if (lateralFeatures != null)
+                {
+                    lateralFeatures.CollectionChanged -= FMRegionCollectionChanged;
+                }
+
+                lateralFeatures = value;
+
+                if (lateralFeatures != null)
+                {
+                    lateralFeatures.CollectionChanged += FMRegionCollectionChanged;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Get or set the collection of laterals.
+        /// </summary>
+        public IEventedList<Lateral> Laterals
+        {
+            get => laterals;
+            set
+            {
+                if (laterals != null)
+                {
+                    laterals.CollectionChanged -= FMRegionCollectionChanged;
+                }
+
+                laterals = value;
+
+                if (laterals != null)
+                {
+                    laterals.CollectionChanged += FMRegionCollectionChanged;
                 }
             }
         }

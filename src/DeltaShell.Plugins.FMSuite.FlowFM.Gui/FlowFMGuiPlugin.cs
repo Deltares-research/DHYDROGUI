@@ -29,9 +29,13 @@ using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Laterals.TimeSeriesGeneration;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Laterals.ViewModels;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Laterals.Views;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
@@ -139,6 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new FmModelTreeShortcutNodePresenter { GuiPlugin = this };
             yield return new BoundaryConditionSetNodePresenter { GuiPlugin = this };
             yield return new SourceSinkNodePresenter { GuiPlugin = this };
+            yield return new LateralNodePresenter { GuiPlugin = this };
             yield return new FMMapFileFunctionStoreNodePresenter { GuiPlugin = this };
             yield return new FMHisFileFunctionStoreNodePresenter();
             yield return new FMClassMapFileFunctionStoreNodePresenter { GuiPlugin = this };
@@ -367,6 +372,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             ViewInfo<IEventedList<Feature2D>, ILayer, VectorLayerAttributeTableView> pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
+            // Laterals
+            var lateralViewInfo = new ViewInfo<Lateral, LateralDefinitionView>
+            {
+                GetViewName = (view, lateral) => lateral.Feature.Name, 
+                CloseForData = (v, o) => Equals(v.Data, o),
+                AfterCreate = (v, o) =>
+                {
+                    v.DataContext = new LateralDefinitionViewModel(o.Data, new TimeSeriesGeneratorDialogService());
+                }
+            };
+            yield return lateralViewInfo;
+
+            yield return ViewInfoWrapper<Feature2D>.Create(lateralViewInfo, FindDataForLateralFeature, IsModelLateralFeature);
+            
+            ViewInfo<IEventedList<Feature2D>, ILayer, VectorLayerAttributeTableView> lateralFeatures = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Laterals", m => m.LateralFeatures, () => Gui);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(lateralFeatures, GetLateralFeaturesFromLaterals, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+
             // Heat flux model
             yield return new ViewInfo<HeatFluxModel, HeatFluxModelView>
             {
@@ -503,6 +525,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             WaterFlowFMModel model = FlowModels.FirstOrDefault(m => Equals(sourcesAndSinks, m.SourcesAndSinks));
             return model == null ? null : model.Pipes;
         }
+        
+        
+        private object GetLateralFeaturesFromLaterals(FmModelTreeShortcut treeShortCut)
+        {
+            var laterals = treeShortCut.Value as IEventedList<Lateral>;
+            if (laterals == null)
+            {
+                return null;
+            }
+
+            WaterFlowFMModel model = FlowModels.FirstOrDefault(m => Equals(laterals, m.Laterals));
+            return model == null ? null : model.LateralFeatures;
+        }
 
         private ViewInfo<TImporter, Feature2DImportExportDialog> GetFeature2DImportDialogViewInfo<TImporter>()
             where TImporter : IFeature2DImporterExporter, new()
@@ -552,6 +587,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             return FlowModels.Any(m => m.Pipes.Contains(arg));
         }
+        
+        private bool IsModelLateralFeature(Feature2D arg)
+        {
+            return FlowModels.Any(m => m.LateralFeatures.Contains(arg));
+        }
 
         private SourceAndSink FindDataForPipe(Feature2D arg)
         {
@@ -559,6 +599,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (model != null)
             {
                 return model.SourcesAndSinks.First(bcs => Equals(bcs.Feature, arg));
+            }
+
+            return null;
+        }
+        
+        private Lateral FindDataForLateralFeature(Feature2D arg)
+        {
+            WaterFlowFMModel model = FlowModels.FirstOrDefault(m => m.LateralFeatures.Contains(arg));
+            if (model != null)
+            {
+                return model.Laterals.First(bcs => Equals(bcs.Feature, arg));
             }
 
             return null;

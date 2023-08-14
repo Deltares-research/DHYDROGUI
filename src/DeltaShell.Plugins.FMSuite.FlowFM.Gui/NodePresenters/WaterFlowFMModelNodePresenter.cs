@@ -39,6 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static readonly Bitmap InitialConditionsIcon = new Bitmap(Resources.initial_folder, 16, 16);
         private static readonly Bitmap BoundaryConditionIcon = new Bitmap(Common.Gui.Properties.Resources.boundary_folder, 16, 16);
         private static readonly Bitmap SourceSinkIcon = new Bitmap(Resources.SourceSinkFolder, 16, 16);
+        private static readonly Bitmap LateralsFolderIcon = new Bitmap(Resources.LateralsFolder, 16, 16);
         private static readonly Bitmap PhysParamIcon = new Bitmap(Common.Gui.Properties.Resources.folder_wrench, 16, 16);
         private static readonly Bitmap NumParamIcon = new Bitmap(Common.Gui.Properties.Resources.settings, 16, 16);
         private static readonly Bitmap OutParamIcon = new Bitmap(Common.Gui.Properties.Resources.output_param, 16, 16);
@@ -147,6 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FmModelTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets, ShortCutType.FeatureSet, model.BoundaryConditionSets);
             yield return new FmModelTreeShortcut("Physical Parameters", PhysParamIcon, model, "Physical Parameters", childObjects: GetPhysicalSubItems(model));
             yield return new FmModelTreeShortcut("Sources and Sinks", SourceSinkIcon, model, model.SourcesAndSinks, ShortCutType.FeatureSet, model.SourcesAndSinks);
+            yield return new FmModelTreeShortcut("Laterals", LateralsFolderIcon, model, model.Laterals, ShortCutType.FeatureSet, model.Laterals);
             yield return new FmModelTreeShortcut("Numerical Parameters", NumParamIcon, model, "Numerical Parameters");
             yield return new FmModelTreeShortcut("Output Parameters", OutParamIcon, model, "Output Parameters");
         }

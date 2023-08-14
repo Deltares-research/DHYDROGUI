@@ -132,6 +132,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         ShowInLegend = false
                     };
                 }
+                
+                if (Equals(feature2Ds, parentWaterFlowFmModel1.LateralFeatures))
+                {
+                    return LateralMapLayerProvider.Create(feature2Ds, parentWaterFlowFmModel1);
+                }
             }
 
             if (data is IEventedList<BoundaryConditionSet> allBoundaryConditionSets && parentData is WaterFlowFMModel parentWaterFlowModel2)
@@ -291,6 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 yield return model.BoundaryConditionSets;
                 yield return model.Boundaries;
                 yield return model.Pipes;
+                yield return model.LateralFeatures;
 
                 if (!snappedGroupLayerDataMapping.TryGetValue(model, out FMSnappedFeaturesGroupLayerData layerData))
                 {

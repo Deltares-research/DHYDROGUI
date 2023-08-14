@@ -16,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
@@ -125,6 +126,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             UnsupportedFileBasedExtForceFileItems = new EventedList<IUnsupportedFileBasedExtForceFileItem>();
             SourcesAndSinks = new EventedList<SourceAndSink>();
             Pipes = new EventedList<Feature2D>();
+            Laterals = new EventedList<Lateral>();
+            LateralFeatures = new EventedList<Feature2D>();
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
             InitialTracerNames = new List<string>();
             InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
@@ -193,6 +196,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public IEventedList<Feature2D> Pipes { get; private set; }
 
         public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
+        
+        /// <summary>
+        /// Get the collection of lateral features.
+        /// </summary>
+        public IEventedList<Feature2D> LateralFeatures { get; private set; }
+
+        /// <summary>
+        /// Get the collection of laterals.
+        /// </summary>
+        public IEventedList<Lateral> Laterals { get; private set; }
 
         public int Kmx
         {

@@ -138,7 +138,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                        .Concat(area.FixedWeirs)
                        .Concat(area.Enclosures)
                        .Concat(model.Boundaries)
-                       .Concat(model.Pipes);
+                       .Concat(model.Pipes)
+                       .Concat(model.LateralFeatures);
         }
     }
 }

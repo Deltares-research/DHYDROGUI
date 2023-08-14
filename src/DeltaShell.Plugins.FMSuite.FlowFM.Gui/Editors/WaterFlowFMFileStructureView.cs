@@ -88,9 +88,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (Equals(sender, Model) && e.PropertyName == nameof(Model.Name) ||
                 Model.Boundaries.Contains(sender) && e.PropertyName == nameof(Feature2D.Name) ||
                 //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
-                Model.Pipes.Contains(sender) && e.PropertyName == nameof(Feature2D.Name))
-            //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
-
+                Model.Pipes.Contains(sender) && e.PropertyName == nameof(Feature2D.Name) ||
+                Model.LateralFeatures.Contains(sender) && e.PropertyName == nameof(Feature2D.Name))
             {
                 RefreshTree();
             }

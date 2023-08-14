@@ -159,6 +159,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Constant discharge:.
+        /// </summary>
+        public static string Constant_discharge {
+            get {
+                return ResourceManager.GetString("Constant_discharge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Delete {
@@ -175,6 +184,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("DeleteHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discharge type:.
+        /// </summary>
+        public static string Discharge_type {
+            get {
+                return ResourceManager.GetString("Discharge_type", resourceCulture);
             }
         }
         
@@ -334,6 +352,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap landboundary {
             get {
                 object obj = ResourceManager.GetObject("landboundary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap LateralPoint {
+            get {
+                object obj = ResourceManager.GetObject("LateralPoint", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap LateralPolygon {
+            get {
+                object obj = ResourceManager.GetObject("LateralPolygon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap LateralsFolder {
+            get {
+                object obj = ResourceManager.GetObject("LateralsFolder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -549,6 +597,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap velocity_x {
+            get {
+                object obj = ResourceManager.GetObject("velocity_x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap velocity_y {
+            get {
+                object obj = ResourceManager.GetObject("velocity_y", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show in Windows Explorer....
         /// </summary>
         public static string WaterFlowFMFileBasedItemNodePresenter_GetContextMenu_Show_in_Windows_Explorer___ {
@@ -630,26 +698,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap wrenchPlus {
             get {
                 object obj = ResourceManager.GetObject("wrenchPlus", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap velocity_x {
-            get {
-                object obj = ResourceManager.GetObject("velocity_x", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap velocity_y {
-            get {
-                object obj = ResourceManager.GetObject("velocity_y", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -11,6 +12,7 @@ using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -943,13 +945,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(File.Exists(extFileName));
             string fileText = File.ReadAllText(extFileName);
-            Assert.That(fileText, Does.Contain(BndExtForceFileConstants.BoundaryBlockKey)
+            Assert.That(fileText, Does.Contain("[" + BndExtForceFileConstants.BoundaryBlockKey + "]")
                                     .And.Contains(BndExtForceFileConstants.QuantityKey + "=" + ExtForceQuantNames.ConcentrationAtBound + "frac1")
                                     .And.Contains(BndExtForceFileConstants.LocationFileKey + "=" + "L1.pli")
                                     .And.Contains(BndExtForceFileConstants.ForcingFileKey + "=" + "frac1.bc"));
 
             //check to see if only 2 boundaries are written
-            Assert.AreEqual(2, new Regex(Regex.Escape(BndExtForceFileConstants.BoundaryBlockKey)).Matches(fileText).Count);
+            Assert.AreEqual(2, new Regex(Regex.Escape("[" + BndExtForceFileConstants.BoundaryBlockKey + "]")).Matches(fileText).Count);
 
             Assert.IsTrue(File.Exists("frac1.bc"));
 
@@ -1024,13 +1026,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void WriteBndExtForceFileSubFilesReturnsNoItemsIfMissingName()
         {
+            // Setup
             var bndExtForceFile = new BndExtForceFile();
             var firstBoundary = new Feature2D { Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray()) };
             Assert.That(firstBoundary.Name, Is.Null.Or.Empty);
 
             var bcSet = new BoundaryConditionSet { Feature = firstBoundary };
-            IList<DelftIniCategory> resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(string.Empty, new List<BoundaryConditionSet> { bcSet }, DateTime.Today);
 
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            modelDefinition.BoundaryConditionSets.Add(bcSet);
+            
+            // Call
+            IList<DelftIniCategory> resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(modelDefinition);
+
+            // Assert
             Assert.IsFalse(resultingItems.Any());
         }
 
@@ -1261,12 +1270,164 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             });
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FileWithLateralDefinition_AddsTheLateralDefinitionToTheModelDefinition()
+        {
+            // Setup
+            var extFileLines = new[]
+            {
+                "[lateral] = ",
+                "id = some_id",
+                "type = discharge",
+                "locationType = 2d",
+                "numCoordinates = 3",
+                "xCoordinates = 1.23 2.34 3.45",
+                "yCoordinates = 4.56 5.67 6.78", 
+                "discharge = lateral_discharge.bc",
+            };
+            
+            var bcFileLines = new[]
+            {
+                "[forcing]",
+                "Name = some_id",
+                "Function = timeseries",
+                "Time-interpolation = linear",
+                "Quantity = time",
+                "Unit = seconds since 2023-07-31 00:00:00",
+                "Quantity = lateral_discharge",
+                "Unit = m3/s",
+                "60  1.23",
+                "120 2.34",
+                "180 3.45",
+            };
+
+            var bndExtForceFile = new BndExtForceFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            
+            using (var temp = new TemporaryDirectory())
+            {
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", string.Join(Environment.NewLine, extFileLines));
+                temp.CreateFile("lateral_discharge.bc", string.Join(Environment.NewLine, bcFileLines));
+                
+                // Call
+                bndExtForceFile.Read(extFile, modelDefinition, extFile);
+            }
+            
+            // Assert
+            Assert.That(modelDefinition.Laterals, Has.Count.EqualTo(1));
+            Assert.That(modelDefinition.LateralFeatures, Has.Count.EqualTo(1));
+
+            Lateral lateral = modelDefinition.Laterals.Single();
+            Feature2D lateralFeature = modelDefinition.LateralFeatures.Single();
+                
+            Assert.That(lateral.Feature, Is.SameAs(lateralFeature));
+
+            Assert.That(lateralFeature.Geometry, Is.EqualTo(new Polygon(new LinearRing(new[]
+            {
+                new Coordinate(1.23, 4.56), 
+                new Coordinate(2.34, 5.67), 
+                new Coordinate(3.45, 6.78), 
+                new Coordinate(1.23, 4.56),
+            }))));
+            
+            Assert.That(lateral.Data.Discharge.Type, Is.EqualTo(LateralDischargeType.TimeSeries));
+            Assert.That(lateral.Data.Discharge.TimeSeries.Time.InterpolationType, Is.EqualTo(InterpolationType.Linear));
+                
+            var referenceDate = new DateTime(2023, 7, 31);
+            Assert.That(lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(60)], Is.EqualTo(1.23));
+            Assert.That(lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(120)], Is.EqualTo(2.34));
+            Assert.That(lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(180)], Is.EqualTo(3.45));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_ModelDefinitionWithLaterals_WritesLateralDataToFiles()
+        {
+            // Setup
+            var bndExtForceFile = new BndExtForceFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var referenceDate = new DateTime(2023, 7, 31);
+            var feature = new Feature2D { 
+                Name = "some_id",
+                Geometry = new Polygon(new LinearRing(new[]
+                {
+                    new Coordinate(1.23, 4.56), 
+                    new Coordinate(2.34, 5.67), 
+                    new Coordinate(3.45, 6.78), 
+                    new Coordinate(1.23, 4.56),
+                }))
+            };
+            var lateral = new Lateral { Feature = feature };
+            lateral.Data.Discharge.Type = LateralDischargeType.TimeSeries;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(60)] = 1.23;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(120)] = 2.34;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(180)] = 3.45;
+            lateral.Data.Discharge.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
+            
+            modelDefinition.SetReferenceDateAsDateTime(referenceDate);
+            modelDefinition.Laterals.Add(lateral);
+
+            string[] extFileLines;
+            string[] bcFileLines;
+            using (var temp = new TemporaryDirectory())
+            {
+                string extFile = Path.Combine(temp.Path,  "FlowFM_bnd.ext");
+                string bcFile = Path.Combine(temp.Path,  "lateral_discharge.bc");
+
+                // Call
+                bndExtForceFile.Write(extFile, modelDefinition);
+
+                extFileLines = File.ReadAllLines(extFile).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
+                bcFileLines = File.ReadAllLines(bcFile).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
+            }
+
+            Assert.That(extFileLines, Has.Length.EqualTo(9));
+            Assert.That(extFileLines[0], Is.EqualTo("[lateral]"));
+            AssertPropertyLine(extFileLines[1], "id", "some_id");
+            AssertPropertyLine(extFileLines[2], "name", "some_id");
+            AssertPropertyLine(extFileLines[3], "type", "discharge");
+            AssertPropertyLine(extFileLines[4], "locationType", "2d");
+            AssertPropertyLine(extFileLines[5], "numCoordinates", "3");
+            AssertPropertyLine(extFileLines[6], "xCoordinates", "1.2300000e+000 2.3400000e+000 3.4500000e+000");
+            AssertPropertyLine(extFileLines[7], "yCoordinates", "4.5600000e+000 5.6700000e+000 6.7800000e+000");
+            AssertPropertyLine(extFileLines[8], "discharge", "lateral_discharge.bc");
+            
+            Assert.That(bcFileLines, Has.Length.EqualTo(11));
+            Assert.That(bcFileLines[0], Is.EqualTo("[forcing]"));
+            AssertPropertyLine(bcFileLines[1], "Name", "some_id");
+            AssertPropertyLine(bcFileLines[2], "Function", "timeseries");
+            AssertPropertyLine(bcFileLines[3], "Time-interpolation", "linear");
+            AssertPropertyLine(bcFileLines[4], "Quantity", "time");
+            AssertPropertyLine(bcFileLines[5], "Unit", "seconds since 2023-07-31 00:00:00");
+            AssertPropertyLine(bcFileLines[6], "Quantity", "lateral_discharge");
+            AssertPropertyLine(bcFileLines[7], "Unit", "m3/s");
+            AssertDataLine(bcFileLines[8], "60", "1.23");
+            AssertDataLine(bcFileLines[9], "120", "2.34");
+            AssertDataLine(bcFileLines[10], "180", "3.45");
+        }
+
         private static void CheckIfSubFilesMentionedInBndExtForceFileAreWrittenRelativeToThisFile(string line, string saveBndExtFilePath)
         {
             string[] parts = line.Split('=');
             string expectedSavedSubFilePath =
                 Path.Combine(Path.GetDirectoryName(saveBndExtFilePath), parts[1].Trim());
             Assert.IsTrue(File.Exists(expectedSavedSubFilePath));
+        }
+        
+        private static void AssertDataLine(string fileLine, string timeValue, string dataValue)
+        {
+            string[] parts = fileLine.Split(new char[] {}, StringSplitOptions.RemoveEmptyEntries);
+            Assert.That(parts[0].Trim(), Is.EqualTo(timeValue));
+            Assert.That(parts[1].Trim(), Is.EqualTo(dataValue));
+        }
+
+        private static void AssertPropertyLine(string line, string propertyName, string value)
+        {
+            string[] pair = line.Split('=');
+            Assert.That(pair[0].Trim(), Is.EqualTo(propertyName));
+            Assert.That(pair[1].Trim(), Is.EqualTo(value));
         }
     }
 }

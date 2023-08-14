@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor.BoundaryParametersSpecific"
              xmlns:functionViews="clr-namespace:DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;assembly=DeltaShell.Plugins.CommonTools.Gui"
+             xmlns:hostMaps="clr-namespace:DeltaShell.NGHS.Common.Gui.HostMaps;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -12,10 +13,10 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <WindowsFormsHost local:MultipleFunctionViewWindowsFormsHostMap.ChartSeriesType="LineSeries"
-                          local:MultipleFunctionViewWindowsFormsHostMap.ChartViewOption="AllSeries"
-                          local:MultipleFunctionViewWindowsFormsHostMap.Dock="Fill"
-                          local:MultipleFunctionViewWindowsFormsHostMap.Functions="{Binding TimeDependentParametersFunctions}"
+        <WindowsFormsHost hostMaps:MultipleFunctionViewWindowsFormsHostMap.ChartSeriesType="LineSeries"
+                          hostMaps:MultipleFunctionViewWindowsFormsHostMap.ChartViewOption="AllSeries"
+                          hostMaps:MultipleFunctionViewWindowsFormsHostMap.Dock="Fill"
+                          hostMaps:MultipleFunctionViewWindowsFormsHostMap.Functions="{Binding TimeDependentParametersFunctions}"
                           x:Name="WindowsFormsHost"
                           Grid.Row="0">
             <WindowsFormsHost.Child>

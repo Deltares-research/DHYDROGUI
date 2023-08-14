@@ -436,11 +436,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     ExternalForcingsFile.ExistingBoundaryConditions.Where(bc => bc.Feature != null)
                                         .Select(bc => bc.Feature)).Any();
 
+            bool laterals = modelDefinition.Laterals.Any();
+
+            bool writeNewFormat = newFormatBoundaryConditions || newBoundaries || laterals;
+            
             // will check if indeed the file is written)
             ExternalForcingsFile.Write(extForceFilePath, modelDefinition,
-                                       !(newFormatBoundaryConditions || newBoundaries), switchTo);
+                                       !writeNewFormat, switchTo);
 
-            if (newFormatBoundaryConditions || newBoundaries)
+            if (writeNewFormat)
             {
                 string bndExtFileName =
                     modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();

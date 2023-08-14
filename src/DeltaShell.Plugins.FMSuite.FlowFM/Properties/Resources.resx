@@ -697,6 +697,12 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="MduFile_MduFile_Unknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
+  <data name="Category_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_" xml:space="preserve">
+	  <value>Category {0} has an unknown header and cannot be parsed. Line: {1}</value>
+  </data>
+  <data name="The_parsing_of_the_boundary_external_forcing_file" xml:space="preserve">
+	  <value>the parsing of the boundary external forcing file</value>
+  </data>
   <data name="MduFileReader_AddNewPropertyToDefinition_An_unrecognized_keyword_has_been_detected" xml:space="preserve">
     <value>An unrecognized keyword *{0}* has been detected. The setting will be preserved and written back to the MDU file on export.</value>
   </data>
@@ -705,6 +711,42 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="PropertyUpdater_Required_value_for_keyword_0_is_missing" xml:space="preserve">
     <value>The value for the required keyword `{0}` is missing in the mdu file.</value>
+  </data>
+  <data name="Discharge_value_0_could_not_be_parsed_Line_1_" xml:space="preserve">
+    <value>Discharge value '{0}' could not be parsed into either a scalar, time series file or "realtime". Line: {1}</value>
+  </data>
+  <data name="_0_could_not_be_parsed_to_a_double_for_property_1_Line_2_" xml:space="preserve">
+    <value>'{0}' could not be parsed to a double for property '{1}'. Line: {2}</value>
+  </data>
+  <data name="Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided" xml:space="preserve">
+    <value>Properties 'numCoordinates', 'xCoordinates' and 'yCoordinates' must be provided.</value>
+  </data>
+  <data name="Property_id_must_be_provided" xml:space="preserve">
+    <value>Property 'id' must be provided.</value>
+  </data>
+  <data name="Property_0_contains_an_unsupported_value_Supported_values_1_" xml:space="preserve">
+    <value>Property '{0}' contains an unsupported value. Supported values: {1}.</value>
+  </data>
+  <data name="The_number_of_values_of_property_0_must_be_equal_to_the_value_of_property_numCoordinates_" xml:space="preserve">
+    <value>The number of values of property '{0}' must be equal to the value of property 'numCoordinates'.</value>
+  </data>
+  <data name="_0_Line_1_" xml:space="preserve">
+    <value>{0} Line: {1}</value>
+  </data>
+  <data name="Property_numCoordinates_must_either_be_1_point_or_any_value_greater_than_2_polygon" xml:space="preserve">
+    <value>Property 'numCoordinates' must either be 1 (point) or any value greater than 2 (polygon).</value>
+  </data>
+  <data name="No_BC_data_could_be_found_for_lateral_with_id_0_" xml:space="preserve">
+    <value>No BC data could be found for lateral with id '{0}'.</value>
+  </data>
+  <data name="Function_type_0_is_not_supported_for_lateral_with_id_1_Line_2_" xml:space="preserve">
+    <value>Function type '{0}' is not supported for lateral with id '{1}'. Line: {2}</value>
+  </data>
+  <data name="Could_not_parse_0_to_a_floating_value_Line_1_" xml:space="preserve">
+    <value>Could not parse '{0}' to a floating value. Line: {1}</value>
+  </data>
+  <data name="Quantity_0_could_not_be_found_for_lateral_with_id_1_Line_2_" xml:space="preserve">
+    <value>Quantity '{0}' could not be found for lateral with id '{1}'. Line: {2}</value>
   </data>
   <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00" xml:space="preserve">
     <value>Time zone of boundary condition '{0}' falls outside of allowed range -12:00 and +12:00</value>

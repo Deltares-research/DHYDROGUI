@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             DelftIniCategory result = DelftIniCategoryFactory.CreateBoundaryBlock(quantity, locationFilePath, forcingFilePath, thatcherHarlemanTimeLag);
 
             // Assert
-            Assert.That(result.Name, Is.EqualTo("[boundary]"));
+            Assert.That(result.Name, Is.EqualTo("boundary"));
             Assert.That(result.Properties, Has.Count.EqualTo(4));
             CategoryContains(result, "quantity", quantity);
             CategoryContains(result, "locationFile", locationFilePath);
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             DelftIniCategory result = DelftIniCategoryFactory.CreateBoundaryBlock(null, null, null, TimeSpan.Zero);
 
             // Assert
-            Assert.That(result.Name, Is.EqualTo("[boundary]"));
+            Assert.That(result.Name, Is.EqualTo("boundary"));
             Assert.That(result.Properties, Has.Count.EqualTo(0));
             CategoryDoesNotContain(result, "quantity");
             CategoryDoesNotContain(result, "locationFile");

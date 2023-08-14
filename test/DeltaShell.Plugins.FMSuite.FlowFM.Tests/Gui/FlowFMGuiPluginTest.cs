@@ -82,6 +82,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             var restartFileNodePresenter = Contains<RestartFileNodePresenter<WaterFlowFMRestartFile>>(nodePresenters);
             Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+            
+            var lateralNodePresenter = Contains<LateralNodePresenter>(nodePresenters);
+            Assert.That(lateralNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
         }
 
         private static T Contains<T>(ITreeNodePresenter[] source)

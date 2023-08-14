@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 
@@ -14,12 +14,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         // items that existed in the file when the file was read
         private readonly IDictionary<Feature2D, string> existingPolyLineFiles;
-        private readonly IDictionary<IBoundaryCondition, DelftIniCategory> existingBndForceFileItems;
+        private readonly IDictionary<IBoundaryCondition, BoundaryDTO> existingBndForceFileItems;
 
         public BndExtForceFile()
         {
             existingPolyLineFiles = new Dictionary<Feature2D, string>();
-            existingBndForceFileItems = new Dictionary<IBoundaryCondition, DelftIniCategory>();
+            existingBndForceFileItems = new Dictionary<IBoundaryCondition, BoundaryDTO>();
             WriteToDisk = true;
         }
     }

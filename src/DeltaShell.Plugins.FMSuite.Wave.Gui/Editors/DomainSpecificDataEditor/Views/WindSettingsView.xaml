@@ -10,7 +10,7 @@
              mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converters1:WindInputTypeToVisibilityConverter x:Key="WindInputTypeToVisibilityConverter" />
+        <converters:EnumToVisibilityConverter x:Key="WindInputTypeToVisibilityConverter" CollapseHidden="True" InvertVisibility="False"  />
         <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
         <converters1:FilePathToFileNameConverter x:Key="FileNameConverter" />
         <converters1:WindInputTypeAndBooleanToBooleanConverter x:Key="EnabledGridWebFieldConverter" />

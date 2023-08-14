@@ -8,8 +8,18 @@
         /// <summary>
         /// The boundary category key.
         /// </summary>
-        public const string BoundaryBlockKey = "[boundary]";
+        public const string BoundaryBlockKey = "boundary";
 
+        /// <summary>
+        /// The lateral category key.
+        /// </summary>
+        public const string LateralBlockKey = "lateral";
+        
+        /// <summary>
+        /// The general category key.
+        /// </summary>
+        public const string GeneralBlockKey = "general";
+        
         /// <summary>
         /// The quantity property key.
         /// </summary>
@@ -34,5 +44,50 @@
         /// The open boundary tolerance property key.
         /// </summary>
         public const string OpenBoundaryToleranceKey = "OpenBoundaryTolerance";
+
+        /// <summary>
+        /// The id key.
+        /// </summary>
+        public const string IdKey = "id";
+        
+        /// <summary>
+        /// The name key.
+        /// </summary>
+        public const string NameKey = "name";
+
+        /// <summary>
+        /// The type key.
+        /// </summary>
+        public const string TypeKey = "type";
+        
+        /// <summary>
+        /// The location type key.
+        /// </summary>
+        public const string LocationTypeKey = "locationType";
+        
+        /// <summary>
+        /// The number of coordinates key.
+        /// </summary>
+        public const string NumCoordinatesKey = "numCoordinates";
+        
+        /// <summary>
+        /// The x-coordinates key.
+        /// </summary>
+        public const string XCoordinatesKey = "xCoordinates";
+        
+        /// <summary>
+        /// The y-coordinates key.
+        /// </summary>
+        public const string YCoordinatesKey = "yCoordinates";
+
+        /// <summary>
+        /// The discharge key.
+        /// </summary>
+        public const string DischargeKey = "discharge";
+
+        /// <summary>
+        /// The realtime discharge value.
+        /// </summary>
+        public const string RealTimeValue = "realtime";
     }
 }

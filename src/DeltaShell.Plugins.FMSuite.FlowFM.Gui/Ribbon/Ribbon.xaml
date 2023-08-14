@@ -20,6 +20,8 @@
                 <fluent:ToggleButton x:Name="ButtonAddBoundary" ToolTip="Add a (2D) flow boundary" Header="Add Flow Boundary" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\boundary.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddSourceSink" ToolTip="Add a (2D) source/sink" Header="Add Source/Sink" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\SourceSink.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddSource" ToolTip="Add a (2D) point source" Header="Add Point Source" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\LateralSourceMap.png" Size="Middle" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddLateralPolygon" ToolTip="Add a (2D) lateral" Header="Add lateral" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\LateralPolygon.png" Size="Middle" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddLateralPoint" ToolTip="Add a (2D) point lateral" Header="Add lateral point" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\LateralPoint.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:Button x:Name="ButtonReverseLine" Header="Reverse line(s)" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\arrow_switch.png" Size="Middle" SizeDefinition="Small, Small, Small" />
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>

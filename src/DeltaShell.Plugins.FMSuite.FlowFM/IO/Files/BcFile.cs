@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using log4net;
@@ -137,12 +139,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         boundaryCondition as FlowBoundaryCondition,
                         supportPointNames, refDate, seriesIndex, CorrectionFile);
 
-                    foreach (BcBlockData block in blockData)
-                    {
-                        WriteBlock(block);
-                        WriteLine("");
-                    }
+                    WriteBlocks(blockData);
                 }
+            }
+            finally
+            {
+                CloseOutputFile();
+            }
+        }
+
+        private void WriteBlocks(IEnumerable<BcBlockData> blockData)
+        {
+            foreach (BcBlockData block in blockData)
+            {
+                WriteBlock(block);
+                WriteLine("");
+            }
+        }
+
+        /// <summary>
+        /// Write the lateral time series data to the specified file.
+        /// </summary>
+        /// <param name="laterals"> The laterals. </param>
+        /// <param name="filePath"> The target bc file path. </param>
+        /// <param name="boundaryDataBuilder"> The bc file flow boundary data builder. </param>
+        /// <param name="refDate"> The reference date. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="laterals"/> or <paramref name="boundaryDataBuilder"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="filePath"/> is <c>null</c> or empty or white space.
+        /// </exception>
+        public void WriteLateralData(
+            IEnumerable<Lateral> laterals,
+            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
+        {
+            Ensure.NotNull(laterals, nameof(laterals));
+            Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
+            Ensure.NotNull(boundaryDataBuilder, nameof(boundaryDataBuilder));
+            
+            var blocks = new List<BcBlockData>();
+            foreach (Lateral lateral in laterals)
+            {
+                BcBlockData block = boundaryDataBuilder.CreateBcBlockForLateral(lateral, refDate);
+                blocks.Add(block);
+            }
+            
+            OpenOutputFile(filePath);
+            try
+            {
+                WriteBlocks(blocks);
             }
             finally
             {

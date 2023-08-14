@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -1378,6 +1380,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
         {
             yield return new TestCaseData("seconds since 1992-09-01 18:00:00 +04:40", new TimeSpan(4,40,0));
             yield return new TestCaseData("seconds since 1992-09-01 18:00:00 -10:12", new TimeSpan(-10,-12,0));
+        }
+
+        [Test]
+        public void CreateBcBlockForLateral_LateralNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var bcFileDataBuilder = new BcFileFlowBoundaryDataBuilder();
+            
+            // Call
+            void Call() => bcFileDataBuilder.CreateBcBlockForLateral(null, DateTime.Today);
+            
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+
+        }
+        
+        [Test]
+        public void CreateBcBlockForLateral_LateralDischargeTypeNotTimeSeries_ThrowsArgumentException()
+        {
+            // Setup
+            var bcFileDataBuilder = new BcFileFlowBoundaryDataBuilder();
+            var lateral = new Lateral();
+            lateral.Data.Discharge.Type = LateralDischargeType.Constant;
+            
+            // Call
+            void Call() => bcFileDataBuilder.CreateBcBlockForLateral(lateral, DateTime.Today);
+            
+            // Assert
+            Assert.That(Call, Throws.ArgumentException);
+        }
+        
+        [Test]
+        [TestCase(InterpolationType.Linear, "linear")]
+        [TestCase(InterpolationType.Constant, "block")]
+        public void CreateBcBlockForLateral_CreatesCorrectBcBlockData(InterpolationType interpolationType, string expTimeInterpolationType)
+        {
+            // Setup
+            var bcFileDataBuilder = new BcFileFlowBoundaryDataBuilder();
+            var referenceDate = new DateTime(2023, 7, 31);
+            var feature = new Feature2D { Name = "some_name" };
+            var lateral = new Lateral { Feature = feature };
+            lateral.Data.Discharge.Type = LateralDischargeType.TimeSeries;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(60)] = 1.23;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(120)] = 2.34;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(180)] = 3.45;
+            lateral.Data.Discharge.TimeSeries.Time.InterpolationType = interpolationType;
+            
+            // Call
+            BcBlockData bcBlockData = bcFileDataBuilder.CreateBcBlockForLateral(lateral, referenceDate);
+            
+            // Assert
+            Assert.That(bcBlockData.SupportPoint, Is.EqualTo("some_name"));
+            Assert.That(bcBlockData.FunctionType, Is.EqualTo("timeseries"));
+            Assert.That(bcBlockData.TimeInterpolationType, Is.EqualTo(expTimeInterpolationType));
+            Assert.That(bcBlockData.Quantities, Has.Count.EqualTo(2));
+            
+            BcQuantityData timeQuantity = bcBlockData.Quantities[0];
+            Assert.That(timeQuantity.QuantityName, Is.EqualTo("time"));
+            Assert.That(timeQuantity.Unit, Is.EqualTo("seconds since 2023-07-31 00:00:00"));
+            var expTimeValues = new[] { "60", "120", "180" };
+            Assert.That(timeQuantity.Values, Is.EqualTo(expTimeValues));
+            
+            BcQuantityData dischargeQuantity = bcBlockData.Quantities[1];
+            Assert.That(dischargeQuantity.QuantityName, Is.EqualTo("lateral_discharge"));
+            Assert.That(dischargeQuantity.Unit, Is.EqualTo("m3/s"));
+            var expDischargeValues = new[] { "1.23", "2.34", "3.45" };
+            Assert.That(dischargeQuantity.Values, Is.EqualTo(expDischargeValues));
         }
 
         public static IEnumerable<TestCaseData> GetLongValueTestData()

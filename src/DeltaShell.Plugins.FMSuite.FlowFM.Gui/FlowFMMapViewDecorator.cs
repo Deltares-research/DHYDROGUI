@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using SharpMap.Api.Layers;
@@ -19,10 +20,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         internal const string BoundaryToolName = "Boundary tool (2D)";
         internal const string SourceToolName = "Source tool (2D)";
         internal const string SourceAndSinkToolName = "Source & sink tool";
+        internal const string LateralPointToolName = "Lateral point (2D)";
+        internal const string LateralToolName = "Lateral tool";
         internal const string Reverse2DLineToolName = "Reverse line(s) (2D)";
         private static readonly Bitmap BoundaryIcon = Resources.boundary;
         private static readonly Bitmap SourceSinkIcon = Properties.Resources.SourceSink;
         private static readonly Bitmap SourceIcon = Properties.Resources.LateralSourceMap;
+        private static readonly Bitmap LateralPointIcon = Properties.Resources.LateralPoint;
+        private static readonly Bitmap LateralPolygonIcon = Properties.Resources.LateralPolygon;
 
         private static readonly string ModelName = nameof(WaterFlowFMModel);
 
@@ -49,6 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.BoundariesLayerName, BoundaryToolName, BoundaryIcon));
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceAndSinkToolName, SourceSinkIcon));
             tools.Add(new Feature2DPointTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceToolName, SourceIcon));
+            tools.Add(new Feature2DLineTool(LateralMapLayerProvider.LayerName, LateralToolName, LateralPolygonIcon) {CloseLine = true});
+            tools.Add(new Feature2DPointTool(LateralMapLayerProvider.LayerName, LateralPointToolName, LateralPointIcon));
             tools.OfType<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
 
             mapView.MapControl.Tools.AddRange(tools);

@@ -16,8 +16,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
-            <convertersTimeFrame:HydrodynamicsInputDataTypeToVisibilityConverter x:Key="HydrodynamicsToVisibilityConverter" />
-            <convertersTimeFrame:WindInputDataTypeToVisibilityConverter x:Key="WindToVisibilityConverter" />
+            <converters:EnumToVisibilityConverter x:Key="HydrodynamicsToVisibilityConverter" CollapseHidden="True" InvertVisibility="False" />
+            <converters:EnumToVisibilityConverter x:Key="WindToVisibilityConverter" CollapseHidden="True" InvertVisibility="False" />
             <convertersTimeFrame:ColumnVisibilitiesConverter x:Key="ColumnVisibilitiesConverter"/>
 
             <DataTemplate x:Key="EnumLabeledComboBoxTemplate">

@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -56,6 +56,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; could not be parsed to a double for property &apos;{1}&apos;. Line: {2}.
+        /// </summary>
+        public static string _0_could_not_be_parsed_to_a_double_for_property_1_Line_2_ {
+            get {
+                return ResourceManager.GetString("_0_could_not_be_parsed_to_a_double_for_property_1_Line_2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Line: {1}.
+        /// </summary>
+        public static string _0_Line_1_ {
+            get {
+                return ResourceManager.GetString("_0_Line_1_", resourceCulture);
             }
         }
         
@@ -120,6 +138,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category {0} has an unknown header and cannot be parsed. Line: {1}.
+        /// </summary>
+        public static string Category_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_ {
+            get {
+                return ResourceManager.GetString("Category_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown key {0} from file {1}. It will not be imported..
         /// </summary>
         public static string CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_ {
@@ -134,6 +161,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string Could_not_export_data_for_SourceAndSink___0___no_Function_was_found {
             get {
                 return ResourceManager.GetString("Could_not_export_data_for_SourceAndSink___0___no_Function_was_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not parse &apos;{0}&apos; to a floating value. Line: {1}.
+        /// </summary>
+        public static string Could_not_parse_0_to_a_floating_value_Line_1_ {
+            get {
+                return ResourceManager.GetString("Could_not_parse_0_to_a_floating_value_Line_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discharge value &apos;{0}&apos; could not be parsed into either a scalar, time series file or &quot;realtime&quot;. Line: {1}.
+        /// </summary>
+        public static string Discharge_value_0_could_not_be_parsed_Line_1_ {
+            get {
+                return ResourceManager.GetString("Discharge_value_0_could_not_be_parsed_Line_1_", resourceCulture);
             }
         }
         
@@ -375,6 +420,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_featu" +
                         "re_layers_location_not_found_at___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function type &apos;{0}&apos; is not supported for lateral with id &apos;{1}&apos;. Line: {2}.
+        /// </summary>
+        public static string Function_type_0_is_not_supported_for_lateral_with_id_1_Line_2_ {
+            get {
+                return ResourceManager.GetString("Function_type_0_is_not_supported_for_lateral_with_id_1_Line_2_", resourceCulture);
             }
         }
         
@@ -809,12 +863,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No BC data could be found for lateral with id &apos;{0}&apos;..
+        /// </summary>
+        public static string No_BC_data_could_be_found_for_lateral_with_id_0_ {
+            get {
+                return ResourceManager.GetString("No_BC_data_could_be_found_for_lateral_with_id_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Observation {
             get {
                 object obj = ResourceManager.GetObject("Observation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Properties &apos;numCoordinates&apos;, &apos;xCoordinates&apos; and &apos;yCoordinates&apos; must be provided..
+        /// </summary>
+        public static string Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided {
+            get {
+                return ResourceManager.GetString("Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; contains an unsupported value. Supported values: {1}..
+        /// </summary>
+        public static string Property_0_contains_an_unsupported_value_Supported_values_1_ {
+            get {
+                return ResourceManager.GetString("Property_0_contains_an_unsupported_value_Supported_values_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;id&apos; must be provided..
+        /// </summary>
+        public static string Property_id_must_be_provided {
+            get {
+                return ResourceManager.GetString("Property_id_must_be_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;numCoordinates&apos; must either be 1 (point) or any value greater than 2 (polygon)..
+        /// </summary>
+        public static string Property_numCoordinates_must_either_be_1_point_or_any_value_greater_than_2_polygon {
+            get {
+                return ResourceManager.GetString("Property_numCoordinates_must_either_be_1_point_or_any_value_greater_than_2_polygo" +
+                        "n", resourceCulture);
             }
         }
         
@@ -843,6 +943,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("PumpSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantity &apos;{0}&apos; could not be found for lateral with id &apos;{1}&apos;. Line: {2}.
+        /// </summary>
+        public static string Quantity_0_could_not_be_found_for_lateral_with_id_1_Line_2_ {
+            get {
+                return ResourceManager.GetString("Quantity_0_could_not_be_found_for_lateral_with_id_1_Line_2_", resourceCulture);
             }
         }
         
@@ -1140,6 +1249,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("TextDocument", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The number of values of property &apos;{0}&apos; must be equal to the value of property &apos;numCoordinates&apos;..
+        /// </summary>
+        public static string The_number_of_values_of_property_0_must_be_equal_to_the_value_of_property_numCoordinates_ {
+            get {
+                return ResourceManager.GetString("The_number_of_values_of_property_0_must_be_equal_to_the_value_of_property_numCoor" +
+                        "dinates_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the parsing of the boundary external forcing file.
+        /// </summary>
+        public static string The_parsing_of_the_boundary_external_forcing_file {
+            get {
+                return ResourceManager.GetString("The_parsing_of_the_boundary_external_forcing_file", resourceCulture);
             }
         }
         
