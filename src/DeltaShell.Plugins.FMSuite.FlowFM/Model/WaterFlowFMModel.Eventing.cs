@@ -397,6 +397,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private static bool PropertyIsDataAccessObject(WaterFlowFMProperty prop) =>
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.RestartFile,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.RestartDateTime,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.LandBoundaryFile,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ThinDamFile,

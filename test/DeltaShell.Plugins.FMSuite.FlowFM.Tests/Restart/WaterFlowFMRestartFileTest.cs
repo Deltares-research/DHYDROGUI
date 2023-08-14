@@ -224,6 +224,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
                 Assert.IsTrue(fileExists);
             }
         }
+        
+        [TestCaseSource(nameof(GetIsMapFileTestCases))]
+        public void IsMapFile_ReturnsExpectedResults(string filepath, bool expectedResult)
+        {
+            // Setup
+            var restartFile = new WaterFlowFMRestartFile(filepath);
+
+            // Call
+            bool isMapFile = restartFile.IsMapFile;
+
+            // Assert
+            Assert.That(isMapFile, Is.EqualTo(expectedResult));
+        }
+
+        private static IEnumerable<TestCaseData> GetIsMapFileTestCases()
+        {
+            yield return new TestCaseData("_map.nc", true);
+            yield return new TestCaseData("map.nc", false);
+            yield return new TestCaseData(".nc", false);
+            yield return new TestCaseData("_rst.nc", false);
+            yield return new TestCaseData(null, false);
+        }
 
         [Test]
         public void CopyConstructor_ArgNull_ThrowsArgumentNullException()
@@ -241,7 +263,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
             using (var temp = new TemporaryDirectory())
             {
                 string path = Path.Combine(temp.Path, "some_file_rst.nc");
-                var source = new WaterFlowFMRestartFile(path);
+
+                var startTime = new DateTime(1990, 07, 18, 12, 34, 56);
+                var source = new WaterFlowFMRestartFile(path) { StartTime = startTime };
 
                 // Call
                 var copy = new WaterFlowFMRestartFile(source);
@@ -251,6 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
                 Assert.That(copy.IsEmpty, Is.EqualTo(source.IsEmpty));
                 Assert.That(copy.Exists, Is.EqualTo(source.Exists));
                 Assert.That(copy.Path, Is.EqualTo(source.Path));
+                Assert.That(copy.StartTime, Is.EqualTo(source.StartTime));
             }
         }
         

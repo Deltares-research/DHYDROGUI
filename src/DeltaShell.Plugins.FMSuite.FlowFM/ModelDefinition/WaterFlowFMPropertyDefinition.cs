@@ -35,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string ProfdefFile = "profdeffile";
         public const string ProflocFile = "proflocfile";
         public const string RestartFile = "restartfile";
+        public const string RestartDateTime = "restartdatetime";
         public const string RstInterval = "rstinterval";
         public const string StatsInterVal = "statsinterval";
         public const string ThinDamFile = "thindamfile";

@@ -3,6 +3,7 @@ using System.IO;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Restart;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Restart
 {
@@ -35,6 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Restart
 
             path = source.path;
             pathInfo = source.pathInfo;
+            StartTime = source.StartTime;
         }
 
         /// <summary>
@@ -101,6 +103,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Restart
                 return pathInfo.Exists;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the start time of this restart file.
+        /// </summary>
+        public DateTime StartTime { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Gets whether or not the restart file is a map file.
+        /// </summary>
+        public bool IsMapFile => Name.EndsWith(FileConstants.MapFileExtension);
 
         /// <summary>
         /// Copies the file in to the specified <paramref name="directoryPath"/>.

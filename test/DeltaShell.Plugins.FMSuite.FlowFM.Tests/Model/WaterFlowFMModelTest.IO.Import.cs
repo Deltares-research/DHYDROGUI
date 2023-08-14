@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DHYDRO.TestModels.DFlowFM;
 using log4net.Core;
 using NSubstitute;
@@ -136,6 +138,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     // When | Then
                     void Call() => model.ImportFromMdu(mduPath, true);
                     Assert.DoesNotThrow(Call);
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ExportingAndImportingAModelShouldLoadRestartFileCorrectly()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mduPath = Path.Combine(tempDir.Path, "randomName.mdu");
+                var startTime = new DateTime(1990, 07, 18, 12, 34, 56);
+                
+                // Create random _map.nc file we can use as restart file
+                const string mapExtension = "_map.nc";
+                string restartMapFile = tempDir.CreateFile($"random{mapExtension}");
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.RestartInput = new WaterFlowFMRestartFile(restartMapFile) { StartTime = startTime };
+                    model.ExportTo(mduPath);
+                }
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    // Call
+                    model.ImportFromMdu(mduPath);
+                    
+                    // Assert
+                    WaterFlowFMRestartFile restartFile = model.RestartInput;
+                    Assert.That(restartFile, Is.Not.Null);
+                    Assert.That(restartFile.Path, Is.EqualTo(restartMapFile));
+                    Assert.That(restartFile.StartTime, Is.EqualTo(startTime));
                 }
             }
         }

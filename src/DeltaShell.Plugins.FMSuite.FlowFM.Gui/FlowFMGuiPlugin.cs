@@ -451,6 +451,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
+            yield return new PropertyInfo<WaterFlowFMRestartFile, RestartFileProperties>();
             yield return new PropertyInfo<Structure, FMWeirProperties> { AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Structures.Contains(w)) };
         }
 

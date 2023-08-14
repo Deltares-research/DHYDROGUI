@@ -40,6 +40,11 @@
         /// <c> true </c> if [the flow renumbering should be disabled];
         /// otherwise, <c> false </c>.
         /// </value>
-        bool DisableFlowNodeRenumbering { get; }
+        bool DisableFlowNodeRenumbering { get; } 
+        
+        /// <summary>
+        /// Get whether the restart start time should be written.
+        /// </summary>
+        bool WriteRestartStartTime { get; }
     }
 }

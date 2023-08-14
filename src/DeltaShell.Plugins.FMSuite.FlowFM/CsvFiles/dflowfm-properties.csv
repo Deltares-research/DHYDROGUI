@@ -152,7 +152,7 @@ time,Tunit,,,Time unit:hours|minutes|seconds,H|M|S,S,,,TRUE,,,,,,"Time unit for 
 time,StartDateTime,timeframe,Time Frame,Start datetime,DateTime,20010101000000,,,FALSE,,,,,,Computation start datetime [yyyymmddhhmmss]
 time,StopDateTime,timeframe,Time Frame,Stop datetime,DateTime,20010102000000,,,FALSE,,,,,,Computation stop datetime [yyyymmddhhmmss]
 restart,RestartFile,,,,FileName,,,,TRUE,,,,,,"Restart netcdf-file, either *_rst.nc or *_map.nc"
-restart,RestartDateTime,,,Restart Time,DateTime,,,,TRUE,,,,,,Restart date and time when restarting from *_map.nc [YYYY-MM-DD HH:MM:SS]
+restart,RestartDateTime,,,Restart Time,DateTime,,,,TRUE,,,,,,Restart date and time when restarting from *_map.nc [YYYYMMDDHHMMSS]
 external forcing,ExtForceFile,,,,FileName,,,,TRUE,,,,,,"Old format for external forcings file *.ext, link with tim/cmp-format boundary conditions specification"
 external forcing,ExtForceFileNew,,,,FileName,,,,TRUE,,,,,,"New format for external forcings file *.ext, link with bc-format boundary conditions specification"
 trachytopes,TrtRou,,,Include trachytopes?:Yes (Y)|No (N),Y|N,N,,,TRUE,,,,,,"Include alluvial and vegetation roughness (trachytopes) (Y: yes, N: no)"

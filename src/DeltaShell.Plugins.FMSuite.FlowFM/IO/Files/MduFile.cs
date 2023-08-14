@@ -700,6 +700,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return string.Empty;
             }
 
+            if (!config.WriteRestartStartTime && propertyName == KnownProperties.RestartDateTime)
+            {
+                return string.Empty;
+            }
+
             return prop.GetValueAsString();
         }
 

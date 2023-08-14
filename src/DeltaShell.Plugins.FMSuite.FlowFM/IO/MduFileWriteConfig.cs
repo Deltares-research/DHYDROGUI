@@ -15,6 +15,7 @@
         /// WriteFeatures              = true
         /// WriteMorSed                = true
         /// DisableFlowNodeRenumbering = false
+        /// WriteRestartStartTime      = false
         /// </remarks>
         public MduFileWriteConfig()
         {
@@ -22,11 +23,13 @@
             WriteFeatures = true;
             WriteMorphologySediment = true;
             DisableFlowNodeRenumbering = false;
+            WriteRestartStartTime = false;
         }
 
         public bool WriteExtForcings { get; set; }
         public bool WriteFeatures { get; set; }
         public bool WriteMorphologySediment { get; set; }
         public bool DisableFlowNodeRenumbering { get; set; }
+        public bool WriteRestartStartTime { get; set; }
     }
 }

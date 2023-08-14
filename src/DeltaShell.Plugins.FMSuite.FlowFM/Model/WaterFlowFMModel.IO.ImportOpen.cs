@@ -10,6 +10,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -245,7 +246,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return;
             }
 
-            RestartInput = new WaterFlowFMRestartFile(restartFilePath);
+            string restartStartTimeString = ModelDefinition.GetModelProperty(KnownProperties.RestartDateTime).GetValueAsString();
+            var restartStartTime = FMParser.FromString<DateTime>(restartStartTimeString);
+            RestartInput = new WaterFlowFMRestartFile(restartFilePath) { StartTime = restartStartTime };
         }
 
         private void ImportSpatialOperationsAfterCreating()

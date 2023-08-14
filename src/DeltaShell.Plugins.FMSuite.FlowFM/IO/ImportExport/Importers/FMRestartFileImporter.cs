@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public bool CanImportOnRootLevel => false;
 
         /// <inheritdoc cref="IFileImporter"/>
-        public string FileFilter => $"FM restart files|*{FileConstants.RestartFileExtension}";
+        public string FileFilter => $"FM restart files|*{FileConstants.RestartFileExtension};*{FileConstants.MapFileExtension}";
 
         /// <inheritdoc cref="IFileImporter"/>
         public string TargetDataDirectory { get; set; }

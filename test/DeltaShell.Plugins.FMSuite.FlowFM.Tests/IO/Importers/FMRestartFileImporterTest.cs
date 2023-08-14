@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importer.Image, Is.Not.Null);
             CollectionContainsOnlyAssert.AssertContainsOnly(importer.SupportedItemTypes, typeof(WaterFlowFMRestartFile));
             Assert.That(importer.CanImportOnRootLevel, Is.False);
-            Assert.That(importer.FileFilter, Is.EqualTo($"FM restart files|*_rst.nc"));
+            Assert.That(importer.FileFilter, Is.EqualTo($"FM restart files|*_rst.nc;*_map.nc"));
             Assert.That(importer.TargetDataDirectory, Is.Null);
             Assert.That(importer.ShouldCancel, Is.False);
             Assert.That(importer.OpenViewAfterImport, Is.False);

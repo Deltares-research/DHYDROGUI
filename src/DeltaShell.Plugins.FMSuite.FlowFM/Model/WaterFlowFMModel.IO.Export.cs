@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
@@ -90,12 +91,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 WriteExtForcings = writeExtForcings,
                 WriteFeatures = writeFeatures,
-                DisableFlowNodeRenumbering = DisableFlowNodeRenumbering
+                DisableFlowNodeRenumbering = DisableFlowNodeRenumbering,
+                WriteRestartStartTime = RestartInput.IsMapFile
             };
 
             RestartInput.CopyToDirectory(dirName, switchTo);
             ModelDefinition.GetModelProperty(KnownProperties.RestartFile)
                            .SetValueAsString(RestartInput.Name);
+
+            WaterFlowFMProperty restartDateTimeProperty = ModelDefinition.GetModelProperty(KnownProperties.RestartDateTime);
+            restartDateTimeProperty.SetValueAsString(FMParser.ToString(RestartInput.StartTime, typeof(DateTime)));
 
             CacheFile.Export(mduPath);
             MduFile.Write(mduPath,
