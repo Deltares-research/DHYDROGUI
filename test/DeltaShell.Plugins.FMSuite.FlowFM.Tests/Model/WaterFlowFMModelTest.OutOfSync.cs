@@ -622,7 +622,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.ObservationPoints.Add(new GroupableFeature2DPoint
             {
-                Geometry = new Point(5, 5)
+                Geometry = new Point(5, 5),
+                Name = "haha"
             });
         }
 

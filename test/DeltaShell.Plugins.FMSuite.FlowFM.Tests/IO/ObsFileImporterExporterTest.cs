@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -14,6 +13,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     internal class ObsFileImporterExporterTest
     {
         [Test]
@@ -124,6 +124,72 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(obsFileGroupB);
             }
         }
+        
+        [Test]
+        [TestCase("(20,40)")]
+        [TestCase("Name with spaces")]
+        [TestCase("\tname_with_tab")]
+        [TestCase("\t name with tab and space and a comma")]
+        [TestCase("\"NameStartingWithADoubleQuote")]
+        [TestCase("NameEndingWithADoubleQuote\"")]
+        [TestCase("NameEndingWithAWithADoubleQuote\"InTheMiddle")]
+        [TestCase("\"")]
+        public void ObsFile_names_exports_names_with_whitespace_or_commas_in_quotes(string name)
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDir.Path, ".xyn");
+
+                List<Feature2DPoint> points = CreateObservationPoints<Feature2DPoint>(9);
+                var point = new Feature2DPoint()
+                {
+                    Geometry = new Point(0.123, 0.456),
+                    Name = name
+                };
+                points.Add(point);
+
+                var obsFileImporterExporter = new ObsFileImporterExporter<Feature2DPoint>();
+
+                obsFileImporterExporter.Export(points, filePath);
+                string fileContent = File.ReadAllText(filePath);
+
+                const char quote = '\'';
+                Assert.AreEqual(2, fileContent.Count(f => (f == quote)), "More or less than one name is quoted");
+                Assert.IsTrue(fileContent.Contains("'" + name + "'"), "Name is not found in quotes");
+            }
+        }
+        
+        [Test]
+        [TestCase("NormalName")]
+        [TestCase(@"NameWithéóÄ")]
+        public void ObsFile_names_exports_names_without_whitespace_or_commas_without_quotes(string name)
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDir.Path, ".xyn");
+
+                List<Feature2DPoint> points = CreateObservationPoints<Feature2DPoint>(9);
+                var point = new Feature2DPoint()
+                {
+                    Geometry = new Point(0.123, 0.456),
+                    Name = name
+                };
+                points.Add(point);
+
+                var obsFileImporterExporter = new ObsFileImporterExporter<Feature2DPoint>();
+
+                obsFileImporterExporter.Export(points, filePath);
+                string fileContent = File.ReadAllText(filePath);
+
+                const char quote = '\'';
+
+                Assert.AreEqual(0, fileContent.Count(f => (f == quote)), "One or more names are quoted");
+                Assert.IsTrue(fileContent.Contains(name), "Name is not found");
+            }
+        }
+
 
         private List<T> CreateObservationPoints<T>(int numberOfPoints) where T : Feature2DPoint, new()
         {
