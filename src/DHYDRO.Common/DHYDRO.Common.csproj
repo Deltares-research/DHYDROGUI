@@ -13,6 +13,7 @@
     <PropertyGroup>
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
         <OutputPath>$(SolutionDir)bin\$(Configuration)\src</OutputPath>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
