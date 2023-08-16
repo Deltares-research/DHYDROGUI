@@ -969,7 +969,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 blocks = new DelftIniReader().ReadDelftIniFile(fileStream, path);
             }
 
-            Assert.AreEqual(2, blocks.Count);
+            Assert.AreEqual(3, blocks.Count);
         }
 
         [Test]

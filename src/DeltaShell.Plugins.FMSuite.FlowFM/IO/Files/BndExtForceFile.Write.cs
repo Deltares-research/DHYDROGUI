@@ -125,6 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             OpenOutputFile(bndExtFilePath);
             try
             {
+                WriteGeneralSection();
                 WriteBoundaryCategories(bndExtForceFileItems);
                 WriteLateralCategories(lateralCategories);
 
@@ -168,6 +169,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 WritePropertyValueIfNotNull(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey, bndExtForceFileItem);
                 WritePropertyValueIfNotNull(areaKey, bndExtForceFileItem);
             }
+        }
+
+        private void WriteGeneralSection()
+        {
+            WriteLine($"[{BndExtForceFileConstants.GeneralBlockKey}]");
+            WritePropertyValue(BndExtForceFileConstants.FileVersionKey, FileVersion);
+            WritePropertyValue(BndExtForceFileConstants.FileTypeKey, FileType);
         }
 
         private void WritePropertyValues(string propertyName, DelftIniCategory bndExtForceFileItem)

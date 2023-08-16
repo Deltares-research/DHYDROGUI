@@ -89,5 +89,15 @@
         /// The realtime discharge value.
         /// </summary>
         public const string RealTimeValue = "realtime";
+
+        /// <summary>
+        /// The file version property key.
+        /// </summary>
+        public const string FileVersionKey = "fileVersion";
+        
+        /// <summary>
+        /// The file type property key.
+        /// </summary>
+        public const string FileTypeKey = "fileType";
     }
 }

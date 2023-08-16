@@ -1383,16 +1383,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 bcFileLines = File.ReadAllLines(bcFile).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
             }
 
-            Assert.That(extFileLines, Has.Length.EqualTo(9));
-            Assert.That(extFileLines[0], Is.EqualTo("[lateral]"));
-            AssertPropertyLine(extFileLines[1], "id", "some_id");
-            AssertPropertyLine(extFileLines[2], "name", "some_id");
-            AssertPropertyLine(extFileLines[3], "type", "discharge");
-            AssertPropertyLine(extFileLines[4], "locationType", "2d");
-            AssertPropertyLine(extFileLines[5], "numCoordinates", "3");
-            AssertPropertyLine(extFileLines[6], "xCoordinates", "1.2300000e+000 2.3400000e+000 3.4500000e+000");
-            AssertPropertyLine(extFileLines[7], "yCoordinates", "4.5600000e+000 5.6700000e+000 6.7800000e+000");
-            AssertPropertyLine(extFileLines[8], "discharge", "lateral_discharge.bc");
+            Assert.That(extFileLines, Has.Length.EqualTo(12));
+            
+            AssertGeneralSection(extFileLines, bndExtForceFile);
+
+            Assert.That(extFileLines[3], Is.EqualTo("[lateral]"));
+            AssertPropertyLine(extFileLines[4], "id", "some_id");
+            AssertPropertyLine(extFileLines[5], "name", "some_id");
+            AssertPropertyLine(extFileLines[6], "type", "discharge");
+            AssertPropertyLine(extFileLines[7], "locationType", "2d");
+            AssertPropertyLine(extFileLines[8], "numCoordinates", "3");
+            AssertPropertyLine(extFileLines[9], "xCoordinates", "1.2300000e+000 2.3400000e+000 3.4500000e+000");
+            AssertPropertyLine(extFileLines[10], "yCoordinates", "4.5600000e+000 5.6700000e+000 6.7800000e+000");
+            AssertPropertyLine(extFileLines[11], "discharge", "lateral_discharge.bc");
             
             Assert.That(bcFileLines, Has.Length.EqualTo(11));
             Assert.That(bcFileLines[0], Is.EqualTo("[forcing]"));
@@ -1406,6 +1409,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             AssertDataLine(bcFileLines[8], "60", "1.23");
             AssertDataLine(bcFileLines[9], "120", "2.34");
             AssertDataLine(bcFileLines[10], "180", "3.45");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAnyWaterFlowFmModelDefinition_WhenWriteBndExtForceFile_ThenWrittenFileContainsVersionInformation()
+        {
+            //Arrange
+            var bndExtForceFile = new BndExtForceFile();
+            var waterFlowFMModelDefinition = new WaterFlowFMModelDefinition();
+            waterFlowFMModelDefinition.BoundaryConditionSets.AddRange(new []
+            {
+                new BoundaryConditionSet 
+                { 
+                    Feature = new Feature2D
+                    {
+                        Name = "TestName",
+                        Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
+                    } 
+                }
+            });
+
+            const string fileName = "file_bnd.ext";
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = tempDirectory.Path +@"\"+ fileName;
+                
+                //Act
+                bndExtForceFile.Write(filePath, waterFlowFMModelDefinition);
+                
+                //Assert
+                string[] extFileLines = File.ReadAllLines(filePath);
+                AssertGeneralSection(extFileLines, bndExtForceFile);
+            }
+        }
+        
+        private static void AssertGeneralSection(string[] extFileLines, BndExtForceFile bndExtForceFile)
+        {
+            Assert.That(extFileLines[0], Is.EqualTo($"[{BndExtForceFileConstants.GeneralBlockKey}]"));
+            AssertPropertyLine(extFileLines[1], BndExtForceFileConstants.FileVersionKey, bndExtForceFile.FileVersion);
+            AssertPropertyLine(extFileLines[2], BndExtForceFileConstants.FileTypeKey, bndExtForceFile.FileType);
         }
 
         private static void CheckIfSubFilesMentionedInBndExtForceFileAreWrittenRelativeToThisFile(string line, string saveBndExtFilePath)

@@ -9,6 +9,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public partial class BndExtForceFile : NGHSFileBase
     {
+        /// <summary>
+        /// File version of the file.
+        /// </summary>
+        public string FileVersion => "2.01";
+
+        /// <summary>
+        /// File type of the file.
+        /// </summary>
+        public string FileType => "extForce";
+        
         private const string areaKey = "area";
         private static readonly ILog log = LogManager.GetLogger(typeof(BndExtForceFile));
 
