@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         private static readonly ILog Log = LogManager.GetLogger(typeof(BcFileFlowBoundaryDataBuilder));
 
         private static readonly IDictionary<string, ForcingTypeDefinition> ForcingTypeDefinitions =
-            new Dictionary<string, ForcingTypeDefinition>
+            new Dictionary<string, ForcingTypeDefinition>( StringComparer.CurrentCultureIgnoreCase )
             {
                 {
                     "timeseries", new ForcingTypeDefinition
@@ -159,8 +159,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             };
 
         private static readonly IDictionary<string, VerticalProfileType> VerticalDefinitionKeys =
-            new Dictionary<string, VerticalProfileType>
+            new Dictionary<string, VerticalProfileType>(StringComparer.CurrentCultureIgnoreCase)
             {
+                {"percBed",VerticalProfileType.PercentageFromBed},
+                {"zDatum", VerticalProfileType.ZFromDatum},
+                {"zBed",VerticalProfileType.ZFromBed},
+                {"zSurf", VerticalProfileType.ZFromSurface},
+                // obsolete values retained to keep our tests from failing
                 {"single", VerticalProfileType.Uniform},
                 {"uniform", VerticalProfileType.Uniform},
                 {"none", VerticalProfileType.Uniform},
@@ -960,8 +965,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 return VerticalDefinitionKeys.First(kvp => kvp.Value == type).Key;
             }
 
-            throw new NotImplementedException("Vertical profile definition " + type +
-                                              " not supported by bc file writer");
+            string supportedValues = string.Join(", ", VerticalDefinitionKeys.Keys);
+            throw new NotSupportedException($"Vertical profile definition {type} not supported. " +
+                                            $"Supported values are: {supportedValues}");
         }
 
         private static string VerticalProfileDefinitionString(VerticalProfileDefinition verticalProfile)
@@ -1045,22 +1051,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 return new VerticalProfileDefinition();
             }
 
+            if (!VerticalDefinitionKeys.ContainsKey(dataBlock.VerticalPositionType))
+            {
+                LogWarningParsePropertyFailed(dataBlock, "vertical position type", dataBlock.VerticalPositionType);
+                string supportedValues = string.Join(", ", VerticalDefinitionKeys.Keys);
+                throw new NotSupportedException($"Vertical profile definition {dataBlock.VerticalPositionType} not supported. " +
+                                                $"Supported values are: {supportedValues}");
+            }
+
             try
             {
-                string verticalPositionType = dataBlock.VerticalPositionType.ToLower();
-                if (!VerticalDefinitionKeys.ContainsKey(verticalPositionType))
-                {
-                    throw new NotSupportedException($"Not possible to generate a Vertical Profile Definition for {verticalPositionType}.");
-                }
-
-                VerticalProfileType type = VerticalDefinitionKeys[verticalPositionType];
+                VerticalProfileType type = VerticalDefinitionKeys[dataBlock.VerticalPositionType];
                 var depths = new List<double>();
                 if (type == VerticalProfileType.Uniform || type == VerticalProfileType.TopBottom)
                 {
                     return VerticalProfileDefinition.Create(type, depths);
                 }
 
-                depths = dataBlock.VerticalPositionDefinition.Split().Select(double.Parse).ToList();
+                depths = dataBlock.VerticalPositionDefinition.Split(null as char[], StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToList();
                 IEnumerable<double> sortedDepths = VerticalProfileDefinition.SortDepths(depths, type);
                 if (!depths.SequenceEqual(sortedDepths))
                 {

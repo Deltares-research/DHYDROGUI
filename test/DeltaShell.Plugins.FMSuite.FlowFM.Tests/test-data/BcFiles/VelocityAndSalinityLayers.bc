@@ -2,7 +2,7 @@
 Name 				= pli1_0001
 Function			= timeseries
 Time-interpolation 		= linear
-Vertical position type		= percentage from bed
+Vertical position type		= percBed
 Vertical position specification	= 20 50 70
 Vertical interpolation		= linear
 Quantity			= time
@@ -32,7 +32,7 @@ Vertical position 	= 3
 Name 				= pli1_0001
 Function			= timeseries
 Time-interpolation 		= linear
-Vertical position type		= z above datum
+Vertical position type		= zDatum
 Vertical position specification	= -8 -6 -4 -2 0
 Vertical interpolation		= linear
 Quantity			= time 
