@@ -1306,6 +1306,101 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(lines, Has.One.Matches<string>(line => LineStartsWith(line, KnownProperties.StopDateTime)));
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(Get3DLayerPropertiesTestCases))]
+        public void Writing3DLayerPropertiesShouldUseDefaultValuesIfPropertyIsDisabled(string propertyName,
+                                                                                       string validNonDefaultValueAsString)
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mduFilepath = Path.Combine(tempDir.Path, "random.mdu");
+                
+                var mduFile = new MduFile();
+
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+                string expectedDefaultValue = property.PropertyDefinition.DefaultValueAsString;
+                
+                // Precondition
+                Assert.That(expectedDefaultValue, Is.Not.EqualTo(validNonDefaultValueAsString));
+                
+                property.SetValueAsString(validNonDefaultValueAsString);
+                property.PropertyDefinition.IsEnabled = properties => false; // disable the property
+                
+                // Call
+                mduFile.WriteProperties(mduFilepath, modelDefinition.Properties, null, false);
+                
+                // Assert
+                string[] lines = File.ReadAllLines(mduFilepath);
+                string value = GetValueForPropertyFromMduFile(propertyName, lines);
+
+                Assert.That(value, Is.EqualTo(expectedDefaultValue));
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WritingNumTopSigPropertyShouldUseDefaultValuesIfPropertyIsDisabled()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mduFilepath = Path.Combine(tempDir.Path, "random.mdu");
+                
+                var mduFile = new MduFile();
+
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                WaterFlowFMProperty property = modelDefinition.GetModelProperty(KnownProperties.NumTopSig);
+                string expectedDefaultValue = property.PropertyDefinition.DefaultValueAsString;
+                const string validNonDefaultValueAsString = "2"; // value between 0 and kmx
+
+                modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("10"); // random valid number
+                
+                // Precondition
+                Assert.That(expectedDefaultValue, Is.Not.EqualTo(validNonDefaultValueAsString));
+                
+                property.SetValueAsString(validNonDefaultValueAsString);
+                property.PropertyDefinition.IsEnabled = properties => false; // disable the property
+                
+                // Call
+                mduFile.WriteProperties(mduFilepath, modelDefinition.Properties, null, false);
+                
+                // Assert
+                string[] lines = File.ReadAllLines(mduFilepath);
+                string value = GetValueForPropertyFromMduFile(KnownProperties.NumTopSig, lines);
+
+                Assert.That(value, Is.EqualTo(expectedDefaultValue));
+            }
+        }
+
+        private static IEnumerable<TestCaseData> Get3DLayerPropertiesTestCases()
+        {
+            yield return new TestCaseData(KnownProperties.DzTop, "9999");
+            yield return new TestCaseData(KnownProperties.FloorLevTopLay, "-9999");
+            yield return new TestCaseData(KnownProperties.DzTopUniAboveZ, "-9999");
+            yield return new TestCaseData(KnownProperties.SigmaGrowthFactor, "9999");
+            yield return new TestCaseData(KnownProperties.NumTopSigUniform, "1");
+        }
+
+        private static string GetValueForPropertyFromMduFile(string property, IEnumerable<string> fileContent)
+        {
+            string line = fileContent.FirstOrDefault(l => l.TrimStart().StartsWith(property, StringComparison.InvariantCultureIgnoreCase));
+            if (line is null)
+            {
+                Assert.Fail($"Mdu file does not contain the property `{property}`.");
+            }
+
+            string valueWithPossibleComment = line.Split('=')[1];
+            if (valueWithPossibleComment.Contains("#"))
+            {
+                return valueWithPossibleComment.Split('#')[0].Trim();
+            }
+
+            return valueWithPossibleComment.Trim();
+        }
+
         private static bool LineStartsWith(string line, string substring)
         {
             string key = line.Split('=')[0].Trim();

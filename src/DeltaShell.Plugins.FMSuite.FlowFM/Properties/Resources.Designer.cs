@@ -662,6 +662,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The kmx property is required to validate {0}..
+        /// </summary>
+        public static string Kmx_property_is_required_to_validate__0__ {
+            get {
+                return ResourceManager.GetString("Kmx_property_is_required_to_validate__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copied file at location &apos;{0}&apos; to location &apos;{1}&apos;,
         ///because the file existed outside of the project folder of model &apos;{2}&apos;..
         /// </summary>
@@ -891,6 +900,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameter {0} should be between 0 and {1} (the current value of {2})..
+        /// </summary>
+        public static string Parameter__0__should_be_between_0_and__1___the_current_value_of__2___ {
+            get {
+                return ResourceManager.GetString("Parameter__0__should_be_between_0_and__1___the_current_value_of__2___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter {0} should be &lt; 0.00..
+        /// </summary>
+        public static string Parameter__0__should_be_less_than_zero {
+            get {
+                return ResourceManager.GetString("Parameter__0__should_be_less_than_zero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; contains an unsupported value. Supported values: {1}..
         /// </summary>
         public static string Property_0_contains_an_unsupported_value_Supported_values_1_ {
@@ -915,6 +942,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("Property_numCoordinates_must_either_be_1_point_or_any_value_greater_than_2_polygo" +
                         "n", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter {0} should be &gt; 0.00..
+        /// </summary>
+        public static string Parameter__0__should_be_more_than_zero {
+            get {
+                return ResourceManager.GetString("Parameter__0__should_be_more_than_zero", resourceCulture);
             }
         }
         
@@ -1418,6 +1454,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} cannot be validated..
+        /// </summary>
+        public static string WaterFlowFM3DLayerPropertyValidator_Cannot_validate_property {
+            get {
+                return ResourceManager.GetString("WaterFlowFM3DLayerPropertyValidator_Cannot_validate_property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to thin dam &apos;{0}&apos; not within grid extent.
         /// </summary>
         public static string WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent {
@@ -1767,6 +1812,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameter {0} outside validity range {1}..
+        /// </summary>
+        public static string WaterFlowFMModelDefinitionValidator_Parameter__0__outside_validity_range__1__ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Parameter__0__outside_validity_range__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solver type selected for parallel run; this is currently not possible in GUI..
+        /// </summary>
+        public static string WaterFlowFMModelDefinitionValidator_Solver_type_selected_for_parallel_run__this_is_currently_not_possible_in_GUI_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Solver_type_selected_for_parallel_run__this_i" +
+                        "s_currently_not_possible_in_GUI_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Conveyance2D type in Geometry should be set to &apos;R=HU&apos; (-1), &apos;R=H&apos; (0) or &apos;R=A/P&apos; (1) when morphology is active..
         /// </summary>
         public static string WaterFlowFMModelDefinitionValidator_Validate_ {
@@ -1782,6 +1846,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to" +
                         "__faces__when_morphology_is_active_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WaterFlow FM model definition.
+        /// </summary>
+        public static string WaterFlowFMModelDefinitionValidator_WaterFlow_FM_model_definition {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_WaterFlow_FM_model_definition", resourceCulture);
             }
         }
         

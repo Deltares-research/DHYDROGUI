@@ -46,6 +46,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string FixedWeirScheme = "fixedweirscheme";
         public const string StructuresFile = "structurefile";
         public const string Kmx = "kmx";
+        public const string LayerType = "layertype";
+        public const string DzTop = "dztop";
+        public const string FloorLevTopLay = "floorlevtoplay";
+        public const string DzTopUniAboveZ = "dztopuniabovez";
+        public const string NumTopSig = "numtopsig";
+        public const string NumTopSigUniform = "numtopsiguniform";
+        public const string SigmaGrowthFactor = "sigmagrowthfactor";
         public const string DtInit = "dtinit";
         public const string DtUser = "dtuser";
         public const string DtMax = "dtmax";

@@ -47,10 +47,14 @@ Dcenterinside                     = 1                   # Limit cell center (1.0
 Bamin                             = 1E-06               # Minimum grid cell area, in combination with cut cells
 OpenBoundaryTolerance             = 3                   # Search tolerance factor between boundary polyline and grid cells, in cell size units
 RenumberFlowNodes                 = 1                   # Renumber the flow nodes (1: yes, 0: no)
-Kmx                               = 0                   # Maximum number of vertical layers
+Kmx                               = 0                   # Number of vertical layers use 0 for 2D
 Layertype                         = 1                   # Vertical layer type (1: all sigma, 2: all z, 3: use VertplizFile)
-Numtopsig                         = 0                   # Number of sigma layers in top of z-layer model
-SigmaGrowthFactor                 = 1                   # Layer thickness growth factor from bed up
+NumTopSig                         = 0                   # Number of sigma-layers on top of z-layers
+SigmaGrowthFactor                 = 1.2                 # Layer thickness growth factor from DzTopUniAboveZ downwards
+DzTop                             = 1                   # z-layer thickness of layers above level DzTopUniAboveZ
+FloorLevTopLay                    = -1.0                # The floor level of the top layer
+DzTopUniAboveZ                    = -5.0                # The level above which the layers will have a uniform thickness of DzTop
+NumTopSigUniform                  = 0                   # Indicating whether the number of sigma-layers is 0=constant or 1=decreasing
 
 [numerics]
 CFLMax                            = 0.7                 # Maximum Courant number

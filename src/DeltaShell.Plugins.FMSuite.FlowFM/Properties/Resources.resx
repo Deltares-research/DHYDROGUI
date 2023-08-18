@@ -751,4 +751,28 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00" xml:space="preserve">
     <value>Time zone of boundary condition '{0}' falls outside of allowed range -12:00 and +12:00</value>
   </data>
+  <data name="WaterFlowFMModelDefinitionValidator_WaterFlow_FM_model_definition" xml:space="preserve">
+    <value>WaterFlow FM model definition</value>
+  </data>
+  <data name="WaterFlowFMModelDefinitionValidator_Parameter__0__outside_validity_range__1__" xml:space="preserve">
+    <value>Parameter {0} outside validity range {1}.</value>
+  </data>
+  <data name="WaterFlowFMModelDefinitionValidator_Solver_type_selected_for_parallel_run__this_is_currently_not_possible_in_GUI_" xml:space="preserve">
+    <value>Solver type selected for parallel run; this is currently not possible in GUI.</value>
+  </data>
+  <data name="WaterFlowFM3DLayerPropertyValidator_Cannot_validate_property" xml:space="preserve">
+    <value>{0} cannot be validated.</value>
+  </data>
+  <data name="Parameter__0__should_be_more_than_zero" xml:space="preserve">
+    <value>Parameter {0} should be &gt; 0.00.</value>
+  </data>
+  <data name="Parameter__0__should_be_less_than_zero" xml:space="preserve">
+    <value>Parameter {0} should be &lt; 0.00.</value>
+  </data>
+  <data name="Kmx_property_is_required_to_validate__0__" xml:space="preserve">
+    <value>The kmx property is required to validate {0}.</value>
+  </data>
+  <data name="Parameter__0__should_be_between_0_and__1___the_current_value_of__2___" xml:space="preserve">
+    <value>Parameter {0} should be between 0 and {1} (the current value of {2}).</value>
+  </data>
 </root>

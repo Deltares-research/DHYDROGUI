@@ -1840,6 +1840,101 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(operations, Is.Empty);
         }
 
+        [Test]
+        [TestCaseSource(nameof(GetAllConditional3DLayerPropertiesCases))]
+        public void WhenKmxIsZero_3DLayerPropertiesAreDisabledAndInvisible(string propertyName)
+        {
+            // Setup
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Call
+            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("0");
+            
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+
+            // Assert
+            Assert.That(property.IsEnabled(modelDefinition.Properties), Is.False);
+            Assert.That(property.IsVisible(modelDefinition.Properties), Is.False);
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(GetAllConditional3DLayerPropertiesCases))]
+
+        public void WhenKmxIsLargerThanZero_LayerTypeAllZ_AllPropertiesAreEnabledAndVisible(string propertyName)
+        {
+            // Setup
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Call
+            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("1");
+            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueAsString("2"); // all-z
+
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+
+            // Assert
+            Assert.That(property.IsEnabled(modelDefinition.Properties), Is.True);
+            Assert.That(property.IsVisible(modelDefinition.Properties), Is.True);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetAllConditional3DLayerPropertiesCases))]
+
+        public void WhenKmxIsLargerThanZero_LayerTypeAllSigma_NoPropertiesAreEnabledOrVisible(string propertyName)
+        {
+            // Setup
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Call
+            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("1");
+            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueAsString("1"); // all-sigma
+            
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+
+            // Assert
+            Assert.That(property.IsEnabled(modelDefinition.Properties), Is.False);
+            Assert.That(property.IsVisible(modelDefinition.Properties), Is.False);
+        }
+
+        private static IEnumerable<TestCaseData> GetAllConditional3DLayerPropertiesCases()
+
+        {
+            yield return new TestCaseData(KnownProperties.DzTop);
+            yield return new TestCaseData(KnownProperties.FloorLevTopLay);
+            yield return new TestCaseData(KnownProperties.DzTopUniAboveZ);
+            yield return new TestCaseData(KnownProperties.SigmaGrowthFactor);
+            yield return new TestCaseData(KnownProperties.NumTopSig);
+            yield return new TestCaseData(KnownProperties.NumTopSigUniform);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetOnlyZPropertiesAreEnabledAndVisibleCases))]
+        public void WhenKmxIsLargerThanZero_LayerTypeAllZ_ZPropertiesAreEnabledAndVisible(string propertyName,
+                                                                                         bool enabledAndVisible)
+        {
+            // Setup
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Call
+            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("1");
+            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueAsString("2"); // all-z
+
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+
+            // Assert
+            Assert.That(property.IsEnabled(modelDefinition.Properties), Is.EqualTo(enabledAndVisible));
+            Assert.That(property.IsVisible(modelDefinition.Properties), Is.EqualTo(enabledAndVisible));
+        }
+        
+        private static IEnumerable<TestCaseData> GetOnlyZPropertiesAreEnabledAndVisibleCases()
+        {
+            yield return new TestCaseData(KnownProperties.DzTop, true);
+            yield return new TestCaseData(KnownProperties.FloorLevTopLay, true);
+            yield return new TestCaseData(KnownProperties.DzTopUniAboveZ, true);
+            yield return new TestCaseData(KnownProperties.SigmaGrowthFactor, true);
+            yield return new TestCaseData(KnownProperties.NumTopSig, true);
+            yield return new TestCaseData(KnownProperties.NumTopSigUniform, true);
+        }
+
         private static UnstructuredGridCellCoverage CreateGridCoverageWithValue(double value)
         {
             UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 1, 1);

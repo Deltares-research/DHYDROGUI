@@ -8,7 +8,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
@@ -16,8 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public static class WaterFlowFmSettingsHelper
     {
-        private const string layersTabName = "3D Layers";
-
         /// <summary>
         /// Get the WPF GUI categories <seealso cref="WpfGuiCategory"/>.
         /// </summary>
@@ -42,19 +39,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                                              .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
                                              .ToList();
 
-            AddCustomCategories(wpfGuiCategories);
-
             wpfGuiCategories.SelectMany(gp => gp.Properties).Distinct()
                             .ForEach(p => p.GetModel = () => model);
 
             SetFlowFmExtraSettings(model, gui, wpfGuiCategories);
 
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
-        }
-
-        private static void AddCustomCategories(List<WpfGuiCategory> wpfGuiCategories)
-        {
-            wpfGuiCategories.Add(new WpfGuiCategory(layersTabName, new List<FieldUIDescription>()));
         }
 
         private static ObjectUIDescription GetWaterFlowFmSettings(WaterFlowFMModel model)
@@ -76,7 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var fmModel = model as WaterFlowFMModel;
 
             AddCoordinateSystemPropertyToGeneralSettingsCategory(gui, wpfCategories, fmModel);
-            AddLayerPropertyTo3DLayerCategory(wpfCategories, fmModel);
             AddAdditionalCategories(wpfCategories, fmModel);
         }
 
@@ -140,36 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
             }
-        }
-
-        private static void AddLayerPropertyTo3DLayerCategory(IEnumerable<WpfGuiCategory> wpfCategories, WaterFlowFMModel fmModel)
-        {
-            WpfGuiCategory layerCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.Equals(layersTabName));
-            if (layerCategory is null)
-            {
-                return;
-            }
-
-            var layerProperty = new WpfGuiProperty(
-                new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description,
-                                       null,
-                                       o => true,
-                                       o => true)
-                {
-                    Category = layersTabName,
-                    SubCategory = "Layers",
-                    ToolTip = EditDepthLayersHelper.ToolTip,
-                    Label = EditDepthLayersHelper.Label,
-                    ValueType = typeof(string),
-                    HasMaxValue = false,
-                    HasMinValue = false,
-                });
-
-            layerProperty.CustomCommand.TextBoxEnabled = false;
-            layerProperty.CustomCommand.ButtonBehaviour = new EditDepthLayersHelper();
-            layerProperty.CustomCommand.ButtonImage = EditDepthLayersHelper.ButtonImage;
-            layerProperty.GetModel = () => fmModel;
-            layerCategory.AddWpfGuiProperty(layerProperty);
         }
 
         /*Extracted from WaterFlowFMModelView.cs */

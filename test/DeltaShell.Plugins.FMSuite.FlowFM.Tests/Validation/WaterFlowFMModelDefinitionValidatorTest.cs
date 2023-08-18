@@ -19,6 +19,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     public class WaterFlowFMModelDefinitionValidatorTest
     {
         [Test]
+        public void Validate_ModelNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaterFlowFMModelDefinitionValidator.Validate(null);
+            
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);    
+        }
+        
+        [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void DoNotValidateCalculationTimeStep()
@@ -206,6 +216,211 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.That(issueViewData, Is.Not.Null);
             Assert.That(issueViewData.FlowFmModel, Is.EqualTo(fmModel));
             Assert.That(issueViewData.TabName, Is.EqualTo(expectedTabName));
+        }
+
+        [Test]
+        public void FmModelWithValid3DLayerProperties_DoesNotAddValidationIssueToReport()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
+                
+                // Enable all 3D modelling properties
+                SetKmxToOne(modelDefinition);
+                SetLayerTypeToAllZ(modelDefinition);
+
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.DzTop, "2", modelDefinition);
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.FloorLevTopLay, "-2", modelDefinition);
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.DzTopUniAboveZ, "-2", modelDefinition);
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.SigmaGrowthFactor, "2", modelDefinition);
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.NumTopSig, "1", modelDefinition);
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.NumTopSigUniform, "1", modelDefinition);
+
+                // Call
+                ValidationReport report = WaterFlowFMModelDefinitionValidator.Validate(model);
+                
+                // Assert
+                Assert.That(report.ErrorCount, Is.Zero);
+            }            
+        }
+
+        private static void SetModelPropertyAndAssertIsEnabled(string propertyName, string valueAsString, WaterFlowFMModelDefinition modelDefinition)
+        {
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
+            property.SetValueAsString(valueAsString);
+
+            Assert.That(property.IsEnabled(modelDefinition.Properties));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetInvalidKmxPropertyCases))]
+        public void GivenAnFmModelWithInvalidKmxProperty_AddsValidationIssueToReport(string invalidValue)
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                // Set property to invalid value
+                model.ModelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString(invalidValue);
+                
+                // Call
+                ValidationReport report = WaterFlowFMModelDefinitionValidator.Validate(model);
+                
+                // Assert
+                const string expectedErrorMessage = "Parameter Kmx outside validity range  [0,99].";
+                ValidationIssue issue = report.AllErrors.FirstOrDefault(i => i.Message.Equals(expectedErrorMessage));
+                Assert.That(issue, Is.Not.Null);
+                Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Error));
+            }
+        }
+
+        private static IEnumerable<TestCaseData> GetInvalidKmxPropertyCases()
+        {
+            yield return new TestCaseData("-1").SetName("Invalid Kmx value: lower than 0.");
+            yield return new TestCaseData("100").SetName("Invalid Kmx value: higher than 99.");
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(GetInvalid3DLayerPropertyCases))]
+        public void FmModelWithInvalid3DLayerProperty_AddsValidationIssueToReportAndSetsCustomViewData(string propertyName,
+                                                                                                       string invalidValue,
+                                                                                                       string expectedErrorMessage)
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
+                
+                // Enable the property
+                SetKmxToOne(modelDefinition);
+                SetLayerTypeToAllZ(modelDefinition);
+
+                SetModelPropertyAndAssertIsEnabled(propertyName, invalidValue, modelDefinition);
+                
+                // Call
+                ValidationReport report = WaterFlowFMModelDefinitionValidator.Validate(model);
+                
+                // Assert
+                ValidationIssue issue = report.AllErrors.FirstOrDefault(i => i.Message.Equals(expectedErrorMessage));
+                Assert.That(issue, Is.Not.Null);
+                Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Error));
+                
+                AssertThatIssueHasCustomViewData(issue, model);
+            }
+        }
+
+        private static IEnumerable<TestCaseData> GetInvalid3DLayerPropertyCases()
+        {
+            yield return new TestCaseData(KnownProperties.DzTop, "-0.001", "Parameter DzTop should be > 0.00.")
+                .SetName("Invalid DzTop value.");
+            yield return new TestCaseData(KnownProperties.FloorLevTopLay, "0.001", "Parameter FloorLevTopLay should be < 0.00.")
+                .SetName("Invalid FloorLevToPlay value.");
+            yield return new TestCaseData(KnownProperties.DzTopUniAboveZ, "0.001", "Parameter DzTopUniAboveZ should be < 0.00.")
+                .SetName("Invalid DzTopUniAboveZ value.");
+        }
+        
+        [Test]
+        public void GivenAnFmModelWithInvalidSigmaGrowthFactor_AddsValidationIssueToReport()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
+                
+                // Enable the property
+                SetKmxToOne(modelDefinition);
+                SetLayerTypeToAllZ(modelDefinition);
+                
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.SigmaGrowthFactor, "-1", modelDefinition);
+
+                // Call
+                ValidationReport report = WaterFlowFMModelDefinitionValidator.Validate(model);
+
+                // Assert
+                const string expectedErrorMessage = "Parameter SigmaGrowthFactor outside validity range  [1,+inf].";
+                ValidationIssue issue = report.AllErrors.FirstOrDefault(i => i.Message.Equals(expectedErrorMessage));
+                Assert.That(issue, Is.Not.Null);
+                Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Error));
+            }
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetInvalidNumTopSigPropertyCases))]
+        public void GivenAnFmModelWithInvalidNumTopSigProperty_AddsValidationIssueToReportAndSetsCustomViewData(string invalidValue)
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
+                
+                // Enable the property
+                SetKmxToOne(modelDefinition);
+                SetLayerTypeToAllZ(modelDefinition);
+
+                // Set property to invalid value
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.NumTopSig, invalidValue, modelDefinition);
+                
+                // Call
+                ValidationReport report = WaterFlowFMModelDefinitionValidator.Validate(model);
+                
+                // Assert
+                const string expectedErrorMessage = "Parameter numtopsig should be between 0 and 1 (the current value of kmx).";
+                ValidationIssue issue = report.AllErrors.FirstOrDefault(i => i.Message.Equals(expectedErrorMessage));
+                Assert.That(issue, Is.Not.Null);
+                Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Error));
+                
+                AssertThatIssueHasCustomViewData(issue, model);
+            }
+        }
+
+        private static IEnumerable<TestCaseData> GetInvalidNumTopSigPropertyCases()
+        {
+            yield return new TestCaseData("-1").SetName("Invalid NumTopSig: value smaller than 0.");
+            yield return new TestCaseData("100").SetName("Invalid NumTopSig: value larger than Kmx.");
+        }
+
+        [Test]
+        public void GivenAnFmModelWithInvalidNumTopSigUniformProperty_AddsValidationIssueToReport()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
+                
+                // Ensure the property
+                SetKmxToOne(modelDefinition);
+                SetLayerTypeToAllZ(modelDefinition);
+
+                // Set property to invalid value
+                SetModelPropertyAndAssertIsEnabled(KnownProperties.NumTopSigUniform, "2", modelDefinition);
+                
+                // Call
+                ValidationReport report = WaterFlowFMModelDefinitionValidator.Validate(model);
+                
+                // Assert
+                const string expectedErrorMessage = "Parameter NumTopSigUniform outside validity range  [0,1].";
+                ValidationIssue issue = report.AllErrors.FirstOrDefault(i => i.Message.Equals(expectedErrorMessage));
+                Assert.That(issue, Is.Not.Null);
+                Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Error));
+            }
+        }
+
+        private static void AssertThatIssueHasCustomViewData(ValidationIssue issue, WaterFlowFMModel model)
+        {
+            var viewData = (FmValidationShortcut)issue.ViewData;
+            Assert.That(viewData.FlowFmModel, Is.EqualTo(model));
+            const string expectedTabName = "3D Layers";
+            Assert.That(viewData.TabName, Is.EqualTo(expectedTabName));
+        }
+
+        private static void SetKmxToOne(WaterFlowFMModelDefinition modelModelDefinition)
+        {
+            modelModelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("1");
+        }
+        
+        private static void SetLayerTypeToAllZ(WaterFlowFMModelDefinition modelModelDefinition)
+        {
+            modelModelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueAsString("2"); // 2 = all-z
         }
 
         private static WaterFlowFMModel CreateSimpleModel()

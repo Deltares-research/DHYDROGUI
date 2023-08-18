@@ -27,6 +27,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using DHYDRO.Common.Extensions;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -550,6 +551,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     WriteMduLine(mduPropertyName, "0", "# For 1d2d coupling we should never renumber the flownodes");
                 }
+                else if (IsConditional3DLayerProperty(mduPropertyName)
+                         && PropertyIsDisabled(prop, propertyGroup))
+                {
+                    string defaultValue = prop.PropertyDefinition.DefaultValueAsString;
+                    string mduPropertyComment = prop.PropertyDefinition.Description;
+                    WriteMduLine(mduPropertyName, defaultValue, mduPropertyComment);
+                }
                 else
                 {
                     string mduPropertyValue = GetPropertyValue(prop, config);
@@ -557,6 +565,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     WriteMduLine(mduPropertyName, mduPropertyValue, mduPropertyComment);
                 }
             }
+        }
+
+        private static bool PropertyIsDisabled(WaterFlowFMProperty prop, IEnumerable<WaterFlowFMProperty> propertyGroup)
+        {
+            return !prop.PropertyDefinition.IsEnabled(propertyGroup);
+        }
+
+        private static bool IsConditional3DLayerProperty(string mduPropertyName)
+        {
+            return mduPropertyName.EqualsCaseInsensitive(KnownProperties.DzTop)
+                   || mduPropertyName.EqualsCaseInsensitive(KnownProperties.FloorLevTopLay)
+                   || mduPropertyName.EqualsCaseInsensitive(KnownProperties.DzTopUniAboveZ)
+                   || mduPropertyName.EqualsCaseInsensitive(KnownProperties.SigmaGrowthFactor)
+                   || mduPropertyName.EqualsCaseInsensitive(KnownProperties.NumTopSig)
+                   || mduPropertyName.EqualsCaseInsensitive(KnownProperties.NumTopSigUniform);
         }
 
         private void WriteMduLine(string propertyName, string propertyValue, string propertyComment)
