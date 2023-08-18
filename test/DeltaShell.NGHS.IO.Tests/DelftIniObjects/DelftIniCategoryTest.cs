@@ -10,6 +10,40 @@ namespace DeltaShell.NGHS.IO.Tests.DelftIniObjects
     public class DelftIniCategoryTest
     {
         [Test]
+        public void Constructor_CategoryIsNull_ThrowsArgumentNullException()
+        {
+            // Assert
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var _ = new DelftIniCategory(null);
+            });
+        }
+        
+        [Test]
+        public void Constructor_WithExistingCategory_CreatesCopy()
+        {
+            // Setup
+            DelftIniProperty[] properties =
+            {
+                GetProperty("Property1"),
+                GetProperty("Property2")
+            };
+
+            var category = new DelftIniCategory("category", 10);
+            category.AddProperties(properties);
+            
+            // Call
+            var copy = new DelftIniCategory(category);
+            
+            // Assert
+            Assert.That(copy.Id, Is.EqualTo(category.Id));
+            Assert.That(copy.Name, Is.EqualTo(category.Name));
+            Assert.That(copy.LineNumber, Is.EqualTo(category.LineNumber));
+            Assert.That(copy.Properties.Select(x => x.Name), Is.EqualTo(category.Properties.Select(x => x.Name)));
+            Assert.That(copy.Properties.Select(x => x.Value), Is.EqualTo(category.Properties.Select(x => x.Value)));
+        }
+        
+        [Test]
         public void GetPropertyValue_PropertyNotFound_ReturnsDefaultValue()
         {
             // Setup
@@ -125,6 +159,57 @@ namespace DeltaShell.NGHS.IO.Tests.DelftIniObjects
 
             // Assert
             Assert.That(category.Properties, Is.EqualTo(originalProperties));
+        }
+        
+        [Test]
+        public void ContainsPropertyWithId_IdIsNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var category = new DelftIniCategory("category_name");
+            
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => category.ContainsPropertyWithId(null));
+        }
+                
+        [Test]
+        [TestCase("property_name", ExpectedResult = true)]
+        [TestCase("PROPERTY_NAME", ExpectedResult = true)]
+        [TestCase("Property_Name", ExpectedResult = true)]
+        [TestCase("category_name", ExpectedResult = false)]
+        [TestCase("propertyname", ExpectedResult = false)]
+        public bool ContainsPropertyWithId_WithValidIdentifier_ReturnsExpectedValue(string id)
+        {
+            // Setup
+            var category = new DelftIniCategory("category_name");
+            var property = new DelftIniProperty("property_name", "property_value", "property_comment");
+            category.AddProperty(property);
+            
+            // Call
+            return category.ContainsPropertyWithId(id);
+        }
+        
+        [Test]
+        public void IdEqualsTo_IdIsNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var category = new DelftIniCategory("category_name");
+            
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => category.IdEqualsTo(null));
+        }
+        
+        [Test]
+        [TestCase("category_name", ExpectedResult = true)]
+        [TestCase("CATEGORY_NAME", ExpectedResult = true)]
+        [TestCase("Category_Name", ExpectedResult = true)]
+        [TestCase("categoryname", ExpectedResult = false)]
+        public bool IdEqualsTo_WithValidIdentifier_ReturnsExpectedValue(string id)
+        {
+            // Setup
+            var category = new DelftIniCategory("category_name");
+            
+            // Call
+            return category.IdEqualsTo(id);
         }
 
         private static DelftIniProperty GetProperty(string name) => new DelftIniProperty(name, $"{name}-value", string.Empty);

@@ -6,6 +6,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
+using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.NGHS.IO.DelftIniObjects
 {
@@ -14,22 +15,35 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
     /// </summary>
     public class DelftIniCategory : INameable
     {
-        private readonly List<DelftIniProperty> delftIniProperties;
+        private readonly List<DelftIniProperty> delftIniProperties = new List<DelftIniProperty>();
 
         /// <summary>
-        /// Creates an instance of <see cref="DelftIniCategory"/>.
+        /// Initializes a new instance of the <see cref="DelftIniCategory"/> class.
         /// </summary>
-        /// <param name="categoryName"> The category name. </param>
-        public DelftIniCategory(string categoryName)
+        /// <param name="categoryName">The name of this category.</param>
+        /// <param name="lineNumber">The line number where this category was read in the file.</param>
+        public DelftIniCategory(string categoryName, int lineNumber = 0)
         {
+            Id = categoryName;
             Name = categoryName;
-            delftIniProperties = new List<DelftIniProperty>();
+            LineNumber = lineNumber;
         }
 
-        public DelftIniCategory(string categoryName, int lineNumber)
-            : this(categoryName)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DelftIniCategory"/> class.
+        /// </summary>
+        /// <param name="other">The category to copy.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="other"/> is <c>null</c>.</exception>
+        public DelftIniCategory(DelftIniCategory other)
         {
-            LineNumber = lineNumber;
+            Ensure.NotNull(other, nameof(other));
+
+            Id = other.Id;
+            Name = other.Name;
+            LineNumber = other.LineNumber;
+            
+            delftIniProperties.AddRange(
+                other.Properties.Select(p => new DelftIniProperty(p)));
         }
 
         /// <summary>
@@ -38,14 +52,20 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         public IEnumerable<DelftIniProperty> Properties => delftIniProperties;
 
         /// <summary>
-        /// The line number where this category was read in the file.
+        /// The category identifier. The default value is the category name.
+        /// This value is not written to the INI file.
         /// </summary>
-        public int LineNumber { get; }
+        public string Id { get; set; }
 
         /// <summary>
         /// The category name.
         /// </summary>
         public string Name { get; set; }
+        
+        /// <summary>
+        /// The line number where this category was read in the file.
+        /// </summary>
+        public int LineNumber { get; }
 
         /// <summary>
         /// Gets the property value as a string.
@@ -206,6 +226,30 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         {
             Ensure.NotNull(property, nameof(property));
             delftIniProperties.Remove(property);
+        }
+        
+        /// <summary>
+        /// Determines whether the properties collection contains a property with the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier of the property to locate in the properties collection.</param>
+        /// <returns><c>true</c> if the properties collection contains a property with the specified identifier; otherwise, <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">When <paramref name="id"/> is <c>null</c>.</exception>
+        public bool ContainsPropertyWithId(string id)
+        {
+            Ensure.NotNull(id, nameof(id));
+            return Properties.Any(property => property.IdEqualsTo(id));
+        }
+
+        /// <summary>
+        /// Determines whether the specified identifier is equal to the current identifier.
+        /// </summary>
+        /// <param name="id">The identifier to compare with the current identifier.</param>
+        /// <returns><c>true</c> if the specified identifier  is equal to the current identifier; otherwise, <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">When <paramref name="id"/> is <c>null</c>.</exception>
+        public bool IdEqualsTo(string id)
+        {
+            Ensure.NotNull(id, nameof(id));
+            return Id.EqualsCaseInsensitive(id);
         }
 
         /// <summary>
