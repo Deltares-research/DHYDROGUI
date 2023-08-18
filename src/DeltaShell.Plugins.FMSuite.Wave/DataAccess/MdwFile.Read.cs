@@ -50,6 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             {
                 mdwCategories = new DelftIniReader().ReadDelftIniFile(fileStream, MdwFilePath);
             }
+            
+            mdwFileMerger.Target = mdwCategories;
 
             string mdwDir = Path.GetDirectoryName(filePath);
 

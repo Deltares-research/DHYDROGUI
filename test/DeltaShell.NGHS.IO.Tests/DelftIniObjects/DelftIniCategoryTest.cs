@@ -212,6 +212,53 @@ namespace DeltaShell.NGHS.IO.Tests.DelftIniObjects
             return category.IdEqualsTo(id);
         }
 
-        private static DelftIniProperty GetProperty(string name) => new DelftIniProperty(name, $"{name}-value", string.Empty);
+        [Test]
+        public void UpdateIdentifiers_CategoriesIsNull_ThrowsArgumentNullException()
+        {
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => DelftIniCategory.UpdateIdentifiers(null));
+        }
+        
+        [Test]
+        public void UpdateIdentifiers_MultipleCategoriesWithSameName_AssignsUniqueIdentifiers()
+        {
+            // Setup
+            DelftIniCategory[] categories =
+            {
+                new DelftIniCategory("a"), 
+                new DelftIniCategory("b"), 
+                new DelftIniCategory("c"), 
+                new DelftIniCategory("c")
+            };
+
+            // Call
+            DelftIniCategory.UpdateIdentifiers(categories);
+
+            // Assert
+            var expected = new[] { "a0", "b0", "c0", "c1" };
+            Assert.That(categories.Select(c => c.Id), Is.EqualTo(expected));
+        }
+        
+        [Test]
+        public void UpdateIdentifiers_MultipleCategoriesWithSameNameDifferentCasing_AssignsUniqueIdentifiers()
+        {
+            // Setup
+            DelftIniCategory[] categories =
+            {
+                new DelftIniCategory("Category"), 
+                new DelftIniCategory("category"), 
+                new DelftIniCategory("CATEGORY")
+            };
+
+            // Call
+            DelftIniCategory.UpdateIdentifiers(categories);
+
+            // Assert
+            var expected = new[] { "Category0", "category1", "CATEGORY2" };
+            Assert.That(categories.Select(c => c.Id), Is.EqualTo(expected));
+        }
+
+        private static DelftIniProperty GetProperty(string name) 
+            => new DelftIniProperty(name, $"{name}-value", string.Empty);
     }
 }

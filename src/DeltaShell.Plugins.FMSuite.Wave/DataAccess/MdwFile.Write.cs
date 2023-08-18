@@ -88,6 +88,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             WriteTimeSeriesFileForBoundaries(modelName, modelDefinition, targetDir);
 
             List<DelftIniCategory> mdwCategories = GroupPropertiesByMdwCategory(modelDefinition);
+            mdwFileMerger.Source = mdwCategories;
+
             CreateTimePointCategories(mdwFileDTO.TimeFrameData,
                                       mdwCategories,
                                       modelDefinition.ModelReferenceDateTime);
@@ -134,8 +136,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 outputCategory.SetProperty(KnownWaveProperties.CurveFile, string.Empty);
             }
 
+            // category & property id's must be unique
+            DelftIniCategory.UpdateIdentifiers(mdwFileMerger.Source.ToArray());
+            DelftIniCategory.UpdateIdentifiers(mdwFileMerger.Target.ToArray());
+            
+            // merge mdw
+            bool isMerged = mdwFileMerger.TryMerge(out IEnumerable<DelftIniCategory> merged);
+
             // write mdw
-            new DelftIniWriter().WriteDelftIniFile(mdwCategories, mdwTargetFilePath);
+            new DelftIniWriter().WriteDelftIniFile(isMerged ? merged : mdwCategories, mdwTargetFilePath);
 
             // switch
             if (switchTo)

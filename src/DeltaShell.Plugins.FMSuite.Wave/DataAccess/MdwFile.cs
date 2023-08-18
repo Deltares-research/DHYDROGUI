@@ -11,6 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
     public partial class MdwFile : NGHSFileBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(MdwFile));
+        
+        private readonly DelftIniMerger mdwFileMerger = new DelftIniMerger();
 
         /// <summary>
         /// These mdw categories can have multiplicity greater than 1 (or gui only),

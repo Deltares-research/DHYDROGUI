@@ -251,6 +251,26 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
             Ensure.NotNull(id, nameof(id));
             return Id.EqualsCaseInsensitive(id);
         }
+        
+        /// <summary>
+        /// Updates the identifiers for the specified categories.
+        /// </summary>
+        /// <param name="categories">The collection of categories to update the identifiers for.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="categories"/> is <c>null</c>.</exception>
+        public static void UpdateIdentifiers(IReadOnlyCollection<DelftIniCategory> categories)
+        {
+            Ensure.NotNull(categories, nameof(categories));
+            
+            categories.GroupBy(c => c.Name.ToLower())
+                      .ForEach(g => g.ForEach(SetCategoryIdentifier));
+
+            categories.ForEach(c => DelftIniProperty.UpdateIdentifiers(c.Properties.ToArray()));
+        }
+        
+        private static void SetCategoryIdentifier(DelftIniCategory category, int index)
+        {
+            category.Id = category.Name + index;
+        }
 
         /// <summary>
         /// Override to add the <seealso cref="Name"/>.

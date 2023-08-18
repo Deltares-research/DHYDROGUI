@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using NUnit.Framework;
 
@@ -95,6 +96,52 @@ namespace DeltaShell.NGHS.IO.Tests.DelftIniObjects
             
             // Call
             return property.IdEqualsTo(id);
+        }
+        
+        [Test]
+        public void UpdateIdentifiers_PropertiesIsNull_ThrowsArgumentNullException()
+        {
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => DelftIniProperty.UpdateIdentifiers(null));
+        }
+        
+        [Test]
+        public void UpdateIdentifiers_MultiplePropertiesWithSameName_AssignsUniqueIdentifiers()
+        {
+            // Setup
+            DelftIniProperty[] properties =
+            {
+                new DelftIniProperty("a", "", ""), 
+                new DelftIniProperty("b", "", ""), 
+                new DelftIniProperty("c", "", ""), 
+                new DelftIniProperty("c", "", "")
+            };
+
+            // Call
+            DelftIniProperty.UpdateIdentifiers(properties);
+
+            // Assert
+            var expected = new[] { "a0", "b0", "c0", "c1" };
+            Assert.That(properties.Select(c => c.Id), Is.EqualTo(expected));
+        }
+        
+        [Test]
+        public void UpdateIdentifiers_MultiplePropertiesWithSameNameDifferentCasing_AssignsUniqueIdentifiers()
+        {
+            // Setup
+            DelftIniProperty[] categories =
+            {
+                new DelftIniProperty("Property", "", ""), 
+                new DelftIniProperty("property", "", ""), 
+                new DelftIniProperty("PROPERTY", "", "")
+            };
+
+            // Call
+            DelftIniProperty.UpdateIdentifiers(categories);
+
+            // Assert
+            var expected = new[] { "Property0", "property1", "PROPERTY2" };
+            Assert.That(categories.Select(c => c.Id), Is.EqualTo(expected));
         }
     }
 }

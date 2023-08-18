@@ -1295,6 +1295,173 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 Assert.That(modelDefinition.InputTemplateFilePath, Is.EqualTo(switchTo ? targetFilePath : sourceFilePath));
             }
         }
+        
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_MergeLoadedMdwFile_PreservesOrder(bool switchTo)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mdwPath = TestHelper.GetTestFilePath(@"MdwMerging\wad.mdw");
+                string mdwImportPath = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(mdwPath);
+                string mdwExportPath = Path.Combine(tempDir.Path, "export.mdw");
+                
+                var mdwFile = new MdwFile();
+                
+                MdwFileDTO dto = mdwFile.Load(mdwImportPath);
+                mdwFile.SaveTo(mdwExportPath, dto, switchTo);
+
+                IReadOnlyCollection<string> expected = File.ReadLines(mdwImportPath).ToArray();
+                IReadOnlyCollection<string> actual = File.ReadLines(mdwExportPath).ToArray();
+                
+                // remove whitespaces
+                expected = expected.Select(line => line.Replace(" ", string.Empty)).ToArray();
+                actual = actual.Select(line => line.Replace(" ", string.Empty)).ToArray();
+             
+                // remove missing lines
+                expected = expected.Where(line => actual.Contains(line)).ToArray();
+                actual = actual.Where(line => expected.Contains(line)).ToArray();
+                
+                Assert.That(actual, Is.Not.Empty);
+                Assert.That(actual, Is.EqualTo(expected));
+            }
+        }
+        
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_MergeLoadedMdwFile_UpdatesModifiedProperties(bool switchTo)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mdwPath = TestHelper.GetTestFilePath(@"MdwMerging\wad.mdw");
+                string mdwImportPath = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(mdwPath);
+                string mdwExportPath = Path.Combine(tempDir.Path, "export.mdw");
+                
+                var mdwFile = new MdwFile();
+                
+                MdwFileDTO dto = mdwFile.Load(mdwImportPath);
+
+                WaveModelProperty waterLevel = dto.WaveModelDefinition.GetModelProperty(
+                    KnownWaveCategories.GeneralCategory, 
+                    KnownWaveProperties.WaterLevel);
+                
+                WaveModelProperty keepInput = dto.WaveModelDefinition.GetModelProperty(
+                    KnownWaveCategories.OutputCategory, 
+                    KnownWaveProperties.KeepINPUT);
+                
+                WaveModelProperty bedFrictionCoef = dto.WaveModelDefinition.GetModelProperty(
+                    KnownWaveCategories.ProcessesCategory, 
+                    KnownWaveProperties.BedFrictionCoef);
+
+                WaveModelProperty maxIter = dto.WaveModelDefinition.GetModelProperty(
+                    KnownWaveCategories.NumericsCategory, 
+                    KnownWaveProperties.MaxIter);
+
+                waterLevel.Value = 20.0d;
+                keepInput.Value = false;
+                bedFrictionCoef.Value = 10.0d;
+                maxIter.Value = 5;
+                
+                mdwFile.SaveTo(mdwExportPath, dto, switchTo);
+             
+                IReadOnlyCollection<string> actual = File.ReadLines(mdwExportPath).ToArray();
+                AssertPropertyInLines(actual, KnownWaveProperties.WaterLevel, waterLevel.GetValueAsString());
+                AssertPropertyInLines(actual, KnownWaveProperties.KeepINPUT, keepInput.GetValueAsString());
+                AssertPropertyInLines(actual, KnownWaveProperties.BedFrictionCoef, bedFrictionCoef.GetValueAsString());
+                AssertPropertyInLines(actual, KnownWaveProperties.MaxIter, maxIter.GetValueAsString());
+            }
+        }
+        
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_MergeLoadedMdwFile_ShouldNotContainRemovedBoundariesAndTimePoints(bool switchTo)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mdwPath = TestHelper.GetTestFilePath(@"MdwMerging\wad.mdw");
+                string mdwImportPath = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(mdwPath);
+                string mdwExportPath = Path.Combine(tempDir.Path, "export.mdw");
+                
+                var mdwFile = new MdwFile();
+                
+                MdwFileDTO dto = mdwFile.Load(mdwImportPath);
+
+                dto.TimeFrameData.TimeVaryingData.Clear();
+                dto.WaveModelDefinition.BoundaryContainer.Boundaries.Clear();
+                
+                mdwFile.SaveTo(mdwExportPath, dto, switchTo);
+
+                IReadOnlyCollection<string> actual = File.ReadLines(mdwExportPath).ToArray();
+                
+                Assert.That(actual, Has.None.EqualTo("[Boundary]").IgnoreCase);
+                Assert.That(actual, Has.None.EqualTo("[TimePoint]").IgnoreCase);
+            }
+        }
+        
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_MergeLoadedMdwFile_ShouldNotContainRemovedDomainProperties(bool switchTo)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mdwPath = TestHelper.GetTestFilePath(@"MdwMerging\wad.mdw");
+                string mdwImportPath = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(mdwPath);
+                string mdwExportPath = Path.Combine(tempDir.Path, "export.mdw");
+                
+                var mdwFile = new MdwFile();
+                
+                MdwFileDTO dto = mdwFile.Load(mdwImportPath);
+
+                dto.WaveModelDefinition.OuterDomain.UseGlobalMeteoData = true;
+                dto.WaveModelDefinition.OuterDomain.SpectralDomainData.UseDefaultFrequencySpace = true;
+                dto.WaveModelDefinition.OuterDomain.SpectralDomainData.UseDefaultFrequencySpace = true;
+                dto.WaveModelDefinition.OuterDomain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = true;
+                
+                mdwFile.SaveTo(mdwExportPath, dto, switchTo);
+
+                IReadOnlyCollection<string> actual = File.ReadLines(mdwExportPath).ToArray();
+                
+                Assert.That(actual, Has.None.EqualTo(KnownWaveProperties.DirectionalSpaceType).IgnoreCase);
+                Assert.That(actual, Has.None.EqualTo(KnownWaveProperties.NumberOfFrequencies).IgnoreCase);
+                Assert.That(actual, Has.None.EqualTo(KnownWaveProperties.MeteoFile).IgnoreCase);
+                Assert.That(actual, Has.None.EqualTo(KnownWaveProperties.FlowBedLevelUsage).IgnoreCase);
+            }
+        }
+        
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_MergeLoadedMdwFile_ShouldNotContainRemovedBoundaryProperties(bool switchTo)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string mdwPath = TestHelper.GetTestFilePath(@"MdwMerging\wad.mdw");
+                string mdwImportPath = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(mdwPath);
+                string mdwExportPath = Path.Combine(tempDir.Path, "export.mdw");
+
+                var mdwFile = new MdwFile();
+
+                MdwFileDTO dto = mdwFile.Load(mdwImportPath);
+
+                UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> uniformComponent = CreateUniformConstantDataComponent();
+                dto.WaveModelDefinition.BoundaryContainer.Boundaries[1] = BuildWaveBoundary(uniformComponent);
+
+                mdwFile.SaveTo(mdwExportPath, dto, switchTo);
+
+                IReadOnlyCollection<string> actual = File.ReadLines(mdwExportPath).ToArray();
+
+                Assert.That(actual, Has.None.EqualTo(KnownWaveProperties.CondSpecAtDist).IgnoreCase);
+            }
+        }
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -1457,6 +1624,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
             Assert.That(pair[0].Trim(), Is.EqualTo(propertyName));
             Assert.That(pair[1].Trim(), Is.EqualTo(value));
+        }
+
+        private static void AssertPropertyInLines(IEnumerable<string> lines, string propertyName, string value)
+        {
+            string[][] pairs = lines.Select(l => l.Split('='))
+                                    .Select(p => p.Select(x => x.Trim()).ToArray())
+                                    .ToArray();
+
+            Assert.That(pairs, Has.One.Matches<string[]>(p => p.Length == 2 && p[0] == propertyName && p[1] == value));
         }
 
         private static string[] GetBoundaryLines(string filePath)

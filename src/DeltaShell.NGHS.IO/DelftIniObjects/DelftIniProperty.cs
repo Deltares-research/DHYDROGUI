@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DHYDRO.Common.Extensions;
 
@@ -90,7 +93,25 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
             Ensure.NotNull(id, nameof(id));
             return Id.EqualsCaseInsensitive(id);
         }
+
+        /// <summary>
+        /// Updates the identifiers for the specified properties.
+        /// </summary>
+        /// <param name="properties">The collection of properties to update the identifiers for.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="properties"/> is <c>null</c>.</exception>
+        public static void UpdateIdentifiers(IReadOnlyCollection<DelftIniProperty> properties)
+        {
+            Ensure.NotNull(properties, nameof(properties));
+            
+            properties.GroupBy(x => x.Name.ToLower())
+                      .ForEach(g => g.ForEach(SetPropertyId));
+        }
         
+        private static void SetPropertyId(DelftIniProperty property, int index)
+        {
+            property.Id = property.Name + index;
+        }
+
         /// <summary>
         /// Override to add the <seealso cref="Name"/>.
         /// </summary>
