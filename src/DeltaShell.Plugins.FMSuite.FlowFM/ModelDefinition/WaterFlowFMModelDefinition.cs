@@ -130,6 +130,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             LateralFeatures = new EventedList<Feature2D>();
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
             InitialTracerNames = new List<string>();
+            InitialVelocityX = new Samples(InitialVelocityXName);
+            InitialVelocityY = new Samples(InitialVelocityYName);
             InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
             UpdateWriteOutputSnappedFeatures();
         }
@@ -170,8 +172,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public ICoordinateSystem CoordinateSystem { get; set; }
         public UnstructuredGridCoverage Bathymetry { get; set; }
 
-        public IPointCloud InitialVelocityX { get; set; }
-        public IPointCloud InitialVelocityY { get; set; }
+        public Samples InitialVelocityX { get; }
+        public Samples InitialVelocityY { get;  }
 
         public IEventedList<IWindField> WindFields { get; private set; }
 

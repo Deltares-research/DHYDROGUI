@@ -7,8 +7,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -16,6 +16,7 @@ using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 {
@@ -96,23 +97,113 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
         }
 
         [Test]
-        public void GivenMultipleItemsAndInitialVelocities_WhenGetVelocityItem_ThenRetrieveExpectedForceFileItem()
+        [TestCaseSource(nameof(ConstructorArgumentNullCases))]
+        public void Constructor_ArgumentNullCases_ThrowsException(Samples samples, string quantity, 
+                                                                  IDictionary<ExtForceFileItem, object> existingForceFileItems)
         {
-            //Arrange
-            var extForceFileItem = new ExtForceFileItem("quantity");
-            var initialVelocity = Substitute.For<IPointCloud>();
-            IDictionary<ExtForceFileItem, object> existingForceFileItems = new Dictionary<ExtForceFileItem, object>();
-            existingForceFileItems[extForceFileItem] = initialVelocity;
-            existingForceFileItems[new ExtForceFileItem("otherquantityone")] = Substitute.For<IPointCloud>();
-            existingForceFileItems[new ExtForceFileItem("otherquantitytwo")] = Substitute.For<IPointCloud>();
-
-            //Act
-            ExtForceFileItem retrievedExtForceFileItem = ExtForceFileItemFactory.GetVelocityItem(initialVelocity, existingForceFileItems);
+            // Call
+            void Call() => ExtForceFileItemFactory.GetSamplesItem(samples, quantity, existingForceFileItems);
             
-            //Assert
-            Assert.That(retrievedExtForceFileItem, Is.EqualTo(extForceFileItem));
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(GetNullOrWhiteSpaceTestCases))]
+        public void Constructor_QuantityNullOrWhitespace_ThrowsException(string quantity)
+        {
+            // Setup
+            var samples = new Samples("randomName");
+            var existingForceFileItems = Substitute.For<IDictionary<ExtForceFileItem, object>>();
+            
+            // Call
+            void Call() => ExtForceFileItemFactory.GetSamplesItem(samples, quantity, existingForceFileItems);
+            
+            // Assert
+            Assert.That(Call, Throws.ArgumentException);
         }
 
+        [Test]
+        public void GetSamplesItem_SpatialInterpolationMethodAveraging_ReturnsExpectedExtForceFileItem()
+        {
+            // Setup
+            const string fileName = "randomFileName";
+            const double relativeSearchCellSize = 123.4;
+            var samples = new Samples("randomName")
+            {
+                SourceFileName = fileName,
+                InterpolationMethod = SpatialInterpolationMethod.Averaging,
+                RelativeSearchCellSize = relativeSearchCellSize,
+                AveragingMethod = GridCellAveragingMethod.ClosestPoint
+            };
+            
+            
+            const string quantity = "randomQuantity";
+            var existingFiles = new Dictionary<ExtForceFileItem, object>();
+
+            // Call
+            ExtForceFileItem samplesItem = ExtForceFileItemFactory.GetSamplesItem(samples, quantity, existingFiles);
+
+            // Assert
+            Assert.That(samplesItem.Quantity, Is.EqualTo(quantity));
+            Assert.That(samplesItem.FileName, Is.EqualTo(fileName));
+            Assert.That(samplesItem.FileType, Is.EqualTo(7));
+            Assert.That(samplesItem.Method, Is.EqualTo(6)); // Averaging => 6
+            Assert.That(samplesItem.Operand, Is.EqualTo("O"));
+            Assert.That(samplesItem.ModelData[ExtForceFileConstants.AveragingTypeKey], Is.EqualTo(2)); // ClosestPoint => 2
+            Assert.That(samplesItem.ModelData[ExtForceFileConstants.RelSearchCellSizeKey], Is.EqualTo(relativeSearchCellSize));
+        }
+        
+        [Test]
+        public void GetSamplesItem_SpatialInterpolationMethodTriangulation_ReturnsExpectedExtForceFileItem()
+        {
+            // Setup
+            const string fileName = "randomFileName";
+            const double relativeSearchCellSize = 123.4;
+            const double extraPolTol = 123.4;
+            var samples = new Samples("randomName")
+            {
+                SourceFileName = fileName,
+                InterpolationMethod = SpatialInterpolationMethod.Triangulation,
+                RelativeSearchCellSize = relativeSearchCellSize,
+                AveragingMethod = GridCellAveragingMethod.ClosestPoint,
+                ExtrapolationTolerance = extraPolTol
+            };
+            
+            
+            const string quantity = "randomQuantity";
+            var existingFiles = new Dictionary<ExtForceFileItem, object>();
+
+            // Call
+            ExtForceFileItem samplesItem = ExtForceFileItemFactory.GetSamplesItem(samples, quantity, existingFiles);
+
+            // Assert
+            Assert.That(samplesItem.Quantity, Is.EqualTo(quantity));
+            Assert.That(samplesItem.FileName, Is.EqualTo(fileName));
+            Assert.That(samplesItem.FileType, Is.EqualTo(7));
+            Assert.That(samplesItem.Method, Is.EqualTo(5)); // Triangulation => 5
+            Assert.That(samplesItem.Operand, Is.EqualTo("O"));
+            Assert.That(samplesItem.ExtraPolTol, Is.EqualTo(extraPolTol));
+        }
+        
+        private static IEnumerable<TestCaseData> GetNullOrWhiteSpaceTestCases()
+        {
+            yield return new TestCaseData(null);
+            yield return new TestCaseData("");
+            yield return new TestCaseData("   ");
+            yield return new TestCaseData(Environment.NewLine);
+        }
+
+        private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
+        {
+            var samples = new Samples("randomName");
+            const string quantity = "randomQuantity";
+            var existingForceFileItems = Substitute.For<IDictionary<ExtForceFileItem, object>>();
+
+            yield return new TestCaseData(null, quantity, existingForceFileItems);
+            yield return new TestCaseData(samples, quantity, null);
+        }
+        
         private static void AddBoundaryCondition(WaterFlowFMModelDefinition modelDefinition, FlowBoundaryCondition bc)
         {
             BoundaryConditionSet set = modelDefinition.BoundaryConditionSets.FirstOrDefault(bcs => bcs.Feature == ((IBoundaryCondition) bc).Feature);

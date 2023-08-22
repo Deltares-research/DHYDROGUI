@@ -22,6 +22,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -36,6 +37,7 @@ using NSubstitute;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api.Layers;
+using SharpMap.Layers;
 using SharpMap.UI.Forms;
 using Control = System.Windows.Controls.Control;
 
@@ -345,6 +347,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             //Then
             Assert.That(layer.Name, Is.EqualTo("Sources and Sinks"));
             Assert.That(layer.ShowInLegend, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void CreateLayer_DataIsSamples_ReturnsReadOnlyPointCloudLayer()
+        {
+            // Setup
+            const string name = "randomName";
+            var samples = new Samples(name);
+            var provider = new FlowFMMapLayerProvider();
+
+            // Call
+            ILayer layer = provider.CreateLayer(samples, null);
+            
+            // Assert
+            Assert.That(layer, Is.TypeOf<PointCloudLayer>());
+
+            var pointCloudLayer = (PointCloudLayer)layer;
+            Assert.That(pointCloudLayer.ReadOnly, Is.True);
+            Assert.That(pointCloudLayer.Name, Is.EqualTo(name));
         }
 
         private static void ShowModelLayers(WaterFlowFMModel model)

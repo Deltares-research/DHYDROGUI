@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -12,7 +13,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
@@ -285,17 +285,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         }
 
         /// <summary>
-        /// Get the matching existing <see cref="ExtForceFileItem"/>.
-        /// </summary>
-        /// <param name="initialVelocity">Initial velocity to match for <see cref="ExtForceFileItem"/>.</param>
-        /// <param name="existingForceFileItems">The existing external force file items.</param>
-        /// <returns>Matching existing <see cref="ExtForceFileItem"/>.</returns>
-        public static ExtForceFileItem GetVelocityItem(IPointCloud initialVelocity, IDictionary<ExtForceFileItem, object> existingForceFileItems)
-        {
-            return GetExistingItem(initialVelocity, existingForceFileItems);
-        }
-
-        /// <summary>
         /// Creates an <see cref="ExtForceFileItem"/> for the specified <paramref name="heatFluxModel"/>.
         /// </summary>
         /// <param name="heatFluxModel">The heat flux model.</param>
@@ -388,7 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             {
                 FileName = uniqueFileNameProvider.GetUniqueFileNameFor(fileName),
                 FileType = 7,
-                Method = GetImportSamplesSpatialOperationMethod(spatialOperation)
+                Method = GetImportSamplesSpatialOperationMethod(spatialOperation.InterpolationMethod)
             };
             if (spatialOperation.InterpolationMethod == SpatialInterpolationMethod.Averaging)
             {
@@ -400,6 +389,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             extForceFileItem.Enabled = spatialOperation.Enabled;
             extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
+
+            return extForceFileItem;
+        }
+
+        /// <summary>
+        /// Get an external forcing file item for the provided <see cref="Samples"/> instance.
+        /// </summary>
+        /// <param name="samples"> The samples to write. </param>
+        /// <param name="quantity"> The quantity for the samples. </param>
+        /// <param name="existingForceFileItems"> The existing external forcing file items. </param>
+        /// <returns>
+        /// A new or existing external forcing file item for the provided <see cref="Samples"/> instance.
+        /// </returns>
+        public static ExtForceFileItem GetSamplesItem(Samples samples, string quantity, 
+                                                      IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            Ensure.NotNull(samples, nameof(samples));
+            Ensure.NotNull(existingForceFileItems, nameof(existingForceFileItems));
+            Ensure.NotNullOrWhiteSpace(quantity, nameof(quantity));
+
+            ExtForceFileItem extForceFileItem = GetExistingItem(samples, existingForceFileItems) ??
+                                                new ExtForceFileItem(quantity);
+
+            extForceFileItem.FileName = samples.SourceFileName;
+            extForceFileItem.FileType = 7;
+            extForceFileItem.Method = GetImportSamplesSpatialOperationMethod(samples.InterpolationMethod);
+            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
+            
+            switch (samples.InterpolationMethod)
+            {
+                case SpatialInterpolationMethod.Averaging:
+                    extForceFileItem.ModelData[ExtForceFileConstants.AveragingTypeKey] = (int)samples.AveragingMethod;
+                    extForceFileItem.ModelData[ExtForceFileConstants.RelSearchCellSizeKey] = samples.RelativeSearchCellSize;
+                    break;
+                case SpatialInterpolationMethod.Triangulation:
+                    extForceFileItem.ExtraPolTol = samples.ExtrapolationTolerance;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(samples), "Interpolation method of samples is undefined.");
+            }
 
             return extForceFileItem;
         }
@@ -515,9 +544,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return existingItem;
         }
 
-        private static int GetImportSamplesSpatialOperationMethod(ImportSamplesSpatialOperation operation)
+        private static int GetImportSamplesSpatialOperationMethod(SpatialInterpolationMethod interpolationMethod)
         {
-            switch (operation.InterpolationMethod)
+            switch (interpolationMethod)
             {
                 case SpatialInterpolationMethod.Triangulation:
                     return 5;

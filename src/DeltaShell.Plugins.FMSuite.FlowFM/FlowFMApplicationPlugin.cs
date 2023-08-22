@@ -107,6 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new FMRestartFileImporter(GetWaterFlowFMModels);
             yield return new BcFileImporter();
             yield return new BcmFileImporter();
+            yield return new SamplesImporter();
             yield return new GroupablePointCloudImporter
             {
                 GetBaseFolder = list =>
@@ -386,6 +387,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new StructuresListExporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };
             yield return new BcFileExporter { GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition };
             yield return new BcmFileExporter { GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition };
+            yield return new SamplesExporter();
             yield return new PlizFileImporterExporter<FixedWeir, FixedWeir>
             {
                 Mode = Feature2DImportExportMode.Export,

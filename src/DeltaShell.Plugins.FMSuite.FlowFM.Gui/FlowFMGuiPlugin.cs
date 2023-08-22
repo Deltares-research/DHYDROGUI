@@ -152,6 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new WindItemListNodePresenter { GuiPlugin = this };
             yield return new WindItemNodePresenter { GuiPlugin = this };
             yield return new RestartFileNodePresenter<WaterFlowFMRestartFile>(this);
+            yield return new SamplesNodePresenter(this, new SamplesImageProvider());
 
             yield return new Feature2DPolygonTreeViewNodePresenter { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroAreaLayerNames.LandBoundariesPluralName, Properties.Resources.landboundary) { GuiPlugin = this };
@@ -475,6 +476,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
             yield return new PropertyInfo<WaterFlowFMRestartFile, RestartFileProperties>();
             yield return new PropertyInfo<Structure, FMWeirProperties> { AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Structures.Contains(w)) };
+            yield return new PropertyInfo<Samples, SamplesProperties>();
         }
 
         public override void OnActiveViewChanged(IView view)

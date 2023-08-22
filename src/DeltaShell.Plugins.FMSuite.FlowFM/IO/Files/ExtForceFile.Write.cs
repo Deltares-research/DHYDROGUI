@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using DelftTools.Functions;
-using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -19,9 +18,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DHYDRO.Common.Logging;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 using SharpMap;
@@ -281,27 +278,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private IEnumerable<ExtForceFileItem> WriteVelocityItems(WaterFlowFMModelDefinition modelDefinition)
         {
             string dirPath = GetDirectoryName();
-            var exporter = new PointCloudExporter();
 
-            if (modelDefinition.InitialVelocityX != null)
+            if (modelDefinition.InitialVelocityX.HasData)
             {
-                ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.GetVelocityItem(modelDefinition.InitialVelocityX, ExistingForceFileItems);
-                WriteInitialVelocity(modelDefinition.InitialVelocityX, exporter, dirPath, extForceFileItem.FileName);
+                ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.GetSamplesItem(modelDefinition.InitialVelocityX,
+                                                                                           ExtForceQuantNames.initialVelocityXQuantity, 
+                                                                                           ExistingForceFileItems);
+                WriteInitialVelocity(modelDefinition.InitialVelocityX, dirPath, extForceFileItem.FileName);
                 yield return extForceFileItem;
             }
 
-            if (modelDefinition.InitialVelocityY != null)
+            if (modelDefinition.InitialVelocityY.HasData)
             {
-                ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.GetVelocityItem(modelDefinition.InitialVelocityY, ExistingForceFileItems);
-                WriteInitialVelocity(modelDefinition.InitialVelocityY, exporter, dirPath, extForceFileItem.FileName);
+                ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.GetSamplesItem(modelDefinition.InitialVelocityY,
+                                                                                           ExtForceQuantNames.initialVelocityYQuantity, 
+                                                                                           ExistingForceFileItems);
+                WriteInitialVelocity(modelDefinition.InitialVelocityY, dirPath, extForceFileItem.FileName);
                 yield return extForceFileItem;
             }
         }
 
-        private static void WriteInitialVelocity(IPointCloud initialVelocity, IFileExporter exporter, string dirPath, string fileName)
+        private static void WriteInitialVelocity(Samples initialVelocity, string dirPath, string fileName)
         {
             string path = Path.Combine(dirPath, fileName);
-            exporter.Export(initialVelocity, path);
+            XyzFile.Write(path, initialVelocity.PointValues);
         }
         
         private IEnumerable<ExtForceFileItem> WriteUnknownQuantities(WaterFlowFMModelDefinition modelDefinition)

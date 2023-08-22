@@ -1217,7 +1217,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 string writeExtPath = Path.Combine(temporaryDirectory.Path, Path.GetFileName("with_initialvelocity_written.ext"));
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                modelDefinition.InitialVelocityX = new PointCloud();
+                modelDefinition.InitialVelocityX.SetPointValues(new[]
+                {
+                    new PointValue
+                    {
+                        X = 1.23,
+                        Y = 2.34,
+                        Value = 3.45
+                    }
+                });
+                modelDefinition.InitialVelocityX.SourceFileName = filename;
+                modelDefinition.InitialVelocityX.InterpolationMethod = SpatialInterpolationMethod.Triangulation;
+
                 var extForceFile = new ExtForceFile();
                 extForceFile.ExistingForceFileItems[extForceFileItem] = modelDefinition.InitialVelocityX;
                 

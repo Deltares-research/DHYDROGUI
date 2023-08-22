@@ -233,6 +233,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
+            if (data is Samples samples)
+            {
+                return SamplesMapLayerProvider.Create(samples);
+            }
+
             return null;
         }
 
@@ -256,7 +261,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is FMSnappedFeaturesGroupLayerData
                    || data is FMOutputSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList
-                   || data is IEventedList<Feature2D>; // Boundaries and sources&sinks
+                   || data is IEventedList<Feature2D> // Boundaries and sources&sinks
+                   || data is Samples;
         }
 
         /// <summary>

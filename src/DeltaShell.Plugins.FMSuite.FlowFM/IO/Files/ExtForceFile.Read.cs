@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -16,12 +15,13 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using DHYDRO.Common.Extensions;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
@@ -77,32 +77,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void ReadInitialVelocityData(IList<ExtForceFileItem> forceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
-            var importer = new PointCloudImporter<GroupablePointFeature>();
-
             foreach (ExtForceFileItem forceFileItem in forceFileItems)
             {
-                if (string.Equals(forceFileItem.Quantity, ExtForceQuantNames.initialVelocityXQuantity, StringComparison.InvariantCultureIgnoreCase))
+                if (forceFileItem.Quantity.EqualsCaseInsensitive(ExtForceQuantNames.initialVelocityXQuantity))
                 {
-                    string path = GetPath(forceFileItem.FileName);
-                    modelDefinition.InitialVelocityX = ReadDataFromFile(WaterFlowFMModelDefinition.InitialVelocityXName, path, importer);
-                    AddInitialVelocityToForcingFileItems(forceFileItem, modelDefinition.InitialVelocityX);
+                    ReadSamples(forceFileItem, modelDefinition.InitialVelocityX);
                 }
 
-                if (string.Equals(forceFileItem.Quantity, ExtForceQuantNames.initialVelocityYQuantity, StringComparison.InvariantCultureIgnoreCase))
+                if (forceFileItem.Quantity.EqualsCaseInsensitive(ExtForceQuantNames.initialVelocityYQuantity))
                 {
-                    string path = GetPath(forceFileItem.FileName);
-                    modelDefinition.InitialVelocityY = ReadDataFromFile(WaterFlowFMModelDefinition.InitialVelocityYName, path, importer);
-                    AddInitialVelocityToForcingFileItems(forceFileItem, modelDefinition.InitialVelocityY);
+                    ReadSamples(forceFileItem, modelDefinition.InitialVelocityY);
                 }
             }
         }
 
-        private IPointCloud ReadDataFromFile(string velocityName, string path, PointCloudImporter<GroupablePointFeature> importer)
+        private void ReadSamples(ExtForceFileItem forceFileItem, Samples samples)
         {
-            var initialVelocity = (IPointCloud)importer.ImportItem(path);
-            initialVelocity.Name = velocityName;
-            return initialVelocity;
+            string path = GetPath(forceFileItem.FileName);
+            IList<IPointValue> pointValues = ReadPointValues(path);
+            
+            samples.SetPointValues(pointValues);
+            samples.ExtrapolationTolerance = forceFileItem.ExtraPolTol;
+            samples.Operand = ExtForceQuantNames.ParseOperationType(forceFileItem.Operand);
+            samples.InterpolationMethod = GetInterpolationMethod(forceFileItem);
+            samples.SourceFileName = Path.GetFileName(forceFileItem.FileName);
+            
+            if (forceFileItem.ModelData.TryGetValue(ExtForceFileConstants.AveragingTypeKey, out object value))
+            {
+                samples.AveragingMethod = (GridCellAveragingMethod) value;
+            }
+            if (forceFileItem.ModelData.TryGetValue(ExtForceFileConstants.RelSearchCellSizeKey, out value))
+            {
+                samples.RelativeSearchCellSize = (double) value;
+            }
+
+            AddSamplesToForcingFileItems(forceFileItem, samples);
         }
+
+        private static IList<IPointValue> ReadPointValues(string path) => XyzFile.Read(path, checkForUnsupportedSize: true);
 
         private string GetPath(string filePath)
         {
@@ -110,10 +122,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return Path.Combine(dirPath, filePath);
         }
 
-        private void AddInitialVelocityToForcingFileItems(ExtForceFileItem forceFileItem, IPointCloud initialVelocity)
+        private void AddSamplesToForcingFileItems(ExtForceFileItem forceFileItem, Samples samples)
         {
             supportedExtForceFileItems.Add(forceFileItem);
-            ExistingForceFileItems[forceFileItem] = initialVelocity;
+            ExistingForceFileItems[forceFileItem] = samples;
         }
 
         private IEnumerable<ExtForceFileItem> GetUnknownExtForceFileItems(IEnumerable<ExtForceFileItem> allExtForceFileItems) =>
@@ -697,23 +709,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 operation.RelativeSearchCellSize = (double) value;
             }
-
-            switch (extForceFileItem.Method)
-            {
-                case 5:
-                    operation.InterpolationMethod = SpatialInterpolationMethod.Triangulation;
-                    break;
-                case 6:
-                    operation.InterpolationMethod = SpatialInterpolationMethod.Averaging;
-                    break;
-                default:
-                    throw new Exception(
-                        $"Invalid interpolation method {extForceFileItem.Method} for file {extForceFileItem.FileName}");
-            }
+            operation.InterpolationMethod = GetInterpolationMethod(extForceFileItem);
 
             ExistingForceFileItems[extForceFileItem] = operation;
 
             return operation;
+        }
+
+        private static SpatialInterpolationMethod GetInterpolationMethod(ExtForceFileItem extForceFileItem)
+        {
+            switch (extForceFileItem.Method)
+            {
+                case 5:
+                    return SpatialInterpolationMethod.Triangulation;
+                case 6:
+                    return SpatialInterpolationMethod.Averaging;
+                default:
+                    throw new Exception(
+                        $"Invalid interpolation method {extForceFileItem.Method} for file {extForceFileItem.FileName}");
+            }
         }
 
         private void ReadWindItems(IEnumerable<ExtForceFileItem> extForceFileItems,
