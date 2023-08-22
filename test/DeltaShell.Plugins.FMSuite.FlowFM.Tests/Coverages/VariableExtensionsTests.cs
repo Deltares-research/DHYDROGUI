@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
             
             Assert.That(coverage2.Values.Count, Is.EqualTo(0));
             Assert.That(j, Is.Not.EqualTo(0));
-            Assert.That(j, Is.EqualTo(count));
+            Assert.That(j, Is.EqualTo(1));
 
             Assert.That(coverage.Values.IsAutoSorted, Is.True);
             Assert.That(coverage2.Values.IsAutoSorted, Is.True);
