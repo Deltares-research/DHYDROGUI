@@ -239,7 +239,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                             .SelectMany(i => MapHisFileReader.GetTimeStepData(path, MetaData, i, parameterName))
                             .ToList();
                         UpdateMinMax(values, parameterName, variable);
-                        return new MultiDimensionalArray<double>(values, MetaData?.NumberOfTimeSteps ?? 1, MetaData?.NumberOfLocations ?? 1);
+                        return new MultiDimensionalArray<double>(values, new [] { MetaData?.NumberOfTimeSteps ?? 1, MetaData?.NumberOfLocations ?? 1 });
                     };
                     return new LazyMultiDimensionalArray<double>(realGetFunction, () => (MetaData?.NumberOfTimeSteps ?? 1) * (MetaData?.NumberOfLocations ?? 1));
                 }

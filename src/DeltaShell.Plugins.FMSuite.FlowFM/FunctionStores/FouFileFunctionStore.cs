@@ -145,13 +145,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 // network locations
                 if (variable.ValueType == typeof(INetworkLocation))
                 {
-                    return new MultiDimensionalArray<INetworkLocation>(MetaData.Mesh1dLocations, MetaData.Mesh1dLocations.Count);
+                    return new MultiDimensionalArray<INetworkLocation>(MetaData.Mesh1dLocations, new [] { MetaData.Mesh1dLocations.Count });
                 }
 
                 // cell indices 
                 if (variable.ValueType == typeof(int))
                 {
-                    return new MultiDimensionalArray<int>(Enumerable.Range(0, MetaData.Grid.Cells.Count).ToArray(), MetaData.Grid.Cells.Count);
+                    return new MultiDimensionalArray<int>(Enumerable.Range(0, MetaData.Grid.Cells.Count).ToArray(), new [] { MetaData.Grid.Cells.Count });
                 }
 
                 return CreateEmptyArrayForType(variable.ValueType);

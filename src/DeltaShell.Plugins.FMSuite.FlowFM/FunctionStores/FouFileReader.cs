@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                               : array.OfType<T>()).ToList();
             }
 
-            return new MultiDimensionalArray<T>(true, values, values.Count);
+            return new MultiDimensionalArray<T>(true, false, default(T), values, new[] { values.Count });
         }
 
         private static T GenerateCoverageForVariable<T>(NetCdfFile file, string variableName, Func<T> createCoverageFunc) where T : ICoverage

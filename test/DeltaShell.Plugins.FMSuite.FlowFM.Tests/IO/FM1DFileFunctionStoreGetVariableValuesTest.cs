@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private const string fileName = "output_mapfiles\\CustomLengthFlowFM_map.nc";
         private static readonly string filePath = TestHelper.GetTestFilePath(fileName);
         private const string dictionaryData = "ncName";
-        private readonly MultiDimensionalArray<double> emptyMultiDimensionalArray = new MultiDimensionalArray<double>(new List<double>(), 0, 0);
+        private readonly MultiDimensionalArray<double> emptyMultiDimensionalArray = new MultiDimensionalArray<double>(new List<double>(), new [] { 0, 0 });
 
         private static (FM1DFileFunctionStore, ICoverage, IVariable) GetDefaultFunctionStore(bool withCoverage = true, 
                                                                                              bool withDictionary = true, 

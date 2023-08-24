@@ -241,9 +241,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             Func<IMultiDimensionalArray<T>> realGetFunction = () =>
                     {
                         var variableData = GetAllVariableData<T>(ncVariableName);
-                        var variableDataShape = variableData.GetShape();
                         UpdateMinMaxCache(variableData.Cast<double>(), function);
-                        return new MultiDimensionalArray<T>(variableData, variableDataShape);
+                        return new MultiDimensionalArray<T>(variableData);
                     };
             timeSeriesAtAllLocations = new LazyMultiDimensionalArray<T>(realGetFunction, () => (MetaData?.Times.Count ?? 1) * (MetaData?.NumLocationsForFunctionId(ncVariableName) ?? 1));
             argumentVariableCache[function] = timeSeriesAtAllLocations;
@@ -645,7 +644,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 log.Error(string.Format("While reading variable {0} from the file {1} an error was encountered: {2}", function.Name, System.IO.Path.GetFileName(Path), e.Message));
                 int functionSize = GetSize(function);
-                return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), functionSize);
+                return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]));
             }
         }
     }

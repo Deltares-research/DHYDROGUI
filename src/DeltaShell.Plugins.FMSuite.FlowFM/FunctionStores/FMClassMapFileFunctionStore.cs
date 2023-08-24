@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             if (!function.IsIndependent || typeof(T) != typeof(INetworkLocation))
             {
                 int size = GetSize(function);
-                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), size);
+                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), new [] { size });
             }
 
             var featureFilter = filters.FirstOrDefault(f => f.Variable.ValueType == typeof(INetworkLocation));

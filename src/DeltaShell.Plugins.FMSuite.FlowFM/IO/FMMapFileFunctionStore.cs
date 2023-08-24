@@ -342,7 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 log.Error(string.Format("While reading variable {0} from the file {1} an error was encountered: {2}", function.Name, System.IO.Path.GetFileName(Path), e.Message));
                 int functionSize = GetSize(function);
-                return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), functionSize);
+                return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), new [] { functionSize });
             }
         }
 
