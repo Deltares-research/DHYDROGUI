@@ -469,7 +469,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                            (location == NetworkDataLocation.Edge ||
                             location == NetworkDataLocation.Node );
                 })
-                : v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2;
+                : (Func<NetCdfVariableInfo, bool>)(v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
 
             var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
             var functions = timeDepVariables.SelectMany(ProcessTimeDependent1DVariable).Where(c => c != null).ToList();
