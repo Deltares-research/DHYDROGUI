@@ -12,7 +12,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.ComponentModel;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -271,7 +270,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         [DisplayName("From compartment")]
         [FeatureAttribute(ExportName = "From compartment", Order = 4)]
-        [DynamicReadOnly]
+        [ReadOnly(true)]
         public ICompartment SourceCompartment
         {
             get { return sourceCompartment; }
@@ -299,7 +298,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         [DisplayName("To compartment")]
         [FeatureAttribute(ExportName = "To compartment", Order = 4)]
-        [DynamicReadOnly]
+        [ReadOnly(true)]
         public ICompartment TargetCompartment
         {
             get { return targetCompartment; }
@@ -323,21 +322,6 @@ namespace DelftTools.Hydro.SewerFeatures
                 UpdateTargetCompartmentId();
                 UpdateGeometryBasedOnSourceAndTargetCompartments();
             }
-        }
-
-        [DynamicReadOnlyValidationMethod]
-        public bool DynamicReadOnlyValidationMethod(string propertyName)
-        {
-            if (propertyName == nameof(SourceCompartment))
-            {
-                return !(Source is IManhole sourceManhole) || sourceManhole.Compartments.Count <= 1;
-            }
-            if (propertyName == nameof(TargetCompartment))
-            {
-                return Source == null || !(Target is IManhole targetManhole) || targetManhole.Compartments.Count <= 1;
-            }
-
-            return false;
         }
 
         protected virtual void UpdateGeometryBasedOnSourceAndTargetCompartments()
