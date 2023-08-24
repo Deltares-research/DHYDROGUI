@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             // The current known situation in which this can occur should be fixed 
             // as part of D3DFMIQ-2336.
             cachedArray = featuresDictionary.TryGetValue(dimensionName, out IEnumerable<IFeature> features) ?
-                              new MultiDimensionalArray<IFeature>(features.ToList(), functionSize) :
+                              new MultiDimensionalArray<IFeature>(features.ToList(), new [] { functionSize }) :
                               new MultiDimensionalArray<IFeature>();
 
             cachedFeatures[dimensionName] = cachedArray;

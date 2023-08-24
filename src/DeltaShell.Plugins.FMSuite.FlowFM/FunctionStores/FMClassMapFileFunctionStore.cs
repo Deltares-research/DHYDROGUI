@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable
             {
                 int size = GetSize(function);
-                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), size);
+                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), new [] { size });
             }
 
             return base.GetVariableValuesCore<T>(function, filters);

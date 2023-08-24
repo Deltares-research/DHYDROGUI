@@ -293,7 +293,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             int functionSize = GetSize(function);
             cachedArray = featuresDictionary.TryGetValue(dimensionName, out IList<IFeature> features) 
-                              ? new MultiDimensionalArray<IFeature>(features.ToList(), functionSize) 
+                              ? new MultiDimensionalArray<IFeature>(features.ToList(), new[] { functionSize }) 
                               : new MultiDimensionalArray<IFeature>();
             
             cachedFeatures[dimensionName] = cachedArray;
