@@ -54,7 +54,7 @@
                         <TextBlock HorizontalAlignment="Center"
                                    VerticalAlignment="Top"
                                    FontSize="15"
-                                   Text="{Binding TopLevel, StringFormat={}{0:G2} m}" />
+                                   Text="{Binding TopLevel, StringFormat={}{0:F2} m}" />
                         <TextBlock HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    FontSize="15"
@@ -63,7 +63,7 @@
                         <TextBlock HorizontalAlignment="Center"
                                    VerticalAlignment="Bottom"
                                    FontSize="15"
-                                   Text="{Binding BottomLevel, StringFormat={}{0:G2} m}" />
+                                   Text="{Binding BottomLevel, StringFormat={}{0:F2} m}" />
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PipeShape}">
