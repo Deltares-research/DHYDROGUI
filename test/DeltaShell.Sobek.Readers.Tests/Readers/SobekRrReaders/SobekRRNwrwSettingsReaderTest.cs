@@ -53,5 +53,23 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             Assert.That(sobekRRNwrwSetting.InfiltrationFromDepressions, Is.EqualTo(false));
             Assert.That(sobekRRNwrwSetting.InfiltrationFromRunoff, Is.EqualTo(true));
         }
+        
+        [Test]
+        public void GivenPluvius3BDataLineFromFM1D2D_1547Model_WhenParseNwrw_ThenExpectedDataOnCorrectAreasIndex()
+        {
+            // arrange
+            var line = "NWRW id 'l_0-1001--1002' sl -.475 ar  0  2966  0  0  0  0  0  0  0  0  11322  0 np  0 dw 'Default_DWA' ms '' nwrw";
+
+            // act
+            var sobekRRNwrwData = new SobekRRNwrwReader().Parse(line);
+            var sobekRRNwrwSetting = sobekRRNwrwData.FirstOrDefault();
+
+            // asserts
+            Assert.That(sobekRRNwrwSetting, Is.Not.Null);
+            Assert.That(sobekRRNwrwSetting.Id, Is.EqualTo("l_0-1001--1002"));
+            Assert.That(sobekRRNwrwSetting.Areas.Length, Is.EqualTo(12));
+            Assert.That(sobekRRNwrwSetting.Areas[1], Is.EqualTo(2966));//NwrwSurfaceType.ClosedPavedFlat
+            Assert.That(sobekRRNwrwSetting.Areas[2], Is.EqualTo(0));//NwrwSurfaceType.ClosedPavedFlatStretch
+        }
     }
 }

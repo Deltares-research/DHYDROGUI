@@ -142,11 +142,14 @@ namespace DeltaShell.Sobek.Readers.Readers
             var matches = RegularExpression.GetMatches(pattern, record);
             if (matches.Count == 1)
             {
-                var stringValues = matches[0].Groups[label].Value.Split();
+                string stringWithValues = matches[0].Groups[label].Value;
+                string[] stringValues = stringWithValues.Contains(" ") 
+                                        ? stringWithValues.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries) 
+                                        : stringWithValues.Split();
+                
                 for (int i = 0; i < length; ++i)
                 {
-                    double value;
-                    if (double.TryParse(stringValues[i], NumberStyles.Any, NumberFormatInfo.InvariantInfo, out value))
+                    if (double.TryParse(stringValues[i], NumberStyles.Any, NumberFormatInfo.InvariantInfo, out double value))
                     {
                         arrayValues[i] = value;
                     }
