@@ -665,6 +665,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                                 double crestWidth = Math.Sqrt(diameter * diameter / 4 * Math.PI);
                                 orifice.CrestWidth = crestWidth;
                                 formula.GateOpening = crestWidth;
+                                formula.LowerEdgeLevel = orifice.CrestLevel + orifice.CrestWidth;
                                 break;
                             }
                             default:
