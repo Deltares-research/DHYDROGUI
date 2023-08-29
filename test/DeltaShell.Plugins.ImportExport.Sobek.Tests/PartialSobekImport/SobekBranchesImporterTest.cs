@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -50,6 +51,59 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(2, network.Nodes.Count);
             Assert.AreEqual(1, network.Branches.Count);
             Assert.AreEqual(130, network.Branches[0].Geometry.Coordinates.Length);
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportNodesWithStorageTables_Results_In_CompartmentsWithStorageTables()
+        {
+            var targetObject = new HydroNetwork();
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string pathToSobekNetwork = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(@"network_storagetables\Network.TP");
+                
+                var branchesFromSobekImporter = new SobekBranchesImporter
+                {
+                    TargetObject = targetObject,
+                    PathSobek = pathToSobekNetwork
+                };
+
+                try
+                {
+                    branchesFromSobekImporter.Import();
+                }
+                catch (ArgumentException e)
+                {
+                    Assert.Fail("Exception: " + e.Message);
+                }
+            }
+
+            //NODE id '8' ty 1 ct sw PDIN 1 0 '' pdin
+            //TBLE
+            //    -0.4 100 <
+            //    0.1 100 <
+            //    0.11 0.64 <
+            //    tble  ss 100 ml 0.65 node
+            
+            Compartment compartmentWithStorage = targetObject.Compartments.FirstOrDefault(c => c.Name.Equals("8"));
+            Assert.NotNull(compartmentWithStorage, "Test compartment for checking not found");
+            
+            Assert.IsTrue(compartmentWithStorage.UseTable, "Use table for storage has not been set");
+            
+            //check content table
+            IFunction table = compartmentWithStorage.Storage;
+            Assert.IsNotNull(table, "No storage data (table) has been imported");
+            Assert.AreEqual(1,table.Arguments.Count);
+            Assert.AreEqual(1,table.Components.Count);
+            IMultiDimensionalArray valuesHeight = table.Arguments[0].Values;
+            IMultiDimensionalArray valuesStorage = table.Components[0].Values;
+            Assert.AreEqual(-0.4,valuesHeight[0]);
+            Assert.AreEqual(0.1,valuesHeight[1]);
+            Assert.AreEqual(0.11,valuesHeight[2]);
+            Assert.AreEqual(100,valuesStorage[0]);
+            Assert.AreEqual(100,valuesStorage[1]);
+            Assert.AreEqual(0.64,valuesStorage[2]);
         }
 
         [Test]

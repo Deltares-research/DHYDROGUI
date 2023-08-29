@@ -1,0 +1,8 @@
+NODE id '7' ty 1 ws 0.64 ss 100 wl -1.02 ml 0.65 node
+NODE id '8' ty 1 ct sw PDIN 1 0 '' pdin
+TBLE
+-0.4 100 <
+0.1 100 <
+0.11 0.64 <
+tble  ss 100 ml 0.65 node
+

@@ -406,8 +406,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 compartment.BottomLevel = retention.BedLevel;
                 compartment.FloodableArea = retention.StreetStorageArea;
                 compartment.SurfaceLevel = retention.StreetLevel;
-                //retention.StreetStorage,
-                //retention.WellStorage,
+                if (retention.UseTable)
+                {
+                    compartment.UseTable = true;
+                    compartment.Storage = retention.Data;               
+                }
             }
         }
 
