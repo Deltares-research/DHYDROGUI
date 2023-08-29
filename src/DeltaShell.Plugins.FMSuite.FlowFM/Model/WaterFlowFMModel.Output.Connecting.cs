@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             private IEnumerable<string> FindFilesThatEndWith(string extension)
             {
                 return outputDirectoryInfo.EnumerateFiles()
-                                          .Where(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
+                                          .Where(f => f.Name.EndsWith(extension, StringComparison.Ordinal))
                                           .Select(f => f.FullName);
             }
         }

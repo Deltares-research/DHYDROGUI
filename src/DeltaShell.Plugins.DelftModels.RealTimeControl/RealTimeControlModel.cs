@@ -818,16 +818,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 IEventedList<IFeature> featuresBefore = outputCoverage.Features;
                 var featureInCoverage = false;
-                List<IFeature> featuresAfter = featuresBefore.Select(f =>
+                var featuresAfter = new List<IFeature>();
+
+                foreach (IFeature f in featuresBefore)
                 {
                     if (Equals(f, before))
                     {
                         featureInCoverage = true;
-                        return after;
+                        featuresAfter.Add(after);
                     }
-
-                    return f;
-                }).ToList();
+                    else
+                    {
+                        featuresAfter.Add(f);
+                    }
+                }
 
                 if (featureInCoverage)
                 {

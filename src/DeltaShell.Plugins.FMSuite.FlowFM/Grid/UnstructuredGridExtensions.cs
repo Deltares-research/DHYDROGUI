@@ -50,38 +50,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Grid
 
         private static IEnumerable<FlowLink> GetFlowLinksForEdge(Edge gridEdge, IList<int> vertexFromCellIndices, IList<int> vertexToCellIndices)
         {
-            int cellOne = -1;
-            int cellTwo = -1;
-            var moreThanTwo = false;
+            List<int> cells = vertexFromCellIndices.Intersect(vertexToCellIndices).ToList();
 
-            foreach (int fromCellIndex in vertexFromCellIndices)
+            if (cells.Count == 2)
             {
-                foreach (int toCellIndex in vertexToCellIndices)
-                {
-                    if (fromCellIndex != toCellIndex)
-                    {
-                        continue;
-                    }
-
-                    if (cellOne == -1)
-                    {
-                        cellOne = fromCellIndex;
-                        continue;
-                    }
-
-                    if (cellTwo == -1)
-                    {
-                        cellTwo = toCellIndex;
-                        continue;
-                    }
-
-                    moreThanTwo = true;
-                }
-            }
-
-            if (!moreThanTwo && cellOne != -1 && cellTwo != -1)
-            {
-                yield return new FlowLink(cellOne, cellTwo, gridEdge);
+                yield return new FlowLink(cells[0], cells[1], gridEdge);
             }
         }
     }

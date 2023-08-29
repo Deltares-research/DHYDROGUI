@@ -404,7 +404,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     {
                         fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
                         ModelFeatureCoordinateData<FixedWeir> correspondingModelFeatureCoordinateData =
-                            waterFlowFmModel?.FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+                            waterFlowFmModel.FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
 
                         if (correspondingModelFeatureCoordinateData == null)
                         {

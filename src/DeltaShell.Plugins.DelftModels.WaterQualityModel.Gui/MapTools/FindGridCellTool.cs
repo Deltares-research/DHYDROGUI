@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
                 var gridLayer = Layers.FirstOrDefault() as UnstructuredGridLayer;
                 if (gridLayer != null)
                 {
-                    UnstructuredGrid grid = gridLayer?.Grid;
+                    UnstructuredGrid grid = gridLayer.Grid;
                     WaterQualityModel model = GetWaqModelForGrid(grid);
 
                     return base.Enabled && model?.PointToGridCellMapper != null;

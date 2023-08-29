@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.MapView
                 return;
             }
 
-            mapView?.RefreshView();
+            mapView.RefreshView();
         }
 
         private void ResizeMap()

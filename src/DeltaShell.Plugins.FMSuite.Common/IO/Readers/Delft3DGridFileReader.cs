@@ -24,17 +24,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
                 CheckIfFileIsEmpty(reader);
 
                 var gridSizeLineRead = false;
-                var skipNextLine = false;
 
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     string currentLine = line.Trim();
-                    if (skipNextLine)
-                    {
-                        skipNextLine = false;
-                        continue;
-                    }
 
                     if (string.IsNullOrEmpty(currentLine) || currentLine.StartsWith("*"))
                     {
@@ -77,7 +71,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
                         nSize = int.Parse(gridSizeString.ElementAt(1), CultureInfo.InvariantCulture);
 
                         gridSizeLineRead = true;
-                        skipNextLine = true;
+
+                        // skip the next line
+                        if (reader.ReadLine() == null)
+                        {
+                            break;
+                        }
+
                         continue;
                     }
 

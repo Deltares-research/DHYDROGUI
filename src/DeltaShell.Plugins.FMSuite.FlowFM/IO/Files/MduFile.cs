@@ -1533,7 +1533,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 List<StructureDAO> featuresToAdd = fileReader.ReadStructuresFromFile(structureFilePath).ToList();
                 var hasBadFileReferences = false;
-                featuresToAdd.ForEach(f =>
+
+                foreach (StructureDAO f in featuresToAdd)
                 {
                     string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
                     string featureFilePath =
@@ -1545,7 +1546,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         logHandler.ReportErrorFormat(Resources.MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist, featureFilePath,
                                                      structureFilePath);
                     }
-                });
+                }
 
                 if (hasBadFileReferences)
                 {

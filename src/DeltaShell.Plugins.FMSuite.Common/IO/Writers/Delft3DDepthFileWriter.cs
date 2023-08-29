@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Writers
                     {
                         for (var m = 0; m < sizeM; ++m)
                         {
-                            if (m > 0)
+                            if (m != 0)
                             {
                                 writer.Write(m % MaxNrOfEntriesInRow == 0 ? Environment.NewLine : spacing);
                             }
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Writers
                     // write -999 row:
                     for (var m = 0; m < sizeM + 1; ++m)
                     {
-                        if (m > 0)
+                        if (m != 0)
                         {
                             writer.Write(m % MaxNrOfEntriesInRow == 0 ? Environment.NewLine : spacing);
                         }

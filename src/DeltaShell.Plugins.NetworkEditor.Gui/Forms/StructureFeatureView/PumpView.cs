@@ -25,14 +25,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 pump = value;
 
-                if (pump == null)
+                if (pump != null)
                 {
-                    return;
+                    ipumpBindingSource.DataSource = pump;
+
+                    ConfigureTimeDependentControls();
                 }
-
-                ipumpBindingSource.DataSource = (object) pump ?? typeof(IPump);
-
-                ConfigureTimeDependentControls();
             }
         }
 

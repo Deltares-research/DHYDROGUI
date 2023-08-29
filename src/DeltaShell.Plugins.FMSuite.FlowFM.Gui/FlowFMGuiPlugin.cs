@@ -716,7 +716,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                                                  .FirstOrDefault(l => l.Name.Equals("Bed Level"));
 
                 if (bathymetry?.Components?[0]?.MinValue is double minValue &&
-                    bathymetry?.Components?[0]?.MaxValue is double maxValue)
+                    bathymetry.Components?[0]?.MaxValue is double maxValue)
+
                 {
                     bedLevelLayer?.Theme?.ScaleTo(minValue, maxValue);
                 }
