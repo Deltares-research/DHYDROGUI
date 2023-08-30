@@ -9,14 +9,11 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.NGHS.IO.Properties;
-using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Network
 {
     public static class NodeFile
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(NodeFile));
         private const string manholeId = "ManholeId";
         private const string compartmentShape = "CompartmentShape";
 
@@ -24,12 +21,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         {
 
             var categories = new List<DelftIniCategory>();
-            if (compartments != null && compartments.Any())
+            if (compartments != null)
             {
                 categories.AddRange(compartments.Select(CreateCompartmentIniCategory).ToList());
             }
 
-            if (retentions != null && retentions.Any())
+            if (retentions != null)
             {
                 categories.AddRange(retentions.Select(GenerateRetentionStorageNode).ToList());
             }
@@ -87,11 +84,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             return categories
                 .Skip(1) // skip version info
                 .Where(IsManHole)
-                .Select(category => CreateCompartmentProperties(filePath, category))
+                .Select(CreateCompartmentProperties)
                 .ToList();
         }
         
-        private static CompartmentProperties CreateCompartmentProperties(string filePath, DelftIniCategory category)
+        private static CompartmentProperties CreateCompartmentProperties(DelftIniCategory category)
         {
             var properties = new CompartmentProperties
             {
@@ -99,45 +96,31 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 Name = category.ReadProperty<string>(RetentionRegion.Name),
                 NodeId = category.ReadProperty<string>(RetentionRegion.NodeId),
                 ManholeId = category.ReadProperty<string>(manholeId),
+                BedLevel = category.ReadProperty<double>(RetentionRegion.BedLevel),
+                Area = category.ReadProperty<double>(RetentionRegion.Area),
+                StreetLevel = category.ReadProperty<double>(RetentionRegion.StreetLevel),
+                StreetStorageArea = category.ReadProperty<double>(RetentionRegion.StreetStorageArea),
+                CompartmentShape = category.ReadProperty<CompartmentShape>(compartmentShape, true),
+                CompartmentStorageType = category.ReadProperty<CompartmentStorageType>(RetentionRegion.StorageType, true),
                 UseTable = false
             };
-
+            
+            // useTable (mandatory) may be a bool or an int
             var useTable = category.ReadProperty<bool?>(RetentionRegion.UseTable, true);
             if (!useTable.HasValue)
             {
-                var intValue = category.ReadProperty<int?>(RetentionRegion.UseTable, true);
+                var intValue = category.ReadProperty<int?>(RetentionRegion.UseTable);
                 useTable = intValue.HasValue && intValue !=0;
             }
-
-            if (useTable.Value)
+            properties.UseTable = useTable.Value;
+            
+            if (properties.UseTable)
             {
-                log.Warn($"compartments with storage tables are not supported, using DEFAULT VALUES for " +
-                         $"compartment id {properties.CompartmentId} ({properties.Name}) on " +
-                         $"node id {properties.NodeId} and " +
-                         $"manhole id {properties.ManholeId} is NOT read from the file {filePath}");
-                
-                properties.BedLevel = -10;
-                properties.Area = 0.64;
-                properties.StreetLevel = 0;
-                properties.StreetStorageArea = 500;
-                properties.CompartmentShape = CompartmentShape.Unknown;
-                properties.CompartmentStorageType = CompartmentStorageType.Reservoir;
-                properties.UseTable = true;
                 properties.NumberOfLevels = category.ReadProperty<int>(RetentionRegion.NumLevels);
                 properties.Levels = category.ReadPropertiesToListOfType<double>(RetentionRegion.Levels).ToArray();
                 properties.StorageAreas = category.ReadPropertiesToListOfType<double>(RetentionRegion.StorageArea).ToArray();
                 properties.Interpolation = GetInterpolationType(category.ReadProperty<string>(RetentionRegion.Interpolate));
             }
-            else
-            {
-                properties.BedLevel = category.ReadProperty<double>(RetentionRegion.BedLevel);
-                properties.Area = category.ReadProperty<double>(RetentionRegion.Area);
-                properties.StreetLevel = category.ReadProperty<double>(RetentionRegion.StreetLevel);
-                properties.StreetStorageArea = category.ReadProperty<double>(RetentionRegion.StreetStorageArea);
-                properties.CompartmentShape = category.ReadProperty<CompartmentShape>(compartmentShape, true);
-                properties.CompartmentStorageType = category.ReadProperty<CompartmentStorageType>(RetentionRegion.StorageType, true);
-            }
-
             return properties;
         }
         private static InterpolationType GetInterpolationType(string interpolationTypeString)
@@ -150,17 +133,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             }
         }
         
+        /// <summary>
+        /// A node is associated with a manhole if the manhole id is set. 
+        /// </summary>
+        /// <param name="category">The source data of the node</param>
+        /// <returns>true iff the manhole id is set</returns>
         private static bool IsManHole(DelftIniCategory category)
         {
-            IDelftIniProperty useTableProperty = category.GetProperty(RetentionRegion.UseTable.Key);
-            if (useTableProperty == null)
-            {
-                log.WarnFormat(Resources.NodeFile_The_category_does_not_contain_property, 
-                               category.Name, category.LineNumber, RetentionRegion.UseTable.Key);
-                return false;
-            }
-
-            return !useTableProperty.ReadBooleanValue();
+            var manhole = category.ReadProperty<string>(NodeFile.manholeId);
+            return manhole != null;
         }
     }
 }
