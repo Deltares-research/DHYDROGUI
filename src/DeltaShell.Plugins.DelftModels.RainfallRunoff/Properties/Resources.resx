@@ -243,4 +243,7 @@
   <data name="RainfallRunoffBasinValidator_Basin_contains_no_catchments" xml:space="preserve">
     <value>Contains no concrete catchments</value>
   </data>
+  <data name="RainfallRunoffModelValidator_ValidateModelSettings_DryWeatherFlowDefinitions" xml:space="preserve">
+    <value>DryWeatherFlowDefinitions</value>
+  </data>
 </root>

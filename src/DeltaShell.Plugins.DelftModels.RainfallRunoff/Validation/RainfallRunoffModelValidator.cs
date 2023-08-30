@@ -4,7 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
@@ -22,12 +22,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
         {
             return new ValidationReport(rainfallRunoffModel.Name + " (Rainfall Runoff Model)", new[]
                 {
+                    ValidateModelSettings(rainfallRunoffModel),
                     new RainfallRunoffBasinValidator().Validate(rainfallRunoffModel, rainfallRunoffModel.Basin),
                     RainfallRunoffMeteoValidator.Validate(rainfallRunoffModel),
                     new RainfallRunoffCatchmentDataValidator().Validate(rainfallRunoffModel, rainfallRunoffModel.GetAllModelData()),
                     ValidateTimers(rainfallRunoffModel),
                     new RainfallRunoffSettingsValidator().Validate(rainfallRunoffModel, rainfallRunoffModel),
                 });
+        }
+
+        private static ValidationReport ValidateModelSettings(IRainfallRunoffModel rainfallRunoffModel)
+        {
+            return new ValidationReport("ModelSettings", ValidationHelper.ValidateDuplicateNames(rainfallRunoffModel.NwrwDryWeatherFlowDefinitions, Resources.RainfallRunoffModelValidator_ValidateModelSettings_DryWeatherFlowDefinitions, rainfallRunoffModel.NwrwDryWeatherFlowDefinitions));
         }
 
         public static ValidationReport ValidateTimers(RainfallRunoffModel model)

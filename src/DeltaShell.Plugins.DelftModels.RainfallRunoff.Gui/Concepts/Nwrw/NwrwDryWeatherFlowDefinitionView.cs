@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Controls.Swf.Table;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Threading;
@@ -48,6 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
                 {
                     ((INotifyPropertyChanged)data).PropertyChanged -= OnPropertyChanged;
                     data.CollectionChanged -= delayedEventHandlerDefinitionsCollectionChanged;
+                    data.CollectionChanging -= DataOnCollectionChanging;
                 }
 
                 data = value as IEventedList<NwrwDryWeatherFlowDefinition>;
@@ -58,6 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
                     ((INotifyPropertyChanged)data).PropertyChanged += OnPropertyChanged;
                     data.CollectionChanged += delayedEventHandlerDefinitionsCollectionChanged;
+                    data.CollectionChanging += DataOnCollectionChanging;
                 }
                 else
                 {
@@ -65,6 +68,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
                 }
 
                 UpdateTableView();
+            }
+        }
+
+        private void DataOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add
+                && e.Item is NwrwDryWeatherFlowDefinition newDryWeatherFlowDefinition 
+                && sender is IEventedList<NwrwDryWeatherFlowDefinition> dryWeatherFlowDefinitions)
+            {
+                newDryWeatherFlowDefinition.Name = NamingHelper.GetUniqueName("DefinitionName{0:D2}", dryWeatherFlowDefinitions);
             }
         }
 
@@ -221,14 +234,26 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
         {
             if (!IsValidId(cell, newValue))
             {
-                return new DelftTools.Utils.Tuple<string, bool>("Id cannot be empty", false);
+                return new DelftTools.Utils.Tuple<string, bool>(Resources.NwrwDryWeatherFlowDefinitionView_ValidateInput_Id_cannot_be_empty_or_duplicate_name, false);
             }
 
             return new DelftTools.Utils.Tuple<string, bool>(string.Empty, true);
         }
 
         private bool IsValidId(TableViewCell cell, object newValue) =>
-            cell.Column != tableView.Columns.First() || // The cell is not an id, thus is valid
-            newValue is string newId && !string.IsNullOrWhiteSpace(newId);
+            IsCellNotInColumnIds(cell)
+            || newValue is string newId 
+            && !string.IsNullOrWhiteSpace(newId) 
+            && !IsDuplicateValueInColumnIds(newId);
+
+        private bool IsDuplicateValueInColumnIds(string newId)
+        {
+            return ((IList<NwrwDryWeatherFlowDefinition>)tableView.Data).Select(dwf => dwf.Name).Contains(newId);
+        }
+
+        private bool IsCellNotInColumnIds(TableViewCell cell)
+        {
+            return cell.Column != tableView.Columns[0];
+        }
     }
 }

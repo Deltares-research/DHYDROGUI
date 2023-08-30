@@ -126,6 +126,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             Assert.AreEqual(2,report.AllErrors.Count());
         }
 
+        [Test]
+        public void ValidateDuplicateDWFNames()
+        {
+            // arrange
+            var model = new RainfallRunoffModel();
+            model.NwrwDryWeatherFlowDefinitions.Add(model.NwrwDryWeatherFlowDefinitions[0]);
+
+            // act
+            var report = model.Validate();
+            
+            // assert
+            Assert.That(report.AllErrors.Select(error => error.Message).Any(message => message.Contains(Properties.Resources.RainfallRunoffModelValidator_ValidateModelSettings_DryWeatherFlowDefinitions)), Is.True);
+        }
+
         private static void FillMeteoDataTimes(RainfallRunoffModel model)
         {
             var generator = new TimeSeriesGenerator();

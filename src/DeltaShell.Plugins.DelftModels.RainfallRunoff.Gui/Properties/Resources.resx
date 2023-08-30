@@ -262,4 +262,7 @@
   <data name="NWRWLayer" xml:space="preserve">
     <value>NWRW</value>
   </data>
+  <data name="NwrwDryWeatherFlowDefinitionView_ValidateInput_Id_cannot_be_empty_or_duplicate_name" xml:space="preserve">
+    <value>Id cannot be empty or duplicate name</value>
+  </data>
 </root>
