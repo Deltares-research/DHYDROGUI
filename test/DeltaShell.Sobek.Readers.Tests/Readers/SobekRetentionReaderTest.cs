@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using DelftTools.Hydro;
+using DelftTools.TestUtils;
 using DeltaShell.Sobek.Readers.Readers;
+using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Sobek.Readers.Tests.Readers
@@ -87,6 +91,74 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             SobekRetentionsReader sobekRetentionsReader = new SobekRetentionsReader { Sobek2Import = true };
             var retention = sobekRetentionsReader.GetRetention(source);
             Assert.IsNull(retention);
+        }
+
+        [Test]
+        public void GetRetention_ForReservoirCompartment_ValueMissing_SetsTheFloodableAreaWith500_AndLogsWarning()
+        {
+            // Setup
+            var reader = new SobekRetentionsReader { Sobek2Import = true };
+            const string line = "NODE id '6' ty 1 ws 10000 ss wl 22 node";
+
+            Retention retention = null;
+
+            // Call
+            void Call() => retention = reader.GetRetention(line);
+
+            // Assert
+            IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+            const string expWarning = "Could not read SS of retention definition with id 6 (\"NODE id '6' ty 1 ws 10000 ss wl 22 node\"). Using default value 500.";
+            Assert.That(warnings, Does.Contain(expWarning));
+            Assert.That(retention.StreetStorageArea, Is.EqualTo(500));
+        }
+
+        [Test]
+        public void GetRetention_ForReservoirCompartment_ValueProvided_SetsTheFloodableAreaWithProvidedValue()
+        {
+            // Setup
+            var reader = new SobekRetentionsReader { Sobek2Import = true };
+            const string line = "NODE id '6' ty 1 ws 10000 ss 1.23 wl 22 node";
+
+            // Call
+            Retention retention = reader.GetRetention(line);
+
+            // Assert
+            Assert.That(retention.StreetStorageArea, Is.EqualTo(1.23));
+        }
+
+        [Test]
+        [TestCase("NODE id '6' ty 2 ws 10000 ss wl 22 node")]
+        [TestCase("NODE id '6' ty 3 ws 10000 ss wl 22 node")]
+        public void GetRetention_ForNonReservoirCompartment_ValueMissing_SetsTheFloodableAreaWith500_AndLogsWarning(string line)
+        {
+            // Setup
+            var reader = new SobekRetentionsReader { Sobek2Import = true };
+
+            Retention retention = null;
+
+            // Call
+            void Call() => retention = reader.GetRetention(line);
+
+            // Assert
+            IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+            var expWarning = $"Could not read SS of retention definition with id 6 (\"{line}\"). Using default value 0.";
+            Assert.That(warnings, Does.Contain(expWarning));
+            Assert.That(retention.StreetStorageArea, Is.EqualTo(0));
+        }
+
+        [Test]
+        [TestCase("NODE id '6' ty 2 ws 10000 ss 1.23 wl 22 node")]
+        [TestCase("NODE id '6' ty 3 ws 10000 ss 1.23 wl 22 node")]
+        public void GetRetention_ForNonReservoirCompartment_ValueProvided_SetsTheFloodableAreaWithProvidedValue(string line)
+        {
+            // Setup
+            var reader = new SobekRetentionsReader { Sobek2Import = true };
+
+            // Call
+            Retention retention = reader.GetRetention(line);
+
+            // Assert
+            Assert.That(retention.StreetStorageArea, Is.EqualTo(1.23));
         }
     }
 }

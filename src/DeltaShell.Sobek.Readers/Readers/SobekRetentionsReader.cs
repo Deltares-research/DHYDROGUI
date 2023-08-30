@@ -8,8 +8,10 @@ using System.Text.RegularExpressions;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.Utils.Extensions;
+using DeltaShell.Sobek.Readers.Properties;
 using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers
@@ -135,7 +137,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                     case "SS":
                         if (Sobek2Import)
                         {
-                            retention.StreetStorageArea = ParseAndGetValue(value);   
+                            retention.StreetStorageArea = ParseAndGetStreetStorageArea(value, retention, line);   
                         }
                         else
                         {
@@ -258,6 +260,20 @@ namespace DeltaShell.Sobek.Readers.Readers
                    value != 0
                 ? value
                 : 0;
+        }
+        
+        private static double ParseAndGetStreetStorageArea(string stringValue, IRetention retention, string line)
+        {
+            if (double.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
+            {
+                return value;
+            }
+
+            double defaultValue = retention.Type == RetentionType.Reservoir ? Compartment.DefaultReservoirFloodableArea : 0;
+
+            Log.WarnFormat(Resources.Could_not_read_SS_of_retention_definition_with_id_0_1_Using_default_value_2_,
+                           retention.Name, line, defaultValue);
+            return defaultValue;
         }
 
         private string ConcatinateStringValues(string[] words, int i, string value)

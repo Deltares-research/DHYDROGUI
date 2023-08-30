@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             double defaultValue = 0;
             if (compartment.CompartmentStorageType == CompartmentStorageType.Reservoir)
             {
-                defaultValue = 500;
+                defaultValue = Compartment.DefaultReservoirFloodableArea;
             }
             
             var logMessage = $"Missing floodable area value for '{compartment.Name}', using default value: {defaultValue}";

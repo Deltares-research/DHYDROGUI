@@ -39,4 +39,7 @@
     <data name="The_extra_resistance_functionality_is_not_supported_skipping_this_item_with_id_0" xml:space="preserve">
         <value>The extra resistance functionality is not supported, skipping this item with id: {0}</value>
     </data>
+    <data name="Could_not_read_SS_of_retention_definition_with_id_0_1_Using_default_value_2_" xml:space="preserve">
+        <value>Could not read SS of retention definition with id {0} ("{1}"). Using default value {2}.</value>
+    </data>
 </root>

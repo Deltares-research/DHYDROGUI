@@ -72,7 +72,7 @@ namespace DelftTools.Hydro.Tests.Structures
             ICompartment compartment = manhole.Compartments.First();
             Assert.That(compartment.SurfaceLevel, Is.EqualTo(0.0));
             Assert.That(compartment.BottomLevel, Is.EqualTo(-2.0));
-            Assert.That(compartment.FloodableArea, Is.EqualTo(100.0));
+            Assert.That(compartment.FloodableArea, Is.EqualTo(500.0));
             Assert.That(compartment.ManholeLength, Is.EqualTo(0.64));
             Assert.That(compartment.ManholeWidth, Is.EqualTo(0.64));
         }

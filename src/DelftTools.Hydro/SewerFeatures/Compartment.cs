@@ -20,6 +20,11 @@ namespace DelftTools.Hydro.SewerFeatures
     {
         private IManhole parentManhole;
 
+        /// <summary>
+        /// The default floodable area for a reservoir compartment (m²).
+        /// </summary>
+        public const double DefaultReservoirFloodableArea = 500.0;
+
         public Compartment() : this("compartment")
         {
             
@@ -92,7 +97,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 5)]
         [DynamicReadOnly]
         [DisplayName("Floodable area")]
-        public virtual double FloodableArea { get; set; } = 100.0;
+        public virtual double FloodableArea { get; set; } = DefaultReservoirFloodableArea;
 
         /// <summary>
         /// The bottom level of the manhole compared to Dutch NAP (m).

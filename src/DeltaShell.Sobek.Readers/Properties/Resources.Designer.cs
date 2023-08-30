@@ -61,6 +61,15 @@ namespace DeltaShell.Sobek.Readers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not read SS of retention definition with id {0} (&quot;{1}&quot;). Using default value {2}..
+        /// </summary>
+        public static string Could_not_read_SS_of_retention_definition_with_id_0_1_Using_default_value_2_ {
+            get {
+                return ResourceManager.GetString("Could_not_read_SS_of_retention_definition_with_id_0_1_Using_default_value_2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} ({1}) can not be equal to or higher than {2} ({3})..
         /// </summary>
         public static string Exception_IndexEqualToOrHigherThanNumberOfLocations {
