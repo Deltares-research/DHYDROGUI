@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     /// </summary>
     public partial class ManholeView : IReusableView
     {
+        private bool disposed = false;
         private Point startPoint;
         private Cursor customCursor;
 
@@ -43,10 +44,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public Image Image { get; set; }
         
         public ViewInfo ViewInfo { get; set; }
-
-        public void Dispose()
-        {
-        }
 
         [InvokeRequired]
         public void EnsureVisible(object item)
@@ -188,6 +185,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             // reset selected pipe (attached property was set when ProfileChartView was null)
             WindowsFormsHostProfileView.SetPipe(host, null);
             WindowsFormsHostProfileView.SetPipe(host, ViewModel.SelectedItem as IPipe);
+        }
+        
+        /// <inheritdoc cref="IDisposable"/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing && ManholeVisualisationControl != null)
+            {
+                ManholeVisualisationControl.Dispose();
+                ManholeVisualisationControl = null;
+            }
+
+            disposed = true;
         }
     }
 }

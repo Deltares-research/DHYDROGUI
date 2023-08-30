@@ -12,8 +12,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     /// <summary>
     /// Interaction logic for ManholeVisualisationControl.xaml
     /// </summary>
-    public partial class ManholeVisualisation : UserControl
+    public partial class ManholeVisualisation : UserControl, IDisposable
     {
+        private bool disposed = false;
+        
         public static readonly DependencyProperty ManholeProperty = DependencyProperty.Register(
             nameof(Manhole),
             typeof(Manhole),
@@ -249,7 +251,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         
         private void SetViewGridSize()
         {
-            var ratio = ViewModel.HeightWidthRatio;
+            double ratio = Math.Abs(ViewModel.HeightWidthRatio);
             if (double.IsNaN(ratio)) return;
 
             var actualHeight = UserControl.ActualHeight;
@@ -313,6 +315,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public int GetIndexFor(Point pos)
         {
             return ViewModel.GetIndexFor(pos);
+        }
+
+        /// <inheritdoc cref="IDisposable"/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing && ViewModel != null)
+            {
+                ViewModel.Dispose();
+                ViewModel = null;
+            }
+
+            disposed = true;
         }
     }
 }

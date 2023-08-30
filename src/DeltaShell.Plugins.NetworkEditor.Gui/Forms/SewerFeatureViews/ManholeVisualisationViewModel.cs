@@ -16,8 +16,10 @@ using DelftTools.Utils.Collections.Extensions;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
-    public class ManholeVisualisationViewModel
+    public class ManholeVisualisationViewModel : IDisposable
     {
+        private bool disposed = false;
+        
         private double minX;
         private double maxX;
         private double minY;
@@ -391,6 +393,64 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private void OnShapePropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             UpdateShapeDimensions();
+        }
+
+        /// <inheritdoc cref="IDisposable"/>
+        public void Dispose()
+
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                UnsubscribeFromCompartmentCollectionChanged();
+                UnsubscribeFromShapesCollectionChanged();
+                UnsubscribeFromBranchesCollectionChanged();
+                UnsubscribeFromAllShapePropertyChanged();
+            }
+
+            disposed = true;
+        }
+
+        private void UnsubscribeFromCompartmentCollectionChanged()
+        {
+            if (manhole != null && manhole.Compartments != null)
+            {
+                manhole.Compartments.CollectionChanged -= CompartmentsOnCollectionChanged;
+            }
+        }
+
+        private void UnsubscribeFromShapesCollectionChanged()
+        {
+            if (shapes != null)
+            {
+                shapes.CollectionChanged -= ShapesOnCollectionChanged;
+            }
+        }
+
+        private void UnsubscribeFromBranchesCollectionChanged()
+        {
+            if (network != null && network.Branches != null)
+            {
+                network.Branches.CollectionChanged -= Branches_CollectionChanged;
+            }
+        }
+
+        private void UnsubscribeFromAllShapePropertyChanged()
+        {
+            if (Shapes != null)
+            {
+                UnsubscribeShapePropertyChanged();
+            }
         }
     }
 }
