@@ -220,14 +220,32 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
         private void OnCollectionChanged(object sender, EventArgs e)
         {
-            tableView.RefreshData();
-            tableView.BestFitColumns();
+            RefreshTable();
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == nameof(NwrwDryWeatherFlowDefinition.DistributionType) ||
+                e.PropertyName == nameof(NwrwDryWeatherFlowDefinition.DailyVolumeConstant))
+            {
+                UpdateDailyVolumeVariable((NwrwDryWeatherFlowDefinition)sender);
+            }
+            
+            RefreshTable();
+        }
+
+        private void RefreshTable()
+        {
             tableView.RefreshData();
             tableView.BestFitColumns();
+        }
+
+        private void UpdateDailyVolumeVariable(NwrwDryWeatherFlowDefinition flowDefinition)
+        {
+            if (flowDefinition.DistributionType == DryweatherFlowDistributionType.Constant)
+            {
+                flowDefinition.DailyVolumeVariable = flowDefinition.DailyVolumeConstant;
+            }
         }
 
         private DelftTools.Utils.Tuple<string, bool> ValidateInput(TableViewCell cell, object newValue)
