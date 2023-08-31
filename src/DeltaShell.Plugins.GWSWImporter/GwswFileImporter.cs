@@ -633,6 +633,20 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     pipe.CrossSection = crossSection;
                     helper.PipeCrossSections?.Enqueue(crossSection);
                 }
+                else if(string.IsNullOrWhiteSpace(pipe.CrossSectionDefinitionName))
+                {
+                    // use default!
+                    Log.Warn(string.Format(Resources.GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbinding_csv_for_pipe__0___Using_default_pipe_profile, pipe.PipeId));
+                    ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2, false);
+                    crossSection.Name = $"SewerProfile_";
+                    var defaultProfile = pipe.SpecialConnectionType == SewerConnectionSpecialConnectionType.Weir
+                                                                         ? SewerFactory.GetDefaultWeirSewerStructureProfile(pipe.HydroNetwork)
+                                                                         : SewerFactory.GetDefaultPumpSewerStructureProfile(pipe.HydroNetwork);
+                    
+                    crossSection.UseSharedDefinition(defaultProfile);
+                    pipe.CrossSection = crossSection;
+                    helper.PipeCrossSections?.Enqueue(crossSection);
+                }
 
                 if (helper.SewerProfileMaterialsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var material))
                     pipe.Material = material;

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -127,6 +127,16 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
             get {
                 return ResourceManager.GetString("GwswElementValidationExtensions_IsValidGwswStructure_Cannot_import_sewer_structur" +
                         "e_s__without_a_unique_id__Please_check__Kunstwerk_csv__for_empty_unique_id_s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No cross-section id defined in Verbinding.csv for pipe {0}. Using default pipe profile.
+        /// </summary>
+        public static string GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbinding_csv_for_pipe__0___Using_default_pipe_profile {
+            get {
+                return ResourceManager.GetString("GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbind" +
+                        "ing_csv_for_pipe__0___Using_default_pipe_profile", resourceCulture);
             }
         }
         
