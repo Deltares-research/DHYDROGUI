@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing.Design;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
@@ -88,14 +91,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(5)]
         [DisplayName("Compartment Storage Type")]
         [DynamicVisible]
-        public CompartmentStorageType Compartment1StorageType
+        public CompartmentStorageType CompartmentOneStorageType
         {
-            get
-            {
-                return data.Compartments.ElementAtOrDefault(manholeOneIndex)?.CompartmentStorageType ?? CompartmentStorageType.Reservoir; }
+            get { return GetCompartmentPropertyAtIndex(manholeOneIndex, comp => comp.CompartmentStorageType); }
             set { data.Compartments[manholeOneIndex].CompartmentStorageType = value; }
         }
 
+        [Category("Compartment 1")]
+        [PropertyOrder(6)]
+        [DisplayName("Use table")]
+        [DynamicVisible]
+        public bool CompartmentOneUseTable
+        {
+            get { return GetCompartmentPropertyAtIndex(manholeOneIndex, comp => comp.UseTable); }
+            set { data.Compartments[manholeOneIndex].UseTable = value; }
+        }
+        
+        [Category("Compartment 1")]
+        [PropertyOrder(7)]
+        [DisplayName("Interpolation Type")]
+        [DynamicReadOnly]
+        [DynamicVisible]
+        public InterpolationType CompartmentOneInterpolationType
+        {
+            get { return GetCompartmentPropertyAtIndex(manholeOneIndex, comp => comp.InterpolationType); }
+            set { data.Compartments[manholeOneIndex].InterpolationType = value; }
+        }
+        
+        [Category("Compartment 1")]
+        [PropertyOrder(8)]
+        [DisplayName("Storage")]
+        [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
+        [DynamicReadOnly]
+        [DynamicVisible]
+        public Function CompartmentOneStorage
+        {
+            get { return (Function) GetCompartmentPropertyAtIndex(manholeOneIndex, comp => comp.Storage); }
+            set { data.Compartments[manholeOneIndex].Storage = value; }
+        }
         #endregion
 
         #region Compartment 2
@@ -144,13 +177,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(5)]
         [DisplayName("Compartment Storage Type")]
         [DynamicVisible]
-        public CompartmentStorageType Compartment2StorageType
+        public CompartmentStorageType CompartmentTwoStorageType
         {
-            get
-            {
-                return data.Compartments.ElementAtOrDefault(manholeTwoIndex)?.CompartmentStorageType ?? CompartmentStorageType.Reservoir;
-            }
+            get { return GetCompartmentPropertyAtIndex(manholeTwoIndex, comp => comp.CompartmentStorageType); }
             set { data.Compartments[manholeTwoIndex].CompartmentStorageType = value; }
+        }
+        
+        [Category("Compartment 2")]
+        [PropertyOrder(6)]
+        [DisplayName("Use table")]
+        [DynamicVisible]
+        public bool CompartmentTwoUseTable
+        {
+            get { return GetCompartmentPropertyAtIndex(manholeTwoIndex, comp => comp.UseTable); }
+            set { data.Compartments[manholeTwoIndex].UseTable = value; }
+        }
+        
+        [Category("Compartment 2")]
+        [PropertyOrder(7)]
+        [DisplayName("Interpolation Type")]
+        [DynamicReadOnly]
+        [DynamicVisible]
+        public InterpolationType CompartmentTwoInterpolationType
+        {
+            get { return GetCompartmentPropertyAtIndex(manholeTwoIndex, comp => comp.InterpolationType); }
+            set { data.Compartments[manholeTwoIndex].InterpolationType = value; }
+        }
+        
+        [Category("Compartment 2")]
+        [PropertyOrder(8)]
+        [DisplayName("Storage")]
+        [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
+        [DynamicReadOnly]
+        [DynamicVisible]
+        public Function CompartmentTwoStorage
+        {
+            get { return (Function) GetCompartmentPropertyAtIndex(manholeTwoIndex, comp => comp.Storage); }
+            set { data.Compartments[manholeTwoIndex].Storage = value; }
         }
         #endregion
 
@@ -182,7 +245,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CompartmentThreeStreetLevel
         {
-            get { return GetDoublePropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.SurfaceLevel); }
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.SurfaceLevel); }
             set { data.Compartments[manholeThreeIndex].SurfaceLevel = value; }
         }
 
@@ -199,55 +262,119 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(5)]
         [DisplayName("Compartment Storage Type")]
         [DynamicVisible]
-        public CompartmentStorageType Compartment3StorageType
+        public CompartmentStorageType CompartmentThreeStorageType
         {
-            get
-            {
-                return data.Compartments.ElementAtOrDefault(manholeThreeIndex)?.CompartmentStorageType ?? CompartmentStorageType.Reservoir;
-            }
+            get { return GetCompartmentPropertyAtIndex(manholeThreeIndex, comp => comp.CompartmentStorageType); }
             set { data.Compartments[manholeThreeIndex].CompartmentStorageType = value; }
+        }
+        
+        [Category("Compartment 3")]
+        [PropertyOrder(6)]
+        [DisplayName("Use table")]
+        [DynamicVisible]
+        public bool CompartmentThreeUseTable
+        {
+            get { return GetCompartmentPropertyAtIndex(manholeThreeIndex, comp => comp.UseTable); }
+            set { data.Compartments[manholeThreeIndex].UseTable = value; }
+        }
+        
+        [Category("Compartment 3")]
+        [PropertyOrder(7)]
+        [DisplayName("Interpolation Type")]
+        [DynamicReadOnly]
+        [DynamicVisible]
+        public InterpolationType CompartmentThreeInterpolationType
+        {
+            get { return GetCompartmentPropertyAtIndex(manholeThreeIndex, comp => comp.InterpolationType); }
+            set { data.Compartments[manholeThreeIndex].InterpolationType = value; }
+        }
+        
+        [Category("Compartment 3")]
+        [PropertyOrder(8)]
+        [DisplayName("Storage")]
+        [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
+        [DynamicReadOnly]
+        [DynamicVisible]
+        public Function CompartmentThreeStorage
+        {
+            get { return (Function) GetCompartmentPropertyAtIndex(manholeThreeIndex, comp => comp.Storage); }
+            set { data.Compartments[manholeThreeIndex].Storage = value; }
         }
         #endregion
 
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
         {
-            var compartmentCount = data.Compartments.Count;
+            int compartmentCount = data.Compartments.Count;
             switch (propertyName)
             {
                 case nameof(CompartmentOneName):
                 case nameof(CompartmentOneBottomLevel):
                 case nameof(CompartmentOneStreetLevel):
                 case nameof(CompartmentOneFloodableArea):
-                case nameof(Compartment1StorageType):
+                case nameof(CompartmentOneStorageType):
                     return compartmentCount > 0;
+                case nameof(CompartmentOneUseTable):
+                case nameof(CompartmentOneInterpolationType):
+                case nameof(CompartmentOneStorage):
+                    return compartmentCount > 0 && !IsOutletCompartment(manholeOneIndex);
                 case nameof(CompartmentTwoName):
                 case nameof(CompartmentTwoBottomLevel):
                 case nameof(CompartmentTwoStreetLevel):
                 case nameof(CompartmentTwoFloodableArea):
-                case nameof(Compartment2StorageType):
+                case nameof(CompartmentTwoStorageType):
                     return compartmentCount > 1;
+                case nameof(CompartmentTwoUseTable):
+                case nameof(CompartmentTwoInterpolationType):
+                case nameof(CompartmentTwoStorage):
+                    return compartmentCount > 1 && !IsOutletCompartment(manholeTwoIndex);
                 case nameof(CompartmentThreeName):
                 case nameof(CompartmentThreeBottomLevel):
                 case nameof(CompartmentThreeStreetLevel):
                 case nameof(CompartmentThreeFloodableArea):
-                case nameof(Compartment3StorageType):
+                case nameof(CompartmentThreeStorageType):
                     return compartmentCount > 2;
+                case nameof(CompartmentThreeUseTable):
+                case nameof(CompartmentThreeInterpolationType):
+                case nameof(CompartmentThreeStorage):
+                    return compartmentCount > 2 && !IsOutletCompartment(manholeThreeIndex);
                 default:
                     return false;
             }
         }
-
-        private string GetStringPropertyFromCompartmentAtIndex(int index, Func<ICompartment, string> function)
+        
+        [DynamicReadOnlyValidationMethod]
+        public bool IsReadOnly(string propertyName)
         {
-            var compartments = data.Compartments;
-            return compartments.Count > index ? function(compartments[index]) : string.Empty;
+            switch (propertyName)
+            {
+                case nameof(CompartmentOneInterpolationType):
+                case nameof(CompartmentOneStorage):
+                    return !CompartmentOneUseTable;
+                case nameof(CompartmentTwoInterpolationType):
+                case nameof(CompartmentTwoStorage):
+                    return !CompartmentTwoUseTable;
+                case nameof(CompartmentThreeInterpolationType):
+                case nameof(CompartmentThreeStorage):
+                    return !CompartmentThreeUseTable;
+                default:
+                    return true;
+            }
         }
 
+        private bool IsOutletCompartment(int index) 
+            => GetCompartmentPropertyAtIndex(index, compartment => compartment is OutletCompartment);
+        
+        private string GetStringPropertyFromCompartmentAtIndex(int index, Func<ICompartment, string> function)
+            => GetCompartmentPropertyAtIndex(index, function, string.Empty);
+
         private double GetDoublePropertyFromCompartmentAtIndex(int index, Func<ICompartment, double> function)
+            => GetCompartmentPropertyAtIndex(index, function, double.NaN);
+        
+        private T GetCompartmentPropertyAtIndex<T>(int index, Func<ICompartment, T> func, T defaultValue = default)
         {
-            var compartments = data.Compartments;
-            return compartments.Count > index ? function(compartments[index]) : double.NaN;
+            ICompartment compartment = data.Compartments.ElementAtOrDefault(index);
+            return compartment != null ? func(compartment) : defaultValue;
         }
     }
 }

@@ -118,6 +118,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get => data.CompartmentStorageType;
             set => data.CompartmentStorageType = value;
         }
+        
         [Category(PropertyWindowCategoryHelper.TableCategory)]
         [Description("Storage area definition.")]
         [PropertyOrder(12)]
@@ -182,8 +183,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 propertyName == nameof(SurfaceLevel) ||
                 propertyName == nameof(UseTable) ||
                 propertyName == nameof(Storage) ||
-                propertyName == nameof(InterpolationType) 
-                )
+                propertyName == nameof(InterpolationType))
             {
                 return !(data is OutletCompartment);
             }
