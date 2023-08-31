@@ -1,11 +1,17 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using System.Threading;
+using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
 {
     [TestFixture]
     public class ManholeViewModelTest
     {
-/*        [Test]
+        [Test]
         public void TestTestManhole()
         {
             var testManhole = GetManholeWithTwoCompartments();
@@ -24,7 +30,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             {
                 Manhole = testManhole
             };
-            manholeViewModel.AddPumpCommand.Execute(null);
+            manholeViewModel.AddShape(ShapeType.Pump);
 
             // manhole
             var internalConnections = testManhole.InternalConnections().ToList();
@@ -55,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 Manhole = testManhole
             };
 
-            manholeViewModel.AddPumpCommand.Execute(null);
+            manholeViewModel.AddShape(ShapeType.Pump);
 
             AssertManholeAndInternalStructure<Pump>(manholeViewModel.Manhole, 1, 1);
         }
@@ -69,7 +75,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 Manhole = testManhole
             };
 
-            manholeViewModel.AddWeirCommand.Execute(null);
+            manholeViewModel.AddShape(ShapeType.Weir);
 
             AssertManholeAndInternalStructure<Weir>(manholeViewModel.Manhole, 1, 0);
 
@@ -84,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 Manhole = testManhole
             };
 
-            manholeViewModel.AddOrificeCommand.Execute(null);
+            manholeViewModel.AddShape(ShapeType.Orifice);
 
             // Test is failing because orifice is at the moment not a structure on a branch. This might become a structure
             AssertManholeAndInternalStructure<Orifice>(manholeViewModel.Manhole, 1, 0);
@@ -102,9 +108,68 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             var numberOfCompartments = testManhole.Compartments.Count;
             Assert.AreEqual(numberOfCompartments, testManhole.Compartments.Count);
 
-            vm.AddCompartmentCommand.Execute(null);
+            vm.AddShape(ShapeType.Compartment);
 
             Assert.AreEqual(numberOfCompartments + 1, testManhole.Compartments.Count);
+        }
+
+        [Test]
+        public void GivenTwoPipesAndAddedNewCompartmentToConnectingManhole_WhenDeleteNewCompartment_ThenNoExceptionAndOriginalCompartmentIsSetToPipes()
+        {
+            // Arrange
+            var hydroNetwork = new HydroNetwork();
+
+            var compartment1 = new Compartment("compartment1");
+            var compartment2a = new Compartment("compartment2a");
+            var compartment2b = new Compartment("compartment2b");
+            var compartment3 = new Compartment("compartment3");
+
+            var manhole = new Manhole("manhole");
+            manhole.Compartments.Add(compartment1);
+
+            var manhole2 = new Manhole("manhole2");
+            manhole2.Compartments.Add(compartment2a);
+
+            var manhole3 = new Manhole("manhole3");
+            manhole.Compartments.Add(compartment3);
+
+            hydroNetwork.Nodes.Add(manhole);
+            hydroNetwork.Nodes.Add(manhole2);
+            hydroNetwork.Nodes.Add(manhole3);
+
+            var pipe1 = new Pipe()
+            {
+                SourceCompartment = compartment1,
+                TargetCompartment = compartment2a,
+            };
+
+            var pipe2 = new Pipe()
+            {
+                SourceCompartment = compartment2a,
+                TargetCompartment = compartment3,
+            };
+            hydroNetwork.Branches.Add(pipe1);
+            hydroNetwork.Branches.Add(pipe2);
+
+
+            var vm = new ManholeViewModel
+            {
+                Manhole = manhole2,
+            };
+
+            manhole2.Compartments.Add(compartment2b);
+            pipe1.TargetCompartment = compartment2b;
+            pipe2.SourceCompartment = compartment2b;
+
+            vm.SelectedItem = compartment2b;
+
+            // Act
+            void Call() => vm.DeleteCommand.Execute(null);
+
+            // Asserts
+            Assert.That(Call, Throws.Nothing);
+            Assert.That(pipe1.TargetCompartment, Is.EqualTo(compartment2a));
+            Assert.That(pipe2.SourceCompartment, Is.EqualTo(compartment2a));
         }
 
         private static void AssertManholeAndInternalStructure<T>(Manhole manhole, int initialBranchesCount, int initialStructuresCountForType)
@@ -115,8 +180,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             Assert.AreEqual(manhole, internalConnections[1].Target);
             Assert.AreEqual(manhole, internalConnections[1].Source);
 
-            Assert.AreEqual(manhole.Compartments[1], internalConnections[1].SourceCompartment);
-            Assert.AreEqual(manhole.Compartments[2], internalConnections[1].TargetCompartment);
+            Assert.AreEqual(manhole.Compartments[0], internalConnections[1].SourceCompartment);
+            Assert.AreEqual(manhole.Compartments[3], internalConnections[1].TargetCompartment);
 
             //network
             var nBranches = manhole.Network.Branches.Count;
@@ -158,7 +223,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole);
             SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole);
 
-            var pumpConnection = SewerFactory.CreateConnectionWithStructure<Pump>(manhole);
+            var pumpConnection = SewerFactory.CreatePumpConnection(manhole);
             
             pumpConnection.SourceCompartment = compartment1;
             pumpConnection.TargetCompartment = compartment2;
@@ -166,6 +231,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             network.Branches.Add(pumpConnection);
 
             return manhole;
-        }*/
+        }
+
     }
 }

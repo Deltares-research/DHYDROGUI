@@ -73,13 +73,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 if (!CanRemoveCompartment(compartmentToRemove)) return;
 
                 // incoming pipes => replace target compartment
-                foreach (var pipe in manhole.IncomingPipes().Where(p => p.TargetCompartment == compartmentToRemove))
+                foreach (var pipe in manhole.IncomingPipes().Where(p => p.TargetCompartment == compartmentToRemove).ToArray())
                 {
                     pipe.TargetCompartment = manhole.Compartments.FirstOrDefault(c => c != compartmentToRemove);
                 }
 
                 // outgoing pipes => replace source compartment
-                foreach (var pipe in manhole.OutgoingPipes().Where(p => p.SourceCompartment == compartmentToRemove))
+                foreach (var pipe in manhole.OutgoingPipes().Where(p => p.SourceCompartment == compartmentToRemove).ToArray())
                 {
                     pipe.SourceCompartment = manhole.Compartments.FirstOrDefault(c => c != compartmentToRemove);
                 }
