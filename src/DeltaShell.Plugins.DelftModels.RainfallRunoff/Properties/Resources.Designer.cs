@@ -447,6 +447,96 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No settings found for infiltration capacity reduction..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateInfiltrationCapacityDecrease_No_settings_found_for_infiltration_capacity_reduction {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateInfiltrationCapacityDecrease_No_settings_foun" +
+                        "d_for_infiltration_capacity_reduction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No settings found for infiltration capacity recovery..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateInfiltrationCapacityIncrease_No_settings_found_for_infiltration_capacity_recovery {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateInfiltrationCapacityIncrease_No_settings_foun" +
+                        "d_for_infiltration_capacity_recovery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No settings found for maximum infiltration capacities..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateMaximumInfiltrationCapacities_No_settings_found_for_maximum_infiltration_capacities {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateMaximumInfiltrationCapacities_No_settings_fou" +
+                        "nd_for_maximum_infiltration_capacities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No settings found for maximum storages..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateMaximumStorages_No_settings_found_for_maximum_storages {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateMaximumStorages_No_settings_found_for_maximum" +
+                        "_storages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No settings found for minimum infiltration capacities..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateMinimumInfiltrationCapacities_No_settings_found_for_minimum_infiltration_capacities {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateMinimumInfiltrationCapacities_No_settings_fou" +
+                        "nd_for_minimum_infiltration_capacities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found multiple nwrw settings. Importing the first settings and ignoring the others..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_Found_multiple_nwrw_settings__Importing_the_first_settings_and_ignoring_the_others {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_Found_multiple_nwrw_settings__Im" +
+                        "porting_the_first_settings_and_ignoring_the_others", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No nwrw settings were found..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_No_nwrw_settings_were_found {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_No_nwrw_settings_were_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nwrw Definitions in RR model are not configured as expected. Cannot load default data in unexpected configured NWRW surface settings object..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_Nwrw_Definitions_in_RR_model_are_not_configured_as_expected__Cannot_load_default_data_in_unexpected_configured_NWRW_surface_settings_object {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_Nwrw_Definitions_in_RR_model_are" +
+                        "_not_configured_as_expected__Cannot_load_default_data_in_unexpected_configured_N" +
+                        "WRW_surface_settings_object", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find any runoff factors..
+        /// </summary>
+        public static string SobekRRNwrwSettingsExtensions_UpdateRunoffDelayFactors_Could_not_find_any_runoff_factors {
+            get {
+                return ResourceManager.GetString("SobekRRNwrwSettingsExtensions_UpdateRunoffDelayFactors_Could_not_find_any_runoff_" +
+                        "factors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not a valid time-dependent function.
         /// </summary>
         public static string TimeDependentFunctionSplitter_SplitIntoFunctionsPerArgumentValue_Not_a_valid_time_dependent_function {

@@ -33,8 +33,8 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             }
 
             if (TryGetArrayOfNumbers("ms", text, 12, out doubleArray)) sobekRrNwrwSettings.MaximumStorages = doubleArray;
-            if (TryGetArrayOfNumbers("ix", text, 4, out doubleArray)) sobekRrNwrwSettings.MaximumInfiltrationCapcaties = doubleArray;
-            if (TryGetArrayOfNumbers("im", text, 4, out doubleArray)) sobekRrNwrwSettings.MinimumInfiltrationCapcaties = doubleArray;
+            if (TryGetArrayOfNumbers("ix", text, 4, out doubleArray)) sobekRrNwrwSettings.MaximumInfiltrationCapacities = doubleArray;
+            if (TryGetArrayOfNumbers("im", text, 4, out doubleArray)) sobekRrNwrwSettings.MinimumInfiltrationCapacities = doubleArray;
             if (TryGetArrayOfNumbers("ic", text, 4, out doubleArray)) sobekRrNwrwSettings.InfiltrationCapacityDecreases = doubleArray;
             if (TryGetArrayOfNumbers("dc", text, 4, out doubleArray)) sobekRrNwrwSettings.InfiltrationCapacityIncreases = doubleArray;
             

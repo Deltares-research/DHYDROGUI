@@ -23,8 +23,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             Assert.That(sobekRRNwrwSetting.RunoffDelayFactors, Is.EqualTo(new []{0.5, 0.2, 0.1, 0.5, 0.2, 0.1 , 0.5, 0.2, 0.1 , 0.5, 0.2, 0.1 }));
             Assert.That(sobekRRNwrwSetting.IsOldFormatData, Is.EqualTo(false));
             Assert.That(sobekRRNwrwSetting.MaximumStorages, Is.EqualTo(new [] { 0, 0.5, 1, 0, 0.5, 1, 0, 2, 4, 2, 4, 6 }));
-            Assert.That(sobekRRNwrwSetting.MaximumInfiltrationCapcaties, Is.EqualTo(new [] { 0, 2, 0, 5 }));
-            Assert.That(sobekRRNwrwSetting.MinimumInfiltrationCapcaties, Is.EqualTo(new [] { 0, 0.5, 0, 1 }));
+            Assert.That(sobekRRNwrwSetting.MaximumInfiltrationCapacities, Is.EqualTo(new [] { 0, 2, 0, 5 }));
+            Assert.That(sobekRRNwrwSetting.MinimumInfiltrationCapacities, Is.EqualTo(new [] { 0, 0.5, 0, 1 }));
             Assert.That(sobekRRNwrwSetting.InfiltrationCapacityDecreases, Is.EqualTo(new [] { 0, 3, 0, 3 }));
             Assert.That(sobekRRNwrwSetting.InfiltrationCapacityIncreases, Is.EqualTo(new []{ 0, 0.1, 0, 0.1 }));
             Assert.That(sobekRRNwrwSetting.InfiltrationFromDepressions, Is.EqualTo(true));
@@ -46,8 +46,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             Assert.That(sobekRRNwrwSetting.RunoffDelayFactors, Is.EqualTo(new[] { 0.5, 0.2, 0.1 }));
             Assert.That(sobekRRNwrwSetting.IsOldFormatData, Is.EqualTo(true));
             Assert.That(sobekRRNwrwSetting.MaximumStorages, Is.EqualTo(new[] { 0, 0.5, 1, 0, 0.5, 1, 0, 2, 4, 2, 4, 6 }));
-            Assert.That(sobekRRNwrwSetting.MaximumInfiltrationCapcaties, Is.EqualTo(new[] { 0, 2, 0, 5 }));
-            Assert.That(sobekRRNwrwSetting.MinimumInfiltrationCapcaties, Is.EqualTo(new[] { 0, 0.5, 0, 1 }));
+            Assert.That(sobekRRNwrwSetting.MaximumInfiltrationCapacities, Is.EqualTo(new[] { 0, 2, 0, 5 }));
+            Assert.That(sobekRRNwrwSetting.MinimumInfiltrationCapacities, Is.EqualTo(new[] { 0, 0.5, 0, 1 }));
             Assert.That(sobekRRNwrwSetting.InfiltrationCapacityDecreases, Is.EqualTo(new[] { 0, 3, 0, 3 }));
             Assert.That(sobekRRNwrwSetting.InfiltrationCapacityIncreases, Is.EqualTo(new[] { 0, 0.1, 0, 0.1 }));
             Assert.That(sobekRRNwrwSetting.InfiltrationFromDepressions, Is.EqualTo(false));

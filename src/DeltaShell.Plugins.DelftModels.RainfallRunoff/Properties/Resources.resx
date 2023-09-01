@@ -246,4 +246,31 @@
   <data name="RainfallRunoffModelValidator_ValidateModelSettings_DryWeatherFlowDefinitions" xml:space="preserve">
     <value>DryWeatherFlowDefinitions</value>
   </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_No_nwrw_settings_were_found" xml:space="preserve">
+    <value>No nwrw settings were found.</value>
+  </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_Found_multiple_nwrw_settings__Importing_the_first_settings_and_ignoring_the_others" xml:space="preserve">
+    <value>Found multiple nwrw settings. Importing the first settings and ignoring the others.</value>
+  </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateInfiltrationCapacityIncrease_No_settings_found_for_infiltration_capacity_recovery" xml:space="preserve">
+    <value>No settings found for infiltration capacity recovery.</value>
+  </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateInfiltrationCapacityDecrease_No_settings_found_for_infiltration_capacity_reduction" xml:space="preserve">
+    <value>No settings found for infiltration capacity reduction.</value>
+  </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateMinimumInfiltrationCapacities_No_settings_found_for_minimum_infiltration_capacities" xml:space="preserve">
+    <value>No settings found for minimum infiltration capacities.</value>
+  </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateMaximumInfiltrationCapacities_No_settings_found_for_maximum_infiltration_capacities" xml:space="preserve">
+    <value>No settings found for maximum infiltration capacities.</value>
+  </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateMaximumStorages_No_settings_found_for_maximum_storages" xml:space="preserve">
+    <value>No settings found for maximum storages.</value>
+  </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateRunoffDelayFactors_Could_not_find_any_runoff_factors" xml:space="preserve">
+    <value>Could not find any runoff factors.</value>
+  </data>
+  <data name="SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_Nwrw_Definitions_in_RR_model_are_not_configured_as_expected__Cannot_load_default_data_in_unexpected_configured_NWRW_surface_settings_object" xml:space="preserve">
+    <value>Nwrw Definitions in RR model are not configured as expected. Cannot load default data in unexpected configured NWRW surface settings object.</value>
+  </data>
 </root>

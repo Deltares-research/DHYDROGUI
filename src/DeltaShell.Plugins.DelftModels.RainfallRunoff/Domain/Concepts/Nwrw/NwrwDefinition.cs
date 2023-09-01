@@ -2,6 +2,10 @@
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.FixedFiles;
+using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
+using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
 using log4net;
 
@@ -73,8 +77,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                         Name = NwrwSurfaceTypeHelper.SurfaceTypeDictionary[surfaceType],
                     });
             }
-
+            LoadNwrwDefaults(nwrwDefinitions);
             return nwrwDefinitions;
+        }
+        
+        private static void LoadNwrwDefaults(EventedList<NwrwDefinition> nwrwDefinitions)
+        {
+            ILogHandler logHandler = new LogHandler("importing Default RR NWRW data", Log);
+            var line = RainfallRunoffModelFixedFiles.ReadFixedFileFromResource("PLUVIUS.ALG");
+            if (line != null)
+            {
+                SobekRRNwrwSettings[] sobekRRNwrwSettings = new SobekRRNwrwSettingsReader().Parse(line).ToArray();
+                sobekRRNwrwSettings.UpdateNwrwSettings(nwrwDefinitions, logHandler);
+            }
+            else
+            {
+                logHandler.ReportError("PLUVIUS.ALG is not set as embedded resource, cannot load default values for NWRW definitions");
+            }
+
+            logHandler.LogReport();
         }
     }
 }

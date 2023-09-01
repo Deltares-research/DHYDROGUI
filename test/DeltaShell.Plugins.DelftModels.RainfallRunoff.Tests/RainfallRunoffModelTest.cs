@@ -278,8 +278,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             
             Assert.IsTrue(rrModel.ModelData.OfType<UnpavedData>().First().BoundarySettings.UseLocalBoundaryData);
         }
+
+        [Test]
+        public void GivenNewRRModelCreationWhenCreatedThenDefaultNwrwSurfaceSettingsLoaded()
+        {
+            var rrModel = new RainfallRunoffModel();
+            Assert.That(rrModel.NwrwDefinitions.Last().SurfaceStorage, Is.EqualTo(6.0).Within(0.1));
+        }
     }
-    
+
     [Entity] public class MyCompositeActivity : ICompositeActivity
     {
         public MyCompositeActivity()

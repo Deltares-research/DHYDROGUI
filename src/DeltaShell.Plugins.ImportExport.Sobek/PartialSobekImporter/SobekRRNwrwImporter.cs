@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (readSobekRrNodeDictionary.Any())
             {
                 ImportNwrwDryweatherFlowDefinitions(rrModel.NwrwDryWeatherFlowDefinitions);
-                ImportNwrwDefinitions(rrModel.NwrwDefinitions);
+                ImportNwrwDefinitions(rrModel.NwrwDefinitions, logHandler);
             }
 
             if (HydroNetwork != null) // importing RR and FLOW
@@ -142,148 +142,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         #region Nwrw definitions
 
-        private void ImportNwrwDefinitions(ICollection<NwrwDefinition> rrModelNwrwDefinitions)
+        private void ImportNwrwDefinitions(ICollection<NwrwDefinition> rrModelNwrwDefinitions, ILogHandler logHandler)
         {
-            if (rrModelNwrwDefinitions.Count != 12)
-            {
-                throw new ArgumentException();
-            }
-
             SobekRRNwrwSettings[] readNwrwSettings = new SobekRRNwrwSettingsReader().Read(GetFilePath(SobekFileNames.SobekRRNwrwSettingsFileName)).ToArray();
-            SobekRRNwrwSettings readNwrwSetting = readNwrwSettings.FirstOrDefault();
-            if (readNwrwSetting == null)
-            {
-                Log.WarnFormat($"No nwrw settings were found.");
-                return;
-            }
-
-            if (readNwrwSettings.Count() > 1)
-            {
-                Log.WarnFormat($"Found multiple nwrw settings. Importing the first settings and ignoring the others.");
-            }
-
-            UpdateNwrwSettings(rrModelNwrwDefinitions, readNwrwSetting);
-        }
-
-        private void UpdateNwrwSettings(IEnumerable<NwrwDefinition> existingDefinitions, SobekRRNwrwSettings readSettings)
-        {
-            NwrwDefinition[] nwrwDefinitionArray = existingDefinitions.ToArray();
-
-            UpdateRunoffDelayFactors(nwrwDefinitionArray, readSettings);
-            UpdateMaximumStorages(nwrwDefinitionArray, readSettings);
-            UpdateMaximumInfiltrationCapacities(nwrwDefinitionArray, readSettings);
-            UpdateMinimumInfiltrationCapacities(nwrwDefinitionArray, readSettings);
-            UpdateInfiltrationCapacityDecrease(nwrwDefinitionArray, readSettings);
-            UpdateInfiltrationCapacityIncrease(nwrwDefinitionArray, readSettings);
-        }
-
-        private void UpdateRunoffDelayFactors(NwrwDefinition[] nwrwDefinitions, SobekRRNwrwSettings readSettings)
-        {
-            if (readSettings.RunoffDelayFactors == null)
-            {
-                logHandler.ReportWarning("Could not find any runoff factors.");
-                return;
-            }
-
-            if (readSettings.IsOldFormatData)
-            {
-                for (var i = 0; i < readSettings.RunoffDelayFactors.Length; i++)
-                {
-                    nwrwDefinitions[i].RunoffDelay = readSettings.RunoffDelayFactors[i];
-                    nwrwDefinitions[i + 3].RunoffDelay = readSettings.RunoffDelayFactors[i];
-                    nwrwDefinitions[i + 6].RunoffDelay = readSettings.RunoffDelayFactors[i];
-                    nwrwDefinitions[i + 9].RunoffDelay = readSettings.RunoffDelayFactors[i];
-                }
-            }
-            else
-            {
-                for (var i = 0; i < readSettings.RunoffDelayFactors.Length; i++)
-                {
-                    nwrwDefinitions[i].RunoffDelay = readSettings.RunoffDelayFactors[i];
-                }
-            }
-        }
-
-        private void UpdateMaximumStorages(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
-        {
-            if (readSettings.MaximumStorages == null)
-            {
-                logHandler.ReportWarning("No settings found for maximum storages.");
-                return;
-            }
-
-            for (var i = 0; i < readSettings.MaximumStorages.Length; i++)
-            {
-                nwrwDefinitionArray[i].SurfaceStorage = readSettings.MaximumStorages[i];
-            }
-        }
-
-        private void UpdateMaximumInfiltrationCapacities(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
-        {
-            if (readSettings.MaximumInfiltrationCapcaties == null)
-            {
-                logHandler.ReportWarning("No settings found for maximum infiltration capacities.");
-                return;
-            }
-
-            for (var i = 0; i < readSettings.MaximumInfiltrationCapcaties.Length - 1; i++)
-            {
-                nwrwDefinitionArray[i].InfiltrationCapacityMax = readSettings.MaximumInfiltrationCapcaties[0];
-                nwrwDefinitionArray[i + 3].InfiltrationCapacityMax = readSettings.MaximumInfiltrationCapcaties[1];
-                nwrwDefinitionArray[i + 6].InfiltrationCapacityMax = readSettings.MaximumInfiltrationCapcaties[2];
-                nwrwDefinitionArray[i + 9].InfiltrationCapacityMax = readSettings.MaximumInfiltrationCapcaties[3];
-            }
-        }
-
-        private void UpdateMinimumInfiltrationCapacities(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
-        {
-            if (readSettings.MinimumInfiltrationCapcaties == null)
-            {
-                logHandler.ReportWarning("No settings found for minimum infiltration capacities.");
-                return;
-            }
-
-            for (var i = 0; i < readSettings.MinimumInfiltrationCapcaties.Length - 1; i++)
-            {
-                nwrwDefinitionArray[i].InfiltrationCapacityMin = readSettings.MinimumInfiltrationCapcaties[0];
-                nwrwDefinitionArray[i + 3].InfiltrationCapacityMin = readSettings.MinimumInfiltrationCapcaties[1];
-                nwrwDefinitionArray[i + 6].InfiltrationCapacityMin = readSettings.MinimumInfiltrationCapcaties[2];
-                nwrwDefinitionArray[i + 9].InfiltrationCapacityMin = readSettings.MinimumInfiltrationCapcaties[3];
-            }
-        }
-
-        private void UpdateInfiltrationCapacityDecrease(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
-        {
-            if (readSettings.InfiltrationCapacityDecreases == null)
-            {
-                logHandler.ReportWarning("No settings found for infiltration capacity reduction.");
-                return;
-            }
-
-            for (var i = 0; i < readSettings.InfiltrationCapacityDecreases.Length - 1; i++)
-            {
-                nwrwDefinitionArray[i].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[0];
-                nwrwDefinitionArray[i + 3].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[1];
-                nwrwDefinitionArray[i + 6].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[2];
-                nwrwDefinitionArray[i + 9].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[3];
-            }
-        }
-
-        private void UpdateInfiltrationCapacityIncrease(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
-        {
-            if (readSettings.InfiltrationCapacityIncreases == null)
-            {
-                logHandler.ReportWarning("No settings found for infiltration capacity recovery.");
-                return;
-            }
-
-            for (var i = 0; i < readSettings.InfiltrationCapacityIncreases.Length - 1; i++)
-            {
-                nwrwDefinitionArray[i].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[0];
-                nwrwDefinitionArray[i + 3].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[1];
-                nwrwDefinitionArray[i + 6].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[2];
-                nwrwDefinitionArray[i + 9].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[3];
-            }
+            readNwrwSettings.UpdateNwrwSettings(rrModelNwrwDefinitions, logHandler);
         }
         #endregion
 

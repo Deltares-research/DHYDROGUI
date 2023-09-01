@@ -147,6 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 NwrwDryWeatherFlowDefinition.CreateDefaultDwaDefinition()
             };
             NwrwDefinitions = NwrwDefinition.CreateDefaultNwrwDefinitions();
+
             BoundaryData = new EventedList<RunoffBoundaryData>();
             MeteoStations = new EventedList<string>();
             TemperatureStations = new EventedList<string>();
@@ -174,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                                                                   new MeteoTimeSeriesInstanceCreator());
             globalEvaporation.PropertyChanged += OnEvaporationPropertyChanged;
         }
-
+        
         /// <summary>
         /// Generate a default global evaporation timeseries
         /// from 01-01-1980 until 01-01-2030.
