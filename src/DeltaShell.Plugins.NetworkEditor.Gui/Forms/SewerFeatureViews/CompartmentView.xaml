@@ -46,14 +46,14 @@
                Content="Surface level [m]" />
         <TextBox Grid.Row="1"
                  Grid.Column="1"
-                 Text="{Binding Compartment.SurfaceLevel, StringFormat={}{0:G3}}" />
+                 Text="{Binding Compartment.SurfaceLevel}" />
 
         <Label Grid.Row="2"
                Grid.Column="0"
                Content="Bottom level [m]" />
         <TextBox Grid.Row="2"
                  Grid.Column="1"
-                 Text="{Binding Compartment.BottomLevel, StringFormat={}{0:G3}}" />
+                 Text="{Binding Compartment.BottomLevel}" />
 
         <!--  Right column  -->
         <Label Grid.Row="3"
@@ -63,7 +63,6 @@
                  Grid.Column="1">
             <TextBox.Text>
                 <Binding Path="Compartment.ManholeWidth"
-                         StringFormat="{}{0:G3}"
                          UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <local:CompartmentValueValidationRule ValidatesOnTargetUpdated="True" />
@@ -79,7 +78,6 @@
                  Grid.Column="1">
             <TextBox.Text>
                 <Binding Path="Compartment.ManholeLength"
-                         StringFormat="{}{0:G3}"
                          UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <local:CompartmentValueValidationRule ValidatesOnTargetUpdated="True" />
@@ -95,7 +93,6 @@
                  Grid.Column="1">
             <TextBox.Text>
                 <Binding Path="Compartment.FloodableArea"
-                         StringFormat="{}{0:G3}"
                          UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <local:CompartmentValueValidationRule ValidatesOnTargetUpdated="True" />
