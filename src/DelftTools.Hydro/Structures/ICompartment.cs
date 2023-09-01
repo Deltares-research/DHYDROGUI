@@ -52,7 +52,10 @@ namespace DelftTools.Hydro.Structures
         /// The shape of the manhole (either square or rectangular).
         /// </summary>
         CompartmentShape Shape { get; set; }
-
+        
+        /// <summary>
+        /// Storage type of compartment (like reservoir or closed)
+        /// </summary>
         CompartmentStorageType CompartmentStorageType { get; set; }
 
         /// <summary>
