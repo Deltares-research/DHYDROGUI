@@ -12,11 +12,5 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
-  
-  <ItemGroup Condition="'@(InternalsVisibleTo->Count())' &gt; 0">
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>%(InternalsVisibleTo.Identity)</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
-  
+
 </Project>
