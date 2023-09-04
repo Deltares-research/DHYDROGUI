@@ -78,7 +78,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                         select GetSobekGridPointsPerBranch12(gridPointsPerBranch.Value)).ToList();
 
             }
-            Log.WarnFormat(string.Format("Grid version definition not found in {0}, assuming version Re version (offset only)", GetFilePath));
+            Log.WarnFormat("Grid version definition not found, assuming version Re version (offset only)");
             return (from Match gridPointsPerBranch in RegularExpression.GetMatches(gridPointsPattern, fileContent)
                     select GetSobekGridPointsPerBranchRe(gridPointsPerBranch.Value)).ToList();
         }

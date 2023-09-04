@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
     public partial class BridgeView : UserControl, IView
     {
         private IBridge bridge;
-        private Color noBackColor; // Use create empty color to remove validation failure highlight
 
         public BridgeView()
         {
@@ -321,7 +320,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void textBoxPillarWidth_Validated(object sender, EventArgs e)
         {
-            textBoxPillarWidth.BackColor = noBackColor;
+            textBoxPillarWidth.BackColor = default;
         }
 
         #endregion

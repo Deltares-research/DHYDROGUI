@@ -47,8 +47,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         
         private string originalDirectory = "";
         private string workingDirectory = "";
-        private DateTime currentTime;
-        private bool runningParallelWithFlow; //cached per run
+        private readonly DateTime currentTime = DateTime.MinValue;
+        private const bool runningParallelWithFlow = false; //cached per run
 
         private IEnumerable<CatchmentModelData> modelDataCache;
         private IDictionary<Catchment, CatchmentModelData> catchmentDataLookUp;

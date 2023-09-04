@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             importer.NumberOfLevels = 2;
             importer.FileBasedFeatureProviders = new List<IFileBasedFeatureProvider>();
             importer.FileBasedFeatureProviders.Add(FromGisImporterHelper.GetTestFileBasedFeatureProvider(testFileLocation));
-            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer, hydroNetwork);
+            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer);
             MapColumnsFromGisFile(importer);
             
             var data = importer.ImportItem("") as HydroNetwork;

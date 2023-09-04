@@ -97,12 +97,6 @@ namespace DeltaShell.Sobek.Readers.Readers
             yield break;
         }
 
-        private string filePath;
-        public string GetFilePath
-        {
-            get { return filePath; }
-        }
-
         // regex id and name pattern, with the latter optional
         protected const string IdAndOptionalNamePattern = @"id\s+?\'(?'id'.*?)\'\s+?(?:nm\s+?\'(?'nm'.*?)\'\s+?)?";
 

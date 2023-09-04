@@ -28,9 +28,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         /// </summary>
         /// <param name="importer">Importer under test.</param>
         /// <param name="hydroNetwork">network to be used by test.</param>
-        public static void SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(FeatureFromGisImporterBase importer, IHydroNetwork hydroNetwork)
+        public static void SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(FeatureFromGisImporterBase importer)
         {
-            hydroNetwork = new HydroNetwork();
+            var hydroNetwork = new HydroNetwork();
 
             var node1 = new Node
             {

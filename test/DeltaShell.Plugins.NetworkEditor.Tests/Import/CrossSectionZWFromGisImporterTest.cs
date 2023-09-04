@@ -27,8 +27,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         private static readonly PropertyMapping propertyMappingFlowWidth = new PropertyMapping(lblFlowWidth, false, true) { PropertyUnit = "m" };
         private static readonly PropertyMapping propertyMappingStorageWidth = new PropertyMapping(lblStorageWidth, false, true) { PropertyUnit = "m" };
 
-        private IHydroNetwork hydroNetwork;
-
         [Test]
         public void Constructor_InitializesCorrectly()
         {
@@ -130,7 +128,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 
             importer.FileBasedFeatureProviders = new List<IFileBasedFeatureProvider>();
             importer.FileBasedFeatureProviders.Add(FromGisImporterHelper.GetTestFileBasedFeatureProvider(testFileLocation));
-            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer, hydroNetwork);
+            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer);
             MapColumnsFromGisFile(importer);
 
             var data = importer.ImportItem("") as HydroNetwork;

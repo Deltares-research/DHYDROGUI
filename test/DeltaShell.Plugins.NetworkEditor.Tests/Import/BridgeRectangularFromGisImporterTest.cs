@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         private const string testFileLocation = FromGisImporterHelper.FileLocationBridgeRectangular;
         private static readonly PropertyMapping propertyMappingHeight = new PropertyMapping("Height") { PropertyUnit = "m" };
         private static readonly PropertyMapping propertyMappingWidth = new PropertyMapping("Width") { PropertyUnit = "m" };
-        private IHydroNetwork hydroNetwork;
 
         [Test]
         public void Constructor_InitializesCorrectly()
@@ -75,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 
             importer.FileBasedFeatureProviders = new List<IFileBasedFeatureProvider>();
             importer.FileBasedFeatureProviders.Add(FromGisImporterHelper.GetTestFileBasedFeatureProvider(testFileLocation));
-            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer, hydroNetwork);
+            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer);
             MapColumnsFromGisFile(importer);
             
             var data = importer.ImportItem("") as HydroNetwork;

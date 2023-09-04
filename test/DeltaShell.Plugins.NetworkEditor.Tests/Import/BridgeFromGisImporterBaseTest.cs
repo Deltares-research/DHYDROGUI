@@ -19,7 +19,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         private static readonly PropertyMapping propertyMappingLevel = new PropertyMapping("Bed level") { PropertyUnit = "m" };
         private static readonly PropertyMapping propertyMappingLength = new PropertyMapping("Length") { PropertyUnit = "m" };
         private static readonly PropertyMapping propertyMappingFrictionValue = new PropertyMapping("Roughness") { PropertyUnit = "Chezy (C) m^1/2*s^-1" };
-        private IHydroNetwork hydroNetwork;
 
         [Test]
         public void Constructor_InitializesCorrectly()
@@ -80,7 +79,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             
             importer.FileBasedFeatureProviders = new List<IFileBasedFeatureProvider>();
             importer.FileBasedFeatureProviders.Add(FromGisImporterHelper.GetTestFileBasedFeatureProvider(testFileLocation));
-            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer, hydroNetwork);
+            FromGisImporterHelper.SetupAndLinkHydroNetworkWithBranchesAndHighSnappingTolerance(importer);
             MapColumnsFromGisFile(importer);
             
             var data = importer.ImportItem("") as HydroNetwork;
