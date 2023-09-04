@@ -45,7 +45,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private Point startPoint;
         private Point currentPosition;
-        private double originalLeft;
         private bool isDown;
         private bool isDragging;
         private ContentPresenter contentPresenter;
@@ -62,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public object SelectedItem
         {
-            get { return (object)GetValue(SelectedItemProperty); }
+            get { return GetValue(SelectedItemProperty); }
             set { SetValue(SelectedItemProperty, value); }
         }
 
@@ -73,7 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             ViewModel.ContainerHeight = () => ViewGrid.Height;
             ViewModel.SetWindowSize = SetViewGridSize;
 
-            pipeStrategy = new PipeShapeDragAndDropStrategy();
+            pipeStrategy = new PipeShapeDragAndDropStrategy(ViewModel.Shapes);
             compartmentStrategy = new CompartmentShapeDragAndDropStrategy(ViewModel.Shapes);
             connectionStrategy = new ConnectionShapeDragAndDropStrategy(ViewModel.Shapes);
         }
@@ -86,22 +85,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public void DeselectItem()
         {
-            ContentPresenter = null;
+            SetContentPresenter(null);
             SelectedItem = null;
             if (isDragging) DragFinished(true);
         }
 
-        private ContentPresenter ContentPresenter
+        private void SetContentPresenter(ContentPresenter contentPresenter)
         {
-            get { return contentPresenter; }
-            set
-            {
-                RemoveSelectedItemAdorner();
-                contentPresenter = value;
-                AddSelectedItemAdorner();
+            RemoveSelectedItemAdorner();
+            this.contentPresenter = contentPresenter;
+            AddSelectedItemAdorner();
 
-                SelectedItem = (contentPresenter?.Content as IDrawingShape)?.Source;
-            }
+            SelectedItem = (contentPresenter?.Content as IDrawingShape)?.Source;
         }
 
         private void UIElement_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -110,11 +105,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             if (!(sender is Canvas canvas))
             {
-                ContentPresenter = null;
+                SetContentPresenter(null);
                 return;
             }
 
-            ContentPresenter = (e.Source as DependencyObject)?.TryFindParent<ContentPresenter>();
+            SetContentPresenter((e.Source as DependencyObject)?.TryFindParent<ContentPresenter>());
             if (contentPresenter == null) return;
 
             startPoint = e.GetPosition(canvas);
@@ -132,17 +127,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             var mousePosition = e.GetPosition(canvas);
 
-            if (isDragging == false && (Math.Abs(mousePosition.X - startPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                                        Math.Abs(mousePosition.Y - startPoint.Y) > SystemParameters.MinimumVerticalDragDistance))
+            var movement = mousePosition - startPoint;
+            bool mouseHasMoved = Math.Abs(movement.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                                 Math.Abs(movement.Y) > SystemParameters.MinimumVerticalDragDistance; 
+            
+            if (!isDragging && mouseHasMoved)
             {
-                DragStarted();
+                DragStarted(canvas);
             }
 
-            var diff = startPoint - mousePosition;
-
-            if (e.LeftButton != MouseButtonState.Pressed ||
-                (!(Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance) &&
-                 !(Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)))
+            if (e.LeftButton != MouseButtonState.Pressed || !mouseHasMoved)
             {
                 return;
             }
@@ -162,16 +156,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             e.Handled = true;
         }
 
-        private void DragStarted()
+        private void DragStarted(Canvas canvas)
         {
             isDragging = true;
             moveIsValid = false;
             foundNewPosition = false;
-            originalLeft = Canvas.GetLeft(contentPresenter);
 
             RemoveSelectedItemAdorner();
 
             AddMoveAdorner();
+            if (contentPresenter == null || canvas == null) return;
+
+            var helper = GetStrategyForShape(contentPresenter.Content as IDrawingShape);
+            if (helper != null)
+            {
+                helper.DragStart(canvas,contentPresenter);
+            }
         }
 
         private void DragMoved(Canvas canvas)
@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             var helper = GetStrategyForShape(contentPresenter?.Content as IDrawingShape);
             if (helper == null) return;
-            foundNewPosition = helper.FindNewPosition(canvas, contentPresenter, moveAdorner.LeftOffset, originalLeft);
+            foundNewPosition = helper.FindNewPosition(moveAdorner.LeftOffset);
             moveIsValid = helper.Validate();
         }
 

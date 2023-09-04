@@ -4,8 +4,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     public interface IDragAndDropStrategy
     {
+        void DragStart(Canvas canvas, ContentPresenter contentPresenter);
+        
         bool Validate();
         void Reposition();
-        bool FindNewPosition(Canvas canvas, ContentPresenter contentPresenter, double leftOffset, double originalLeft);
+        bool FindNewPosition(double horizontalOffset);
     }
 }

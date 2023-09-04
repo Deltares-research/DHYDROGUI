@@ -2,78 +2,58 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
-    public class CompartmentShapeDragAndDropStrategy : IDragAndDropStrategy
+    public class CompartmentShapeDragAndDropStrategy : DrawingShapeDragAndDropStrategy, IDragAndDropStrategy 
     {
-        private readonly ObservableCollection<IDrawingShape> shapes;
-        private int oldIndex;
-        private int newIndex;
-
-        public CompartmentShapeDragAndDropStrategy(ObservableCollection<IDrawingShape> shapes)
+        public CompartmentShapeDragAndDropStrategy(ObservableCollection<IDrawingShape> shapes) : base( shapes )
         {
-            this.shapes = shapes;
         }
 
-        public bool FindNewPosition(Canvas canvas, ContentPresenter contentPresenter, double leftOffset, double originalLeft)
+        public void DragStart(Canvas canvas, ContentPresenter contentPresenter)
         {
-            var originalDrawingShape = contentPresenter.Content as IDrawingShape;
-            
-            var cps = GetContentPresentersByContentType<CompartmentShape>(canvas).Concat(GetContentPresentersByContentType<InternalConnectionShape>(canvas));
-            var movedShapeMiddle = leftOffset + originalLeft + 0.5 * contentPresenter.ActualWidth;
+            SetDragContent(canvas,contentPresenter);
+        }
 
+        public bool FindNewPosition(double horizontalOffset)
+        {
+            var movedShapeMiddle = horizontalOffset + InitialShapeCenter;
+
+            var cps = GetContentPresentersByContentType<CompartmentShape>().Concat(GetContentPresentersByContentType<InternalConnectionShape>());
             var tuple = cps.Select(cp => new KeyValuePair<ContentPresenter, double>(cp, GetElementMiddle(cp))).ToList();
             var closestLeft = tuple.Where(t => t.Value <= movedShapeMiddle).OrderBy(t => Math.Abs(t.Value - movedShapeMiddle)).FirstOrDefault().Key;
             // Find new index when adding after closest left
-            if (closestLeft?.Content is IDrawingShape)
+            if (closestLeft?.Content is IDrawingShape closestLeftShape)
             {
-                var leftItem = (IDrawingShape)closestLeft.Content;
-                if (leftItem == originalDrawingShape) return false;
-                var indexOfClosestLeft = shapes.IndexOf(leftItem);
-                oldIndex = shapes.IndexOf(originalDrawingShape);
-                newIndex = oldIndex < indexOfClosestLeft ? indexOfClosestLeft : indexOfClosestLeft + 1;
+                if (closestLeftShape == DraggedShape) return false;
+                var indexOfClosestLeft = Shapes.IndexOf(closestLeftShape);
+                bool movingRight = OldIndex < indexOfClosestLeft; 
+                NewIndex =  movingRight ? indexOfClosestLeft : indexOfClosestLeft + 1;
 
                 return true;
             }
 
             // Find new index when adding just before closest right
             var closestRight = tuple.Where(t => t.Value > movedShapeMiddle).OrderBy(t => Math.Abs(t.Value - movedShapeMiddle)).FirstOrDefault().Key;
-            if (!(closestRight?.Content is IDrawingShape)) return false;
-
-            var closestRightShape = (IDrawingShape)closestRight.Content;
-            var indexOfClosestRight = shapes.IndexOf(closestRightShape);
-
-            oldIndex = shapes.IndexOf(originalDrawingShape);
-            newIndex = indexOfClosestRight;
-            return true;
+            if (closestRight?.Content is IDrawingShape closestRightShape)
+            {
+                NewIndex = Shapes.IndexOf(closestRightShape);
+                return true;
+            }
+            return false;
         }
 
         public bool Validate()
         {
-            return shapes.IndexInRange(oldIndex) && shapes.IndexInRange(newIndex);
+            return Shapes.IndexInRange(OldIndex) && Shapes.IndexInRange(NewIndex);
         }
 
         public void Reposition()
         {
-            shapes.Move(oldIndex, newIndex);
-
-            oldIndex = 0;
-            newIndex = 0;
-        }
-
-        protected virtual IEnumerable<ContentPresenter> GetContentPresentersByContentType<T>(Canvas canvas) where T : IDrawingShape
-        {
-            return canvas.Children.OfType<ContentPresenter>().Where(cp => cp.Content is T);
-        }
-
-        protected virtual double GetElementMiddle(FrameworkElement element)
-        {
-            var x = Canvas.GetLeft(element) + 0.5 * element.ActualWidth;
-            return x;
+            MoveDrawingShapeAndClearDragContent();
         }
     }
 }

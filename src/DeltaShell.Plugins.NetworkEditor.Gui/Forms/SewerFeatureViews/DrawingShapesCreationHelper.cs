@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                                          ? compartmentsWithOneConnection[0]
                                          : compartmentShapes[0].Compartment;
 
-            var orderedCount = compartmentShapes.OfType<IDrawingShape>().Concat(connectionShapes).Count();
+            var orderedCount = compartmentShapes.Count + connectionShapes.Count;
 
             for (int i = 0; i < orderedCount; i++)
             {
