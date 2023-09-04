@@ -2,7 +2,9 @@
   <Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
 
   <ItemGroup>
-    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>"$(MSBuildProjectName).Tests"</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="CoreCompile" Condition="!Exists('$(ProjectDir)\dimr_xsd\dimr.cs') Or !Exists('$(ProjectDir)\drtc_xsd\rtcRuntimeConfig.cs')">

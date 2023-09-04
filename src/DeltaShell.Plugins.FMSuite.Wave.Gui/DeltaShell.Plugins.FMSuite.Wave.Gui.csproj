@@ -2,7 +2,9 @@
   <Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
 
   <ItemGroup>
-    <InternalsVisibleTo Include="$(MSBuildProjectName.Replace('.Gui', '.Tests'))" />
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>"$(MSBuildProjectName.Replace('.Gui', '.Tests'))"</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
   <PropertyGroup>
