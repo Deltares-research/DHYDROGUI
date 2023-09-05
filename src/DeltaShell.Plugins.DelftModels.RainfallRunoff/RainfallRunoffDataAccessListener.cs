@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
     public class RainfallRunoffDataAccessListener : DataAccessListenerBase
     {
         private readonly IBasinGeometrySerializer serializer;
+        private bool firstBasin = true;
 
         public RainfallRunoffDataAccessListener(IBasinGeometrySerializer serializer)
         {
@@ -24,10 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             return new RainfallRunoffDataAccessListener(new BasinGeometryShapeFileSerializer()) {ProjectRepository = ProjectRepository};
         }
-
-        private bool firstBasin = true;
-        private bool firstRRModel = true;
-
+        
         public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
         {
             if (!(entity is RainfallRunoffModel rainfallRunoffModel)) 
@@ -55,17 +53,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             if (entity is Project)
             {
                 firstBasin = true;
-                firstRRModel = true;
-            }
-            else if (firstRRModel && entity is RainfallRunoffModel)
-            {
-                ProjectRepository.PreLoad<UnpavedData>(up => up.BoundarySettings.BoundaryData);
-                ProjectRepository.PreLoad<UnpavedData>(up => up.DrainageFormula);
-                firstRRModel = false;
             }
             else if (firstBasin && entity is DrainageBasin || entity is IDrainageBasin)
             {
-                ProjectRepository.PreLoad<Catchment>(c => c.Links);
                 ProjectRepository.PreLoad<RunoffBoundary>(rb => rb.Links);
                 ProjectRepository.PreLoad<WasteWaterTreatmentPlant>(wwtp => wwtp.Links);
                 firstBasin = false;
