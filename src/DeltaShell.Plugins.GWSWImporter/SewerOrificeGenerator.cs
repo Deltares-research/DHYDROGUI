@@ -106,6 +106,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             
             if (maxDischarge.TryGetValueAsDouble(out auxDouble))
             {
+                gatedWeirFormula.UseMaxFlowPos = true;
+                gatedWeirFormula.UseMaxFlowNeg = true;
                 gatedWeirFormula.MaxFlowNeg = auxDouble;
                 gatedWeirFormula.MaxFlowPos = auxDouble;
                 orifice.MaxDischarge = auxDouble;

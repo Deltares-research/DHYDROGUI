@@ -54,6 +54,8 @@ namespace DelftTools.Hydro.SewerFeatures
             targetFormula.ContractionCoefficient = sourceFormula.ContractionCoefficient;
             targetFormula.MaxFlowNeg = sourceFormula.MaxFlowNeg;
             targetFormula.MaxFlowPos = sourceFormula.MaxFlowPos;
+            targetFormula.UseMaxFlowNeg = sourceFormula.UseMaxFlowNeg;
+            targetFormula.UseMaxFlowPos = sourceFormula.UseMaxFlowPos;
         }
 
         public override StructureType GetStructureType() => StructureType.Orifice;

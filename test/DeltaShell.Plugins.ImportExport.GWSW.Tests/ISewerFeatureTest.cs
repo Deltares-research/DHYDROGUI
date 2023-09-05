@@ -529,6 +529,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var levelTarget = 1.1;
             var length = 44.0;
             var sewerConnectionWaterType = SewerConnectionWaterType.StormWater;
+            var allowNegativeFlow = false;
+            var allowPositiveFlow = true;
             var gwswConnectionOrifice = new GwswConnectionOrifice(orificeName)
             {
                 LevelSource = levelSource,
@@ -536,13 +538,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 Length = length,
                 WaterType = sewerConnectionWaterType,
                 SourceCompartmentName = sourceCompartmentName,
-                TargetCompartmentName = targetCompartmentName
+                TargetCompartmentName = targetCompartmentName,
+                AllowNegativeFlow = allowNegativeFlow,
+                AllowPositiveFlow = allowPositiveFlow
             };
 
             AddSewerFeatureToNetwork(gwswConnectionOrifice, network);
-            Assert.That<int>(network.SewerConnections.Count, Is.EqualTo(1));
+            Assert.That(network.SewerConnections.Count, Is.EqualTo(1));
 
-            var sewerConnection = Enumerable.FirstOrDefault<ISewerConnection>(network.SewerConnections);
+            var sewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(sewerConnection);
             Assert.That(sewerConnection.Name, Is.EqualTo(orificeName));
             Assert.That(sewerConnection.SourceCompartment.Name, Is.EqualTo(sourceCompartmentName));
@@ -559,7 +563,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var orifice = branchFeatures.FirstOrDefault(bf => bf is Orifice) as Orifice;
             Assert.IsNotNull(orifice);
-            Assert.That((object) orifice.Name, Is.EqualTo(orificeName));
+            Assert.That(orifice.Name, Is.EqualTo(orificeName));
+            Assert.That(orifice.AllowPositiveFlow, Is.EqualTo(allowPositiveFlow));
+            Assert.That(orifice.AllowNegativeFlow, Is.EqualTo(allowNegativeFlow));
+
+            var formula = orifice.WeirFormula as GatedWeirFormula;
+            Assert.IsNotNull(formula);
+            Assert.That(formula.UseMaxFlowNeg, Is.False);
+            Assert.That(formula.UseMaxFlowPos, Is.False);
         }
 
         [Test]

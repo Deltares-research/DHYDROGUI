@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
 {
@@ -32,11 +31,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
 
         protected override void CopyPropertyValuesToExistingWeir(IWeir weir)
         {
-            if(weir?.WeirFormula is GatedWeirFormula targetFormula)
-            {
-                targetFormula.UseMaxFlowNeg = AllowNegativeFlow;
-                targetFormula.UseMaxFlowPos = AllowPositiveFlow;
-            }
+            weir.AllowNegativeFlow = AllowNegativeFlow;
+            weir.AllowPositiveFlow = AllowPositiveFlow;
         }
     }
 }
