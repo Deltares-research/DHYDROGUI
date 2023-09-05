@@ -161,5 +161,73 @@ namespace DelftTools.Hydro.Tests.Structures
             // Assert
             Assert.That(crossSectionDefinition, Is.SameAs(existingCrossSectionDefinition));
         }
+        
+        
+        [Test]
+        public void New_Compartment_Add_To_Manhole_Should_Be_Initialized_With_Same_values_As_Existing_One()
+        {
+            var manhole = new Manhole("manhole_1");
+            var network = new HydroNetwork();
+            network.Nodes.Add(manhole);
+
+            var shape = CompartmentShape.Rectangular;
+            var storageType = CompartmentStorageType.Closed;
+            var manholeWith = 1.23;
+            var manholeLength = 4.56;
+            var bottomLevel = 7.89; 
+            var surfaceLevel = 10.11;
+
+            var compartment =  new Compartment
+            {
+                Name = "compartment_1",
+                Shape = shape,
+                CompartmentStorageType = storageType,
+                ManholeLength = manholeLength,
+                ManholeWidth = manholeWith,
+                BottomLevel = bottomLevel,
+                SurfaceLevel = surfaceLevel
+            };
+            
+            manhole.Compartments.Add(compartment);
+            
+            //Initialization check
+            Assert.AreSame(manhole,compartment.ParentManhole);
+
+            var nameNewCompartment = "newCompartmentName";
+            
+            //Action
+            var newCompartment = SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole, nameNewCompartment);
+            
+            //check values new compartment
+            Assert.IsNotNull(newCompartment, "Test compartment not be found");
+            Assert.AreEqual(shape,newCompartment.Shape);
+            Assert.AreEqual(storageType,newCompartment.CompartmentStorageType);
+            Assert.AreEqual(manholeWith,newCompartment.ManholeWidth);
+            Assert.AreEqual(manholeLength,newCompartment.ManholeLength);
+            Assert.AreEqual(bottomLevel,newCompartment.BottomLevel);
+            Assert.AreEqual(surfaceLevel,newCompartment.SurfaceLevel);
+        }
+
+        [Test]
+        public void New_Compartment_Add_To_Manhole_Should_Be_Initialized_With_Initial_Values_When_No_Other_Compartment_Exists()
+        {
+            var manhole = new Manhole("manhole_1");
+            var network = new HydroNetwork();
+            network.Nodes.Add(manhole);
+
+            //Action
+            var name = "hahaha";
+            var newCompartment = SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole, name);
+            
+            //check some values
+            var initialCompartment = new Compartment();
+            Assert.IsNotNull(newCompartment, "Test compartment not be found");
+
+            Assert.AreEqual(initialCompartment.ManholeWidth,newCompartment.ManholeWidth);
+            Assert.AreEqual(initialCompartment.ManholeLength,newCompartment.ManholeLength);
+            Assert.AreEqual(initialCompartment.Shape,newCompartment.Shape);
+            Assert.AreEqual(initialCompartment.BottomLevel,newCompartment.BottomLevel);
+            Assert.AreEqual(initialCompartment.FloodableArea,newCompartment.FloodableArea);
+        }
     }
 }

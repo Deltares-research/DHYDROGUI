@@ -196,6 +196,7 @@ namespace DelftTools.Hydro.SewerFeatures
             SurfaceLevel = compartment.SurfaceLevel;
             ManholeLength = compartment.ManholeLength;
             ManholeWidth = compartment.ManholeWidth;
+            CompartmentStorageType = compartment.CompartmentStorageType;
             FloodableArea = compartment.FloodableArea;
             BottomLevel = compartment.BottomLevel;
             Geometry = compartment.Geometry;

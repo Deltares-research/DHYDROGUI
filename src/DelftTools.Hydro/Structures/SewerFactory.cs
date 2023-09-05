@@ -97,37 +97,37 @@ namespace DelftTools.Hydro.Structures
 
             var uniqueCompartmentName = NetworkHelper.GetUniqueName("Compartment{0:D3}",
                 network.Manholes.SelectMany(m => m.Compartments), "Compartment");
+            
             var newCompartment = new Compartment(uniqueCompartmentName);
-            lock (newManhole.Compartments)
-            {
-                newManhole.Compartments.Add(newCompartment);
-            }
+            newManhole.Compartments.Add(newCompartment);
+            network.Nodes.Add(newManhole);
 
-            lock (network.Nodes)
-            {
-                network.Nodes.Add(newManhole);
-            }
             return newManhole;
         }
 
         public static Compartment CreateNewCompartmentAndAddToManhole(IHydroNetwork network, Manhole parentManhole, string compartmentName = null)
         {
-            var name = string.IsNullOrWhiteSpace(compartmentName) 
-                ? GetUniqueCompartmentName(network)
-                : compartmentName;
+            string name = string.IsNullOrWhiteSpace(compartmentName) 
+                              ? GetUniqueCompartmentName(network)
+                              : compartmentName;
 
-            var newCompartment = new Compartment
+            Compartment newCompartment = CreateNewCompartment(parentManhole, name);
+            parentManhole.Compartments.Add(newCompartment);
+
+            return newCompartment;
+        }
+
+        private static Compartment CreateNewCompartment(IManhole parentManhole, string name)
+        {
+            var newCompartment = new Compartment();
+
+            ICompartment lastAddedCompartment = parentManhole.Compartments.LastOrDefault();
+            if (lastAddedCompartment != null)
             {
-                Name = name,
-                ParentManhole = parentManhole,
-                ManholeWidth = 1,
-                BottomLevel = 0,
-                SurfaceLevel = 1
-            };
-            lock (parentManhole.Compartments)
-            {
-                parentManhole.Compartments.Add(newCompartment);
+                newCompartment.CopyFrom(lastAddedCompartment);
+                newCompartment.Name = name;
             }
+            
             return newCompartment;
         }
 
