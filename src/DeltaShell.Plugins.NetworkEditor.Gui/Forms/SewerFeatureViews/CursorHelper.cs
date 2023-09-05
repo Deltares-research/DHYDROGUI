@@ -51,7 +51,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private static Cursor InternalCreateCursor(System.Drawing.Bitmap bmp)
         {
-            var iconInfo = new NativeMethods.IconInfo();
+            var iconInfo = new NativeMethods.IconInfo
+            {
+                hbmMask = IntPtr.Zero,
+                hbmColor = IntPtr.Zero
+            };
+            
             NativeMethods.GetIconInfo(bmp.GetHicon(), ref iconInfo);
 
             // hotspot is in the center
