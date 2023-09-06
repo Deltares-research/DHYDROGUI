@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Given
             var waveModel = new WaveModel();
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteTable).Value = true;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.WriteTable).Value = true;
 
             // When
             ValidationReport validationReport = WaveOutputParametersValidator.Validate(waveModel);
@@ -39,8 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Given
             var waveModel = new WaveModel();
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.MapWriteNetCDF).Value = true;
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.NetCdfSinglePrecision).Value = true;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.MapWriteNetCDF).Value = true;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.NetCdfSinglePrecision).Value = true;
             
             // When
             ValidationReport validationReport = WaveOutputParametersValidator.Validate(waveModel);
@@ -66,8 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Given
             var waveModel = new WaveModel();
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.MapWriteNetCDF).Value = writeMapNetCDF;
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.NetCdfSinglePrecision).Value = useSinglePrecision;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.MapWriteNetCDF).Value = writeMapNetCDF;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.NetCdfSinglePrecision).Value = useSinglePrecision;
             
             // When
             ValidationReport validationReport = WaveOutputParametersValidator.Validate(waveModel);

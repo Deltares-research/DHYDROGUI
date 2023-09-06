@@ -138,15 +138,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Category {0} has an unknown header and cannot be parsed. Line: {1}.
-        /// </summary>
-        public static string Category_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_ {
-            get {
-                return ResourceManager.GetString("Category_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unknown key {0} from file {1}. It will not be imported..
         /// </summary>
         public static string CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_ {
@@ -1035,6 +1026,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_ {
             get {
                 return ResourceManager.GetString("RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Section {0} has an unknown header and cannot be parsed. Line: {1}.
+        /// </summary>
+        public static string Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_ {
+            get {
+                return ResourceManager.GetString("Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_", resourceCulture);
             }
         }
         

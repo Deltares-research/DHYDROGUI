@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations.PostBehaviours;
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
             var behaviour = new CollectIniFileNamePostOperationBehaviour(hashSet, relativeDirectory);
 
             // Call
-            behaviour.Invoke(Stream.Null, fileName, new List<DelftIniCategory>(), null);
+            behaviour.Invoke(Stream.Null, fileName, new IniData(), null);
 
             // Assert
             string expectedPath = Path.Combine(relativeDirectory, fileName);

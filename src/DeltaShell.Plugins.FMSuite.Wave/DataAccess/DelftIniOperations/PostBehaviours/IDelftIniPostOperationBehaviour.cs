@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+﻿using System.IO;
+using DeltaShell.NGHS.IO.Ini;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours
@@ -18,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBeha
         /// </summary>
         /// <param name="sourceFileStream">The source file stream.</param>
         /// <param name="sourceFilePath">The source file path.</param>
-        /// <param name="categories">The categories.</param>
+        /// <param name="iniData">The parsed INI data.</param>
         /// <param name="logHandler">The log handler.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter but the <paramref name="logHandler"/> is
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBeha
         /// </exception>
         void Invoke(Stream sourceFileStream, 
                     string sourceFilePath, 
-                    IList<DelftIniCategory> categories,
+                    IniData iniData,
                     ILogHandler logHandler);
         
     }

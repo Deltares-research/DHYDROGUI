@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
         protected override void SetFileLocation(string fileLocation, WaveModel waveModel)
         {
             waveModel.ModelDefinition
-                     .GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile)
+                     .GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile)
                      .SetValueAsString(fileLocation);
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DeltaShell.NGHS.Common.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Constructor_InitializesInstanceCorrectly()
         {
             // Call
-            var visitor = new SpectrumDataComponentVisitor(new DelftIniCategory(""),
+            var visitor = new SpectrumDataComponentVisitor(new IniSection("TestSection"),
                                                            Substitute.For<IFilesManager>());
 
             // Assert
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Visit_UniformDataComponent_UniformDataComponentNull_ThrowsArgumentNullException()
         {
             // Setup
-            var visitor = new SpectrumDataComponentVisitor(new DelftIniCategory(""),
+            var visitor = new SpectrumDataComponentVisitor(new IniSection("TestSection"),
                                                            Substitute.For<IFilesManager>());
 
             // Call
@@ -53,9 +53,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Visit_UniformDataComponent_WithFileBasedParameters_SetsCorrectSpectrumTypeAndProperties()
         {
             // Setup
-            var category = new DelftIniCategory("");
+            var section = new IniSection("TestSection");
             var filesManager = Substitute.For<IFilesManager>();
-            var visitor = new SpectrumDataComponentVisitor(category, filesManager);
+            var visitor = new SpectrumDataComponentVisitor(section, filesManager);
 
             const string fileName = "file.txt";
             var filePath = $"D:\\some_directory\\{fileName}";
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             // Assert
             Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
 
-            DelftIniProperty[] properties = category.Properties.ToArray();
+            IniProperty[] properties = section.Properties.ToArray();
             Assert.That(properties, Has.Length.EqualTo(2));
             AssertProperty(properties[0], KnownWaveProperties.SpectrumSpec, "from file");
             AssertProperty(properties[1], KnownWaveProperties.Spectrum, fileName);
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Visit_SpatiallyVaryingDataComponent_SpatiallyVaryingDataComponentNull_ThrowsArgumentNullException()
         {
             // Setup
-            var visitor = new SpectrumDataComponentVisitor(new DelftIniCategory(""),
+            var visitor = new SpectrumDataComponentVisitor(new IniSection("TestSection"),
                                                            Substitute.For<IFilesManager>());
 
             // Call
@@ -95,9 +95,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Visit_SpatiallyVaryingDataComponent_WithFileBasedParameters_SetsCorrectSpectrumTypeAndProperties()
         {
             // Setup
-            var category = new DelftIniCategory("");
+            var section = new IniSection("TestSection");
             var filesManager = Substitute.For<IFilesManager>();
-            var visitor = new SpectrumDataComponentVisitor(category, filesManager);
+            var visitor = new SpectrumDataComponentVisitor(section, filesManager);
 
             const int distance1 = 0;
             const string fileName1 = "file_1.txt";
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             // Assert
             Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
 
-            DelftIniProperty[] properties = category.Properties.ToArray();
+            IniProperty[] properties = section.Properties.ToArray();
             Assert.That(properties, Has.Length.EqualTo(7));
             AssertProperty(properties[0], KnownWaveProperties.SpectrumSpec, "from file");
             AssertProperty(properties[1], KnownWaveProperties.CondSpecAtDist, distance1);
@@ -143,15 +143,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
         private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
         {
-            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "category");
-            yield return new TestCaseData(new DelftIniCategory(""), null, "filesManager");
+            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "section");
+            yield return new TestCaseData(new IniSection("TestSection"), null, "filesManager");
         }
 
         [TestCaseSource(nameof(ConstructorArgumentNullCases))]
-        public void Constructor_ArgumentNull_ThrowsArgumentNullException(DelftIniCategory category, IFilesManager filesManager, string expectedParamName)
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(IniSection section, IFilesManager filesManager, string expectedParamName)
         {
             // Call
-            void Call() => new SpectrumDataComponentVisitor(category, filesManager);
+            void Call() => new SpectrumDataComponentVisitor(section, filesManager);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -175,8 +175,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             public void Visit_UniformDataComponent_WithConstantParameters_SetsCorrectSpectrumTypeAndProperty()
             {
                 // Setup
-                var category = new DelftIniCategory("");
-                var visitor = new SpectrumDataComponentVisitor(category,
+                var section = new IniSection("TestSection");
+                var visitor = new SpectrumDataComponentVisitor(section,
                                                                Substitute.For<IFilesManager>());
 
                 var dataComponent = new UniformDataComponent<ConstantParameters<T>>(ConstantParameters);
@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 visitor.Visit(dataComponent);
 
                 // Assert
-                AssertProperty(category.Properties.Single(),
+                AssertProperty(section.Properties.Single(),
                                KnownWaveProperties.SpectrumSpec, "parametric");
                 Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             }
@@ -194,8 +194,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             public void Visit_UniformDataComponent_WithTimeDependentParameters_SetsCorrectSpectrumTypeAndProperty()
             {
                 // Setup
-                var category = new DelftIniCategory("");
-                var visitor = new SpectrumDataComponentVisitor(category,
+                var section = new IniSection("TestSection");
+                var visitor = new SpectrumDataComponentVisitor(section,
                                                                Substitute.For<IFilesManager>());
 
                 var dataComponent = new UniformDataComponent<TimeDependentParameters<T>>(TimeDependentParameters);
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 visitor.Visit(dataComponent);
 
                 // Assert
-                AssertProperty(category.Properties.Single(),
+                AssertProperty(section.Properties.Single(),
                                KnownWaveProperties.SpectrumSpec, "parametric");
                 Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             }
@@ -213,8 +213,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             public void Visit_SpatiallyVaryingDataComponent_WithConstantParameters_SetsCorrectSpectrumTypeAndProperty()
             {
                 // Setup
-                var category = new DelftIniCategory("");
-                var visitor = new SpectrumDataComponentVisitor(category,
+                var section = new IniSection("TestSection");
+                var visitor = new SpectrumDataComponentVisitor(section,
                                                                Substitute.For<IFilesManager>());
 
                 var dataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<T>>();
@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 visitor.Visit(dataComponent);
 
                 // Assert
-                AssertProperty(category.Properties.Single(),
+                AssertProperty(section.Properties.Single(),
                                KnownWaveProperties.SpectrumSpec, "parametric");
                 Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             }
@@ -235,8 +235,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             public void Visit_SpatiallyVaryingDataComponent_WithTimeDependentParameters_SetsCorrectSpectrumTypeAndProperty()
             {
                 // Setup
-                var category = new DelftIniCategory("");
-                var visitor = new SpectrumDataComponentVisitor(category,
+                var section = new IniSection("TestSection");
+                var visitor = new SpectrumDataComponentVisitor(section,
                                                                Substitute.For<IFilesManager>());
 
                 var dataComponent = new SpatiallyVaryingDataComponent<TimeDependentParameters<T>>();
@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 visitor.Visit(dataComponent);
 
                 // Assert
-                AssertProperty(category.Properties.Single(),
+                AssertProperty(section.Properties.Single(),
                                KnownWaveProperties.SpectrumSpec, "parametric");
                 Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             }
@@ -257,14 +257,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         private static SupportPoint GetSupportPoint(double distance) =>
             new SupportPoint(distance, Substitute.For<IWaveBoundaryGeometricDefinition>());
 
-        private static void AssertProperty(DelftIniProperty property, string name, double value)
+        private static void AssertProperty(IniProperty property, string key, double value)
         {
-            AssertProperty(property, name, value.ToString("F7", CultureInfo.InvariantCulture));
+            AssertProperty(property, key, value.ToString("F7", CultureInfo.InvariantCulture));
         }
 
-        private static void AssertProperty(DelftIniProperty property, string name, string value)
+        private static void AssertProperty(IniProperty property, string key, string value)
         {
-            Assert.That(property.Name, Is.EqualTo(name));
+            Assert.That(property.Key, Is.EqualTo(key));
             Assert.That(property.Value, Is.EqualTo(value));
         }
 

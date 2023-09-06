@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DHYDRO.Common.Logging;
 using NSubstitute;
@@ -21,19 +21,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         }
 
         [Test]
-        public void GetUpdatedPropertyName_NotInConfigMapping_ReturnsNull()
+        public void GetUpdatedPropertyKey_NotInConfigMapping_ReturnsNull()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
 
-            const string propertyName = "legacyProperty";
+            const string propertyKey = "legacyProperty";
 
             var config = new TestConfigurationValues() { LegacyPropertyMapping = new Dictionary<string, NewPropertyData>() };
 
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call
-            string result = backwardsCompatibilityHelper.GetUpdatedPropertyName(propertyName, logHandler);
+            string result = backwardsCompatibilityHelper.GetUpdatedPropertyKey(propertyKey, logHandler);
 
             // Assert
             Assert.That(result, Is.Null);
@@ -41,25 +41,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         }
 
         [Test]
-        [TestCaseSource(nameof(GetUpdatedPropertyNameData))]
-        public void GetUpdatedPropertyName_InConfigMapping_ReturnsMappedValueAndLogsMessage(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
-                                                                                            string legacyPropertyName,
-                                                                                            string expectedPropertyName)
+        [TestCaseSource(nameof(GetUpdatedPropertyKeyData))]
+        public void GetUpdatedPropertyKey_InConfigMapping_ReturnsMappedValueAndLogsMessage(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
+                                                                                           string legacyPropertyKey,
+                                                                                           string expectedPropertyKey)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(configurationValues);
 
             // Call
-            string result = backwardsCompatibilityHelper.GetUpdatedPropertyName(legacyPropertyName, logHandler);
+            string result = backwardsCompatibilityHelper.GetUpdatedPropertyKey(legacyPropertyKey, logHandler);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expectedPropertyName));
+            Assert.That(result, Is.EqualTo(expectedPropertyKey));
             logHandler.ReceivedWithAnyArgs(1).ReportWarningFormat("message");
         }
 
         [Test]
-        public void GetUpdatedPropertyName_PropertyNameNull_ThrowsArgumentNullException()
+        public void GetUpdatedPropertyKey_PropertyKeyNull_ThrowsArgumentNullException()
         {
             // Setup
             var config = new TestConfigurationValues() { LegacyPropertyMapping = new Dictionary<string, NewPropertyData>() };
@@ -67,27 +67,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call
-            void Call() => backwardsCompatibilityHelper.GetUpdatedPropertyName(null);
+            void Call() => backwardsCompatibilityHelper.GetUpdatedPropertyKey(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("propertyName"));
+            Assert.That(exception.ParamName, Is.EqualTo("propertyKey"));
         }
 
         [Test]
-        public void GetUpdatedCategoryName_NotInConfigMapping_ReturnsNull()
+        public void GetUpdatedSectionName_NotInConfigMapping_ReturnsNull()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
 
-            const string categoryName = "legacyProperty";
+            const string sectionName = "legacyProperty";
 
-            var config = new TestConfigurationValues() { LegacyCategoryMapping = new Dictionary<string, string>() };
+            var config = new TestConfigurationValues() { LegacySectionMapping = new Dictionary<string, string>() };
 
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call
-            string result = backwardsCompatibilityHelper.GetUpdatedCategoryName(categoryName, logHandler);
+            string result = backwardsCompatibilityHelper.GetUpdatedSectionName(sectionName, logHandler);
 
             // Assert
             Assert.That(result, Is.Null);
@@ -95,106 +95,106 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         }
 
         [Test]
-        [TestCaseSource(nameof(GetUpdatedCategoryNameData))]
-        public void GetUpdatedCategoryName_InConfigMapping_ReturnsMappedValue(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
-                                                                              string legacyCategoryName,
-                                                                              string expectedCategoryName)
+        [TestCaseSource(nameof(GetUpdatedSectionKeyData))]
+        public void GetUpdatedSectionName_InConfigMapping_ReturnsMappedValue(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
+                                                                             string legacySectionName,
+                                                                             string expectedSectionName)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(configurationValues);
 
             // Call
-            string result = backwardsCompatibilityHelper.GetUpdatedCategoryName(legacyCategoryName, logHandler);
+            string result = backwardsCompatibilityHelper.GetUpdatedSectionName(legacySectionName, logHandler);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expectedCategoryName));
+            Assert.That(result, Is.EqualTo(expectedSectionName));
             logHandler.ReceivedWithAnyArgs(1).ReportWarningFormat("message");
         }
 
         [Test]
-        public void GetUpdatedCategoryName_CategoryNameNull_ThrowsArgumentNullException()
+        public void GetUpdatedSectionName_SectionNameNull_ThrowsArgumentNullException()
         {
             // Setup
-            var config = new TestConfigurationValues() { LegacyCategoryMapping = new Dictionary<string, string>() };
+            var config = new TestConfigurationValues() { LegacySectionMapping = new Dictionary<string, string>() };
 
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call
-            void Call() => backwardsCompatibilityHelper.GetUpdatedCategoryName(null);
+            void Call() => backwardsCompatibilityHelper.GetUpdatedSectionName(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("categoryName"));
+            Assert.That(exception.ParamName, Is.EqualTo("sectionName"));
         }
 
         [Test]
-        [TestCaseSource(nameof(GetIsObsoletePropertyNameData))]
-        public void IsObsoletePropertyName_ExpectedResults(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
-                                                           string propertyName,
-                                                           bool expectedResult)
+        [TestCaseSource(nameof(GetIsObsoletePropertyKeyData))]
+        public void IsObsoletePropertyKey_ExpectedResults(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
+                                                          string propertyKey,
+                                                          bool expectedResult)
         {
             // Setup
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(configurationValues);
 
             // Call
-            bool result = backwardsCompatibilityHelper.IsObsoletePropertyName(propertyName);
+            bool result = backwardsCompatibilityHelper.IsObsoletePropertyKey(propertyKey);
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedResult),
-                        "Expected a different result from IsObsoletePropertyName");
+                        "Expected a different result from IsObsoletePropertyKey");
         }
 
         [Test]
-        public void IsObsoletePropertyName_PropertyNameNull_ThrowsArgumentNullException()
+        public void IsObsoletePropertyKey_PropertyKeyNull_ThrowsArgumentNullException()
         {
             // Setup`
             var config = new TestConfigurationValues() { ObsoleteProperties = new HashSet<string>() };
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call
-            void Call() => backwardsCompatibilityHelper.IsObsoletePropertyName(null);
+            void Call() => backwardsCompatibilityHelper.IsObsoletePropertyKey(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("propertyName"));
+            Assert.That(exception.ParamName, Is.EqualTo("propertyKey"));
         }
         
         [Test]
-        public void IsConditionalObsoletePropertyName_PropertyNameNull_ThrowsArgumentNullException()
+        public void IsConditionalObsoletePropertyKey_PropertyKeyNull_ThrowsArgumentNullException()
         {
             // Setup
             var config = new TestConfigurationValues() { ConditionalObsoleteProperties = new Dictionary<string, string>() };
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call
-            void Call() => backwardsCompatibilityHelper.IsConditionalObsoletePropertyName(null, new DelftIniCategory("randomName"));
+            void Call() => backwardsCompatibilityHelper.IsConditionalObsoletePropertyKey(null, new IniSection("randomName"));
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
         }
         
         [Test]
-        public void IsConditionalObsoletePropertyName_CategoryNull_ThrowsArgumentNullException()
+        public void IsConditionalObsoletePropertyKey_SectionNull_ThrowsArgumentNullException()
         {
             // Setup
             var config = new TestConfigurationValues() { ConditionalObsoleteProperties = new Dictionary<string, string>() };
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call
-            void Call() => backwardsCompatibilityHelper.IsConditionalObsoletePropertyName("randomName", null);
+            void Call() => backwardsCompatibilityHelper.IsConditionalObsoletePropertyKey("randomKey", null);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
-        public void IsConditionalObsoletePropertyName_MappingDoesNotContainProperty_ReturnsFalse()
+        public void IsConditionalObsoletePropertyKey_MappingDoesNotContainProperty_ReturnsFalse()
         {
             // Setup
-            const string propertyName = "property_to_check";
-            var category = new DelftIniCategory("randomCategory");
-            category.AddProperty(new DelftIniProperty(propertyName, string.Empty, string.Empty));
+            const string propertyKey = "property_to_check";
+            var section = new IniSection("randomSection");
+            section.AddProperty(propertyKey, string.Empty);
 
             var config = new TestConfigurationValues
             {
@@ -206,64 +206,64 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
             
             // Call
-            bool isObsolete = backwardsCompatibilityHelper.IsConditionalObsoletePropertyName(propertyName, category);
+            bool isObsolete = backwardsCompatibilityHelper.IsConditionalObsoletePropertyKey(propertyKey, section);
 
             // Assert
             Assert.That(isObsolete, Is.False);
         }
         
         [Test]
-        public void IsConditionalObsoletePropertyName_MappingContainsPropertyButCategoryDoesNotContainRequiredProperty_ReturnsFalse()
+        public void IsConditionalObsoletePropertyKey_MappingContainsPropertyButSectionDoesNotContainRequiredProperty_ReturnsFalse()
         {
             // Setup
-            const string propertyName = "property_to_check";
-            var category = new DelftIniCategory("randomCategory");
-            category.AddProperty(new DelftIniProperty("randomProperty", string.Empty, string.Empty));
+            const string propertyKey = "property_to_check";
+            var section = new IniSection("randomSection");
+            section.AddProperty("randomProperty", string.Empty);
 
             var config = new TestConfigurationValues
             {
                 ConditionalObsoleteProperties = new Dictionary<string, string>()
                 {
-                    { propertyName, "conditionalProperty" }
+                    { propertyKey, "conditionalProperty" }
                 }
             };
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
             
             // Call
-            bool isObsolete = backwardsCompatibilityHelper.IsConditionalObsoletePropertyName(propertyName, category);
+            bool isObsolete = backwardsCompatibilityHelper.IsConditionalObsoletePropertyKey(propertyKey, section);
 
             // Assert
             Assert.That(isObsolete, Is.False);
         }
         
         [Test]
-        public void IsConditionalObsoletePropertyName_MappingContainsPropertyAndCategoryContainsRequiredProperty_ReturnsTrue()
+        public void IsConditionalObsoletePropertyKey_MappingContainsPropertyAndSectionContainsRequiredProperty_ReturnsTrue()
         {
             // Setup
-            const string propertyName = "property_to_check";
-            const string conditionalPropertyName = "conditionalProperty";
+            const string propertyKey = "property_to_check";
+            const string conditionalPropertyKey = "conditionalProperty";
             
-            var category = new DelftIniCategory("randomCategory");
-            category.AddProperty(new DelftIniProperty(conditionalPropertyName, string.Empty, string.Empty));
+            var section = new IniSection("randomSection");
+            section.AddProperty(conditionalPropertyKey, string.Empty);
 
             var config = new TestConfigurationValues
             {
                 ConditionalObsoleteProperties = new Dictionary<string, string>()
                 {
-                    { propertyName, conditionalPropertyName }
+                    { propertyKey, conditionalPropertyKey }
                 }
             };
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
             
             // Call
-            bool isObsolete = backwardsCompatibilityHelper.IsConditionalObsoletePropertyName(propertyName, category);
+            bool isObsolete = backwardsCompatibilityHelper.IsConditionalObsoletePropertyKey(propertyKey, section);
 
             // Assert
             Assert.That(isObsolete, Is.True);
         }
 
         [Test]
-        public void RemoveObsoletePropertiesWithWarning_CategoryNull_ThrowsArgumentNullException()
+        public void RemoveObsoletePropertiesWithWarning_SectionNull_ThrowsArgumentNullException()
         {
             // Setup
             var config = new TestConfigurationValues { ObsoleteProperties = new HashSet<string>() };
@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("category"));
+            Assert.That(exception.ParamName, Is.EqualTo("section"));
         }
 
         [Test]
@@ -284,10 +284,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             // Setup
             var config = new TestConfigurationValues { ObsoleteProperties = new HashSet<string>() };
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
-            var category = new DelftIniCategory("category_name");
+            var section = new IniSection("section_name");
 
             // Call
-            void Call() => backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(category, null);
+            void Call() => backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(section, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -295,56 +295,56 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         }
 
         [Test]
-        public void RemoveObsoletePropertiesWithWarning_RemovesObsoletePropertiesFromTheCategoryAndLogsWarning()
+        public void RemoveObsoletePropertiesWithWarning_RemovesObsoletePropertiesFromTheSectionAndLogsWarning()
         {
             // Setup
-            const string obsoletePropertyName = "obsolete_property";
+            const string obsoletePropertyKey = "obsolete_property";
             var config = new TestConfigurationValues
             {
                 ObsoleteProperties = new HashSet<string>
                 {
-                    obsoletePropertyName
+                    obsoletePropertyKey
                 },
                 ConditionalObsoleteProperties = new Dictionary<string, string>()
             };
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
-            var obsoleteProperty = new DelftIniProperty(obsoletePropertyName, "property_value", "property_comment");
-            var nonObsoleteProperty = new DelftIniProperty("property_name", "property_value", "property_comment");
+            var obsoleteProperty = new IniProperty(obsoletePropertyKey, "property_value");
+            var nonObsoleteProperty = new IniProperty("property_key", "property_value");
 
-            var category = new DelftIniCategory("category_name");
-            category.AddProperty(obsoleteProperty);
-            category.AddProperty(nonObsoleteProperty);
+            var section = new IniSection("section_name");
+            section.AddProperty(obsoleteProperty);
+            section.AddProperty(nonObsoleteProperty);
 
             var logHandler = Substitute.For<ILogHandler>();
 
             // Call
-            backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(category, logHandler);
+            backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(section, logHandler);
 
             // Assert
-            Assert.That(category.Properties, Does.Not.Contain(obsoleteProperty));
-            logHandler.Received(1).ReportWarning($"Key {obsoletePropertyName} is deprecated and automatically removed from model.");
+            Assert.That(section.Properties, Does.Not.Contain(obsoleteProperty));
+            logHandler.Received(1).ReportWarning($"Key {obsoletePropertyKey} is deprecated and automatically removed from model.");
         }
         
         [Test]
-        public void RemoveObsoletePropertiesWithWarning_RemovesConditionalObsoletePropertiesFromTheCategoryAndLogsWarning()
+        public void RemoveObsoletePropertiesWithWarning_RemovesConditionalObsoletePropertiesFromTheSectionAndLogsWarning()
         {
             // Setup
-            var category = new DelftIniCategory("randomCategory");
+            var section = new IniSection("randomSection");
             
-            const string obsoletePropertyName = "obsolete_property";
-            var obsoleteProperty = new DelftIniProperty(obsoletePropertyName, string.Empty, string.Empty);
-            category.AddProperty(obsoleteProperty);
+            const string obsoletePropertyKey = "obsolete_property";
+            var obsoleteProperty = new IniProperty(obsoletePropertyKey);
+            section.AddProperty(obsoleteProperty);
             
-            const string conditionalPropertyName = "conditionalObsoleteProperty";
-            var conditionalObsoleteProperty = new DelftIniProperty(conditionalPropertyName, string.Empty, string.Empty);
-            category.AddProperty(conditionalObsoleteProperty);
+            const string conditionalPropertyKey = "conditionalObsoleteProperty";
+            var conditionalObsoleteProperty = new IniProperty(conditionalPropertyKey);
+            section.AddProperty(conditionalObsoleteProperty);
 
             var config = new TestConfigurationValues
             {
                 ConditionalObsoleteProperties = new Dictionary<string, string>()
                 {
-                    { obsoletePropertyName, conditionalPropertyName }
+                    { obsoletePropertyKey, conditionalPropertyKey }
                 },
                 ObsoleteProperties = new HashSet<string>()
             };
@@ -353,18 +353,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             var logHandler = Substitute.For<ILogHandler>();
             
             // Call
-            backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(category, logHandler);
+            backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(section, logHandler);
             
             // Assert
-            Assert.That(category.Properties, Does.Not.Contain(obsoleteProperty));
-            logHandler.Received(1).ReportWarning($"Key {obsoletePropertyName} is deprecated and automatically removed from model.");
+            Assert.That(section.Properties, Does.Not.Contain(obsoleteProperty));
+            logHandler.Received(1).ReportWarning($"Key {obsoletePropertyKey} is deprecated and automatically removed from model.");
 
         }
 
         [Test]
         [TestCaseSource(nameof(GetArgumentNullCases))]
-        public void UpdateProperty_ArgumentNull_ThrowsArgumentNullException(DelftIniProperty property,
-                                                                            DelftIniCategory propertyCategory,
+        public void UpdateProperty_ArgumentNull_ThrowsArgumentNullException(IniProperty property,
+                                                                            IniSection section,
                                                                             ILogHandler logHandler)
         {
             // Setup
@@ -372,14 +372,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             var helper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call
-            void Call() => helper.UpdateProperty(property, propertyCategory, logHandler);
+            void Call() => helper.UpdateProperty(property, section, logHandler);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
-        public void UpdateProperty_WhenPropertyNameNotInLegacyPropertyMapping_DoesNotUpdateProperty()
+        public void UpdateProperty_WhenPropertyKeyNotInLegacyPropertyMapping_DoesNotUpdateProperty()
         {
             // Setup
             var propertyUpdater = Substitute.For<IPropertyUpdater>();
@@ -388,13 +388,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             var config = new TestConfigurationValues() { LegacyPropertyMapping = legacyPropertyMapping };
             var helper = new DelftIniBackwardsCompatibilityHelper(config);
 
-            const string randomNameNotInMapping = "randomName";
-            var property = new DelftIniProperty(randomNameNotInMapping, string.Empty, string.Empty);
-            var category = new DelftIniCategory(string.Empty);
+            const string randomKeyNotInMapping = "randomKey";
+            var property = new IniProperty(randomKeyNotInMapping);
+            var section = new IniSection("TestSection");
             var logHandler = Substitute.For<ILogHandler>();
 
             // Call
-            helper.UpdateProperty(property, category, logHandler);
+            helper.UpdateProperty(property, section, logHandler);
 
             // Assert
             propertyUpdater.DidNotReceiveWithAnyArgs().UpdateProperty(default, default, default, default);
@@ -404,35 +404,36 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         public void UpdateProperty_UpdatesProperty()
         {
             // Setup
-            const string randomNameInMapping = "oldproperty";
-            const string randomNewName = "newname";
+            const string randomKeyInMapping = "oldproperty";
+            const string randomNewKey = "newkey";
 
             var propertyUpdater = Substitute.For<IPropertyUpdater>();
-            var legacyPropertyMapping = new Dictionary<string, NewPropertyData> { { randomNameInMapping, new NewPropertyData(randomNewName, propertyUpdater) } };
+            var legacyPropertyMapping = new Dictionary<string, NewPropertyData> { { randomKeyInMapping, new NewPropertyData(randomNewKey, propertyUpdater) } };
 
             var config = new TestConfigurationValues() { LegacyPropertyMapping = legacyPropertyMapping };
             var helper = new DelftIniBackwardsCompatibilityHelper(config);
 
-            var property = new DelftIniProperty(randomNameInMapping, string.Empty, string.Empty);
-            var category = new DelftIniCategory(string.Empty);
+            var property = new IniProperty(randomKeyInMapping);
+            var section = new IniSection("TestSection");
+            section.AddProperty(property);
             var logHandler = Substitute.For<ILogHandler>();
 
             // Call
-            helper.UpdateProperty(property, category, logHandler);
+            helper.UpdateProperty(property, section, logHandler);
 
             // Assert
-            propertyUpdater.Received().UpdateProperty(property, randomNewName, category, logHandler);
+            propertyUpdater.Received().UpdateProperty(randomKeyInMapping, randomNewKey, section, logHandler);
         }
 
         private static IEnumerable<TestCaseData> GetArgumentNullCases()
         {
-            var property = new DelftIniProperty(string.Empty, string.Empty, string.Empty);
-            var category = new DelftIniCategory(string.Empty);
+            var property = new IniProperty("TestProperty");
+            var section = new IniSection("TestSection");
             var logHandler = Substitute.For<ILogHandler>();
 
-            yield return new TestCaseData(null, category, logHandler);
+            yield return new TestCaseData(null, section, logHandler);
             yield return new TestCaseData(property, null, logHandler);
-            yield return new TestCaseData(property, category, null);
+            yield return new TestCaseData(property, section, null);
         }
 
         private sealed class TestConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
@@ -440,10 +441,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             public ISet<string> ObsoleteProperties { get; set; }
             public IReadOnlyDictionary<string, string> ConditionalObsoleteProperties { get; set; }
             public IReadOnlyDictionary<string, NewPropertyData> LegacyPropertyMapping { get; set; }
-            public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; set; }
+            public IReadOnlyDictionary<string, string> LegacySectionMapping { get; set; }
         }
 
-        private static IEnumerable<TestCaseData> GetUpdatedPropertyNameData()
+        private static IEnumerable<TestCaseData> GetUpdatedPropertyKeyData()
         {
             const string expectedProperty = "expected_property";
             var testConfig = new TestConfigurationValues { LegacyPropertyMapping = new Dictionary<string, NewPropertyData> { { "legacy_property", new NewPropertyData(expectedProperty, new DefaultPropertyUpdater()) } } };
@@ -455,62 +456,62 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             yield return new TestCaseData(testConfig, "legacy_Property", expectedProperty);
         }
 
-        private static IEnumerable<TestCaseData> GetUpdatedCategoryNameData()
+        private static IEnumerable<TestCaseData> GetUpdatedSectionKeyData()
         {
-            const string expectedCategory = "expected_category";
-            var testConfig = new TestConfigurationValues { LegacyCategoryMapping = new Dictionary<string, string> { { "legacy_category", expectedCategory } } };
+            const string expectedSection = "expected_section";
+            var testConfig = new TestConfigurationValues { LegacySectionMapping = new Dictionary<string, string> { { "legacy_section", expectedSection } } };
 
-            yield return new TestCaseData(testConfig, "legacy_category", expectedCategory);
-            yield return new TestCaseData(testConfig, "LEGACY_CATEGORY", expectedCategory);
-            yield return new TestCaseData(testConfig, "legacy_CATEGORY", expectedCategory);
-            yield return new TestCaseData(testConfig, "LeGaCy_CaTeGoRy", expectedCategory);
-            yield return new TestCaseData(testConfig, "legacy_Category", expectedCategory);
+            yield return new TestCaseData(testConfig, "legacy_section", expectedSection);
+            yield return new TestCaseData(testConfig, "LEGACY_SECTION", expectedSection);
+            yield return new TestCaseData(testConfig, "legacy_SECTION", expectedSection);
+            yield return new TestCaseData(testConfig, "LeGaCy_SeCtIoN", expectedSection);
+            yield return new TestCaseData(testConfig, "legacy_Section", expectedSection);
         }
 
-        private static IEnumerable<TestCaseData> GetIsObsoletePropertyNameData()
+        private static IEnumerable<TestCaseData> GetIsObsoletePropertyKeyData()
         {
-            const string propertyName = "propertyName";
+            const string propertyKey = "propertyKey";
 
             var emptyConfig = new TestConfigurationValues { ObsoleteProperties = new HashSet<string>() };
             yield return new TestCaseData(emptyConfig,
-                                          propertyName,
+                                          propertyKey,
                                           false);
-            var configWithoutPropertyName = new TestConfigurationValues
+            var configWithoutPropertyKey = new TestConfigurationValues
             {
                 ObsoleteProperties = new HashSet<string>()
                 {
-                    "othername",
-                    "otterName"
+                    "otherkey",
+                    "otterKey"
                 }
             };
-            yield return new TestCaseData(configWithoutPropertyName,
-                                          propertyName,
+            yield return new TestCaseData(configWithoutPropertyKey,
+                                          propertyKey,
                                           false);
 
-            var configWithOnlyPropertyName =
-                new TestConfigurationValues { ObsoleteProperties = new HashSet<string> { propertyName.ToLowerInvariant() } };
-            yield return new TestCaseData(configWithOnlyPropertyName,
-                                          propertyName,
+            var configWithOnlyPropertyKey =
+                new TestConfigurationValues { ObsoleteProperties = new HashSet<string> { propertyKey.ToLowerInvariant() } };
+            yield return new TestCaseData(configWithOnlyPropertyKey,
+                                          propertyKey,
                                           true);
 
-            var configWithPropertyName = new TestConfigurationValues
+            var configWithPropertyKey = new TestConfigurationValues
             {
                 ObsoleteProperties = new HashSet<string>
                 {
-                    propertyName.ToLowerInvariant(),
-                    "othername",
-                    "ottername"
+                    propertyKey.ToLowerInvariant(),
+                    "otherkey",
+                    "otterkey"
                 }
             };
 
-            yield return new TestCaseData(configWithPropertyName,
-                                          propertyName,
+            yield return new TestCaseData(configWithPropertyKey,
+                                          propertyKey,
                                           true);
-            yield return new TestCaseData(configWithPropertyName,
-                                          "PROPERTYNAME",
+            yield return new TestCaseData(configWithPropertyKey,
+                                          "PROPERTYKEY",
                                           true);
-            yield return new TestCaseData(configWithPropertyName,
-                                          "pRoPeRtYnAmE",
+            yield return new TestCaseData(configWithPropertyKey,
+                                          "pRoPeRtYkEy",
                                           true);
         }
     }

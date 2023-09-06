@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DHYDRO.Common.Logging;
@@ -11,7 +11,7 @@ using DHYDRO.Common.Logging;
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
 {
     /// <summary>
-    /// Converter for converting a collection of boundary <see cref="DelftIniCategory"/>
+    /// Converter for converting a collection of boundary <see cref="IniSection"/>
     /// to a collection of <see cref="WaveDomainData"/>.
     /// </summary>
     public static class WaveDomainDataConverter
@@ -22,61 +22,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
         private static readonly MeteoFileReader meteoFileReader = new MeteoFileReader();
 
         /// <summary>
-        /// Converts the specified <paramref name="domainCategories"/> to
+        /// Converts the specified <paramref name="domainSections"/> to
         /// their respective <see cref="WaveDomainData"/>.
         /// </summary>
-        /// <param name="domainCategories">The domain categories.</param>
-        /// <param name="mdwDirPath">The path of the directory of the mdw file..</param>
+        /// <param name="domainSections">The domain sections.</param>
+        /// <param name="mdwDirPath">The path of the directory of the mdw file.</param>
         /// <param name="logHandler">The log handler.</param>
         /// <returns>
         /// The converted collection of <see cref="WaveDomainData"/>
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="domainCategories"/> or <paramref name="logHandler"/> is <c>null</c>.
+        /// Thrown when <paramref name="domainSections"/> or <paramref name="logHandler"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="System.ArgumentException">
         /// Thrown when <paramref name="mdwDirPath"/> is <c>null</c> or empty.
         /// </exception>
-        public static IEnumerable<WaveDomainData> Convert(IEnumerable<DelftIniCategory> domainCategories, string mdwDirPath, ILogHandler logHandler)
+        public static IEnumerable<WaveDomainData> Convert(IEnumerable<IniSection> domainSections, string mdwDirPath, ILogHandler logHandler)
         {
-            Ensure.NotNull(domainCategories, nameof(domainCategories));
+            Ensure.NotNull(domainSections, nameof(domainSections));
             Ensure.NotNullOrEmpty(mdwDirPath, nameof(mdwDirPath));
             Ensure.NotNull(logHandler, nameof(logHandler));
 
-            foreach (DelftIniCategory domainCategory in domainCategories)
+            foreach (IniSection domainSection in domainSections)
             {
-                string gridFileName = domainCategory.GetPropertyValue("Grid", "");
+                string gridFileName = domainSection.GetPropertyValueOrDefault("Grid", "");
                 string domainName = Path.GetFileNameWithoutExtension(gridFileName);
 
                 var domain = new WaveDomainData(domainName)
                 {
                     GridFileName = gridFileName,
-                    BedLevelGridFileName = domainCategory.GetPropertyValue("BedLevelGrid", ""),
-                    BedLevelFileName = domainCategory.GetPropertyValue("BedLevel", ""),
-                    NestedInDomain = int.Parse(domainCategory.GetPropertyValue("NestedInDomain", "-1"), NumberStyles.Any, CultureInfo.InvariantCulture)
+                    BedLevelGridFileName = domainSection.GetPropertyValueOrDefault("BedLevelGrid", ""),
+                    BedLevelFileName = domainSection.GetPropertyValueOrDefault("BedLevel", ""),
+                    NestedInDomain = int.Parse(domainSection.GetPropertyValueOrDefault("NestedInDomain", "-1"), NumberStyles.Any, CultureInfo.InvariantCulture)
                 };
 
-                CreateDirectionalSpaceData(domainCategory, domain);
-                CreateFrequencySpaceData(domainCategory, domain);
-                SetMeteoData(domainCategory, domain, mdwDirPath, logHandler);
-                CreateHydroFromFlowSettingsData(domainCategory, domain);
+                CreateDirectionalSpaceData(domainSection, domain);
+                CreateFrequencySpaceData(domainSection, domain);
+                SetMeteoData(domainSection, domain, mdwDirPath, logHandler);
+                CreateHydroFromFlowSettingsData(domainSection, domain);
 
                 yield return domain;
             }
         }
 
-        private static void CreateHydroFromFlowSettingsData(DelftIniCategory domainCategory, WaveDomainData domain)
+        private static void CreateHydroFromFlowSettingsData(IniSection domainSection, WaveDomainData domain)
         {
-            string bedLevelUsage = domainCategory.GetPropertyValue("FlowBedLevel");
+            string bedLevelUsage = domainSection.GetPropertyValueOrDefault("FlowBedLevel");
             if (bedLevelUsage != null)
             {
                 domain.HydroFromFlowData.BedLevelUsage = (UsageFromFlowType) int.Parse(bedLevelUsage, NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.HydroFromFlowData.WaterLevelUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowWaterLevel", "0"),
+                domain.HydroFromFlowData.WaterLevelUsage = (UsageFromFlowType) int.Parse(domainSection.GetPropertyValueOrDefault("FlowWaterLevel", "0"),
                                                                                          NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.HydroFromFlowData.VelocityUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowVelocity", "0"),
+                domain.HydroFromFlowData.VelocityUsage = (UsageFromFlowType) int.Parse(domainSection.GetPropertyValueOrDefault("FlowVelocity", "0"),
                                                                                        NumberStyles.Any,
                                                                                        CultureInfo.InvariantCulture);
-                string velocityType = domainCategory.GetPropertyValue("FlowVelocityType", "not-specified");
+                string velocityType = domainSection.GetPropertyValueOrDefault("FlowVelocityType", "not-specified");
                 switch (velocityType)
                 {
                     case "wave-dependent":
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
                         break;
                 }
 
-                domain.HydroFromFlowData.WindUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowWind", "0"),
+                domain.HydroFromFlowData.WindUsage = (UsageFromFlowType) int.Parse(domainSection.GetPropertyValueOrDefault("FlowWind", "0"),
                                                                                    NumberStyles.Any, CultureInfo.InvariantCulture);
 
                 domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = false;
@@ -101,15 +101,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
             }
         }
 
-        private static void CreateFrequencySpaceData(DelftIniCategory domainCategory, WaveDomainData domain)
+        private static void CreateFrequencySpaceData(IniSection domainSection, WaveDomainData domain)
         {
-            string nFreq = domainCategory.GetPropertyValue("NFreq");
+            string nFreq = domainSection.GetPropertyValueOrDefault("NFreq");
             if (nFreq != null)
             {
                 domain.SpectralDomainData.NFreq = (int) double.Parse(nFreq, NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.SpectralDomainData.FreqMin = double.Parse(domainCategory.GetPropertyValue("FreqMin", "0.0"),
+                domain.SpectralDomainData.FreqMin = double.Parse(domainSection.GetPropertyValueOrDefault("FreqMin", "0.0"),
                                                                  NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.SpectralDomainData.FreqMax = double.Parse(domainCategory.GetPropertyValue("FreqMax", "0.0"),
+                domain.SpectralDomainData.FreqMax = double.Parse(domainSection.GetPropertyValueOrDefault("FreqMax", "0.0"),
                                                                  NumberStyles.Any, CultureInfo.InvariantCulture);
                 domain.SpectralDomainData.UseDefaultFrequencySpace = false;
             }
@@ -119,19 +119,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
             }
         }
 
-        private static void CreateDirectionalSpaceData(DelftIniCategory domainCategory, WaveDomainData domain)
+        private static void CreateDirectionalSpaceData(IniSection domainSection, WaveDomainData domain)
         {
-            string spaceType = domainCategory.GetPropertyValue("DirSpace");
+            string spaceType = domainSection.GetPropertyValueOrDefault("DirSpace");
             if (spaceType != null)
             {
                 domain.SpectralDomainData.DirectionalSpaceType = spaceType == "circle"
                                                                      ? WaveDirectionalSpaceType.Circle
                                                                      : WaveDirectionalSpaceType.Sector;
-                domain.SpectralDomainData.NDir = int.Parse(domainCategory.GetPropertyValue("NDir", "0"),
+                domain.SpectralDomainData.NDir = int.Parse(domainSection.GetPropertyValueOrDefault("NDir", "0"),
                                                            NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.SpectralDomainData.StartDir = double.Parse(domainCategory.GetPropertyValue("StartDir", "0.0"),
+                domain.SpectralDomainData.StartDir = double.Parse(domainSection.GetPropertyValueOrDefault("StartDir", "0.0"),
                                                                   NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.SpectralDomainData.EndDir = double.Parse(domainCategory.GetPropertyValue("EndDir", "0.0"),
+                domain.SpectralDomainData.EndDir = double.Parse(domainSection.GetPropertyValueOrDefault("EndDir", "0.0"),
                                                                 NumberStyles.Any, CultureInfo.InvariantCulture);
                 domain.SpectralDomainData.UseDefaultDirectionalSpace = false;
             }
@@ -141,11 +141,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
             }
         }
 
-        private static void SetMeteoData(DelftIniCategory domainCategory, WaveDomainData domain, string mdwDirPath, ILogHandler logHandler)
+        private static void SetMeteoData(IniSection domainSection, WaveDomainData domain, string mdwDirPath, ILogHandler logHandler)
         {
             domain.UseGlobalMeteoData = true;
 
-            List<string> meteoFiles = domainCategory.GetPropertyValues(KnownWaveProperties.MeteoFile).Select(f => Path.Combine(mdwDirPath, f)).ToList();
+            List<string> meteoFiles = domainSection.GetAllProperties(KnownWaveProperties.MeteoFile)
+                                                   .Select(p => Path.Combine(mdwDirPath, p.Value))
+                                                   .ToList();
 
             if (!meteoFiles.Any())
             {

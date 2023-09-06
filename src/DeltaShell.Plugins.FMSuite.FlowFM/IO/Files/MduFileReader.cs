@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
@@ -31,47 +32,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public static void Read(Stream stream, string filePath, WaterFlowFMModelDefinition definition)
         {
             var logHandler = new LogHandler($"reading the {Path.GetFileName(filePath)} file", log);
-            IList<DelftIniCategory> categories = new MduDelftIniReader().ReadDelftIniFile(stream, filePath);
+            IniData iniData = new MduDelftIniReader().ReadDelftIniFile(stream, filePath);
 
-            RemoveObsoleteProperties(categories, logHandler);
-            UpdateLegacyCategoriesAndProperties(categories, logHandler);
-            AddOrUpdateProperties(definition, categories, logHandler);
+            RemoveObsoleteProperties(iniData, logHandler);
+            UpdateLegacySectionsAndProperties(iniData, logHandler);
+            AddOrUpdateProperties(definition, iniData, logHandler);
             ExecutePostReadActions(definition);
 
             logHandler.LogReport();
         }
 
-        private static void RemoveObsoleteProperties(IEnumerable<DelftIniCategory> categories, ILogHandler logHandler)
+        private static void RemoveObsoleteProperties(IniData iniData, ILogHandler logHandler)
         {
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
-            categories.ForEach(category => backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(category, logHandler));
+            iniData.Sections.ForEach(section => backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(section, logHandler));
         }
 
-        private static void UpdateLegacyCategoriesAndProperties(IEnumerable<DelftIniCategory> categories, LogHandler logHandler)
+        private static void UpdateLegacySectionsAndProperties(IniData iniData, LogHandler logHandler)
+        {
+            UpdateLegacySections(iniData, logHandler);
+            UpdateLegacyProperties(iniData, logHandler);
+        }
+
+        private static void UpdateLegacySections(IniData iniData, LogHandler logHandler)
         {
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
 
-            categories.ForEach(category =>
+            foreach (string sectionName in iniData.Sections.Select(x => x.Name).ToList())
             {
-                category.Name =
-                    backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name) ??
-                    category.Name;
-                category.Properties.ForEach(property =>
+                string newSectionName = backwardsCompatibilityHelper.GetUpdatedSectionName(sectionName, logHandler);
+                if (newSectionName != null)
                 {
-                    backwardsCompatibilityHelper.UpdateProperty(property, category, logHandler);
-                });
-            });
+                    iniData.RenameSections(sectionName, newSectionName);
+                }
+            }
+        }
+
+        private static void UpdateLegacyProperties(IniData iniData, LogHandler logHandler)
+        {
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+
+            foreach (IniSection section in iniData.Sections)
+            {
+                List<IniProperty> properties = section.Properties.ToList();
+
+                foreach (IniProperty property in properties)
+                {
+                    backwardsCompatibilityHelper.UpdateProperty(property, section, logHandler);
+                }
+            }
         }
         
-        private static void AddOrUpdateProperties(WaterFlowFMModelDefinition definition, IEnumerable<DelftIniCategory> categories, ILogHandler logHandler)
+        private static void AddOrUpdateProperties(WaterFlowFMModelDefinition definition, IniData iniData, ILogHandler logHandler)
         {
-            foreach (DelftIniCategory category in categories)
+            foreach (IniSection section in iniData.Sections)
             {
-                foreach (DelftIniProperty property in category.Properties)
+                foreach (IniProperty property in section.Properties)
                 {
-                    if (!definition.ContainsProperty(property.Name))
+                    if (!definition.ContainsProperty(property.Key))
                     {
-                        AddNewPropertyToDefinition(definition, category, property, logHandler);
+                        AddNewPropertyToDefinition(definition, section, property, logHandler);
                     }
                     else if (!string.IsNullOrEmpty(property.Value))
                     {
@@ -83,26 +103,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void AddNewPropertyToDefinition(WaterFlowFMModelDefinition definition, DelftIniCategory category, DelftIniProperty property, ILogHandler logHandler)
+        private static void AddNewPropertyToDefinition(WaterFlowFMModelDefinition definition, IniSection section, IniProperty property, ILogHandler logHandler)
         {
-            WaterFlowFMProperty newFmProperty = CreateNewProperty(property, category.Name);
+            WaterFlowFMProperty newFmProperty = CreateNewProperty(property, section.Name);
             definition.AddProperty(newFmProperty);
             
             logHandler.ReportInfoFormat(Resources.MduFileReader_AddNewPropertyToDefinition_An_unrecognized_keyword_has_been_detected,
                                         newFmProperty.PropertyDefinition.Caption);
         }
 
-        private static WaterFlowFMProperty CreateNewProperty(DelftIniProperty property, string categoryName)
+        private static WaterFlowFMProperty CreateNewProperty(IniProperty property, string sectionName)
         {
             WaterFlowFMPropertyDefinition newPropertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(categoryName, property.Name, property.Comment);
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(sectionName, property.Key, property.Comment);
 
             return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
         }
 
-        private static void SetPropertyValue(WaterFlowFMModelDefinition definition, DelftIniProperty property, ILogHandler logHandler)
+        private static void SetPropertyValue(WaterFlowFMModelDefinition definition,IniProperty property, ILogHandler logHandler)
         {
-            WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Name);
+            WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Key);
             try
             {
                 modelProperty.SetValueAsString(property.Value);
@@ -114,9 +134,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void SetPropertySortIndex(WaterFlowFMModelDefinition definition, DelftIniProperty property)
+        private static void SetPropertySortIndex(WaterFlowFMModelDefinition definition, IniProperty property)
         {
-            WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Name);
+            WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Key);
             modelProperty.PropertyDefinition.SortIndex = property.LineNumber;
         }
 

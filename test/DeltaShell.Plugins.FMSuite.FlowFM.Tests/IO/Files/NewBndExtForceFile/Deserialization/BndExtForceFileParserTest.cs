@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+﻿using System.Linq;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
@@ -39,22 +38,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsedBoundaryCategoryWithValuesIsAdded()
+        public void Parse_ParsedBoundarySectionWithValuesIsAdded()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("boundary");
-            delftIniCategory.AddProperty("quantity", "some_quantity");
-            delftIniCategory.AddProperty("locationFile", "some_location_file");
-            delftIniCategory.AddProperty("forcingFile", "some_forcing_file1");
-            delftIniCategory.AddProperty("forcingFile", "some_forcing_file2");
-            delftIniCategory.AddProperty("returnTime", "1.23");
-            var delftIniCategories = new List<DelftIniCategory> { delftIniCategory };
+            var section = new IniSection("boundary");
+            section.AddProperty("quantity", "some_quantity");
+            section.AddProperty("locationFile", "some_location_file");
+            section.AddProperty("forcingFile", "some_forcing_file1");
+            section.AddProperty("forcingFile", "some_forcing_file2");
+            section.AddProperty("returnTime", "1.23");
+            var iniData = new IniData();
+            iniData.AddSection(section);
 
             // Call
-            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(delftIniCategories);
+            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
 
             // Assert
             var expLocationFiles = new[] { "some_location_file" };
@@ -67,17 +67,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsedBoundaryCategoryWithoutValuesIsAdded()
+        public void Parse_ParsedBoundarySectionWithoutValuesIsAdded()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("boundary");
-            var delftIniCategories = new List<DelftIniCategory> { delftIniCategory };
-
+            var section = new IniSection("boundary");
+            var iniData = new IniData();
+            iniData.AddSection(section);
+            
             // Call
-            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(delftIniCategories);
+            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
 
             // Assert
             Assert.That(bndExtForceFileDTO.LocationFiles, Is.Empty);
@@ -88,25 +89,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ValidParsedLateralCategoryIsAdded()
+        public void Parse_ValidParsedLateralSectionIsAdded()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "some_id");
-            delftIniCategory.AddProperty("name", "some_name");
-            delftIniCategory.AddProperty("type", "discharge");
-            delftIniCategory.AddProperty("locationType", "2d");
-            delftIniCategory.AddProperty("numCoordinates", "3");
-            delftIniCategory.AddProperty("xCoordinates", "1.23 2.34 3.45");
-            delftIniCategory.AddProperty("yCoordinates", "4.56 5.67 6.78");
-            delftIniCategory.AddProperty("discharge", "some_forcing_file.bc");
-            var delftIniCategories = new List<DelftIniCategory> { delftIniCategory };
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "some_id");
+            section.AddProperty("name", "some_name");
+            section.AddProperty("type", "discharge");
+            section.AddProperty("locationType", "2d");
+            section.AddProperty("numCoordinates", "3");
+            section.AddProperty("xCoordinates", "1.23 2.34 3.45");
+            section.AddProperty("yCoordinates", "4.56 5.67 6.78");
+            section.AddProperty("discharge", "some_forcing_file.bc");
+            var iniData = new IniData();
+            iniData.AddSection(section);
 
             // Call
-            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(delftIniCategories);
+            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
 
             // Assert
             var expForcingFiles = new[] { "some_forcing_file.bc" };
@@ -126,17 +128,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_InvalidParsedLateralCategoryIsNotAdded()
+        public void Parse_InvalidParsedLateralSectionIsNotAdded()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            var delftIniCategories = new List<DelftIniCategory> { delftIniCategory };
+            var section = new IniSection("lateral");
+            var iniData = new IniData();
+            iniData.AddSection(section);
 
             // Call
-            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(delftIniCategories);
+            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
 
             // Assert
             Assert.That(bndExtForceFileDTO.LocationFiles, Is.Empty);
@@ -146,38 +149,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_DoesNotParseUnknownCategoriesAndLogsAWarning()
+        public void Parse_DoesNotParseUnknownSectionsAndLogsAWarning()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("unknown", 5);
-            var delftIniCategories = new List<DelftIniCategory> { delftIniCategory };
+            var section = new IniSection("unknown") {LineNumber = 5};
+            var iniData = new IniData();
+            iniData.AddSection(section);
 
             // Call
-            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(delftIniCategories);
+            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
 
             // Assert
             Assert.That(bndExtForceFileDTO.LocationFiles, Is.Empty);
             Assert.That(bndExtForceFileDTO.ForcingFiles, Is.Empty);
             Assert.That(bndExtForceFileDTO.Boundaries, Is.Empty);
             Assert.That(bndExtForceFileDTO.Laterals, Is.Empty);
-            logHandler.Received(1).ReportWarningFormat("Category {0} has an unknown header and cannot be parsed. Line: {1}", "unknown", 5);
+            logHandler.Received(1).ReportWarningFormat("Section {0} has an unknown header and cannot be parsed. Line: {1}", "unknown", 5);
         }
         
         [Test]
-        public void Parse_GeneralCategories_NothingHappens()
+        public void Parse_GeneralSections_NothingHappens()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("general", 5);
-            var delftIniCategories = new List<DelftIniCategory> { delftIniCategory };
+            var section = new IniSection("general") {LineNumber = 5};
+            var iniData = new IniData();
+            iniData.AddSection(section);
 
             // Call
-            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(delftIniCategories);
+            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
 
             // Assert
             Assert.That(bndExtForceFileDTO.LocationFiles, Is.Empty);

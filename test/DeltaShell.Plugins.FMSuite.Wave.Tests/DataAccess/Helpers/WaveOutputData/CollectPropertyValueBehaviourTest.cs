@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
 using DHYDRO.Common.Logging;
@@ -26,13 +26,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
 
         public static IEnumerable<TestCaseData> GetConstructorParameterNullData()
         {
-            const string propertyName = "someProperty";
+            const string propertyKey = "someProperty";
             var hashSet = new HashSet<string>();
             const string relativeDirectory = "someRelativeDirectory";
 
-            yield return new TestCaseData(null, hashSet, relativeDirectory, "propertyName");
-            yield return new TestCaseData(propertyName, null, relativeDirectory, "hashSet");
-            yield return new TestCaseData(propertyName, hashSet, null, "relativeDirectory");
+            yield return new TestCaseData(null, hashSet, relativeDirectory, "propertyKey");
+            yield return new TestCaseData(propertyKey, null, relativeDirectory, "hashSet");
+            yield return new TestCaseData(propertyKey, hashSet, null, "relativeDirectory");
         }
 
         [Test]
@@ -69,13 +69,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
         {
             // Setup
             var hashSet = new HashSet<string>();
-            const string propertyName = "propertyName";
+            const string propertyKey = "propertyKey";
             const string relativeDirectory = "relativePath";
             const string propertyValue = "someFile.loc";
 
-            var behaviour = new CollectPropertyValueBehaviour(propertyName, hashSet, relativeDirectory);
+            var behaviour = new CollectPropertyValueBehaviour(propertyKey, hashSet, relativeDirectory);
 
-            var property = new DelftIniProperty(propertyName, propertyValue, "someComment");
+            var property = new IniProperty(propertyKey, propertyValue, "someComment");
 
             // Call
             behaviour.Invoke(property, null);
@@ -90,13 +90,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
         {
             // Setup
             var hashSet = new HashSet<string>();
-            const string propertyName = "propertyName";
+            const string propertyKey = "propertyKey";
             const string relativeDirectory = "relativePath";
             const string propertyValue = "someFile.loc";
 
             var behaviour = new CollectPropertyValueBehaviour("someOtherProperty", hashSet, relativeDirectory);
 
-            var property = new DelftIniProperty(propertyName, propertyValue, "someComment");
+            var property = new IniProperty(propertyKey, propertyValue, "someComment");
 
             // Call
             behaviour.Invoke(property, null);

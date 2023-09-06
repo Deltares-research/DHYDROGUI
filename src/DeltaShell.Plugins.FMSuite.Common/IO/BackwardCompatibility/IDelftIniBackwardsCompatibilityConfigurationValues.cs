@@ -4,7 +4,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
 {
     /// <summary>
     /// <see cref="IDelftIniBackwardsCompatibilityConfigurationValues"/> defines the legacy
-    /// mappings and obsolete categories and properties.
+    /// mappings and obsolete sections and properties.
     /// </summary>
     public interface IDelftIniBackwardsCompatibilityConfigurationValues
     {
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         IReadOnlyDictionary<string, string> ConditionalObsoleteProperties { get; }
 
         /// <summary>
-        /// Gets the mapping of legacy property names to the data required to
+        /// Gets the mapping of legacy property keys to the data required to
         /// update them to their up to date equivalents.
         /// </summary>
         /// <remarks>
@@ -47,16 +47,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         IReadOnlyDictionary<string, NewPropertyData> LegacyPropertyMapping { get; }
 
         /// <summary>
-        /// Gets the mapping of legacy category names to their up to date
+        /// Gets the mapping of legacy section names to their up to date
         /// equivalents.
         /// </summary>
         /// <remarks>
-        /// Note that all categories are assumed to be case-insensitive, as
+        /// Note that all sections are assumed to be case-insensitive, as
         /// such it is required for all keys (and only the keys) in
-        /// <see cref="LegacyCategoryMapping"/> to be written in lowercase,
+        /// <see cref="LegacySectionMapping"/> to be written in lowercase,
         /// i.e. the following invariant should hold:
         /// FORALL p IN LegacyCategoryMapping.Keys: p == p.ToLower()
         /// </remarks>
-        IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; }
+        IReadOnlyDictionary<string, string> LegacySectionMapping { get; }
     }
 }

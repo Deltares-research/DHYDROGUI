@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
@@ -18,41 +18,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 {
     /// <summary>
     /// Static class containing static method to start extending the boundary
-    /// category with condition properties. This class has a visitor as private
+    /// section with condition properties. This class has a visitor as private
     /// nested class, since the visitor must only be used in this context.
     /// </summary>
     public static class MdwBoundaryCategoryConditionsExtender
     {
         /// <summary>
         /// Static method for retrieving boundary condition properties of each boundary
-        /// and add them to the existing category.
+        /// and add them to the existing section.
         /// </summary>
-        /// <param name="boundaryCategory"> The category that needs to be extended.</param>
+        /// <param name="boundarySection"> The section that needs to be extended.</param>
         /// <param name="conditionDefinition"> The condition definition of the boundary.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="boundaryCategory"/>
+        /// Thrown when <paramref name="boundarySection"/>
         /// is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="conditionDefinition"/>
         /// is <c>null</c>.
         /// </exception>
-        public static void AddNewProperties(DelftIniCategory boundaryCategory,
-                                            IWaveBoundaryConditionDefinition conditionDefinition)
+        public static void AddNewProperties(IniSection boundarySection, IWaveBoundaryConditionDefinition conditionDefinition)
         {
-            Ensure.NotNull(boundaryCategory, nameof(boundaryCategory));
+            Ensure.NotNull(boundarySection, nameof(boundarySection));
             Ensure.NotNull(conditionDefinition, nameof(conditionDefinition));
 
-            var visitor = new Visitor(boundaryCategory);
+            var visitor = new Visitor(boundarySection);
             conditionDefinition.AcceptVisitor(visitor);
 
-            SetSpreadingTypeOfSpatiallyVaryingBoundaryWithoutActiveSupportPoints(boundaryCategory, conditionDefinition);
+            SetSpreadingTypeOfSpatiallyVaryingBoundaryWithoutActiveSupportPoints(boundarySection, conditionDefinition);
         }
 
         private static void SetSpreadingTypeOfSpatiallyVaryingBoundaryWithoutActiveSupportPoints(
-            DelftIniCategory boundaryCategory, IWaveBoundaryConditionDefinition conditionDefinition)
+            IniSection boundarySection, IWaveBoundaryConditionDefinition conditionDefinition)
         {
-            if (boundaryCategory.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingType) != string.Empty)
+            if (boundarySection.GetPropertyValueOrDefault(KnownWaveProperties.DirectionalSpreadingType) != string.Empty)
             {
                 return;
             }
@@ -61,11 +60,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             {
                 case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _:
-                    boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
+                    boundarySection.AddOrUpdateProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
                     break;
                 case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
-                    boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
+                    boundarySection.AddOrUpdateProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
                     break;
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
@@ -79,17 +78,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             private int supportPointCounter;
 
             /// <summary>
-            /// The constructor should set the category.
+            /// The constructor should set the section.
             /// </summary>
-            /// <param name="boundaryCategory"> The boundary category that needs to be extended</param>
-            public Visitor(DelftIniCategory boundaryCategory)
+            /// <param name="boundarySection"> The boundary section that needs to be extended</param>
+            public Visitor(IniSection boundarySection)
             {
-                BoundaryCategory = boundaryCategory;
+                BoundarySection = boundarySection;
             }
 
             /// <summary>
             /// Visit method for adding place holders for shape type and directional spreading type. Also adds
-            /// period type to the category. Calls next shape object to visit and data component.
+            /// period type to the section. Calls next shape object to visit and data component.
             /// </summary>
             /// <param name="waveBoundaryConditionDefinition">The visited <see cref="IWaveBoundaryConditionDefinition"/></param>
             /// <exception cref="System.ArgumentNullException">
@@ -101,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 Ensure.NotNull(waveBoundaryConditionDefinition, nameof(waveBoundaryConditionDefinition));
 
                 //place holder
-                BoundaryCategory.AddProperty(KnownWaveProperties.ShapeType, string.Empty);
+                BoundarySection.AddProperty(KnownWaveProperties.ShapeType, string.Empty);
 
                 string periodTypePropertyValue;
 
@@ -117,9 +116,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                         throw new NotSupportedException($"Value '{waveBoundaryConditionDefinition.PeriodType}' is not a valid period type for the exporter.");
                 }
 
-                BoundaryCategory.AddProperty(KnownWaveProperties.PeriodType, periodTypePropertyValue);
+                BoundarySection.AddProperty(KnownWaveProperties.PeriodType, periodTypePropertyValue);
 
-                BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType, string.Empty);
+                BoundarySection.AddProperty(KnownWaveProperties.DirectionalSpreadingType, string.Empty);
 
                 waveBoundaryConditionDefinition.Shape.AcceptVisitor(this);
 
@@ -128,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
             /// <summary>
             /// Visit method for setting <see cref="hasConstantValues"/> and adding constant values
-            /// to the category with/without distances. Calls the next AcceptVisitor method for the spreading.
+            /// to the section with/without distances. Calls the next AcceptVisitor method for the spreading.
             /// </summary>
             /// <typeparam name="T"> An <see cref="IBoundaryConditionSpreading"/> object</typeparam>
             /// <param name="constantParameters"> The visited <see cref="ConstantParameters{TSpreading}"/></param>
@@ -142,14 +141,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 hasConstantValues = true;
                 if (!isUniform)
                 {
-                    BoundaryCategory.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist,
-                                                        SupportPoints[supportPointCounter].Distance);
+                    BoundarySection.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist,
+                                                       SupportPoints[supportPointCounter].Distance);
                     supportPointCounter++;
                 }
 
-                BoundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, constantParameters.Height);
-                BoundaryCategory.AddProperty(KnownWaveProperties.Period, constantParameters.Period);
-                BoundaryCategory.AddProperty(KnownWaveProperties.Direction, constantParameters.Direction);
+                BoundarySection.AddProperty(KnownWaveProperties.WaveHeight, constantParameters.Height);
+                BoundarySection.AddProperty(KnownWaveProperties.Period, constantParameters.Period);
+                BoundarySection.AddProperty(KnownWaveProperties.Direction, constantParameters.Direction);
 
                 constantParameters.Spreading.AcceptVisitor(this);
             }
@@ -170,8 +169,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 hasConstantValues = false;
                 if (!isUniform)
                 {
-                    BoundaryCategory.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist,
-                                                        SupportPoints[supportPointCounter].Distance);
+                    BoundarySection.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist,
+                                                       SupportPoints[supportPointCounter].Distance);
                     supportPointCounter++;
                 }
 
@@ -189,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
             /// <summary>
             /// Visit method for setting the shape type at the place holder and adding the Gaussian spreading
-            /// to the category.
+            /// to the section.
             /// </summary>
             /// <param name="gaussShape"> The visited <see cref="GaussShape"/></param>
             /// <exception cref="System.ArgumentNullException">
@@ -199,13 +198,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             public void Visit(GaussShape gaussShape)
             {
                 Ensure.NotNull(gaussShape, nameof(gaussShape));
-                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.GaussShape);
-                BoundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, gaussShape.GaussianSpread);
+                BoundarySection.AddOrUpdateProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.GaussShape);
+                BoundarySection.AddProperty(KnownWaveProperties.GaussianSpreading, gaussShape.GaussianSpread);
             }
 
             /// <summary>
             /// Visit method for setting the shape type at the place holder and adding the Peak Enhancement factor
-            /// to the category.
+            /// to the section.
             /// </summary>
             /// <param name="jonswapShape">The visited <see cref="JonswapShape"/></param>
             /// <exception cref="System.ArgumentNullException">
@@ -215,12 +214,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             public void Visit(JonswapShape jonswapShape)
             {
                 Ensure.NotNull(jonswapShape, nameof(jonswapShape));
-                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.JonswapShape);
-                BoundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, jonswapShape.PeakEnhancementFactor);
+                BoundarySection.AddOrUpdateProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.JonswapShape);
+                BoundarySection.AddProperty(KnownWaveProperties.PeakEnhancementFactor, jonswapShape.PeakEnhancementFactor);
             }
 
             /// <summary>
-            /// Visit method for setting the shape type at the place holder in the category.
+            /// Visit method for setting the shape type at the place holder in the section.
             /// </summary>
             /// <param name="piersonMoskowitzShape"> The visited <see cref="PiersonMoskowitzShape"/></param>
             /// <exception cref="System.ArgumentNullException">
@@ -230,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             public void Visit(PiersonMoskowitzShape piersonMoskowitzShape)
             {
                 Ensure.NotNull(piersonMoskowitzShape, nameof(piersonMoskowitzShape));
-                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.PiersonMoskowitzShape);
+                BoundarySection.AddOrUpdateProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.PiersonMoskowitzShape);
             }
 
             /// <summary>
@@ -278,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
             /// <summary>
             /// Visit method for setting the directional spreading type and adding the directional
-            /// spreading value to the category.
+            /// spreading value to the section.
             /// </summary>
             /// <param name="degreesDefinedSpreading"> The visited <see cref="DegreesDefinedSpreading"/></param>
             /// <exception cref="System.ArgumentNullException">
@@ -288,19 +287,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             public void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
             {
                 Ensure.NotNull(degreesDefinedSpreading, nameof(degreesDefinedSpreading));
-                BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
-                                             KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
+                BoundarySection.AddOrUpdateProperty(KnownWaveProperties.DirectionalSpreadingType,
+                                                    KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
 
                 if (hasConstantValues)
                 {
-                    BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue,
+                    BoundarySection.AddProperty(KnownWaveProperties.DirectionalSpreadingValue,
                                                  degreesDefinedSpreading.DegreesSpreading);
                 }
             }
 
             /// <summary>
             /// Visit method for setting the directional spreading type at the place holder and adding the
-            /// directional spreading value to the category.
+            /// directional spreading value to the section.
             /// </summary>
             /// <param name="powerDefinedSpreading"> The visited <see cref="PowerDefinedSpreading"/></param>
             /// <exception cref="System.ArgumentNullException">
@@ -310,17 +309,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             public void Visit(PowerDefinedSpreading powerDefinedSpreading)
             {
                 Ensure.NotNull(powerDefinedSpreading, nameof(powerDefinedSpreading));
-                BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
-                                             KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
+                BoundarySection.AddOrUpdateProperty(KnownWaveProperties.DirectionalSpreadingType,
+                                                    KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
 
                 if (hasConstantValues)
                 {
-                    BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue,
+                    BoundarySection.AddProperty(KnownWaveProperties.DirectionalSpreadingValue,
                                                  powerDefinedSpreading.SpreadingPower);
                 }
             }
 
-            private DelftIniCategory BoundaryCategory { get; }
+            private IniSection BoundarySection { get; }
 
             private IList<SupportPoint> SupportPoints { get; set; }
         }

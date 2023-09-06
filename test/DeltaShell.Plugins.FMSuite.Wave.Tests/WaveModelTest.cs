@@ -320,9 +320,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             var waveModel = new WaveModel();
 
-            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection,
                                                                                 KnownWaveProperties.BedFriction);
-            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection,
                                                                                  KnownWaveProperties.BedFrictionCoef);
 
             Assert.AreEqual("0.038", prop2.GetValueAsString());
@@ -335,9 +335,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             var waveModel = new WaveModel();
 
-            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection,
                                                                                 KnownWaveProperties.BedFriction);
-            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection,
                                                                                  KnownWaveProperties.BedFrictionCoef);
 
             Assert.AreEqual("0.038", prop2.GetValueAsString());
@@ -350,9 +350,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             var waveModel = new WaveModel();
 
-            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
+            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection,
                                                                                 KnownWaveProperties.SimulationMode);
-            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
+            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.NumericsSection,
                                                                                  KnownWaveProperties.MaxIter);
 
             Assert.AreEqual("50", prop2.GetValueAsString());

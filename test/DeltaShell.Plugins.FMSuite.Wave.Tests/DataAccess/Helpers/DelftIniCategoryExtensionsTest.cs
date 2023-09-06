@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers;
 using NUnit.Framework;
 
@@ -11,11 +11,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers
     public class DelftIniCategoryExtensionsTest
     {
         [TestCaseSource(nameof(GetAddSpatialPropertyArgumentNullCases))]
-        public void AddSpatialProperty_ArgumentNull_ThrowsArgumentNullException(DelftIniCategory category, string propertyName,
+        public void AddSpatialProperty_ArgumentNull_ThrowsArgumentNullException(IniSection section, string propertyKey,
                                                                                 string expectedParamName)
         {
             // Call
-            void Call() => category.AddSpatialProperty(propertyName, 0);
+            void Call() => section.AddSpatialProperty(propertyKey, 0);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -24,23 +24,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers
 
         private static IEnumerable<TestCaseData> GetAddSpatialPropertyArgumentNullCases()
         {
-            yield return new TestCaseData(null, "property_name", "category");
-            yield return new TestCaseData(new DelftIniCategory(""), null, "propertyName");
+            yield return new TestCaseData(null, "property", "section");
+            yield return new TestCaseData(new IniSection("section"), null, "propertyKey");
         }
 
         [TestCaseSource(nameof(GetAddSpatialDataCases))]
         public void AddSpatialProperty_AddsCorrectPropertyToCategory(double value, string expectedPropValue)
         {
             // Setup
-            var category = new DelftIniCategory("");
-            const string propertyName = "property_name";
+            var section = new IniSection("TestSection");
+            const string propertyKey = "property_key";
 
             // Call
-            category.AddSpatialProperty(propertyName, value);
+            section.AddSpatialProperty(propertyKey, value);
 
             // Assert
-            DelftIniProperty property = category.Properties.Single();
-            Assert.That(property.Name, Is.EqualTo(propertyName));
+            IniProperty property = section.Properties.Single();
+            Assert.That(property.Key, Is.EqualTo(propertyKey));
             Assert.That(property.Comment, Is.Empty);
             Assert.That(property.Value, Is.EqualTo(expectedPropValue));
         }

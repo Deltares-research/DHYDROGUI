@@ -96,10 +96,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             using (var model = new WaveModel(fileCopy))
             {
-                WaveModelProperty waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup);
+                WaveModelProperty waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup);
                 waveSetup.Value = true;
-                model.ModelDefinition.SetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup, waveSetup);
-                waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup);
+                model.ModelDefinition.SetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup, waveSetup);
+                waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup);
                 Assert.IsTrue((bool) waveSetup.Value);
 
                 Assert.IsTrue(CheckDomainGrid(model.OuterDomain, WaveModel.CoordinateSystemType.Spherical));
@@ -123,10 +123,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             using (var model = new WaveModel(fileCopy))
             {
-                WaveModelProperty waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup);
+                WaveModelProperty waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup);
                 waveSetup.Value = false;
-                model.ModelDefinition.SetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup, waveSetup);
-                waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup);
+                model.ModelDefinition.SetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup, waveSetup);
+                waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup);
                 Assert.IsFalse((bool) waveSetup.Value);
 
                 Assert.IsTrue(CheckDomainGrid(model.OuterDomain, WaveModel.CoordinateSystemType.Spherical));

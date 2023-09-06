@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
 {
     /// <summary>
-    /// A descriptor class for a property (key-value-comment pairs), mainly to be used in a Delft .ini formatted file.
+    /// A descriptor class for a property (key-value-comment pairs), mainly to be used in a INI formatted file.
     /// </summary>
     /// <seealso cref="ModelProperty"/>
     public abstract class ModelPropertyDefinition
@@ -27,12 +27,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public Type DataType { get; set; }
 
         /// <summary>
-        /// The Delft .ini category name to which this property belongs to.
+        /// The INI section name to which this property belongs to.
         /// </summary>
         public string FileCategoryName { get; set; }
 
         /// <summary>
-        /// The name of the property as it occurs in the Delft .ini file.
+        /// The name of the property as it occurs in the INI file.
         /// </summary>
         public string FilePropertyName { get; set; }
 
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public string Caption { get; set; }
 
         /// <summary>
-        /// The sorting index of this property in the Delft .ini file. A value of -1 indicates that the property
+        /// The sorting index of this property in the INI file. A value of -1 indicates that the property
         /// is not included in the sorting. The default value is -1.
         /// </summary>
         public int SortIndex { get; set; } = -1;

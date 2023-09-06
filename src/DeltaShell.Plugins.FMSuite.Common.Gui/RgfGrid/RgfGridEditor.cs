@@ -193,8 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                     config.AddGridFileNames(new Tuple<string, string>(copies[0].FileName,
                                                                       copies[0].Type == GridType.FM ? RgfConfig.FMGridKeyword : RgfConfig.GrdKeyword));
 
-                    new DelftIniWriter().WriteDelftIniFile(config.ToDelftIniCategories(),
-                                                           Path.Combine(tempDir, RgfGridConfigurationFileName));
+                    new DelftIniWriter().WriteDelftIniFile(config.ToIniData(), Path.Combine(tempDir, RgfGridConfigurationFileName));
 
                     happyWithGrid = false;
                 }
@@ -415,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             };
             config.AddGridFileNames(gridFilePaths.Select(Path.GetFileName).ToArray());
 
-            new DelftIniWriter().WriteDelftIniFile(config.ToDelftIniCategories(),
+            new DelftIniWriter().WriteDelftIniFile(config.ToIniData(),
                                                    Path.Combine(targetDir, RgfGridConfigurationFileName));
 
             if (polygons != null && polFileName != null)

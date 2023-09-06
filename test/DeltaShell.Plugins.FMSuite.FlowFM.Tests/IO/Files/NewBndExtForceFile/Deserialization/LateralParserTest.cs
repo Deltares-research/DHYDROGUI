@@ -1,4 +1,4 @@
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
@@ -39,24 +39,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         [TestCase("2d", LateralLocationType.TwoD)]
         [TestCase("2D", LateralLocationType.TwoD)]
-        public void Parse_ParsesLateralCategoryWithValues(string locationTypeValue, LateralLocationType expLateralLocationType)
+        public void Parse_ParsesLateralSectionWithValues(string locationTypeValue, LateralLocationType expLateralLocationType)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "some_id");
-            delftIniCategory.AddProperty("name", "some_name");
-            delftIniCategory.AddProperty("type", "discharge");
-            delftIniCategory.AddProperty("locationType", locationTypeValue);
-            delftIniCategory.AddProperty("numCoordinates", "3");
-            delftIniCategory.AddProperty("xCoordinates", "1.23 2.34 3.45");
-            delftIniCategory.AddProperty("yCoordinates", "4.56 5.67 6.78");
-            delftIniCategory.AddProperty("discharge", "7.89");
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "some_id");
+            section.AddProperty("name", "some_name");
+            section.AddProperty("type", "discharge");
+            section.AddProperty("locationType", locationTypeValue);
+            section.AddProperty("numCoordinates", "3");
+            section.AddProperty("xCoordinates", "1.23 2.34 3.45");
+            section.AddProperty("yCoordinates", "4.56 5.67 6.78");
+            section.AddProperty("discharge", "7.89");
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             var expXCoordinates = new[] { 1.23, 2.34, 3.45 };
@@ -73,24 +73,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsesLateralCategoryWithUnknownValues()
+        public void Parse_ParsesLateralSectionWithUnknownValues()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "some_id");
-            delftIniCategory.AddProperty("name", "some_name");
-            delftIniCategory.AddProperty("type", "unsupported_type");
-            delftIniCategory.AddProperty("locationType", "unsupported_location_type");
-            delftIniCategory.AddProperty("numCoordinates", "3");
-            delftIniCategory.AddProperty("xCoordinates", "1.23 2.34 3.45");
-            delftIniCategory.AddProperty("yCoordinates", "4.56 5.67 6.78");
-            delftIniCategory.AddProperty("discharge", "7.89");
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "some_id");
+            section.AddProperty("name", "some_name");
+            section.AddProperty("type", "unsupported_type");
+            section.AddProperty("locationType", "unsupported_location_type");
+            section.AddProperty("numCoordinates", "3");
+            section.AddProperty("xCoordinates", "1.23 2.34 3.45");
+            section.AddProperty("yCoordinates", "4.56 5.67 6.78");
+            section.AddProperty("discharge", "7.89");
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             var expXCoordinates = new[] { 1.23, 2.34, 3.45 };
@@ -107,24 +107,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsesLateralCategoryWithConstantDischarge()
+        public void Parse_ParsesLateralSectionWithConstantDischarge()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "some_id");
-            delftIniCategory.AddProperty("name", "some_name");
-            delftIniCategory.AddProperty("type", "discharge");
-            delftIniCategory.AddProperty("locationType", "2d");
-            delftIniCategory.AddProperty("numCoordinates", "3");
-            delftIniCategory.AddProperty("xCoordinates", "1.23 2.34 3.45");
-            delftIniCategory.AddProperty("yCoordinates", "4.56 5.67 6.78");
-            delftIniCategory.AddProperty("discharge", "7.89");
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "some_id");
+            section.AddProperty("name", "some_name");
+            section.AddProperty("type", "discharge");
+            section.AddProperty("locationType", "2d");
+            section.AddProperty("numCoordinates", "3");
+            section.AddProperty("xCoordinates", "1.23 2.34 3.45");
+            section.AddProperty("yCoordinates", "4.56 5.67 6.78");
+            section.AddProperty("discharge", "7.89");
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             var expXCoordinates = new[] { 1.23, 2.34, 3.45 };
@@ -140,24 +140,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsesLateralCategoryWithInvalidCoordinates_ReportsError()
+        public void Parse_ParsesLateralSectionWithInvalidCoordinates_ReportsError()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "some_id");
-            delftIniCategory.AddProperty("name", "some_name");
-            delftIniCategory.AddProperty("type", "discharge");
-            delftIniCategory.AddProperty("locationType", "2d");
-            delftIniCategory.AddProperty("numCoordinates", "3");
-            delftIniCategory.AddProperty("xCoordinates", "1.oeps23 2.34 3.45");
-            delftIniCategory.AddProperty("yCoordinates", "4.56 5.67 6./78");
-            delftIniCategory.AddProperty("discharge", "7.89");
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "some_id");
+            section.AddProperty("name", "some_name");
+            section.AddProperty("type", "discharge");
+            section.AddProperty("locationType", "2d");
+            section.AddProperty("numCoordinates", "3");
+            section.AddProperty("xCoordinates", "1.oeps23 2.34 3.45");
+            section.AddProperty("yCoordinates", "4.56 5.67 6./78");
+            section.AddProperty("discharge", "7.89");
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             var expXCoordinates = new[] { 2.34, 3.45 };
@@ -178,24 +178,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         [TestCase("timeseries.bc")]
         [TestCase("TIMSERIES.BC")]
-        public void Parse_ParsesLateralCategoryWithTimeSeriesDischarge(string dischargeValue)
+        public void Parse_ParsesLateralSectionWithTimeSeriesDischarge(string dischargeValue)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "some_id");
-            delftIniCategory.AddProperty("name", "some_name");
-            delftIniCategory.AddProperty("type", "discharge");
-            delftIniCategory.AddProperty("locationType", "2d");
-            delftIniCategory.AddProperty("numCoordinates", "3");
-            delftIniCategory.AddProperty("xCoordinates", "1.23 2.34 3.45");
-            delftIniCategory.AddProperty("yCoordinates", "4.56 5.67 6.78");
-            delftIniCategory.AddProperty("discharge", dischargeValue);
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "some_id");
+            section.AddProperty("name", "some_name");
+            section.AddProperty("type", "discharge");
+            section.AddProperty("locationType", "2d");
+            section.AddProperty("numCoordinates", "3");
+            section.AddProperty("xCoordinates", "1.23 2.34 3.45");
+            section.AddProperty("yCoordinates", "4.56 5.67 6.78");
+            section.AddProperty("discharge", dischargeValue);
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             var expXCoordinates = new[] { 1.23, 2.34, 3.45 };
@@ -213,24 +213,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         [TestCase("realtime")]
         [TestCase("REALTIME")]
-        public void Parse_ParsesLateralCategoryWithRealTimeDischarge(string dischargeValue)
+        public void Parse_ParsesLateralSectionWithRealTimeDischarge(string dischargeValue)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "some_id");
-            delftIniCategory.AddProperty("name", "some_name");
-            delftIniCategory.AddProperty("type", "discharge");
-            delftIniCategory.AddProperty("locationType", "2d");
-            delftIniCategory.AddProperty("numCoordinates", "3");
-            delftIniCategory.AddProperty("xCoordinates", "1.23 2.34 3.45");
-            delftIniCategory.AddProperty("yCoordinates", "4.56 5.67 6.78");
-            delftIniCategory.AddProperty("discharge", dischargeValue);
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "some_id");
+            section.AddProperty("name", "some_name");
+            section.AddProperty("type", "discharge");
+            section.AddProperty("locationType", "2d");
+            section.AddProperty("numCoordinates", "3");
+            section.AddProperty("xCoordinates", "1.23 2.34 3.45");
+            section.AddProperty("yCoordinates", "4.56 5.67 6.78");
+            section.AddProperty("discharge", dischargeValue);
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             var expXCoordinates = new[] { 1.23, 2.34, 3.45 };
@@ -242,24 +242,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsesLateralCategoryWithUnsupportedDischarge_ReportsError()
+        public void Parse_ParsesLateralSectionWithUnsupportedDischarge_ReportsError()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "some_id");
-            delftIniCategory.AddProperty("name", "some_name");
-            delftIniCategory.AddProperty("type", "discharge");
-            delftIniCategory.AddProperty("locationType", "2d");
-            delftIniCategory.AddProperty("numCoordinates", "3");
-            delftIniCategory.AddProperty("xCoordinates", "1.23 2.34 3.45");
-            delftIniCategory.AddProperty("yCoordinates", "4.56 5.67 6.78");
-            delftIniCategory.AddProperty("discharge", "unsupported");
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "some_id");
+            section.AddProperty("name", "some_name");
+            section.AddProperty("type", "discharge");
+            section.AddProperty("locationType", "2d");
+            section.AddProperty("numCoordinates", "3");
+            section.AddProperty("xCoordinates", "1.23 2.34 3.45");
+            section.AddProperty("yCoordinates", "4.56 5.67 6.78");
+            section.AddProperty("discharge", "unsupported");
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             Assert.That(lateralDTO.Discharge, Is.Null);
@@ -270,24 +270,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
-        public void Parse_ParsesLateralCategoryWithEmptyValues_SetsPropertiesToNull(string emptyValue)
+        public void Parse_ParsesLateralSectionWithEmptyValues_SetsPropertiesToNull(string emptyValue)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
-            delftIniCategory.AddProperty("id", "");
-            delftIniCategory.AddProperty("name", "");
-            delftIniCategory.AddProperty("type", "");
-            delftIniCategory.AddProperty("locationType", "");
-            delftIniCategory.AddProperty("numCoordinates", "");
-            delftIniCategory.AddProperty("xCoordinates", "");
-            delftIniCategory.AddProperty("yCoordinates", "");
-            delftIniCategory.AddProperty("discharge", "");
+            var section = new IniSection("lateral");
+            section.AddProperty("id", "");
+            section.AddProperty("name", "");
+            section.AddProperty("type", "");
+            section.AddProperty("locationType", "");
+            section.AddProperty("numCoordinates", "");
+            section.AddProperty("xCoordinates", "");
+            section.AddProperty("yCoordinates", "");
+            section.AddProperty("discharge", "");
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             var expLateralDTO = new LateralDTO(null, null, LateralForcingType.None, LateralLocationType.None,
@@ -296,16 +296,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsesLateralCategoryWithoutValues()
+        public void Parse_ParsesLateralSectionWithoutValues()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var lateralParser = new LateralParser(logHandler);
 
-            var delftIniCategory = new DelftIniCategory("lateral");
+            var section = new IniSection("lateral");
 
             // Call
-            LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
+            LateralDTO lateralDTO = lateralParser.Parse(section);
 
             // Assert
             var expLateralDTO = new LateralDTO(null, null, LateralForcingType.None, LateralLocationType.None,

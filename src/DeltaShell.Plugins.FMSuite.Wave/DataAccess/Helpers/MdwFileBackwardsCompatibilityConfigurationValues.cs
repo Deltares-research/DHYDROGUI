@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers
                 {"tscale", new NewPropertyData("TimeInterval", new DefaultPropertyUpdater())}
             };
 
-        public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } =
+        public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } =
             new Dictionary<string, string>();
     }
 }

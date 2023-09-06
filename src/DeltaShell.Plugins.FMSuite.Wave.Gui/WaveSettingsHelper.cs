@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 var waveBoundariesPerFileUsed = new WpfGuiProperty(new FieldUIDescription(o => model.ModelDefinition.BoundaryContainer.DefinitionPerFileUsed,
                                                                                           (d, v) => model.ModelDefinition.BoundaryContainer.DefinitionPerFileUsed = (bool) v)
                 {
-                    Category = KnownWaveCategories.GeneralCategory,
+                    Category = KnownWaveSections.GeneralSection,
                     SubCategory = Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name,
                     Label = Resources.WaveSettingsHelper_AddCustomWaveSettings_Use_SWAN_domain_boundary_from_file,
                     ValueType = typeof(bool),
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                                                           (d, v) => model.ModelDefinition.BoundaryContainer.FilePathForBoundariesPerFile = (string) v,
                                                                                           d => model.BoundaryContainer.DefinitionPerFileUsed)
                 {
-                    Category = KnownWaveCategories.GeneralCategory,
+                    Category = KnownWaveSections.GeneralSection,
                     SubCategory = Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name,
                     Label = Resources.WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File,
                     ValueType = typeof(string),
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var flowCouplingCheckBox = new FieldUIDescription(o => data.IsCoupledToFlow,
                                                               (d, v) => data.IsCoupledToFlow = (bool) v)
             {
-                Category = KnownWaveCategories.GeneralCategory,
+                Category = KnownWaveSections.GeneralSection,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
                 Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupled_to_D_Flow_FM,
                 Name = "IsCoupledToFlow",
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var startTime = new FieldUIDescription(o => data.StartTime, (d, v) => data.StartTime = (DateTime) v,
                                                    d => data.IsCoupledToFlow)
             {
-                Category = KnownWaveCategories.GeneralCategory,
+                Category = KnownWaveSections.GeneralSection,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
                 Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_start_time,
                 Name = "StartTime",
@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var stopTime = new FieldUIDescription(o => data.StopTime, (d, v) => data.StopTime = (DateTime) v,
                                                   d => data.IsCoupledToFlow)
             {
-                Category = KnownWaveCategories.GeneralCategory,
+                Category = KnownWaveSections.GeneralSection,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
                 Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_stop_time,
                 Name = "StopTime",
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var timeStep = new FieldUIDescription(o => data.TimeStep, (d, v) => data.TimeStep = (TimeSpan) v,
                                                   d => data.IsCoupledToFlow)
             {
-                Category = KnownWaveCategories.GeneralCategory,
+                Category = KnownWaveSections.GeneralSection,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
                 Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step,
                 Name = "TimeStep",

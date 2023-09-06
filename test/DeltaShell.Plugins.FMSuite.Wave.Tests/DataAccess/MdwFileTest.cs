@@ -211,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
                 string[] lines = File.ReadAllLines(targetPath);
 
-                Assert.IsTrue(lines.Any(line => line.Contains(KnownWaveCategories.BoundaryCategory)));
+                Assert.IsTrue(lines.Any(line => line.Contains(KnownWaveSections.BoundarySection)));
                 Assert.IsFalse(lines.Any(line => line.Contains(KnownWaveProperties.TimeSeriesFile)));
             }
         }
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
                 string[] lines = File.ReadAllLines(targetPath);
 
-                Assert.IsTrue(lines.Any(line => line.Contains(KnownWaveCategories.BoundaryCategory)));
+                Assert.IsTrue(lines.Any(line => line.Contains(KnownWaveSections.BoundarySection)));
 
                 string timeSeriesFileNameLine = lines.Single(line => line.Contains(KnownWaveProperties.TimeSeriesFile));
                 string timeSeriesFileNameMentioned = timeSeriesFileNameLine.Split('=').Last().Trim();
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
 
                 Assert.AreEqual("wad.obt",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.ObstacleFile)
                                         .GetValueAsString());
 
                 modelDef.FeatureContainer.Obstacles.Clear();
@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 mdwFile.SaveTo(targetPath, dto, true);
 
                 Assert.AreEqual(string.Empty,
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.ObstacleFile)
                                         .GetValueAsString());
 
                 // Verify what was really written in the file
@@ -323,7 +323,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 WaveModelDefinition modelDef2 = dto2.WaveModelDefinition;
 
                 Assert.AreEqual(string.Empty,
-                                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
+                                modelDef2.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.ObstacleFile)
                                          .GetValueAsString());
             }
         }
@@ -343,11 +343,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
 
                 Assert.AreEqual("10",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WindSpeed)
                                         .GetValueAsString());
 
                 Assert.AreEqual("315",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WindDirection)
                                         .GetValueAsString());
 
                 var timeFrameData = dto.TimeFrameData;
@@ -357,11 +357,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 mdwFile.SaveTo(targetPath, dto, true);
 
                 Assert.AreEqual("0",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WindSpeed)
                                         .GetValueAsString());
 
                 Assert.AreEqual("0",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WindDirection)
                                         .GetValueAsString());
 
                 // Verify what was really written in the file
@@ -369,11 +369,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 WaveModelDefinition modelDef2 = dto2.WaveModelDefinition;
 
                 Assert.AreEqual("0",
-                                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
+                                modelDef2.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WindSpeed)
                                          .GetValueAsString());
 
                 Assert.AreEqual("0",
-                                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
+                                modelDef2.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WindDirection)
                                          .GetValueAsString());
             }
         }
@@ -399,15 +399,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 mdwFile.SaveTo(targetPath, new MdwFileDTO(modelDef, timeFrameData), true);
 
                 Assert.AreEqual("6",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterLevel)
                                         .GetValueAsString());
 
                 Assert.AreEqual("6",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterVelocityX)
                                         .GetValueAsString());
 
                 Assert.AreEqual("6",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterVelocityX)
                                         .GetValueAsString());
 
                 timeFrameData.HydrodynamicsInputDataType = HydrodynamicsInputDataType.TimeVarying;
@@ -415,15 +415,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 mdwFile.SaveTo(targetPath, new MdwFileDTO(modelDef, timeFrameData), true);
 
                 Assert.AreEqual("0",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterLevel)
                                         .GetValueAsString());
 
                 Assert.AreEqual("0",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterVelocityX)
                                         .GetValueAsString());
 
                 Assert.AreEqual("0",
-                                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                modelDef.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterVelocityX)
                                         .GetValueAsString());
 
                 //Verify what was really written in the file
@@ -431,15 +431,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 WaveModelDefinition modelDef2 = resultDto.WaveModelDefinition;
 
                 Assert.AreEqual("0",
-                                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
+                                modelDef2.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterLevel)
                                          .GetValueAsString());
 
                 Assert.AreEqual("0",
-                                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                modelDef2.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterVelocityX)
                                          .GetValueAsString());
 
                 Assert.AreEqual("0",
-                                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                modelDef2.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterVelocityX)
                                          .GetValueAsString());
             }
         }
@@ -459,7 +459,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
 
                 Assert.AreEqual("wad.loc",
-                                modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                                modelDef.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.LocationFile)
                                         .GetValueAsString());
 
                 modelDef.FeatureContainer.ObservationPoints.Clear();
@@ -468,7 +468,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 mdwFile.SaveTo(targetPath, dto, true);
 
                 Assert.AreEqual(string.Empty,
-                                modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                                modelDef.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.LocationFile)
                                         .GetValueAsString());
 
                 // Verify what was really written in the file
@@ -476,7 +476,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 WaveModelDefinition modelDef2 = dto2.WaveModelDefinition;
 
                 Assert.AreEqual(string.Empty,
-                                modelDef2.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                                modelDef2.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.LocationFile)
                                          .GetValueAsString());
             }
         }
@@ -493,11 +493,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 MdwFileDTO dto = mdwFile.Load(importedMdwFilePath);
                 WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
-                WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFrictionCoef);
+                WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.BedFrictionCoef);
                 Assert.IsNotNull(propertyBedFrictionCoef);
                 Assert.AreEqual("0.05", propertyBedFrictionCoef.GetValueAsString());
 
-                WaveModelProperty propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory, KnownWaveProperties.MaxIter);
+                WaveModelProperty propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveSections.NumericsSection, KnownWaveProperties.MaxIter);
                 Assert.IsNotNull(propertyMaxIter);
                 Assert.AreEqual("15", propertyMaxIter.GetValueAsString());
             }
@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                             "Expected no property with the file name TScale");
 
                 string expectedMsg = string.Format(
-                    Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
+                    Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
                     "TScale", "TimeInterval");
                 Assert.That(logMessages.Any(x => x.Contains(expectedMsg)), Is.True, "Expected a warning messages logged.");
             }
@@ -950,7 +950,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 MdwFileDTO dto = new MdwFile().Load(mdwPath);
                 WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
-                WaveModelProperty waveModelProperty = modelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.KeepINPUT);
+                WaveModelProperty waveModelProperty = modelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.KeepINPUT);
 
                 // Assert
                 Assert.IsNotNull(waveModelProperty);
@@ -1346,19 +1346,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 MdwFileDTO dto = mdwFile.Load(mdwImportPath);
 
                 WaveModelProperty waterLevel = dto.WaveModelDefinition.GetModelProperty(
-                    KnownWaveCategories.GeneralCategory, 
+                    KnownWaveSections.GeneralSection, 
                     KnownWaveProperties.WaterLevel);
                 
                 WaveModelProperty keepInput = dto.WaveModelDefinition.GetModelProperty(
-                    KnownWaveCategories.OutputCategory, 
+                    KnownWaveSections.OutputSection, 
                     KnownWaveProperties.KeepINPUT);
                 
                 WaveModelProperty bedFrictionCoef = dto.WaveModelDefinition.GetModelProperty(
-                    KnownWaveCategories.ProcessesCategory, 
+                    KnownWaveSections.ProcessesSection, 
                     KnownWaveProperties.BedFrictionCoef);
 
                 WaveModelProperty maxIter = dto.WaveModelDefinition.GetModelProperty(
-                    KnownWaveCategories.NumericsCategory, 
+                    KnownWaveSections.NumericsSection, 
                     KnownWaveProperties.MaxIter);
 
                 waterLevel.Value = 20.0d;
@@ -1638,7 +1638,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         private static string[] GetBoundaryLines(string filePath)
         {
             return File.ReadAllLines(filePath)
-                       .SkipWhile(l => !l.Contains($"[{KnownWaveCategories.BoundaryCategory}]"))
+                       .SkipWhile(l => !l.Contains($"[{KnownWaveSections.BoundarySection}]"))
                        .Skip(1)
                        .TakeWhile(l => !l.Contains("[") && !string.IsNullOrWhiteSpace(l))
                        .ToArray();

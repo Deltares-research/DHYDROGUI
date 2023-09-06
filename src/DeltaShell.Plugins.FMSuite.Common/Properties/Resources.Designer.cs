@@ -62,10 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
         /// </summary>
-        public static string DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__ {
+        public static string DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__ {
             get {
-                return ResourceManager.GetString("DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0_" +
-                        "__has_been_updated_to___1__", resourceCulture);
+                return ResourceManager.GetString("DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0__" +
+                        "_has_been_updated_to___1__", resourceCulture);
             }
         }
         
@@ -167,15 +167,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Category [{0}] not supported for structures and is skipped. (Line {1}).
-        /// </summary>
-        public static string StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__ {
-            get {
-                return ResourceManager.GetString("StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Failed to convert .ini structure definition to actual structure (Line {0}): {1}.
         /// </summary>
         public static string StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__ {
@@ -212,6 +203,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
             get {
                 return ResourceManager.GetString("StructureFile_Replacing_structure_time_series_folder__0__with__1__all_structure_t" +
                         "ime_series_will_be_written_to_this_folder_Line__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category [{0}] not supported for structures and is skipped. (Line {1}).
+        /// </summary>
+        public static string StructureFile_Section__0__not_supported_for_structures_and_is_skipped_Line__1__ {
+            get {
+                return ResourceManager.GetString("StructureFile_Section__0__not_supported_for_structures_and_is_skipped_Line__1__", resourceCulture);
             }
         }
         

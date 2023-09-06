@@ -5,7 +5,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 {
     /// <summary>
-    /// <see cref="MduFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy categories
+    /// <see cref="MduFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy sections
     /// and properties for the <see cref="MduFile"/>
     /// </summary>
     /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>
@@ -39,6 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             {"tstop", new NewPropertyData("StopDateTime", new LegacyStartAndStopTimeUpdater())},
         };
 
-        public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } = new Dictionary<string, string>() {{"model", "General"}};
+        public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } = new Dictionary<string, string>() {{"model", "General"}};
     }
 }

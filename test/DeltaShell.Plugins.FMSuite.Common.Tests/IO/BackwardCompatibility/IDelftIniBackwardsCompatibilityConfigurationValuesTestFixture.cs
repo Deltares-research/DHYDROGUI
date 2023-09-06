@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             Assert.That(configurationValues.ObsoleteProperties, Is.EquivalentTo(ObsoleteProperties));
             Assert.That(configurationValues.ConditionalObsoleteProperties, Is.EquivalentTo(ConditionalObsoleteProperties));
             AssertThatLegacyPropertyMappingIsEquivalent(configurationValues.LegacyPropertyMapping, LegacyPropertyMapping);
-            Assert.That(configurationValues.LegacyCategoryMapping, Is.EquivalentTo(LegacyCategoryMapping));
+            Assert.That(configurationValues.LegacySectionMapping, Is.EquivalentTo(LegacyCategoryMapping));
         }
 
         private static void AssertThatLegacyPropertyMappingIsEquivalent(
@@ -34,15 +34,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
 
             foreach (KeyValuePair<string, NewPropertyData> keyValuePair in expectedMapping)
             {
-                string legacyName = keyValuePair.Key;
+                string legacyKey = keyValuePair.Key;
                 NewPropertyData expectedNewData = keyValuePair.Value;
 
-                if (!actualMapping.TryGetValue(legacyName, out NewPropertyData actualNewData))
+                if (!actualMapping.TryGetValue(legacyKey, out NewPropertyData actualNewData))
                 {
-                    Assert.Fail($"Expected legacy property `{legacyName}` was not found in the actual mapping.");
+                    Assert.Fail($"Expected legacy property `{legacyKey}` was not found in the actual mapping.");
                 }
 
-                Assert.That(actualNewData.Name, Is.EqualTo(expectedNewData.Name));
+                Assert.That(actualNewData.Key, Is.EqualTo(expectedNewData.Key));
                 Assert.That(actualNewData.Updater.GetType(), Is.EqualTo(expectedNewData.Updater.GetType()));
             }
         }

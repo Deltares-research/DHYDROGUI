@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
@@ -10,7 +9,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
@@ -159,8 +158,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.DoesNotThrow(() => { structuresFile.Write(exportFilePath, structures); });
 
                 // Read file with ini reader again.
-                DelftIniCategory category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
-                AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.CrestWidth);
+                IniSection section = AssertThatStructureSectionExistsInFileAndReturn(exportFilePath);
+                AssertThatPropertyExistsAndIsEmpty(section, KnownStructureProperties.CrestWidth);
             });
         }
 
@@ -197,8 +196,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.DoesNotThrow(() => { structuresFile.Write(exportFilePath, structures); });
 
                 // Read file with ini reader again.
-                DelftIniCategory category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
-                AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.CrestWidth);
+                IniSection section = AssertThatStructureSectionExistsInFileAndReturn(exportFilePath);
+                AssertThatPropertyExistsAndIsEmpty(section, KnownStructureProperties.CrestWidth);
             });
         }
 
@@ -244,13 +243,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.DoesNotThrow(() => { structuresFile.Write(exportFilePath, structures); });
 
                 // Read file with ini reader again.
-                DelftIniCategory category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
+                IniSection section = AssertThatStructureSectionExistsInFileAndReturn(exportFilePath);
 
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Upstream2Width));
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Upstream1Width));
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.CrestWidth));
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Downstream1Width));
-                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Downstream2Width));
+                AssertThatPropertyExistsAndIsEmpty(section, GetName(KnownGeneralStructureProperties.Upstream2Width));
+                AssertThatPropertyExistsAndIsEmpty(section, GetName(KnownGeneralStructureProperties.Upstream1Width));
+                AssertThatPropertyExistsAndIsEmpty(section, GetName(KnownGeneralStructureProperties.CrestWidth));
+                AssertThatPropertyExistsAndIsEmpty(section, GetName(KnownGeneralStructureProperties.Downstream1Width));
+                AssertThatPropertyExistsAndIsEmpty(section, GetName(KnownGeneralStructureProperties.Downstream2Width));
             });
         }
 
@@ -274,37 +273,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             return structuresFile;
         }
 
-        private static DelftIniCategory AssertThatStructureCategoryExistsInFileAndReturn(string filePath)
+        private static IniSection AssertThatStructureSectionExistsInFileAndReturn(string filePath)
         {
-            IList<DelftIniCategory> categories;
+            IniData iniData;
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                categories = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
+                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
             }
 
-            DelftIniCategory category = categories.Single();
+            IniSection section = iniData.Sections.First();
+            
+            Assert.That(section.Name, Is.EqualTo("structure")
+                        , "The name of the section does not match the expectation.");
 
-            Assert.That(category.Name, Is.EqualTo("structure")
-                        , "The name of the category does not match the expectation.");
-
-            return category;
+            return section;
         }
 
         /// <summary>
-        /// Assert the that property with the name <paramref name="propertyName"/> exists and has an empty value.
+        /// Assert the that property with the key <paramref name="propertyKey"/> exists and has an empty value.
         /// </summary>
-        /// <param name="category">The category.</param>
-        /// <param name="propertyName">Name of the property.</param>
-        private static void AssertThatPropertyExistsAndIsEmpty(DelftIniCategory category, string propertyName)
+        /// <param name="section">The section.</param>
+        /// <param name="propertyKey">The key of the property.</param>
+        private static void AssertThatPropertyExistsAndIsEmpty(IniSection section, string propertyKey)
         {
-            Assert.That(category.Properties, Is.Not.Null
-                        , "The Properties of the structure category should not be null.");
-            IEnumerable<DelftIniProperty> obtainedProperties = category.Properties.Where(p => p.Name == propertyName);
+            Assert.That(section.Properties, Is.Not.Null
+                        , "The Properties of the structure section should not be null.");
+            IEnumerable<IniProperty> obtainedProperties = section.GetAllProperties(propertyKey);
             Assert.That(obtainedProperties.Count()
                         , Is.EqualTo(1)
                         , "Expected a single crest_width element in structure properties:");
 
-            DelftIniProperty prop = obtainedProperties.First();
+            IniProperty prop = obtainedProperties.First();
             Assert.That(prop.Value, Is.EqualTo(string.Empty), "crest_width value does not meet expectation:");
         }
 

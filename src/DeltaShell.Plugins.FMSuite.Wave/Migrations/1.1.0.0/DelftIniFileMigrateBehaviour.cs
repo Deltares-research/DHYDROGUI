@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DHYDRO.Common.Logging;
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         }
 
         protected override void HandleMigration(FileInfo filePathInfo,
-                                                DelftIniProperty property)
+                                                IniProperty property)
         {
             string migratingMsg = string.Format(Resources.DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_, property.Value);
             var logHandler = new LogHandler(migratingMsg, log);

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 {
     [TestFixture]
     public class RgfConfigTest
@@ -43,39 +43,37 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
 
         /// <summary>
         /// GIVEN a new RgfConfig
-        /// WHEN it is converted to DelftIniCategories
+        /// WHEN it is converted to IniData
         /// THEN it has the correct FileInformation header
         /// </summary>
         [Test]
-        public void GivenANewRgfConfig_WhenItIsConvertedToDelftIniCategories_ThenItHasTheCorrectFileInformationHeader()
+        public void GivenANewRgfConfig_WhenItIsConvertedToIniData_ThenItHasTheCorrectFileInformationHeader()
         {
             // Given
             var config = new RgfConfig();
 
             // When
-            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            var iniData = config.ToIniData();
 
             // Then
-            Assert.That(categories, Is.Not.Null,
-                        "Expected the returned categories not to be null.");
-            Assert.That(categories, Has.Count.EqualTo(1),
-                        "Expected a single category to be returned.");
+            Assert.That(iniData, Is.Not.Null, "Expected the returned INI data not to be null.");
+            Assert.That(iniData.Sections, Has.Count.EqualTo(1), "Expected INI data with a single section to be returned.");
 
-            DelftIniCategory category = categories.First();
-            AssertValidCategory(category, RgfConfig.FileInformationHeader,
-                                new Tuple<string, string>(RgfConfig.FileGeneratedBy, null),
-                                new Tuple<string, string>(RgfConfig.FileCreationData, null),
-                                new Tuple<string, string>(RgfConfig.FileVersion, null));
+            IniSection section = iniData.Sections.First();
+            AssertValidSection(section, RgfConfig.FileInformationHeader,
+                               new Tuple<string, string>(RgfConfig.FileGeneratedBy, null),
+                               new Tuple<string, string>(RgfConfig.FileCreationData, null),
+                               new Tuple<string, string>(RgfConfig.FileVersion, null));
         }
 
         /// <summary>
         /// GIVEN a RgfConfig without a polygon file name and polygons
-        /// WHEN it is converted to DelftIniCategories
-        /// THEN it has no Polygon category
-        /// AND it has no Batch category
+        /// WHEN it is converted to IniData
+        /// THEN it has no Polygon section
+        /// AND it has no Batch section
         /// </summary>
         [Test]
-        public void GivenARgfConfigWithoutAPolygonFileNameAndPolygons_WhenItIsConvertedToDelftIniCategories_ThenItHasNoPolygonCategoryAndItHasNoBatchCategory()
+        public void GivenARgfConfigWithoutAPolygonFileNameAndPolygons_WhenItIsConvertedToDelftIniData_ThenItHasNoPolygonSectionAndItHasNoBatchSection()
         {
             // Given
             var config = new RgfConfig
@@ -85,26 +83,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             };
 
             // When 
-            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            var iniData = config.ToIniData();
 
             // Then
-            Assert.That(categories, Is.Not.Null,
-                        "Expected the returned categories not to be null.");
+            Assert.That(iniData, Is.Not.Null,
+                        "Expected the returned INI data not to be null.");
 
-            Assert.That(categories.Any(c => c.Name == RgfConfig.PolygonsHeader), Is.False,
-                        $"Expected no category with the {RgfConfig.PolygonsHeader} header.");
-            Assert.That(categories.Any(c => c.Name == RgfConfig.BatchHeader), Is.False,
-                        $"Expected no category with the {RgfConfig.BatchHeader} header.");
+            Assert.That(iniData.ContainsSection(RgfConfig.PolygonsHeader), Is.False,
+                        $"Expected no section with the {RgfConfig.PolygonsHeader} header.");
+            Assert.That(iniData.ContainsSection(RgfConfig.BatchHeader), Is.False,
+                        $"Expected no section with the {RgfConfig.BatchHeader} header.");
         }
 
         /// <summary>
         /// GIVEN a RgfConfig with a polygon file name and polygons
-        /// WHEN it is converted to DelftIniCategories
-        /// THEN it has the correct Polygon category
-        /// AND it has the correct Batch category
+        /// WHEN it is converted to IniData
+        /// THEN it has the correct Polygon section
+        /// AND it has the correct Batch section
         /// </summary>
         [Test]
-        public void GivenARgfConfigWithAPolygonFileNameAndPolygons_WhenItIsConvertedToDelftIniCategories_ThenItHasTheCorrectPolygonCategoryAndItHasTheCorrectBatchCategory()
+        public void GivenARgfConfigWithAPolygonFileNameAndPolygons_WhenItIsConvertedToIniData_ThenItHasTheCorrectPolygonSectionAndItHasTheCorrectBatchSection()
         {
             // Given
             const string expectedPolFileName = "bacon.pol";
@@ -119,31 +117,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             config.AddGridFileNames(expectedGridFileName);
 
             // When 
-            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            var iniData = config.ToIniData();
 
             // Then
-            Assert.That(categories, Is.Not.Null,
-                        "Expected the returned categories not to be null.");
+            Assert.That(iniData, Is.Not.Null,
+                        "Expected the returned INI data not to be null.");
 
-            DelftIniCategory polygonCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.PolygonsHeader);
-            AssertValidCategory(polygonCategory,
+            IniSection polygonSection = iniData.GetSection(RgfConfig.PolygonsHeader);
+            AssertValidSection(polygonSection,
                                 RgfConfig.PolygonsHeader,
                                 new Tuple<string, string>(RgfConfig.PolygonFileName, expectedPolFileName));
 
-            DelftIniCategory batchCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.BatchHeader);
-            AssertValidCategory(batchCategory,
-                                RgfConfig.BatchHeader,
-                                new Tuple<string, string>(RgfConfig.BatchFileName, expectedGridFileName),
-                                new Tuple<string, string>(RgfConfig.BatchGridType, RgfConfig.SepranGrid));
+            IniSection batchSection = iniData.GetSection(RgfConfig.BatchHeader);
+            AssertValidSection(batchSection,
+                               RgfConfig.BatchHeader,
+                               new Tuple<string, string>(RgfConfig.BatchFileName, expectedGridFileName),
+                               new Tuple<string, string>(RgfConfig.BatchGridType, RgfConfig.SepranGrid));
         }
 
         /// <summary>
         /// GIVEN a RgfConfig with null AdditionalGridPaths
-        /// WHEN it is converted to DelftIniCategories
+        /// WHEN it is converted to IniData
         /// THEN it throws an InvalidOperationException
         /// </summary>
         [Test]
-        public void GivenARgfConfigWithNullAdditionalGridPaths_WhenItIsConvertedToDelftIniCategories_ThenItThrowsAnInvalidOperationException()
+        public void GivenARgfConfigWithNullAdditionalGridPaths_WhenItIsConvertedToIniData_ThenItThrowsAnInvalidOperationException()
         {
             // Given
             var config = new RgfConfig() {AdditionalGeometryPaths = null};
@@ -151,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             // When
             void testAction()
             {
-                config.ToDelftIniCategories();
+                config.ToIniData();
             }
 
             // Then
@@ -160,11 +158,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
 
         /// <summary>
         /// GIVEN a RgfConfig with a null GridFilePaths
-        /// WHEN it is converted to DelftIniCategories
+        /// WHEN it is converted to IniData
         /// THEN it throws an InvalidOperationException
         /// </summary>
         [Test]
-        public void GivenARgfConfigWithANullGridFilePaths_WhenItIsConvertedToDelftIniCategories_ThenItThrowsAnInvalidOperationException()
+        public void GivenARgfConfigWithANullGridFilePaths_WhenItIsConvertedToIniData_ThenItThrowsAnInvalidOperationException()
         {
             // Given
             var config = new RgfConfig() {GridFileNames = null};
@@ -172,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             // When
             void testAction()
             {
-                config.ToDelftIniCategories();
+                config.ToIniData();
             }
 
             // Then
@@ -181,11 +179,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
 
         /// <summary>
         /// GIVEN a RgfConfig with an AdditionalGeometryPath with an unknown extension
-        /// WHEN it is converted to DelftIniCategories
+        /// WHEN it is converted to IniData
         /// THEN it throws an InvalidOperationException
         /// </summary>
         [Test]
-        public void GivenARgfConfigWithAnAdditionalGeometryPathWithAnUnknownExtension_WhenItIsConvertedToDelftIniCategories_ThenItThrowsAnInvalidOperationException()
+        public void GivenARgfConfigWithAnAdditionalGeometryPathWithAnUnknownExtension_WhenItIsConvertedToIniData_ThenItThrowsAnInvalidOperationException()
         {
             // Given
             var config = new RgfConfig();
@@ -195,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             // When
             void testAction()
             {
-                config.ToDelftIniCategories();
+                config.ToIniData();
             }
 
             // Then
@@ -265,80 +263,80 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
 
         /// <summary>
         /// GIVEN a RgfConfig with a set of additional geometry paths
-        /// WHEN it is converted to DelftIniCategories
+        /// WHEN it is converted to IniData
         /// THEN it has the correct Geometry headers
         /// </summary>
         [TestCase("steak.ldb", "TEKAL")]
         [TestCase("steak.shp", "SHAPEFILE")]
         [TestCase("steak", "TEKAL")]
-        public void GivenARgfConfigWithASetOfAdditionalGeometryPaths_WhenItIsConvertedToDelftIniCategories_ThenItHasTheCorrectGeometryHeaders(string additionalPath, string expectedFormat)
+        public void GivenARgfConfigWithASetOfAdditionalGeometryPaths_WhenItIsConvertedToIniData_ThenItHasTheCorrectGeometryHeaders(string additionalPath, string expectedFormat)
         {
             // Given
             var config = new RgfConfig();
             config.AdditionalGeometryPaths.Add(additionalPath);
 
             // When
-            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            var iniData = config.ToIniData();
 
             // Then
-            Assert.That(categories, Is.Not.Null,
-                        "Expected the returned categories not to be null.");
+            Assert.That(iniData, Is.Not.Null,
+                        "Expected the returned INI data not to be null.");
 
-            DelftIniCategory geometryCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.GeometryHeader);
-            AssertValidCategory(geometryCategory, RgfConfig.GeometryHeader,
+            IniSection geometrySection = iniData.GetSection(RgfConfig.GeometryHeader);
+            AssertValidSection(geometrySection, RgfConfig.GeometryHeader,
                                 new Tuple<string, string>(RgfConfig.LandBoundaryFile, additionalPath),
                                 new Tuple<string, string>(RgfConfig.LandBoundaryFormat, expectedFormat));
         }
 
         /// <summary>
         /// GIVEN a RgfConfig with a set of Grid file paths
-        /// WHEN it is converted to DelftIniCategories
-        /// THEN it has the correct Grid categories
+        /// WHEN it is converted to IniData
+        /// THEN it has the correct Grid sections
         /// </summary>
         [TestCase("bacon.nc", RgfConfig.FMGridKeyword)]
         [TestCase("bacon.grd", RgfConfig.GrdKeyword)]
-        public void GivenARgfConfigWithASetOfGridFilePaths_WhenItIsConvertedToDelftIniCategories_ThenItHasTheCorrectGridCategories(string gridFilePath, string gridFileFormat)
+        public void GivenARgfConfigWithASetOfGridFilePaths_WhenItIsConvertedToIniData_ThenItHasTheCorrectGridSections(string gridFilePath, string gridFileFormat)
         {
             // Given
             var config = new RgfConfig();
             config.AddGridFileNames(new Tuple<string, string>(gridFilePath, gridFileFormat));
 
             // When
-            IList<DelftIniCategory> categories = config.ToDelftIniCategories().ToList();
+            var iniData = config.ToIniData();
 
             // Then
-            Assert.That(categories, Is.Not.Null,
-                        "Expected the returned categories not to be null.");
+            Assert.That(iniData, Is.Not.Null,
+                        "Expected the returned INI data not to be null.");
 
-            DelftIniCategory gridCategory = categories.FirstOrDefault(c => c.Name == RgfConfig.GridHeader);
-            AssertValidCategory(gridCategory, RgfConfig.GridHeader,
+            IniSection gridSection = iniData.GetSection(RgfConfig.GridHeader);
+            AssertValidSection(gridSection, RgfConfig.GridHeader,
                                 new Tuple<string, string>(RgfConfig.GridFileName, gridFilePath),
                                 new Tuple<string, string>(RgfConfig.GridType, gridFileFormat));
         }
 
-        private static void AssertValidCategory(DelftIniCategory category,
-                                                string headerName,
-                                                params Tuple<string, string>[] expectedProperties)
+        private static void AssertValidSection(IniSection section,
+                                               string headerName,
+                                               params Tuple<string, string>[] expectedProperties)
         {
-            Assert.That(category, Is.Not.Null,
-                        $"Expected the returned categories to contain a {headerName} header.");
+            Assert.That(section, Is.Not.Null,
+                        $"Expected the returned sections to contain a {headerName} header.");
 
-            Assert.That(category.Name, Is.EqualTo(headerName),
-                        "Expected the category name to be different:");
-            Assert.That(category.Properties, Is.Not.Null,
+            Assert.That(section.Name, Is.EqualTo(headerName),
+                        "Expected the section name to be different:");
+            Assert.That(section.Properties, Is.Not.Null,
                         $"Expected the properties of the {headerName} header to not be null.");
-            Assert.That(category.Properties, Has.Count.EqualTo(expectedProperties.Length),
+            Assert.That(section.Properties, Has.Count.EqualTo(expectedProperties.Length),
                         $"Expected a different number of properties within {headerName} header:");
 
             foreach (Tuple<string, string> prop in expectedProperties)
             {
-                DelftIniProperty propInCategory = category.Properties.FirstOrDefault(p => p.Name == prop.Item1);
-                Assert.That(propInCategory, Is.Not.Null,
+                IniProperty propInSection = section.GetProperty(prop.Item1);
+                Assert.That(propInSection, Is.Not.Null,
                             $"Expected a {prop.Item1} property to be in {headerName} header.");
 
                 if (prop.Item2 != null)
                 {
-                    Assert.That(propInCategory.Value, Is.EqualTo(prop.Item2),
+                    Assert.That(propInSection.Value, Is.EqualTo(prop.Item2),
                                 $"Expected the {prop.Item1} property in {headerName} header to have a different value:");
                 }
             }

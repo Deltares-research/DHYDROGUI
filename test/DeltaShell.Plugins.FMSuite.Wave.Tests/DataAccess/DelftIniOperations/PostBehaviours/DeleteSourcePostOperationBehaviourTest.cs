@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
 using NUnit.Framework;
 
@@ -37,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations.Po
                 // Call
                 behaviour.Invoke(Stream.Null, 
                                  filePath, 
-                                 new List<DelftIniCategory>(), 
+                                 new IniData(), 
                                  null);
 
                 // Assert

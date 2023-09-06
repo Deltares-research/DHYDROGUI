@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Data;
@@ -15,30 +15,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         public void Parse_ArgNull_ThrowsArgumentNullException()
         {
             // Setup
-            var boundaryCategoryParser = new BoundaryParser();
+            var boundaryParser = new BoundaryParser();
 
             // Call
-            void Call() => boundaryCategoryParser.Parse(null);
+            void Call() => boundaryParser.Parse(null);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
-        public void Parse_ParsesBoundaryCategoryWithValues()
+        public void Parse_ParsesBoundarySectionWithValues()
         {
             // Setup
-            var boundaryCategoryParser = new BoundaryParser();
+            var boundaryParser = new BoundaryParser();
 
-            var delftIniCategory = new DelftIniCategory("boundary");
-            delftIniCategory.AddProperty("quantity", "some_quantity");
-            delftIniCategory.AddProperty("locationFile", "some_location_file");
-            delftIniCategory.AddProperty("forcingFile", "some_forcing_file1");
-            delftIniCategory.AddProperty("forcingFile", "some_forcing_file2");
-            delftIniCategory.AddProperty("returnTime", "1.23");
+            var section = new IniSection("boundary");
+            section.AddProperty("quantity", "some_quantity");
+            section.AddProperty("locationFile", "some_location_file");
+            section.AddProperty("forcingFile", "some_forcing_file1");
+            section.AddProperty("forcingFile", "some_forcing_file2");
+            section.AddProperty("returnTime", "1.23");
 
             // Call
-            BoundaryDTO boundaryDTO = boundaryCategoryParser.Parse(delftIniCategory);
+            BoundaryDTO boundaryDTO = boundaryParser.Parse(section);
 
             // Assert
             var expForcingFiles = new[] { "some_forcing_file1", "some_forcing_file2" };
@@ -50,19 +50,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
-        public void Parse_ParsesBoundaryCategoryWithEmptyValues(string emptyValue)
+        public void Parse_ParsesBoundarySectionWithEmptyValues(string emptyValue)
         {
             // Setup
-            var boundaryCategoryParser = new BoundaryParser();
+            var boundaryParser = new BoundaryParser();
 
-            var delftIniCategory = new DelftIniCategory("boundary");
-            delftIniCategory.AddProperty("quantity", emptyValue);
-            delftIniCategory.AddProperty("locationFile", emptyValue);
-            delftIniCategory.AddProperty("forcingFile", emptyValue);
-            delftIniCategory.AddProperty("returnTime", emptyValue);
+            var section = new IniSection("boundary");
+            section.AddProperty("quantity", emptyValue);
+            section.AddProperty("locationFile", emptyValue);
+            section.AddProperty("forcingFile", emptyValue);
+            section.AddProperty("returnTime", emptyValue);
 
             // Call
-            BoundaryDTO boundaryDTO = boundaryCategoryParser.Parse(delftIniCategory);
+            BoundaryDTO boundaryDTO = boundaryParser.Parse(section);
 
             // Assert
             IEnumerable<string> expForcingFiles = Enumerable.Empty<string>();
@@ -71,15 +71,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsesBoundaryCategoryWithoutValues()
+        public void Parse_ParsesBoundarySectionWithoutValues()
         {
             // Setup
-            var boundaryCategoryParser = new BoundaryParser();
+            var boundaryParser = new BoundaryParser();
 
-            var delftIniCategory = new DelftIniCategory("boundary");
+            var section = new IniSection("boundary");
 
             // Call
-            BoundaryDTO boundaryDTO = boundaryCategoryParser.Parse(delftIniCategory);
+            BoundaryDTO boundaryDTO = boundaryParser.Parse(section);
 
             // Assert
             IEnumerable<string> expForcingFiles = Enumerable.Empty<string>();

@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                         new List<ValidationReport>
                                         {
                                             GenerateGeneralCategoryValidationReport(waveModel),
-                                            new ValidationReport(KnownWaveCategories.ProcessesCategory, GetProcessesValidationIssues(waveModel))
+                                            new ValidationReport(KnownWaveSections.ProcessesSection, GetProcessesValidationIssues(waveModel))
                                         });
         }
 
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             validationIssues.AddRange(GetTimeStepTimeIntervalValidationIssues(model));
             validationIssues.AddRange(GetBoundaryValidationIssues(model));
 
-            return new ValidationReport(KnownWaveCategories.GeneralCategory, validationIssues);
+            return new ValidationReport(KnownWaveSections.GeneralSection, validationIssues);
         }
 
         private static IEnumerable<ValidationIssue> GetBoundaryValidationIssues(WaveModel model)
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 var waveValidationShortcut = new WaveValidationShortcut()
                 {
                     WaveModel = model,
-                    TabName = KnownWaveCategories.GeneralCategory
+                    TabName = KnownWaveSections.GeneralSection
                 };
                 yield return new ValidationIssue(waveValidationShortcut, ValidationSeverity.Error,
                                                  Resources.WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected);
@@ -66,10 +66,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationIssue> GetTimeStepTimeIntervalValidationIssues(WaveModel model)
         {
-            WaveModelProperty timeStepProperty = model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep);
+            WaveModelProperty timeStepProperty = model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep);
             var timeStep = (double)timeStepProperty.Value;
 
-            WaveModelProperty tScaleProperty = model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeScale);
+            WaveModelProperty tScaleProperty = model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale);
             var tScale = (double)tScaleProperty.Value;
 
             if (timeStep > tScale && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             IVariable windSpeedValueTimeSeries = waveModel.TimeFrameData.TimeVaryingData.Components.FirstOrDefault(c => c.Name == "Wind Speed");
 
-            WaveModelProperty quadrupletsProperty = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Quadruplets);
+            WaveModelProperty quadrupletsProperty = waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.Quadruplets);
             bool quadrupletsSelected = Convert.ToBoolean(quadrupletsProperty.Value);
 
             if (quadrupletsSelected)

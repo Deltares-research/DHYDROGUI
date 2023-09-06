@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DHYDRO.Common.Logging;
@@ -46,11 +46,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             GoalDirectory = goalDirectory;
         }
 
-        public void Invoke(DelftIniProperty property, ILogHandler logHandler)
+        public void Invoke(IniProperty property, ILogHandler logHandler)
         {
             Ensure.NotNull(property, nameof(property));
 
-            if (property.Name != expectedKey ||
+            if (property.Key != expectedKey ||
                 property.Value.Trim() == string.Empty)
             {
                 return;
@@ -78,9 +78,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// guaranteed to be not null. Furthermore, the <paramref name="filePathInfo"/>
         /// has an existing file.
         /// </remarks>
-        protected abstract void HandleMigration(FileInfo filePathInfo, DelftIniProperty property);
+        protected abstract void HandleMigration(FileInfo filePathInfo, IniProperty property);
 
-        private void HandleNotExists(FileInfo filePathInfo, DelftIniProperty property, ILogHandler logHandler)
+        private void HandleNotExists(FileInfo filePathInfo, IniProperty property, ILogHandler logHandler)
         {
             logHandler?.ReportWarningFormat(Resources.FileMigrateBehaviour_HandleNotExists_The_file_associated_with_property__0____1__at__2___does_not_exist_and_thus_is_not_migrated_,
                                             expectedKey, Path.GetFileName(property.Value), filePathInfo.FullName);

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
@@ -65,12 +65,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                         bndExtForceFile.WriteToDisk = false;
 
-                        IList<DelftIniCategory> bndExtForceFileItems =
+                        IList<IniSection> bndExtForceFileItems =
                             bndExtForceFile.WriteBndExtForceFileSubFiles(model.ModelDefinition);
 
                         List<string> locationFiles =
                             bndExtForceFileItems.Select(
-                                                    item => item.GetPropertyValue(BndExtForceFileConstants.LocationFileKey))
+                                                    item => item.GetPropertyValueOrDefault(BndExtForceFileConstants.LocationFileKey))
                                                 .ToList();
 
                         foreach (string locationFile in locationFiles.Distinct())
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         }
 
                         IEnumerable<string> forcingFiles =
-                            bndExtForceFileItems.Select(item => item.GetPropertyValue(BndExtForceFileConstants.ForcingFileKey));
+                            bndExtForceFileItems.Select(item => item.GetPropertyValueOrDefault(BndExtForceFileConstants.ForcingFileKey));
 
                         foreach (string forcingFile in forcingFiles.Distinct())
                         {

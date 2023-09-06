@@ -5,21 +5,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
     public class WaveModelPropertyDefinition : ModelPropertyDefinition {}
 
     /// <summary>
-    /// <see cref="KnownWaveCategories"/> defines the known and up to date
-    /// categories in the .mdw file of a wave model.
+    /// <see cref="KnownWaveSections"/> defines the known and up to date
+    /// sections in the .mdw file of a wave model.
     /// </summary>
-    public static class KnownWaveCategories
+    public static class KnownWaveSections
     {
-        public const string GeneralCategory = "General";
-        public const string ProcessesCategory = "Processes";
-        public const string BoundaryCategory = "Boundary";
-        public const string TimePointCategory = "TimePoint";
-        public const string OutputCategory = "Output";
-        public const string DomainCategory = "Domain";
-        public const string ObstacleCategory = "Obstacle";
-        public const string NumericsCategory = "Numerics";
+        public const string GeneralSection = "General";
+        public const string ProcessesSection = "Processes";
+        public const string BoundarySection = "Boundary";
+        public const string TimePointSection = "TimePoint";
+        public const string OutputSection = "Output";
+        public const string DomainSection = "Domain";
+        public const string ObstacleSection = "Obstacle";
+        public const string NumericsSection = "Numerics";
 
-        public const string GuiOnlyCategory = "GUIOnly";
+        public const string GuiOnlySection = "GUIOnly";
     }
 
     /// <summary>
@@ -124,10 +124,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
     }
 
     /// <summary>
-    /// <see cref="KnownWaveObsCategories"/> defines the known and up to date
-    /// categories in the .obs file of a wave model.
+    /// <see cref="KnownWaveObsSections"/> defines the known and up to date
+    /// sections in the .obs file of a wave model.
     /// </summary>
-    public static class KnownWaveObsCategories
+    public static class KnownWaveObsSections
     {
         public const string ObstacleFileInformation = "ObstacleFileInformation";
 

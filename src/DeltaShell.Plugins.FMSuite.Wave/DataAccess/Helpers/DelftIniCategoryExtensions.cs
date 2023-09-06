@@ -1,11 +1,12 @@
-﻿using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+﻿using System.Globalization;
+using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers
 {
     /// <summary>
-    /// <see cref="DelftIniCategoryExtensions"/> contains extension methods for a <see cref="DelftIniCategory"/>.
+    /// <see cref="DelftIniCategoryExtensions"/> contains extension methods for a <see cref="IniSection"/>.
     /// </summary>
     public static class DelftIniCategoryExtensions
     {
@@ -16,18 +17,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers
         /// such as geometry or a support point distance. The specified <paramref name="value"/> will
         /// be formatted to a string with 7 decimals.
         /// </summary>
-        /// <param name="category">The category which the property will be added to.</param>
-        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="section">The section which the property will be added to.</param>
+        /// <param name="propertyKey">Key of the property.</param>
         /// <param name="value">The property value.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="category"/> or <paramref name="propertyName"/> is <c>null</c>.
+        /// Thrown when <paramref name="section"/> or <paramref name="propertyKey"/> is <c>null</c>.
         /// </exception>
-        public static void AddSpatialProperty(this DelftIniCategory category, string propertyName, double value)
+        public static void AddSpatialProperty(this IniSection section, string propertyKey, double value)
         {
-            Ensure.NotNull(category, nameof(category));
-            Ensure.NotNull(propertyName, nameof(propertyName));
+            Ensure.NotNull(section, nameof(section));
+            Ensure.NotNull(propertyKey, nameof(propertyKey));
 
-            category.AddProperty(propertyName, SpatialDouble.Round(value), null, spatialDoubleFormat);
+            var formattedValue = SpatialDouble.Round(value).ToString(spatialDoubleFormat, CultureInfo.InvariantCulture);
+
+            section.AddProperty(propertyKey, formattedValue);
         }
     }
 }

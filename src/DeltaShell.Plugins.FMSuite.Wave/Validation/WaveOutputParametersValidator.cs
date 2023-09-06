@@ -22,9 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
 
             // Note this ValidationIssue can be removed once DSF properly supports single-precision netCDF values, see D3DFMIQ-2555.
-            if ((bool) waveModel.ModelDefinition.GetModelProperty(ModelDefinition.KnownWaveCategories.OutputCategory, 
+            if ((bool) waveModel.ModelDefinition.GetModelProperty(ModelDefinition.KnownWaveSections.OutputSection, 
                                                            ModelDefinition.KnownWaveProperties.NetCdfSinglePrecision).Value && 
-                (bool) waveModel.ModelDefinition.GetModelProperty(ModelDefinition.KnownWaveCategories.OutputCategory, 
+                (bool) waveModel.ModelDefinition.GetModelProperty(ModelDefinition.KnownWaveSections.OutputSection, 
                                                                   ModelDefinition.KnownWaveProperties.MapWriteNetCDF).Value)
             {
                 validationIssues.Add(new ValidationIssue(waveModel, ValidationSeverity.Warning,

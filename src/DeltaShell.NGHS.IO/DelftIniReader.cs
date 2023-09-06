@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO
@@ -21,17 +20,17 @@ namespace DeltaShell.NGHS.IO
         private const string keyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#]*)(#(?<comment>.*))?$";
 
         /// <inheritdoc cref="IDelftIniReader"/>
-        public IList<DelftIniCategory> ReadDelftIniFile(Stream stream, string filePath)
+        public IniData ReadDelftIniFile(Stream stream, string filePath)
         {
             OpenInputFile(stream);
             InputFilePath = filePath;
 
-            var content = new List<DelftIniCategory>();
+            var content = new IniData();
             try
             {
                 string line;
-                DelftIniCategory currentCategory = null;
-                string categoryName = null;
+                IniSection currentSection = null;
+                string sectionName = null;
                 while ((line = GetNextLine()) != null)
                 {
                     line = line.Trim();
@@ -40,21 +39,21 @@ namespace DeltaShell.NGHS.IO
                         continue; // Skip white-space characters.
                     }
 
-                    if (IsNewCategory(line, ref categoryName))
+                    if (IsNewSection(line, ref sectionName))
                     {
-                        currentCategory = new DelftIniCategory(categoryName, LineNumber);
-                        content.Add(currentCategory);
+                        currentSection = new IniSection(sectionName) {LineNumber = LineNumber};
+                        content.AddSection(currentSection);
                         continue;
                     }
 
-                    if (currentCategory == null)
+                    if (currentSection == null)
                     {
                         continue;
                     }
 
                     string[] fields = GetKeyValueComment(line);
-                    var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2], LineNumber);
-                    currentCategory.AddProperty(delftIniProperty);
+                    var delftIniProperty = new IniProperty(fields[0], fields[1]) {Comment = fields[2], LineNumber = LineNumber};
+                    currentSection.AddProperty(delftIniProperty);
                 }
             }
             finally
@@ -93,13 +92,13 @@ namespace DeltaShell.NGHS.IO
         }
 
         /// <summary>
-        /// Reads the line and checks if it represents a new category/group.
+        /// Reads the line and checks if it represents a new section.
         /// </summary>
         /// <param name="line">Line to be interpreted.</param>
-        /// <param name="newCategory">Set to the name of the category/group, when returning true.</param>
-        /// <returns>True if the line represents a new category/group; False otherwise.</returns>
-        /// <exception cref="FormatException">When an invalid category/group line was encountered.</exception>
-        private bool IsNewCategory(string line, ref string newCategory)
+        /// <param name="newSection">Set to the name of the section, when returning true.</param>
+        /// <returns>True if the line represents a new section; False otherwise.</returns>
+        /// <exception cref="FormatException">When an invalid section line was encountered.</exception>
+        private bool IsNewSection(string line, ref string newSection)
         {
             if (line.StartsWith("["))
             {
@@ -110,7 +109,7 @@ namespace DeltaShell.NGHS.IO
                     throw new FormatException(string.Format(Resources.DelftIniReader_Invalid_group_on_line__0__in_file__1_, LineNumber, InputFilePath));
                 }
 
-                newCategory = line.Substring(1, endIndex - 1).Trim();
+                newSection = line.Substring(1, endIndex - 1).Trim();
                 return true;
             }
 

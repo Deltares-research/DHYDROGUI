@@ -6,7 +6,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_BoundaryCategoriesNull_ThrowsArgumentNullException()
+        public void Convert_BoundarySectionsNull_ThrowsArgumentNullException()
         {
             // Setup
             var converter = new WaveBoundaryConverter(Substitute.For<IImportBoundaryConditionDataComponentFactory>(),
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryCategories"));
+            Assert.That(exception.ParamName, Is.EqualTo("boundarySections"));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                       Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
 
             // Call
-            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), null, "path", Substitute.For<ILogHandler>());
+            void Call() => converter.Convert(Substitute.For<IEnumerable<IniSection>>(), null, "path", Substitute.For<ILogHandler>());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                       Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
 
             // Call
-            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), Substitute.For<IDictionary<string, List<IFunction>>>(), null, Substitute.For<ILogHandler>());
+            void Call() => converter.Convert(Substitute.For<IEnumerable<IniSection>>(), Substitute.For<IDictionary<string, List<IFunction>>>(), null, Substitute.For<ILogHandler>());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                       Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
 
             // Call
-            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), Substitute.For<IDictionary<string, List<IFunction>>>(), "path", null);
+            void Call() => converter.Convert(Substitute.For<IEnumerable<IniSection>>(), Substitute.For<IDictionary<string, List<IFunction>>>(), "path", null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_DelftIniCategory_WithUniformConstantData_ReturnsCorrectUniformConstantWaveBoundary(
+        public void Convert_IniSection_WithUniformConstantData_ReturnsCorrectUniformConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -141,14 +141,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateUniformConstantComponent<T>(Arg.Is<ParametersBlock>(p => MatchesParameters(p, mdwValues, 0)))
                                       .Returns(uniformDataComponent);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetUniformConstantCategory(shapeType, periodType, mdwValues)
+                GetUniformConstantSection(shapeType, periodType, mdwValues)
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_DelftIniCategory_WithUniformTimeDependentData_ReturnsCorrectUniformTimeDependentWaveBoundary(
+        public void Convert_IniSection_WithUniformTimeDependentData_ReturnsCorrectUniformTimeDependentWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -185,15 +185,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateUniformTimeDependentComponent(Arg.Is<IWaveEnergyFunction<T>>(f => MatchesWaveEnergyFunction(f, bcwValues, 0)))
                                       .Returns(uniformDataComponent);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetBoundaryCategory(shapeType, periodType, mdwValues)
+                GetBoundarySection(shapeType, periodType, mdwValues)
             };
             Dictionary<string, List<IFunction>> timeSeriesData = CreateUniformTimeSeriesData(bcwValues);
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, timeSeriesData, "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -211,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_DelftIniCategory_WithUniformFileBasedData_ReturnsCorrectUniformConstantWaveBoundary()
+        public void Convert_IniSection_WithUniformFileBasedData_ReturnsCorrectUniformConstantWaveBoundary()
         {
             // Setup
             double peakEnhancementFactor = RandomDouble;
@@ -227,14 +227,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateUniformFileBasedComponent(@"C:\path\" + mdwValues.SpectrumFiles.First())
                                       .Returns(uniformDataComponent);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetUniformFileBasedCategory(mdwValues)
+                GetUniformFileBasedSection(mdwValues)
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), @"C:\path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), @"C:\path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_DelftIniCategory_WithSpatiallyVaryingConstantData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
+        public void Convert_IniSection_WithSpatiallyVaryingConstantData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -272,14 +272,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                                                       p => MatchesSpatiallyVaryingParameters(p, mdwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetSpatiallyVaryingConstantCategory(shapeType, periodType, mdwValues)
+                GetSpatiallyVaryingConstantSection(shapeType, periodType, mdwValues)
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_DelftIniCategory_WithSpatiallyVaryingTimeDependentData_ReturnsCorrectSpatiallyVaryingTimeDependentWaveBoundary(
+        public void Convert_IniSection_WithSpatiallyVaryingTimeDependentData_ReturnsCorrectSpatiallyVaryingTimeDependentWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -325,15 +325,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                                                         p => MatchesSpatiallyVaryingWaveEnergyFunctions(p, mdwValues, bcwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetSpatiallyVaryingTimeDependentCategory(shapeType, periodType, mdwValues)
+                GetSpatiallyVaryingTimeDependentSection(shapeType, periodType, mdwValues)
             };
             Dictionary<string, List<IFunction>> timeSeriesData = GetSpatiallyVaryingTimeSeries(bcwValues);
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, timeSeriesData, "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_DelftIniCategory_WithSpatiallyVaryingFileBasedData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary()
+        public void Convert_IniSection_WithSpatiallyVaryingFileBasedData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary()
         {
             // Setup
             double peakEnhancementFactor = RandomDouble;
@@ -375,14 +375,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                                                     p => MatchesSpatiallyVaryingParameters(p, mdwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetSpatiallyVaryingFileBasedCategory(mdwValues)
+                GetSpatiallyVaryingFileBasedSection(mdwValues)
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), @"C:\path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), @"C:\path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -404,7 +404,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
         [Test]
         [TestCase("non_parametric")]
-        public void Convert_DelftIniCategory_WithNonParametricData_ThrowsNotSupportedException(string spectrumSpec)
+        public void Convert_IniSection_WithNonParametricData_ThrowsNotSupportedException(string spectrumSpec)
         {
             // Setup
             var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
@@ -413,23 +413,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
             var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetBoundaryCategory(random.NextEnumValue<ShapeImportType>(),
+                GetBoundarySection(random.NextEnumValue<ShapeImportType>(),
                                     random.NextEnumValue<PeriodImportExportType>(),
                                     mdwValues, spectrumSpec)
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            void Call() => converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>()).ToList();
+            void Call() => converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>()).ToList();
 
             // Assert
             Assert.Throws<NotSupportedException>(Call);
         }
 
         [Test]
-        public void Convert_DelftIniCategory_WithDefinitionThatIsNotXYCoordinates_IsSkipped()
+        public void Convert_IniSection_WithDefinitionThatIsNotXYCoordinates_IsSkipped()
         {
             // Setup
             var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
@@ -438,16 +438,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
             var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetBoundaryCategory(random.NextEnumValue<ShapeImportType>(),
+                GetBoundarySection(random.NextEnumValue<ShapeImportType>(),
                                     random.NextEnumValue<PeriodImportExportType>(),
                                     mdwValues, "parametric", DefinitionImportType.SpectrumFile.GetDescription())
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -456,7 +456,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_DelftIniCategory_WithSpatiallyVaryingConstantData_WithActiveAndInactiveSupportPoints_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
+        public void Convert_IniSections_WithSpatiallyVaryingConstantData_WithActiveAndInactiveSupportPoints_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -477,14 +477,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                                                       p => MatchesSpatiallyVaryingParameters(p, mdwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                GetSpatiallyVaryingConstantCategory(shapeType, periodType, mdwValues)
+                GetSpatiallyVaryingConstantSection(shapeType, periodType, mdwValues)
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -509,7 +509,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_TwoDelftIniCategories_ReturnsTwoWaveBoundaries()
+        public void Convert_TwoIniSections_ReturnsTwoWaveBoundaries()
         {
             // Setup
             var firstMdwValues = new MdwTestValues(RandomDouble, RandomDouble);
@@ -528,26 +528,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateUniformConstantComponent<T>(Arg.Is<ParametersBlock>(p => MatchesParameters(p, firstMdwValues, 0)))
                                       .Returns(new UniformDataComponent<ConstantParameters<T>>(parametersFactory.ConstructDefaultConstantParameters<T>()));
 
-            DelftIniCategory firstCategory = GetUniformConstantCategory(random.NextEnumValue<ShapeImportType>(),
-                                                                        random.NextEnumValue<PeriodImportExportType>(),
-                                                                        firstMdwValues);
+            IniSection firstSection = GetUniformConstantSection(random.NextEnumValue<ShapeImportType>(),
+                                                                random.NextEnumValue<PeriodImportExportType>(),
+                                                                firstMdwValues);
             const string firstBoundaryName = "boundary_name_1";
-            firstCategory.SetProperty(KnownWaveProperties.Name, firstBoundaryName);
-            DelftIniCategory secondCategory = GetUniformConstantCategory(random.NextEnumValue<ShapeImportType>(),
-                                                                         random.NextEnumValue<PeriodImportExportType>(),
-                                                                         secondMdwValues);
+            firstSection.AddOrUpdateProperty(KnownWaveProperties.Name, firstBoundaryName);
+            IniSection secondSection = GetUniformConstantSection(random.NextEnumValue<ShapeImportType>(),
+                                                                 random.NextEnumValue<PeriodImportExportType>(),
+                                                                 secondMdwValues);
             const string secondBoundaryName = "boundary_name_2";
-            secondCategory.SetProperty(KnownWaveProperties.Name, secondBoundaryName);
-            DelftIniCategory[] categories =
+            secondSection.AddOrUpdateProperty(KnownWaveProperties.Name, secondBoundaryName);
+            IniSection[] sections =
             {
-                firstCategory,
-                secondCategory
+                firstSection,
+                secondSection
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -575,22 +575,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateUniformConstantComponent<T>(Arg.Is<ParametersBlock>(p => MatchesParameters(p, mdwValues, 0)))
                                       .Returns(uniformDataComponent);
 
-            DelftIniCategory category = GetBoundaryCategory(shapeType,
-                                                            periodType,
-                                                            mdwValues,
-                                                            definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
-            category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
-            AddParametersToCategory(mdwValues, category, 0);
+            IniSection section = GetBoundarySection(shapeType,
+                                                    periodType,
+                                                    mdwValues,
+                                                    definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            section.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
+            AddParametersToSection(mdwValues, section, 0);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                category
+                section
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -628,29 +628,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                                                       p => MatchesSpatiallyVaryingParametersInverted(p, mdwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
-                                                            PeriodImportExportType.Mean,
-                                                            mdwValues,
-                                                            definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            IniSection section = GetBoundarySection(ShapeImportType.Gauss,
+                                                    PeriodImportExportType.Mean,
+                                                    mdwValues,
+                                                    definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
 
-            category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
-            category.AddProperty(KnownWaveProperties.DistanceDir, DistanceDirType.Clockwise.GetDescription());
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[0]));
-            AddParametersToCategory(mdwValues, category, 0);
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[1]));
-            AddParametersToCategory(mdwValues, category, 1);
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[2]));
-            AddParametersToCategory(mdwValues, category, 2);
+            section.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
+            section.AddProperty(KnownWaveProperties.DistanceDir, DistanceDirType.Clockwise.GetDescription());
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[0]));
+            AddParametersToSection(mdwValues, section, 0);
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[1]));
+            AddParametersToSection(mdwValues, section, 1);
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[2]));
+            AddParametersToSection(mdwValues, section, 2);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                category
+                section
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -687,15 +687,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                                                       p => MatchesSpatiallyVaryingParametersInverted(p, mdwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory[] categories =
+            IniSection[] section =
             {
-                GetSpatiallyVaryingConstantCategory(ShapeImportType.Gauss, PeriodImportExportType.Mean, mdwValues)
+                GetSpatiallyVaryingConstantSection(ShapeImportType.Gauss, PeriodImportExportType.Mean, mdwValues)
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
+            List<IWaveBoundary> result = converter.Convert(section, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -728,24 +728,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>())
                                       .Returns(new SpatiallyVaryingDataComponent<ConstantParameters<T>>());
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
-                                                            PeriodImportExportType.Mean,
-                                                            mdwValues,
-                                                            definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
-            category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
+            IniSection section = GetBoundarySection(ShapeImportType.Gauss,
+                                                    PeriodImportExportType.Mean,
+                                                    mdwValues,
+                                                    definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            section.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
 
-            AddParametersToCategory(mdwValues, category, 0);
+            AddParametersToSection(mdwValues, section, 0);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                category
+                section
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -771,22 +771,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>())
                                       .Returns(new SpatiallyVaryingDataComponent<ConstantParameters<T>>());
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
-                                                            PeriodImportExportType.Mean,
-                                                            mdwValues);
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
+            IniSection section = GetBoundarySection(ShapeImportType.Gauss,
+                                                    PeriodImportExportType.Mean,
+                                                    mdwValues);
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
 
-            AddParametersToCategory(mdwValues, category, 0);
+            AddParametersToSection(mdwValues, section, 0);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                category
+                section
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -812,23 +812,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateSpatiallyVaryingFileBasedComponent(Arg.Any<IEnumerable<Tuple<SupportPoint, string>>>())
                                       .Returns(new SpatiallyVaryingDataComponent<FileBasedParameters>());
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
-                                                            PeriodImportExportType.Mean,
-                                                            mdwValues,
-                                                            "from file");
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
+            IniSection section = GetBoundarySection(ShapeImportType.Gauss,
+                                                    PeriodImportExportType.Mean,
+                                                    mdwValues,
+                                                    "from file");
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
 
-            AddParametersToCategory(mdwValues, category, 0);
+            AddParametersToSection(mdwValues, section, 0);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                category
+                section
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
+            List<IWaveBoundary> result = converter.Convert(sections, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -854,23 +854,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             importDataComponentFactory.CreateSpatiallyVaryingTimeDependentComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<T>>>>())
                                       .Returns(new SpatiallyVaryingDataComponent<TimeDependentParameters<T>>());
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
-                                                            PeriodImportExportType.Mean,
-                                                            mdwValues);
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
+            IniSection section = GetBoundarySection(ShapeImportType.Gauss,
+                                                    PeriodImportExportType.Mean,
+                                                    mdwValues);
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
 
-            AddParametersToCategory(mdwValues, category, 0);
+            AddParametersToSection(mdwValues, section, 0);
 
-            DelftIniCategory[] categories =
+            IniSection[] sections =
             {
-                category
+                section
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
             Dictionary<string, List<IFunction>> timeSeriesData = GetSpatiallyVaryingTimeSeries(new BcwTestValues());
-            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path", logHandler).ToList();
+            List<IWaveBoundary> result = converter.Convert(sections, timeSeriesData, "path", logHandler).ToList();
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(1));
@@ -1058,107 +1058,107 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             return function;
         }
 
-        private DelftIniCategory GetBoundaryCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values,
+        private IniSection GetBoundarySection(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values,
+                                              string spectrumSpec = "parametric",
+                                              string definition = "xy-coordinates")
+        {
+            IniSection section = GetBoundarySection(values, spectrumSpec, definition);
+
+            section.AddProperty(KnownWaveProperties.ShapeType, shapeType.GetDescription());
+            section.AddProperty(KnownWaveProperties.PeriodType, periodType.GetDescription());
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingType.GetDescription());
+
+            return section;
+        }
+
+        private static IniSection GetBoundarySection(MdwTestValues values,
                                                      string spectrumSpec = "parametric",
                                                      string definition = "xy-coordinates")
         {
-            DelftIniCategory category = GetBoundaryCategory(values, spectrumSpec, definition);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
+            section.AddProperty(KnownWaveProperties.Name, "boundary_name");
+            section.AddProperty(KnownWaveProperties.Definition, definition);
 
-            category.AddProperty(KnownWaveProperties.ShapeType, shapeType.GetDescription());
-            category.AddProperty(KnownWaveProperties.PeriodType, periodType.GetDescription());
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingType.GetDescription());
+            section.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(values.StartX));
+            section.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(values.StartY));
+            section.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(values.EndX));
+            section.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(values.EndY));
 
-            return category;
+            section.AddProperty(KnownWaveProperties.SpectrumSpec, spectrumSpec);
+
+            section.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(values.PeakEnhancementFactor));
+            section.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(values.GaussianSpreading));
+            return section;
         }
 
-        private static DelftIniCategory GetBoundaryCategory(MdwTestValues values,
-                                                            string spectrumSpec = "parametric",
-                                                            string definition = "xy-coordinates")
+        private IniSection GetUniformConstantSection(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
         {
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-            category.AddProperty(KnownWaveProperties.Name, "boundary_name");
-            category.AddProperty(KnownWaveProperties.Definition, definition);
+            IniSection section = GetBoundarySection(shapeType, periodType, values);
 
-            category.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(values.StartX));
-            category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(values.StartY));
-            category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(values.EndX));
-            category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(values.EndY));
+            AddParametersToSection(values, section, 0);
 
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, spectrumSpec);
-
-            category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(values.PeakEnhancementFactor));
-            category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(values.GaussianSpreading));
-            return category;
+            return section;
         }
 
-        private DelftIniCategory GetUniformConstantCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
+        private static IniSection GetUniformFileBasedSection(MdwTestValues values)
         {
-            DelftIniCategory category = GetBoundaryCategory(shapeType, periodType, values);
+            IniSection section = GetBoundarySection(values, "from file");
 
-            AddParametersToCategory(values, category, 0);
+            AddParametersToSection(values, section, 0);
 
-            return category;
+            return section;
         }
 
-        private static DelftIniCategory GetUniformFileBasedCategory(MdwTestValues values)
+        private IniSection GetSpatiallyVaryingConstantSection(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
         {
-            DelftIniCategory category = GetBoundaryCategory(values, "from file");
+            IniSection section = GetBoundarySection(shapeType, periodType, values);
 
-            AddParametersToCategory(values, category, 0);
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[0]));
+            AddParametersToSection(values, section, 0);
 
-            return category;
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[1]));
+            AddParametersToSection(values, section, 1);
+
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[2]));
+            AddParametersToSection(values, section, 2);
+
+            return section;
         }
 
-        private DelftIniCategory GetSpatiallyVaryingConstantCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
+        private IniSection GetSpatiallyVaryingTimeDependentSection(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
         {
-            DelftIniCategory category = GetBoundaryCategory(shapeType, periodType, values);
+            IniSection section = GetBoundarySection(shapeType, periodType, values);
 
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[0]));
-            AddParametersToCategory(values, category, 0);
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[0]));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[1]));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[2]));
 
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[1]));
-            AddParametersToCategory(values, category, 1);
-
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[2]));
-            AddParametersToCategory(values, category, 2);
-
-            return category;
+            return section;
         }
 
-        private DelftIniCategory GetSpatiallyVaryingTimeDependentCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
+        private static IniSection GetSpatiallyVaryingFileBasedSection(MdwTestValues values)
         {
-            DelftIniCategory category = GetBoundaryCategory(shapeType, periodType, values);
+            IniSection section = GetBoundarySection(values, "from file");
 
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[0]));
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[1]));
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[2]));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[0]));
+            AddParametersToSection(values, section, 0);
 
-            return category;
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[1]));
+            AddParametersToSection(values, section, 1);
+
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[2]));
+            AddParametersToSection(values, section, 2);
+
+            return section;
         }
 
-        private static DelftIniCategory GetSpatiallyVaryingFileBasedCategory(MdwTestValues values)
+        private static void AddParametersToSection(MdwTestValues values, IniSection section, int i)
         {
-            DelftIniCategory category = GetBoundaryCategory(values, "from file");
-
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[0]));
-            AddParametersToCategory(values, category, 0);
-
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[1]));
-            AddParametersToCategory(values, category, 1);
-
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[2]));
-            AddParametersToCategory(values, category, 2);
-
-            return category;
-        }
-
-        private static void AddParametersToCategory(MdwTestValues values, DelftIniCategory category, int i)
-        {
-            category.AddProperty(KnownWaveProperties.WaveHeight, ToString(values.WaveHeights[i]));
-            category.AddProperty(KnownWaveProperties.Period, ToString(values.Periods[i]));
-            category.AddProperty(KnownWaveProperties.Direction, ToString(values.Directions[i]));
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(values.DirSpreadings[i]));
-            category.AddProperty(KnownWaveProperties.Spectrum, values.SpectrumFiles[i]);
+            section.AddProperty(KnownWaveProperties.WaveHeight, ToString(values.WaveHeights[i]));
+            section.AddProperty(KnownWaveProperties.Period, ToString(values.Periods[i]));
+            section.AddProperty(KnownWaveProperties.Direction, ToString(values.Directions[i]));
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(values.DirSpreadings[i]));
+            section.AddProperty(KnownWaveProperties.Spectrum, values.SpectrumFiles[i]);
         }
 
         private static Dictionary<string, List<IFunction>> CreateUniformTimeSeriesData(BcwTestValues bcwValues) =>

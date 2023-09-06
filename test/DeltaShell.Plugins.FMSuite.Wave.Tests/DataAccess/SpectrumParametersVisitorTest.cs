@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.Common.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Constructor_InitializesInstanceCorrectly()
         {
             // Call
-            var visitor = new SpectrumParametersVisitor(new DelftIniCategory(""),
+            var visitor = new SpectrumParametersVisitor(new IniSection("TestSection"),
                                                         Substitute.For<IFilesManager>());
 
             // Assert
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Visit_FileBasedParameters_FileBasedParametersNull_ThrowsArgumentNullException()
         {
             // Setup
-            var visitor = new SpectrumParametersVisitor(new DelftIniCategory(""),
+            var visitor = new SpectrumParametersVisitor(new IniSection("TestSection"),
                                                         Substitute.For<IFilesManager>());
 
             // Call
@@ -50,9 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Visit_FileBasedParameters_SetsCorrectSpectrumTypeAndFileNameAndProperties()
         {
             // Setup
-            var category = new DelftIniCategory("");
+            var section = new IniSection("TestSection");
             var filesManager = Substitute.For<IFilesManager>();
-            var visitor = new SpectrumParametersVisitor(category, filesManager);
+            var visitor = new SpectrumParametersVisitor(section, filesManager);
 
             const string fileName = "file.txt";
             var filePath = $"D:\\some_directory\\{fileName}";
@@ -62,8 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             visitor.Visit(parameters);
 
             // Assert
-            DelftIniProperty property = category.Properties.Single();
-            Assert.That(property.Name, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
+            IniProperty property = section.Properties.Single();
+            Assert.That(property.Key, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
             Assert.That(property.Value, Is.EqualTo("from file"));
             Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
             Assert.That(visitor.SpectrumFile, Is.EqualTo(fileName));
@@ -74,9 +74,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         public void Visit_FileBasedParameters_WithEmptyFilePath_SetsCorrectSpectrumTypeAndFileName()
         {
             // Setup
-            var category = new DelftIniCategory("");
+            var section = new IniSection("TestSection");
             var filesManager = Substitute.For<IFilesManager>();
-            var visitor = new SpectrumParametersVisitor(category, filesManager);
+            var visitor = new SpectrumParametersVisitor(section, filesManager);
 
             var parameters = new FileBasedParameters(string.Empty);
 
@@ -84,8 +84,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             visitor.Visit(parameters);
 
             // Assert
-            DelftIniProperty property = category.Properties.Single();
-            Assert.That(property.Name, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
+            IniProperty property = section.Properties.Single();
+            Assert.That(property.Key, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
             Assert.That(property.Value, Is.EqualTo("from file"));
             Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
             Assert.That(visitor.SpectrumFile, Is.EqualTo(" "));
@@ -94,15 +94,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
         private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
         {
-            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "category");
-            yield return new TestCaseData(new DelftIniCategory(""), null, "filesManager");
+            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "section");
+            yield return new TestCaseData(new IniSection("TestSection"), null, "filesManager");
         }
 
         [TestCaseSource(nameof(ConstructorArgumentNullCases))]
-        public void Constructor_ArgumentNull_ThrowsArgumentNullException(DelftIniCategory category, IFilesManager filesManager, string expectedParamName)
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(IniSection section, IFilesManager filesManager, string expectedParamName)
         {
             // Call
-            void Call() => new SpectrumParametersVisitor(category, filesManager);
+            void Call() => new SpectrumParametersVisitor(section, filesManager);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             public void Visit_ConstantParameters_ConstantParametersNull_ThrowsArgumentNullException()
             {
                 // Setup
-                var visitor = new SpectrumParametersVisitor(new DelftIniCategory(""),
+                var visitor = new SpectrumParametersVisitor(new IniSection("TestSection"),
                                                             Substitute.For<IFilesManager>());
 
                 // Call
@@ -142,8 +142,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             public void Visit_ConstantParameters_SetCorrectSpectrumTypeAndProperty()
             {
                 // Setup
-                var category = new DelftIniCategory("");
-                var visitor = new SpectrumParametersVisitor(category,
+                var section = new IniSection("TestSection");
+                var visitor = new SpectrumParametersVisitor(section,
                                                             Substitute.For<IFilesManager>());
 
                 var parameters = new ConstantParameters<T>(RandomValue, RandomValue, RandomValue, new T());
@@ -152,8 +152,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 visitor.Visit(parameters);
 
                 // Assert
-                DelftIniProperty property = category.Properties.Single();
-                Assert.That(property.Name, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
+                IniProperty property = section.Properties.Single();
+                Assert.That(property.Key, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
                 Assert.That(property.Value, Is.EqualTo("parametric"));
                 Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
                 Assert.That(visitor.SpectrumFile, Is.Null);
@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             public void Visit_TimeDependentParameters_TimeDependentParametersNull_ThrowsArgumentNullException()
             {
                 // Setup
-                var visitor = new SpectrumParametersVisitor(new DelftIniCategory(""),
+                var visitor = new SpectrumParametersVisitor(new IniSection("TestSection"),
                                                             Substitute.For<IFilesManager>());
 
                 // Call
@@ -178,8 +178,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             public void Visit_TimeDependentParameters_SetCorrectSpectrumTypeAndProperty()
             {
                 // Setup
-                var category = new DelftIniCategory("");
-                var visitor = new SpectrumParametersVisitor(category,
+                var section = new IniSection("TestSection");
+                var visitor = new SpectrumParametersVisitor(section,
                                                             Substitute.For<IFilesManager>());
 
                 var parameters = new TimeDependentParameters<T>(Substitute.For<IWaveEnergyFunction<T>>());
@@ -188,8 +188,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 visitor.Visit(parameters);
 
                 // Assert
-                DelftIniProperty property = category.Properties.Single();
-                Assert.That(property.Name, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
+                IniProperty property = section.Properties.Single();
+                Assert.That(property.Key, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
                 Assert.That(property.Value, Is.EqualTo("parametric"));
                 Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
                 Assert.That(visitor.SpectrumFile, Is.Null);

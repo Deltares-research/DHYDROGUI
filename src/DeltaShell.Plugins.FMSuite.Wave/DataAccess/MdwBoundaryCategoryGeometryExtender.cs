@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -13,29 +13,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 {
     /// <summary>
     /// Static class containing static method to start extending the boundary
-    /// category with geometry properties.
+    /// section with geometry properties.
     /// </summary>
     public static class MdwBoundaryCategoryGeometryExtender
     {
         /// <summary>
         /// Static method for retrieving boundary geometry properties of each boundary
-        /// and add them to the existing category.
+        /// and add them to the existing section.
         /// </summary>
-        /// <param name="boundaryCategory"> The category that needs to be extended</param>
+        /// <param name="boundarySection"> The section that needs to be extended</param>
         /// <param name="boundaryContainer"> The boundary container of the model</param>
         /// <param name="supportPoints"> The support points in the geometric definition</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="boundaryCategory"/>, <paramref name="boundaryContainer"/>
+        /// Thrown when <paramref name="boundarySection"/>, <paramref name="boundaryContainer"/>
         /// or <paramref name="supportPoints"/> is <c>null</c>.
         /// </exception>
-        public static void AddNewProperties(DelftIniCategory boundaryCategory, IBoundaryContainer boundaryContainer,
+        public static void AddNewProperties(IniSection boundarySection, IBoundaryContainer boundaryContainer,
                                             IEnumerable<SupportPoint> supportPoints)
         {
-            Ensure.NotNull(boundaryCategory, nameof(boundaryCategory));
+            Ensure.NotNull(boundarySection, nameof(boundarySection));
             Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
             Ensure.NotNull(supportPoints, nameof(supportPoints));
 
-            boundaryCategory.AddProperty(KnownWaveProperties.Definition, "xy-coordinates");
+            boundarySection.AddProperty(KnownWaveProperties.Definition, "xy-coordinates");
 
             SupportPoint[] sortedSupportPoints = supportPoints.OrderBy(sp => sp.Distance).ToArray();
 
@@ -44,10 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             Coordinate startCoordinate = calculator.CalculateCoordinateFromSupportPoint(sortedSupportPoints.First());
             Coordinate endCoordinate = calculator.CalculateCoordinateFromSupportPoint(sortedSupportPoints.Last());
 
-            boundaryCategory.AddSpatialProperty(KnownWaveProperties.StartCoordinateX, startCoordinate.X);
-            boundaryCategory.AddSpatialProperty(KnownWaveProperties.EndCoordinateX, endCoordinate.X);
-            boundaryCategory.AddSpatialProperty(KnownWaveProperties.StartCoordinateY, startCoordinate.Y);
-            boundaryCategory.AddSpatialProperty(KnownWaveProperties.EndCoordinateY, endCoordinate.Y);
+            boundarySection.AddSpatialProperty(KnownWaveProperties.StartCoordinateX, startCoordinate.X);
+            boundarySection.AddSpatialProperty(KnownWaveProperties.EndCoordinateX, endCoordinate.X);
+            boundarySection.AddSpatialProperty(KnownWaveProperties.StartCoordinateY, startCoordinate.Y);
+            boundarySection.AddSpatialProperty(KnownWaveProperties.EndCoordinateY, endCoordinate.Y);
         }
     }
 }

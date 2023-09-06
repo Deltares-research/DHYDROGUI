@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
             var mapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>()
                 {
-                    {KnownWaveObsCategories.ObstacleFileInformation, obstacleFileInformationMapping},
+                    {KnownWaveObsSections.ObstacleFileInformation, obstacleFileInformationMapping},
                 };
 
             IDelftIniPostOperationBehaviour[] postBehaviours =
@@ -77,10 +77,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
             var mapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>()
                 {
-                    {KnownWaveCategories.GeneralCategory, CreateGeneralCategoryMigrations(hashSet, relativeDirectory)},
-                    {KnownWaveCategories.DomainCategory, CreateDomainCategoryMigrations(hashSet, relativeDirectory)},
-                    {KnownWaveCategories.BoundaryCategory, CreateBoundaryCategoryMigrations(hashSet, relativeDirectory)},
-                    {KnownWaveCategories.OutputCategory, CreateOutputCategoryMigrations(hashSet, relativeDirectory)},
+                    {KnownWaveSections.GeneralSection, CreateGeneralCategoryMigrations(hashSet, relativeDirectory)},
+                    {KnownWaveSections.DomainSection, CreateDomainCategoryMigrations(hashSet, relativeDirectory)},
+                    {KnownWaveSections.BoundarySection, CreateBoundaryCategoryMigrations(hashSet, relativeDirectory)},
+                    {KnownWaveSections.OutputSection, CreateOutputCategoryMigrations(hashSet, relativeDirectory)},
                 };
 
             IDelftIniPostOperationBehaviour[] postBehaviours =

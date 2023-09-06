@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DHYDRO.Common.Extensions;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,83 +14,107 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
     {
         [Test]
         [TestCaseSource(nameof(GetArgumentNullCases))]
-        public void Constructor_ArgumentNull_ThrowsArgumentNullException(DelftIniProperty legacyProperty,
-                                                                         string newPropertyName,
-                                                                         DelftIniCategory legacyPropertyCategory,
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(string oldPropertyKey,
+                                                                         string newPropertyKey,
+                                                                         IniSection section,
                                                                          ILogHandler logHandler)
         {
             // Setup
             var updater = new LegacyStartAndStopTimeUpdater();
 
             // Call
-            void Call() => updater.UpdateProperty(legacyProperty, newPropertyName, legacyPropertyCategory, logHandler);
+            void Call() => updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(GetValidPropertyKeyCases))]
+        public void UpdateProperty_MissingLegacyProperty_ThrowsInvalidOperationException(string oldPropertyKey, string newPropertyKey)
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+
+            IniSection section = CreateSectionWithRefDate();
+
+            var updater = new LegacyStartAndStopTimeUpdater();
+
+            // Call
+            void Call() => updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
+
+            // Assert
+            var expectedMessage = $"The keyword `{oldPropertyKey}` is missing in the mdu file.";
+            Assert.That(Call, Throws.InvalidOperationException.With.Message.EqualTo(expectedMessage));
         }
 
         [Test]
         public void UpdateProperty_WrongLegacyProperty_DoesNotUpdateProperty()
         {
             // Setup
-            const string name = "ThisNameIsNotTStartOrTStop";
+            const string key = "ThisNameIsNotTStartOrTStop";
             const string value = "randomValue";
 
             var logHandler = Substitute.For<ILogHandler>();
-            var unsupportedProperty = new DelftIniProperty(name, value, string.Empty);
+            var unsupportedProperty = new IniProperty(key, value, string.Empty);
 
-            const string newName = "newName";
-            var category = new DelftIniCategory(string.Empty);
+            const string newKey = "newKey";
+            var section = new IniSection("TestSection");
+            section.AddProperty(unsupportedProperty);
 
             var updater = new LegacyStartAndStopTimeUpdater();
 
             // Call
-            updater.UpdateProperty(unsupportedProperty, newName, category, logHandler);
+            updater.UpdateProperty(key, newKey, section, logHandler);
 
             // Assert
-            Assert.That(unsupportedProperty.Name, Is.EqualTo(name));
+            unsupportedProperty = section.Properties.First();
+            Assert.That(unsupportedProperty.Key, Is.EqualTo(key));
             Assert.That(unsupportedProperty.Value, Is.EqualTo(value));
         }
 
         [Test]
-        [TestCaseSource(nameof(GetValidPropertyNameCases))]
-        public void UpdateProperty_UpdatesPropertyNameAndLogsWarning(string propertyName, string newPropertyName)
+        [TestCaseSource(nameof(GetValidPropertyKeyCases))]
+        public void UpdateProperty_UpdatesPropertyKeyAndLogsWarning(string oldPropertyKey, string newPropertyKey)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
 
             var updater = new LegacyStartAndStopTimeUpdater();
 
-            var property = new DelftIniProperty(propertyName, "1", string.Empty);
-            var category = new DelftIniCategory(string.Empty);
-            category.AddProperty(new DelftIniProperty(KnownProperties.RefDate, "19900718", string.Empty));
-            category.AddProperty(new DelftIniProperty(KnownProperties.Tunit, "S", string.Empty));
+            var property = new IniProperty(oldPropertyKey, "1");
+            var section = new IniSection("TestSection");
+            section.AddProperty(property);
+            section.AddProperty(new IniProperty(KnownProperties.RefDate, "19900718"));
+            section.AddProperty(new IniProperty(KnownProperties.Tunit, "S"));
 
             // Call
-            updater.UpdateProperty(property, newPropertyName, category, logHandler);
+            updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
-            Assert.That(property.Name, Is.EqualTo(newPropertyName));
+            IniProperty updatedProperty = section.GetProperty(newPropertyKey);
+            Assert.NotNull(updatedProperty);
 
             const string expectedLogMessage = "Backwards Compatibility: '{0}' has been updated to '{1}'";
-            logHandler.Received(1).ReportWarningFormat(expectedLogMessage, propertyName, newPropertyName);
+            logHandler.Received(1).ReportWarningFormat(expectedLogMessage, oldPropertyKey, newPropertyKey);
         }
 
         [Test]
-        [TestCaseSource(nameof(GetValidPropertyNameCases))]
-        public void UpdateProperty_MissingTUnit_ThrowsInvalidOperationException(string propertyName, string newPropertyName)
+        [TestCaseSource(nameof(GetValidPropertyKeyCases))]
+        public void UpdateProperty_MissingTUnit_ThrowsInvalidOperationException(string oldPropertyKey, string newPropertyKey)
         {
             // Setup
             const string originalValue = "10";
             var logHandler = Substitute.For<ILogHandler>();
-            var property = new DelftIniProperty(propertyName, originalValue, string.Empty);
+            var property = new IniProperty(oldPropertyKey, originalValue);
 
-            DelftIniCategory category = CreateCategoryWithRefDate();
+            IniSection section = CreateSectionWithRefDate();
+            section.AddProperty(property);
 
             var updater = new LegacyStartAndStopTimeUpdater();
 
             // Call
-            void Call() => updater.UpdateProperty(property, newPropertyName, category, logHandler);
+            void Call() => updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
             var expectedMessage = $"The keyword `{KnownProperties.Tunit}` is missing in the mdu file.";
@@ -99,49 +122,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
         }
 
         [Test]
-        [TestCaseSource(nameof(GetValidPropertyNameCases))]
-        public void UpdateProperty_MissingTUnitValue_UsesSecondsAsDefaultValue(string propertyName, string newPropertyName)
+        [TestCaseSource(nameof(GetValidPropertyKeyCases))]
+        public void UpdateProperty_MissingTUnitValue_UsesSecondsAsDefaultValue(string oldPropertyKey, string newPropertyKey)
         {
             // Setup
             const string originalValue = "10";
             var logHandler = Substitute.For<ILogHandler>();
-            var property = new DelftIniProperty(propertyName, originalValue, string.Empty);
+            var property = new IniProperty(oldPropertyKey, originalValue);
 
-            DelftIniCategory category = CreateCategoryWithRefDateAndTUnit();
-            DelftIniProperty tUnitProperty = category.Properties.First(p => p.Name.EqualsCaseInsensitive(KnownProperties.Tunit));
+            IniSection section = CreateSectionWithRefDateAndTUnit();
+            section.AddProperty(property);
+            
+            IniProperty tUnitProperty = section.GetProperty(KnownProperties.Tunit);
             tUnitProperty.Value = null;
 
             var updater = new LegacyStartAndStopTimeUpdater();
 
             // Call
-            updater.UpdateProperty(property, newPropertyName, category, logHandler);
+            updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
+            IniProperty updatedProperty = section.GetProperty(newPropertyKey);
+            Assert.NotNull(updatedProperty);
+
             const string expectedTUnitValue = "S"; // Updater should set the value to S if it is missing!
             Assert.That(tUnitProperty.Value, Is.EqualTo(expectedTUnitValue));
             
             const string expectedValue = "19900718000010"; // refdate = 1990-07-18, TStart/TStop = 10 and TUnit = S
-            Assert.That(property.Value, Is.EqualTo(expectedValue));
+            Assert.That(updatedProperty.Value, Is.EqualTo(expectedValue));
 
             const string expectedLogMessage = "Backwards Compatibility: Value for '{0}' has been updated from '{1}' to '{2}'";
-            logHandler.Received(1).ReportWarningFormat(expectedLogMessage, property.Name, originalValue, expectedValue);
+            logHandler.Received(1).ReportWarningFormat(expectedLogMessage, updatedProperty.Key, originalValue, expectedValue);
         }
 
         [Test]
-        [TestCaseSource(nameof(GetValidPropertyNameCases))]
-        public void UpdateProperty_MissingRefDate_ThrowsInvalidOperationException(string propertyName, string newPropertyName)
+        [TestCaseSource(nameof(GetValidPropertyKeyCases))]
+        public void UpdateProperty_MissingRefDate_ThrowsInvalidOperationException(string oldPropertyKey, string newPropertyKey)
         {
             // Setup
             const string originalValue = "10";
             var logHandler = Substitute.For<ILogHandler>();
-            var property = new DelftIniProperty(propertyName, originalValue, string.Empty);
+            var property = new IniProperty(oldPropertyKey, originalValue);
 
-            DelftIniCategory category = CreateCategoryWithTUnit();
+            IniSection section = CreateSectionWithTUnit();
+            section.AddProperty(property);
 
             var updater = new LegacyStartAndStopTimeUpdater();
 
             // Call
-            void Call() => updater.UpdateProperty(property, newPropertyName, category, logHandler);
+            void Call() => updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
             var expectedMessage = $"The keyword `{KnownProperties.RefDate}` is missing in the mdu file.";
@@ -149,22 +178,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
         }
 
         [Test]
-        [TestCaseSource(nameof(GetValidPropertyNameCases))]
-        public void UpdateProperty_MissingRefDateValue_ThrowsInvalidOperationException(string propertyName, string newPropertyName)
+        [TestCaseSource(nameof(GetValidPropertyKeyCases))]
+        public void UpdateProperty_MissingRefDateValue_ThrowsInvalidOperationException(string oldPropertyKey, string newPropertyKey)
         {
             // Setup
             const string originalValue = "10";
             var logHandler = Substitute.For<ILogHandler>();
-            var property = new DelftIniProperty(propertyName, originalValue, string.Empty);
+            var property = new IniProperty(oldPropertyKey, originalValue);
 
-            DelftIniCategory category = CreateCategoryWithRefDateAndTUnit();
-            DelftIniProperty tUnitProperty = category.Properties.First(p => p.Name.EqualsCaseInsensitive(KnownProperties.RefDate));
+            IniSection section = CreateSectionWithRefDateAndTUnit();
+            section.AddProperty(property);
+
+            IniProperty tUnitProperty = section.GetProperty(KnownProperties.RefDate);
             tUnitProperty.Value = null;
 
             var updater = new LegacyStartAndStopTimeUpdater();
 
             // Call
-            void Call() => updater.UpdateProperty(property, newPropertyName, category, logHandler);
+            void Call() => updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
             var expectedMessage = $"The value for the required keyword `{KnownProperties.RefDate}` is missing in the mdu file.";
@@ -172,82 +203,83 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
         }
 
         [Test]
-        [TestCaseSource(nameof(GetValidPropertyNameCases))]
-        public void UpdateProperty_UpdatesPropertyValueAndLogsMessage(string propertyName, string newPropertyName)
+        [TestCaseSource(nameof(GetValidPropertyKeyCases))]
+        public void UpdateProperty_UpdatesPropertyValueAndLogsMessage(string oldPropertyKey, string newPropertyKey)
         {
             // Setup
             const string originalValue = "10";
             var logHandler = Substitute.For<ILogHandler>();
-            var property = new DelftIniProperty(propertyName, originalValue, string.Empty);
+            var property = new IniProperty(oldPropertyKey, originalValue, string.Empty);
 
-            DelftIniCategory category = CreateCategoryWithRefDateAndTUnit();
-            category.AddProperty(property);
+            IniSection section = CreateSectionWithRefDateAndTUnit();
+            section.AddProperty(property);
 
             var updater = new LegacyStartAndStopTimeUpdater();
 
             // Call
-            updater.UpdateProperty(property, newPropertyName, category, logHandler);
+            updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
-            Assert.That(property.Name, Is.EqualTo(newPropertyName));
+            IniProperty updatedProperty = section.GetProperty(newPropertyKey);
+            Assert.NotNull(updatedProperty);
 
             const string expectedValue = "19900718000010"; // refdate = 1990-07-18, TStart/TStop = 10 and TUnit = S
-            Assert.That(property.Value, Is.EqualTo(expectedValue));
+            Assert.That(updatedProperty.Value, Is.EqualTo(expectedValue));
 
             const string expectedLogMessage = "Backwards Compatibility: Value for '{0}' has been updated from '{1}' to '{2}'";
-            logHandler.Received(1).ReportWarningFormat(expectedLogMessage, property.Name, originalValue, expectedValue);
+            logHandler.Received(1).ReportWarningFormat(expectedLogMessage, updatedProperty.Key, originalValue, expectedValue);
         }
 
         private static IEnumerable<TestCaseData> GetArgumentNullCases()
         {
-            var property = new DelftIniProperty(string.Empty, string.Empty, string.Empty);
-            var newPropertyName = string.Empty;
-            var category = new DelftIniCategory(string.Empty);
+            var oldPropertyKey = "OldPropertyKey";
+            var newPropertyKey = "NewPropertyKey";
+            var section = new IniSection("TestSection");
             var logHandler = Substitute.For<ILogHandler>();
 
-            yield return new TestCaseData(null, newPropertyName, category, logHandler);
-            yield return new TestCaseData(property, null, category, logHandler);
-            yield return new TestCaseData(property, newPropertyName, null, logHandler);
-            yield return new TestCaseData(property, newPropertyName, category, null);
+            yield return new TestCaseData(null, newPropertyKey, section, logHandler);
+            yield return new TestCaseData(oldPropertyKey, null, section, logHandler);
+            yield return new TestCaseData(oldPropertyKey, newPropertyKey, null, logHandler);
+            yield return new TestCaseData(oldPropertyKey, newPropertyKey, section, null);
         }
 
-        private static IEnumerable<TestCaseData> GetValidPropertyNameCases()
+        private static IEnumerable<TestCaseData> GetValidPropertyKeyCases()
         {
             yield return new TestCaseData(KnownLegacyProperties.TStart, KnownProperties.StartDateTime);
             yield return new TestCaseData(KnownLegacyProperties.TStop, KnownProperties.StopDateTime);
         }
 
-        private static DelftIniCategory CreateCategoryWithRefDate()
+        private static IniSection CreateSectionWithRefDate()
         {
-            var category = new DelftIniCategory("randomCategoryName");
+            var section = new IniSection("randomSectionName");
 
-            category.AddProperty(CreateProperty("RefDate", "19900718"));
+            section.AddProperty(CreateProperty("RefDate", "19900718"));
 
-            return category;
+            return section;
         }
 
-        private static DelftIniCategory CreateCategoryWithTUnit()
+        private static IniSection CreateSectionWithTUnit()
         {
-            var category = new DelftIniCategory("randomCategoryName");
+            var section = new IniSection("randomSectionName");
 
-            category.AddProperty(CreateProperty("TUnit", "S"));
+            section.AddProperty(CreateProperty("TUnit", "S"));
 
-            return category;
+            return section;
         }
 
-        private static DelftIniCategory CreateCategoryWithRefDateAndTUnit()
+        private static IniSection CreateSectionWithRefDateAndTUnit()
         {
-            var category = new DelftIniCategory("randomCategoryName");
+            var section = new IniSection("randomSectionName");
 
-            category.AddProperty(CreateProperty("TUnit", "S"));
-            category.AddProperty(CreateProperty("RefDate", "19900718"));
+            section.AddProperty(CreateProperty("TUnit", "S"));
+            section.AddProperty(CreateProperty("RefDate", "19900718"));
 
-            return category;
+            return section;
         }
 
-        private static DelftIniProperty CreateProperty(string name, string value)
+        private static IniProperty CreateProperty(string key, string value)
         {
-            return new DelftIniProperty(name, value, string.Empty);
+            return new IniProperty(key, value, string.Empty);
         }
     }
 }

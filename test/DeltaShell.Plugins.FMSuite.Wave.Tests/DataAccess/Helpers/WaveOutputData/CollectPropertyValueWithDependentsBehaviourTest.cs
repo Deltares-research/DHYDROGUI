@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
 using DHYDRO.Common.Logging;
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
             const string relativeDirectory = "someRelativeDirectory";
             var iniOperator = Substitute.For<IDelftIniFileOperator>();
 
-            yield return new TestCaseData(null, relativeDirectory, iniOperator, "propertyName");
+            yield return new TestCaseData(null, relativeDirectory, iniOperator, "propertyKey");
             yield return new TestCaseData(propertyName, null, iniOperator, "relativeDirectory");
             yield return new TestCaseData(propertyName, relativeDirectory, null, "iniFileOperator");
         }
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
-                const string propertyName = "propertyName";
+                const string propertyKey = "propertyKey";
                 const string propertyValue = "someFile.loc";
 
                 string relativeDirectory = tempDir.Path;
@@ -82,11 +82,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
 
                 var iniFileOperator = Substitute.For<IDelftIniFileOperator>();
 
-                var behaviour = new CollectPropertyValueWithDependentsBehaviour(propertyName,
+                var behaviour = new CollectPropertyValueWithDependentsBehaviour(propertyKey,
                                                                                 relativeDirectory,
                                                                                 iniFileOperator);
 
-                var property = new DelftIniProperty(propertyName, propertyValue, "someComment");
+                var property = new IniProperty(propertyKey, propertyValue, "someComment");
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
         public void Invoke_PropertyDoesNotMatch_DoesNotCallOperator()
         {
             // Setup
-            const string propertyName = "propertyName";
+            const string propertyKey = "propertyKey";
             const string propertyValue = "someFile.loc";
             const string relativeDirectory = "someDirectory";
 
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
 
             var behaviour = new CollectPropertyValueWithDependentsBehaviour("someOtherProperty", relativeDirectory, iniFileOperator);
 
-            var property = new DelftIniProperty(propertyName, propertyValue, "someComment");
+            var property = new IniProperty(propertyKey, propertyValue, "someComment");
 
             // Call
             behaviour.Invoke(property, null);

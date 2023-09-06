@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using log4net;
 
@@ -12,18 +13,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(MdwFile));
         
-        private readonly DelftIniMerger mdwFileMerger = new DelftIniMerger();
+        private readonly IniMerger mdwFileMerger = new IniMerger();
 
         /// <summary>
-        /// These mdw categories can have multiplicity greater than 1 (or gui only),
+        /// These mdw sections can have multiplicity greater than 1 (or gui only),
         /// excluded them from the generic property treatment..
         /// </summary>
-        public static IList<string> ExcludedCategories { get; } = new List<string>
+        public static IList<string> ExcludedSections { get; } = new List<string>
         {
-            KnownWaveCategories.TimePointCategory,
-            KnownWaveCategories.DomainCategory,
-            KnownWaveCategories.BoundaryCategory,
-            KnownWaveCategories.GuiOnlyCategory
+            KnownWaveSections.TimePointSection,
+            KnownWaveSections.DomainSection,
+            KnownWaveSections.BoundarySection,
+            KnownWaveSections.GuiOnlySection
         };
 
         /// <summary>

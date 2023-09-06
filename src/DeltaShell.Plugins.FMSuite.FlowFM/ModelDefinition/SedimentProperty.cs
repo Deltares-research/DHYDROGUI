@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Aop;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using SharpMap;
@@ -80,15 +80,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             return Name;
         }
 
-        public virtual void SedimentPropertyWrite(DelftIniCategory category)
+        public virtual void SedimentPropertyWrite(IniSection section)
         {
-            category.AddSedimentProperty(Name, string.Format(CultureInfo.InvariantCulture, "{0}", Value), Unit,
+            section.AddSedimentProperty(Name, string.Format(CultureInfo.InvariantCulture, "{0}", Value), Unit,
                                          Description);
         }
 
-        public virtual void SedimentPropertyLoad(DelftIniCategory category)
+        public virtual void SedimentPropertyLoad(IniSection section)
         {
-            DelftIniProperty property = category.Properties.FirstOrDefault(p => p.Name == Name);
+            IniProperty property = section.Properties.FirstOrDefault(p => p.Key == Name);
             if (property == null)
             {
                 return;
@@ -129,30 +129,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         #region Overrides of SedimentProperty<T>
 
-        public override void SedimentPropertyWrite(DelftIniCategory category)
+        public override void SedimentPropertyWrite(IniSection section)
         {
             if (!IsSpatiallyVarying)
             {
-                base.SedimentPropertyWrite(category);
+                base.SedimentPropertyWrite(section);
             }
             else
             {
                 /* DFlowFM Kernel requires this field to include the extension. */
-                category.AddSedimentProperty(
-                    Name, string.Format("#{0}#", SpatiallyVaryingName + "." + XyzFile.Extension), Unit, Description);
+                section.AddSedimentProperty(Name, $"#{SpatiallyVaryingName + "." + XyzFile.Extension}#", Unit, Description);
             }
         }
 
-        public override void SedimentPropertyLoad(DelftIniCategory category)
+        public override void SedimentPropertyLoad(IniSection section)
         {
             try
             {
-                base.SedimentPropertyLoad(category);
+                base.SedimentPropertyLoad(section);
             }
             catch
             {
                 // check if we can cast to string so we can find out if it is a spatially varying property
-                DelftIniProperty prop = category.Properties.FirstOrDefault(p => p.Name == Name);
+                IniProperty prop = section.Properties.FirstOrDefault(p => p.Key == Name);
                 if (prop == null)
                 {
                     return;

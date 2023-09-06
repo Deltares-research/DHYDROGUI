@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
 using NSubstitute;
 using NUnit.Framework;
@@ -62,13 +61,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations.Po
             string fileName = Path.GetFileName(sourceFilePath);
 
             var behaviour = new WriteCategoriesPostOperationBehaviour(writer, goalDirectory);
-            var categories = new List<DelftIniCategory>();
+            var iniData = new IniData();
 
             // Call
-            behaviour.Invoke(Stream.Null, sourceFilePath, categories, null);
+            behaviour.Invoke(Stream.Null, sourceFilePath, iniData, null);
 
             // Assert
-            writer.Received(1).WriteDelftIniFile(categories, Path.Combine(goalDirectory, fileName), true);
+            writer.Received(1).WriteDelftIniFile(iniData, Path.Combine(goalDirectory, fileName), true);
         }
     }
 }

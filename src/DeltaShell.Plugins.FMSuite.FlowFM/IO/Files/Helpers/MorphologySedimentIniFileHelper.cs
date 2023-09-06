@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -22,34 +22,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         private static readonly string createdBy = "Deltares, FM-Suite DFlowFM Model Version " +
                                                    FMSuiteFlowModelVersion + ", DFlow FM Version " + FMDllVersion;
 
-        public static DelftIniCategory CreateMorpologyGeneralDelftIniCategory()
+        public static IniSection CreateMorphologyGeneralSection()
         {
-            var generalCategory = new DelftIniCategory(MorphologyFile.GeneralHeader);
+            var generalCategory = new IniSection(MorphologyFile.GeneralHeader);
             AddGeneralProperties(generalCategory);
             return generalCategory;
         }
 
-        public static DelftIniCategory CreateSedimentGeneralDelftIniCategory()
+        public static IniSection CreateSedimentGeneralSection()
         {
-            var generalCategory = new DelftIniCategory(SedimentFile.GeneralHeader);
-            AddGeneralProperties(generalCategory);
-            return generalCategory;
+            var generalSection = new IniSection(SedimentFile.GeneralHeader);
+            AddGeneralProperties(generalSection);
+            return generalSection;
         }
 
-        public static DelftIniCategory CreateSedimentOverallDelftIniCategory(
-            IEnumerable<ISedimentProperty> sedimentOverallProperties)
+        public static IniSection CreateSedimentOverallSection(IEnumerable<ISedimentProperty> sedimentOverallProperties)
         {
-            var overallDelftIniCategory = new DelftIniCategory(SedimentFile.OverallHeader);
+            var overallSection = new IniSection(SedimentFile.OverallHeader);
 
             foreach (ISedimentProperty sedimentOverallProperty in sedimentOverallProperties)
             {
-                sedimentOverallProperty.SedimentPropertyWrite(overallDelftIniCategory);
+                sedimentOverallProperty.SedimentPropertyWrite(overallSection);
             }
 
-            return overallDelftIniCategory;
+            return overallSection;
         }
 
-        public static IEnumerable<DelftIniCategory> CreateDelftIniCategoriesFromModelProperties(
+        public static IEnumerable<IniSection> CreateSectionsFromModelProperties(
             IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups)
         {
             IEnumerable<IGrouping<string, WaterFlowFMProperty>> categories =
@@ -63,15 +62,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                     categoryName = MorphologyFile.Header;
                 }
 
-                var delftIniCategory = new DelftIniCategory(categoryName);
+                var section = new IniSection(categoryName);
 
                 foreach (WaterFlowFMProperty property in category)
                 {
-                    delftIniCategory.AddProperty(property.PropertyDefinition.FilePropertyName,
-                                                 property.GetValueAsString());
+                    section.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
                 }
 
-                yield return delftIniCategory;
+                yield return section;
             }
         }
 
@@ -111,13 +109,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             }
         }
 
-        private static void AddGeneralProperties(DelftIniCategory generalDelftIniCategory)
+        private static void AddGeneralProperties(IniSection generalSection)
         {
             DateTime creationTime = DateTime.Now;
-            generalDelftIniCategory.AddProperty(SedimentFile.FileCreatedBy, createdBy);
-            generalDelftIniCategory.AddProperty(SedimentFile.FileCreationDate,
+            generalSection.AddProperty(SedimentFile.FileCreatedBy, createdBy);
+            generalSection.AddProperty(SedimentFile.FileCreationDate,
                                                 creationTime.ToString("ddd MMM dd yyyy, HH:mm:ss"));
-            generalDelftIniCategory.AddProperty(SedimentFile.FileVersion, SEDFILEVERSION);
+            generalSection.AddProperty(SedimentFile.FileVersion, SEDFILEVERSION);
         }
     }
 }

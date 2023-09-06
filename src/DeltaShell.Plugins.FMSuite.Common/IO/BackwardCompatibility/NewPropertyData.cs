@@ -10,22 +10,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <summary>
         /// Initializes a new instance of the <see cref="NewPropertyData"/> class.
         /// </summary>
-        /// <param name="name">The new name for a property.</param>
+        /// <param name="key">The new key for a property.</param>
         /// <param name="converter">The converter used to update the property value.</param>
         /// <exception cref="System.ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
-        public NewPropertyData(string name, IPropertyUpdater converter)
+        public NewPropertyData(string key, IPropertyUpdater converter)
         {
-            Ensure.NotNull(name, nameof(name));
+            Ensure.NotNull(key, nameof(key));
             Ensure.NotNull(converter, nameof(converter));
 
-            Name = name;
+            Key = key;
             Updater = converter;
         }
 
         /// <summary>
-        /// Gets the name.
+        /// Gets the key.
         /// </summary>
-        public string Name { get; }
+        public string Key { get; }
         
         /// <summary>
         /// Gets the updater.

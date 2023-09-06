@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DHYDRO.Common.Logging;
-using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
 {
     /// <summary>
     /// <see cref="DelftIniBackwardsCompatibilityHelper"/> provides the methods to update
-    /// properties and categories based upon a provided <see cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>.
+    /// properties and sections based upon a provided <see cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>.
     /// </summary>
     public class DelftIniBackwardsCompatibilityHelper
     {
@@ -31,29 +30,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         }
 
         /// <summary>
-        /// Determines whether the provided <paramref name="propertyName"/> is currently considered obsolete.
+        /// Determines whether the provided <paramref name="propertyKey"/> is currently considered obsolete.
         /// </summary>
-        /// <param name="propertyName">The property name to check.</param>
+        /// <param name="propertyKey">The property key to check.</param>
         /// <returns>
-        /// <c>true</c> if the specified property name is obsolete; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified property key is obsolete; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="propertyName"/> is <c>null</c>.
+        /// Thrown when <paramref name="propertyKey"/> is <c>null</c>.
         /// </exception>
         /// <remarks>
         /// Note that property names are case-insensitive and will be matched as such.
         /// </remarks>
-        public bool IsObsoletePropertyName(string propertyName)
+        public bool IsObsoletePropertyKey(string propertyKey)
         {
-            Ensure.NotNull(propertyName, nameof(propertyName));
-            return configurationValues.ObsoleteProperties.Contains(propertyName.ToLowerInvariant());
+            Ensure.NotNull(propertyKey, nameof(propertyKey));
+            return configurationValues.ObsoleteProperties.Contains(propertyKey.ToLowerInvariant());
         }
 
         /// <summary>
-        /// Determines whether the provided <paramref name="propertyName"/> is currently considered obsolete.
+        /// Determines whether the provided <paramref name="propertyKey"/> is currently considered obsolete.
         /// </summary>
-        /// <param name="propertyName">The property name to check.</param>
-        /// <param name="category">The category the property belongs to.</param>
+        /// <param name="propertyKey">The property name to check.</param>
+        /// <param name="section">The section the property belongs to.</param>
         /// <returns>
         /// <c>true</c> if the specified property name is obsolete; otherwise, <c>false</c>.
         /// </returns>
@@ -61,102 +60,102 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <remarks>
         /// Note that property names are case-insensitive and will be matched as such.
         /// </remarks>
-        public bool IsConditionalObsoletePropertyName(string propertyName, DelftIniCategory category)
+        public bool IsConditionalObsoletePropertyKey(string propertyKey, IniSection section)
         {
-            Ensure.NotNull(propertyName, nameof(propertyName));
-            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(propertyKey, nameof(propertyKey));
+            Ensure.NotNull(section, nameof(section));
 
-            if (configurationValues.ConditionalObsoleteProperties.TryGetValue(propertyName.ToLowerInvariant(), out string conditionalProperty))
+            if (configurationValues.ConditionalObsoleteProperties.TryGetValue(propertyKey.ToLowerInvariant(), out string conditionalProperty))
             {
-                return category.Properties.Any(property => property.Name.EqualsCaseInsensitive(conditionalProperty));
+                return section.Properties.Any(property => property.IsKeyEqualTo(conditionalProperty));
             }
 
             return false;
         }
 
         /// <summary>
-        /// Get the mapping of <paramref name="propertyName"/> if one exists, else null.
+        /// Get the mapping of <paramref name="propertyKey"/> if one exists, else null.
         /// </summary>
-        /// <param name="propertyName"> Name of the property to be updated. </param>
+        /// <param name="propertyKey"> Name of the property to be updated. </param>
         /// <param name="logHandler"> Optional logger to call if a mapping is returned. </param>
         /// <returns>
-        /// IF a mapping for <paramref name="propertyName"/> exists THEN this mapping is returned,
+        /// IF a mapping for <paramref name="propertyKey"/> exists THEN this mapping is returned,
         /// ELSE null.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when
-        /// <param name="propertyName"/>
+        /// <param name="propertyKey"/>
         /// is null.
         /// </exception>
         /// <remarks>
-        /// Note that property names are case-insensitive and will be matched as such.
+        /// Note that property keys are case-insensitive and will be matched as such.
         /// </remarks>
-        public string GetUpdatedPropertyName(string propertyName, ILogHandler logHandler = null)
+        public string GetUpdatedPropertyKey(string propertyKey, ILogHandler logHandler = null)
         {
-            Ensure.NotNull(propertyName, nameof(propertyName));
-            return GetUpdatedName(propertyName, configurationValues.LegacyPropertyMapping, logHandler);
+            Ensure.NotNull(propertyKey, nameof(propertyKey));
+            return GetUpdatedKey(propertyKey, configurationValues.LegacyPropertyMapping, logHandler);
         }
 
         /// <summary>
-        /// Get the mapping of <paramref name="categoryName"/> if one exists, else null.
+        /// Get the mapping of <paramref name="sectionName"/> if one exists, else null.
         /// </summary>
-        /// <param name="categoryName"> Name of the category to be updated. </param>
+        /// <param name="sectionName"> Name of the section to be updated. </param>
         /// <param name="logHandler"> Optional logger to call if a mapping is returned. </param>
         /// <returns>
-        /// IF a mapping for <paramref name="categoryName"/> exists THEN this mapping is returned,
+        /// IF a mapping for <paramref name="sectionName"/> exists THEN this mapping is returned,
         /// ELSE null.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when
-        /// <param name="categoryName"/>
+        /// <param name="sectionName"/>
         /// is null.
         /// </exception>
         /// <remarks>
-        /// Note that categories names are case-insensitive and will be matched as such.
+        /// Note that section names are case-insensitive and will be matched as such.
         /// </remarks>
-        public string GetUpdatedCategoryName(string categoryName, ILogHandler logHandler = null)
+        public string GetUpdatedSectionName(string sectionName, ILogHandler logHandler = null)
         {
-            Ensure.NotNull(categoryName, nameof(categoryName));
-            return GetUpdatedName(categoryName, configurationValues.LegacyCategoryMapping, logHandler);
+            Ensure.NotNull(sectionName, nameof(sectionName));
+            return GetUpdatedKey(sectionName, configurationValues.LegacySectionMapping, logHandler);
         }
 
         /// <summary>
-        /// Removes the obsolete properties from the given category.
+        /// Removes the obsolete properties from the given section.
         /// For each removed property a warning is reported.
         /// </summary>
-        /// <param name="category">The Delft INI category to delete the obsolete properties from. </param>
+        /// <param name="section">The INI section to delete the obsolete properties from. </param>
         /// <param name="logHandler"> The log handler to log messages with. </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any argument is <c>null</c>
         /// </exception>
-        public void RemoveObsoletePropertiesWithWarning(DelftIniCategory category, ILogHandler logHandler)
+        public void RemoveObsoletePropertiesWithWarning(IniSection section, ILogHandler logHandler)
         {
-            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(section, nameof(section));
             Ensure.NotNull(logHandler, nameof(logHandler));
 
-            foreach (DelftIniProperty property in category.Properties.ToArray())
+            foreach (IniProperty property in section.Properties.ToArray())
             {
-                if (!IsObsoletePropertyName(property.Name) && !IsConditionalObsoletePropertyName(property.Name, category))
+                if (!IsObsoletePropertyKey(property.Key) && !IsConditionalObsoletePropertyKey(property.Key, section))
                 {
                     continue;
                 }
 
-                logHandler.ReportWarning(string.Format(Resources.Key_0_is_deprecated_and_automatically_removed_from_model, property.Name));
-                category.RemoveProperty(property);
+                logHandler.ReportWarning(string.Format(Resources.Key_0_is_deprecated_and_automatically_removed_from_model, property.Key));
+                section.RemoveProperty(property);
             }
         }
 
         /// <summary>
         /// Updates a property to its latest version.
         /// </summary>
-        /// <param name="property">The <see cref="DelftIniProperty"/> to update.</param>
-        /// <param name="propertyCategory">The <see cref="DelftIniCategory"/> the property belongs to.</param>
+        /// <param name="property">The <see cref="IniSection"/> to update.</param>
+        /// <param name="section">The <see cref="IniSection"/> the property belongs to.</param>
         /// <param name="logHandler">The log handler to log messages with.</param>
         /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
-        public void UpdateProperty(DelftIniProperty property, DelftIniCategory propertyCategory, ILogHandler logHandler)
+        public void UpdateProperty(IniProperty property, IniSection section, ILogHandler logHandler)
         {
             Ensure.NotNull(property, nameof(property));
-            Ensure.NotNull(propertyCategory, nameof(propertyCategory));
+            Ensure.NotNull(section, nameof(section));
             Ensure.NotNull(logHandler, nameof(logHandler));
 
             if (!IsLegacyProperty(property))
@@ -164,55 +163,55 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
                 return;
             }
 
-            NewPropertyData newData = configurationValues.LegacyPropertyMapping[property.Name.ToLower()];
+            NewPropertyData newData = configurationValues.LegacyPropertyMapping[property.Key.ToLower()];
 
-            string newName = GetUpdatedPropertyName(property.Name);
+            string newKey = GetUpdatedPropertyKey(property.Key);
 
             IPropertyUpdater updater = newData.Updater;
-            updater.UpdateProperty(property, newName, propertyCategory, logHandler);
+            updater.UpdateProperty(property.Key, newKey, section, logHandler);
         }
 
-        private bool IsLegacyProperty(DelftIniProperty property)
+        private bool IsLegacyProperty(IniProperty property)
         {
-            return configurationValues.LegacyPropertyMapping.ContainsKey(property.Name.ToLower());
+            return configurationValues.LegacyPropertyMapping.ContainsKey(property.Key.ToLower());
         }
 
-        private static string GetUpdatedName(string propertyName,
-                                             IReadOnlyDictionary<string, string> mapping,
-                                             ILogHandler logHandler)
+        private static string GetUpdatedKey(string propertyKey,
+                                            IReadOnlyDictionary<string, string> mapping,
+                                            ILogHandler logHandler)
         {
-            string propertyNameLower = propertyName.ToLower();
+            string propertyKeyLower = propertyKey.ToLower();
 
-            if (!mapping.ContainsKey(propertyNameLower))
+            if (!mapping.ContainsKey(propertyKeyLower))
             {
                 return null;
             }
 
-            string mappedName = mapping[propertyNameLower];
-            logHandler?.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
-                                            propertyName,
-                                            mappedName);
+            string mappedKey = mapping[propertyKeyLower];
+            logHandler?.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
+                                            propertyKey,
+                                            mappedKey);
 
-            return mappedName;
+            return mappedKey;
         }
 
-        private static string GetUpdatedName(string propertyName,
-                                             IReadOnlyDictionary<string, NewPropertyData> mapping,
-                                             ILogHandler logHandler)
+        private static string GetUpdatedKey(string propertyKey,
+                                            IReadOnlyDictionary<string, NewPropertyData> mapping,
+                                            ILogHandler logHandler)
         {
-            string propertyNameLower = propertyName.ToLower();
+            string propertyKeyLower = propertyKey.ToLower();
 
-            if (!mapping.ContainsKey(propertyNameLower))
+            if (!mapping.ContainsKey(propertyKeyLower))
             {
                 return null;
             }
 
-            string mappedName = mapping[propertyNameLower].Name;
-            logHandler?.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
-                                            propertyName,
-                                            mappedName);
+            string mappedKey = mapping[propertyKeyLower].Key;
+            logHandler?.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
+                                            propertyKey,
+                                            mappedKey);
 
-            return mappedName;
+            return mappedKey;
         }
     }
 }

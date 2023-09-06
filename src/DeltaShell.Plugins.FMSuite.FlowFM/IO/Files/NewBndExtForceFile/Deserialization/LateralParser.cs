@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -11,7 +11,7 @@ using DHYDRO.Common.Logging;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization
 {
     /// <summary>
-    /// Parser for a lateral Delft INI category from the external forcing file (*_bnd.ext).
+    /// Parser for a lateral INI section from the external forcing file (*_bnd.ext).
     /// </summary>
     public sealed class LateralParser
     {
@@ -32,37 +32,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
         }
 
         /// <summary>
-        /// Parse the Delft INI category from the boundary external forcing file to a data access object.
-        /// Delft INI categories with the header "lateral" can be parsed.
-        /// If values from the Delft INI category are <c>null</c> or empty they will be set as <c>null</c> on the data access
-        /// object.
+        /// Parse the INI section from the boundary external forcing file to a data access object.
+        /// INI sections with the header "lateral" can be parsed.
+        /// If values from the INI section are <c>null</c> or empty they will be set as <c>null</c> on the data access object.
         /// </summary>
-        /// <param name="delftIniCategory"> The Delft INI category from the boundary external forcing file.</param>
+        /// <param name="section"> The INI section from the boundary external forcing file.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="delftIniCategory"/> is <c>null</c>.
+        /// Thrown when <paramref name="section"/> is <c>null</c>.
         /// </exception>
         /// <returns>
         /// A <see cref="LateralDTO"/> data access object that contains the parsed data of the lateral category.
         /// </returns>
-        public LateralDTO Parse(DelftIniCategory delftIniCategory)
+        public LateralDTO Parse(IniSection section)
         {
-            Ensure.NotNull(delftIniCategory, nameof(delftIniCategory));
+            Ensure.NotNull(section, nameof(section));
 
-            string id = ParseId(delftIniCategory);
-            string name = ParseName(delftIniCategory);
-            LateralForcingType type = ParseType(delftIniCategory);
-            LateralLocationType locationType = ParseLocationType(delftIniCategory);
-            int? numCoordinates = ParseNumCoordinates(delftIniCategory);
-            IEnumerable<double> xCoordinates = ParseXCoordinates(delftIniCategory);
-            IEnumerable<double> yCoordinates = ParseYCoordinates(delftIniCategory);
-            Steerable discharge = ParseDischarge(delftIniCategory);
+            string id = ParseId(section);
+            string name = ParseName(section);
+            LateralForcingType type = ParseType(section);
+            LateralLocationType locationType = ParseLocationType(section);
+            int? numCoordinates = ParseNumCoordinates(section);
+            IEnumerable<double> xCoordinates = ParseXCoordinates(section);
+            IEnumerable<double> yCoordinates = ParseYCoordinates(section);
+            Steerable discharge = ParseDischarge(section);
 
             return new LateralDTO(id, name, type, locationType, numCoordinates, xCoordinates, yCoordinates, discharge);
         }
 
-        private Steerable ParseDischarge(DelftIniCategory delftIniCategory)
+        private Steerable ParseDischarge(IniSection section)
         {
-            string discharge = Retrieve(delftIniCategory, BndExtForceFileConstants.DischargeKey);
+            string discharge = Retrieve(section, BndExtForceFileConstants.DischargeKey);
 
             if (!HasValue(discharge))
             {
@@ -92,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
                 };
             }
 
-            logHandler.ReportError(string.Format(Resources.Discharge_value_0_could_not_be_parsed_Line_1_, discharge, delftIniCategory.LineNumber));
+            logHandler.ReportError(string.Format(Resources.Discharge_value_0_could_not_be_parsed_Line_1_, discharge, section.LineNumber));
             return null;
         }
 
@@ -102,21 +101,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
         private static bool IsRealTime(string discharge) =>
             discharge.EqualsCaseInsensitive(BndExtForceFileConstants.RealTimeValue);
 
-        private static string ParseId(DelftIniCategory delftIniCategory)
+        private static string ParseId(IniSection section)
         {
-            string id = Retrieve(delftIniCategory, BndExtForceFileConstants.IdKey);
+            string id = Retrieve(section, BndExtForceFileConstants.IdKey);
             return HasValue(id) ? id : null;
         }
 
-        private static string ParseName(DelftIniCategory delftIniCategory)
+        private static string ParseName(IniSection section)
         {
-            string name = Retrieve(delftIniCategory, BndExtForceFileConstants.NameKey);
+            string name = Retrieve(section, BndExtForceFileConstants.NameKey);
             return HasValue(name) ? name : null;
         }
 
-        private static LateralForcingType ParseType(DelftIniCategory delftIniCategory)
+        private static LateralForcingType ParseType(IniSection section)
         {
-            string typeStr = Retrieve(delftIniCategory, BndExtForceFileConstants.TypeKey);
+            string typeStr = Retrieve(section, BndExtForceFileConstants.TypeKey);
             if (!HasValue(typeStr))
             {
                 return LateralForcingType.None;
@@ -130,9 +129,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             return LateralForcingType.Unsupported;
         }
 
-        private static LateralLocationType ParseLocationType(DelftIniCategory delftIniCategory)
+        private static LateralLocationType ParseLocationType(IniSection section)
         {
-            string locationTypeStr = Retrieve(delftIniCategory, BndExtForceFileConstants.LocationTypeKey);
+            string locationTypeStr = Retrieve(section, BndExtForceFileConstants.LocationTypeKey);
             if (!HasValue(locationTypeStr))
             {
                 return LateralLocationType.None;
@@ -146,9 +145,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             return LateralLocationType.Unsupported;
         }
 
-        private static int? ParseNumCoordinates(DelftIniCategory delftIniCategory)
+        private static int? ParseNumCoordinates(IniSection section)
         {
-            string numCoordinatesStr = Retrieve(delftIniCategory, BndExtForceFileConstants.NumCoordinatesKey);
+            string numCoordinatesStr = Retrieve(section, BndExtForceFileConstants.NumCoordinatesKey);
             if (int.TryParse(numCoordinatesStr, out int numCoordinates))
             {
                 return numCoordinates;
@@ -157,15 +156,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             return null;
         }
 
-        private IEnumerable<double> ParseXCoordinates(DelftIniCategory delftIniCategory) =>
-            ParseDoubles(delftIniCategory, BndExtForceFileConstants.XCoordinatesKey);
+        private IEnumerable<double> ParseXCoordinates(IniSection section) =>
+            ParseDoubles(section, BndExtForceFileConstants.XCoordinatesKey);
 
-        private IEnumerable<double> ParseYCoordinates(DelftIniCategory delftIniCategory) =>
-            ParseDoubles(delftIniCategory, BndExtForceFileConstants.YCoordinatesKey);
+        private IEnumerable<double> ParseYCoordinates(IniSection section) =>
+            ParseDoubles(section, BndExtForceFileConstants.YCoordinatesKey);
 
-        private IEnumerable<double> ParseDoubles(DelftIniCategory delftIniCategory, string propertyKey)
+        private IEnumerable<double> ParseDoubles(IniSection section, string propertyKey)
         {
-            string strValues = Retrieve(delftIniCategory, propertyKey);
+            string strValues = Retrieve(section, propertyKey);
             if (!HasValue(strValues))
             {
                 return null;
@@ -177,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             {
                 if (!strValue.TryParseToDouble(out double doubleValue))
                 {
-                    logHandler.ReportError(string.Format(Resources._0_could_not_be_parsed_to_a_double_for_property_1_Line_2_, strValue, propertyKey, delftIniCategory.LineNumber));
+                    logHandler.ReportError(string.Format(Resources._0_could_not_be_parsed_to_a_double_for_property_1_Line_2_, strValue, propertyKey, section.LineNumber));
                     continue;
                 }
 
@@ -192,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
 
         private static bool HasValue(string value) => !string.IsNullOrWhiteSpace(value);
 
-        private static string Retrieve(DelftIniCategory category, string property) =>
-            category.GetPropertyValue(property, comparisonType: ignoreCase);
+        private static string Retrieve(IniSection category, string property) =>
+            category.GetPropertyValueOrDefault(property);
     }
 }

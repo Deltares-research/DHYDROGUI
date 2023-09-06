@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+﻿using System.IO;
+using DeltaShell.NGHS.IO.Ini;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours
@@ -15,10 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBeha
     {
         public override void Invoke(Stream sourceFileStream,
                                     string sourceFilePath,
-                                    IList<DelftIniCategory> categories,
+                                    IniData iniData,
                                     ILogHandler logHandler)
         {
-            base.Invoke(sourceFileStream, sourceFilePath, categories, logHandler);
+            base.Invoke(sourceFileStream, sourceFilePath, iniData, logHandler);
             File.Delete(sourceFilePath);
         }
     }

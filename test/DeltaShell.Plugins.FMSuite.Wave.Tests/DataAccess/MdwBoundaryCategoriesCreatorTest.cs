@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         private readonly JonswapShape jonswapShape = new JonswapShape {PeakEnhancementFactor = factor};
 
         [Test]
-        public void CreateCategories_ShouldCreateACompleteCategoryForOneBoundary()
+        public void CreateSections_ShouldCreateACompleteSectionForOneBoundary()
         {
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
 
@@ -53,17 +53,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             SetupBoundaryContainerForBoundary(boundarySnappingCalculator, supportPoint1, supportPoint2, out Coordinate coordinate1, out Coordinate coordinate2);
 
             // Act
-            IEnumerable<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, Substitute.For<IFilesManager>());
+            IEnumerable<IniSection> sections = MdwBoundaryCategoriesCreator.CreateSections(boundaryContainer, Substitute.For<IFilesManager>());
 
             // Assert
-            DelftIniCategory createdCategory = categories.Single();
-            List<DelftIniProperty> properties = createdCategory.Properties.ToList();
+            IniSection createdSection = sections.Single();
+            List<IniProperty> properties = createdSection.Properties.ToList();
 
-            CheckCreatedCategory(properties, boundaryName, coordinate1, coordinate2);
+            CheckCreatedSection(properties, boundaryName, coordinate1, coordinate2);
         }
 
         [Test]
-        public void CreateCategories_ShouldCreateCategoriesForAllBoundaries()
+        public void CreateSections_ShouldCreateSectionsForAllBoundaries()
         {
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
 
@@ -92,19 +92,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                                               out Coordinate boundary2Coordinate1, out Coordinate boundary2Coordinate2);
 
             // Act
-            List<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, Substitute.For<IFilesManager>()).ToList();
+            List<IniSection> sections = MdwBoundaryCategoriesCreator.CreateSections(boundaryContainer, Substitute.For<IFilesManager>()).ToList();
 
             // Assert
-            Assert.AreEqual(2, categories.Count);
-            DelftIniCategory category1 = categories.First();
-            DelftIniCategory category2 = categories.Last();
+            Assert.AreEqual(2, sections.Count);
+            IniSection section1 = sections.First();
+            IniSection section2 = sections.Last();
 
-            CheckCreatedCategory(category1.Properties.ToList(), boundary1Name, boundary1Coordinate1, boundary1Coordinate2);
-            CheckCreatedCategory(category2.Properties.ToList(), boundary2Name, boundary2Coordinate1, boundary2Coordinate2);
+            CheckCreatedSection(section1.Properties.ToList(), boundary1Name, boundary1Coordinate1, boundary1Coordinate2);
+            CheckCreatedSection(section2.Properties.ToList(), boundary2Name, boundary2Coordinate1, boundary2Coordinate2);
         }
 
         [Test]
-        public void CreateCategories_WithUniformFileBasedData_CreatesCorrectCategory()
+        public void CreateSections_WithUniformFileBasedData_CreatesCorrectSection()
         {
             // Setup
             const string name = "boundary_name";
@@ -125,11 +125,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             var filesManager = Substitute.For<IFilesManager>();
 
             // Call
-            List<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager).ToList();
+            List<IniSection> sections = MdwBoundaryCategoriesCreator.CreateSections(boundaryContainer, filesManager).ToList();
 
             // Assert
-            DelftIniCategory category = categories.Single();
-            DelftIniProperty[] properties = category.Properties.ToArray();
+            IniSection section = sections.Single();
+            IniProperty[] properties = section.Properties.ToArray();
             Assert.That(properties, Has.Length.EqualTo(8));
             AssertProperty(properties[0], KnownWaveProperties.Name, name);
             AssertProperty(properties[1], KnownWaveProperties.Definition, "xy-coordinates");
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         }
 
         [Test]
-        public void CreateCategories_WithSpatiallyVaryingFileBasedData_CreatesCorrectCategory()
+        public void CreateSections_WithSpatiallyVaryingFileBasedData_CreatesCorrectSection()
         {
             // Setup
             const string name = "boundary_name";
@@ -177,11 +177,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             var filesManager = Substitute.For<IFilesManager>();
 
             // Call
-            List<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager).ToList();
+            List<IniSection> sections = MdwBoundaryCategoriesCreator.CreateSections(boundaryContainer, filesManager).ToList();
 
             // Assert
-            DelftIniCategory category = categories.Single();
-            DelftIniProperty[] properties = category.Properties.ToArray();
+            IniSection section = sections.Single();
+            IniProperty[] properties = section.Properties.ToArray();
             Assert.That(properties, Has.Length.EqualTo(13));
             AssertProperty(properties[0], KnownWaveProperties.Name, name);
             AssertProperty(properties[1], KnownWaveProperties.Definition, "xy-coordinates");
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         }
 
         [Test]
-        public void CreateCategories_WithFromSpectrumFileDefinedBoundaries_CreatesCorrectCategory()
+        public void CreateSections_WithFromSpectrumFileDefinedBoundaries_CreatesCorrectSection()
         {
             // Setup
             const string fileName = "file.txt";
@@ -217,11 +217,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             var filesManager = Substitute.For<IFilesManager>();
 
             // Call
-            IEnumerable<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager);
+            IEnumerable<IniSection> sections = MdwBoundaryCategoriesCreator.CreateSections(boundaryContainer, filesManager);
 
             // Assert
-            DelftIniCategory category = categories.Single();
-            DelftIniProperty[] properties = category.Properties.ToArray();
+            IniSection section = sections.Single();
+            IniProperty[] properties = section.Properties.ToArray();
             Assert.That(properties, Has.Length.EqualTo(2));
             AssertProperty(properties[0], KnownWaveProperties.Definition, "fromsp2file");
             AssertProperty(properties[1], KnownWaveProperties.OverallSpecFile, fileName);
@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         }
 
         [Test]
-        public void CreateCategories_WithFromSpectrumFileDefinedBoundaries_WithEmptyFilePath_CreatesCorrectCategory()
+        public void CreateSections_WithFromSpectrumFileDefinedBoundaries_WithEmptyFilePath_CreatesCorrectSection()
         {
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
@@ -240,11 +240,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             var filesManager = Substitute.For<IFilesManager>();
 
             // Call
-            IEnumerable<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager);
+            IEnumerable<IniSection> sections = MdwBoundaryCategoriesCreator.CreateSections(boundaryContainer, filesManager);
 
             // Assert
-            DelftIniCategory category = categories.Single();
-            DelftIniProperty[] properties = category.Properties.ToArray();
+            IniSection section = sections.Single();
+            IniProperty[] properties = section.Properties.ToArray();
             Assert.That(properties, Has.Length.EqualTo(2));
             AssertProperty(properties[0], KnownWaveProperties.Definition, "fromsp2file");
             AssertProperty(properties[1], KnownWaveProperties.OverallSpecFile, " ");
@@ -259,12 +259,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         }
 
         [TestCaseSource(nameof(ConstructorArgumentNullCases))]
-        public void CreateCategories_ArgumentNull_ThrowsArgumentNullException(IBoundaryContainer boundaryContainer,
-                                                                              IFilesManager filesManager,
-                                                                              string expectedParamName)
+        public void CreateSections_ArgumentNull_ThrowsArgumentNullException(IBoundaryContainer boundaryContainer,
+                                                                            IFilesManager filesManager,
+                                                                            string expectedParamName)
         {
             // Act
-            void Call() => MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager).ToList();
+            void Call() => MdwBoundaryCategoriesCreator.CreateSections(boundaryContainer, filesManager).ToList();
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -316,8 +316,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             boundarySnappingCalculator.CalculateCoordinateFromSupportPoint(supportPoint2).Returns(coordinate2);
         }
 
-        private static void CheckCreatedCategory(List<DelftIniProperty> properties, string boundary1Name, Coordinate coordinate1,
-                                                 Coordinate coordinate2)
+        private static void CheckCreatedSection(List<IniProperty> properties, string boundary1Name, Coordinate coordinate1,
+                                                Coordinate coordinate2)
         {
             Assert.AreEqual(11, properties.Count);
             AssertProperty(properties[0], KnownWaveProperties.Name, boundary1Name);
@@ -333,19 +333,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             AssertProperty(properties[10], KnownWaveProperties.PeakEnhancementFactor, factor);
         }
 
-        private static void AssertProperty(DelftIniProperty property, string name, double value)
+        private static void AssertProperty(IniProperty property, string key, double value)
         {
-            AssertProperty(property, name, value.ToString("e7", CultureInfo.InvariantCulture));
+            AssertProperty(property, key, value.ToString("e7", CultureInfo.InvariantCulture));
         }
 
-        private static void AssertSpatialProperty(DelftIniProperty property, string name, double value)
+        private static void AssertSpatialProperty(IniProperty property, string key, double value)
         {
-            AssertProperty(property, name, value.ToString("F7", CultureInfo.InvariantCulture));
+            AssertProperty(property, key, value.ToString("F7", CultureInfo.InvariantCulture));
         }
 
-        private static void AssertProperty(DelftIniProperty property, string name, string value)
+        private static void AssertProperty(IniProperty property, string key, string value)
         {
-            Assert.That(property.Name, Is.EqualTo(name));
+            Assert.That(property.Key, Is.EqualTo(key));
             Assert.That(property.Value, Is.EqualTo(value));
         }
 

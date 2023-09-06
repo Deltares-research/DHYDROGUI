@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.AreEqual(6, modelDefinition.ModelSchema.ModelDefinitionCategory.Count);
 
             Assert.AreEqual("nautical",
-                            modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, "DirConvention")
+                            modelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, "DirConvention")
                                            .GetValueAsString());
         }
 
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             ModelPropertySchema<WaveModelPropertyDefinition> schema = modelDefinition.ModelSchema;
             WaveModelPropertyDefinition propertyDefinitionBedFrictionCoef = schema.PropertyDefinitions[KnownWaveProperties.BedFrictionCoef.ToLower()];
 
-            WaveModelProperty propertyBedFriction = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFriction);
+            WaveModelProperty propertyBedFriction = modelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.BedFriction);
             Assert.IsNotNull(propertyBedFriction);
 
             //Check DefaultValueAsString
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.AreEqual(expectedDefaultValue, propertyDefinitionBedFrictionCoef.DefaultValueAsString);
 
             // Check value of property
-            WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFrictionCoef);
+            WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.BedFrictionCoef);
             Assert.IsNotNull(propertyBedFriction);
             string retrievedBedFrictionCoef = string.Format(CultureInfo.InvariantCulture, "{0}", propertyBedFrictionCoef.Value);
             Assert.AreEqual(expectedDefaultValue, retrievedBedFrictionCoef);
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             ModelPropertySchema<WaveModelPropertyDefinition> schema = modelDefinition.ModelSchema;
             WaveModelPropertyDefinition propertyDefinitionMaxIter = schema.PropertyDefinitions[KnownWaveProperties.MaxIter.ToLower()];
 
-            WaveModelProperty propertySimMode = modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode);
+            WaveModelProperty propertySimMode = modelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode);
             Assert.IsNotNull(propertySimMode);
 
             //Check DefaultValueAsString
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.AreEqual(expectedDefaultValue, propertyDefinitionMaxIter.DefaultValueAsString);
 
             // Check value of property
-            WaveModelProperty propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory, KnownWaveProperties.MaxIter);
+            WaveModelProperty propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveSections.NumericsSection, KnownWaveProperties.MaxIter);
             Assert.IsNotNull(propertySimMode);
             string retrievedMaxIter = string.Format(CultureInfo.InvariantCulture, "{0}", propertyMaxIter.Value);
             Assert.AreEqual(expectedDefaultValue, retrievedMaxIter);

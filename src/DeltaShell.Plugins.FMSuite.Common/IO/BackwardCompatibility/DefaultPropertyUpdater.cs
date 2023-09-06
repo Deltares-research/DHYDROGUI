@@ -1,5 +1,5 @@
 ﻿using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DHYDRO.Common.Logging;
 
@@ -14,20 +14,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <remarks>
         /// The default behaviour for updating legacy properties is simply updating their name to the up to date version.
         /// </remarks>
-        public void UpdateProperty(DelftIniProperty legacyProperty,
-                                   string newPropertyName,
-                                   DelftIniCategory legacyPropertyCategory,
+        public void UpdateProperty(string oldPropertyKey,
+                                   string newPropertyKey,
+                                   IniSection section,
                                    ILogHandler logHandler)
         {
-            Ensure.NotNull(legacyProperty, nameof(legacyProperty));
-            Ensure.NotNull(newPropertyName, nameof(newPropertyName));
+            Ensure.NotNull(oldPropertyKey, nameof(oldPropertyKey));
+            Ensure.NotNull(newPropertyKey, nameof(newPropertyKey));
+            Ensure.NotNull(section, nameof(section));
             Ensure.NotNull(logHandler, nameof(logHandler));
 
-            logHandler.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
-                                           legacyProperty.Name,
-                                           newPropertyName);
+            logHandler.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
+                                           oldPropertyKey,
+                                           newPropertyKey);
 
-            legacyProperty.Name = newPropertyName;
+            section.RenameProperties(oldPropertyKey, newPropertyKey);
         }
     }
 }

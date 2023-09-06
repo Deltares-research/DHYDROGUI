@@ -1,15 +1,16 @@
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class DelftIniCategoryExtension
     {
-        public static void AddSedimentProperty(this DelftIniCategory category, string name, string value, string unit,
-                                               string comment)
+        public static void AddSedimentProperty(this IniSection section, string key, string value, string unit, string comment)
         {
-            category.AddProperty(name, value,
-                                 string.Format("{0,-10}{1}",
-                                               string.IsNullOrEmpty(unit) ? string.Empty : "[" + unit + "]", comment));
+            var formattedComment = $"{(string.IsNullOrEmpty(unit) ? string.Empty : "[" + unit + "]"),-10}{comment}";
+
+            var property = new IniProperty(key, value, formattedComment);
+
+            section.AddProperty(property);
         }
     }
 }

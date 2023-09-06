@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -17,69 +16,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
     /// </summary>
     public class LegacyStartAndStopTimeUpdater : IPropertyUpdater
     {
-        public void UpdateProperty(DelftIniProperty legacyProperty,
-                                   string newPropertyName,
-                                   DelftIniCategory legacyPropertyCategory,
+        public void UpdateProperty(string oldPropertyKey,
+                                   string newPropertyKey,
+                                   IniSection section,
                                    ILogHandler logHandler)
         {
-            Ensure.NotNull(legacyProperty, nameof(legacyProperty));
-            Ensure.NotNull(newPropertyName, nameof(newPropertyName));
-            Ensure.NotNull(legacyPropertyCategory, nameof(legacyPropertyCategory));
+            Ensure.NotNull(oldPropertyKey, nameof(oldPropertyKey));
+            Ensure.NotNull(newPropertyKey, nameof(newPropertyKey));
+            Ensure.NotNull(section, nameof(section));
             Ensure.NotNull(logHandler, nameof(logHandler));
 
-            if (!IsValidLegacyPropertyForThisUpdater(legacyProperty))
+            if (!IsValidLegacyPropertyForThisUpdater(oldPropertyKey))
             {
                 return;
             }
 
-            EnsureRequiredPropertiesForUpdatingLegacyPropertyArePresent(legacyPropertyCategory);
+            EnsureRequiredPropertiesForUpdatingLegacyPropertyArePresent(section, oldPropertyKey);
 
-            UpdateLegacyProperty(legacyProperty, newPropertyName, legacyPropertyCategory, logHandler);
+            UpdateLegacyProperty(oldPropertyKey, newPropertyKey, section, logHandler);
         }
 
-        private static bool IsValidLegacyPropertyForThisUpdater(DelftIniProperty legacyProperty)
+        private static bool IsValidLegacyPropertyForThisUpdater(string legacyPropertyKey)
         {
-            return legacyProperty.Name.EqualsCaseInsensitive(KnownLegacyProperties.TStart)
-                   || legacyProperty.Name.EqualsCaseInsensitive(KnownLegacyProperties.TStop);
+            return legacyPropertyKey.EqualsCaseInsensitive(KnownLegacyProperties.TStart) || 
+                   legacyPropertyKey.EqualsCaseInsensitive(KnownLegacyProperties.TStop);
         }
 
-        private static void EnsureRequiredPropertiesForUpdatingLegacyPropertyArePresent(DelftIniCategory legacyPropertyCategory)
+        private static void EnsureRequiredPropertiesForUpdatingLegacyPropertyArePresent(IniSection section, string oldPropertyKey)
         {
-            EnsureRefDateIsPresentInCategoryAndHasValue(legacyPropertyCategory);
-            EnsureTUnitIsPresentInCategoryAndHasValueOrUseDefault(legacyPropertyCategory);
+            EnsurePropertyIsPresentInSection(section, oldPropertyKey);
+            EnsureRefDateIsPresentInSectionAndHasValue(section);
+            EnsureTUnitIsPresentInSectionAndHasValueOrUseDefault(section);
         }
 
-        private static void EnsureRefDateIsPresentInCategoryAndHasValue(DelftIniCategory legacyPropertyCategory)
+        private static void EnsureRefDateIsPresentInSectionAndHasValue(IniSection section)
         {
-            EnsurePropertyIsPresentInCategory(legacyPropertyCategory, KnownProperties.RefDate);
-            EnsurePropertyHasValue(legacyPropertyCategory, KnownProperties.RefDate);
+            EnsurePropertyIsPresentInSection(section, KnownProperties.RefDate);
+            EnsurePropertyHasValue(section, KnownProperties.RefDate);
         }
 
-        private static DelftIniProperty EnsurePropertyIsPresentInCategory(DelftIniCategory legacyPropertyCategory, string propertyName)
+        private static IniProperty EnsurePropertyIsPresentInSection(IniSection section, string propertyKey)
         {
-            DelftIniProperty requiredProperty = legacyPropertyCategory.Properties.FirstOrDefault(property => property.Name.EqualsCaseInsensitive(propertyName));
+            IniProperty requiredProperty = section.GetProperty(propertyKey);
             if (requiredProperty is null)
             {
-                throw new InvalidOperationException(string.Format(Resources.PropertyUpdater_Required_keyword_0_is_missing, propertyName));
+                throw new InvalidOperationException(string.Format(Resources.PropertyUpdater_Required_keyword_0_is_missing, propertyKey));
             }
 
             return requiredProperty;
         }
 
-        private static void EnsurePropertyHasValue(DelftIniCategory legacyPropertyCategory, string propertyName)
+        private static void EnsurePropertyHasValue(IniSection section, string propertyKey)
         {
-            string requiredPropertyValue = GetPropertyValue(propertyName, legacyPropertyCategory);
+            string requiredPropertyValue = GetPropertyValue(propertyKey, section);
             if (string.IsNullOrWhiteSpace(requiredPropertyValue))
             {
-                throw new InvalidOperationException(string.Format(Resources.PropertyUpdater_Required_value_for_keyword_0_is_missing, propertyName));
+                throw new InvalidOperationException(string.Format(Resources.PropertyUpdater_Required_value_for_keyword_0_is_missing, propertyKey));
             }
         }
 
-        private static void EnsureTUnitIsPresentInCategoryAndHasValueOrUseDefault(DelftIniCategory legacyPropertyCategory)
+        private static void EnsureTUnitIsPresentInSectionAndHasValueOrUseDefault(IniSection section)
         {
-            DelftIniProperty requiredProperty = EnsurePropertyIsPresentInCategory(legacyPropertyCategory, KnownProperties.Tunit);
+            IniProperty requiredProperty = EnsurePropertyIsPresentInSection(section, KnownProperties.Tunit);
 
-            string requiredPropertyValue = GetPropertyValue(KnownProperties.Tunit, legacyPropertyCategory);
+            string requiredPropertyValue = GetPropertyValue(KnownProperties.Tunit, section);
             if (requiredPropertyValue is null)
             {
                 const string defaultTUnitValue = "S";
@@ -87,26 +87,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
             }
         }
 
-        private static void UpdateLegacyProperty(DelftIniProperty legacyProperty,
-                                                 string newPropertyName,
-                                                 DelftIniCategory legacyPropertyCategory,
+        private static void UpdateLegacyProperty(string oldPropertyKey,
+                                                 string newPropertyKey,
+                                                 IniSection section,
                                                  ILogHandler logHandler)
         {
-            UpdatePropertyName(legacyProperty, newPropertyName, logHandler);
-            UpdatePropertyValue(legacyProperty, legacyPropertyCategory, logHandler);
+            UpdatePropertyKey(oldPropertyKey, newPropertyKey, section, logHandler);
+            UpdatePropertyValue(newPropertyKey, section, logHandler);
         }
 
-        private static void UpdatePropertyName(DelftIniProperty legacyProperty, string newPropertyName, ILogHandler logHandler)
+        private static void UpdatePropertyKey(string oldPropertyKey, string newPropertyKey, IniSection section, ILogHandler logHandler)
         {
-            LogWarningAboutUpdatedName(legacyProperty, newPropertyName, logHandler);
+            LogWarningAboutUpdatedKey(oldPropertyKey, newPropertyKey, logHandler);
 
-            legacyProperty.Name = newPropertyName;
+            section.RenameProperties(oldPropertyKey, newPropertyKey);
         }
 
-        private static void UpdatePropertyValue(DelftIniProperty legacyProperty, DelftIniCategory legacyPropertyCategory, ILogHandler logHandler)
+        private static void UpdatePropertyValue(string newPropertyKey, IniSection section, ILogHandler logHandler)
         {
-            string tUnit = GetTUnitFromCategory(legacyPropertyCategory);
-            string refDateAsString = GetRefDateFromCategory(legacyPropertyCategory);
+            IniProperty legacyProperty = section.GetProperty(newPropertyKey);
+            
+            string tUnit = GetTUnitFromSection(section);
+            string refDateAsString = GetRefDateFromSection(section);
 
             string newValue = GetNewValue(legacyProperty, refDateAsString, tUnit);
 
@@ -115,24 +117,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
             legacyProperty.Value = newValue;
         }
 
-        private static string GetTUnitFromCategory(DelftIniCategory legacyPropertyCategory)
+        private static string GetTUnitFromSection(IniSection section)
         {
-            return GetPropertyValue(KnownProperties.Tunit, legacyPropertyCategory);
+            return GetPropertyValue(KnownProperties.Tunit, section);
         }
 
-        private static string GetRefDateFromCategory(DelftIniCategory legacyPropertyCategory)
+        private static string GetRefDateFromSection(IniSection section)
         {
-            return GetPropertyValue(KnownProperties.RefDate, legacyPropertyCategory);
+            return GetPropertyValue(KnownProperties.RefDate, section);
         }
 
-        private static string GetPropertyValue(string propertyName, DelftIniCategory legacyPropertyCategory)
+        private static string GetPropertyValue(string propertyKey, IniSection section)
         {
-            return legacyPropertyCategory.Properties
-                                         .FirstOrDefault(property => property.Name.EqualsCaseInsensitive(propertyName))?
-                                         .Value;
+            return section.GetPropertyValueOrDefault(propertyKey);
         }
 
-        private static string GetNewValue(DelftIniProperty legacyProperty, string refDateAsString, string tUnit)
+        private static string GetNewValue(IniProperty legacyProperty, string refDateAsString, string tUnit)
         {
             var refDate = FMParser.FromString<DateOnly>(refDateAsString);
             var offset = FMParser.FromString<double>(legacyProperty.Value);
@@ -163,19 +163,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
             return FMParser.ToString(newValue, typeof(DateTime));
         }
 
-        private static void LogWarningAboutUpdatedName(DelftIniProperty legacyProperty, string newPropertyName, ILogHandler logHandler)
+        private static void LogWarningAboutUpdatedKey(string oldPropertyKey, string newPropertyKey, ILogHandler logHandler)
         {
             logHandler.ReportWarningFormat(
-                CommonResources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
-                legacyProperty.Name,
-                newPropertyName);
+                CommonResources.DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
+                oldPropertyKey,
+                newPropertyKey);
         }
 
-        private static void ReportWarningAboutUpdatedValue(DelftIniProperty legacyProperty, string newValue, ILogHandler logHandler)
+        private static void ReportWarningAboutUpdatedValue(IniProperty legacyProperty, string newValue, ILogHandler logHandler)
         {
             logHandler.ReportWarningFormat(
                 CommonResources.DelftIniBackwardsCompatibilityHelper_Value_for_0_has_been_updated_from_1_to_2,
-                legacyProperty.Name,
+                legacyProperty.Key,
                 legacyProperty.Value,
                 newValue);
         }

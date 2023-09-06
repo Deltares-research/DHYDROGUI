@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DHYDRO.Common.Logging;
 
@@ -8,40 +8,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
 {
     public class CollectPropertyValueWithDependentsBehaviour : IDelftIniPropertyBehaviour
     {
-        private readonly string propertyName;
+        private readonly string propertyKey;
         private readonly string relativeDirectory;
         private readonly IDelftIniFileOperator iniFileOperator;
 
         /// <summary>
         /// Creates a new <see cref="CollectPropertyValueWithDependentsBehaviour"/>.
         /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyKey">Name of the property.</param>
         /// <param name="relativeDirectory">The relative directory.</param>
         /// <param name="iniFileOperator">The ini file operator.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public CollectPropertyValueWithDependentsBehaviour(string propertyName,
+        public CollectPropertyValueWithDependentsBehaviour(string propertyKey,
                                                            string relativeDirectory,
                                                            IDelftIniFileOperator iniFileOperator)
         {
-            Ensure.NotNull(propertyName, nameof(propertyName));
+            Ensure.NotNull(propertyKey, nameof(propertyKey));
             Ensure.NotNull(relativeDirectory, nameof(relativeDirectory));
             Ensure.NotNull(iniFileOperator, nameof(iniFileOperator));
 
-            this.propertyName = propertyName;
+            this.propertyKey = propertyKey;
             this.relativeDirectory = relativeDirectory;
             this.iniFileOperator = iniFileOperator;
         }
 
-        public void Invoke(DelftIniProperty property, ILogHandler logHandler)
+        public void Invoke(IniProperty property, ILogHandler logHandler)
         {
             Ensure.NotNull(property, nameof(property));
 
             string fullPath = Path.Combine(relativeDirectory, property.Value ?? "");
             var filePathInfo = new FileInfo(fullPath);
 
-            if (property.Name.Equals(propertyName) && filePathInfo.Exists)
+            if (property.Key.Equals(propertyKey) && filePathInfo.Exists)
             {
                 FileStream stream = filePathInfo.Open(FileMode.Open);
                 iniFileOperator.Invoke(stream, filePathInfo.FullName, logHandler);

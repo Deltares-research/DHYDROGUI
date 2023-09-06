@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
 using DHYDRO.Common.Logging;
 
@@ -51,38 +51,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations
             Ensure.NotNull(sourceFileStream, nameof(sourceFileStream));
             Ensure.NotNull(sourceFilePath, nameof(sourceFilePath));
 
-            IList<DelftIniCategory> categories = 
-                iniReader.ReadDelftIniFile(sourceFileStream, sourceFilePath);
+            IniData iniData = iniReader.ReadDelftIniFile(sourceFileStream, sourceFilePath);
 
-            foreach (DelftIniCategory category in categories)
+            foreach (IniSection section in iniData.Sections)
             {
-                InvokeOnCategory(category, logHandler);
+                InvokeOnSection(section, logHandler);
             }
 
             foreach (IDelftIniPostOperationBehaviour postOperation in postOperations)
             {
-                postOperation.Invoke(sourceFileStream, sourceFilePath, categories, logHandler);
+                postOperation.Invoke(sourceFileStream, sourceFilePath, iniData, logHandler);
             }
         }
 
-        private void InvokeOnCategory(DelftIniCategory category, ILogHandler logHandler)
+        private void InvokeOnSection(IniSection section, ILogHandler logHandler)
         {
-            if (!categoryPropertyBehaviourMapping.TryGetValue(category.Name, out IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> categoryMapping))
+            if (!categoryPropertyBehaviourMapping.TryGetValue(section.Name, out IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> categoryMapping))
             {
                 return;
             }
 
-            foreach (DelftIniProperty property in category.Properties)
+            foreach (IniProperty property in section.Properties)
             {
                 InvokeOnProperty(property, categoryMapping, logHandler);
             }
         }
 
-        private static void InvokeOnProperty(DelftIniProperty property,
-                                            IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> categoryMapping,
-                                            ILogHandler logHandler)
+        private static void InvokeOnProperty(IniProperty property,
+                                             IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> categoryMapping,
+                                             ILogHandler logHandler)
         {
-            if (categoryMapping.TryGetValue(property.Name, out IDelftIniPropertyBehaviour propertyBehaviour))
+            if (categoryMapping.TryGetValue(property.Key, out IDelftIniPropertyBehaviour propertyBehaviour))
             {
                 propertyBehaviour.Invoke(property, logHandler);
             }

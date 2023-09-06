@@ -13,8 +13,8 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
-using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
@@ -301,11 +301,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 using (var fileStream = new FileStream(mduFilePath, FileMode.Open, FileAccess.Read))
                 {
                     var reader = new MduDelftIniReader();
-                    IList<DelftIniCategory> categories = reader.ReadDelftIniFile(fileStream, mduFilePath);
+                    IniData iniData = reader.ReadDelftIniFile(fileStream, mduFilePath);
 
-                    DelftIniCategory category = categories.GetByName("geometry", StringComparison.OrdinalIgnoreCase);
-                    gridFileName = category?.GetPropertyValue(KnownProperties.NetFile,
-                                                              comparisonType: StringComparison.OrdinalIgnoreCase);
+                    IniSection geometrySection = iniData.GetSection("geometry");
+                    gridFileName = geometrySection?.GetPropertyValueOrDefault(KnownProperties.NetFile);
 
                     return gridFileName != null;
                 }

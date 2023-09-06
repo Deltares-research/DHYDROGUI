@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                                                 string relativeDirectory,
                                                 string goalDirectory) : base(expectedKey, relativeDirectory, goalDirectory) {}
 
-        protected override void HandleMigration(FileInfo filePathInfo, DelftIniProperty property)
+        protected override void HandleMigration(FileInfo filePathInfo, IniProperty property)
         {
             string goalPath = Path.Combine(GoalDirectory, Path.GetFileName(property.Value));
 

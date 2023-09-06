@@ -7,7 +7,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
@@ -963,13 +963,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             model.ExportTo(mduPath);
 
             string path = model.BndExtFilePath;
-            IList<DelftIniCategory> blocks;
+            IniData iniData;
             using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                blocks = new DelftIniReader().ReadDelftIniFile(fileStream, path);
+                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, path);
             }
 
-            Assert.AreEqual(3, blocks.Count);
+            Assert.AreEqual(3, iniData.Sections.Count());
         }
 
         [Test]

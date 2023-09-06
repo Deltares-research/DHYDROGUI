@@ -2,7 +2,7 @@
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -13,30 +13,30 @@ using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 {
     /// <summary>
-    /// Visits <see cref="ISpatiallyDefinedDataComponent"/> to build a <see cref="DelftIniCategory"/>
+    /// Visits <see cref="ISpatiallyDefinedDataComponent"/> to build a <see cref="IniSection"/>
     /// with the relevant spectrum data.
     /// </summary>
     /// <seealso cref="ISpatiallyDefinedDataComponentVisitor"/>
     public class SpectrumDataComponentVisitor : ISpatiallyDefinedDataComponentVisitor
     {
-        private readonly DelftIniCategory category;
+        private readonly IniSection section;
         private readonly SpectrumParametersVisitor parametersVisitor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpectrumDataComponentVisitor"/> class.
         /// </summary>
-        /// <param name="category">The delft ini category.</param>
+        /// <param name="section">The INI section.</param>
         /// <param name="filesManager">The files manager.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="category"/> or <paramref name="filesManager"/> is <c>null</c>.
+        /// Thrown when <paramref name="section"/> or <paramref name="filesManager"/> is <c>null</c>.
         /// </exception>
-        public SpectrumDataComponentVisitor(DelftIniCategory category, IFilesManager filesManager)
+        public SpectrumDataComponentVisitor(IniSection section, IFilesManager filesManager)
         {
-            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(section, nameof(section));
             Ensure.NotNull(filesManager, nameof(filesManager));
 
-            this.category = category;
-            parametersVisitor = new SpectrumParametersVisitor(category, filesManager);
+            this.section = section;
+            parametersVisitor = new SpectrumParametersVisitor(section, filesManager);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             SpectrumType = parametersVisitor.SpectrumType;
             if (SpectrumType == SpectrumImportExportType.FromFile)
             {
-                category.SetProperty(KnownWaveProperties.Spectrum, parametersVisitor.SpectrumFile);
+                section.AddOrUpdateProperty(KnownWaveProperties.Spectrum, parametersVisitor.SpectrumFile);
             }
         }
 
@@ -74,8 +74,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                     return;
                 }
 
-                category.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist, kvp.Key.Distance);
-                category.AddProperty(KnownWaveProperties.Spectrum, parametersVisitor.SpectrumFile);
+                section.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist, kvp.Key.Distance);
+                section.AddProperty(KnownWaveProperties.Spectrum, parametersVisitor.SpectrumFile);
             }
         }
     }

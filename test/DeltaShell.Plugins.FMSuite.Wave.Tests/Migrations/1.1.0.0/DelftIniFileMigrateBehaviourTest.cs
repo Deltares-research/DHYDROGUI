@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using DHYDRO.Common.Logging;
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             const string value = "value";
             const string comment = "comment";
 
-            var property = new DelftIniProperty(key, value, comment);
+            var property = new IniProperty(key, value, comment);
 
             var behaviour = new DelftIniFileMigrateBehaviour("notKey",
                                                              ".",
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             behaviour.Invoke(property, logHandler);
 
             // Assert
-            Assert.That(property.Name, Is.EqualTo(key));
+            Assert.That(property.Key, Is.EqualTo(key));
             Assert.That(property.Value, Is.EqualTo(value));
             Assert.That(property.Comment, Is.EqualTo(comment));
 
@@ -106,11 +106,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 string goalDir = tempDir.CreateDirectory(goalDirName);
 
-                const string propertyName = "key";
+                const string propertyKey = "key";
                 const string propertyComment = "Comment";
-                var property = new DelftIniProperty(propertyName, oldPath, propertyComment);
+                var property = new IniProperty(propertyKey, oldPath, propertyComment);
 
-                var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
+                var behaviour = new DelftIniFileMigrateBehaviour(propertyKey,
                                                                  Path.Combine(tempDir.Path, subDirectory),
                                                                  goalDir,
                                                                  migrator);
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 behaviour.Invoke(property, logHandler);
 
                 // Assert
-                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Key, Is.EqualTo(propertyKey));
                 Assert.That(property.Comment, Is.EqualTo(propertyComment));
                 Assert.That(property.Value, Is.EqualTo(fileName));
 
@@ -156,11 +156,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 string goalDir = tempDir.CreateDirectory(goalDirName);
 
-                const string propertyName = "key";
+                const string propertyKey = "key";
                 const string propertyComment = "Comment";
-                var property = new DelftIniProperty(propertyName, absolutePath, propertyComment);
+                var property = new IniProperty(propertyKey, absolutePath, propertyComment);
 
-                var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
+                var behaviour = new DelftIniFileMigrateBehaviour(propertyKey,
                                                                  Path.Combine(tempDir.Path, subDirectory),
                                                                  goalDir,
                                                                  migrator);
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 behaviour.Invoke(property, logHandler);
 
                 // Assert
-                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Key, Is.EqualTo(propertyKey));
                 Assert.That(property.Comment, Is.EqualTo(propertyComment));
                 Assert.That(property.Value, Is.EqualTo(fileName));
 
@@ -201,11 +201,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 string oldPath = Path.Combine(tempDir.Path, fileName);
                 string goalDir = tempDir.CreateDirectory(goalDirName);
 
-                const string propertyName = "key";
+                const string propertyKey = "key";
                 const string propertyComment = "Comment";
-                var property = new DelftIniProperty(propertyName, oldPath, propertyComment);
+                var property = new IniProperty(propertyKey, oldPath, propertyComment);
 
-                var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
+                var behaviour = new DelftIniFileMigrateBehaviour(propertyKey,
                                                                  tempDir.Path,
                                                                  goalDir,
                                                                  migrator);
@@ -214,12 +214,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 behaviour.Invoke(property, logHandler);
 
                 // Assert
-                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Key, Is.EqualTo(propertyKey));
                 Assert.That(property.Comment, Is.EqualTo(propertyComment));
                 Assert.That(property.Value, Is.EqualTo(oldPath));
 
                 const string expectedString = "The file associated with property {0}, {1} at {2}, does not exist and thus is not migrated.";
-                logHandler.Received(1).ReportWarningFormat(expectedString, propertyName, fileName, oldPath);
+                logHandler.Received(1).ReportWarningFormat(expectedString, propertyKey, fileName, oldPath);
             }
         }
 
@@ -234,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             const string value = "";
             const string comment = "comment";
 
-            var property = new DelftIniProperty(key, value, comment);
+            var property = new IniProperty(key, value, comment);
 
             var behaviour = new DelftIniFileMigrateBehaviour("key", ".", ".", migrator);
 
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             behaviour.Invoke(property, logHandler);
 
             // Assert
-            Assert.That(property.Name, Is.EqualTo(key));
+            Assert.That(property.Key, Is.EqualTo(key));
             Assert.That(property.Value, Is.EqualTo(value));
             Assert.That(property.Comment, Is.EqualTo(comment));
 

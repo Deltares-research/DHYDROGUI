@@ -273,8 +273,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 
             /* Wave Model */
             waveModel.OuterDomain.Grid = CreateWaveModelOuterDomainGrid();
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM).Value = true;
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).Value = "file.txt";
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.WriteCOM).Value = true;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile).Value = "file.txt";
 
             /*FM Model*/
             fmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);

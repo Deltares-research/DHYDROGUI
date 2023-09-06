@@ -23,14 +23,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         public void Constructor_ExpectedArguments()
         {
             // Setup
-            const string name = "random name";
+            const string key = "random key";
             var updater = Substitute.For<IPropertyUpdater>();
 
             // Call
-            var data = new NewPropertyData(name, updater);
+            var data = new NewPropertyData(key, updater);
 
             // Assert
-            Assert.That(data.Name, Is.EqualTo(name));
+            Assert.That(data.Key, Is.EqualTo(key));
             Assert.That(data.Updater, Is.SameAs(updater));
         }
 

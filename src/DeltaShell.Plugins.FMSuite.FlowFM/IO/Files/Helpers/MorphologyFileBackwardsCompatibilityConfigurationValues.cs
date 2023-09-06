@@ -4,7 +4,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 {
     /// <summary>
-    /// <see cref="MorphologyFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy categories
+    /// <see cref="MorphologyFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy sections
     /// and properties for the <see cref="MorphologyFile"/>
     /// </summary>
     /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>
@@ -24,6 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             {"bslhd", new NewPropertyData("Bshld", new DefaultPropertyUpdater())}
         };
 
-        public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } = new Dictionary<string, string>();
+        public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } = new Dictionary<string, string>();
     }
 }

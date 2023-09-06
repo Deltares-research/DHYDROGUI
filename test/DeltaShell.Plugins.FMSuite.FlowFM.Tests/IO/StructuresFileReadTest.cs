@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
@@ -43,15 +42,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 WritePliFileSingleStructure(tempDir, structureName);
 
-                DelftIniCategory structureCategory = GetBaseStructureCategory(structureName, "weir");
-                SetSimpleWeirRequiredProperties(structureCategory);
+                IniSection structureSection = GetBaseStructureSection(structureName, "weir");
+                SetSimpleWeirRequiredProperties(structureSection);
 
                 if (hasExplicitField)
                 {
-                    structureCategory.AddProperty(KnownStructureProperties.CrestWidth, " ", "#");
+                    structureSection.AddProperty(KnownStructureProperties.CrestWidth, " ");
                 }
 
-                WriteStructuresIniFile(structureCategory, tempDir);
+                WriteStructuresIniFile(structureSection, tempDir);
 
                 // When | Then
                 // - Read structures file
@@ -89,15 +88,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 WritePliFileSingleStructure(tempDir, structureName);
 
-                DelftIniCategory structureCategory = GetBaseStructureCategory(structureName, "gate");
-                SetSimpleGateRequiredProperties(structureCategory);
+                IniSection structureSection = GetBaseStructureSection(structureName, "gate");
+                SetSimpleGateRequiredProperties(structureSection);
 
                 if (hasExplicitField)
                 {
-                    structureCategory.AddProperty(KnownStructureProperties.CrestWidth, " ", "#");
+                    structureSection.AddProperty(KnownStructureProperties.CrestWidth, " ");
                 }
 
-                WriteStructuresIniFile(structureCategory, tempDir);
+                WriteStructuresIniFile(structureSection, tempDir);
 
                 // When | Then
                 // - Read structures file
@@ -135,19 +134,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 WritePliFileSingleStructure(tempDir, structureName);
 
-                DelftIniCategory structureCategory = GetBaseStructureCategory(structureName, "generalstructure");
-                SetGeneralStructureRequiredProperties(structureCategory);
+                IniSection structureSection = GetBaseStructureSection(structureName, "generalstructure");
+                SetGeneralStructureRequiredProperties(structureSection);
 
                 if (hasExplicitFields)
                 {
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Width), " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Width), " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.CrestWidth), " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Width), " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Width), " ", "#");
+                    structureSection.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Width), " ");
+                    structureSection.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Width), " ");
+                    structureSection.AddProperty(GetName(KnownGeneralStructureProperties.CrestWidth), " ");
+                    structureSection.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Width), " ");
+                    structureSection.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Width), " ");
                 }
 
-                WriteStructuresIniFile(structureCategory, tempDir);
+                WriteStructuresIniFile(structureSection, tempDir);
 
                 // When | Then
                 // - Read structures file
@@ -184,18 +183,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         /// <summary>
-        /// Write the <paramref name="structureCategory"/> to the structures ini file in the
+        /// Write the <paramref name="structureSection"/> to the structures ini file in the
         /// specified <paramref name="tempDir"/>.
         /// </summary>
-        /// <param name="structureCategory">The structure category.</param>
+        /// <param name="structureSection">The structure section.</param>
         /// <param name="tempDir">The temporary dir.</param>
         /// <remarks> The newly created file is always called structures.ini </remarks>
-        private static void WriteStructuresIniFile(DelftIniCategory structureCategory, string tempDir)
+        private static void WriteStructuresIniFile(IniSection structureSection, string tempDir)
         {
-            var categories = new List<DelftIniCategory>() {structureCategory};
+            var iniData = new IniData();
+            iniData.AddSection(structureSection);
 
             string fileIniPath = Path.Combine(tempDir, "structures.ini");
-            new DelftIniWriter().WriteDelftIniFile(categories, fileIniPath);
+            new DelftIniWriter().WriteDelftIniFile(iniData, fileIniPath);
         }
 
         /// <summary>
@@ -219,61 +219,61 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         /// <summary>
-        /// Get the base structure category.
+        /// Get the base structure section.
         /// </summary>
         /// <param name="structureName">Name of the structure.</param>
         /// <param name="structureType">Type of the structure.</param>
-        /// <returns> A DelftIniCategory describing the category, type, name and geo file. </returns>
-        private static DelftIniCategory GetBaseStructureCategory(string structureName, string structureType)
+        /// <returns> A <see cref="IniSection"/> describing the section, type, name and geo file. </returns>
+        private static IniSection GetBaseStructureSection(string structureName, string structureType)
         {
-            var structureCategory = new DelftIniCategory("structure");
-            structureCategory.AddProperty(KnownStructureProperties.Type, structureType, "#");
-            structureCategory.AddProperty(KnownStructureProperties.Name, structureName, "#");
-            structureCategory.AddProperty(KnownStructureProperties.PolylineFile, $"{structureName}.pli", "#");
-            return structureCategory;
+            var structureSection = new IniSection("structure");
+            structureSection.AddProperty(KnownStructureProperties.Type, structureType);
+            structureSection.AddProperty(KnownStructureProperties.Name, structureName);
+            structureSection.AddProperty(KnownStructureProperties.PolylineFile, $"{structureName}.pli");
+            return structureSection;
         }
 
-        private static void SetSimpleWeirRequiredProperties(DelftIniCategory structureCategory)
+        private static void SetSimpleWeirRequiredProperties(IniSection structureSection)
         {
-            structureCategory.AddProperty(KnownStructureProperties.CrestLevel, "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.LateralContractionCoefficient, "1.0", "#");
+            structureSection.AddProperty(KnownStructureProperties.CrestLevel, "0.0");
+            structureSection.AddProperty(KnownStructureProperties.LateralContractionCoefficient, "1.0");
         }
 
-        private static void SetSimpleGateRequiredProperties(DelftIniCategory structureCategory)
+        private static void SetSimpleGateRequiredProperties(IniSection structureSection)
         {
-            structureCategory.AddProperty(KnownStructureProperties.CrestLevel, "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.GateOpeningWidth, "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.GateHeight, "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric", "#");
+            structureSection.AddProperty(KnownStructureProperties.CrestLevel, "0.0");
+            structureSection.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, "0.0");
+            structureSection.AddProperty(KnownStructureProperties.GateOpeningWidth, "0.0");
+            structureSection.AddProperty(KnownStructureProperties.GateHeight, "0.0");
+            structureSection.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric");
         }
 
-        private static void SetGeneralStructureRequiredProperties(DelftIniCategory structureCategory)
+        private static void SetGeneralStructureRequiredProperties(IniSection structureSection)
         {
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Level), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Level), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.CrestLevel), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Level), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Level), "0.0", "#");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Level), "0.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Level), "0.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.CrestLevel), "0.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Level), "0.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Level), "0.0");
 
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateLowerEdgeLevel), "0.0", "#");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.GateLowerEdgeLevel), "0.0");
 
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient), "1.0", "#");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient), "1.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient), "1.0");
 
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.ExtraResistance), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateHeight), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateOpeningWidth), "0.0", "#");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.ExtraResistance), "0.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.GateHeight), "0.0");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.GateOpeningWidth), "0.0");
 
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateOpeningHorizontalDirection), "symmetric", "#");
+            structureSection.AddProperty(GetName(KnownGeneralStructureProperties.GateOpeningHorizontalDirection), "symmetric");
         }
 
         private static void AssertThatStructureIsCorrect(IStructureObject structure, Type expectedWeirFormulaType)

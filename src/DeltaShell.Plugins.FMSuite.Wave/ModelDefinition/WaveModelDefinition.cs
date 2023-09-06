@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             Properties = new EventedList<WaveModelProperty>();
             foreach (WaveModelPropertyDefinition propertyDefinition in ModelSchema.PropertyDefinitions.Values)
             {
-                if (MdwFile.ExcludedCategories.Contains(propertyDefinition.Category))
+                if (MdwFile.ExcludedSections.Contains(propertyDefinition.Category))
                 {
                     continue;
                 }
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
                 // override default reference date property value with current date
                 ModelPropertyDefinition referenceDatePropertyDefinition =
-                    ModelSchema.ModelDefinitionCategory[KnownWaveCategories.GeneralCategory]?
+                    ModelSchema.ModelDefinitionCategory[KnownWaveSections.GeneralSection]?
                                .PropertyDefinitions
                                .FirstOrDefault(p => p.FilePropertyName == KnownWaveProperties.ReferenceDate);
 
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         private DateTime GetReferenceDateAsDateTime()
         {
-            object value = GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value;
+            object value = GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.ReferenceDate).Value;
             var refDate = (DateOnly)value;
             return refDate.ToDateTime(TimeOnly.MinValue);
         }
@@ -151,86 +151,86 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             {
                 throw new ArgumentException($"Unexpected non-zero time in ReferenceTime value {value}");
             }
-            GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ReferenceDate).Value = refDate;
+            GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.ReferenceDate).Value = refDate;
 
         }
 
         public WaveDirectionalSpaceType DefaultDirectionalSpaceType =>
-            (WaveDirectionalSpaceType)GetModelProperty(KnownWaveCategories.GeneralCategory,
+            (WaveDirectionalSpaceType)GetModelProperty(KnownWaveSections.GeneralSection,
                                                         KnownWaveProperties.DirectionalSpaceType).Value;
 
         public int DefaultNumberOfDirections =>
-            (int)GetModelProperty(KnownWaveCategories.GeneralCategory,
+            (int)GetModelProperty(KnownWaveSections.GeneralSection,
                                    KnownWaveProperties.NumberOfDirections).Value;
 
         public double DefaultStartDirection =>
-            (double)GetModelProperty(KnownWaveCategories.GeneralCategory,
+            (double)GetModelProperty(KnownWaveSections.GeneralSection,
                                       KnownWaveProperties.StartDirection).Value;
 
         public double DefaultEndDirection =>
-            (double)GetModelProperty(KnownWaveCategories.GeneralCategory,
+            (double)GetModelProperty(KnownWaveSections.GeneralSection,
                                       KnownWaveProperties.EndDirection).Value;
 
         public int DefaultNumberOfFrequencies =>
-            (int)GetModelProperty(KnownWaveCategories.GeneralCategory,
+            (int)GetModelProperty(KnownWaveSections.GeneralSection,
                                    KnownWaveProperties.NumberOfFrequencies).Value;
 
         public double DefaultStartFrequency =>
-            (double)GetModelProperty(KnownWaveCategories.GeneralCategory,
+            (double)GetModelProperty(KnownWaveSections.GeneralSection,
                                       KnownWaveProperties.StartFrequency).Value;
 
         public double DefaultEndFrequency =>
-            (double)GetModelProperty(KnownWaveCategories.GeneralCategory,
+            (double)GetModelProperty(KnownWaveSections.GeneralSection,
                                       KnownWaveProperties.EndFrequency).Value;
 
         public UsageFromFlowType DefaultBedLevelUsage
         {
             get =>
-                (UsageFromFlowType)GetModelProperty(KnownWaveCategories.GeneralCategory,
+                (UsageFromFlowType)GetModelProperty(KnownWaveSections.GeneralSection,
                                                      KnownWaveProperties.FlowBedLevelUsage).Value;
             set =>
-                GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.FlowBedLevelUsage)
+                GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.FlowBedLevelUsage)
                     .SetValueAsString(((int)value).ToString());
         }
 
         public UsageFromFlowType DefaultWaterLevelUsage
         {
             get =>
-                (UsageFromFlowType)GetModelProperty(KnownWaveCategories.GeneralCategory,
+                (UsageFromFlowType)GetModelProperty(KnownWaveSections.GeneralSection,
                                                      KnownWaveProperties.FlowWaterLevelUsage).Value;
             set =>
-                GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.FlowWaterLevelUsage)
+                GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.FlowWaterLevelUsage)
                     .SetValueAsString(((int)value).ToString());
         }
 
         public UsageFromFlowType DefaultVelocityUsage
         {
             get =>
-                (UsageFromFlowType)GetModelProperty(KnownWaveCategories.GeneralCategory,
+                (UsageFromFlowType)GetModelProperty(KnownWaveSections.GeneralSection,
                                                      KnownWaveProperties.FlowVelocityUsage).Value;
             set =>
-                GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.FlowVelocityUsage)
+                GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.FlowVelocityUsage)
                     .SetValueAsString(((int)value).ToString());
         }
 
         public VelocityComputationType DefaultVelocityUsageType =>
-            (VelocityComputationType)GetModelProperty(KnownWaveCategories.GeneralCategory,
+            (VelocityComputationType)GetModelProperty(KnownWaveSections.GeneralSection,
                                                        KnownWaveProperties.FlowVelocityUsageType).Value;
 
         public UsageFromFlowType DefaultWindUsage
         {
             get =>
-                (UsageFromFlowType)GetModelProperty(KnownWaveCategories.GeneralCategory,
+                (UsageFromFlowType)GetModelProperty(KnownWaveSections.GeneralSection,
                                                      KnownWaveProperties.FlowWindUsage).Value;
             set =>
-                GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.FlowWindUsage)
+                GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.FlowWindUsage)
                     .SetValueAsString(((int)value).ToString());
         }
 
         public string CommunicationsFilePath
         {
-            get => GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).GetValueAsString();
-            set => GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).SetValueAsString(value);
+            get => GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile).GetValueAsString();
+            set => GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile).SetValueAsString(value);
         }
 
         /// <summary>
@@ -245,11 +245,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public bool WaveSetup
         {
-            get => (bool)GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value;
-            set => GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value = value;
+            get => (bool)GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup).Value;
+            set => GetModelProperty(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup).Value = value;
         }
 
-        private WaveModelProperty InputTemplateFileProperty => GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.InputTemplateFile);
+        private WaveModelProperty InputTemplateFileProperty => GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.InputTemplateFile);
 
         #endregion
     }

@@ -1,62 +1,62 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization
 {
     /// <summary>
-    /// Parser for a boundary Delft INI category from the external forcing file (*_bnd.ext).
+    /// Parser for a boundary INI section from the external forcing file (*_bnd.ext).
     /// </summary>
     public sealed class BoundaryParser
     {
         /// <summary>
-        /// Parse the Delft INI category from the boundary external forcing file to a data access object.
-        /// Delft INI categories with the header "boundary" can be parsed.
-        /// If values from the Delft INI category are <c>null</c> or empty they will be set as <c>null</c> on the data access
-        /// object.
+        /// Parse the INI section from the boundary external forcing file to a data access object.
+        /// INI sections with the header "boundary" can be parsed.
+        /// If values from the INI section are <c>null</c> or empty they will be set as <c>null</c> on the data access object.
         /// </summary>
-        /// <param name="delftIniCategory"> The Delft INI category from the boundary external forcing file.</param>
+        /// <param name="section"> The INI section from the boundary external forcing file.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="delftIniCategory"/> is <c>null</c>.
+        /// Thrown when <paramref name="section"/> is <c>null</c>.
         /// </exception>
         /// <returns>
-        /// A <see cref="BoundaryDTO"/> data access object that contains the parsed data of the boundary category.
+        /// A <see cref="BoundaryDTO"/> data access object that contains the parsed data of the boundary section.
         /// </returns>
-        public BoundaryDTO Parse(DelftIniCategory delftIniCategory)
+        public BoundaryDTO Parse(IniSection section)
         {
-            Ensure.NotNull(delftIniCategory, nameof(delftIniCategory));
+            Ensure.NotNull(section, nameof(section));
 
-            string quantity = ParseQuantity(delftIniCategory);
-            string locationFile = ParseLocationFile(delftIniCategory);
-            IEnumerable<string> forcingFiles = ParseForcingFiles(delftIniCategory);
-            double? returnTime = ParseReturnTime(delftIniCategory);
+            string quantity = ParseQuantity(section);
+            string locationFile = ParseLocationFile(section);
+            IEnumerable<string> forcingFiles = ParseForcingFiles(section);
+            double? returnTime = ParseReturnTime(section);
 
             return new BoundaryDTO(quantity, locationFile, forcingFiles, returnTime);
         }
 
-        private static string ParseQuantity(DelftIniCategory delftIniCategory)
+        private static string ParseQuantity(IniSection section)
         {
-            string quantity = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey);
+            string quantity = section.GetPropertyValueOrDefault(BndExtForceFileConstants.QuantityKey);
             return HasValue(quantity) ? quantity : null;
         }
 
-        private static string ParseLocationFile(DelftIniCategory delftIniCategory)
+        private static string ParseLocationFile(IniSection section)
         {
-            string locationFile = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.LocationFileKey);
+            string locationFile = section.GetPropertyValueOrDefault(BndExtForceFileConstants.LocationFileKey);
             return HasValue(locationFile) ? locationFile : null;
         }
 
-        private static IEnumerable<string> ParseForcingFiles(DelftIniCategory delftIniCategory)
+        private static IEnumerable<string> ParseForcingFiles(IniSection section)
         {
-            return delftIniCategory.GetPropertyValues(BndExtForceFileConstants.ForcingFileKey)
-                                   .Where(HasValue);
+            return section.GetAllProperties(BndExtForceFileConstants.ForcingFileKey)
+                          .Select(p => p.Value)
+                          .Where(HasValue);
         }
 
-        private static double? ParseReturnTime(DelftIniCategory delftIniCategory)
+        private static double? ParseReturnTime(IniSection section)
         {
-            string returnTimeString = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
+            string returnTimeString = section.GetPropertyValueOrDefault(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
             double? returnTime = ParseReturnTime(returnTimeString);
             return returnTime;
         }

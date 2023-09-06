@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -20,21 +20,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         private int RandomInt => random.Next(100);
 
         [Test]
-        public void Convert_BoundaryCategoryNull_ThrowsArgumentNullException()
+        public void Convert_BoundarySectionNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => BoundaryCategoryConverter.Convert(null, "path");
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryCategory"));
+            Assert.That(exception.ParamName, Is.EqualTo("boundarySection"));
         }
 
         [Test]
         public void Convert_MdwDirPathNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => BoundaryCategoryConverter.Convert(new DelftIniCategory("category"), null);
+            void Call() => BoundaryCategoryConverter.Convert(new IniSection("section"), null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -42,25 +42,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_NoBoundaryCategory_ThrowsArgumentException()
+        public void Convert_NoBoundarySection_ThrowsArgumentException()
         {
             // Call
-            void Call() => BoundaryCategoryConverter.Convert(new DelftIniCategory("category"), "path");
+            void Call() => BoundaryCategoryConverter.Convert(new IniSection("section"), "path");
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryCategory"));
-            Assert.That(exception.Message, Does.StartWith("Category is not an mdw boundary category."));
+            Assert.That(exception.ParamName, Is.EqualTo("boundarySection"));
+            Assert.That(exception.Message, Does.StartWith("Section is not an mdw boundary section."));
         }
 
         [Test]
         [TestCaseSource(nameof(GetParameterizedCoordinatesTestCases))]
-        public void Convert_ParameterizedImportTypeCoordinates_ReturnsCorrectResult(CategoryTestKeyValue<ShapeImportType> shapeImportData,
-                                                                                    CategoryTestKeyValue<PeriodImportExportType> periodImportExportData,
-                                                                                    CategoryTestKeyValue<SpreadingImportType> spreadingImportData)
+        public void Convert_ParameterizedImportTypeCoordinates_ReturnsCorrectResult(SectionTestKeyValue<ShapeImportType> shapeImportData,
+                                                                                    SectionTestKeyValue<PeriodImportExportType> periodImportExportData,
+                                                                                    SectionTestKeyValue<SpreadingImportType> spreadingImportData)
         {
             // Setup
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
 
             const string name = "boundary_name";
             double startX = RandomDouble;
@@ -80,31 +80,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             double peakEnhancementFactor = RandomDouble;
             double gaussianSpread = RandomDouble;
 
-            category.AddProperty(KnownWaveProperties.Name, name);
-            category.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.CoordinatesDefinitionType);
-            category.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(startX));
-            category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
-            category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
-            category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
-            AddToCategory(category, shapeImportData);
-            AddToCategory(category, periodImportExportData);
-            AddToCategory(category, spreadingImportData);
-            category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
-            category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
-            category.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight1));
-            category.AddProperty(KnownWaveProperties.Period, ToString(period1));
-            category.AddProperty(KnownWaveProperties.Direction, ToString(direction1));
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading1));
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
-            category.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight2));
-            category.AddProperty(KnownWaveProperties.Period, ToString(period2));
-            category.AddProperty(KnownWaveProperties.Direction, ToString(direction2));
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading2));
+            section.AddProperty(KnownWaveProperties.Name, name);
+            section.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.CoordinatesDefinitionType);
+            section.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(startX));
+            section.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
+            section.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
+            section.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
+            section.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
+            AddToSection(section, shapeImportData);
+            AddToSection(section, periodImportExportData);
+            AddToSection(section, spreadingImportData);
+            section.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
+            section.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
+            section.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight1));
+            section.AddProperty(KnownWaveProperties.Period, ToString(period1));
+            section.AddProperty(KnownWaveProperties.Direction, ToString(direction1));
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading1));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
+            section.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight2));
+            section.AddProperty(KnownWaveProperties.Period, ToString(period2));
+            section.AddProperty(KnownWaveProperties.Direction, ToString(direction2));
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading2));
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(section, "path");
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
@@ -126,14 +126,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(GetParameterizedOrientedTestCases))]
-        public void Convert_ParameterizedImportTypeOriented_ReturnsCorrectResult(CategoryTestKeyValue<ShapeImportType> shapeImportData,
-                                                                                 CategoryTestKeyValue<PeriodImportExportType> periodImportExportData,
-                                                                                 CategoryTestKeyValue<SpreadingImportType> spreadingImportData,
-                                                                                 CategoryTestKeyValue<BoundaryOrientationType> orientationTypeData,
-                                                                                 CategoryTestKeyValue<DistanceDirType> distanceDirType)
+        public void Convert_ParameterizedImportTypeOriented_ReturnsCorrectResult(SectionTestKeyValue<ShapeImportType> shapeImportData,
+                                                                                 SectionTestKeyValue<PeriodImportExportType> periodImportExportData,
+                                                                                 SectionTestKeyValue<SpreadingImportType> spreadingImportData,
+                                                                                 SectionTestKeyValue<BoundaryOrientationType> orientationTypeData,
+                                                                                 SectionTestKeyValue<DistanceDirType> distanceDirType)
         {
             // Setup
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
 
             const string name = "boundary_name";
             double distance1 = RandomDouble;
@@ -149,29 +149,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             double peakEnhancementFactor = RandomDouble;
             double gaussianSpread = RandomDouble;
 
-            category.AddProperty(KnownWaveProperties.Name, name);
-            category.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.OrientationDefinitionType);
-            AddToCategory(category, orientationTypeData);
-            AddToCategory(category, distanceDirType);
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
-            AddToCategory(category, shapeImportData);
-            AddToCategory(category, periodImportExportData);
-            AddToCategory(category, spreadingImportData);
-            category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
-            category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
-            category.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight1));
-            category.AddProperty(KnownWaveProperties.Period, ToString(period1));
-            category.AddProperty(KnownWaveProperties.Direction, ToString(direction1));
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading1));
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
-            category.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight2));
-            category.AddProperty(KnownWaveProperties.Period, ToString(period2));
-            category.AddProperty(KnownWaveProperties.Direction, ToString(direction2));
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading2));
+            section.AddProperty(KnownWaveProperties.Name, name);
+            section.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            AddToSection(section, orientationTypeData);
+            AddToSection(section, distanceDirType);
+            section.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
+            AddToSection(section, shapeImportData);
+            AddToSection(section, periodImportExportData);
+            AddToSection(section, spreadingImportData);
+            section.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
+            section.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
+            section.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight1));
+            section.AddProperty(KnownWaveProperties.Period, ToString(period1));
+            section.AddProperty(KnownWaveProperties.Direction, ToString(direction1));
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading1));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
+            section.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight2));
+            section.AddProperty(KnownWaveProperties.Period, ToString(period2));
+            section.AddProperty(KnownWaveProperties.Direction, ToString(direction2));
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading2));
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(section, "path");
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                                                                string spreadingTypeStr)
         {
             // Setup
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
 
             const string name = "boundary_name";
             double startX = RandomDouble;
@@ -210,25 +210,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             double peakEnhancementFactor = RandomDouble;
             double gaussianSpread = RandomDouble;
 
-            category.AddProperty(KnownWaveProperties.Name, name);
-            category.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.CoordinatesDefinitionType);
-            category.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(startX));
-            category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
-            category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
-            category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.FromFile.GetDescription());
-            category.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
-            category.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
-            category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
-            category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
-            category.AddProperty(KnownWaveProperties.Spectrum, spectrum1);
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
-            category.AddProperty(KnownWaveProperties.Spectrum, spectrum2);
+            section.AddProperty(KnownWaveProperties.Name, name);
+            section.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.CoordinatesDefinitionType);
+            section.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(startX));
+            section.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
+            section.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
+            section.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
+            section.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.FromFile.GetDescription());
+            section.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
+            section.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
+            section.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
+            section.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
+            section.AddProperty(KnownWaveProperties.Spectrum, spectrum1);
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
+            section.AddProperty(KnownWaveProperties.Spectrum, spectrum2);
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, @"C:\path\to\mdw");
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(section, @"C:\path\to\mdw");
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
@@ -254,11 +254,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         public void Convert_FromFileImportTypeOriented_ReturnsCorrectResult(string shapeTypeStr,
                                                                             string periodTypeStr,
                                                                             string spreadingTypeStr,
-                                                                            CategoryTestKeyValue<BoundaryOrientationType> orientationTypeData,
-                                                                            CategoryTestKeyValue<DistanceDirType> distanceDirType)
+                                                                            SectionTestKeyValue<BoundaryOrientationType> orientationTypeData,
+                                                                            SectionTestKeyValue<DistanceDirType> distanceDirType)
         {
             // Setup
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
 
             const string name = "boundary_name";
             double distance1 = RandomDouble;
@@ -268,23 +268,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             double peakEnhancementFactor = RandomDouble;
             double gaussianSpread = RandomDouble;
 
-            category.AddProperty(KnownWaveProperties.Name, name);
-            category.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.OrientationDefinitionType);
-            AddToCategory(category, orientationTypeData);
-            AddToCategory(category, distanceDirType);
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.FromFile.GetDescription());
-            category.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
-            category.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
-            category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
-            category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
-            category.AddProperty(KnownWaveProperties.Spectrum, spectrum1);
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
-            category.AddProperty(KnownWaveProperties.Spectrum, spectrum2);
+            section.AddProperty(KnownWaveProperties.Name, name);
+            section.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            AddToSection(section, orientationTypeData);
+            AddToSection(section, distanceDirType);
+            section.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.FromFile.GetDescription());
+            section.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
+            section.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
+            section.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
+            section.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
+            section.AddProperty(KnownWaveProperties.Spectrum, spectrum1);
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
+            section.AddProperty(KnownWaveProperties.Spectrum, spectrum2);
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, @"C:\path\to\mdw");
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(section, @"C:\path\to\mdw");
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
@@ -309,16 +309,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         public void Convert_FileBasedBoundaryWithoutSpectrumPath_ReturnsCorrectResult(string fileName)
         {
             // Setup
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
 
-            category.AddProperty(KnownWaveProperties.Name, "boundary_name");
-            category.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.Coordinates.GetDescription());
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.FromFile.GetDescription());
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, RandomDouble);
-            category.AddProperty(KnownWaveProperties.Spectrum, fileName);
+            section.AddProperty(KnownWaveProperties.Name, "boundary_name");
+            section.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.Coordinates.GetDescription());
+            section.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.FromFile.GetDescription());
+            section.AddProperty(KnownWaveProperties.CondSpecAtDist, RandomDouble);
+            section.AddProperty(KnownWaveProperties.Spectrum, fileName);
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(section, "path");
 
             // Assert
             Assert.That(result.SpectrumFiles[0], Is.Empty);
@@ -328,17 +328,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         public void Convert_PropertyWithDoubleValueNotFound_ReturnsCorrectResult()
         {
             // Setup
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
 
-            category.AddProperty(KnownWaveProperties.Name, "boundary_name");
-            category.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.Coordinates.GetDescription());
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
-            category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportExportType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
+            section.AddProperty(KnownWaveProperties.Name, "boundary_name");
+            section.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.Coordinates.GetDescription());
+            section.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
+            section.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
+            section.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportExportType>().GetDescription());
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(section, "path");
 
             // Assert
             Assert.That(result.XStartCoordinate, Is.NaN);
@@ -353,18 +353,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
         public void Convert_OrientedBoundaryButDistanceDirNotSet_ReturnsCorrectResult()
         {
             // Setup
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
 
-            category.AddProperty(KnownWaveProperties.Name, "boundary_name");
-            category.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.Oriented.GetDescription());
-            category.AddProperty(KnownWaveProperties.Orientation, BoundaryOrientationType.East.GetDescription());
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
-            category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportExportType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
+            section.AddProperty(KnownWaveProperties.Name, "boundary_name");
+            section.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.Oriented.GetDescription());
+            section.AddProperty(KnownWaveProperties.Orientation, BoundaryOrientationType.East.GetDescription());
+            section.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
+            section.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
+            section.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportExportType>().GetDescription());
+            section.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(section, "path");
 
             // Assert
             Assert.That(result.DistanceDirType, Is.EqualTo(DistanceDirType.CounterClockwise));
@@ -410,73 +410,73 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
                                     orientationTypeCase,
                                     distanceDirTypeCase);
 
-        private static IEnumerable<CategoryTestKeyValue<ShapeImportType>> ShapeTypeTestCases()
+        private static IEnumerable<SectionTestKeyValue<ShapeImportType>> ShapeTypeTestCases()
         {
-            yield return new CategoryTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
+            yield return new SectionTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
                                                                    "gauss",
                                                                    ShapeImportType.Gauss);
-            yield return new CategoryTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
+            yield return new SectionTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
                                                                    "jonswap",
                                                                    ShapeImportType.Jonswap);
-            yield return new CategoryTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
+            yield return new SectionTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
                                                                    "pierson-moskowitz",
                                                                    ShapeImportType.PiersonMoskowitz);
         }
 
-        private static IEnumerable<CategoryTestKeyValue<PeriodImportExportType>> PeriodTypeTestCases()
+        private static IEnumerable<SectionTestKeyValue<PeriodImportExportType>> PeriodTypeTestCases()
         {
-            yield return new CategoryTestKeyValue<PeriodImportExportType>(KnownWaveProperties.PeriodType,
+            yield return new SectionTestKeyValue<PeriodImportExportType>(KnownWaveProperties.PeriodType,
                                                                           "mean",
                                                                           PeriodImportExportType.Mean);
-            yield return new CategoryTestKeyValue<PeriodImportExportType>(KnownWaveProperties.PeriodType,
+            yield return new SectionTestKeyValue<PeriodImportExportType>(KnownWaveProperties.PeriodType,
                                                                           "peak",
                                                                           PeriodImportExportType.Peak);
         }
 
-        private static IEnumerable<CategoryTestKeyValue<SpreadingImportType>> SpreadingTypeTestCases()
+        private static IEnumerable<SectionTestKeyValue<SpreadingImportType>> SpreadingTypeTestCases()
         {
-            yield return new CategoryTestKeyValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType,
+            yield return new SectionTestKeyValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType,
                                                                        "degrees",
                                                                        SpreadingImportType.Degrees);
-            yield return new CategoryTestKeyValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType,
+            yield return new SectionTestKeyValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType,
                                                                        "power",
                                                                        SpreadingImportType.Power);
         }
 
-        private static IEnumerable<CategoryTestKeyValue<BoundaryOrientationType>> OrientationTypeTestCases()
+        private static IEnumerable<SectionTestKeyValue<BoundaryOrientationType>> OrientationTypeTestCases()
         {
-            yield return new CategoryTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
+            yield return new SectionTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
                                                                            KnownWaveBoundariesFileConstants.EastBoundaryOrientationType,
                                                                            BoundaryOrientationType.East);
-            yield return new CategoryTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
+            yield return new SectionTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
                                                                            KnownWaveBoundariesFileConstants.NorthEastBoundaryOrientationType,
                                                                            BoundaryOrientationType.NorthEast);
-            yield return new CategoryTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
+            yield return new SectionTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
                                                                            KnownWaveBoundariesFileConstants.NorthBoundaryOrientationType,
                                                                            BoundaryOrientationType.North);
-            yield return new CategoryTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
+            yield return new SectionTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
                                                                            KnownWaveBoundariesFileConstants.NorthWestBoundaryOrientationType,
                                                                            BoundaryOrientationType.NorthWest);
-            yield return new CategoryTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
+            yield return new SectionTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
                                                                            KnownWaveBoundariesFileConstants.WestBoundaryOrientationType,
                                                                            BoundaryOrientationType.West);
-            yield return new CategoryTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
+            yield return new SectionTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
                                                                            KnownWaveBoundariesFileConstants.SouthWestBoundaryOrientationType,
                                                                            BoundaryOrientationType.SouthWest);
-            yield return new CategoryTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
+            yield return new SectionTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
                                                                            KnownWaveBoundariesFileConstants.SouthBoundaryOrientationType,
                                                                            BoundaryOrientationType.South);
-            yield return new CategoryTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
+            yield return new SectionTestKeyValue<BoundaryOrientationType>(KnownWaveProperties.Orientation,
                                                                            KnownWaveBoundariesFileConstants.SouthEastBoundaryOrientationType,
                                                                            BoundaryOrientationType.SouthEast);
         }
 
-        private static IEnumerable<CategoryTestKeyValue<DistanceDirType>> DistanceDirTypeTestCases()
+        private static IEnumerable<SectionTestKeyValue<DistanceDirType>> DistanceDirTypeTestCases()
         {
-            yield return new CategoryTestKeyValue<DistanceDirType>(KnownWaveProperties.DistanceDir,
+            yield return new SectionTestKeyValue<DistanceDirType>(KnownWaveProperties.DistanceDir,
                                                                    KnownWaveBoundariesFileConstants.CounterClockwiseDistanceDirType,
                                                                    DistanceDirType.CounterClockwise);
-            yield return new CategoryTestKeyValue<DistanceDirType>(KnownWaveProperties.DistanceDir,
+            yield return new SectionTestKeyValue<DistanceDirType>(KnownWaveProperties.DistanceDir,
                                                                    KnownWaveBoundariesFileConstants.ClockwiseDistanceDirType,
                                                                    DistanceDirType.Clockwise);
         }
@@ -495,9 +495,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             }
         }
 
-        public class CategoryTestKeyValue<T>
+        public class SectionTestKeyValue<T>
         {
-            public CategoryTestKeyValue(string key, string stringValue, T expectedValue)
+            public SectionTestKeyValue(string key, string stringValue, T expectedValue)
             {
                 Key = key;
                 StringValue = stringValue;
@@ -509,8 +509,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries
             public T ExpectedValue { get; }
         }
 
-        private static void AddToCategory<T>(DelftIniCategory category, CategoryTestKeyValue<T> keyValuePair) =>
-            category.AddProperty(keyValuePair.Key, keyValuePair.StringValue);
+        private static void AddToSection<T>(IniSection section, SectionTestKeyValue<T> keyValuePair) =>
+            section.AddProperty(keyValuePair.Key, keyValuePair.StringValue);
 
         private static double[] Doubles(double a, double b)
         {

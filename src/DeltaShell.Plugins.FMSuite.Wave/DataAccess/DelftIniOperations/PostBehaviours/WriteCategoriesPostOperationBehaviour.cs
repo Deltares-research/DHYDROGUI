@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours
 {
     /// <summary>
     /// <see cref="WriteCategoriesPostOperationBehaviour"/> defines the post-behaviour
-    /// that writes the provided the list of <see cref="DelftIniCategory"/>
+    /// that writes the provided <see cref="IniData"/>
     /// </summary>
     /// <seealso cref="IDelftIniPostOperationBehaviour" />
     public sealed class WriteCategoriesPostOperationBehaviour : DelftIniPostOperationBehaviour
@@ -37,13 +36,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBeha
 
         public override void Invoke(Stream sourceFileStream, 
                                     string sourceFilePath, 
-                                    IList<DelftIniCategory> categories, 
+                                    IniData iniData, 
                                     ILogHandler logHandler)
         {
-            base.Invoke(sourceFileStream, sourceFilePath, categories, logHandler);
+            base.Invoke(sourceFileStream, sourceFilePath, iniData, logHandler);
 
             string writePath = Path.Combine(goalDirectory, Path.GetFileName(sourceFilePath));
-            iniWriter.WriteDelftIniFile(categories, writePath);
+            iniWriter.WriteDelftIniFile(iniData, writePath);
         }
     }
 }

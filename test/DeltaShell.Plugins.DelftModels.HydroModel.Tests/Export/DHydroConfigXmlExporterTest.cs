@@ -187,9 +187,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             grid.Resize(nSize, mSize, xCoordinates, yCoordinates);
             grid.IsTimeDependent = false;
             waveModel.OuterDomain.Grid = grid;
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM)
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.WriteCOM)
                      .Value = true;
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection,
                                                        KnownWaveProperties.COMFile).Value = "file.txt";
             waveModel.TimeFrameData.WindConstantData.Speed = 2;
             WaterFlowFMModel fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         [Test]
         public void AddNewProperties_ForBoundaryGeometryDefinitionWithUnsortedSupportPoints()
         {
-            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
             var geometryDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
 
             var supportPoint1 = new SupportPoint(0, geometryDefinition);
@@ -48,24 +48,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             boundarySnappingCalculator.CalculateCoordinateFromSupportPoint(supportPoint1).Returns(coordinate1);
             boundarySnappingCalculator.CalculateCoordinateFromSupportPoint(supportPoint2).Returns(coordinate2);
 
-            MdwBoundaryCategoryGeometryExtender.AddNewProperties(category, boundaryContainer, supportPoints);
+            MdwBoundaryCategoryGeometryExtender.AddNewProperties(section, boundaryContainer, supportPoints);
 
-            List<DelftIniProperty> properties = category.Properties.ToList();
+            List<IniProperty> properties = section.Properties.ToList();
             Assert.AreEqual(5, properties.Count);
-            Assert.AreEqual(KnownWaveProperties.Definition, properties[0].Name);
+            Assert.AreEqual(KnownWaveProperties.Definition, properties[0].Key);
             Assert.AreEqual("xy-coordinates", properties[0].Value);
-            Assert.AreEqual(KnownWaveProperties.StartCoordinateX, properties[1].Name);
+            Assert.AreEqual(KnownWaveProperties.StartCoordinateX, properties[1].Key);
             Assert.AreEqual(GetStringValue(coordinate1.X), properties[1].Value);
-            Assert.AreEqual(KnownWaveProperties.EndCoordinateX, properties[2].Name);
+            Assert.AreEqual(KnownWaveProperties.EndCoordinateX, properties[2].Key);
             Assert.AreEqual(GetStringValue(coordinate2.X), properties[2].Value);
-            Assert.AreEqual(KnownWaveProperties.StartCoordinateY, properties[3].Name);
+            Assert.AreEqual(KnownWaveProperties.StartCoordinateY, properties[3].Key);
             Assert.AreEqual(GetStringValue(coordinate1.Y), properties[3].Value);
-            Assert.AreEqual(KnownWaveProperties.EndCoordinateY, properties[4].Name);
+            Assert.AreEqual(KnownWaveProperties.EndCoordinateY, properties[4].Key);
             Assert.AreEqual(GetStringValue(coordinate2.Y), properties[4].Value);
         }
 
         [Test]
-        public void AddNewProperties_CategoryNull_ThrowsArgumentNullException()
+        public void AddNewProperties_SectionNull_ThrowsArgumentNullException()
         {
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var supportPoints = new List<SupportPoint>();
@@ -75,17 +75,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryCategory"));
+            Assert.That(exception.ParamName, Is.EqualTo("boundarySection"));
         }
 
         [Test]
         public void AddNewProperties_BoundaryContainerNull_ThrowsArgumentNullException()
         {
-            var delftIniCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
             var supportPoints = new List<SupportPoint>();
 
             // Act
-            void Call() => MdwBoundaryCategoryGeometryExtender.AddNewProperties(delftIniCategory, null, supportPoints);
+            void Call() => MdwBoundaryCategoryGeometryExtender.AddNewProperties(section, null, supportPoints);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -95,11 +95,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         [Test]
         public void AddNewProperties_SupportPointsNull_ThrowsArgumentNullException()
         {
-            var delftIniCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var section = new IniSection(KnownWaveSections.BoundarySection);
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
 
             // Act
-            void Call() => MdwBoundaryCategoryGeometryExtender.AddNewProperties(delftIniCategory, boundaryContainer, null);
+            void Call() => MdwBoundaryCategoryGeometryExtender.AddNewProperties(section, boundaryContainer, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);

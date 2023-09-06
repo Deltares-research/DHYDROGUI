@@ -8,8 +8,8 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common.Utils;
-using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -114,13 +114,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             using (var fileStream = new FileStream(mduFilePath, FileMode.Open, FileAccess.Read))
             {
-                IList<DelftIniCategory> categories = new MduDelftIniReader().ReadDelftIniFile(fileStream, filePath);
+                IniData iniData = new MduDelftIniReader().ReadDelftIniFile(fileStream, filePath);
 
-                DelftIniCategory geometryCategory =
-                    categories.FirstOrDefault(x => x.Name.ToLowerInvariant() == "geometry");
-                DelftIniProperty netFileProperty =
-                    geometryCategory?.Properties
-                                    .FirstOrDefault(x => x.Name.ToLowerInvariant() == KnownProperties.NetFile);
+                IniSection geometrySection = iniData.GetSection("geometry");
+                IniProperty netFileProperty = geometrySection?.GetProperty(KnownProperties.NetFile);
 
                 string netFileRelativePath = netFileProperty?.Value;
                 return netFileRelativePath != null ? Path.Combine(mduFileDir, netFileRelativePath) : null;

@@ -5,7 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Utils;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
@@ -22,7 +22,7 @@ using GeoAPI.Geometries;
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
 {
     /// <summary>
-    /// Converter for converting a collection of boundary <see cref="DelftIniCategory"/>
+    /// Converter for converting a collection of boundary <see cref="IniSection"/>
     /// to a collection of <see cref="IWaveBoundary"/>.
     /// </summary>
     public class WaveBoundaryConverter
@@ -50,10 +50,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
         }
 
         /// <summary>
-        /// Converts the specified <paramref name="boundaryCategories"/> to
+        /// Converts the specified <paramref name="boundarySections"/> to
         /// their respective <see cref="IWaveBoundary"/>.
         /// </summary>
-        /// <param name="boundaryCategories">The boundary categories.</param>
+        /// <param name="boundarySections">The boundary sections.</param>
         /// <param name="timeSeriesData">The time series data from the .bcw file. </param>
         /// <param name="mdwDirPath">The path to the directory where the .mdw file is located.</param>
         /// <param name="logHandler">The log handler.</param>
@@ -63,27 +63,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public IEnumerable<IWaveBoundary> Convert(IEnumerable<DelftIniCategory> boundaryCategories,
+        public IEnumerable<IWaveBoundary> Convert(IEnumerable<IniSection> boundarySections,
                                                   IDictionary<string, List<IFunction>> timeSeriesData,
                                                   string mdwDirPath,
                                                   ILogHandler logHandler)
         {
-            Ensure.NotNull(boundaryCategories, nameof(boundaryCategories));
+            Ensure.NotNull(boundarySections, nameof(boundarySections));
             Ensure.NotNull(timeSeriesData, nameof(timeSeriesData));
             Ensure.NotNull(mdwDirPath, nameof(mdwDirPath));
             Ensure.NotNull(logHandler, nameof(logHandler));
 
-            return CreateWaveBoundaries(boundaryCategories, timeSeriesData, mdwDirPath, logHandler);
+            return CreateWaveBoundaries(boundarySections, timeSeriesData, mdwDirPath, logHandler);
         }
 
-        private IEnumerable<IWaveBoundary> CreateWaveBoundaries(IEnumerable<DelftIniCategory> boundaryCategories,
+        private IEnumerable<IWaveBoundary> CreateWaveBoundaries(IEnumerable<IniSection> boundarySections,
                                                                 IDictionary<string, List<IFunction>> timeSeriesData,
                                                                 string mdwDirPath,
                                                                 ILogHandler logHandler)
         {
-            foreach (DelftIniCategory category in boundaryCategories)
+            foreach (IniSection section in boundarySections)
             {
-                BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(category, mdwDirPath);
+                BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(section, mdwDirPath);
 
                 IWaveBoundaryGeometricDefinition geometricDefinition = GetGeometricDefinition(boundaryBlock, logHandler);
 

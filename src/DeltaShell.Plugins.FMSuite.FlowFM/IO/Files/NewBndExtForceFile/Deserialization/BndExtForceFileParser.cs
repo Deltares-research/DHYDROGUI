@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+﻿using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DHYDRO.Common.Extensions;
@@ -36,69 +35,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
         }
 
         /// <summary>
-        /// Parse the Delft INI categories from the boundary external forcing file to a data access object.
-        /// Delft INI categories with the header "boundary" can be parsed.
-        /// Other categories cannot be parsed and for these a warning message is reported to the user.
+        /// Parse the INI data from the boundary external forcing file to a data access object.
+        /// INI sections with the header "boundary" can be parsed.
+        /// Other sections cannot be parsed and for these a warning message is reported to the user.
         /// </summary>
-        /// <param name="delftIniCategories"> The Delft INI categories from the boundary external forcing file.</param>
+        /// <param name="iniData"> The INI data from the boundary external forcing file.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="delftIniCategories"/> is <c>null</c>.
+        /// Thrown when <paramref name="iniData"/> is <c>null</c>.
         /// </exception>
         /// <returns>
         /// A <see cref="BndExtForceFileDTO"/> data access object that contains the parsed data of the boundary external forcing
         /// file.
         /// </returns>
-        public BndExtForceFileDTO Parse(IEnumerable<DelftIniCategory> delftIniCategories)
+        public BndExtForceFileDTO Parse(IniData iniData)
         {
-            Ensure.NotNull(delftIniCategories, nameof(delftIniCategories));
+            Ensure.NotNull(iniData, nameof(iniData));
 
             var bndExtForceFileDTO = new BndExtForceFileDTO();
 
-            foreach (DelftIniCategory delftIniCategory in delftIniCategories)
+            foreach (IniSection section in iniData.Sections)
             {
-                ParseCategory(delftIniCategory, bndExtForceFileDTO);
+                ParseSection(section, bndExtForceFileDTO);
             }
 
             return bndExtForceFileDTO;
         }
 
-        private void ParseCategory(DelftIniCategory delftIniCategory, BndExtForceFileDTO bndExtForceFileDTO)
+        private void ParseSection(IniSection section, BndExtForceFileDTO bndExtForceFileDTO)
         {
-            string header = delftIniCategory.Name;
-            if (IsBoundaryCategory(header))
+            string header = section.Name;
+            if (IsBoundarySection(header))
             {
-                BoundaryDTO boundaryDTO = boundaryParser.Parse(delftIniCategory);
+                BoundaryDTO boundaryDTO = boundaryParser.Parse(section);
                 bndExtForceFileDTO.AddBoundary(boundaryDTO);
             }
-            else if (IsLateralCategory(header))
+            else if (IsLateralSection(header))
             {
-                LateralDTO lateralDTO = lateralParser.Parse(delftIniCategory);
-                if (lateralValidator.Validate(lateralDTO, delftIniCategory.LineNumber))
+                LateralDTO lateralDTO = lateralParser.Parse(section);
+                if (lateralValidator.Validate(lateralDTO, section.LineNumber))
                 {
                     bndExtForceFileDTO.AddLateral(lateralDTO);
                 }
             }
             else
             {
-                if (IsGeneralCategory(header))
+                if (IsGeneralSection(header))
                 {
                     return;
                 }
                 
-                logHandler.ReportWarningFormat(Resources.Category_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_, header, delftIniCategory.LineNumber);
+                logHandler.ReportWarningFormat(Resources.Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_, header, section.LineNumber);
             }
         }
 
-        private static bool IsBoundaryCategory(string header) =>
-            IsCategory(BndExtForceFileConstants.BoundaryBlockKey, header);
+        private static bool IsBoundarySection(string header) =>
+            IsSection(BndExtForceFileConstants.BoundaryBlockKey, header);
 
-        private static bool IsLateralCategory(string header) =>
-            IsCategory(BndExtForceFileConstants.LateralBlockKey , header);
+        private static bool IsLateralSection(string header) =>
+            IsSection(BndExtForceFileConstants.LateralBlockKey , header);
 
-        private static bool IsGeneralCategory(string header) =>
-            IsCategory(BndExtForceFileConstants.GeneralBlockKey, header);
+        private static bool IsGeneralSection(string header) =>
+            IsSection(BndExtForceFileConstants.GeneralBlockKey, header);
 
-        private static bool IsCategory(string currentCategory, string category) => 
-            currentCategory.EqualsCaseInsensitive(category);
+        private static bool IsSection(string currentCategory, string section) => 
+            currentCategory.EqualsCaseInsensitive(section);
     }
 }

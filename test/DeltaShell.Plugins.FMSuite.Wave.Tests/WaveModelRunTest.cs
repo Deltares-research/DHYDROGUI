@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 WaveModelDefinition waveModelModelDefinition = waveModel.ModelDefinition;
                 WaveModelProperty keepInputProperty = waveModelModelDefinition.GetModelProperty(
-                    KnownWaveCategories.OutputCategory,
+                    KnownWaveSections.OutputSection,
                     KnownWaveProperties.KeepINPUT);
                 
                 keepInputProperty.Value = keepInput;

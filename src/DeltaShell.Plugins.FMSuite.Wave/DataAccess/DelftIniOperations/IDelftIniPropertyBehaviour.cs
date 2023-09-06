@@ -1,4 +1,4 @@
-﻿using DeltaShell.NGHS.IO.DelftIniObjects;
+﻿using DeltaShell.NGHS.IO.Ini;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations
@@ -24,6 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations
         /// one and only one property. If the provided property does not
         /// match the defined property, then nothing will occur.
         /// </remarks>
-        void Invoke(DelftIniProperty property, ILogHandler logHandler);
+        void Invoke(IniProperty property, ILogHandler logHandler);
     }
 }

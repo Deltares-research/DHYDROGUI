@@ -9,7 +9,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -36,19 +36,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class SedimentFileTest
     {
-        private static readonly string[] iniPropertyNamesOverall =
+        private static readonly string[] iniPropertyKeysOverall =
         {
             "Bros",
             "Bounty"
         };
 
-        private static readonly string[] iniPropertyNamesSedimentFraction =
+        private static readonly string[] iniPropertyKeySedimentFraction =
         {
             "MilkyWay",
             "Snickers"
         };
 
-        private static readonly string[] iniPropertyNamesUnknown =
+        private static readonly string[] iniPropertyKeysUnknown =
         {
             "Toblerone",
             "Twix"
@@ -1054,9 +1054,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
                 logHandlerMock.Expect(lh => lh.LogReport()).Repeat.Once();
 
-                setUpExpectationsReportWarning(logHandlerMock, nUnknownOverall, iniPropertyNamesOverall);
-                setUpExpectationsReportWarning(logHandlerMock, nUnknownSediment, iniPropertyNamesSedimentFraction);
-                setUpExpectationsReportWarning(logHandlerMock, nUnknownUnknown, iniPropertyNamesUnknown);
+                setUpExpectationsReportWarning(logHandlerMock, nUnknownOverall, iniPropertyKeysOverall);
+                setUpExpectationsReportWarning(logHandlerMock, nUnknownSediment, iniPropertyKeySedimentFraction);
+                setUpExpectationsReportWarning(logHandlerMock, nUnknownUnknown, iniPropertyKeysUnknown);
 
                 logHandlerMock.Replay();
                 // When
@@ -1085,31 +1085,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                           int nUnknownSediment,
                                           int nUnknownUnknown)
         {
-            var iniCategories = new List<DelftIniCategory>();
+            var iniSections = new List<IniSection>();
 
-            // General Category
-            var sedimentFileInformationCategory = new DelftIniCategory(SedimentFile.GeneralHeader);
-            sedimentFileInformationCategory.AddProperty(SedimentFile.FileCreatedBy, "This sexy test helper.");
-            sedimentFileInformationCategory.AddProperty(SedimentFile.FileCreationDate, "Wed Jan 24 1852, 10:58:04", "Gee that is old");
-            sedimentFileInformationCategory.AddProperty(SedimentFile.FileVersion, "02.00");
+            // General Section
+            var sedimentFileInformationCategory = new IniSection(SedimentFile.GeneralHeader);
+            sedimentFileInformationCategory.AddProperty(new IniProperty(SedimentFile.FileCreatedBy, "This sexy test helper."));
+            sedimentFileInformationCategory.AddProperty(new IniProperty(SedimentFile.FileCreationDate, "Wed Jan 24 1852, 10:58:04", "Gee that is old"));
+            sedimentFileInformationCategory.AddProperty(new IniProperty(SedimentFile.FileVersion, "02.00"));
 
-            iniCategories.Add(sedimentFileInformationCategory);
+            iniSections.Add(sedimentFileInformationCategory);
 
-            // Overall Category
-            var sedimentOverall = new DelftIniCategory(SedimentFile.OverallHeader);
+            // Overall Section
+            var sedimentOverall = new IniSection(SedimentFile.OverallHeader);
             sedimentOverall.AddSedimentProperty("Cref", "1600", "kg/m³", "Reference density for hindered settling calculations");
 
             for (var i = 0; i < nUnknownOverall; i++)
             {
-                sedimentOverall.AddProperty(iniPropertyNamesOverall[i], "Lekker", "#Toch?");
+                sedimentOverall.AddProperty(new IniProperty(iniPropertyKeysOverall[i], "Lekker", "#Toch?"));
             }
 
-            iniCategories.Add(sedimentOverall);
+            iniSections.Add(sedimentOverall);
 
-            // Sediment Category
+            // Sediment Section
 
-            // Sediment Category
-            var sedimentFracCat = new DelftIniCategory(SedimentFile.Header);
+            // Sediment Section
+            var sedimentFracCat = new IniSection(SedimentFile.Header);
 
             ISedimentType sedType = SedimentFractionHelper.GetSedimentationTypes().First();
 
@@ -1123,25 +1123,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             for (var i = 0; i < nUnknownSediment; i++)
             {
-                sedimentFracCat.AddProperty(iniPropertyNamesSedimentFraction[i], "Lekker", "#Toch");
+                sedimentFracCat.AddProperty(new IniProperty(iniPropertyKeySedimentFraction[i], "Lekker", "#Toch"));
             }
 
-            iniCategories.Add(sedimentFracCat);
+            iniSections.Add(sedimentFracCat);
 
-            // Optional unknown category
+            // Optional unknown section
             if (nUnknownUnknown > 0)
             {
-                var unknownCategory = new DelftIniCategory("I_am_an_unknown_category");
+                var unknownSection = new IniSection("I_am_an_unknown_category");
 
                 for (var i = 0; i < nUnknownUnknown; i++)
                 {
-                    unknownCategory.AddProperty(iniPropertyNamesUnknown[i], "Lekker", "Toch");
+                    unknownSection.AddProperty(new IniProperty(iniPropertyKeysUnknown[i], "Lekker", "Toch"));
                 }
 
-                iniCategories.Add(unknownCategory);
+                iniSections.Add(unknownSection);
             }
 
-            new DelftIniWriter().WriteDelftIniFile(iniCategories, path, false);
+            var iniData = new IniData();
+            iniData.AddMultipleSections(iniSections);
+            
+            new DelftIniWriter().WriteDelftIniFile(iniData, path, false);
         }
     }
 }

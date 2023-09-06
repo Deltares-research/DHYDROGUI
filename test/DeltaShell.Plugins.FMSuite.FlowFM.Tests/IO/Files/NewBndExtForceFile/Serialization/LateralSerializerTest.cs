@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Serialization;
 using GeoAPI.Geometries;
@@ -40,19 +40,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             var lateral = new Lateral { Feature = feature };
 
             // Call
-            DelftIniCategory delftIniCategory = lateralSerializer.Serialize(lateral);
+            IniSection section = lateralSerializer.Serialize(lateral);
 
             // Assert
-            Assert.That(delftIniCategory.Name, Is.EqualTo("lateral"));
-            Assert.That(delftIniCategory.Properties, Has.Count.EqualTo(8));
-            Assert.That(delftIniCategory.GetPropertyValue("id"), Is.EqualTo("some_name"));
-            Assert.That(delftIniCategory.GetPropertyValue("name"), Is.EqualTo("some_name"));
-            Assert.That(delftIniCategory.GetPropertyValue("type"), Is.EqualTo("discharge"));
-            Assert.That(delftIniCategory.GetPropertyValue("locationType"), Is.EqualTo("2d"));
-            Assert.That(delftIniCategory.GetPropertyValue("numCoordinates"), Is.EqualTo("1"));
-            Assert.That(delftIniCategory.GetPropertyValue("xCoordinates"), Is.EqualTo("1.2300000e+000"));
-            Assert.That(delftIniCategory.GetPropertyValue("yCoordinates"), Is.EqualTo("2.3400000e+000"));
-            Assert.That(delftIniCategory.GetPropertyValue("discharge"), Is.EqualTo("0.0000000e+000"));
+            Assert.That(section.Name, Is.EqualTo("lateral"));
+            Assert.That(section.Properties, Has.Count.EqualTo(8));
+            Assert.That(section.GetPropertyValueOrDefault("id"), Is.EqualTo("some_name"));
+            Assert.That(section.GetPropertyValueOrDefault("name"), Is.EqualTo("some_name"));
+            Assert.That(section.GetPropertyValueOrDefault("type"), Is.EqualTo("discharge"));
+            Assert.That(section.GetPropertyValueOrDefault("locationType"), Is.EqualTo("2d"));
+            Assert.That(section.GetPropertyValueOrDefault("numCoordinates"), Is.EqualTo("1"));
+            Assert.That(section.GetPropertyValueOrDefault("xCoordinates"), Is.EqualTo("1.2300000e+000"));
+            Assert.That(section.GetPropertyValueOrDefault("yCoordinates"), Is.EqualTo("2.3400000e+000"));
+            Assert.That(section.GetPropertyValueOrDefault("discharge"), Is.EqualTo("0.0000000e+000"));
         }
 
         [Test]
@@ -75,19 +75,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             lateral.Data.Discharge.Constant = 1.23;
 
             // Call
-            DelftIniCategory delftIniCategory = lateralSerializer.Serialize(lateral);
+            IniSection section = lateralSerializer.Serialize(lateral);
 
             // Assert
-            Assert.That(delftIniCategory.Name, Is.EqualTo("lateral"));
-            Assert.That(delftIniCategory.Properties, Has.Count.EqualTo(8));
-            Assert.That(delftIniCategory.GetPropertyValue("id"), Is.EqualTo("some_id"));
-            Assert.That(delftIniCategory.GetPropertyValue("name"), Is.EqualTo("some_id"));
-            Assert.That(delftIniCategory.GetPropertyValue("type"), Is.EqualTo("discharge"));
-            Assert.That(delftIniCategory.GetPropertyValue("locationType"), Is.EqualTo("2d"));
-            Assert.That(delftIniCategory.GetPropertyValue("numCoordinates"), Is.EqualTo("3"));
-            Assert.That(delftIniCategory.GetPropertyValue("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
-            Assert.That(delftIniCategory.GetPropertyValue("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
-            Assert.That(delftIniCategory.GetPropertyValue("discharge"), Is.EqualTo("1.2300000e+000"));
+            Assert.That(section.Name, Is.EqualTo("lateral"));
+            Assert.That(section.Properties, Has.Count.EqualTo(8));
+            Assert.That(section.GetPropertyValueOrDefault("id"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValueOrDefault("name"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValueOrDefault("type"), Is.EqualTo("discharge"));
+            Assert.That(section.GetPropertyValueOrDefault("locationType"), Is.EqualTo("2d"));
+            Assert.That(section.GetPropertyValueOrDefault("numCoordinates"), Is.EqualTo("3"));
+            Assert.That(section.GetPropertyValueOrDefault("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
+            Assert.That(section.GetPropertyValueOrDefault("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
+            Assert.That(section.GetPropertyValueOrDefault("discharge"), Is.EqualTo("1.2300000e+000"));
         }
 
         [Test]
@@ -108,19 +108,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             lateral.Data.Discharge.Type = LateralDischargeType.TimeSeries;
 
             // Call
-            DelftIniCategory delftIniCategory = lateralSerializer.Serialize(lateral);
+            IniSection section = lateralSerializer.Serialize(lateral);
 
             // Assert
-            Assert.That(delftIniCategory.Name, Is.EqualTo("lateral"));
-            Assert.That(delftIniCategory.Properties, Has.Count.EqualTo(8));
-            Assert.That(delftIniCategory.GetPropertyValue("id"), Is.EqualTo("some_id"));
-            Assert.That(delftIniCategory.GetPropertyValue("name"), Is.EqualTo("some_id"));
-            Assert.That(delftIniCategory.GetPropertyValue("type"), Is.EqualTo("discharge"));
-            Assert.That(delftIniCategory.GetPropertyValue("locationType"), Is.EqualTo("2d"));
-            Assert.That(delftIniCategory.GetPropertyValue("numCoordinates"), Is.EqualTo("3"));
-            Assert.That(delftIniCategory.GetPropertyValue("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
-            Assert.That(delftIniCategory.GetPropertyValue("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
-            Assert.That(delftIniCategory.GetPropertyValue("discharge"), Is.EqualTo("lateral_discharge.bc"));
+            Assert.That(section.Name, Is.EqualTo("lateral"));
+            Assert.That(section.Properties, Has.Count.EqualTo(8));
+            Assert.That(section.GetPropertyValueOrDefault("id"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValueOrDefault("name"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValueOrDefault("type"), Is.EqualTo("discharge"));
+            Assert.That(section.GetPropertyValueOrDefault("locationType"), Is.EqualTo("2d"));
+            Assert.That(section.GetPropertyValueOrDefault("numCoordinates"), Is.EqualTo("3"));
+            Assert.That(section.GetPropertyValueOrDefault("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
+            Assert.That(section.GetPropertyValueOrDefault("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
+            Assert.That(section.GetPropertyValueOrDefault("discharge"), Is.EqualTo("lateral_discharge.bc"));
         }
 
         [Test]
@@ -142,19 +142,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             lateral.Data.Discharge.Type = LateralDischargeType.RealTime;
 
             // Call
-            DelftIniCategory delftIniCategory = lateralSerializer.Serialize(lateral);
+            IniSection section = lateralSerializer.Serialize(lateral);
 
             // Assert
-            Assert.That(delftIniCategory.Name, Is.EqualTo("lateral"));
-            Assert.That(delftIniCategory.Properties, Has.Count.EqualTo(8));
-            Assert.That(delftIniCategory.GetPropertyValue("id"), Is.EqualTo("some_id"));
-            Assert.That(delftIniCategory.GetPropertyValue("name"), Is.EqualTo("some_id"));
-            Assert.That(delftIniCategory.GetPropertyValue("type"), Is.EqualTo("discharge"));
-            Assert.That(delftIniCategory.GetPropertyValue("locationType"), Is.EqualTo("2d"));
-            Assert.That(delftIniCategory.GetPropertyValue("numCoordinates"), Is.EqualTo("3"));
-            Assert.That(delftIniCategory.GetPropertyValue("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
-            Assert.That(delftIniCategory.GetPropertyValue("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
-            Assert.That(delftIniCategory.GetPropertyValue("discharge"), Is.EqualTo("realtime"));
+            Assert.That(section.Name, Is.EqualTo("lateral"));
+            Assert.That(section.Properties, Has.Count.EqualTo(8));
+            Assert.That(section.GetPropertyValueOrDefault("id"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValueOrDefault("name"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValueOrDefault("type"), Is.EqualTo("discharge"));
+            Assert.That(section.GetPropertyValueOrDefault("locationType"), Is.EqualTo("2d"));
+            Assert.That(section.GetPropertyValueOrDefault("numCoordinates"), Is.EqualTo("3"));
+            Assert.That(section.GetPropertyValueOrDefault("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
+            Assert.That(section.GetPropertyValueOrDefault("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
+            Assert.That(section.GetPropertyValueOrDefault("discharge"), Is.EqualTo("realtime"));
         }
 
         private static Polygon GetPolygonGeometry(double[] xCoordinates, double[] yCoordinates)

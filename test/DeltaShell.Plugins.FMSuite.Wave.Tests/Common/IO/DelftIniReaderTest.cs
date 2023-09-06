@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.NGHS.IO.Properties;
 using NUnit.Framework;
 
@@ -20,26 +20,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
             var delftIniReader = new DelftIniReader();
             string mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
 
-            IList<DelftIniCategory> categories;
+            IniData iniData;
             using (var fileStream = new FileStream(mdwFilePath, FileMode.Open, FileAccess.Read))
             {
-                categories = delftIniReader.ReadDelftIniFile(fileStream, mdwFilePath);
+                iniData = delftIniReader.ReadDelftIniFile(fileStream, mdwFilePath);
             }
 
-            Assert.AreEqual(2, categories.Count(k => k.Name == "Domain"));
-            Assert.AreEqual(2, categories.Count(k => k.Name == "Boundary"));
-            Assert.AreEqual(3, categories.Count(k => k.Name == "TimePoint"));
-            Assert.AreEqual(13, categories.Count);
+            Assert.AreEqual(2, iniData.GetAllSections("Domain").Count());
+            Assert.AreEqual(2, iniData.GetAllSections("Boundary").Count());
+            Assert.AreEqual(3, iniData.GetAllSections("TimePoint").Count());
+            Assert.AreEqual(13, iniData.SectionCount);
 
-            DelftIniCategory innerDomain = categories.Where(c => c.Name == "Domain").ToList()[1];
+            IniSection innerDomain = iniData.GetAllSections("Domain").ToList()[1];
             Assert.AreEqual(85, innerDomain.LineNumber);
 
-            DelftIniProperty bedLevelProperty = innerDomain.Properties.First(p => p.Name == "BedLevel");
+            IniProperty bedLevelProperty = innerDomain.GetProperty("BedLevel");
             Assert.AreEqual(88, bedLevelProperty.LineNumber);
             Assert.AreEqual("inner.dep", bedLevelProperty.Value);
 
-            Assert.AreEqual("36", innerDomain.GetPropertyValue("NDir"));
-            Assert.AreEqual(null, innerDomain.GetPropertyValue("harazafraz"));
+            Assert.AreEqual("36", innerDomain.GetPropertyValueOrDefault("NDir"));
+            Assert.AreEqual(null, innerDomain.GetPropertyValueOrDefault("harazafraz"));
         }
 
         [Test]
@@ -48,19 +48,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
         {
             string testFilePath = TestHelper.GetTestFilePath(@"IniReaderTest\NetworkDefinition.ini");
 
-            IList<DelftIniCategory> categories;
+            IniData iniData;
             using (var fileStream = new FileStream(testFilePath, FileMode.Open, FileAccess.Read))
             {
-                categories = new DelftIniReader().ReadDelftIniFile(fileStream, testFilePath);
+                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, testFilePath);
             }
 
-            Assert.That(categories.Count, Is.EqualTo(4));
+            List<IniSection> sections = iniData.Sections.ToList();
+            Assert.That(sections.Count, Is.EqualTo(4));
 
-            Assert.That(categories[1].Name, Is.EqualTo("Node=1"));
-            Assert.That(categories[1].Properties.FirstOrDefault()?.Value, Is.EqualTo("Node001=6"));
+            Assert.That(sections[1].Name, Is.EqualTo("Node=1"));
+            Assert.That(sections[1].Properties.FirstOrDefault()?.Value, Is.EqualTo("Node001=6"));
 
-            Assert.That(categories[2].Name, Is.EqualTo("Node"));
-            Assert.That(categories[2].Properties.FirstOrDefault()?.Value, Is.EqualTo("T1_B1_Manhole_x=1000m"));
+            Assert.That(sections[2].Name, Is.EqualTo("Node"));
+            Assert.That(sections[2].Properties.FirstOrDefault()?.Value, Is.EqualTo("T1_B1_Manhole_x=1000m"));
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using DeltaShell.NGHS.IO.DelftIniObjects;
+﻿using System.Linq;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Serialization;
 using NUnit.Framework;
@@ -22,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
         }
 
         [Test]
-        public void Serialize_ReturnTimeHasValue_SerializesTheBoundaryDTOToADelftINICategory()
+        public void Serialize_ReturnTimeHasValue_SerializesTheBoundaryDTOAnIniSection()
         {
             // Setup
             var boundarySerializer = new BoundarySerializer();
@@ -30,19 +31,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             var boundaryDTO = new BoundaryDTO("some_quantity", "some_location_file", forcingFiles, 1.23);
 
             // Call
-            DelftIniCategory delftIniCategory = boundarySerializer.Serialize(boundaryDTO);
+            IniSection section = boundarySerializer.Serialize(boundaryDTO);
 
             // Assert
-            Assert.That(delftIniCategory.Name, Is.EqualTo("boundary"));
-            Assert.That(delftIniCategory.Properties, Has.Count.EqualTo(5));
-            Assert.That(delftIniCategory.GetPropertyValue("quantity"), Is.EqualTo("some_quantity"));
-            Assert.That(delftIniCategory.GetPropertyValue("locationFile"), Is.EqualTo("some_location_file"));
-            Assert.That(delftIniCategory.GetPropertyValues("forcingFile"), Is.EqualTo(forcingFiles));
-            Assert.That(delftIniCategory.GetPropertyValue("returnTime"), Is.EqualTo("1.2300000e+000"));
+            Assert.That(section.Name, Is.EqualTo("boundary"));
+            Assert.That(section.Properties, Has.Count.EqualTo(5));
+            Assert.That(section.GetPropertyValueOrDefault("quantity"), Is.EqualTo("some_quantity"));
+            Assert.That(section.GetPropertyValueOrDefault("locationFile"), Is.EqualTo("some_location_file"));
+            Assert.That(section.GetAllProperties("forcingFile").Select(p => p.Value), Is.EqualTo(forcingFiles));
+            Assert.That(section.GetPropertyValueOrDefault("returnTime"), Is.EqualTo("1.2300000e+000"));
         }
 
         [Test]
-        public void Serialize_ReturnTimeHasNoValue_SerializesTheBoundaryDTOToADelftINICategory()
+        public void Serialize_ReturnTimeHasNoValue_SerializesTheBoundaryDTOToAnIniSection()
         {
             // Setup
             var boundarySerializer = new BoundarySerializer();
@@ -50,14 +51,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             var boundaryDTO = new BoundaryDTO("some_quantity", "some_location_file", forcingFiles, null);
 
             // Call
-            DelftIniCategory delftIniCategory = boundarySerializer.Serialize(boundaryDTO);
+            IniSection section = boundarySerializer.Serialize(boundaryDTO);
 
             // Assert
-            Assert.That(delftIniCategory.Name, Is.EqualTo("boundary"));
-            Assert.That(delftIniCategory.Properties, Has.Count.EqualTo(4));
-            Assert.That(delftIniCategory.GetPropertyValue("quantity"), Is.EqualTo("some_quantity"));
-            Assert.That(delftIniCategory.GetPropertyValue("locationFile"), Is.EqualTo("some_location_file"));
-            Assert.That(delftIniCategory.GetPropertyValues("forcingFile"), Is.EqualTo(forcingFiles));
+            Assert.That(section.Name, Is.EqualTo("boundary"));
+            Assert.That(section.Properties, Has.Count.EqualTo(4));
+            Assert.That(section.GetPropertyValueOrDefault("quantity"), Is.EqualTo("some_quantity"));
+            Assert.That(section.GetPropertyValueOrDefault("locationFile"), Is.EqualTo("some_location_file"));
+            Assert.That(section.GetAllProperties("forcingFile").Select(p => p.Value), Is.EqualTo(forcingFiles));
         }
     }
 }

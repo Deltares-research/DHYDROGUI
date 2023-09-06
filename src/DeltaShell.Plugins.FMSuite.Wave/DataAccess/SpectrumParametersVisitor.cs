@@ -2,7 +2,7 @@
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries;
@@ -11,30 +11,29 @@ using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 {
     /// <summary>
-    /// Visits <see cref="IForcingTypeDefinedParameters"/> to build a <see cref="DelftIniCategory"/>
-    /// with spectrum data.
+    /// Visits <see cref="IForcingTypeDefinedParameters"/> to build a <see cref="IniSection"/> with spectrum data.
     /// </summary>
     /// <seealso cref="IForcingTypeDefinedParametersVisitor"/>
     public class SpectrumParametersVisitor : IForcingTypeDefinedParametersVisitor
     {
-        private readonly DelftIniCategory category;
+        private readonly IniSection section;
         private readonly IFilesManager filesManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpectrumParametersVisitor"/> class.
         /// </summary>
-        /// <param name="category">The category.</param>
+        /// <param name="section">The section.</param>
         /// <param name="filesManager">The files manager.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="category"/> or <paramref name="filesManager"/>
+        /// Thrown when <paramref name="section"/> or <paramref name="filesManager"/>
         /// is <c>null</c>.
         /// </exception>
-        public SpectrumParametersVisitor(DelftIniCategory category, IFilesManager filesManager)
+        public SpectrumParametersVisitor(IniSection section, IFilesManager filesManager)
         {
-            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(section, nameof(section));
             Ensure.NotNull(filesManager, nameof(filesManager));
 
-            this.category = category;
+            this.section = section;
             this.filesManager = filesManager;
         }
 
@@ -86,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
         private void SetSpectrumProperty()
         {
-            category.SetProperty(KnownWaveProperties.SpectrumSpec, SpectrumType.GetDescription());
+            section.AddOrUpdateProperty(KnownWaveProperties.SpectrumSpec, SpectrumType.GetDescription());
         }
     }
 }

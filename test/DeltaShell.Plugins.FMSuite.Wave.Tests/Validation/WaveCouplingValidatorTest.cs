@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel();
 
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM).Value = true;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.WriteCOM).Value = true;
 
             // When
             ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IsCoupledToFlow = true,
                 WriteCOM = writeComFile
             };
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).Value = comFilePath;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile).Value = comFilePath;
 
             // When
             ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);

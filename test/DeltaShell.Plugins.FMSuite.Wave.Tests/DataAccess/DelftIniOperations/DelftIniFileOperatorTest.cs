@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
 using DHYDRO.Common.Logging;
@@ -93,39 +93,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
             const string sourcePath = "./fromHere/soooooooooourceyFile.ini";
 
             // Ini properties
-            const string categoryName = "categoryName";
-            var category = new DelftIniCategory(categoryName);
+            const string sectionName = "sectionName";
+            var section = new IniSection(sectionName);
 
-            DelftIniProperty[] properties =
+            IniProperty[] properties =
                 Enumerable.Range(0, 5)
-                          .Select(i => new DelftIniProperty($"someName_{i}", $"someValue_{i}", $"(someComment_{i}"))
+                          .Select(i => new IniProperty($"someName_{i}", $"someValue_{i}", $"(someComment_{i}"))
                           .ToArray();
             IDelftIniPropertyBehaviour[] propertyBehaviours =
                 Enumerable.Range(0, 5)
                           .Select(_ => Substitute.For<IDelftIniPropertyBehaviour>())
                           .ToArray();
 
-            category.AddProperties(properties);
+            section.AddMultipleProperties(properties);
 
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>> behaviourMapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>
                 {
                     {
-                        categoryName, new Dictionary<string, IDelftIniPropertyBehaviour>
+                        sectionName, new Dictionary<string, IDelftIniPropertyBehaviour>
                         {
-                            {properties[0].Name, propertyBehaviours[0]},
-                            {properties[1].Name, propertyBehaviours[1]},
-                            {properties[2].Name, propertyBehaviours[2]},
-                            {properties[3].Name, propertyBehaviours[3]},
-                            {properties[4].Name, propertyBehaviours[4]},
+                            {properties[0].Key, propertyBehaviours[0]},
+                            {properties[1].Key, propertyBehaviours[1]},
+                            {properties[2].Key, propertyBehaviours[2]},
+                            {properties[3].Key, propertyBehaviours[3]},
+                            {properties[4].Key, propertyBehaviours[4]},
                         }
                     },
                 };
 
-            DelftIniCategory[] categories =
-            {
-                category
-            };
+            var iniData = new IniData();
+            iniData.AddSection(section);
 
             var postOperations = new[]
             {
@@ -135,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
             };
 
             var iniReader = Substitute.For<IDelftIniReader>();
-            iniReader.ReadDelftIniFile(sourceFile, sourcePath).Returns(categories);
+            iniReader.ReadDelftIniFile(sourceFile, sourcePath).Returns(iniData);
 
             var iniFileOperator = new DelftIniFileOperator(behaviourMapping, iniReader, postOperations);
             var logHandler = Substitute.For<ILogHandler>();
@@ -150,13 +148,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
             for (var i = 0; i < 5; i++)
             {
                 propertyBehaviours[i].Received(1).Invoke(properties[i], logHandler);
-                propertyBehaviours[i].DidNotReceive().Invoke(Arg.Is<DelftIniProperty>(x => !x.Name.Equals(properties[i].Name)),
+                propertyBehaviours[i].DidNotReceive().Invoke(Arg.Is<IniProperty>(x => !x.Key.Equals(properties[i].Key)),
                                                              logHandler);
             }
 
             foreach (IDelftIniPostOperationBehaviour postOperation in postOperations)
             {
-                postOperation.Received(1).Invoke(sourceFile, sourcePath, categories, logHandler);
+                postOperation.Received(1).Invoke(sourceFile, sourcePath, iniData, logHandler);
             }
         }
 
@@ -169,20 +167,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
             const string sourcePath = "./fromHere/soooooooooourceyFile.ini";
 
             // Ini properties
-            const string categoryName = "categoryName";
-            var category = new DelftIniCategory(categoryName);
+            const string sectionName = "sectionName";
+            var section = new IniSection(sectionName);
 
-            const string propertyName = "someName";
+            const string propertyKey = "someKey";
             const string propertyValue = "someValue";
             const string propertyComment = "someComment";
 
-            var property = new DelftIniProperty(propertyName, propertyValue, propertyComment);
-            category.AddProperty(property);
+            var property = new IniProperty(propertyKey, propertyValue, propertyComment);
+            section.AddProperty(property);
 
-            DelftIniCategory[] categories =
-            {
-                category
-            };
+            var iniData = new IniData();
+            iniData.AddSection(section);
 
             var propertyBehaviour = Substitute.For<IDelftIniPropertyBehaviour>();
 
@@ -190,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
                 new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>
                 {
                     {
-                        categoryName, new Dictionary<string, IDelftIniPropertyBehaviour>
+                        sectionName, new Dictionary<string, IDelftIniPropertyBehaviour>
                         {
                             {"notSomeName", propertyBehaviour},
                         }
@@ -198,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
                 };
 
             var iniReader = Substitute.For<IDelftIniReader>();
-            iniReader.ReadDelftIniFile(sourceFile, sourcePath).Returns(categories);
+            iniReader.ReadDelftIniFile(sourceFile, sourcePath).Returns(iniData);
 
             var postOperations = new[]
             {
@@ -218,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
             Assert.That(logHandler.ReceivedCalls(), Is.Empty);
 
             propertyBehaviour.DidNotReceiveWithAnyArgs().Invoke(null, null);
-            Assert.That(property.Name, Is.EqualTo(propertyName));
+            Assert.That(property.Key, Is.EqualTo(propertyKey));
             Assert.That(property.Value, Is.EqualTo(propertyValue));
             Assert.That(property.Comment, Is.EqualTo(propertyComment));
         }

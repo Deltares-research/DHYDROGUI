@@ -8,7 +8,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -1037,7 +1037,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.BoundaryConditionSets.Add(bcSet);
             
             // Call
-            IList<DelftIniCategory> resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(modelDefinition);
+            IList<IniSection> resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(modelDefinition);
 
             // Assert
             Assert.IsFalse(resultingItems.Any());

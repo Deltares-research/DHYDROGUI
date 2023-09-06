@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using NUnit.Framework;
 
@@ -21,13 +21,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
             var reader = new MduDelftIniReader();
 
             // Call
-            DelftIniCategory category = reader.ReadDelftIniFile(stream, string.Empty).Single();
+            IniData iniData = reader.ReadDelftIniFile(stream, string.Empty);
+            IniSection iniSection = iniData.Sections.Single();
 
             // Assert
-            Assert.That(category.Name, Is.EqualTo("output"));
+            Assert.That(iniSection.Name, Is.EqualTo("output"));
 
-            DelftIniProperty property = category.Properties.Single();
-            Assert.That(property.Name, Is.EqualTo("ObsFile"));
+            IniProperty property = iniSection.Properties.Single();
+            Assert.That(property.Key, Is.EqualTo("ObsFile"));
             Assert.That(property.Value, Is.EqualTo("obs_1_obs.xyn obs_2_obs.xyn obs_3_obs.xyn"));
             Assert.That(property.Comment, Is.EqualTo(expectedComment));
         }

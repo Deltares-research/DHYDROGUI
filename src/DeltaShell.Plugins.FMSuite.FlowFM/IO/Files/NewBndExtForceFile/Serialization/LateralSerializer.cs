@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
@@ -12,7 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Serialization
 {
     /// <summary>
-    /// Class for serializing a <see cref="Lateral"/> into a <see cref="DelftIniCategory"/>.
+    /// Class for serializing a <see cref="Lateral"/> into a <see cref="IniSection"/>.
     /// </summary>
     public sealed class LateralSerializer
     {
@@ -28,11 +28,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Serializ
         }
 
         /// <summary>
-        /// Serialize the provided lateral to a <see cref="DelftIniCategory"/>.
+        /// Serialize the provided lateral to a <see cref="IniSection"/>.
         /// </summary>
         /// <param name="lateral"> The lateral to serialize. </param>
         /// <returns>
-        /// A new <see cref="DelftIniCategory"/> instance.
+        /// A new <see cref="IniSection"/> instance.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="lateral"/> is <c>null</c>.
@@ -40,83 +40,83 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Serializ
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when the discharge type of the <paramref name="lateral"/> is not a defined <see cref="LateralDischargeType"/>.
         /// </exception>
-        public DelftIniCategory Serialize(Lateral lateral)
+        public IniSection Serialize(Lateral lateral)
         {
             Ensure.NotNull(lateral, nameof(lateral));
 
             LateralDTO lateralDTO = lateralToDTOConverter.Convert(lateral);
-            DelftIniCategory lateralCategory = Serialize(lateralDTO);
-            return lateralCategory;
+            IniSection lateralSection = Serialize(lateralDTO);
+            return lateralSection;
         }
 
-        private static DelftIniCategory Serialize(LateralDTO lateralDTO)
+        private static IniSection Serialize(LateralDTO lateralDTO)
         {
             Ensure.NotNull(lateralDTO, nameof(lateralDTO));
 
-            var category = new DelftIniCategory(BndExtForceFileConstants.LateralBlockKey);
+            var section = new IniSection(BndExtForceFileConstants.LateralBlockKey);
 
-            SerializeStringProperty(category, BndExtForceFileConstants.IdKey, lateralDTO.Id);
-            SerializeStringProperty(category, BndExtForceFileConstants.NameKey, lateralDTO.Name);
-            SerializeLateralForcingType(category, BndExtForceFileConstants.TypeKey, lateralDTO.Type);
-            SerializeLateralLocationType(category, BndExtForceFileConstants.LocationTypeKey, lateralDTO.LocationType);
-            SerializeIntProperty(category, BndExtForceFileConstants.NumCoordinatesKey, lateralDTO.NumCoordinates);
-            SerializeDoublesProperty(category, BndExtForceFileConstants.XCoordinatesKey, lateralDTO.XCoordinates);
-            SerializeDoublesProperty(category, BndExtForceFileConstants.YCoordinatesKey, lateralDTO.YCoordinates);
-            SerializeSteerableProperty(category, BndExtForceFileConstants.DischargeKey, lateralDTO.Discharge);
+            SerializeStringProperty(section, BndExtForceFileConstants.IdKey, lateralDTO.Id);
+            SerializeStringProperty(section, BndExtForceFileConstants.NameKey, lateralDTO.Name);
+            SerializeLateralForcingType(section, BndExtForceFileConstants.TypeKey, lateralDTO.Type);
+            SerializeLateralLocationType(section, BndExtForceFileConstants.LocationTypeKey, lateralDTO.LocationType);
+            SerializeIntProperty(section, BndExtForceFileConstants.NumCoordinatesKey, lateralDTO.NumCoordinates);
+            SerializeDoublesProperty(section, BndExtForceFileConstants.XCoordinatesKey, lateralDTO.XCoordinates);
+            SerializeDoublesProperty(section, BndExtForceFileConstants.YCoordinatesKey, lateralDTO.YCoordinates);
+            SerializeSteerableProperty(section, BndExtForceFileConstants.DischargeKey, lateralDTO.Discharge);
 
-            return category;
+            return section;
         }
 
-        private static void SerializeStringProperty(DelftIniCategory category, string key, string value)
+        private static void SerializeStringProperty(IniSection section, string key, string value)
         {
             if (value != null)
             {
-                category.AddProperty(key, value);
+                section.AddProperty(key, value);
             }
         }
 
-        private static void SerializeLateralForcingType(DelftIniCategory category, string key, LateralForcingType value)
+        private static void SerializeLateralForcingType(IniSection section, string key, LateralForcingType value)
         {
             if (value != LateralForcingType.None)
             {
-                SerializeEnumProperty<LateralForcingType>(category, key, value);
+                SerializeEnumProperty<LateralForcingType>(section, key, value);
             }
         }
 
-        private static void SerializeLateralLocationType(DelftIniCategory category, string key, LateralLocationType value)
+        private static void SerializeLateralLocationType(IniSection section, string key, LateralLocationType value)
         {
             if (value != LateralLocationType.None)
             {
-                SerializeEnumProperty<LateralLocationType>(category, key, value);
+                SerializeEnumProperty<LateralLocationType>(section, key, value);
             }
         }
 
-        private static void SerializeEnumProperty<T>(DelftIniCategory category, string key, T? value) where T : struct, Enum
+        private static void SerializeEnumProperty<T>(IniSection section, string key, T? value) where T : struct, Enum
         {
-            category.AddProperty(key, value.GetDescription());
+            section.AddProperty(key, value.GetDescription());
         }
 
-        private static void SerializeIntProperty(DelftIniCategory category, string key, int? value)
+        private static void SerializeIntProperty(IniSection section, string key, int? value)
         {
             if (value != null)
             {
-                category.AddProperty(key, value.Value);
+                section.AddProperty(key, value.Value);
             }
         }
 
-        private static void SerializeDoublesProperty(DelftIniCategory category, string key, IEnumerable<double> value)
+        private static void SerializeDoublesProperty(IniSection section, string key, IEnumerable<double> value)
         {
             if (value != null)
             {
-                category.AddProperty(key, string.Join(" ", value.Select(SerializeDouble)));
+                section.AddProperty(key, string.Join(" ", value.Select(SerializeDouble)));
             }
         }
 
-        private static void SerializeSteerableProperty(DelftIniCategory category, string key, Steerable value)
+        private static void SerializeSteerableProperty(IniSection section, string key, Steerable value)
         {
             if (value != null)
             {
-                category.AddProperty(key, SerializeSteerable(value));
+                section.AddProperty(key, SerializeSteerable(value));
             }
         }
 

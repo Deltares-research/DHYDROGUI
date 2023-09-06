@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
@@ -136,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
                 logHandlerMock.Expect(l => l.ReportWarningFormat(
-                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__)),
+                                          Arg<string>.Matches(fp => fp.Equals(Resources.StructureFile_Section__0__not_supported_for_structures_and_is_skipped_Line__1__)),
                                           Arg<object[]>.Matches(fs => fs.Length == 2 &&
                                                                       fs[0].Equals("test") &&
                                                                       fs[1].Equals(1))))
@@ -455,9 +454,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Given
                 string structuresFilePath = CreateStructuresFileWithPliFiles(
                     tempDirectory,
-                    CreateOldWeirDelftIniCategory(),
-                    CreateOldGateDelftIniCategory(),
-                    CreateOldGeneralStructureDelftIniCategory());
+                    CreateOldWeirSection(),
+                    CreateOldGateSection(),
+                    CreateOldGeneralStructureSection());
 
                 var structuresFile = new StructuresFile {StructureSchema = schema};
 
@@ -478,7 +477,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Given
                 string structuresFilePath = CreateStructuresFileWithPliFiles(
                     tempDirectory,
-                    CreateOldWeirDelftIniCategory());
+                    CreateOldWeirSection());
 
                 var structuresFile = new StructuresFile {StructureSchema = schema};
 
@@ -499,7 +498,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Given
                 string structuresFilePath = CreateStructuresFileWithPliFiles(
                     tempDirectory,
-                    CreateOldGateDelftIniCategory());
+                    CreateOldGateSection());
 
                 var structuresFile = new StructuresFile {StructureSchema = new WaterFlowFMModelDefinition().StructureSchema};
 
@@ -520,7 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Given
                 string structuresFilePath = CreateStructuresFileWithPliFiles(
                     tempDirectory,
-                    CreateOldGeneralStructureDelftIniCategory());
+                    CreateOldGeneralStructureSection());
 
                 var structuresFile = new StructuresFile {StructureSchema = new WaterFlowFMModelDefinition().StructureSchema};
 
@@ -962,84 +961,87 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         private void ValidateWrittenStructuresFile(string filePath)
         {
-            IList<DelftIniCategory> categories;
+            IniData iniData;
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                categories = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
+                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
             }
 
-            Assert.AreEqual(3, categories.Count,
-                            "3 categories were expected to be read from the structures file.");
-            DelftIniCategory weirCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.Weir);
-            Assert.IsNotNull(weirCategory,
-                             $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.Weir}");
-            ValidateCommonWeirIniProperties(weirCategory);
+            Assert.AreEqual(3, iniData.SectionCount,
+                            "3 sections were expected to be read from the structures file.");
+            IniSection weirSection = GetSectionForStructureType(iniData, StructureRegion.StructureTypeName.Weir);
+            Assert.IsNotNull(weirSection,
+                             $"There was no INI section with structure type {StructureRegion.StructureTypeName.Weir}");
+            ValidateCommonWeirIniProperties(weirSection);
 
-            DelftIniCategory gateCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.Gate);
-            Assert.IsNotNull(weirCategory,
-                             $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.Gate}");
-            ValidateCommonWeirIniProperties(gateCategory);
-            ValidateGateIniProperties(gateCategory);
+            IniSection gateSection = GetSectionForStructureType(iniData, StructureRegion.StructureTypeName.Gate);
+            Assert.IsNotNull(weirSection,
+                             $"There was no INI section with structure type {StructureRegion.StructureTypeName.Gate}");
+            ValidateCommonWeirIniProperties(gateSection);
+            ValidateGateIniProperties(gateSection);
 
-            DelftIniCategory generalStructureCategory = GetCategoryForStructureType(categories, StructureRegion.StructureTypeName.GeneralStructure);
-            Assert.IsNotNull(weirCategory,
-                             $"There was no delft ini catageory with structure type {StructureRegion.StructureTypeName.GeneralStructure}");
-            ValidateCommonWeirIniProperties(generalStructureCategory);
-            ValidateGateIniProperties(gateCategory);
-            ValidateGeneralStructureIniProperties(generalStructureCategory);
+            IniSection generalStructureSection = GetSectionForStructureType(iniData, StructureRegion.StructureTypeName.GeneralStructure);
+            Assert.IsNotNull(weirSection,
+                             $"There was no INI section with structure type {StructureRegion.StructureTypeName.GeneralStructure}");
+            ValidateCommonWeirIniProperties(generalStructureSection);
+            ValidateGateIniProperties(gateSection);
+            ValidateGeneralStructureIniProperties(generalStructureSection);
         }
 
-        private void ValidateGeneralStructureIniProperties(DelftIniCategory category)
+        private void ValidateGeneralStructureIniProperties(IniSection section)
         {
-            ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Width.GetDescription(), "6");
-            ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Width.GetDescription(), "7");
-            ValidateProperty(category, KnownGeneralStructureProperties.Downstream1Width.GetDescription(), "8");
-            ValidateProperty(category, KnownGeneralStructureProperties.Downstream2Width.GetDescription(), "9");
-            ValidateProperty(category, KnownGeneralStructureProperties.Upstream1Level.GetDescription(), "10");
-            ValidateProperty(category, KnownGeneralStructureProperties.Upstream2Level.GetDescription(), "11");
-            ValidateProperty(category, KnownGeneralStructureProperties.Downstream1Level.GetDescription(), "12");
-            ValidateProperty(category, KnownGeneralStructureProperties.Downstream2Level.GetDescription(), "13");
+            ValidateProperty(section, KnownGeneralStructureProperties.Upstream1Width.GetDescription(), "6");
+            ValidateProperty(section, KnownGeneralStructureProperties.Upstream2Width.GetDescription(), "7");
+            ValidateProperty(section, KnownGeneralStructureProperties.Downstream1Width.GetDescription(), "8");
+            ValidateProperty(section, KnownGeneralStructureProperties.Downstream2Width.GetDescription(), "9");
+            ValidateProperty(section, KnownGeneralStructureProperties.Upstream1Level.GetDescription(), "10");
+            ValidateProperty(section, KnownGeneralStructureProperties.Upstream2Level.GetDescription(), "11");
+            ValidateProperty(section, KnownGeneralStructureProperties.Downstream1Level.GetDescription(), "12");
+            ValidateProperty(section, KnownGeneralStructureProperties.Downstream2Level.GetDescription(), "13");
         }
 
-        private void ValidateGateIniProperties(DelftIniCategory category)
+        private void ValidateGateIniProperties(IniSection section)
         {
-            ValidateProperty(category, KnownStructureProperties.GateLowerEdgeLevel, "3");
-            ValidateProperty(category, KnownStructureProperties.GateOpeningWidth, "4");
-            ValidateProperty(category, KnownStructureProperties.GateHeight, "5");
-            ValidateProperty(category, KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric");
+            ValidateProperty(section, KnownStructureProperties.GateLowerEdgeLevel, "3");
+            ValidateProperty(section, KnownStructureProperties.GateOpeningWidth, "4");
+            ValidateProperty(section, KnownStructureProperties.GateHeight, "5");
+            ValidateProperty(section, KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric");
         }
 
-        private void ValidateCommonWeirIniProperties(DelftIniCategory category)
+        private void ValidateCommonWeirIniProperties(IniSection section)
         {
-            ValidateProperty(category, KnownStructureProperties.CrestLevel, "1");
-            ValidateProperty(category, KnownStructureProperties.CrestWidth, "2");
+            ValidateProperty(section, KnownStructureProperties.CrestLevel, "1");
+            ValidateProperty(section, KnownStructureProperties.CrestWidth, "2");
         }
 
-        private static DelftIniCategory GetCategoryForStructureType(IList<DelftIniCategory> categories, string type)
+        private static IniSection GetSectionForStructureType(IniData iniData, string type)
         {
-            return categories.FirstOrDefault(c => c.Properties.FirstOrDefault(p => p.Name.Equals(KnownStructureProperties.Type)).Value == type);
+            return iniData.Sections.FirstOrDefault(c => c.Properties.FirstOrDefault(p => p.IsKeyEqualTo(KnownStructureProperties.Type))?.Value == type);
         }
 
-        private void ValidateProperty(DelftIniCategory category, string propertyName, string expectedValue)
+        private void ValidateProperty(IniSection section, string propertyKey, string expectedValue)
         {
-            DelftIniProperty property = category.Properties.FirstOrDefault(p => p.Name.Equals(propertyName));
+            IniProperty property = section.Properties.FirstOrDefault(p => p.IsKeyEqualTo(propertyKey));
             Assert.NotNull(property,
-                           $"There was no property '{propertyName}' in category '{category.Name}' in the structures file.");
+                           $"There was no property '{propertyKey}' in section '{section.Name}' in the structures file.");
             Assert.AreEqual(expectedValue, property.Value,
-                            $"Value of property '{propertyName}' was not as expected.");
+                            $"Value of property '{propertyKey}' was not as expected.");
         }
 
-        private string CreateStructuresFileWithPliFiles(string tempDirectoryPath, params DelftIniCategory[] delftIniCategories)
+        private string CreateStructuresFileWithPliFiles(string tempDirectoryPath, params IniSection[] sections)
         {
             string filePath = Path.Combine(tempDirectoryPath, "structures.ini");
 
-            foreach (DelftIniCategory category in delftIniCategories)
+            foreach (IniSection section in sections)
             {
-                string structureName = category.Properties.FirstOrDefault(p => p.Name.Equals("id")).Value;
+                string structureName = section.Properties.FirstOrDefault(p => p.IsKeyEqualTo("id"))?.Value;
                 WritePliFile(tempDirectoryPath, structureName);
             }
 
-            new DelftIniWriter().WriteDelftIniFile(delftIniCategories, filePath);
+            var iniData = new IniData();
+            iniData.AddMultipleSections(sections);
+            
+            new DelftIniWriter().WriteDelftIniFile(iniData, filePath);
 
             return filePath;
         }
@@ -1055,85 +1057,85 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             });
         }
 
-        private static DelftIniCategory CreateOldGeneralStructureDelftIniCategory()
+        private static IniSection CreateOldGeneralStructureSection()
         {
             const string structureName = "general_structure";
-            var properties = new List<DelftIniProperty>
+            var properties = new List<IniProperty>
             {
-                new DelftIniProperty("type", "generalstructure", ""),
-                new DelftIniProperty("id", structureName, ""),
-                new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
-                new DelftIniProperty("pos_freegateflowcoeff", "0", ""),
-                new DelftIniProperty("pos_drowngateflowcoeff", "0", ""),
-                new DelftIniProperty("pos_freeweirflowcoeff", "0", ""),
-                new DelftIniProperty("pos_drownweirflowcoeff", "0", ""),
-                new DelftIniProperty("pos_contrcoeffreegate", "0", ""),
-                new DelftIniProperty("neg_freegateflowcoeff", "0", ""),
-                new DelftIniProperty("neg_drowngateflowcoeff", "0", ""),
-                new DelftIniProperty("neg_freeweirflowcoeff", "0", ""),
-                new DelftIniProperty("neg_drownweirflowcoeff", "0", ""),
-                new DelftIniProperty("neg_contrcoeffreegate", "0", ""),
-                new DelftIniProperty("extraresistance", "0", ""),
-                new DelftIniProperty("levelcenter", "1", ""),
-                new DelftIniProperty("widthcenter", "2", ""),
-                new DelftIniProperty("gateheight", "3", ""),
-                new DelftIniProperty("door_opening_width", "4", ""),
-                new DelftIniProperty("gatedoorheight", "5", ""),
-                new DelftIniProperty("horizontal_opening_direction", "symmetric", ""),
-                new DelftIniProperty("widthleftW1", "6", ""),
-                new DelftIniProperty("widthleftWsdl", "7", ""),
-                new DelftIniProperty("widthrightWsdr", "8", ""),
-                new DelftIniProperty("widthrightW2", "9", ""),
-                new DelftIniProperty("levelleftZb1", "10", ""),
-                new DelftIniProperty("levelleftZbsl", "11", ""),
-                new DelftIniProperty("levelrightZbsr", "12", ""),
-                new DelftIniProperty("levelrightZb2", "13", "")
+                new IniProperty("type", "generalstructure"),
+                new IniProperty("id", structureName),
+                new IniProperty("polylinefile", $"{structureName}.pli"),
+                new IniProperty("pos_freegateflowcoeff", "0"),
+                new IniProperty("pos_drowngateflowcoeff", "0"),
+                new IniProperty("pos_freeweirflowcoeff", "0"),
+                new IniProperty("pos_drownweirflowcoeff", "0"),
+                new IniProperty("pos_contrcoeffreegate", "0"),
+                new IniProperty("neg_freegateflowcoeff", "0"),
+                new IniProperty("neg_drowngateflowcoeff", "0"),
+                new IniProperty("neg_freeweirflowcoeff", "0"),
+                new IniProperty("neg_drownweirflowcoeff", "0"),
+                new IniProperty("neg_contrcoeffreegate", "0"),
+                new IniProperty("extraresistance", "0"),
+                new IniProperty("levelcenter", "1"),
+                new IniProperty("widthcenter", "2"),
+                new IniProperty("gateheight", "3"),
+                new IniProperty("door_opening_width", "4"),
+                new IniProperty("gatedoorheight", "5"),
+                new IniProperty("horizontal_opening_direction", "symmetric"),
+                new IniProperty("widthleftW1", "6"),
+                new IniProperty("widthleftWsdl", "7"),
+                new IniProperty("widthrightWsdr", "8"),
+                new IniProperty("widthrightW2", "9"),
+                new IniProperty("levelleftZb1", "10"),
+                new IniProperty("levelleftZbsl", "11"),
+                new IniProperty("levelrightZbsr", "12"),
+                new IniProperty("levelrightZb2", "13")
             };
 
-            var generalStructureCategory = new DelftIniCategory("structure");
-            generalStructureCategory.AddProperties(properties);
+            var generalStructureSection = new IniSection("structure");
+            generalStructureSection.AddMultipleProperties(properties);
 
-            return generalStructureCategory;
+            return generalStructureSection;
         }
 
-        private static DelftIniCategory CreateOldGateDelftIniCategory()
+        private static IniSection CreateOldGateSection()
         {
             const string structureName = "gated_weir";
 
-            var properties = new List<DelftIniProperty>
+            var properties = new List<IniProperty>
             {
-                new DelftIniProperty("type", "gate", ""),
-                new DelftIniProperty("id", structureName, ""),
-                new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
-                new DelftIniProperty("sill_level", "1", ""),
-                new DelftIniProperty("sill_width", "2", ""),
-                new DelftIniProperty("lower_edge_level", "3", ""),
-                new DelftIniProperty("opening_width", "4", ""),
-                new DelftIniProperty("door_height", "5", ""),
-                new DelftIniProperty("horizontal_opening_direction", "symmetric", "")
+                new IniProperty("type", "gate"),
+                new IniProperty("id", structureName),
+                new IniProperty("polylinefile", $"{structureName}.pli"),
+                new IniProperty("sill_level", "1"),
+                new IniProperty("sill_width", "2"),
+                new IniProperty("lower_edge_level", "3"),
+                new IniProperty("opening_width", "4"),
+                new IniProperty("door_height", "5"),
+                new IniProperty("horizontal_opening_direction", "symmetric")
             };
-            var gateCategory = new DelftIniCategory("structure");
-            gateCategory.AddProperties(properties);
+            var section = new IniSection("structure");
+            section.AddMultipleProperties(properties);
 
-            return gateCategory;
+            return section;
         }
 
-        private static DelftIniCategory CreateOldWeirDelftIniCategory()
+        private static IniSection CreateOldWeirSection()
         {
             const string structureName = "simple_weir";
-            var properties = new List<DelftIniProperty>
+            var properties = new List<IniProperty>
             {
-                new DelftIniProperty("type", "weir", ""),
-                new DelftIniProperty("id", structureName, ""),
-                new DelftIniProperty("polylinefile", $"{structureName}.pli", ""),
-                new DelftIniProperty("lat_contr_coeff", "0", ""),
-                new DelftIniProperty("crest_level", "1", ""),
-                new DelftIniProperty("crest_width", "2", "")
+                new IniProperty("type", "weir"),
+                new IniProperty("id", structureName),
+                new IniProperty("polylinefile", $"{structureName}.pli"),
+                new IniProperty("lat_contr_coeff", "0"),
+                new IniProperty("crest_level", "1"),
+                new IniProperty("crest_width", "2")
             };
-            var weirCategory = new DelftIniCategory("structure");
-            weirCategory.AddProperties(properties);
+            var section = new IniSection("structure");
+            section.AddMultipleProperties(properties);
 
-            return weirCategory;
+            return section;
         }
 
         #region Sobek Structures
@@ -1211,28 +1213,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             using (var fileStreamA = new FileStream(iniFilePathA, FileMode.Open, FileAccess.Read))
             using (var fileStreamB = new FileStream(iniFilePathB, FileMode.Open, FileAccess.Read))
             {
-                IList<DelftIniCategory> iniCategoriesA = new DelftIniReader().ReadDelftIniFile(fileStreamA, iniFilePathA);
-                IList<DelftIniCategory> iniCategoriesB = new DelftIniReader().ReadDelftIniFile(fileStreamB, iniFilePathB);
-                CompareCategories(iniCategoriesA, iniCategoriesB);
+                IniData iniDataA = new DelftIniReader().ReadDelftIniFile(fileStreamA, iniFilePathA);
+                IniData iniDataB = new DelftIniReader().ReadDelftIniFile(fileStreamB, iniFilePathB);
+                CompareSections(iniDataA.Sections.ToList(), iniDataB.Sections.ToList());
             }
         }
 
-        private static void CompareCategories(IList<DelftIniCategory> iniCategoriesA, IList<DelftIniCategory> iniCategoriesB)
+        private static void CompareSections(IList<IniSection> iniSectionsA, IList<IniSection> iniSectionsB)
         {
-            Assert.AreEqual(iniCategoriesA.Count, iniCategoriesB.Count, "Expected the same number of categories.");
-            for (var i = 0; i < iniCategoriesA.Count; i++)
+            Assert.AreEqual(iniSectionsA.Count, iniSectionsB.Count, "Expected the same number of categories.");
+            for (var i = 0; i < iniSectionsA.Count; i++)
             {
-                Assert.AreEqual(iniCategoriesA[i].Name, iniCategoriesB[i].Name, string.Format("Names are not the same at index = {0}.", i));
-                CompareProperties(iniCategoriesA[i].Properties.ToList(), iniCategoriesB[i].Properties.ToList());
+                Assert.AreEqual(iniSectionsA[i].Name, iniSectionsB[i].Name, string.Format("Names are not the same at index = {0}.", i));
+                CompareProperties(iniSectionsA[i].Properties.ToList(), iniSectionsB[i].Properties.ToList());
             }
         }
 
-        private static void CompareProperties(IList<DelftIniProperty> propertiesA, IList<DelftIniProperty> propertiesB)
+        private static void CompareProperties(IList<IniProperty> propertiesA, IList<IniProperty> propertiesB)
         {
             Assert.AreEqual(propertiesA.Count, propertiesB.Count, "Expected the same number of properties.");
             for (var i = 0; i < propertiesA.Count; i++)
             {
-                Assert.AreEqual(propertiesA[i].Name, propertiesB[i].Name, string.Format("Names are not the same at index = {0}.", i));
+                Assert.AreEqual(propertiesA[i].Key, propertiesB[i].Key, string.Format("Names are not the same at index = {0}.", i));
                 Assert.AreEqual(propertiesA[i].Value, propertiesB[i].Value, string.Format("Values are not the same at index = {0}.", i));
                 // Don't care about comments
             }
@@ -1247,8 +1249,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(structures.Count, newStructures.Count, "Expected the same number of structures.");
             for (var i = 0; i < structures.Count; i++)
             {
-                Assert.AreEqual(structures[i].StructureType, newStructures[i].StructureType,
-                                string.Format("Expected same types at index {0}", i));
+                Assert.AreEqual(structures[i].StructureType, newStructures[i].StructureType, $"Expected same types at index {i}");
                 CompareStructureProperties(structures[i].Properties, newStructures[i].Properties);
             }
         }
