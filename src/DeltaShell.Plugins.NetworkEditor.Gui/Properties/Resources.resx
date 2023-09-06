@@ -632,4 +632,43 @@
   <data name="Ribbon_RemoveRoute_Confirm" xml:space="preserve">
     <value>Confirm</value>
   </data>
+  <data name="OrificeShapeEditViewModel_CrestLevelDescription" xml:space="preserve">
+    <value>Crest level [m]</value>
+  </data>
+  <data name="OrificeShapeEditViewModel_CrestWidthDescription" xml:space="preserve">
+    <value>Crest width [m]</value>
+  </data>
+  <data name="OrificeShapeEditViewModel_GateLowerEdgeLevelDescription" xml:space="preserve">
+    <value>Gate lower edge level [m]</value>
+  </data>
+  <data name="OrificeShapeEditViewModel_ContractionCoefficientDescription" xml:space="preserve">
+    <value>Contraction coefficient [-]</value>
+  </data>
+  <data name="WeirShapeEditViewModel_CrestLevelDescription" xml:space="preserve">
+    <value>Crest level [m]</value>
+  </data>
+  <data name="WeirShapeEditViewModel_CrestWidthDescription" xml:space="preserve">
+    <value>Crest width [m]</value>
+  </data>
+  <data name="WeirShapeEditViewModel_FlowDirectionDescription" xml:space="preserve">
+    <value>Flow direction</value>
+  </data>
+  <data name="WeirShapeEditViewModel_CorrectionCoefficientDescription" xml:space="preserve">
+    <value>Correction coefficient [-]</value>
+  </data>
+  <data name="PumpShapeEditViewModel_StartSuctionDescription" xml:space="preserve">
+    <value>Start level suction side [m]</value>
+  </data>
+  <data name="PumpShapeEditViewModel_StopSuctionDescription" xml:space="preserve">
+    <value>Stop level suction side [m]</value>
+  </data>
+  <data name="PumpShapeEditViewModel_StartDeliveryDescription" xml:space="preserve">
+    <value>Start level delivery side[m]</value>
+  </data>
+  <data name="PumpShapeEditViewModel_StopDeliveryDescription" xml:space="preserve">
+    <value>Stop level delivery side [m]</value>
+  </data>
+  <data name="PumpShapeEditViewModel_CapacityDescription" xml:space="preserve">
+    <value>Capacity [m3/s]</value>
+  </data>
 </root>

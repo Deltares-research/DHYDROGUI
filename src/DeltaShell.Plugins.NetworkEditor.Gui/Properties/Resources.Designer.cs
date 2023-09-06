@@ -1086,6 +1086,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contraction coefficient [-].
+        /// </summary>
+        public static string OrificeShapeEditViewModel_ContractionCoefficientDescription {
+            get {
+                return ResourceManager.GetString("OrificeShapeEditViewModel_ContractionCoefficientDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crest level [m].
+        /// </summary>
+        public static string OrificeShapeEditViewModel_CrestLevelDescription {
+            get {
+                return ResourceManager.GetString("OrificeShapeEditViewModel_CrestLevelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crest width [m].
+        /// </summary>
+        public static string OrificeShapeEditViewModel_CrestWidthDescription {
+            get {
+                return ResourceManager.GetString("OrificeShapeEditViewModel_CrestWidthDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gate lower edge level [m].
+        /// </summary>
+        public static string OrificeShapeEditViewModel_GateLowerEdgeLevelDescription {
+            get {
+                return ResourceManager.GetString("OrificeShapeEditViewModel_GateLowerEdgeLevelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap out_of_sync_overlay {
@@ -1171,6 +1207,51 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static string PumpProperties_DisplayName {
             get {
                 return ResourceManager.GetString("PumpProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capacity [m3/s].
+        /// </summary>
+        public static string PumpShapeEditViewModel_CapacityDescription {
+            get {
+                return ResourceManager.GetString("PumpShapeEditViewModel_CapacityDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start level delivery side[m].
+        /// </summary>
+        public static string PumpShapeEditViewModel_StartDeliveryDescription {
+            get {
+                return ResourceManager.GetString("PumpShapeEditViewModel_StartDeliveryDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start level suction side [m].
+        /// </summary>
+        public static string PumpShapeEditViewModel_StartSuctionDescription {
+            get {
+                return ResourceManager.GetString("PumpShapeEditViewModel_StartSuctionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop level delivery side [m].
+        /// </summary>
+        public static string PumpShapeEditViewModel_StopDeliveryDescription {
+            get {
+                return ResourceManager.GetString("PumpShapeEditViewModel_StopDeliveryDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop level suction side [m].
+        /// </summary>
+        public static string PumpShapeEditViewModel_StopSuctionDescription {
+            get {
+                return ResourceManager.GetString("PumpShapeEditViewModel_StopSuctionDescription", resourceCulture);
             }
         }
         
@@ -1627,6 +1708,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static string WeirProperties_DisplayName {
             get {
                 return ResourceManager.GetString("WeirProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Correction coefficient [-].
+        /// </summary>
+        public static string WeirShapeEditViewModel_CorrectionCoefficientDescription {
+            get {
+                return ResourceManager.GetString("WeirShapeEditViewModel_CorrectionCoefficientDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crest level [m].
+        /// </summary>
+        public static string WeirShapeEditViewModel_CrestLevelDescription {
+            get {
+                return ResourceManager.GetString("WeirShapeEditViewModel_CrestLevelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crest width [m].
+        /// </summary>
+        public static string WeirShapeEditViewModel_CrestWidthDescription {
+            get {
+                return ResourceManager.GetString("WeirShapeEditViewModel_CrestWidthDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flow direction.
+        /// </summary>
+        public static string WeirShapeEditViewModel_FlowDirectionDescription {
+            get {
+                return ResourceManager.GetString("WeirShapeEditViewModel_FlowDirectionDescription", resourceCulture);
             }
         }
         

@@ -7,6 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sewerFeatures="clr-namespace:DelftTools.Hydro.SewerFeatures;assembly=DelftTools.Hydro"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
              d:DesignHeight="1020"
              d:DesignWidth="1000"
              Background="White"
@@ -114,17 +115,18 @@
                                 VerticalContentAlignment="Top"
                                 Content="{Binding SelectedItem}">
                     <ContentControl.Resources>
+                        <converters:ObjectToViewModelConverter x:Key="ObjectToViewModelConverter" />
                         <DataTemplate DataType="{x:Type sewerFeatures:Compartment}">
                             <local:CompartmentView Compartment="{Binding Content, ElementName=ContentControl}" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type structures:Weir}">
-                            <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
+                            <local:WeirShapeEditView DataContext="{Binding Converter={StaticResource ObjectToViewModelConverter}}" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type structures:Pump}">
-                            <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
+                            <local:PumpShapeEditView DataContext="{Binding Converter={StaticResource ObjectToViewModelConverter}}" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type sewerFeatures:Orifice}">
-                            <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
+                            <local:OrificeShapeEditView DataContext="{Binding Converter={StaticResource ObjectToViewModelConverter}}" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type sewerFeatures:Pipe}">
                             <WindowsFormsHost local:WindowsFormsHostProfileView.Pipe="{Binding Content, ElementName=ContentControl}"
