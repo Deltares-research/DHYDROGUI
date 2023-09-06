@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -32,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Assert
                 using (var stream = new FileStream(mduFilepath, FileMode.Open))
                 {
-                    IniData iniData = new DelftIniReader().ReadDelftIniFile(stream, mduFilepath);
+                    IniData iniData = new IniReader().ReadIniFile(stream, mduFilepath);
                     Assert.That(iniData, Is.Not.Null);
 
                     IniSection restartSection = iniData.GetSection("restart");
@@ -69,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Assert
                 using (var stream = new FileStream(mduFilepath, FileMode.Open))
                 {
-                    IniData iniData = new DelftIniReader().ReadDelftIniFile(stream, mduFilepath);
+                    IniData iniData = new IniReader().ReadIniFile(stream, mduFilepath);
                     Assert.That(iniData, Is.Not.Null);
 
                     IniSection restartSection = iniData.GetSection("restart");
@@ -102,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Assert
                 using (var stream = new FileStream(mduFilepath, FileMode.Open))
                 {
-                    IniData iniData = new DelftIniReader().ReadDelftIniFile(stream, mduFilepath);
+                    IniData iniData = new IniReader().ReadIniFile(stream, mduFilepath);
                     Assert.That(iniData, Is.Not.Null);
 
                     IniSection restartSection = iniData.GetSection("restart");

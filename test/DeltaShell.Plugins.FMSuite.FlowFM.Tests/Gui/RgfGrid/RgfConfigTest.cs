@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         /// AND it has no Batch section
         /// </summary>
         [Test]
-        public void GivenARgfConfigWithoutAPolygonFileNameAndPolygons_WhenItIsConvertedToDelftIniData_ThenItHasNoPolygonSectionAndItHasNoBatchSection()
+        public void GivenARgfConfigWithoutAPolygonFileNameAndPolygons_WhenItIsConvertedToIniData_ThenItHasNoPolygonSectionAndItHasNoBatchSection()
         {
             // Given
             var config = new RgfConfig

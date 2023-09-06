@@ -60,25 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
-        /// </summary>
-        public static string DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__ {
-            get {
-                return ResourceManager.GetString("DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0__" +
-                        "_has_been_updated_to___1__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Backwards Compatibility: Value for &apos;{0}&apos; has been updated from &apos;{1}&apos; to &apos;{2}&apos;.
-        /// </summary>
-        public static string DelftIniBackwardsCompatibilityHelper_Value_for_0_has_been_updated_from_1_to_2 {
-            get {
-                return ResourceManager.GetString("DelftIniBackwardsCompatibilityHelper_Value_for_0_has_been_updated_from_1_to_2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Stream is not readable..
         /// </summary>
         public static string DiaFileReader_GetAllMessages_Stream_is_not_readable_ {
@@ -113,6 +94,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         public static string FMNetCdfFileFunctionStore_Could_not_parse_time_reference {
             get {
                 return ResourceManager.GetString("FMNetCdfFileFunctionStore_Could_not_parse_time_reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
+        /// </summary>
+        public static string IniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__ {
+            get {
+                return ResourceManager.GetString("IniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_" +
+                        "been_updated_to___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backwards Compatibility: Value for &apos;{0}&apos; has been updated from &apos;{1}&apos; to &apos;{2}&apos;.
+        /// </summary>
+        public static string IniBackwardsCompatibilityHelper_Value_for_0_has_been_updated_from_1_to_2 {
+            get {
+                return ResourceManager.GetString("IniBackwardsCompatibilityHelper_Value_for_0_has_been_updated_from_1_to_2", resourceCulture);
             }
         }
         

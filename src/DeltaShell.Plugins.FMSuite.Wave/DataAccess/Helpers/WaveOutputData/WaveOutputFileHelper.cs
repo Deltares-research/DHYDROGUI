@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
+using DeltaShell.NGHS.IO.Ini;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations.PostBehaviours;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
@@ -43,39 +43,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
             var hashSet = new HashSet<string>();
             string relativeDirectory = Path.GetDirectoryName(mdwPath);
 
-            IDelftIniFileOperator collector = CreateMdwCollector(hashSet, relativeDirectory);
+            IIniFileOperator collector = CreateMdwCollector(hashSet, relativeDirectory);
 
             collector.Invoke(mdwPathInfo.Open(FileMode.Open), mdwPath, null);
 
             return hashSet;
         }
 
-        private static IDelftIniFileOperator CreateObsCollector(HashSet<string> hashSet, string relativeDirectory)
+        private static IIniFileOperator CreateObsCollector(HashSet<string> hashSet, string relativeDirectory)
         {
             var obstacleFileInformationMapping =
-                new Dictionary<string, IDelftIniPropertyBehaviour>()
+                new Dictionary<string, IIniPropertyBehaviour>()
                 {
                     {KnownWaveObsProperties.PolylineFile, new CollectPropertyValueBehaviour(KnownWaveObsProperties.PolylineFile, hashSet, relativeDirectory)},
                 };
 
             var mapping =
-                new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>()
+                new Dictionary<string, IReadOnlyDictionary<string, IIniPropertyBehaviour>>()
                 {
                     {KnownWaveObsSections.ObstacleFileInformation, obstacleFileInformationMapping},
                 };
 
-            IDelftIniPostOperationBehaviour[] postBehaviours =
+            IIniPostOperationBehaviour[] postBehaviours =
             {
                 new CollectIniFileNamePostOperationBehaviour(hashSet, relativeDirectory)
             };
 
-            return new DelftIniFileOperator(mapping, new DelftIniReader(), postBehaviours);
+            return new IniFileOperator(mapping, new IniReader(), postBehaviours);
         }
 
-        private static IDelftIniFileOperator CreateMdwCollector(HashSet<string> hashSet, string relativeDirectory)
+        private static IIniFileOperator CreateMdwCollector(HashSet<string> hashSet, string relativeDirectory)
         {
             var mapping =
-                new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>()
+                new Dictionary<string, IReadOnlyDictionary<string, IIniPropertyBehaviour>>()
                 {
                     {KnownWaveSections.GeneralSection, CreateGeneralCategoryMigrations(hashSet, relativeDirectory)},
                     {KnownWaveSections.DomainSection, CreateDomainCategoryMigrations(hashSet, relativeDirectory)},
@@ -83,17 +83,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
                     {KnownWaveSections.OutputSection, CreateOutputCategoryMigrations(hashSet, relativeDirectory)},
                 };
 
-            IDelftIniPostOperationBehaviour[] postBehaviours =
+            IIniPostOperationBehaviour[] postBehaviours =
             {
                 new CollectIniFileNamePostOperationBehaviour(hashSet, relativeDirectory),
             };
 
-            return new DelftIniFileOperator(mapping, new DelftIniReader(), postBehaviours);
+            return new IniFileOperator(mapping, new IniReader(), postBehaviours);
         }
 
-        private static IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> CreateGeneralCategoryMigrations(HashSet<string> hashSet, string relativeDirectory)
+        private static IReadOnlyDictionary<string, IIniPropertyBehaviour> CreateGeneralCategoryMigrations(HashSet<string> hashSet, string relativeDirectory)
         {
-            return new Dictionary<string, IDelftIniPropertyBehaviour>
+            return new Dictionary<string, IIniPropertyBehaviour>
             {
                 {KnownWaveProperties.FlowFile, new CollectPropertyValueBehaviour(KnownWaveProperties.FlowFile, hashSet, relativeDirectory)},
                 {KnownWaveProperties.FlowMudFile, new CollectPropertyValueBehaviour(KnownWaveProperties.FlowMudFile, hashSet, relativeDirectory)},
@@ -105,9 +105,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
             };
         }
 
-        private static IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> CreateDomainCategoryMigrations(HashSet<string> hashSet, string relativeDirectory)
+        private static IReadOnlyDictionary<string, IIniPropertyBehaviour> CreateDomainCategoryMigrations(HashSet<string> hashSet, string relativeDirectory)
         {
-            return new Dictionary<string, IDelftIniPropertyBehaviour>
+            return new Dictionary<string, IIniPropertyBehaviour>
             {
                 {KnownWaveProperties.Grid, new CollectPropertyValueBehaviour(KnownWaveProperties.Grid, hashSet, relativeDirectory)},
                 {KnownWaveProperties.BedLevelGrid, new CollectPropertyValueBehaviour(KnownWaveProperties.BedLevelGrid, hashSet, relativeDirectory)},
@@ -116,17 +116,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
             };
         }
 
-        private static IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> CreateBoundaryCategoryMigrations(HashSet<string> hashSet, string relativeDirectory)
+        private static IReadOnlyDictionary<string, IIniPropertyBehaviour> CreateBoundaryCategoryMigrations(HashSet<string> hashSet, string relativeDirectory)
         {
-            return new Dictionary<string, IDelftIniPropertyBehaviour>
+            return new Dictionary<string, IIniPropertyBehaviour>
             {
                 {KnownWaveProperties.Spectrum, new CollectPropertyValueBehaviour(KnownWaveProperties.Spectrum, hashSet, relativeDirectory)},
             };
         }
 
-        private static IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> CreateOutputCategoryMigrations(HashSet<string> hashSet, string relativeDirectory)
+        private static IReadOnlyDictionary<string, IIniPropertyBehaviour> CreateOutputCategoryMigrations(HashSet<string> hashSet, string relativeDirectory)
         {
-            return new Dictionary<string, IDelftIniPropertyBehaviour>
+            return new Dictionary<string, IIniPropertyBehaviour>
             {
                 {KnownWaveProperties.LocationFile, new CollectPropertyValueBehaviour(KnownWaveProperties.LocationFile, hashSet, relativeDirectory)},
                 {KnownWaveProperties.CurveFile, new CollectPropertyValueBehaviour(KnownWaveProperties.CurveFile, hashSet, relativeDirectory)},

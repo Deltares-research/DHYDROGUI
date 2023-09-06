@@ -2,8 +2,8 @@
 using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -19,17 +19,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
             // Call
             var behaviour = new CollectPropertyValueWithDependentsBehaviour("somePropertyName",
                                                               "someRelativeDirectory",
-                                                              Substitute.For<IDelftIniFileOperator>());
+                                                              Substitute.For<IIniFileOperator>());
 
             // Assert
-            Assert.That(behaviour, Is.InstanceOf<IDelftIniPropertyBehaviour>());
+            Assert.That(behaviour, Is.InstanceOf<IIniPropertyBehaviour>());
         }
 
         public static IEnumerable<TestCaseData> GetConstructorParameterNullData()
         {
             const string propertyName = "someProperty";
             const string relativeDirectory = "someRelativeDirectory";
-            var iniOperator = Substitute.For<IDelftIniFileOperator>();
+            var iniOperator = Substitute.For<IIniFileOperator>();
 
             yield return new TestCaseData(null, relativeDirectory, iniOperator, "propertyKey");
             yield return new TestCaseData(propertyName, null, iniOperator, "relativeDirectory");
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
         [TestCaseSource(nameof(GetConstructorParameterNullData))]
         public void Constructor_ParameterNull_ThrowsArgumentNullException(string propertyName, 
                                                                           string relativeDirectory,
-                                                                          IDelftIniFileOperator iniFileOperator,
+                                                                          IIniFileOperator iniFileOperator,
                                                                           string expectedParameterName)
         {
             // Call | Assert
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
             // Setup
             var behaviour = new CollectPropertyValueWithDependentsBehaviour("somePropertyName", 
                                                                             "someRelativeDirectory",
-                                                                            Substitute.For<IDelftIniFileOperator>());
+                                                                            Substitute.For<IIniFileOperator>());
 
             // Call | Assert
             void Call() => behaviour.Invoke(null, Substitute.For<ILogHandler>());
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
                 string relativeDirectory = tempDir.Path;
                 tempDir.CreateFile(propertyValue);
 
-                var iniFileOperator = Substitute.For<IDelftIniFileOperator>();
+                var iniFileOperator = Substitute.For<IIniFileOperator>();
 
                 var behaviour = new CollectPropertyValueWithDependentsBehaviour(propertyKey,
                                                                                 relativeDirectory,
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
             const string propertyValue = "someFile.loc";
             const string relativeDirectory = "someDirectory";
 
-            var iniFileOperator = Substitute.For<IDelftIniFileOperator>();
+            var iniFileOperator = Substitute.For<IIniFileOperator>();
 
             var behaviour = new CollectPropertyValueWithDependentsBehaviour("someOtherProperty", relativeDirectory, iniFileOperator);
 

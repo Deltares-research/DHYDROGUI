@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
             Ensure.NotNull(section, nameof(section));
             Ensure.NotNull(logHandler, nameof(logHandler));
 
-            logHandler.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
+            logHandler.ReportWarningFormat(Resources.IniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
                                            oldPropertyKey,
                                            newPropertyKey);
 

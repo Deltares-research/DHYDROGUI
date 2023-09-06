@@ -8,7 +8,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.IO;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
@@ -81,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                                .SetValueAsString(string.Empty);
             }
 
-            IEnumerable<IniSection> boundarySections = MdwBoundaryCategoriesCreator.CreateSections(modelDefinition.BoundaryContainer, filesManager);
+            IEnumerable<IniSection> boundarySections = MdwBoundarySectionsCreator.CreateSections(modelDefinition.BoundaryContainer, filesManager);
 
             WriteTimeSeriesFileForBoundaries(modelName, modelDefinition, targetDir);
             
@@ -138,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             IniData merged = mdwFileMerger.Merge();
             
             // write mdw
-            new DelftIniWriter().WriteDelftIniFile(merged, mdwTargetFilePath);
+            new IniWriter().WriteIniFile(merged, mdwTargetFilePath);
 
             // switch
             if (switchTo)
@@ -216,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 var iniData = new IniData();
                 iniData.AddMultipleSections(obtSections);
                 
-                new DelftIniWriter().WriteDelftIniFile(iniData, Path.Combine(targetDir, targetFile));
+                new IniWriter().WriteIniFile(iniData, Path.Combine(targetDir, targetFile));
             }
             else
             {

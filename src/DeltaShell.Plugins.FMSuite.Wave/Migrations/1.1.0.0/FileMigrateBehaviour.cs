@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DHYDRO.Common.Logging;
 
@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// exists it is migrated, otherwise a warning is logged.
     /// Implementation of the actual file migration is left to the specific base class.
     /// </summary>
-    /// <seealso cref="IDelftIniPropertyBehaviour"/>
-    public abstract class FileMigrateBehaviour : IDelftIniPropertyBehaviour
+    /// <seealso cref="IIniPropertyBehaviour"/>
+    public abstract class FileMigrateBehaviour : IIniPropertyBehaviour
     {
         /// <summary>
         /// The directory to which files are migrated.

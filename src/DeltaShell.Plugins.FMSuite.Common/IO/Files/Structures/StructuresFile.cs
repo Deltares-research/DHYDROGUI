@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             IniData iniData;
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
+                iniData = new IniReader().ReadIniFile(fileStream, filePath);
             }
 
             iniData.Sections.ToList()
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             var iniData = new IniData();
             iniData.AddMultipleSections(structuresDataAccessObjects.Select(CreateSection));
             
-            new DelftIniWriter().WriteDelftIniFile(iniData, path);
+            new IniWriter().WriteIniFile(iniData, path);
         }
 
         public IList<IStructureObject> Read(string filePath)
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             iniData.AddMultipleSections(sections);
             
             
-            new DelftIniWriter().WriteDelftIniFile(iniData, filePath);
+            new IniWriter().WriteIniFile(iniData, filePath);
         }
 
         private string TimFolder { get; set; }

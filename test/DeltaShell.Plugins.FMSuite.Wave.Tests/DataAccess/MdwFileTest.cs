@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                             "Expected no property with the file name TScale");
 
                 string expectedMsg = string.Format(
-                    Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
+                    Resources.IniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
                     "TScale", "TimeInterval");
                 Assert.That(logMessages.Any(x => x.Contains(expectedMsg)), Is.True, "Expected a warning messages logged.");
             }

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
 {
     [TestFixture]
-    public class MorphologyFileBackwardsCompatibilityConfigurationValuesTest : IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
+    public class MorphologyFileBackwardsCompatibilityConfigurationValuesTest : IniBackwardsCompatibilityConfigurationValuesTestFixture
     {
         protected override IEnumerable<string> ObsoleteProperties => new HashSet<string>
         {
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping =>
             new Dictionary<string, string>();
 
-        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
+        protected override IIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
             new MorphologyFileBackwardsCompatibilityConfigurationValues();
     }
 }

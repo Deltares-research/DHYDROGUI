@@ -13,10 +13,10 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DHYDRO.Common.Logging;
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             using (var fileStream = new FileStream(bndExtForceFilePath, FileMode.Open, FileAccess.ReadWrite))
             {
-                iniData = new MduDelftIniReader().ReadDelftIniFile(fileStream, bndExtForceFilePath);
+                iniData = new MduIniReader().ReadIniFile(fileStream, bndExtForceFilePath);
                 RemoveRedundantProperties(iniData, modelDefinition);
                 UpdateLegacyNames(iniData);
             }
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void RemoveRedundantProperties(IniData iniData, WaterFlowFMModelDefinition definition)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+            var backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
             iniData.Sections.ForEach(section =>
             {
                 section.RemoveAllProperties(p => definition.ContainsProperty(p.Key) && p.Value == string.Empty);
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void UpdateLegacyNames(IniData iniData)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+            var backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
 
             foreach (IniSection section in iniData.Sections)
             {

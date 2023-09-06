@@ -7,8 +7,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
     /// <see cref="MorphologyFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy sections
     /// and properties for the <see cref="MorphologyFile"/>
     /// </summary>
-    /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>
-    public sealed class MorphologyFileBackwardsCompatibilityConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
+    /// <seealso cref="IIniBackwardsCompatibilityConfigurationValues"/>
+    public sealed class MorphologyFileBackwardsCompatibilityConfigurationValues : IIniBackwardsCompatibilityConfigurationValues
     {
         public ISet<string> ObsoleteProperties { get; } = new HashSet<string>()
         {

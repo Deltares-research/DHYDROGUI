@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DHYDRO.Common.Logging;
 using log4net;
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             string newInputDirectory = Path.Combine(goalDirectory.FullName, "input");
             string mdwFileName = Path.GetFileName(mdwPath);
 
-            IDelftIniFileOperator migrator =
+            IIniFileOperator migrator =
                 MigratorInstanceCreator.CreateMdwMigrator(origModelDirectoryInfo.FullName, newInputDirectory);
 
             var fileStream = new FileStream(mdwPath, FileMode.Open);

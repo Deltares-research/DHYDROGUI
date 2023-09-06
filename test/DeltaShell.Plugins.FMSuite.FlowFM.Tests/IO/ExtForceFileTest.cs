@@ -6,7 +6,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -966,7 +965,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IniData iniData;
             using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, path);
+                iniData = new IniReader().ReadIniFile(fileStream, path);
             }
 
             Assert.AreEqual(3, iniData.Sections.Count());

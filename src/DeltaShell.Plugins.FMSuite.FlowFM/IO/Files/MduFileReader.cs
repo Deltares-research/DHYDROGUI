@@ -6,8 +6,8 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DHYDRO.Common.Logging;
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public static void Read(Stream stream, string filePath, WaterFlowFMModelDefinition definition)
         {
             var logHandler = new LogHandler($"reading the {Path.GetFileName(filePath)} file", log);
-            IniData iniData = new MduDelftIniReader().ReadDelftIniFile(stream, filePath);
+            IniData iniData = new MduIniReader().ReadIniFile(stream, filePath);
 
             RemoveObsoleteProperties(iniData, logHandler);
             UpdateLegacySectionsAndProperties(iniData, logHandler);
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void RemoveObsoleteProperties(IniData iniData, ILogHandler logHandler)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+            var backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
             iniData.Sections.ForEach(section => backwardsCompatibilityHelper.RemoveObsoletePropertiesWithWarning(section, logHandler));
         }
 
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void UpdateLegacySections(IniData iniData, LogHandler logHandler)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+            var backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
 
             foreach (string sectionName in iniData.Sections.Select(x => x.Name).ToList())
             {
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void UpdateLegacyProperties(IniData iniData, LogHandler logHandler)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+            var backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
 
             foreach (IniSection section in iniData.Sections)
             {

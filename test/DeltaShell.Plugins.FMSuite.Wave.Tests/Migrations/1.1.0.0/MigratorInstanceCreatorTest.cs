@@ -5,9 +5,8 @@ using System.Linq;
 using System.Threading;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using DHYDRO.Common.Logging;
 using NSubstitute;
@@ -97,10 +96,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var oldIniData = new IniData();
                 oldIniData.AddMultipleSections(oldSections);
                 
-                var delftIniWriter = new DelftIniWriter();
-                delftIniWriter.WriteDelftIniFile(oldIniData, inputPath, false);
+                var iniWriter = new IniWriter();
+                iniWriter.WriteIniFile(oldIniData, inputPath, false);
 
-                IDelftIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
+                IIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
 
                 var fileStream = new FileStream(inputPath, FileMode.Open);
 
@@ -119,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var obsFileInfo = new FileInfo(Path.Combine(absoluteGoalDir, obstacleFileName));
                 Assert.That(obsFileInfo.Exists, Is.True);
 
-                IniData newIniData = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(), obsFileInfo.FullName);
+                IniData newIniData = new IniReader().ReadIniFile(obsFileInfo.OpenRead(), obsFileInfo.FullName);
                 List<IniSection> newSections = newIniData.Sections.ToList();
 
                 Assert.That(newSections.Count, Is.EqualTo(oldSections.Length));
@@ -199,10 +198,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var oldIniData = new IniData();
                 oldIniData.AddMultipleSections(oldSections);
                 
-                var delftIniWriter = new DelftIniWriter();
-                delftIniWriter.WriteDelftIniFile(oldIniData, inputPath, false);
+                var iniWriter = new IniWriter();
+                iniWriter.WriteIniFile(oldIniData, inputPath, false);
 
-                IDelftIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
+                IIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
 
                 var fileStream = new FileStream(inputPath, FileMode.Open);
 
@@ -221,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var obsFileInfo = new FileInfo(Path.Combine(absoluteGoalDir, obstacleFileName));
                 Assert.That(obsFileInfo.Exists, Is.True);
 
-                IniData newIniData = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(), obsFileInfo.FullName);
+                IniData newIniData = new IniReader().ReadIniFile(obsFileInfo.OpenRead(), obsFileInfo.FullName);
                 List<IniSection> newSections = newIniData.Sections.ToList();
                 
                 Assert.That(newSections.Count, Is.EqualTo(oldSections.Length));
@@ -314,10 +313,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var oldIniData = new IniData();
                 oldIniData.AddMultipleSections(oldSections);
 
-                var delftIniWriter = new DelftIniWriter();
-                delftIniWriter.WriteDelftIniFile(oldIniData, inputPath, false);
+                var iniWriter = new IniWriter();
+                iniWriter.WriteIniFile(oldIniData, inputPath, false);
 
-                IDelftIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
+                IIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
 
                 var fileStream = new FileStream(inputPath, FileMode.Open);
 
@@ -336,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var obsFileInfo = new FileInfo(Path.Combine(absoluteGoalDir, obstacleFileName));
                 Assert.That(obsFileInfo.Exists, Is.True);
 
-                IniData newIniData = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(), obsFileInfo.FullName);
+                IniData newIniData = new IniReader().ReadIniFile(obsFileInfo.OpenRead(), obsFileInfo.FullName);
                 List<IniSection> newSections = newIniData.Sections.ToList();
                 
                 Assert.That(newSections.Count, Is.EqualTo(oldSections.Length));
@@ -395,7 +394,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 string referenceModelFolder = Path.Combine(tempDir.Path, "reference_model_folder", "input");
                 string referenceMdwPath = Path.Combine(referenceModelFolder, "waves.mdw");
 
-                IDelftIniFileOperator migrator = MigratorInstanceCreator.CreateMdwMigrator(sourceModelFolder, resultPath);
+                IIniFileOperator migrator = MigratorInstanceCreator.CreateMdwMigrator(sourceModelFolder, resultPath);
 
                 var fileStream = new FileStream(sourceMdwPath, FileMode.Open);
                 var logHandler = Substitute.For<ILogHandler>();
@@ -419,9 +418,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 Assert.That(File.Exists(resultMdwPath), Is.True);
 
-                var reader = new DelftIniReader();
-                IniData newIniData = reader.ReadDelftIniFile(new FileStream(resultMdwPath, FileMode.Open), resultMdwPath);
-                IniData referenceIniData = reader.ReadDelftIniFile(new FileStream(referenceMdwPath, FileMode.Open), referenceMdwPath);
+                var reader = new IniReader();
+                IniData newIniData = reader.ReadIniFile(new FileStream(resultMdwPath, FileMode.Open), resultMdwPath);
+                IniData referenceIniData = reader.ReadIniFile(new FileStream(referenceMdwPath, FileMode.Open), referenceMdwPath);
 
                 List<IniSection> newSections = newIniData.Sections.ToList();
                 List<IniSection> referenceSections = referenceIniData.Sections.ToList();
@@ -446,8 +445,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 foreach (string path in Directory.GetFiles(referenceModelFolder, "*.obs", SearchOption.TopDirectoryOnly))
                 {
                     string newObsPath = Path.Combine(sourceMdwPath, Path.GetFileName(path));
-                    IniData obsNewIniData = reader.ReadDelftIniFile(new FileStream(newObsPath, FileMode.Open), newObsPath);
-                    IniData obsReferenceIniData = reader.ReadDelftIniFile(new FileStream(path, FileMode.Open), path);
+                    IniData obsNewIniData = reader.ReadIniFile(new FileStream(newObsPath, FileMode.Open), newObsPath);
+                    IniData obsReferenceIniData = reader.ReadIniFile(new FileStream(path, FileMode.Open), path);
                     
                     List<IniSection> obsNewSections = obsNewIniData.Sections.ToList();
                     List<IniSection> obsReferenceSections = obsReferenceIniData.Sections.ToList();

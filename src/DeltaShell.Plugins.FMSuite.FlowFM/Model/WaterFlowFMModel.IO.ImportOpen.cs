@@ -15,10 +15,10 @@ using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             using (var fileStream = new FileStream(mduFilePath, FileMode.Open, FileAccess.Read))
             {
-                IniData iniData = new MduDelftIniReader().ReadDelftIniFile(fileStream, filePath);
+                IniData iniData = new MduIniReader().ReadIniFile(fileStream, filePath);
 
                 IniSection geometrySection = iniData.GetSection("geometry");
                 IniProperty netFileProperty = geometrySection?.GetProperty(KnownProperties.NetFile);

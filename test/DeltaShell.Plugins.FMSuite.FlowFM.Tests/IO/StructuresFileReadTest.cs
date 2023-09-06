@@ -6,7 +6,6 @@ using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -195,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             iniData.AddSection(structureSection);
 
             string fileIniPath = Path.Combine(tempDir, "structures.ini");
-            new DelftIniWriter().WriteDelftIniFile(iniData, fileIniPath);
+            new IniWriter().WriteIniFile(iniData, fileIniPath);
         }
 
         /// <summary>

@@ -8,7 +8,6 @@ using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -964,7 +963,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             IniData iniData;
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
+                iniData = new IniReader().ReadIniFile(fileStream, filePath);
             }
 
             Assert.AreEqual(3, iniData.SectionCount,
@@ -1041,7 +1040,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var iniData = new IniData();
             iniData.AddMultipleSections(sections);
             
-            new DelftIniWriter().WriteDelftIniFile(iniData, filePath);
+            new IniWriter().WriteIniFile(iniData, filePath);
 
             return filePath;
         }
@@ -1213,8 +1212,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             using (var fileStreamA = new FileStream(iniFilePathA, FileMode.Open, FileAccess.Read))
             using (var fileStreamB = new FileStream(iniFilePathB, FileMode.Open, FileAccess.Read))
             {
-                IniData iniDataA = new DelftIniReader().ReadDelftIniFile(fileStreamA, iniFilePathA);
-                IniData iniDataB = new DelftIniReader().ReadDelftIniFile(fileStreamB, iniFilePathB);
+                IniData iniDataA = new IniReader().ReadIniFile(fileStreamA, iniFilePathA);
+                IniData iniDataB = new IniReader().ReadIniFile(fileStreamB, iniFilePathB);
                 CompareSections(iniDataA.Sections.ToList(), iniDataB.Sections.ToList());
             }
         }

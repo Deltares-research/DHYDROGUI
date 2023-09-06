@@ -157,7 +157,7 @@ namespace DeltaShell.NGHS.IO.Ini
                    string.Equals(Comment, other.Comment, comparison) &&
                    Equals(LineNumber, other.LineNumber);
         }
-        
+
         /// <inheritdoc/>
         public override int GetHashCode()
         {

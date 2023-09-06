@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             string filePath = fileBasedParameters.FilePath;
             if (filePath == string.Empty)
             {
-                // this string should not be empty, because the DelftIniWriter
+                // this string should not be empty, because the IniWriter
                 // only writes properties with values that are not null or empty.
                 SpectrumFile = " ";
                 return;

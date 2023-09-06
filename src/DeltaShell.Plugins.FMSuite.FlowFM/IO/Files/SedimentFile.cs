@@ -10,9 +10,9 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniWriters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniWriters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public static readonly string FileVersion = "FileVersion";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SedimentFile));
-        private static SedMorDelftIniWriter writer;
+        private static SedMorIniWriter writer;
 
         private static readonly IList<string> knownSections = new List<string>
         {
@@ -56,13 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             OverallHeader
         };
 
-        public static SedMorDelftIniWriter Writer
+        public static SedMorIniWriter Writer
         {
             get
             {
                 if (writer == null)
                 {
-                    writer = new SedMorDelftIniWriter();
+                    writer = new SedMorIniWriter();
                 }
 
                 return writer;
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 iniData.AddMultipleSections(CreateUnknownSections(modelDefinition));
 
-                Writer.WriteDelftIniFile(iniData, sedFilePath);
+                Writer.WriteIniFile(iniData, sedFilePath);
             }
             catch (Exception exception)
             {
@@ -514,7 +514,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 IniData iniData;
                 using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    iniData = new SedMorDelftIniReader().ReadDelftIniFile(fileStream, path);
+                    iniData = new SedMorIniReader().ReadIniFile(fileStream, path);
                 }
 
                 foreach (IniSection section in iniData.Sections)

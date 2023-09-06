@@ -1,16 +1,16 @@
 ﻿using System.IO;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
 {
-    public class CollectPropertyValueWithDependentsBehaviour : IDelftIniPropertyBehaviour
+    public class CollectPropertyValueWithDependentsBehaviour : IIniPropertyBehaviour
     {
         private readonly string propertyKey;
         private readonly string relativeDirectory;
-        private readonly IDelftIniFileOperator iniFileOperator;
+        private readonly IIniFileOperator iniFileOperator;
 
         /// <summary>
         /// Creates a new <see cref="CollectPropertyValueWithDependentsBehaviour"/>.
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
         /// </exception>
         public CollectPropertyValueWithDependentsBehaviour(string propertyKey,
                                                            string relativeDirectory,
-                                                           IDelftIniFileOperator iniFileOperator)
+                                                           IIniFileOperator iniFileOperator)
         {
             Ensure.NotNull(propertyKey, nameof(propertyKey));
             Ensure.NotNull(relativeDirectory, nameof(relativeDirectory));

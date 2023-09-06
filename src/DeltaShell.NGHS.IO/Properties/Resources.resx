@@ -246,10 +246,10 @@
   <data name="WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_" xml:space="preserve">
     <value>Error disposing grid operation api: {0}</value>
   </data>
-  <data name="DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_" xml:space="preserve">
+  <data name="IniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_" xml:space="preserve">
     <value>Invalid key-value-comment line on line {0} in file {1}</value>
   </data>
-  <data name="DelftIniReader_Invalid_group_on_line__0__in_file__1_" xml:space="preserve">
+  <data name="IniReader_Invalid_group_on_line__0__in_file__1_" xml:space="preserve">
     <value>Invalid group on line {0} in file {1}</value>
   </data>
   <data name="GridApiException_Message_ErrorCodeWithMessage" xml:space="preserve">

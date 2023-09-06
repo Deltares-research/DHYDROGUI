@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers
 {
     [TestFixture]
-    public class MdwFileBackwardsCompatibilityConfigurationValuesTest : IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
+    public class MdwFileBackwardsCompatibilityConfigurationValuesTest : IniBackwardsCompatibilityConfigurationValuesTestFixture
     {
         protected override IEnumerable<string> ObsoleteProperties { get; } =
             new HashSet<string>();
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping { get; } =
             new Dictionary<string, string>();
 
-        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
+        protected override IIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
             new MdwFileBackwardsCompatibilityConfigurationValues();
     }
 }

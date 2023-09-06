@@ -6,8 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                     config.AddGridFileNames(new Tuple<string, string>(copies[0].FileName,
                                                                       copies[0].Type == GridType.FM ? RgfConfig.FMGridKeyword : RgfConfig.GrdKeyword));
 
-                    new DelftIniWriter().WriteDelftIniFile(config.ToIniData(), Path.Combine(tempDir, RgfGridConfigurationFileName));
+                    new IniWriter().WriteIniFile(config.ToIniData(), Path.Combine(tempDir, RgfGridConfigurationFileName));
 
                     happyWithGrid = false;
                 }
@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             };
             config.AddGridFileNames(gridFilePaths.Select(Path.GetFileName).ToArray());
 
-            new DelftIniWriter().WriteDelftIniFile(config.ToIniData(),
+            new IniWriter().WriteIniFile(config.ToIniData(),
                                                    Path.Combine(targetDir, RgfGridConfigurationFileName));
 
             if (polygons != null && polFileName != null)

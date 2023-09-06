@@ -342,7 +342,7 @@ namespace DeltaShell.NGHS.IO.Ini
                    Equals(LineNumber, other.LineNumber) &&
                    Properties.SequenceEqual(other.Properties);
         }
-        
+
         /// <inheritdoc/>
         public override int GetHashCode()
         {

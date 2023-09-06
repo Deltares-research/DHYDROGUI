@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -47,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             IniData iniData;
             using (var fileStream = new FileStream(MdwFilePath, FileMode.Open, FileAccess.Read))
             {
-                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, MdwFilePath);
+                iniData = new IniReader().ReadIniFile(fileStream, MdwFilePath);
             }
             
             mdwFileMerger.Original = iniData;
@@ -126,9 +125,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             IEnumerable<IniSection> boundarySections = iniData.GetAllSections(KnownWaveSections.BoundarySection).ToArray();
             IDictionary<string, List<IFunction>> timeSeriesData = ReadBoundaryTimeSeriesData(iniData, mdwDirPath);
 
-            if (DomainWideBoundaryCategoryConverter.IsDomainWideBoundarySection(boundarySections))
+            if (DomainWideBoundarySectionConverter.IsDomainWideBoundarySection(boundarySections))
             {
-                DomainWideBoundaryCategoryConverter.Convert(boundaryContainer, boundarySections, mdwDirPath);
+                DomainWideBoundarySectionConverter.Convert(boundaryContainer, boundarySections, mdwDirPath);
             }
             else
             {
@@ -168,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
         private static void ConvertMdwSectionProperties(WaveModelDefinition modelDefinition, IniData iniData, ILogHandler logHandler)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfigurationValues());
+            var backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfigurationValues());
 
             foreach (IniSection section in iniData.Sections)
             {
@@ -243,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                        : CreateWaveModelPropertyDefinition(mdwProperty, section, definedCategory);
         }
 
-        private static bool IsObsoleteProperty(IniProperty mdwProperty, DelftIniBackwardsCompatibilityHelper backwardsCompatibilityHelper, ILogHandler logHandler)
+        private static bool IsObsoleteProperty(IniProperty mdwProperty, IniBackwardsCompatibilityHelper backwardsCompatibilityHelper, ILogHandler logHandler)
         {
             if (!backwardsCompatibilityHelper.IsObsoletePropertyKey(mdwProperty.Key))
             {
@@ -455,11 +454,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 yield break;
             }
 
-            var delftIniReader = new DelftIniReader();
+            var iniReader = new IniReader();
             IniData iniData;
             using (var fileStream = new FileStream(obstacleFilePath, FileMode.Open, FileAccess.Read))
             {
-                iniData = delftIniReader.ReadDelftIniFile(fileStream, obstacleFilePath);
+                iniData = iniReader.ReadIniFile(fileStream, obstacleFilePath);
             }
 
             IniSection fileInfo = iniData.GetSection(KnownWaveObsSections.ObstacleFileInformation);

@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
         {
             foreach (IniSection section in boundarySections)
             {
-                BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(section, mdwDirPath);
+                BoundaryMdwBlock boundaryBlock = BoundarySectionConverter.Convert(section, mdwDirPath);
 
                 IWaveBoundaryGeometricDefinition geometricDefinition = GetGeometricDefinition(boundaryBlock, logHandler);
 

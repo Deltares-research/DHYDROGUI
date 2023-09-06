@@ -8,7 +8,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -1144,7 +1143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var iniData = new IniData();
             iniData.AddMultipleSections(iniSections);
             
-            new DelftIniWriter().WriteDelftIniFile(iniData, path, false);
+            new IniWriter().WriteIniFile(iniData, path, false);
         }
     }
 }

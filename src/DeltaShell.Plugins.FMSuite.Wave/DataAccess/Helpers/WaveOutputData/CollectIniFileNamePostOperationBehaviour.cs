@@ -2,7 +2,7 @@
 using System.IO;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations.PostBehaviours;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
     /// <see cref="CollectIniFileNamePostOperationBehaviour"/> implements the
     /// post operation to add the provided source file to the provided hash set.
     /// </summary>
-    /// <seealso cref="DelftIniPostOperationBehaviour"/>
-    public class CollectIniFileNamePostOperationBehaviour : DelftIniPostOperationBehaviour
+    /// <seealso cref="IniPostOperationBehaviour"/>
+    public class CollectIniFileNamePostOperationBehaviour : IniPostOperationBehaviour
 
     {
         private readonly HashSet<string> hashSet;

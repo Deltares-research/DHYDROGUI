@@ -2,19 +2,19 @@
 using System.IO;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
 {
     /// <summary>
     /// <see cref="CollectPropertyValueBehaviour"/> implements the
-    /// <see cref="IDelftIniPropertyBehaviour"/> that stores the value relative
+    /// <see cref="IIniPropertyBehaviour"/> that stores the value relative
     /// to the provided relative directory associated with the provided property
     /// name in the provided hash set.
     /// </summary>
-    /// <seealso cref="IDelftIniPropertyBehaviour"/>
-    public class CollectPropertyValueBehaviour : IDelftIniPropertyBehaviour
+    /// <seealso cref="IIniPropertyBehaviour"/>
+    public class CollectPropertyValueBehaviour : IIniPropertyBehaviour
     {
         private readonly string propertyKey;
         private readonly HashSet<string> hashSet;

@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
+using DeltaShell.NGHS.IO.Ini;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations.PostBehaviours;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
     /// <summary>
     /// <see cref="MigratorInstanceCreator"/> provides the methods to create configured
-    /// <see cref="DelftIniFileOperator"/> objects to be used during migration.
+    /// <see cref="IniFileOperator"/> objects to be used during migration.
     /// </summary>
     public static class MigratorInstanceCreator
     {
         /// <summary>
-        /// Creates the <see cref="IDelftIniFileOperator"/> to migrate .obs files.
+        /// Creates the <see cref="IIniFileOperator"/> to migrate .obs files.
         /// </summary>
         /// <param name="relativeDirectory">
         /// The path from which relative paths in the .obs file should be resolved.
@@ -23,18 +23,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// The goal directory to which the .obs file and dependent files are migrated.
         /// </param>
         /// <returns>
-        /// A new <see cref="IDelftIniFileOperator"/> with which .obs files can be migrated.
+        /// A new <see cref="IIniFileOperator"/> with which .obs files can be migrated.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is null.
         /// </exception>
-        public static IDelftIniFileOperator CreateObsMigrator(string relativeDirectory, string goalDirectory)
+        public static IIniFileOperator CreateObsMigrator(string relativeDirectory, string goalDirectory)
         {
             Ensure.NotNull(relativeDirectory, nameof(relativeDirectory));
             Ensure.NotNull(goalDirectory, nameof(goalDirectory));
 
             var obstacleFileInformationMapping =
-                new Dictionary<string, IDelftIniPropertyBehaviour>()
+                new Dictionary<string, IIniPropertyBehaviour>()
                 {
                     {
                         KnownWaveObsProperties.PolylineFile, 
@@ -45,22 +45,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 };
 
             var mapping =
-                new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>()
+                new Dictionary<string, IReadOnlyDictionary<string, IIniPropertyBehaviour>>()
                 {
                     {KnownWaveObsSections.ObstacleFileInformation, obstacleFileInformationMapping},
                 };
 
-            IDelftIniPostOperationBehaviour[] postBehaviours =
+            IIniPostOperationBehaviour[] postBehaviours =
             {
                 new DeleteSourcePostOperationBehaviour(),
-                new WriteCategoriesPostOperationBehaviour(new DelftIniWriter(), goalDirectory)
+                new WriteSectionsPostOperationBehaviour(new IniWriter(), goalDirectory)
             };
 
-            return new DelftIniFileOperator(mapping, new DelftIniReader(), postBehaviours);
+            return new IniFileOperator(mapping, new IniReader(), postBehaviours);
         }
 
         /// <summary>
-        /// Creates the <see cref="IDelftIniFileOperator"/> to migrate .mdw files.
+        /// Creates the <see cref="IIniFileOperator"/> to migrate .mdw files.
         /// </summary>
         /// <param name="relativeDirectory">
         /// The path from which relative paths in the .mdw file should be resolved.
@@ -69,19 +69,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// The goal directory to which the .mdw file and dependent files are migrated.
         /// </param>
         /// <returns>
-        /// A new <see cref="IDelftIniFileOperator"/> with which .mdw files can be migrated.
+        /// A new <see cref="IIniFileOperator"/> with which .mdw files can be migrated.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is null.
         /// </exception>
-        public static IDelftIniFileOperator CreateMdwMigrator(string relativeDirectory,
+        public static IIniFileOperator CreateMdwMigrator(string relativeDirectory,
                                                               string goalDirectory)
         {
             Ensure.NotNull(relativeDirectory, nameof(relativeDirectory));
             Ensure.NotNull(goalDirectory, nameof(goalDirectory));
 
             var mapping =
-                new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>()
+                new Dictionary<string, IReadOnlyDictionary<string, IIniPropertyBehaviour>>()
                 {
                     {KnownWaveSections.GeneralSection, CreateGeneralCategoryMigrations(relativeDirectory, goalDirectory)},
                     {KnownWaveSections.DomainSection, CreateDomainCategoryMigrations(relativeDirectory, goalDirectory)},
@@ -89,32 +89,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                     {KnownWaveSections.OutputSection, CreateOutputCategoryMigrations(relativeDirectory, goalDirectory)},
                 };
 
-            IDelftIniPostOperationBehaviour[] postBehaviours =
+            IIniPostOperationBehaviour[] postBehaviours =
             {
                 new DeleteSourcePostOperationBehaviour(),
-                new WriteCategoriesPostOperationBehaviour(new DelftIniWriter(), goalDirectory)
+                new WriteSectionsPostOperationBehaviour(new IniWriter(), goalDirectory)
             };
 
-            return new DelftIniFileOperator(mapping, new DelftIniReader(), postBehaviours);
+            return new IniFileOperator(mapping, new IniReader(), postBehaviours);
         }
 
-        private static IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> CreateGeneralCategoryMigrations(string relativeDirectory,
+        private static IReadOnlyDictionary<string, IIniPropertyBehaviour> CreateGeneralCategoryMigrations(string relativeDirectory,
                                                                                                                string goalDirectory)
         {
-            return new Dictionary<string, IDelftIniPropertyBehaviour>
+            return new Dictionary<string, IIniPropertyBehaviour>
             {
                 {KnownWaveProperties.FlowFile, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.FlowFile, relativeDirectory, goalDirectory)},
                 {KnownWaveProperties.FlowMudFile, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.FlowMudFile, relativeDirectory, goalDirectory)},
-                {KnownWaveProperties.ObstacleFile, new DelftIniFileMigrateBehaviour(KnownWaveProperties.ObstacleFile, relativeDirectory, goalDirectory, CreateObsMigrator(relativeDirectory, goalDirectory))},
+                {KnownWaveProperties.ObstacleFile, new IniFileMigrateBehaviour(KnownWaveProperties.ObstacleFile, relativeDirectory, goalDirectory, CreateObsMigrator(relativeDirectory, goalDirectory))},
                 {KnownWaveProperties.TimeSeriesFile, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.TimeSeriesFile, relativeDirectory, goalDirectory)},
                 {KnownWaveProperties.MeteoFile, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.MeteoFile, relativeDirectory, goalDirectory)},
             };
         }
 
-        private static IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> CreateDomainCategoryMigrations(string relativeDirectory,
+        private static IReadOnlyDictionary<string, IIniPropertyBehaviour> CreateDomainCategoryMigrations(string relativeDirectory,
                                                                                                               string goalDirectory)
         {
-            return new Dictionary<string, IDelftIniPropertyBehaviour>
+            return new Dictionary<string, IIniPropertyBehaviour>
             {
                 {KnownWaveProperties.Grid, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.Grid, relativeDirectory, goalDirectory)},
                 {KnownWaveProperties.BedLevelGrid, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.BedLevelGrid, relativeDirectory, goalDirectory)},
@@ -123,19 +123,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             };
         }
 
-        private static IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> CreateBoundaryCategoryMigrations(string relativeDirectory,
+        private static IReadOnlyDictionary<string, IIniPropertyBehaviour> CreateBoundaryCategoryMigrations(string relativeDirectory,
                                                                                                                 string goalDirectory)
         {
-            return new Dictionary<string, IDelftIniPropertyBehaviour>
+            return new Dictionary<string, IIniPropertyBehaviour>
             {
                 {KnownWaveProperties.Spectrum, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.Spectrum, relativeDirectory, goalDirectory)},
             };
         }
 
-        private static IReadOnlyDictionary<string, IDelftIniPropertyBehaviour> CreateOutputCategoryMigrations(string relativeDirectory,
+        private static IReadOnlyDictionary<string, IIniPropertyBehaviour> CreateOutputCategoryMigrations(string relativeDirectory,
                                                                                                               string goalDirectory)
         {
-            return new Dictionary<string, IDelftIniPropertyBehaviour>
+            return new Dictionary<string, IIniPropertyBehaviour>
             {
                 {KnownWaveProperties.LocationFile, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.LocationFile, relativeDirectory, goalDirectory)},
                 {KnownWaveProperties.CurveFile, new NoDependentsFileMigrateBehaviour(KnownWaveProperties.CurveFile, relativeDirectory, goalDirectory)},

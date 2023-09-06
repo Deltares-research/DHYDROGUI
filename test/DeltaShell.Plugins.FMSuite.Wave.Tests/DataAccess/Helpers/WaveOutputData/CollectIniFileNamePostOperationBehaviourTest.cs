@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
-using DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations.PostBehaviours;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations.PostBehaviours;
+using DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.IniOperations.PostBehaviours;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputData
 {
     [TestFixture]
-    public class CollectIniFileNamePostOperationBehaviourTest : DelftIniPostOperationBehaviourTestFixture
+    public class CollectIniFileNamePostOperationBehaviourTest : IniPostOperationBehaviourTestFixture
     {
-        protected override DelftIniPostOperationBehaviour ConstructPostBehaviour() =>
+        protected override IniPostOperationBehaviour ConstructPostBehaviour() =>
             new CollectIniFileNamePostOperationBehaviour(new HashSet<string>(), "");
 
         [Test]
@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
         {
             var behaviour = new CollectIniFileNamePostOperationBehaviour(new HashSet<string>(), "");
 
-            Assert.That(behaviour, Is.InstanceOf<IDelftIniPostOperationBehaviour>());
+            Assert.That(behaviour, Is.InstanceOf<IIniPostOperationBehaviour>());
         }
 
         public static IEnumerable<TestCaseData> GetConstructorParameterNullData()

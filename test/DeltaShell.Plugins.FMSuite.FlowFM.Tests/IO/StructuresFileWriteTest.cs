@@ -8,7 +8,6 @@ using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -278,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IniData iniData;
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                iniData = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
+                iniData = new IniReader().ReadIniFile(fileStream, filePath);
             }
 
             IniSection section = iniData.Sections.First();

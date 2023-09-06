@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.WaveOutputDat
                                                               "someRelativeDirectory");
 
             // Assert
-            Assert.That(behaviour, Is.InstanceOf<IDelftIniPropertyBehaviour>());
+            Assert.That(behaviour, Is.InstanceOf<IIniPropertyBehaviour>());
         }
 
         public static IEnumerable<TestCaseData> GetConstructorParameterNullData()

@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             List<IniSection> resultingItems =
                 boundaryConditionSets.Where(bcs => !bcs.BoundaryConditions.Any())
                                      .Select(boundaryConditionSet => existingPolyLineFiles.TryGetValue(boundaryConditionSet.Feature, out string pliFileName)
-                                                                         ? DelftIniCategoryFactory.CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero)
+                                                                         ? IniSectionFactory.CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero)
                                                                          : null).Where(it => it != null)
                                      .ToList();
 

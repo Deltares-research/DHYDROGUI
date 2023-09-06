@@ -11,9 +11,9 @@ using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniWriters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniWriters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DHYDRO.Common.Logging;
@@ -30,11 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public const string BoundaryName = "Name";
         public const string BoundaryBedCondition = "IBedCond";
         public const string BcFileIniEntry = "BcFil";
-        private static SedMorDelftIniWriter writer;
+        private static SedMorIniWriter writer;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MorphologyFile));
 
-        public static SedMorDelftIniWriter Writer => writer ?? (writer = new SedMorDelftIniWriter());
+        public static SedMorIniWriter Writer => writer ?? (writer = new SedMorIniWriter());
 
         #region Write
 
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void WriteIniFile(string morFilePath, IniData iniData)
         {
-            Writer.WriteDelftIniFile(iniData, morFilePath);
+            Writer.WriteIniFile(iniData, morFilePath);
         }
 
         private static void CreateBoundaryConditionFileProperty(IEnumerable<IBoundaryCondition> boundaryConditions,
@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IniData iniData;
             using (var fileStream = new FileStream(morFilePath, FileMode.Open, FileAccess.Read))
             {
-                iniData = new SedMorDelftIniReader().ReadDelftIniFile(fileStream, morFilePath);
+                iniData = new SedMorIniReader().ReadIniFile(fileStream, morFilePath);
             }
 
             foreach (IniSection section in iniData.Sections)
@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                   IniSection section,
                                                   ILogHandler logHandler)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MorphologyFileBackwardsCompatibilityConfigurationValues());
+            var backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new MorphologyFileBackwardsCompatibilityConfigurationValues());
             string sectionName = section.Name;
             
             foreach (string propertyKey in section.Properties.Select(x => x.Key).ToList())

@@ -18,8 +18,8 @@ using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -300,8 +300,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 using (var fileStream = new FileStream(mduFilePath, FileMode.Open, FileAccess.Read))
                 {
-                    var reader = new MduDelftIniReader();
-                    IniData iniData = reader.ReadDelftIniFile(fileStream, mduFilePath);
+                    var reader = new MduIniReader();
+                    IniData iniData = reader.ReadIniFile(fileStream, mduFilePath);
 
                     IniSection geometrySection = iniData.GetSection("geometry");
                     gridFileName = geometrySection?.GetPropertyValueOrDefault(KnownProperties.NetFile);

@@ -218,7 +218,7 @@ namespace DeltaShell.NGHS.IO.Ini
                 {
                     target.RemoveSection(targetSection.Id);
                 }
-                
+
                 if (sourceSection != null && RemoveRemovedProperties)
                 {
                     targetSection.RemoveAllProperties(
@@ -247,7 +247,7 @@ namespace DeltaShell.NGHS.IO.Ini
 
             public IEnumerable<UniqueIniSection> Sections
                 => sections.Values;
-            
+
             private Dictionary<string, UniqueIniSection> CreateUniqueSections()
                 => iniData.Sections
                           .Select(CreateUniqueSection)
@@ -255,7 +255,7 @@ namespace DeltaShell.NGHS.IO.Ini
 
             private UniqueIniSection CreateUniqueSection(IniSection section, int index)
                 => new UniqueIniSection($"{section.Name.ToLower()}_{GetCounter(section, index)}", section);
-            
+
             private int GetCounter(IniSection section, int index)
                 => iniData.Sections.Take(index + 1).Count(e => e.IsNameEqualTo(section.Name));
 
@@ -279,7 +279,7 @@ namespace DeltaShell.NGHS.IO.Ini
                 return iniData;
             }
         }
-        
+
         /// <summary>
         /// Represents a duplicate-free container for INI data properties during merging.
         /// </summary>
@@ -287,17 +287,17 @@ namespace DeltaShell.NGHS.IO.Ini
         {
             private readonly IniSection section;
             private readonly Dictionary<string, UniqueIniProperty> properties;
-            
+
             public UniqueIniSection(string id, IniSection section)
             {
                 Id = id;
-                
+
                 this.section = section;
                 properties = CreateUniqueProperties();
             }
 
             public string Id { get; }
-            
+
             public IEnumerable<UniqueIniProperty> Properties
                 => properties.Values;
 
@@ -308,7 +308,7 @@ namespace DeltaShell.NGHS.IO.Ini
 
             private UniqueIniProperty CreateUniqueProperty(IniProperty property, int index)
                 => new UniqueIniProperty($"{property.Key.ToLower()}_{GetCounter(property, index)}", property);
-            
+
             private int GetCounter(IniProperty property, int index)
                 => section.Properties.Take(index + 1).Count(e => e.IsKeyEqualTo(property.Key));
 
@@ -340,16 +340,16 @@ namespace DeltaShell.NGHS.IO.Ini
         private sealed class UniqueIniProperty
         {
             private readonly IniProperty property;
-            
+
             public UniqueIniProperty(string id, IniProperty property)
             {
                 Id = id;
-                
+
                 this.property = property;
             }
 
             public string Id { get; }
-            
+
             public string Value
             {
                 get => property.Value;

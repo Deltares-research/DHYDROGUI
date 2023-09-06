@@ -8,8 +8,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
     /// <see cref="MduFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy sections
     /// and properties for the <see cref="MduFile"/>
     /// </summary>
-    /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>
-    public sealed class MduFileBackwardsCompatibilityConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
+    /// <seealso cref="IIniBackwardsCompatibilityConfigurationValues"/>
+    public sealed class MduFileBackwardsCompatibilityConfigurationValues : IIniBackwardsCompatibilityConfigurationValues
     {
         public ISet<string> ObsoleteProperties { get; } = new HashSet<string>()
         {

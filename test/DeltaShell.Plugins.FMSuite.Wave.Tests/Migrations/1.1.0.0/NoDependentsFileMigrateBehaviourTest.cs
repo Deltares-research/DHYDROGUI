@@ -2,7 +2,7 @@
 using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Ini;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using DHYDRO.Common.Logging;
 using NSubstitute;
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var behaviour = new NoDependentsFileMigrateBehaviour("someKey", ".", ".");
 
             // Assert
-            Assert.That(behaviour, Is.InstanceOf<IDelftIniPropertyBehaviour>());
+            Assert.That(behaviour, Is.InstanceOf<IIniPropertyBehaviour>());
         }
 
         [Test]
