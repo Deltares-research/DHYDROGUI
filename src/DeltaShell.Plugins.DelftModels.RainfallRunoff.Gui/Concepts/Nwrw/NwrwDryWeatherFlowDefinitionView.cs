@@ -198,8 +198,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
             return false;
         }
 
-        private bool HasDistributionType(int rowIndex, DryweatherFlowDistributionType distributionType) =>
-            ((NwrwDryWeatherFlowDefinition)tableView.GetRowObjectAt(rowIndex)).DistributionType == distributionType;
+        private bool HasDistributionType(int rowIndex, DryweatherFlowDistributionType distributionType) => 
+            (tableView.GetRowObjectAt(rowIndex) as NwrwDryWeatherFlowDefinition)?.DistributionType == distributionType;
+
         private static bool IsNewRow(int rowIndex) => rowIndex < 0;
         private static bool IsConstantVolumeColumn(int columnIndex) => columnIndex == 2;
         private static bool IsDailyVolumeColumn(int columnIndex) => columnIndex == 3 || IsButtonColumn(columnIndex);

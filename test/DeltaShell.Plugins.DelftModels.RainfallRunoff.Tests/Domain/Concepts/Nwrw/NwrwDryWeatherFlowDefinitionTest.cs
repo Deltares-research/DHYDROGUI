@@ -1,6 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Linq;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.FixedFiles;
+using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nwrw
@@ -11,32 +19,32 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         [Test]
         public void GivenAModelWithAnExistingDryWeatherFlowDefinition_WhenAddingNewDefaultDefinition_ThenNewDefaultDefinitionIsSet()
         {
-            // Setup
-            var dryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition()
-            {
-                Name = NwrwData.DEFAULT_DWA_ID,
-                DayNumber = 123,
-                DistributionType = DryweatherFlowDistributionType.Daily,
-                DailyVolumeConstant = 456,
-                DailyVolumeVariable = 789,
-                HourlyPercentageDailyVolume = new double []{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24}
-            };
-            
             using (var model = new RainfallRunoffModel())
             {
+                // Setup
+                var dryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition()
+                {
+                    Name = NwrwDryWeatherFlowDefinition.DefaultDwaId,
+                    DayNumber = 123,
+                    DistributionType = DryweatherFlowDistributionType.Daily,
+                    DailyVolumeConstant = 456,
+                    DailyVolumeVariable = 789,
+                    HourlyPercentageDailyVolume = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }
+                };
+
                 // Precondition
-                Assert.That(model.NwrwDryWeatherFlowDefinitions.Count(), Is.EqualTo(1));
-                NwrwDryWeatherFlowDefinition defaultDefinition = model.NwrwDryWeatherFlowDefinitions.Single();
-                Assert.That(defaultDefinition.Name, Is.EqualTo(NwrwData.DEFAULT_DWA_ID));
+                Assert.That(model.NwrwDryWeatherFlowDefinitions.Count(), Is.EqualTo(2));
+                NwrwDryWeatherFlowDefinition defaultDefinition = model.NwrwDryWeatherFlowDefinitions.First();
+                Assert.That(defaultDefinition.Name, Is.EqualTo(NwrwDryWeatherFlowDefinition.DefaultDwaId));
                 
                 // Call
                 dryWeatherFlowDefinition.AddNwrwCatchmentModelDataToModel(model, new NwrwImporterHelper());
                 
                 // Assert
                 IEventedList<NwrwDryWeatherFlowDefinition> definitions = model.NwrwDryWeatherFlowDefinitions;
-                Assert.That(definitions.Count, Is.EqualTo(1));
+                Assert.That(definitions.Count, Is.EqualTo(2));
 
-                NwrwDryWeatherFlowDefinition newDefaultDefinition = definitions.Single();
+                NwrwDryWeatherFlowDefinition newDefaultDefinition = definitions.First(d => d.Name.Equals(NwrwDryWeatherFlowDefinition.DefaultDwaId, StringComparison.InvariantCultureIgnoreCase));
                 Assert.That(newDefaultDefinition, Is.EqualTo(dryWeatherFlowDefinition));
 
                 Assert.That(newDefaultDefinition, Is.Not.SameAs(defaultDefinition)); // Check if old default definition has really been removed and not just updated.
@@ -54,56 +62,30 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         [Test]
         public void Constructor_HourlyPercentageDailyVolumeIsCorrectlyInitialized()
         {
+            // Arrange
+            var defaultDwaFile = RainfallRunoffModelFixedFiles.ReadFixedFileFromResource("PLUVIUS.DWA");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            NwrwDryWeatherFlowDefinitionBuilder nwrwDryWeatherFlowDefinitionBuilder = new NwrwDryWeatherFlowDefinitionBuilder();
+            SobekRRDryWeatherFlow sobekRRDryWeatherFlow = new SobekRRDryWeatherFlowReader().Parse(defaultDwaFile).First();
+            double[] hourlyPercentageDailyVolume = nwrwDryWeatherFlowDefinitionBuilder.Build(sobekRRDryWeatherFlow, logHandler).HourlyPercentageDailyVolume;
+            var rrModel = new RainfallRunoffModel();
+
             // Call
             var definition = new NwrwDryWeatherFlowDefinition();
 
             // Assert
-            Assert.That(definition.HourlyPercentageDailyVolume, Is.EqualTo(GetDefaultHourlyPercentageDailyVolume()));
+            Assert.That(definition.HourlyPercentageDailyVolume, Is.EqualTo(hourlyPercentageDailyVolume));
         }
 
-        [Test]
-        public void CreateDefaultDwaDefinition_ReturnsCorrectInstance()
+        [TearDown]
+        public void CleanUp()
         {
-            // Call
-            var definition = NwrwDryWeatherFlowDefinition.CreateDefaultDwaDefinition();
-
-            // Assert
-            Assert.That(definition.Name, Is.EqualTo("Default_DWA"));
-            Assert.That(definition.DistributionType, Is.EqualTo(DryweatherFlowDistributionType.Constant));
-            Assert.That(definition.DailyVolumeConstant, Is.EqualTo(240));
-            Assert.That(definition.DailyVolumeVariable, Is.EqualTo(120));
-            Assert.That(definition.HourlyPercentageDailyVolume, Is.EqualTo(GetDefaultHourlyPercentageDailyVolume()));
-        }
-
-        private static double[] GetDefaultHourlyPercentageDailyVolume()
-        {
-            return new[]
+            if (!string.IsNullOrWhiteSpace(NwrwDryWeatherFlowDefinition.DefaultDwaId))
             {
-                1.5,
-                1.5,
-                1.5,
-                1.5,
-                1.5,
-                3.0,
-                4.0,
-                5.0,
-                6.0,
-                6.5,
-                7.5,
-                8.5,
-                7.5,
-                6.5,
-                6.0,
-                5.0,
-                5.0,
-                5.0,
-                4.0,
-                3.5,
-                3.0,
-                2.5,
-                2.0,
-                2.0
-            };
+                TypeUtils.SetPrivatePropertyValue(new NwrwDryWeatherFlowDefinition(), "DefaultDwaId",string.Empty);
+            }
         }
+
+        
     }
 }

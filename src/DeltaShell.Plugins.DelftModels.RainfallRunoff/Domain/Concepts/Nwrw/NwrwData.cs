@@ -16,8 +16,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     [Entity(FireOnCollectionChange = false)]
     public class NwrwData : CatchmentModelData
     {
-        public const string DEFAULT_DWA_ID = "Default_DWA";
-        
         //nhib
         public NwrwData(): base(null) { }
 
@@ -25,13 +23,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             catchment.ModelData = this;
             NodeOrBranchId = Name;
-            DryWeatherFlows.Add(new DryWeatherFlow(DEFAULT_DWA_ID));
-            DryWeatherFlows.Add(new DryWeatherFlow(DEFAULT_DWA_ID));
+            DryWeatherFlows.Add(new DryWeatherFlow(NwrwDryWeatherFlowDefinition.DefaultDwaId));
+            DryWeatherFlows.Add(new DryWeatherFlow(NwrwDryWeatherFlowDefinition.DefaultDwaId));
         }
 
 
         public string NodeOrBranchId { get; set; } // UNI_IDE (debiet.csv or oppervlak.csv)
-        public IList<DryWeatherFlow> DryWeatherFlows { get; set; } = new List<DryWeatherFlow>(); // VER_IDE and AVV_ENH (debiet.csv)
+
+        /// <summary>
+        /// DryWeatherFlow[0] = DWF definition (inhabitant)
+        /// DryWeatherFlow[1] = DWF definition (company)
+        /// multiple are possible in GWSW & SOBEK2 but not supported by us.
+        /// GWSW: VER_IDE and AVV_ENH (debiet.csv)
+        /// </summary>
+        public IList<DryWeatherFlow> DryWeatherFlows { get; set; } = new List<DryWeatherFlow>(); 
         public IDictionary<NwrwSurfaceType, double> SurfaceLevelDict { get; set; } = new Dictionary<NwrwSurfaceType, double>(); // AFV_IDE and AFV_OPP (oppervlak.csv)
         public string MeteoStationId { get; set; } // NSL_STA (oppervlak.csv)
         public double LateralSurface { get; set; } // AFV_OPP (debiet.csv, when DischargeType == 'LAT')

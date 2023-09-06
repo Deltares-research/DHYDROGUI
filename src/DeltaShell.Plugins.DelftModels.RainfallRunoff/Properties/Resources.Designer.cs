@@ -152,6 +152,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expected 24 values but got {0} values. Skipping import of water use per capita per hour..
+        /// </summary>
+        public static string NwrwDryWeatherFlowDefinitionBuilder_Build_Expected_24_values_but_got__0__values__Skipping_import_of_water_use_per_capita_per_hour {
+            get {
+                return ResourceManager.GetString("NwrwDryWeatherFlowDefinitionBuilder_Build_Expected_24_values_but_got__0__values__" +
+                        "Skipping_import_of_water_use_per_capita_per_hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A paved node may not be connected downstream to more then 1 boundary..
         /// </summary>
         public static string PavedDataValidation_Cant_link_to_multiple_boundaries {

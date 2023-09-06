@@ -1,44 +1,28 @@
 ﻿using System;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.ImportExport.Sobek.Properties;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using DHYDRO.Common.Logging;
 
-namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
+namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
     /// <summary>
     /// Builder that builds an <see cref="NwrwDryWeatherFlowDefinition"/> from a <see cref="SobekRRDryWeatherFlow"/>.
     /// </summary>
     public class NwrwDryWeatherFlowDefinitionBuilder
     {
-        private readonly ILogHandler logHandler;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NwrwDryWeatherFlowDefinitionBuilder"/> class.
-        /// </summary>
-        /// <param name="logHandler"> The log handler to report user messages with. </param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="logHandler"/> is <c>null</c>.
-        /// </exception>
-        public NwrwDryWeatherFlowDefinitionBuilder(ILogHandler logHandler)
-        {
-            Ensure.NotNull(logHandler, nameof(logHandler));
-
-            this.logHandler = logHandler;
-        }
-
         /// <summary>
         /// Builds an <see cref="NwrwDryWeatherFlowDefinition"/> from a <see cref="SobekRRDryWeatherFlow"/>.
         /// </summary>
         /// <param name="readDefinition"> The Sobek RR dry weather flow definition that was read from file. </param>
+        /// <param name="logHandler"> The log handler to report user messages with. </param>
         /// <returns>
         /// The built <see cref="NwrwDryWeatherFlowDefinition"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="readDefinition"/> is <c>null</c>.
         /// </exception>
-        public NwrwDryWeatherFlowDefinition Build(SobekRRDryWeatherFlow readDefinition)
+        public NwrwDryWeatherFlowDefinition Build(SobekRRDryWeatherFlow readDefinition, ILogHandler logHandler = null)
         {
             Ensure.NotNull(readDefinition, nameof(readDefinition));
 
@@ -53,7 +37,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             int nWaterCapacityPerHourValues = readDefinition.WaterCapacityPerHour.Length;
             if (nWaterCapacityPerHourValues != 24)
             {
-                logHandler.ReportWarningFormat(Resources.NwrwDryWeatherFlowDefinitionBuilder_WarningIncorrectNumberOfWaterCapacityPerHourValues,
+                logHandler?.ReportWarningFormat(Resources.NwrwDryWeatherFlowDefinitionBuilder_Build_Expected_24_values_but_got__0__values__Skipping_import_of_water_use_per_capita_per_hour,
                                                nWaterCapacityPerHourValues);
             }
             else

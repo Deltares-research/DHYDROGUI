@@ -124,9 +124,6 @@
   <data name="STARTUP" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\startup.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NwrwDryWeatherFlowDefinitionBuilder_WarningIncorrectNumberOfWaterCapacityPerHourValues" xml:space="preserve">
-    <value>Expected 24 values but got {0} values. Skipping import of water use per capita per hour.</value>
-  </data>
   <data name="SobekRRMeteoDataImporter_DisplayName_Rainfall_Runoff_meteo_data" xml:space="preserve">
 	  <value>Rainfall Runoff meteo data</value>
   </data>

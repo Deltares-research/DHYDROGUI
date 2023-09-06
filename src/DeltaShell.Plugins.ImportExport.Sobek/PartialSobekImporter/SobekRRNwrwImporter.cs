@@ -8,7 +8,6 @@ using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.ImportExport.Sobek.Builders;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using DHYDRO.Common.Logging;
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SobekRRNwrwImporter));
         private static readonly ILogHandler logHandler = new LogHandler("importing RR NWRW data", Log);
-        private static readonly NwrwDryWeatherFlowDefinitionBuilder nwrwDryWeatherFlowDefinitionBuilder = new NwrwDryWeatherFlowDefinitionBuilder(logHandler);
+        private static readonly NwrwDryWeatherFlowDefinitionBuilder nwrwDryWeatherFlowDefinitionBuilder = new NwrwDryWeatherFlowDefinitionBuilder();
 
         private RainfallRunoffModel rrModel;
         

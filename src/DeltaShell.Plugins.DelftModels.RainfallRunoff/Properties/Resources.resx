@@ -273,4 +273,7 @@
   <data name="SobekRRNwrwSettingsExtensions_UpdateNwrwSettings_Nwrw_Definitions_in_RR_model_are_not_configured_as_expected__Cannot_load_default_data_in_unexpected_configured_NWRW_surface_settings_object" xml:space="preserve">
     <value>Nwrw Definitions in RR model are not configured as expected. Cannot load default data in unexpected configured NWRW surface settings object.</value>
   </data>
+  <data name="NwrwDryWeatherFlowDefinitionBuilder_Build_Expected_24_values_but_got__0__values__Skipping_import_of_water_use_per_capita_per_hour" xml:space="preserve">
+    <value>Expected 24 values but got {0} values. Skipping import of water use per capita per hour.</value>
+  </data>
 </root>

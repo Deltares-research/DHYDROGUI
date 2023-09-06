@@ -142,10 +142,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             ModelData = new EventedList<CatchmentModelData>();
             SaveUnpavedDataExtended = new EventedList<UnpavedDataExtended>();
-            NwrwDryWeatherFlowDefinitions = new EventedList<NwrwDryWeatherFlowDefinition>()
-            {
-                NwrwDryWeatherFlowDefinition.CreateDefaultDwaDefinition()
-            };
+
+            NwrwDryWeatherFlowDefinitions = NwrwDryWeatherFlowDefinition.CreateDefaultDwaDefinitions();
             NwrwDefinitions = NwrwDefinition.CreateDefaultNwrwDefinitions();
 
             BoundaryData = new EventedList<RunoffBoundaryData>();

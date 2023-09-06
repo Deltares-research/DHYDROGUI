@@ -13,37 +13,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Builders
     public class NwrwDryWeatherFlowDefinitionBuilderTest
     {
         [Test]
-        public void Constructor_LogHandlerNull_ThrowsArgumentNullException()
-        {
-            // Call
-            void Call() => new NwrwDryWeatherFlowDefinitionBuilder(null);
-
-            // Assert
-            var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("logHandler"));
-        }
-
-        [Test]
-        public void Build_ReadDefinitionNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            var logHandler = Substitute.For<ILogHandler>();
-            var builder = new NwrwDryWeatherFlowDefinitionBuilder(logHandler);
-
-            // Call
-            void Call() => builder.Build(null);
-
-            // Assert
-            var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("readDefinition"));
-        }
-
-        [Test]
         public void Build_IncorrectWaterCapacityPerHourLength_LogsWarning()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var builder = new NwrwDryWeatherFlowDefinitionBuilder(logHandler);
+            var builder = new NwrwDryWeatherFlowDefinitionBuilder();
 
             var readDefinition = new SobekRRDryWeatherFlow
             {
@@ -55,7 +29,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Builders
             };
 
             // Call
-            NwrwDryWeatherFlowDefinition definition = builder.Build(readDefinition);
+            NwrwDryWeatherFlowDefinition definition = builder.Build(readDefinition, logHandler);
 
             // Assert
             logHandler.Received().ReportWarningFormat("Expected 24 values but got {0} values. Skipping import of water use per capita per hour.", 25);
@@ -70,7 +44,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Builders
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var builder = new NwrwDryWeatherFlowDefinitionBuilder(logHandler);
+            var builder = new NwrwDryWeatherFlowDefinitionBuilder();
 
             double[] hourlyVolume = CreateArray();
             var readDefinition = new SobekRRDryWeatherFlow
@@ -83,7 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Builders
             };
 
             // Call
-            NwrwDryWeatherFlowDefinition definition = builder.Build(readDefinition);
+            NwrwDryWeatherFlowDefinition definition = builder.Build(readDefinition, logHandler);
 
             // Assert
             Assert.That(logHandler.ReceivedCalls(), Is.Empty);
@@ -100,7 +74,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Builders
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var builder = new NwrwDryWeatherFlowDefinitionBuilder(logHandler);
+            var builder = new NwrwDryWeatherFlowDefinitionBuilder();
 
             double[] hourlyVolume = CreateArray();
             var readDefinition = new SobekRRDryWeatherFlow
@@ -113,7 +87,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Builders
             };
 
             // Call
-            void Call() => builder.Build(readDefinition);
+            void Call() => builder.Build(readDefinition, logHandler);
 
             // Assert
             Assert.Throws<NotSupportedException>(Call);

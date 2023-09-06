@@ -21,7 +21,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
-    <ProjectReference Include="..\..\src\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />      
+    <ProjectReference Include="..\..\src\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.Plugins.ImportExport.Sobek.Tests\DeltaShell.Plugins.ImportExport.Sobek.Tests.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>

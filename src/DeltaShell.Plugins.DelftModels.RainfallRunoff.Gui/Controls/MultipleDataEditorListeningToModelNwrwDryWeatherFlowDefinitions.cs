@@ -94,12 +94,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
                     var nwrwDataRow = row as NwrwDataRow;
                     if (nwrwDataRow != null && itemsRemoved.Contains(nwrwDataRow.FirstDryWeatherFlowId))
                     {
-                        nwrwDataRow.FirstDryWeatherFlowId = NwrwData.DEFAULT_DWA_ID;
+                        nwrwDataRow.FirstDryWeatherFlowId = NwrwDryWeatherFlowDefinition.DefaultDwaId;
                     }
 
                     if (nwrwDataRow != null && itemsRemoved.Contains(nwrwDataRow.LastDryWeatherFlowId))
                     {
-                        nwrwDataRow.LastDryWeatherFlowId = NwrwData.DEFAULT_DWA_ID;
+                        nwrwDataRow.LastDryWeatherFlowId = NwrwDryWeatherFlowDefinition.DefaultDwaId;
                     }
                 }
             }

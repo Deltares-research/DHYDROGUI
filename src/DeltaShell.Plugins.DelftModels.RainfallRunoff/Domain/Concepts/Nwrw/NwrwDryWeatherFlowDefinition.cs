@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
+using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Utils;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.FixedFiles;
+using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
+using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -15,6 +23,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     [Entity]
     public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDryWeatherFlowDefinition));
+
+        private static double[] defaultHourlyPercentageDailyVolume = new double[24];
+
+        public NwrwDryWeatherFlowDefinition()
+        {
+            Array.Copy(defaultHourlyPercentageDailyVolume, HourlyPercentageDailyVolume, HourlyPercentageDailyVolume.Length);
+        }
+
+        /// <summary>
+        /// Name of the default dry weather flow definition to be used
+        /// </summary>
+        public static string DefaultDwaId { get; private set; }
+        
         /// <summary>
         /// Name of the dry weather flow definition.
         /// </summary>
@@ -40,8 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         /// The hourly water use per capita expressed in percentages of <see cref="DailyVolumeVariable"/>.
         /// The sum of the 24 percentages should be 100. 
         /// </summary>
-        public double[] HourlyPercentageDailyVolume { get; set; } = GetDefaultHourlyPercentageDailyVolume();
-        
+        public double[] HourlyPercentageDailyVolume { get; set; } = new double[24];
+
         public string Remark { get; set; } // ALG_TOE
 
         public IGeometry Geometry { get; set; }
@@ -55,9 +77,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             
             IEventedList<NwrwDryWeatherFlowDefinition> definitions = rrModel.NwrwDryWeatherFlowDefinitions;
             
-            if (string.Equals(Name, NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(Name, DefaultDwaId, StringComparison.InvariantCultureIgnoreCase))
             {
-                definitions.RemoveAllWhere(definition => string.Equals(definition.Name, NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase));
+                definitions.RemoveAllWhere(definition => string.Equals(definition.Name, DefaultDwaId, StringComparison.InvariantCultureIgnoreCase));
             } 
             else if (definitions.Any(definition => string.Equals(definition.Name,this.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
@@ -101,47 +123,33 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             return false;
         }
 
-        public static NwrwDryWeatherFlowDefinition CreateDefaultDwaDefinition()
+        private static IEnumerable<NwrwDryWeatherFlowDefinition> ExtractNwrwDryWeatherFlowDefinitionDefaults(string content, ILogHandler logHandler)
         {
-            return new NwrwDryWeatherFlowDefinition
+            Ensure.NotNullOrWhiteSpace(content, nameof(content));
+            Ensure.NotNull(logHandler, nameof(logHandler));
+
+            IDictionary<string, SobekRRDryWeatherFlow> defaultDryWeatherFlowDefinitions = new SobekRRDryWeatherFlowReader().Parse(content).ToDictionaryWithErrorDetails(content, item => item.Id, item => item);
+            NwrwDryWeatherFlowDefinitionBuilder nwrwDryWeatherFlowDefinitionBuilder = new NwrwDryWeatherFlowDefinitionBuilder();
+            foreach (KeyValuePair<string, SobekRRDryWeatherFlow> defaultDryWeatherFlowDefinition in defaultDryWeatherFlowDefinitions)
             {
-                Name = NwrwData.DEFAULT_DWA_ID,
-                DistributionType = DryweatherFlowDistributionType.Constant,
-                DailyVolumeConstant = 240,
-                DailyVolumeVariable = 120,
-                HourlyPercentageDailyVolume = GetDefaultHourlyPercentageDailyVolume()
-            };
+                NwrwDryWeatherFlowDefinition nwrwDryWeatherFlowDefinition = nwrwDryWeatherFlowDefinitionBuilder.Build(defaultDryWeatherFlowDefinition.Value, logHandler);
+                yield return nwrwDryWeatherFlowDefinition;
+                
+                if (string.IsNullOrWhiteSpace(DefaultDwaId))
+                {
+                    DefaultDwaId = defaultDryWeatherFlowDefinition.Key;
+                    defaultHourlyPercentageDailyVolume = nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume;
+                }
+            }
         }
 
-        private static double[] GetDefaultHourlyPercentageDailyVolume()
+        public static IEventedList<NwrwDryWeatherFlowDefinition> CreateDefaultDwaDefinitions()
         {
-            return new[]
-            {
-                1.5,
-                1.5,
-                1.5,
-                1.5,
-                1.5,
-                3.0,
-                4.0,
-                5.0,
-                6.0,
-                6.5,
-                7.5,
-                8.5,
-                7.5,
-                6.5,
-                6.0,
-                5.0,
-                5.0,
-                5.0,
-                4.0,
-                3.5,
-                3.0,
-                2.5,
-                2.0,
-                2.0
-            };
+            ILogHandler logHandler = new LogHandler("Importing Default RR NWRW Dry Weather Flow Definition data", Log);
+            var defaultsFileContent = RainfallRunoffModelFixedFiles.ReadFixedFileFromResource("PLUVIUS.DWA");
+            var nwrwDryWeatherFlowDefinitions = new EventedList<NwrwDryWeatherFlowDefinition>(ExtractNwrwDryWeatherFlowDefinitionDefaults(defaultsFileContent, logHandler));
+            logHandler.LogReport();
+            return nwrwDryWeatherFlowDefinitions;
         }
     }
 }

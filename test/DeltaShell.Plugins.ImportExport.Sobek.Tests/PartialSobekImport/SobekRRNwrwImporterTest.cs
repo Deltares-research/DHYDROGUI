@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             importer.Import();
 
             Assert.That(rrModel.NwrwDefinitions.Count, Is.EqualTo(12));
-            Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count, Is.EqualTo(3));
+            Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count, Is.EqualTo(4));
             Assert.That(rrModel.ModelData.OfType<NwrwData>().Count(), Is.EqualTo(75));
             AssertNwrwDefinitionsAreCorrect(rrModel.NwrwDefinitions);
             AssertNwrwDryweatherFlowDefinitionsAreCorrect(rrModel.NwrwDryWeatherFlowDefinitions);
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             importer.Import();
 
             Assert.That(rrModel.NwrwDefinitions.Count, Is.EqualTo(12));
-            Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count, Is.EqualTo(3));
+            Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count, Is.EqualTo(4));
             AssertNwrwDefinitionsAreCorrect(rrModel.NwrwDefinitions);
             AssertNwrwDryweatherFlowDefinitionsAreCorrect(rrModel.NwrwDryWeatherFlowDefinitions);
 
@@ -79,15 +79,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             IList<NwrwDryWeatherFlowDefinition> rrModelNwrwDryWeatherFlowDefinitions)
         {
             var importedDefinition = rrModelNwrwDryWeatherFlowDefinitions[0];
-            Assert.That(importedDefinition.Name, Is.EqualTo(NwrwData.DEFAULT_DWA_ID));
-            Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(240));
-            Assert.That(importedDefinition.DailyVolumeVariable, Is.EqualTo(120));
-            Assert.That(importedDefinition.DistributionType, Is.EqualTo(DryweatherFlowDistributionType.Constant));
-            Assert.That(importedDefinition.HourlyPercentageDailyVolume,
-                Is.EqualTo(new[]
-                    {1.5, 1.5, 1.5, 1.5, 1.5, 3, 4, 5, 6, 6.5, 7.5, 8.5, 7.5, 6.5, 6, 5, 5, 5, 4, 3.5, 3, 2.5, 2, 2}));
-
-            importedDefinition = rrModelNwrwDryWeatherFlowDefinitions[1];
+            Assert.That(importedDefinition.Name, Is.EqualTo(NwrwDryWeatherFlowDefinition.DefaultDwaId));
+            
+            importedDefinition = rrModelNwrwDryWeatherFlowDefinitions[2];
             Assert.That(importedDefinition.Name, Is.EqualTo("1"));
             Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(240));
             Assert.That(importedDefinition.DailyVolumeVariable, Is.EqualTo(120));
@@ -95,7 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.That(importedDefinition.HourlyPercentageDailyVolume,
                 Is.EqualTo(new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
 
-            importedDefinition = rrModelNwrwDryWeatherFlowDefinitions[2];
+            importedDefinition = rrModelNwrwDryWeatherFlowDefinitions[3];
             Assert.That(importedDefinition.Name, Is.EqualTo("P02_1"));
             Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(240));
             Assert.That(importedDefinition.DailyVolumeVariable, Is.EqualTo(120));

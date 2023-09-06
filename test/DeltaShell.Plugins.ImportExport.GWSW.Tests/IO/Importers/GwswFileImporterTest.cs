@@ -482,7 +482,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
                 Assert.IsNotNull(rrModel);
 
-                Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count(), Is.EqualTo(5));
+                Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count(), Is.EqualTo(6));
                 CollectionAssert.AllItemsAreUnique(rrModel.NwrwDryWeatherFlowDefinitions);
                 Assert.False(rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd =>
                                                                            dwfd.DistributionType.Equals(DryweatherFlowDistributionType.Variable))); // not supported
@@ -597,7 +597,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.IsNotNull(lei17.DryWeatherFlows.Select(dwf =>
                                                                   dwf.DryWeatherFlowId.Equals("Bedrijf", StringComparison.InvariantCultureIgnoreCase)));
                 Assert.IsNotNull(lei17.DryWeatherFlows.Select(dwf =>
-                                                                  dwf.DryWeatherFlowId.Equals(NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase)));
+                                                                  dwf.DryWeatherFlowId.Equals(NwrwDryWeatherFlowDefinition.DefaultDwaId, StringComparison.InvariantCultureIgnoreCase)));
                 Assert.That(lei17.LateralSurface, Is.EqualTo(0.0));
                 Assert.That(lei17.MeteoStationId, Is.EqualTo(string.Empty));
                 Assert.That(lei17.NodeOrBranchId, Is.EqualTo("lei17"));
@@ -649,7 +649,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.IsNotNull(lei43);
                 Assert.That(lei43.DryWeatherFlows.Count(), Is.EqualTo(2));
                 Assert.That(lei43.DryWeatherFlows.Select(dwf => dwf.DryWeatherFlowId).FirstOrDefault(),
-                            Is.EqualTo(NwrwData.DEFAULT_DWA_ID));
+                            Is.EqualTo(NwrwDryWeatherFlowDefinition.DefaultDwaId));
                 Assert.That(lei43.LateralSurface, Is.EqualTo(0.0));
                 Assert.That(lei43.MeteoStationId, Is.EqualTo(string.Empty));
                 Assert.That(lei43.NodeOrBranchId, Is.EqualTo("lei43"));
