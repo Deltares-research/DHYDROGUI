@@ -18,7 +18,7 @@ namespace DHYDRO.Common.Extensions
         /// <typeparam name="TKey"> Type of key. </typeparam>
         /// <typeparam name="TValue"> Type of value. </typeparam>
         /// <remarks>
-        /// The assumption is 
+        /// The assumption is
         /// </remarks>
         public static void AddToList<TKey, TValue>(this IDictionary<TKey, IList<TValue>> dictionary, TKey key, TValue value)
         {

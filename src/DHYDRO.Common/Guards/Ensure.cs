@@ -23,7 +23,7 @@ namespace DHYDRO.Common.Guards
                 throw new ArgumentNullException(paramName);
             }
         }
-        
+
         /// <summary>
         /// Ensure that the <paramref name="value"/> is not negative. If it is,
         /// then an <see cref="ArgumentOutOfRangeException"/> is thrown.

@@ -6,8 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="log4net" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+        <PackageReference Include="log4net"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
     </ItemGroup>
 
     <PropertyGroup>
@@ -17,7 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Resource Include="Resources\**" />
+        <Resource Include="Resources\**"/>
     </ItemGroup>
 
     <!--Ensure resources are generated correctly.-->

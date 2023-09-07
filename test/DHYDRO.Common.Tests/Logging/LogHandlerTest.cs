@@ -12,12 +12,7 @@ namespace DHYDRO.Common.Tests.Logging
         private const string LogMessage = "some_log_message";
         private const string Format = "{0}_{1}_{2}";
 
-        private readonly object[] formatArgs =
-        {
-            "some",
-            "log",
-            "message"
-        };
+        private readonly object[] formatArgs = { "some", "log", "message" };
 
         [Test]
         public void GivenALogMessage_WhenReportInfoIsCalled_MessageIsAddedToLogMessagesTableWithInfoSeverity()

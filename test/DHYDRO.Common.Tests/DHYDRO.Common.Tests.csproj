@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    
+
     <PropertyGroup>
         <OutputPath>$(SolutionDir)bin\$(Configuration)\tests</OutputPath>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="log4net" />
-        <PackageReference Include="NSubstitute" />
-        <PackageReference Include="NUnit" />
-        <PackageReference Include="NUnit.ConsoleRunner" />
-        <PackageReference Include="NUnit3TestAdapter" />
+        <PackageReference Include="log4net"/>
+        <PackageReference Include="NSubstitute"/>
+        <PackageReference Include="NUnit"/>
+        <PackageReference Include="NUnit.ConsoleRunner"/>
+        <PackageReference Include="NUnit3TestAdapter"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\DHYDRO.Common\DHYDRO.Common.csproj" />
+        <ProjectReference Include="..\..\src\DHYDRO.Common\DHYDRO.Common.csproj"/>
     </ItemGroup>
 </Project>

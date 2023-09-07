@@ -29,10 +29,7 @@ namespace DHYDRO.Common.Tests.Extensions
             dictionary.AddToList("some_key", "some_value");
 
             // Assert
-            Assert.That(dictionary["some_key"], Is.EqualTo(new[]
-            {
-                "some_value"
-            }));
+            Assert.That(dictionary["some_key"], Is.EqualTo(new[] { "some_value" }));
         }
 
         [Test]
@@ -45,10 +42,7 @@ namespace DHYDRO.Common.Tests.Extensions
             dictionary.AddToList("some_key", "some_value");
 
             // Assert
-            Assert.That(dictionary["some_key"], Is.EqualTo(new[]
-            {
-                "some_value"
-            }));
+            Assert.That(dictionary["some_key"], Is.EqualTo(new[] { "some_value" }));
         }
     }
 }

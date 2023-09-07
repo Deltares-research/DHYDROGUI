@@ -180,13 +180,7 @@ namespace DHYDRO.Common.Tests.IO.BackwardCompatibility
         public void IsUnsupportedPropertyValue_ArgNull_ThrowArgumentNullException(string category, string property, string value, bool expResult)
         {
             // Setup
-            var config = new TestConfigurationValues
-            {
-                UnsupportedPropertyValues = new[]
-                {
-                    new DelftIniPropertyInfo("some_category", "some_property", "some_value")
-                }
-            };
+            var config = new TestConfigurationValues { UnsupportedPropertyValues = new[] { new DelftIniPropertyInfo("some_category", "some_property", "some_value") } };
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call

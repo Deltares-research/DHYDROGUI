@@ -94,7 +94,7 @@ namespace DHYDRO.Common.Extensions
         public static bool ContainsWhitespace(this string source)
         {
             Ensure.NotNull(source, nameof(source));
-            
+
             return source.Any(char.IsWhiteSpace);
         }
     }

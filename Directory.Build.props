@@ -1,52 +1,52 @@
 <Project>
-  <PropertyGroup>
-    <Company>Deltares</Company>
-    <Copyright>Copyright © Deltares 2023</Copyright>
-    <Product>$(MSBuildProjectName)</Product>
-    <AssemblyTitle>$(MSBuildProjectName)</AssemblyTitle>
+    <PropertyGroup>
+        <Company>Deltares</Company>
+        <Copyright>Copyright © Deltares 2023</Copyright>
+        <Product>$(MSBuildProjectName)</Product>
+        <AssemblyTitle>$(MSBuildProjectName)</AssemblyTitle>
 
-    <GitHash>DEV</GitHash>
-    <BuildNumber>0</BuildNumber>
+        <GitHash>DEV</GitHash>
+        <BuildNumber>0</BuildNumber>
 
-    <DhydroCommon>1.2.0</DhydroCommon>
-    <Version>$(DhydroCommon).$(BuildNumber)</Version>
-    <FileVersion>$(Version)</FileVersion>
-    <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <DhydroCommon>1.2.0</DhydroCommon>
+        <Version>$(DhydroCommon).$(BuildNumber)</Version>
+        <FileVersion>$(Version)</FileVersion>
+        <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
-    <LangVersion>7.3</LangVersion>
-    <TargetFramework>net48</TargetFramework>
-    
-    <TargetsPath>$(SolutionDir)Build\targets\</TargetsPath>
+        <LangVersion>7.3</LangVersion>
+        <TargetFramework>net48</TargetFramework>
 
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <TargetsPath>$(SolutionDir)Build\targets\</TargetsPath>
 
-    <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
-    <WarningsAsErrors>CS1700</WarningsAsErrors>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+        <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
+        <WarningsAsErrors>CS1700</WarningsAsErrors>
 
-  <!--Source Link-->
-  <PropertyGroup>
-    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
+        <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>True</DebugSymbols>
-  </PropertyGroup>
+    <!--Source Link-->
+    <PropertyGroup>
+        <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\**"/>
-  </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DebugType>pdbonly</DebugType>
+        <DebugSymbols>True</DebugSymbols>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Resource Include="Resources\**"/>
+    </ItemGroup>
 </Project>

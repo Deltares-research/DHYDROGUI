@@ -109,25 +109,13 @@ namespace DHYDRO.Common.Tests.Extensions
         [Test]
         public void Duplicates_ReturnsCorrectResult()
         {
-            var strings = new[]
-            {
-                "a",
-                "b",
-                "c",
-                "b",
-                "c",
-                "c"
-            };
+            var strings = new[] { "a", "b", "c", "b", "c", "c" };
 
             // Call
             string[] result = strings.Duplicates().ToArray();
 
             // Assert
-            var expResult = new[]
-            {
-                "b",
-                "c"
-            };
+            var expResult = new[] { "b", "c" };
             Assert.That(result, Is.EqualTo(expResult));
         }
 
@@ -156,25 +144,13 @@ namespace DHYDRO.Common.Tests.Extensions
         [Test]
         public void Duplicates_With_Selector_ReturnsCorrectResult()
         {
-            var objects = new[]
-            {
-                new { prop = "a" },
-                new { prop = "b" },
-                new { prop = "c" },
-                new { prop = "b" },
-                new { prop = "c" },
-                new { prop = "c" }
-            };
+            var objects = new[] { new { prop = "a" }, new { prop = "b" }, new { prop = "c" }, new { prop = "b" }, new { prop = "c" }, new { prop = "c" } };
 
             // Call
             string[] result = objects.Duplicates(o => o.prop).ToArray();
 
             // Assert
-            var expResult = new[]
-            {
-                "b",
-                "c"
-            };
+            var expResult = new[] { "b", "c" };
             Assert.That(result, Is.EqualTo(expResult));
         }
 
@@ -193,34 +169,16 @@ namespace DHYDRO.Common.Tests.Extensions
         public void ToGroupedDictionary_ReturnsCorrectResult()
         {
             // Setup
-            var source = new[]
-            {
-                "a",
-                "abc",
-                "abcde",
-                "x",
-                "xyz"
-            };
+            var source = new[] { "a", "abc", "abcde", "x", "xyz" };
 
             // Call
             Dictionary<int, IEnumerable<string>> result = source.ToGroupedDictionary(s => s.Length);
 
             // Assert
             Assert.That(result, Has.Count.EqualTo(3));
-            Assert.That(result[1], Is.EqualTo(new[]
-            {
-                "a",
-                "x"
-            }));
-            Assert.That(result[3], Is.EqualTo(new[]
-            {
-                "abc",
-                "xyz"
-            }));
-            Assert.That(result[5], Is.EqualTo(new[]
-            {
-                "abcde",
-            }));
+            Assert.That(result[1], Is.EqualTo(new[] { "a", "x" }));
+            Assert.That(result[3], Is.EqualTo(new[] { "abc", "xyz" }));
+            Assert.That(result[5], Is.EqualTo(new[] { "abcde", }));
         }
 
         [TestCaseSource(nameof(AllEqualReturnsCorrectResultCases))]
@@ -246,51 +204,18 @@ namespace DHYDRO.Common.Tests.Extensions
         private static IEnumerable<TestCaseData> AllEqualReturnsCorrectResultCases()
         {
             yield return new TestCaseData(Array.Empty<string>(), true);
-            yield return new TestCaseData(new[]
-            {
-                "a"
-            }, true);
-            yield return new TestCaseData(new[]
-            {
-                "a",
-                "a",
-                "a"
-            }, true);
-            yield return new TestCaseData(new[]
-            {
-                "b",
-                "a",
-                "a"
-            }, false);
-            yield return new TestCaseData(new[]
-            {
-                "a",
-                "b",
-                "a"
-            }, false);
+            yield return new TestCaseData(new[] { "a" }, true);
+            yield return new TestCaseData(new[] { "a", "a", "a" }, true);
+            yield return new TestCaseData(new[] { "b", "a", "a" }, false);
+            yield return new TestCaseData(new[] { "a", "b", "a" }, false);
         }
 
         private static IEnumerable<TestCaseData> AllUniqueReturnsCorrectResultCases()
         {
             yield return new TestCaseData(Array.Empty<string>(), true);
-            yield return new TestCaseData(new[]
-            {
-                "a",
-                "b",
-                "c"
-            }, true);
-            yield return new TestCaseData(new[]
-            {
-                "a",
-                "b",
-                "a"
-            }, false);
-            yield return new TestCaseData(new[]
-            {
-                "a",
-                "a",
-                "a"
-            }, false);
+            yield return new TestCaseData(new[] { "a", "b", "c" }, true);
+            yield return new TestCaseData(new[] { "a", "b", "a" }, false);
+            yield return new TestCaseData(new[] { "a", "a", "a" }, false);
         }
 
         private static IEnumerable<TestCaseData> ForEachSourceCollectionNullCases()

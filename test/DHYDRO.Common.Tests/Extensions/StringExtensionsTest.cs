@@ -189,37 +189,12 @@ namespace DHYDRO.Common.Tests.Extensions
         {
             yield return new TestCaseData("", Array.Empty<string>());
             yield return new TestCaseData(" ", Array.Empty<string>());
-            yield return new TestCaseData("a b", new[]
-            {
-                "a",
-                "b"
-            });
-            yield return new TestCaseData("a  b", new[]
-            {
-                "a",
-                "b"
-            });
-            yield return new TestCaseData(" a  b ", new[]
-            {
-                "a",
-                "b"
-            });
-            yield return new TestCaseData("a\tb", new[]
-            {
-                "a",
-                "b"
-            });
-            yield return new TestCaseData($"a{Environment.NewLine}b", new[]
-            {
-                "a",
-                "b"
-            });
-            yield return new TestCaseData($"  a  \t  b  {Environment.NewLine}  c  ", new[]
-            {
-                "a",
-                "b",
-                "c"
-            });
+            yield return new TestCaseData("a b", new[] { "a", "b" });
+            yield return new TestCaseData("a  b", new[] { "a", "b" });
+            yield return new TestCaseData(" a  b ", new[] { "a", "b" });
+            yield return new TestCaseData("a\tb", new[] { "a", "b" });
+            yield return new TestCaseData($"a{Environment.NewLine}b", new[] { "a", "b" });
+            yield return new TestCaseData($"  a  \t  b  {Environment.NewLine}  c  ", new[] { "a", "b", "c" });
         }
     }
 }
