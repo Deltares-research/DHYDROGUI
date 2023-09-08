@@ -10,8 +10,40 @@ namespace DHYDRO.Common.Tests.Extensions
     public class EnumerableExtensionsTest
     {
         [Test]
+        [TestCaseSource(nameof(ForEach_ArgNullCases))]
+        public void ForEach_ArgNull_ThrowsArgumentNullException(IEnumerable<string> source, Action<string> action)
+        {
+            // Call
+            void Call() => source.ForEach(action);
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ForEach_PerformsActionOnEachElement()
+        {
+            // Call
+            IList<string> result = new List<string>();
+            IList<string> source = new List<string>
+            {
+                "a",
+                "b",
+                "c",
+            };
+
+            Action<string> action = s => result.Add(s);
+
+            // Call
+            source.ForEach(action);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(source));
+        }
+
+        [Test]
         [TestCaseSource(nameof(ForEachSourceCollectionNullCases))]
-        public void ForEach_SourceCollectionNull_ThrowsArgumentNullException((IEnumerable<string>, IEnumerable<string>) args, string expParam)
+        public void ForEach_Pairwise_SourceCollectionNull_ThrowsArgumentNullException((IEnumerable<string>, IEnumerable<string>) args, string expParam)
         {
             // Call
             void Call() => args.ForEach((s, s1) => Assert.Fail());
@@ -22,7 +54,7 @@ namespace DHYDRO.Common.Tests.Extensions
         }
 
         [Test]
-        public void ForEach_ArgumentNull_ThrowsArgumentNullException()
+        public void ForEach_Pairwise_ArgumentNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => (new string[0], new string[0]).ForEach(null);
@@ -33,7 +65,7 @@ namespace DHYDRO.Common.Tests.Extensions
         }
 
         [Test]
-        public void ForEach_PerformsActionForEachPair()
+        public void ForEach_Pairwise_PerformsActionForEachPair()
         {
             // Setup
             IList<string> first = new List<string>
@@ -216,6 +248,13 @@ namespace DHYDRO.Common.Tests.Extensions
             yield return new TestCaseData(new[] { "a", "b", "c" }, true);
             yield return new TestCaseData(new[] { "a", "b", "a" }, false);
             yield return new TestCaseData(new[] { "a", "a", "a" }, false);
+        }
+
+        private static IEnumerable<TestCaseData> ForEach_ArgNullCases()
+        {
+            Action<string> action = s => _ = s;
+            yield return new TestCaseData(null, action);
+            yield return new TestCaseData(Enumerable.Empty<string>(), null);
         }
 
         private static IEnumerable<TestCaseData> ForEachSourceCollectionNullCases()

@@ -11,6 +11,26 @@ namespace DHYDRO.Common.Extensions
     public static class EnumerableExtensions
     {
         /// <summary>
+        /// Performs an action for each item in the specified sequence.
+        /// </summary>
+        /// <param name="source">An <see cref="IEnumerable{T}"/> that contains the elements to apply the action to.</param>
+        /// <param name="action">An action to apply to each element.</param>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/> or <paramref name="action"/> is <c>null</c>.
+        /// </exception>
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(action, nameof(action));
+
+            foreach (T item in source)
+            {
+                action(item);
+            }
+        }
+
+        /// <summary>
         /// Performs an action for each pair of items in the two specified sequences.
         /// </summary>
         /// <param name="sources"> The value tuple containing the first and second sequence. </param>
