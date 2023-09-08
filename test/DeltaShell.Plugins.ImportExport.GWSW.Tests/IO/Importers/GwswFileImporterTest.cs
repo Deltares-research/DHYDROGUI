@@ -1926,6 +1926,62 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenGwswModelThatEndsWithManholeConnectedViaSewerConnection_WhenImporting_CreatesLateralAndConnectsToCatchment()
+        {
+            // Setup
+            string originalDirectoryPath = TestHelper.GetTestFilePath(@"gwswFiles\ModelEndingWithSewerConnection");
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string tempDirPath = tempDir.Path;
+                FileUtils.CopyDirectory(originalDirectoryPath, tempDirPath);
+
+                var filesToImport = new List<string>()
+                {
+                    Path.Combine(tempDirPath, "Knooppunt.csv"),
+                    Path.Combine(tempDirPath, "Kunstwerk.csv"),
+                    Path.Combine(tempDirPath, "Nwrw.csv"),
+                    Path.Combine(tempDirPath, "Oppervlak.csv"),
+                    Path.Combine(tempDirPath, "Profiel.csv"),
+                    Path.Combine(tempDirPath, "Verbinding.csv")
+                };
+                
+                GwswFileImporter gwswImporter = SetupGwswFileImporter(filesToImport, tempDirPath);
+
+                // Call
+                object importedModel = gwswImporter.ImportItem(null, null);
+                
+                // Assert
+                Assert.That(importedModel, Is.InstanceOf<HydroModel>());
+                AssertThatLinkIsCreatedBetweenNwrwCatchmentAndLateral((HydroModel)importedModel);
+            }
+        }
+
+        private static void AssertThatLinkIsCreatedBetweenNwrwCatchmentAndLateral(HydroModel hydroModel)
+        {
+            WaterFlowFMModel fmModel = hydroModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+            Assert.That(fmModel, Is.Not.Null);
+
+            List<ILateralSource> laterals = fmModel.Network.LateralSources.ToList();
+            Assert.That(laterals.Count, Is.EqualTo(1));
+
+            ILateralSource lateral = laterals.First();
+            Assert.That(lateral.Links.Count, Is.EqualTo(1));
+
+            HydroLink link = lateral.Links.First();
+            Assert.That(link.Target, Is.SameAs(lateral));
+
+            RainfallRunoffModel rrModel = hydroModel.Models.OfType<RainfallRunoffModel>().FirstOrDefault();
+            Assert.That(rrModel, Is.Not.Null);
+
+            List<NwrwData> nwrwDatas = rrModel.ModelData.OfType<NwrwData>().ToList();
+            Assert.That(nwrwDatas.Count, Is.EqualTo(1));
+
+            NwrwData nwrwData = nwrwDatas.First();
+            Assert.That(link.Source, Is.SameAs(nwrwData.Catchment));
+        }
         #endregion
     }
 }

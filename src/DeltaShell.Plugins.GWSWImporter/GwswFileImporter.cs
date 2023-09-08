@@ -193,9 +193,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             fmModel.UnSubscribeFromNetwork(network);
             
             var branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
-            var pipesBySourceCompartmentName = network.Pipes.ToLookup(p => p.SourceCompartmentName, p => p, StringComparer.OrdinalIgnoreCase);
-            var pipesByTargetCompartmentName = network.Pipes.ToLookup(p => p.TargetCompartmentName, p => p, StringComparer.OrdinalIgnoreCase);
-            var pipesAsBranchesByCompartmentName = pipesBySourceCompartmentName.Concat(pipesByTargetCompartmentName)
+            var sewerConnectionsBySourceCompartmentName = network.SewerConnections.ToLookup(sc => sc.SourceCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
+            var sewerConnectionsByTargetCompartmentName = network.SewerConnections.ToLookup(sc => sc.TargetCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
+            var sewerConnectionsAsBranchesByCompartmentName = sewerConnectionsBySourceCompartmentName.Concat(sewerConnectionsByTargetCompartmentName)
                 .GroupBy(e => e.Key)
                 .ToDictionary(l => l.Key, l => l.First().First() as IBranch);
             var lateralSources = new ConcurrentQueue<LateralSource>();
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         try
                         {
                             IBranch branch = FindTargetBranchForNwrwCatchmentBranch(branchesByName,
-                                pipesAsBranchesByCompartmentName, nwrwData.Name);
+                                sewerConnectionsAsBranchesByCompartmentName, nwrwData.Name);
 
                             if (branch != null)
                             {
@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// <param name="lateralSource"></param>
         private void AddLateralSourceToBranch(IBranch branch, LateralSource lateralSource)
         {
-            if (branch is IPipe pipe && pipe.Target is IManhole manhole && manhole.Name.Equals(lateralSource.Name, StringComparison.InvariantCultureIgnoreCase))
+            if (branch is ISewerConnection sewerConnection && sewerConnection.Target is IManhole manhole && manhole.Name.Equals(lateralSource.Name, StringComparison.InvariantCultureIgnoreCase))
                 lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
             else
                 lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, 0);
@@ -349,9 +349,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var networkFeatureNameAndGeometries = branchesGeometryDict.Concat(compartmentsGeometryDict)
                 .ToDictionary(nameGeometryLookup => nameGeometryLookup.Key, nameGeometryLookup => nameGeometryLookup.FirstOrDefault(), StringComparer.InvariantCultureIgnoreCase);
             var branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
-            var pipesBySourceCompartmentName = network.Pipes.ToLookup(p => p.SourceCompartmentName, p => p, StringComparer.OrdinalIgnoreCase);
-            var pipesByTargetCompartmentName = network.Pipes.ToLookup(p => p.TargetCompartmentName, p => p, StringComparer.OrdinalIgnoreCase);
-            var pipesAsBranchesByCompartmentName = pipesBySourceCompartmentName.Concat(pipesByTargetCompartmentName)
+            var sewerConnectionsBySourceCompartmentName = network.SewerConnections.ToLookup(sc => sc.SourceCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
+            var sewerConnectionsByTargetCompartmentName = network.SewerConnections.ToLookup(sc => sc.TargetCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
+            var sewerConnetionsAsBranchesByCompartmentName = sewerConnectionsBySourceCompartmentName.Concat(sewerConnectionsByTargetCompartmentName)
                 .GroupBy(e => e.Key)
                 .ToDictionary(l => l.Key, l => l.First().First() as IBranch);
             var flowByLateralSources = new ConcurrentDictionary<LateralSource, double>();
@@ -410,7 +410,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     try
                     {
                         IBranch branch = FindTargetBranchForNwrwCatchmentBranch(branchesByName,
-                            pipesAsBranchesByCompartmentName, nwrwDischargeData.Name);
+                            sewerConnetionsAsBranchesByCompartmentName, nwrwDischargeData.Name);
                         if (branch != null)
                         {
                             LateralSource lateralSource = new LateralSource
