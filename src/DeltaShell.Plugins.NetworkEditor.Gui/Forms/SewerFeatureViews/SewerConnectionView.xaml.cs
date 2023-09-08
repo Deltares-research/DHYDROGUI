@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
 using DelftTools.Controls;
-using DelftTools.Hydro.Roughness;
-using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Gui;
 using Image = System.Drawing.Image;
 
@@ -35,26 +33,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public void Dispose()
         {
             OpenView = null;
+            ((SewerConnectionViewModel)DataContext).Dispose();
         }
 
         public void EnsureVisible(object item)
         {
         }
-
-        public object Data
-        {
-            get { return ViewModel.SewerConnection; }
-            set
-            {
-                ViewModel.SewerConnection = (ISewerConnection)value;
-            }
-        }
-
-        public RoughnessSection PipeRoughnessSection
-        {
-            get { return ViewModel.PipeRoughnessSection; }
-            set { ViewModel.PipeRoughnessSection = value; }
-        }
+        
+        public object Data { get; set; }
 
         public string Text { get; set; }
         public Image Image { get; set; }

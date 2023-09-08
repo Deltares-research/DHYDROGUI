@@ -451,7 +451,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(sewerConnection)) as IModelWithRoughnessSections;
                     var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 
-                    view.PipeRoughnessSection = sewerRoughnessSection;
+                    view.DataContext = new SewerConnectionViewModel(sewerConnection, sewerRoughnessSection);
                     view.OpenView = o => Gui.CommandHandler.OpenView(o);
                 }
             };

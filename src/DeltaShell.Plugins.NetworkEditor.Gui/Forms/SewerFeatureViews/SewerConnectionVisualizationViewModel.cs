@@ -91,8 +91,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             
             var targetRight = xL + heightLineLength;
 
-            var sourceBottomLevel = SewerConnection.SourceCompartment.BottomLevel;
-            var sourceSurfaceLevel = SewerConnection.SourceCompartment.SurfaceLevel;
+            var sourceBottomLevel = SewerConnection.SourceCompartment?.BottomLevel ?? 0d;
+            var sourceSurfaceLevel = SewerConnection.SourceCompartment?.SurfaceLevel ?? 0d;
             var targetBottomLevel = SewerConnection.TargetCompartment?.BottomLevel ?? 0d;
             var targetSurfaceLevel = SewerConnection.TargetCompartment?.SurfaceLevel ?? 0d;
 

@@ -2,6 +2,7 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -485,16 +486,140 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
 
             var interactor = new ChannelInteractor(null, channel2, null, null);
             interactor.Network = hydroNetwork;
-            interactor.BranchNodeTopology = new BranchNodeTopology() { AllowReUseNodes = false, AllowRemoveUnusedNodes = false };
+            interactor.BranchNodeTopology = new BranchNodeTopology() { AllowReUseNodes = true, AllowRemoveUnusedNodes = false };
             interactor.Add(channel2);
 
-            // hydroNode2 is NOT reused
+            // hydroNode2 is reused
             // hydroNode4 is unused but not removed
             Assert.AreEqual(5, hydroNetwork.Nodes.Count);
             Assert.AreEqual(2, hydroNetwork.Branches.Count);
             Assert.AreEqual(hydroNode3, hydroNetwork.Branches[1].Source);
-            Assert.AreEqual(hydroNode2b, hydroNetwork.Branches[1].Target);
+            Assert.AreEqual(hydroNode2, hydroNetwork.Branches[1].Target);
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void AddChannel_ToExistingSewerConnection_ManholeIsReplacedWithNewChannelHydroNode()
+        {
+            // Setup
+            var coordinate1 = new Coordinate(1.23, 2.34);
+            var coordinate2 = new Coordinate(3.45, 4.56);
+            var coordinate3 = new Coordinate(5.67, 6.78);
+
+            var sewerConnection = GetBranch<SewerConnection>(coordinate1, coordinate2);
+            var channel = GetBranch<Channel>(coordinate2, coordinate3);
+
+            var hydroNetwork = new HydroNetwork();
+
+            SewerConnectionInteractor sewerConnectionInteractor = GetSewerConnectionInteractor(hydroNetwork, sewerConnection);
+            ChannelInteractor channelInteractor = GetChannelInteractor(hydroNetwork, channel);
+
+            // Add a sewer connection to the network
+            sewerConnectionInteractor.Add(sewerConnection);
+            AssertAddedToNetwork(hydroNetwork, sewerConnection);
+
+            INode manholeToReplace = sewerConnection.Target;
+
+            // Call
+            channelInteractor.Add(channel);
+
+            // Assert
+            AssertAddedToNetwork(hydroNetwork, channel);
+            Assert.That(channel.Source, Is.SameAs(sewerConnection.Target));
+            Assert.That(hydroNetwork.Nodes, Does.Not.Contain(manholeToReplace));
+            Assert.That(hydroNetwork.Manholes, Does.Not.Contain(manholeToReplace));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RemoveChannel_FromExistingSewerConnection_HydroNodeIsReplacedWithNewManhole()
+        {
+            // Setup
+            var coordinate1 = new Coordinate(1.23, 2.34);
+            var coordinate2 = new Coordinate(3.45, 4.56);
+            var coordinate3 = new Coordinate(5.67, 6.78);
+
+            var sewerConnection = GetBranch<SewerConnection>(coordinate1, coordinate2);
+            var channel = GetBranch<Channel>(coordinate2, coordinate3);
+
+            var hydroNetwork = new HydroNetwork();
+
+            SewerConnectionInteractor sewerConnectionInteractor = GetSewerConnectionInteractor(hydroNetwork, sewerConnection);
+            ChannelInteractor channelInteractor = GetChannelInteractor(hydroNetwork, channel);
+
+            // Add a sewer connection to the network
+            sewerConnectionInteractor.Add(sewerConnection);
+            AssertAddedToNetwork(hydroNetwork, sewerConnection);
+
+            // Add a channel to the network
+            channelInteractor.Add(channel);
+            AssertAddedToNetwork(hydroNetwork, channel);
+
+            Assert.That(sewerConnection.Target, Is.SameAs(channel.Source));
+
+            // Call
+            channelInteractor.Delete();
+
+            // Assert
+            AssertRemovedFromNetwork(hydroNetwork, channel);
+
+            Assert.That(sewerConnection.Target, Is.Not.SameAs(channel.Source));
+            Assert.That(hydroNetwork.Nodes, Does.Contain(sewerConnection.Target));
+            Assert.That(hydroNetwork.Manholes, Does.Contain(sewerConnection.Target));
+        }
+
+        private static void AssertAddedToNetwork(IHydroNetwork hydroNetwork, SewerConnection sewerConnection)
+        {
+            Assert.That(hydroNetwork.Branches, Does.Contain(sewerConnection));
+            Assert.That(hydroNetwork.SewerConnections, Does.Contain(sewerConnection));
+            Assert.That(hydroNetwork.Nodes, Does.Contain(sewerConnection.Source));
+            Assert.That(hydroNetwork.Nodes, Does.Contain(sewerConnection.Target));
+            Assert.That(hydroNetwork.Manholes, Does.Contain(sewerConnection.Source));
+            Assert.That(hydroNetwork.Manholes, Does.Contain(sewerConnection.Target));
+        }
+
+        private static void AssertAddedToNetwork(IHydroNetwork hydroNetwork, Channel channel)
+        {
+            Assert.That(hydroNetwork.Branches, Does.Contain(channel));
+            Assert.That(hydroNetwork.Channels, Does.Contain(channel));
+            Assert.That(hydroNetwork.Nodes, Does.Contain(channel.Source));
+            Assert.That(hydroNetwork.Nodes, Does.Contain(channel.Target));
+            Assert.That(hydroNetwork.HydroNodes, Does.Contain(channel.Source));
+            Assert.That(hydroNetwork.HydroNodes, Does.Contain(channel.Target));
+        }
+
+        private static void AssertRemovedFromNetwork(IHydroNetwork hydroNetwork, Channel channel)
+        {
+            Assert.That(hydroNetwork.Branches, Does.Not.Contain(channel));
+            Assert.That(hydroNetwork.Channels, Does.Not.Contain(channel));
+            Assert.That(hydroNetwork.Nodes, Does.Not.Contain(channel.Source));
+            Assert.That(hydroNetwork.Nodes, Does.Not.Contain(channel.Target));
+            Assert.That(hydroNetwork.HydroNodes, Does.Not.Contain(channel.Source));
+            Assert.That(hydroNetwork.HydroNodes, Does.Not.Contain(channel.Target));
+        }
+
+        private static SewerConnectionInteractor GetSewerConnectionInteractor(IHydroNetwork hydroNetwork, ISewerConnection sewerConnection)
+        {
+            return new SewerConnectionInteractor(null,
+                                                 sewerConnection,
+                                                 null,
+                                                 null) { Network = hydroNetwork };
+        }
+
+        private static ChannelInteractor GetChannelInteractor(IHydroNetwork hydroNetwork, IChannel channel)
+        {
+            return new ChannelInteractor(null,
+                                         channel,
+                                         null,
+                                         null) { Network = hydroNetwork };
+        }
+
+        private static TBranch GetBranch<TBranch>(Coordinate start, Coordinate end) where TBranch : IBranch, new()
+        {
+            var geometry = new LineString(new[] { start, end });
+            var branch = new TBranch { Geometry = geometry };
+
+            return branch;
+        }
     }
 }

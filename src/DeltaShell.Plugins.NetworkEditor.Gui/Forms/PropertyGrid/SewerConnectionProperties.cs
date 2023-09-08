@@ -23,40 +23,58 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(0)]
         public string Name
         {
-            get { return data?.Name ?? string.Empty; }
+            get { return data.Name ?? string.Empty; }
             set { data.Name = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.RelationsCategory)]
         [PropertyOrder(1)]
         [DisplayName("From manhole")]
-        public string FromManhole
-        {
-            get { return data?.Source?.ToString() ?? string.Empty; }
-        }
+        [DynamicVisible]
+        public string FromManhole => GetSourceName();
 
         [Category(PropertyWindowCategoryHelper.RelationsCategory)]
         [PropertyOrder(2)]
         [DisplayName("To manhole")]
-        public string ToManhole
-        {
-            get { return data?.Target?.ToString() ?? string.Empty; }
-        }
+        [DynamicVisible]
+        public string ToManhole => GetTargetName();
+
+        /// <summary>
+        /// The name of the source object the pipe or sewer connection is connected to.
+        /// This property is used for a rural node connection.
+        /// </summary>
+        [Category(PropertyWindowCategoryHelper.RelationsCategory)]
+        [PropertyOrder(1)]
+        [DisplayName("From node")]
+        [DynamicVisible]
+        public string FromNode => GetSourceName();
+
+        /// <summary>
+        /// The name of the target object the pipe or sewer connection is connected to.
+        /// This property is used for a rural node connection.
+        /// </summary>
+        [Category(PropertyWindowCategoryHelper.RelationsCategory)]
+        [PropertyOrder(2)]
+        [DisplayName("To node")]
+        [DynamicVisible]
+        public string ToNode => GetTargetName();
 
         [Category(PropertyWindowCategoryHelper.RelationsCategory)]
         [PropertyOrder(3)]
         [DisplayName("From compartment")]
+        [DynamicVisible]
         public string FromCompartment
         {
-            get { return data?.SourceCompartment?.ToString() ?? string.Empty; }
+            get { return data.SourceCompartment?.ToString() ?? string.Empty; }
         }
 
         [Category(PropertyWindowCategoryHelper.RelationsCategory)]
         [PropertyOrder(4)]
         [DisplayName("To compartment")]
+        [DynamicVisible]
         public string ToCompartment
         {
-            get { return data?.TargetCompartment?.ToString() ?? string.Empty; }
+            get { return data.TargetCompartment?.ToString() ?? string.Empty; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -64,7 +82,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Invert level begin (m)")]
         public double LevelStart
         {
-            get { return data?.LevelSource ?? double.NaN; }
+            get { return data.LevelSource; }
             set { data.LevelSource = value; }
         }
 
@@ -73,7 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Invert level end (m)")]
         public double LevelTarget
         {
-            get { return data?.LevelTarget ?? double.NaN; }
+            get { return data.LevelTarget; }
             set { data.LevelTarget = value; }
         }
 
@@ -132,7 +150,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Editor(typeof(SharedCrossSectionsTypeEditor), typeof(UITypeEditor))]
         public string CrossSectionName
         {
-            get { return data?.DefinitionName?? string.Empty; }
+            get { return data.DefinitionName?? string.Empty; }
             set { data.DefinitionName = value; }
         }
 
@@ -141,7 +159,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Shape")]
         public string CrossSectionShape
         {
-            get { return data?.Profile?.Shape?.Type.ToString() ?? string.Empty; }
+            get { return data.Profile?.Shape?.Type.ToString() ?? string.Empty; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
@@ -150,7 +168,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionDiameter
         {
-            get { return data?.Profile?.GetProfileDiameter() ?? double.NaN; }
+            get { return data.Profile?.GetProfileDiameter() ?? double.NaN; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
@@ -159,7 +177,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionWidth
         {
-            get { return data?.Profile?.GetProfileWidth() ?? double.NaN; }
+            get { return data.Profile?.GetProfileWidth() ?? double.NaN; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
@@ -168,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionHeight
         {
-            get { return data?.Profile?.GetProfileHeight() ?? double.NaN; }
+            get { return data.Profile?.GetProfileHeight() ?? double.NaN; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
@@ -177,7 +195,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double ArcHeight
         {
-            get { return data?.Profile?.GetProfileArchHeight() ?? double.NaN; }
+            get { return data.Profile?.GetProfileArchHeight() ?? double.NaN; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
@@ -185,7 +203,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double Slope
         {
-            get { return data?.Profile?.GetProfileSlope() ?? double.NaN; }
+            get { return data.Profile?.GetProfileSlope() ?? double.NaN; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
@@ -194,7 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double BottomWidthB
         {
-            get { return data?.Profile?.GetProfileBottomWidthB() ?? double.NaN; }
+            get { return data.Profile?.GetProfileBottomWidthB() ?? double.NaN; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
@@ -203,7 +221,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double MaximumFlowWidth
         {
-            get { return data?.Profile?.GetProfileMaximumFlowWidth() ?? double.NaN; }
+            get { return data.Profile?.GetProfileMaximumFlowWidth() ?? double.NaN; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
@@ -212,15 +230,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public bool Closed
         {
-            get { return (data?.CrossSection as ICrossSectionStandardShapeOpenClosed)?.Closed ?? false; }
+            get { return (data.CrossSection as ICrossSectionStandardShapeOpenClosed)?.Closed ?? false; }
         }
 
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
         {
-            var shape = data?.Profile?.Shape;
+            bool isTargetHydroNode = data.Target is IHydroNode;
+            bool isSourceHydroNode = data.Source is IHydroNode;
+            
+            var shape = data.Profile?.Shape;
             switch (propertyName)
             {
+                case nameof(ToManhole):
+                case nameof(ToCompartment):
+                    return !isTargetHydroNode;
+                case nameof(ToNode):
+                    return isTargetHydroNode;
+                case nameof(FromManhole):
+                case nameof(FromCompartment):
+                    return !isSourceHydroNode;
+                case nameof(FromNode):
+                    return isSourceHydroNode;
                 case "CrossSectionDiameter":
                     return shape is CrossSectionStandardShapeCircle;
                 case "CrossSectionWidth":
@@ -239,6 +270,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                     return true;
             }
         }
+
+        private string GetSourceName() => data.Source.Name;
+
+        private string GetTargetName() => data.Target.Name;
 
         #endregion
     }

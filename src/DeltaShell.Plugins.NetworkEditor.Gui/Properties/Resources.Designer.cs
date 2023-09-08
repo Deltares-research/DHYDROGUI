@@ -1076,6 +1076,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open water channel.
+        /// </summary>
+        public static string Open_water_channel {
+            get {
+                return ResourceManager.GetString("Open_water_channel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap openwater {

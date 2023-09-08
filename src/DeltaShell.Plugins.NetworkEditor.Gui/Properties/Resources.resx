@@ -632,6 +632,9 @@
   <data name="Ribbon_RemoveRoute_Confirm" xml:space="preserve">
     <value>Confirm</value>
   </data>
+  <data name="Open_water_channel" xml:space="preserve">
+    <value>Open water channel</value>
+  </data>
   <data name="OrificeShapeEditViewModel_CrestLevelDescription" xml:space="preserve">
     <value>Crest level [m]</value>
   </data>

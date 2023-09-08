@@ -11,10 +11,8 @@
              x:Name="UserControl"
              d:DesignHeight="800"
              d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance {x:Type local:SewerConnectionViewModel}, IsDesignTimeCreatable=True}"
              mc:Ignorable="d">
-    <UserControl.DataContext>
-        <local:SewerConnectionViewModel x:Name="ViewModel" />
-    </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="SewerConnectionWaterTypes"
@@ -184,10 +182,10 @@
                                Content="Manhole ID" />
                         <TextBlock Grid.Row="1"
                                    Grid.Column="1"
-                                   Text="{Binding SewerConnection.Source.Name}" />
+                                   Text="{Binding SourceNodeName}" />
                         <TextBlock Grid.Row="1"
                                    Grid.Column="2"
-                                   Text="{Binding SewerConnection.Target.Name}" />
+                                   Text="{Binding TargetNodeName}" />
 
                         <!--  Row 2  -->
                         <Label Grid.Row="2"
@@ -195,10 +193,10 @@
                                Content="Compartment ID" />
                         <TextBlock Grid.Row="2"
                                    Grid.Column="1"
-                                   Text="{Binding SewerConnection.SourceCompartment.Name}" />
+                                   Text="{Binding SourceCompartmentName}" />
                         <TextBlock Grid.Row="2"
                                    Grid.Column="2"
-                                   Text="{Binding SewerConnection.TargetCompartment.Name}" />
+                                   Text="{Binding TargetCompartmentName}" />
 
                         <!--  Row 3  -->
                         <Label Grid.Row="3"

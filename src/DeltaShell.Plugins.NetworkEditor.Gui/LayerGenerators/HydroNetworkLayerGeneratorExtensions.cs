@@ -186,22 +186,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
 
         private static IEnumerable<ISnapRule> GetSnapRule<T>(ILayer vectorLayer) where T : IFeature
         {
-            var type = typeof(T);
-            if (type == typeof(Channel))
-            {
-                yield return CreateDefaultSnappingRule<BranchSnapRule, IHydroNode>(vectorLayer, SnapRole.AllTrackers, false);
-            }
-
-            if (type == typeof(Pipe))
+            Type type = typeof(T);
+            if (typeof(IBranch).IsAssignableFrom(type))
             {
                 yield return CreateDefaultSnappingRule<BranchSnapRule, IManhole>(vectorLayer, SnapRole.AllTrackers, false);
                 yield return CreateDefaultSnappingRule<BranchSnapRule, IHydroNode>(vectorLayer, SnapRole.AllTrackers, false);
-                yield return CreateDefaultSnappingRule<BranchSnapRule, Compartment>(vectorLayer, SnapRole.AllTrackers, false);
-            }
-
-            if (type == typeof(SewerConnection) && type != typeof(Pipe))
-            {
-                yield return CreateDefaultSnappingRule<BranchSnapRule, IManhole>(vectorLayer, SnapRole.AllTrackers, false);
                 yield return CreateDefaultSnappingRule<BranchSnapRule, Compartment>(vectorLayer, SnapRole.AllTrackers, false);
             }
 

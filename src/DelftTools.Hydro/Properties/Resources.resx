@@ -247,4 +247,7 @@
   <data name="HydroNetworkValidator_Cross_section_sections_issues" xml:space="preserve">
     <value>Cross section sections issues ({0})</value>
   </data>
+  <data name="UniqueNodeNameFilter" xml:space="preserve">
+    <value>Node{0:D3}</value>
+  </data>
 </root>

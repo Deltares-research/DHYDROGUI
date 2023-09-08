@@ -459,6 +459,15 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Node{0:D3}.
+        /// </summary>
+        public static string UniqueNodeNameFilter {
+            get {
+                return ResourceManager.GetString("UniqueNodeNameFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap unpaved {

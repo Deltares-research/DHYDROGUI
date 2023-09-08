@@ -118,7 +118,11 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             BeforeSetSource();
             if (value is HydroNode)
+            {
                 source = value;
+                SourceCompartment = null;
+            }
+
             else if (value is Manhole manhole)
             {
                 
@@ -200,7 +204,11 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             BeforeTargetSet();
             if (value is HydroNode)
+            {
                 target = value;
+                TargetCompartment = null;
+            }
+
             else if (value is Manhole manhole)
             {
                 if (manhole?.Compartments != null && manhole.Compartments.Any())
@@ -279,6 +287,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (value == null)
                 {
                     sourceCompartment = null;
+                    sourceCompartmentName = null;
                     return;
                 }
 
@@ -307,6 +316,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (value == null)
                 {
                     targetCompartment = null;
+                    targetCompartmentName = null;
                     return;
                 }
 

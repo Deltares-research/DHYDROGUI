@@ -773,6 +773,82 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             Assert.AreNotEqual(connectionLength, connectionGeometry.Length);
         }
 
+        [Test]
+        public void SetSourceCompartment_WithNull_SetsSourceCompartmentNameToNull()
+        {
+            // Setup
+            var sewerConnection = new SewerConnection();
+            var compartment = Substitute.For<ICompartment>();
+            compartment.Name = "some_compartment_name";
+
+            sewerConnection.SourceCompartment = compartment;
+
+            Assert.That(sewerConnection.SourceCompartmentName, Is.Not.Null);
+
+            // Call
+            sewerConnection.SourceCompartment = null;
+
+            // Assert
+            Assert.That(sewerConnection.SourceCompartmentName, Is.Null);
+        }
+
+        [Test]
+        public void SetTargetCompartment_WithNull_SetsTargetCompartmentNameToNull()
+        {
+            // Setup
+            var sewerConnection = new SewerConnection();
+            var compartment = Substitute.For<ICompartment>();
+            compartment.Name = "some_compartment_name";
+
+            sewerConnection.TargetCompartment = compartment;
+
+            Assert.That(sewerConnection.TargetCompartmentName, Is.Not.Null);
+
+            // Call
+            sewerConnection.TargetCompartment = null;
+
+            // Assert
+            Assert.That(sewerConnection.TargetCompartmentName, Is.Null);
+        }
+
+        [Test]
+        public void SetSource_WithHydroNode_SetsSourceCompartmentToNull()
+        {
+            // Setup
+            var sewerConnection = new SewerConnection();
+            var compartment = Substitute.For<ICompartment>();
+            compartment.Name = "some_compartment_name";
+
+            sewerConnection.SourceCompartment = compartment;
+
+            Assert.That(sewerConnection.SourceCompartment, Is.Not.Null);
+
+            // Call
+            sewerConnection.Source = new HydroNode();
+
+            // Assert
+            Assert.That(sewerConnection.SourceCompartment, Is.Null);
+        }
+
+        [Test]
+        public void SetTarget_WithHydroNode_SetsTargetCompartmentToNull()
+        {
+            // Setup
+            var sewerConnection = new SewerConnection();
+            var compartment = Substitute.For<ICompartment>();
+            compartment.Name = "some_compartment_name";
+
+            sewerConnection.TargetCompartment = compartment;
+
+            Assert.That(sewerConnection.TargetCompartment, Is.Not.Null);
+
+            // Call
+            sewerConnection.Target = new HydroNode();
+
+            // Assert
+            Assert.That(sewerConnection.TargetCompartment, Is.Null);
+        }
+
         #endregion
 
         #region Helpers

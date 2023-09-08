@@ -5,6 +5,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
@@ -15,6 +16,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
     public class ChannelInteractor : BranchInteractor
     {
+        private readonly BranchNodeConnector branchNodeConnector = new BranchNodeConnector();
+        private readonly BranchNodeDisconnector branchNodeDisconnector = new BranchNodeDisconnector();
+        
         public ChannelInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject)
         {
         }
@@ -26,6 +30,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 var channel = (Channel)SourceFeature;
                 channel.GeodeticLength = GeodeticDistance.Length(Network.CoordinateSystem, channel.Geometry);
             }
+            
+            branchNodeConnector.ConnectNodes((IBranch)feature, Network);
+
             base.Add(feature);
         }
 
@@ -58,6 +65,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             {
                 targetNode.Links.ToArray().ForEach(HydroRegion.RemoveLink);
             }
+
+            var hydroNetwork = (IHydroNetwork)Network;
+            branchNodeDisconnector.DisconnectNodes(sourceNode, hydroNetwork);
+            branchNodeDisconnector.DisconnectNodes(targetNode, hydroNetwork);
         }
 
         public override void Stop()
