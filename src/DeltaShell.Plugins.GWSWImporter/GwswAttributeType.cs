@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using log4net;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -11,7 +11,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     /// </summary>
     public class GwswAttributeType
     {
-        private static ILog Log = LogManager.GetLogger(typeof(GwswAttributeType));
+        private readonly ILogHandler logHandler;
+
+        public GwswAttributeType(ILogHandler logHandler)
+        {
+            this.logHandler = logHandler;
+        }
         private string elementName;
 
         /// <summary>
@@ -114,7 +119,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// <param name="fileName">Name of the file.</param>
         /// <param name="lineNumber">The line number.</param>
         /// <returns></returns>
-        public static Type TryGetParsedValueType(string name, string typeField, string definition, string fileName, int lineNumber)
+        public Type TryGetParsedValueType(string name, string typeField, string definition, string fileName, int lineNumber)
         {
             try
             {
@@ -122,9 +127,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
             catch (Exception)
             {
-                Log.ErrorFormat(Resources
-                        .GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_,
-                    name, lineNumber, fileName);
+                logHandler?.ReportErrorFormat(Resources
+                                           .GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_,
+                                       name, lineNumber, fileName);
             }
 
             return null;

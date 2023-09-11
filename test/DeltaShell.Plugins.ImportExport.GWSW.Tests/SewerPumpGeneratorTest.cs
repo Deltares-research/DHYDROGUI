@@ -4,6 +4,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -30,8 +32,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
                 }
             };
-            
-            var createdPump = new SewerPumpGenerator().Generate(pumpGwswElement) as GwswConnectionPump;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var createdPump = new SewerPumpGenerator(logHandler).Generate(pumpGwswElement) as GwswConnectionPump;
             Assert.IsNotNull(createdPump);
             Assert.That(createdPump.SourceCompartmentName, Is.EqualTo(sourceCompartmentName));
             Assert.That(createdPump.TargetCompartmentName, Is.EqualTo(targetCompartmentName));
@@ -64,8 +66,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var gwswElement = GetSewerConnectionGwswElement(nvgString, startNode, endNode, connectionTypeString,
                 nvgDouble, nvgDouble, flowDirectionString, nvgDouble, nvgString, nvgString, waterTypeString, nvgDouble,
                 nvgDouble, nvgDouble, nvgDouble);
-            
-            var createdPump = new SewerPumpGenerator().Generate(gwswElement) as Pump;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var createdPump = new SewerPumpGenerator(logHandler).Generate(gwswElement) as Pump;
             Assert.IsNotNull(createdPump);
             Assert.That(createdPump.DirectionIsPositive, Is.EqualTo(expectedFlowDirectionValue));
         }
@@ -96,8 +98,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
                 }
             };
-            
-            var createdPump = new SewerPumpGenerator().Generate(structurePumpGwswElement) as GwswStructurePump;
+
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var createdPump = new SewerPumpGenerator(logHandler).Generate(structurePumpGwswElement) as GwswStructurePump;
             Assert.IsNotNull(createdPump);
             Assert.That((object) createdPump.Name, Is.EqualTo(pumpId));
             Assert.That(createdPump.Capacity, Is.EqualTo(expectedPumpCapacity));

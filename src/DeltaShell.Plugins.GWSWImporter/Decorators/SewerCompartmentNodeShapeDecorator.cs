@@ -27,11 +27,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             
             return aCompartment;
         }
-        
-        private static void SetNodeShape(ICompartment compartment, GwswElement gwswElement)
+
+        private void SetNodeShape(ICompartment compartment, GwswElement gwswElement)
         {
-            string nodeShapeString = gwswElement.GetAttributeValueFromList<string>(ManholeMapping.PropertyKeys.NodeShape);
-            compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeString);
+            string nodeShapeString = gwswElement.GetAttributeValueFromList<string>(ManholeMapping.PropertyKeys.NodeShape, LogHandler);
+            compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeString, LogHandler);
         }
     }
 }

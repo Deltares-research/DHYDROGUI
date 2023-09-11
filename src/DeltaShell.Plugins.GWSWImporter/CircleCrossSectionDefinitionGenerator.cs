@@ -2,11 +2,13 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class CircleCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {
+
         public override ISewerFeature Generate(GwswElement gwswElement)
         {
             var roundShape = CreateRoundShapeFromGwsw(gwswElement);
@@ -18,9 +20,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var shapeName = GetCrossSectionShapeName(gwswElement);
 
             double width;
-            var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
-            var materialValue = gwswElement.GetAttributeValueFromList<string>(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
-            if (widthAttribute.TryGetValueAsDouble(out width))
+            var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth, logHandler);
+            var materialValue = gwswElement.GetAttributeValueFromList<string>(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, logHandler);
+            if (widthAttribute.TryGetValueAsDouble(logHandler, out width))
             {
                 var multiplier = CalculateDiameterMultiplier(materialValue);
                 return new CrossSectionStandardShapeCircle
@@ -49,6 +51,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             defaultCircle.Name = name;
             defaultCircle.MaterialName = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
             return defaultCircle;
+        }
+
+        public CircleCrossSectionShapeGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
         }
     }
 }

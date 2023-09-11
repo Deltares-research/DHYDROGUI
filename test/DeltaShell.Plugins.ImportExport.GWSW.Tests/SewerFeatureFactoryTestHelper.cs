@@ -6,6 +6,9 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Reflection;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -31,11 +34,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         {
             if (attributeValue == null)
                 attributeValue = string.Empty;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
 
             return new GwswAttribute
             {
                 GwswAttributeType = GetGwswAttributeType("testFile", 5, "columnName", attributeType ?? "string", attributeName,
-                    "unkownDefinition", "mandatoryMaybe", defaultValue, "noRemarks"),
+                    "unkownDefinition", "mandatoryMaybe", defaultValue, "noRemarks", logHandler),
                 ValueAsString = attributeValue
             };
         }
@@ -174,9 +178,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         public static GwswAttributeType GetGwswAttributeType(string fileName, int lineNumber, string columnName,
-            string typeField, string codeName, string definition, string mandatory, string defaultValue, string remarks)
+            string typeField, string codeName, string definition, string mandatory, string defaultValue, string remarks, ILogHandler logHandler)
         {
-            return new GwswAttributeType
+            var gwswAttributeType = new GwswAttributeType(logHandler)
             {
                 Name = columnName,
                 Key = codeName,
@@ -184,19 +188,22 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 Mandatory = mandatory,
                 Remarks = remarks,
                 FileName = fileName,
-                AttributeType = GwswAttributeType.TryGetParsedValueType(columnName, typeField, definition, fileName, lineNumber),
                 DefaultValue = defaultValue
             };
+            gwswAttributeType.AttributeType = gwswAttributeType.TryGetParsedValueType(columnName, typeField, definition, fileName, lineNumber);
+
+            return gwswAttributeType;
         }
 
-        protected static T CreateSewerFeature<T>(GwswElement gwswElement) where T : class, ISewerFeature
+        protected static T CreateSewerFeature<T>(GwswElement gwswElement, ILogHandler logHandler = null) where T : class, ISewerFeature
         {
             SewerFeatureType elementType;
             if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) return null;
 
             var lu = new Dictionary<SewerFeatureType, GwswElement> {{elementType, gwswElement}}.ToLookup(l => l.Key, l => l.Value);
             var activityRunner = new ActivityRunner();
-            var gwswImporter = new GwswFileImporter(new DefinitionsProvider()) { ActivityRunner = activityRunner };
+            var gwswImporter = new GwswFileImporter(new DefinitionsProvider(logHandler)) { ActivityRunner = activityRunner };
+            TypeUtils.SetField(gwswImporter, "logHandler", logHandler);
             activityRunner.Activities.Add(new FileImportActivity(gwswImporter));
 
             var sewerEntities = SewerFeatureFactory.CreateSewerEntities(lu, gwswImporter);

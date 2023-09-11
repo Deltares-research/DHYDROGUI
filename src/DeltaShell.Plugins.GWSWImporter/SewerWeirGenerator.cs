@@ -3,11 +3,16 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
-    public class SewerWeirGenerator : IGwswFeatureGenerator<ISewerFeature>
+    public class SewerWeirGenerator : ASewerGenerator, IGwswFeatureGenerator<ISewerFeature>
     {
+        public SewerWeirGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
+        }
         public ISewerFeature Generate(GwswElement gwswElement)
         {
             var weir = CreateNewWeir(gwswElement);
@@ -16,13 +21,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         private Weir CreateNewWeir(GwswElement gwswElement)
         {
-            var uniqueIdKey = gwswElement.IsValidGwswSewerConnection()
+            var uniqueIdKey = gwswElement.IsValidGwswSewerConnection(logHandler)
                 ? SewerConnectionMapping.PropertyKeys.UniqueId
                 : SewerStructureMapping.PropertyKeys.UniqueId;
             
-            var weirId = gwswElement.GetAttributeValueFromList<string>(uniqueIdKey);
+            var weirId = gwswElement.GetAttributeValueFromList<string>(uniqueIdKey, logHandler);
 
-            if (gwswElement.IsValidGwswSewerConnection())
+            if (gwswElement.IsValidGwswSewerConnection(logHandler))
             {
                 var gwswConnectionWeir = new GwswConnectionWeir(weirId);
                 AddConnectionAttributesToWeir(gwswConnectionWeir, gwswElement);
@@ -34,40 +39,40 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return gwswStructureWeir;
         }
         
-        private static void AddStructureAttributesToWeir(IWeir weir, GwswElement gwswElement)
+        private void AddStructureAttributesToWeir(IWeir weir, GwswElement gwswElement)
         {
             double auxDouble;
             //Add Attributes
-            var crestWidth = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.CrestWidth);
-            if (crestWidth.TryGetValueAsDouble(out auxDouble))
+            var crestWidth = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.CrestWidth, logHandler);
+            if (crestWidth.TryGetValueAsDouble(logHandler, out auxDouble))
                 weir.CrestWidth = auxDouble;
 
-            var crestLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.CrestLevel);
-            if (crestLevel.TryGetValueAsDouble(out auxDouble))
+            var crestLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.CrestLevel, logHandler);
+            if (crestLevel.TryGetValueAsDouble(logHandler, out auxDouble))
                 weir.CrestLevel = auxDouble;
 
-            var dischargeCoefficient = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.DischargeCoefficient);
-            if (dischargeCoefficient.TryGetValueAsDouble(out auxDouble))
+            var dischargeCoefficient = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.DischargeCoefficient, logHandler);
+            if (dischargeCoefficient.TryGetValueAsDouble(logHandler, out auxDouble))
             {
                 var weirFormula = weir.WeirFormula as SimpleWeirFormula;
                 if(weirFormula != null) weirFormula.CorrectionCoefficient = auxDouble;
             }
         }
         
-        private static void AddConnectionAttributesToWeir(GwswConnectionWeir weir, GwswElement gwswElement)
+        private void AddConnectionAttributesToWeir(GwswConnectionWeir weir, GwswElement gwswElement)
         {
-            weir.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            weir.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
+            weir.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, logHandler);
+            weir.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, logHandler);
 
             double auxDouble;
-            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);
-            if (length.TryGetValueAsDouble(out auxDouble))
+            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length, logHandler);
+            if (length.TryGetValueAsDouble(logHandler, out auxDouble))
                 weir.Length = auxDouble;
 
-            var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection);
-            if (flowDirection.IsValidAttribute())
+            var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection, logHandler);
+            if (flowDirection.IsValidAttribute(logHandler))
             {
-                var directionValue = flowDirection.GetValueFromDescription<SewerConnectionMapping.FlowDirection>();
+                var directionValue = flowDirection.GetValueFromDescription<SewerConnectionMapping.FlowDirection>(logHandler);
                 switch (directionValue)
                 {
                     case SewerConnectionMapping.FlowDirection.Open:

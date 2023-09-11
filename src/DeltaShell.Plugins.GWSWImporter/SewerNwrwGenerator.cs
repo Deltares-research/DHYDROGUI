@@ -1,195 +1,198 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
-    public class GwswNwrwSurfaceDataGenerator : IGwswFeatureGenerator<INwrwFeature>
+    public class GwswNwrwSurfaceDataGenerator : ASewerGenerator, IGwswFeatureGenerator<INwrwFeature>
     {
+        public GwswNwrwSurfaceDataGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
+        }
         public INwrwFeature Generate(GwswElement gwswElement)
         {
-            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwSurfaceData(gwswElement);
+            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwSurfaceData(gwswElement, logHandler);
+        }
+
+        
+    }
+    public class GwswNwrwDischargeDataGenerator : ASewerGenerator, IGwswFeatureGenerator<INwrwFeature>
+    {
+        public GwswNwrwDischargeDataGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
+        }
+
+        public INwrwFeature Generate(GwswElement gwswElement)
+        {
+            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwDischargeData(gwswElement, logHandler);
         }
     }
-    public class GwswNwrwDischargeDataGenerator : IGwswFeatureGenerator<INwrwFeature>
-    {
+    public class GwswNwrwRunoffDefinitionGenerator : ASewerGenerator, IGwswFeatureGenerator<INwrwFeature>
+    { 
+        public GwswNwrwRunoffDefinitionGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
+        }
+
         public INwrwFeature Generate(GwswElement gwswElement)
         {
-            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwDischargeData(gwswElement);
+            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwRunoffDefinition(gwswElement, logHandler);
         }
     }
-    public class GwswNwrwRunoffDefinitionGenerator : IGwswFeatureGenerator<INwrwFeature>
+    public class GwswNwrwDryWeatherFlowDefinitionGenerator : ASewerGenerator, IGwswFeatureGenerator<INwrwFeature>
     {
-        public INwrwFeature Generate(GwswElement gwswElement)
+        public GwswNwrwDryWeatherFlowDefinitionGenerator(ILogHandler logHandler)
+            : base(logHandler)
         {
-            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwRunoffDefinition(gwswElement);
         }
-    }
-    public class GwswNwrwDryWeatherFlowDefinitionGenerator : IGwswFeatureGenerator<INwrwFeature>
-    {
+
         public INwrwFeature Generate(GwswElement gwswElement)
         {
-            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwDryWeatherFlowDefinition(gwswElement);
+            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwDryWeatherFlowDefinition(gwswElement, logHandler);
         }
     }
     public static class GwswNwrwGenerator 
     {
-       public static NwrwSurfaceData CreateNewNwrwSurfaceData(GwswElement gwswElement)
+       public static NwrwSurfaceData CreateNewNwrwSurfaceData(GwswElement gwswElement, ILogHandler logHandler)
         {
-            var errorsDuringImport = new List<string>();
-            var nwrwSurface = new NwrwSurfaceData();
+            var nwrwSurface = new NwrwSurfaceData(logHandler);
             try
             {
 
-                nwrwSurface.Name = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId)
+                nwrwSurface.Name = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId, logHandler)
                     .ValueAsString;
                 nwrwSurface.MeteoStationId = gwswElement
-                    .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.MeteoStationId).ValueAsString;
+                    .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.MeteoStationId, logHandler).ValueAsString;
                 nwrwSurface.RunoffDefinitionFile = gwswElement
-                    .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.RunoffDefinitionFile).ValueAsString;
+                    .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.RunoffDefinitionFile, logHandler).ValueAsString;
 
-                var surfaceType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId)
+                var surfaceType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId, logHandler)
                     .ValueAsString.Trim();
                 nwrwSurface.NwrwSurfaceType =
                     (NwrwSurfaceType) typeof(NwrwSurfaceType).GetEnumValueFromDescription(surfaceType);
 
                 double auxDouble;
-                var surfaceArea = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface);
-                if (surfaceArea.TryGetValueAsDouble(out auxDouble))
+                var surfaceArea = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface, logHandler);
+                if (surfaceArea.TryGetValueAsDouble(logHandler, out auxDouble))
                     nwrwSurface.SurfaceArea = auxDouble;
 
-                nwrwSurface.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks)
+                nwrwSurface.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks, logHandler)
                     .ValueAsString;
             }
             catch (Exception e)
             {
-                errorsDuringImport.Add(e.Message);
+                logHandler?.ReportError(e.Message);
+                return null;
             }
 
-            if (errorsDuringImport.Any())
-            {
-                throw new Exception($"Could not import Nwrw surface data: {Environment.NewLine}{string.Join(Environment.NewLine,errorsDuringImport)}");
-            }
             return nwrwSurface;
         }
 
-       public static NwrwDischargeData CreateNewNwrwDischargeData(GwswElement gwswElement)
+       public static NwrwDischargeData CreateNewNwrwDischargeData(GwswElement gwswElement, ILogHandler logHandler)
        {
-           var errorsDuringImport = new List<string>();
-           var nwrwDischargeData = new NwrwDischargeData();
+           var nwrwDischargeData = new NwrwDischargeData(logHandler);
            try
            {
-               nwrwDischargeData.Name = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId).ValueAsString;
+               nwrwDischargeData.Name = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId, logHandler).ValueAsString;
 
-               var dischargeType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DischargeType).ValueAsString;
+               var dischargeType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DischargeType, logHandler).ValueAsString;
                nwrwDischargeData.DischargeType = (DischargeType)typeof(DischargeType).GetEnumValueFromDescription(dischargeType);
 
-               nwrwDischargeData.DryWeatherFlowId = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DischargeId).ValueAsString;
+               nwrwDischargeData.DryWeatherFlowId = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DischargeId, logHandler).ValueAsString;
 
                double auxDouble;
                int auxInt;
 
-                var pollutinUnits = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PollutingUnits);
-               if (pollutinUnits.TryGetValueAsInt(out auxInt))
+               var pollutinUnits = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PollutingUnits, logHandler);
+               if (pollutinUnits.TryGetValueAsInt(logHandler, out auxInt))
                    nwrwDischargeData.NumberOfPeople = auxInt;
 
-               var surface = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface);
-               if (surface.TryGetValueAsDouble(out auxDouble))
+               var surface = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface, logHandler);
+               if (surface.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDischargeData.LateralSurface = auxDouble;
 
-               nwrwDischargeData.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks).ValueAsString;
+               nwrwDischargeData.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks, logHandler).ValueAsString;
            }
            catch (Exception e)
            {
-               errorsDuringImport.Add($"Could not import Nwrw discharge data: {e.Message}");
-           }
-
-           if (errorsDuringImport.Any())
-           {
-               throw new Exception($"Could not import Nwrw discharge data: {Environment.NewLine}{string.Join(Environment.NewLine, errorsDuringImport)}");
+               logHandler?.ReportError($"Could not import Nwrw discharge data: {e.Message}");
+               return null;
            }
            return nwrwDischargeData;
        }
 
-       public static NwrwDefinition CreateNewNwrwRunoffDefinition(GwswElement gwswElement)
+       public static NwrwDefinition CreateNewNwrwRunoffDefinition(GwswElement gwswElement, ILogHandler logHandler)
        {
-           var errorsDuringImport = new List<string>();
-
-           var nwrwDefinition = new NwrwDefinition();
+           var nwrwDefinition = new NwrwDefinition(logHandler);
 
            try
            {
                double auxDouble;
 
-               var surfaceType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId)
+               var surfaceType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId, logHandler)
                    .ValueAsString.Trim();
                nwrwDefinition.Name = surfaceType;
                nwrwDefinition.SurfaceType =
                    (NwrwSurfaceType) typeof(NwrwSurfaceType).GetEnumValueFromDescription(surfaceType);
 
                var surfaceStorage =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceStorage);
-               if (surfaceStorage.TryGetValueAsDouble(out auxDouble))
+                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceStorage, logHandler);
+               if (surfaceStorage.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.SurfaceStorage = auxDouble;
 
                var infiltrationCapacityMax =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.InfiltrationCapacityMax);
-               if (infiltrationCapacityMax.TryGetValueAsDouble(out auxDouble))
+                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.InfiltrationCapacityMax, logHandler);
+               if (infiltrationCapacityMax.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.InfiltrationCapacityMax = auxDouble;
 
                var infiltrationCapacityMin =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.InfiltrationCapacityMin);
-               if (infiltrationCapacityMin.TryGetValueAsDouble(out auxDouble))
+                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.InfiltrationCapacityMin, logHandler);
+               if (infiltrationCapacityMin.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.InfiltrationCapacityMin = auxDouble;
 
                var infiltrationCapacityReduction =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.InfiltrationCapacityReduction);
-               if (infiltrationCapacityReduction.TryGetValueAsDouble(out auxDouble))
+                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.InfiltrationCapacityReduction, logHandler);
+               if (infiltrationCapacityReduction.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.InfiltrationCapacityReduction = auxDouble;
 
                var infiltrationCapacityRecovery =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.InfiltrationCapacityRecovery);
-               if (infiltrationCapacityRecovery.TryGetValueAsDouble(out auxDouble))
+                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.InfiltrationCapacityRecovery, logHandler);
+               if (infiltrationCapacityRecovery.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.InfiltrationCapacityRecovery = auxDouble;
 
-               var runoffDelay = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.RunoffDelay);
-               if (runoffDelay.TryGetValueAsDouble(out auxDouble))
+               var runoffDelay = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.RunoffDelay, logHandler);
+               if (runoffDelay.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.RunoffDelay = auxDouble;
 
-               var runoffLength = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.RunoffLength);
-               if (runoffLength.TryGetValueAsDouble(out auxDouble))
+               var runoffLength = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.RunoffLength, logHandler);
+               if (runoffLength.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.RunoffLength = auxDouble;
 
-               var runoffSlope = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.RunoffSlope);
-               if (runoffSlope.TryGetValueAsDouble(out auxDouble))
+               var runoffSlope = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.RunoffSlope, logHandler);
+               if (runoffSlope.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.RunoffSlope = auxDouble;
 
-               var terrainRoughness = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TerrainRoughness);
-               if (terrainRoughness.TryGetValueAsDouble(out auxDouble))
+               var terrainRoughness = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TerrainRoughness, logHandler);
+               if (terrainRoughness.TryGetValueAsDouble(logHandler, out auxDouble))
                    nwrwDefinition.TerrainRoughness = auxDouble;
 
-               nwrwDefinition.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks)
+               nwrwDefinition.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks, logHandler)
                    .ValueAsString;
            }
            catch (Exception e)
            {
-               errorsDuringImport.Add(e.Message);
+               logHandler?.ReportError(e.Message);
+               return null;
            }
-
-           if (errorsDuringImport.Any())
-           {
-               throw new Exception($"Could not import Nwrw runoff data: {Environment.NewLine}{string.Join(Environment.NewLine, errorsDuringImport)}");
-           }
-
-            return nwrwDefinition;
+           return nwrwDefinition;
        }
 
-       public static NwrwDryWeatherFlowDefinition CreateNewNwrwDryWeatherFlowDefinition(GwswElement gwswElement)
+       public static NwrwDryWeatherFlowDefinition CreateNewNwrwDryWeatherFlowDefinition(GwswElement gwswElement, ILogHandler logHandler)
        {
-           var errorsDuringImport = new List<string>();
-           var nwrwDryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition();
+           var nwrwDryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition(logHandler);
 
            try
            {
@@ -197,165 +200,52 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                int auxInt;
 
                nwrwDryWeatherFlowDefinition.Name = gwswElement
-                   .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DistributionId).ValueAsString;
+                   .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DistributionId, logHandler).ValueAsString;
 
                var distributionType = gwswElement
-                   .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DistributionType).ValueAsString;
+                   .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DistributionType, logHandler).ValueAsString;
                nwrwDryWeatherFlowDefinition.DistributionType =
                    DryweatherFlowDistributionTypeConverter.ConvertStringToDryweatherFlowDistributionType(distributionType);
                
-               var dayNumber = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DayNumber);
-               if (dayNumber.TryGetValueAsInt(out auxInt))
+               var dayNumber = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DayNumber, logHandler);
+               if (dayNumber.TryGetValueAsInt(logHandler, out auxInt))
                    nwrwDryWeatherFlowDefinition.DayNumber = auxInt;
 
                #region Daily Volume
 
-               var dailyVolume = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DailyVolume);
-               if (dailyVolume.TryGetValueAsDouble(out auxDouble))
+               var dailyVolume = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DailyVolume, logHandler);
+               if (dailyVolume.TryGetValueAsDouble(logHandler, out auxDouble))
                {
                    nwrwDryWeatherFlowDefinition.DailyVolumeVariable = auxDouble;
                    nwrwDryWeatherFlowDefinition.DailyVolumeConstant = auxDouble;
                }
-                   
-               
 
-               var hourlyPercentage00 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage00);
-               if (hourlyPercentage00.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[0] = auxDouble;
-
-               var hourlyPercentage01 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage01);
-               if (hourlyPercentage01.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[1] = auxDouble;
-
-               var hourlyPercentage02 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage02);
-               if (hourlyPercentage02.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[2] = auxDouble;
-
-               var hourlyPercentage03 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage03);
-               if (hourlyPercentage03.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[3] = auxDouble;
-
-               var hourlyPercentage04 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage04);
-               if (hourlyPercentage04.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[4] = auxDouble;
-
-               var hourlyPercentage05 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage05);
-               if (hourlyPercentage05.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[5] = auxDouble;
-
-               var hourlyPercentage06 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage06);
-               if (hourlyPercentage06.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[6] = auxDouble;
-
-               var hourlyPercentage07 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage07);
-               if (hourlyPercentage07.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[7] = auxDouble;
-
-               var hourlyPercentage08 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage08);
-               if (hourlyPercentage08.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[8] = auxDouble;
-
-               var hourlyPercentage09 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage09);
-               if (hourlyPercentage09.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[9] = auxDouble;
-
-               var hourlyPercentage10 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage10);
-               if (hourlyPercentage10.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[10] = auxDouble;
-
-               var hourlyPercentage11 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage11);
-               if (hourlyPercentage11.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[11] = auxDouble;
-
-               var hourlyPercentage12 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage12);
-               if (hourlyPercentage12.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[12] = auxDouble;
-
-               var hourlyPercentage13 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage13);
-               if (hourlyPercentage13.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[13] = auxDouble;
-
-               var hourlyPercentage14 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage14);
-               if (hourlyPercentage14.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[14] = auxDouble;
-
-               var hourlyPercentage15 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage15);
-               if (hourlyPercentage15.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[15] = auxDouble;
-
-               var hourlyPercentage16 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage16);
-               if (hourlyPercentage16.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[16] = auxDouble;
-
-               var hourlyPercentage17 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage17);
-               if (hourlyPercentage17.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[17] = auxDouble;
-
-               var hourlyPercentage18 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage18);
-               if (hourlyPercentage18.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[18] = auxDouble;
-
-               var hourlyPercentage19 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage19);
-               if (hourlyPercentage19.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[19] = auxDouble;
-
-               var hourlyPercentage20 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage20);
-               if (hourlyPercentage20.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[20] = auxDouble;
-
-               var hourlyPercentage21 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage21);
-               if (hourlyPercentage21.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[21] = auxDouble;
-
-               var hourlyPercentage22 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage22);
-               if (hourlyPercentage22.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[22] = auxDouble;
-
-               var hourlyPercentage23 =
-                   gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage23);
-               if (hourlyPercentage23.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[23] = auxDouble;
-
+               for (int i = 0; i < SewerConnectionMapping.PropertyKeys.HourlyPercentage.Length; i++)
+               {
+                   nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume[i] = GetHourlyPercentageDailyVolume(gwswElement, SewerConnectionMapping.PropertyKeys.HourlyPercentage[i], nwrwDryWeatherFlowDefinition.Name, logHandler);
+               }
                #endregion
 
                nwrwDryWeatherFlowDefinition.Remark = gwswElement
-                   .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks).ValueAsString;
+                   .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks, logHandler).ValueAsString;
            }
            catch (Exception e)
            {
-               errorsDuringImport.Add(e.Message);
+               logHandler?.ReportError(e.Message);
+               return null;
            }
-
-           if (errorsDuringImport.Any())
-           {
-               throw new Exception($"Could not import Nwrw dry weather flow data: {Environment.NewLine}{string.Join(Environment.NewLine, errorsDuringImport)}");
-           }
-
-            return nwrwDryWeatherFlowDefinition;
+           return nwrwDryWeatherFlowDefinition;
        }
 
+       private static double GetHourlyPercentageDailyVolume(GwswElement gwswElement, string percentageDayVolumeAtHourKey, string nwrwDryWeatherFlowDefinitionName, ILogHandler logHandler)
+       {
+           var hourlyPercentage =
+               gwswElement.GetAttributeFromList(percentageDayVolumeAtHourKey, logHandler);
+           if (!hourlyPercentage.TryGetValueAsDouble(logHandler, out double auxDouble))
+           {
+               logHandler?.ReportWarning($"Could not retrieve percentage day volume for DryWeatherFlowDefinition {nwrwDryWeatherFlowDefinitionName} at hour {percentageDayVolumeAtHourKey}, using default 0.0.");
+           }
+           return auxDouble;
+       }
     }
 }

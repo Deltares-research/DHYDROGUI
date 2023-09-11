@@ -1,13 +1,10 @@
 ﻿using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Data;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FixedFiles;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using DHYDRO.Common.Logging;
-using GeoAPI.Geometries;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -16,11 +13,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// </summary>
     /// <seealso cref="INwrwFeature" />
     [Entity]
-    public class NwrwDefinition : Unique<long>, INwrwFeature
+    public class NwrwDefinition : ANwrwFeature
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDefinition));
-
-        public string Name { get; set; } // AFV_IDE
+        public NwrwDefinition(ILogHandler logHandler): base(logHandler)
+        {
+        }
         public NwrwSurfaceType SurfaceType { get; set; } // AFV_IDE
         public double SurfaceStorage { get; set; } // AFV_BRG
         public double InfiltrationCapacityMax { get; set; } // AFV_IFX
@@ -32,15 +29,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public double RunoffSlope { get; set; } // AFV_HEL
         public double TerrainRoughness { get; set; } // AFV_RUW
         public string Remark { get; set; } // ALG_TOE
+        
 
- 
-        public IGeometry Geometry { get; set; }
-
-        public void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
+        public override void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
         {
             if (rrModel == null)
             {
-                Log.Warn($"Could not add {nameof(NwrwDefinition)} to {nameof(RainfallRunoffModel)}.");
+                logHandler?.ReportWarning($"Could not add {nameof(NwrwDefinition)} to {nameof(RainfallRunoffModel)}.");
                 return;
             }
 
@@ -50,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                     .FindIndex(nd => nd.SurfaceType.Equals(this.SurfaceType));
                 if (nwrwDefinitionIndex == -1)
                 {
-                    Log.Warn($"Could not add {nameof(NwrwDefinition)} to {nameof(RainfallRunoffModel)}.");
+                    logHandler?.ReportWarning($"Could not add {nameof(NwrwDefinition)} to {nameof(RainfallRunoffModel)}.");
                     return;
                 }
 
@@ -59,30 +54,33 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
                 
         }
-
-        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
-        {
-            //nothing to initialize
-        }
-
+        
         public static IEventedList<NwrwDefinition> CreateDefaultNwrwDefinitions()
         {
             var nwrwDefinitions = new EventedList<NwrwDefinition>();
+            ILogHandler logHandler = new LogHandler("Creating default definitions");
+
             foreach (var surfaceType in NwrwSurfaceTypeHelper.SurfaceTypesInCorrectOrder)
             {
                 nwrwDefinitions.Add(
-                    new NwrwDefinition
+                    new NwrwDefinition(logHandler)
                     {
                         SurfaceType = surfaceType,
                         Name = NwrwSurfaceTypeHelper.SurfaceTypeDictionary[surfaceType],
                     });
             }
-            var line = RainfallRunoffModelFixedFiles.ReadFixedFileFromResource("PLUVIUS.ALG");
-            SobekRRNwrwSettings[] sobekRRNwrwSettings = new SobekRRNwrwSettingsReader().Parse(line).ToArray();
-            ILogHandler logHandler = new LogHandler("importing Default RR NWRW data", Log); 
-            sobekRRNwrwSettings.UpdateNwrwSettings(nwrwDefinitions, logHandler);
+            LoadNwrwDefaults(nwrwDefinitions);
             logHandler.LogReport();
             return nwrwDefinitions;
+        }
+        
+        private static void LoadNwrwDefaults(EventedList<NwrwDefinition> nwrwDefinitions)
+        {
+            ILogHandler logHandler = new LogHandler("importing Default RR NWRW data");
+            var line = RainfallRunoffModelFixedFiles.ReadFixedFileFromResource("PLUVIUS.ALG");
+            ISobekRRNwrwSettings[] sobekRRNwrwSettings = new SobekRRNwrwSettingsReader().Parse(line).ToArray();
+            sobekRRNwrwSettings.UpdateNwrwSettings(nwrwDefinitions, logHandler);
+            logHandler.LogReport();
         }
     }
 }

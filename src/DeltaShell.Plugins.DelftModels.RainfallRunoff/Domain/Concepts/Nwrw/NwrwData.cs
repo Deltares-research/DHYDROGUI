@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -105,36 +106,28 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             return nwrwDataLookup;
         }
 
-        public static void CreateNewNwrwDataWithCatchment(IHydroModel model, string name, NwrwImporterHelper helper)
+        public static void CreateNewNwrwDataWithCatchment(IHydroModel model, string name, NwrwImporterHelper helper, ILogHandler logHandler)
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null)
             {
-                throw new ArgumentNullException("Can not add Nwrw catchment without a model.");
+                logHandler?.ReportError($"Can not add Nwrw catchment {name} without a model.");
+                return;
+            }
+
+            if (helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId.ContainsKey(name))
+            {
+                return;
             }
 
             var catchment = Catchment.CreateDefault();
             catchment.CatchmentType = CatchmentType.NWRW;
             catchment.Name = name;
-            CurrentNwrwCatchmentModelDataByNodeOrBranchId = helper?.CurrentNwrwCatchmentModelDataByNodeOrBranchId;
+            CurrentNwrwCatchmentModelDataByNodeOrBranchId = helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId;
             rrModel.ModelDataAdded += RrModelOnModelDataAdded; 
             rrModel.Basin.Catchments.Add(catchment);
             rrModel.ModelDataAdded -= RrModelOnModelDataAdded;
             
-            var nwrwData = rrModel.GetAllModelData()
-                                  .OfType<NwrwData>()
-                                  .SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
-
-            if (nwrwData == null)
-            {
-                catchment.AddDefaultModelDataForCatchment(rrModel);
-                nwrwData = rrModel.GetAllModelData()
-                                  .OfType<NwrwData>()
-                                  .SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
-                if (nwrwData != null)
-                    CurrentNwrwCatchmentModelDataByNodeOrBranchId?.TryAdd(nwrwData.Name, nwrwData);
-            }
-
             CurrentNwrwCatchmentModelDataByNodeOrBranchId = null;
         }
 

@@ -10,6 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.ComponentModel;
+using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
@@ -18,13 +19,18 @@ namespace DelftTools.Hydro.SewerFeatures
     [Entity]
     public class Compartment : ACompartment, IPointFeature, ICompartment, ICopyFrom, IItemContainer
     {
-        private IManhole parentManhole;
-
         /// <summary>
         /// The default floodable area for a reservoir compartment (m²).
         /// </summary>
         public const double DefaultReservoirFloodableArea = 500.0;
 
+        private IManhole parentManhole;
+
+        public Compartment(ILogHandler logHandler, string name):this(name)
+        {
+            LogHandler = logHandler;
+        }
+        
         public Compartment() : this("compartment")
         {
             
@@ -173,6 +179,8 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             return Name;
         }
+
+        public override ILogHandler LogHandler { get; }
 
         public override ACompartment ProcessInput(object gwswElement)
         {

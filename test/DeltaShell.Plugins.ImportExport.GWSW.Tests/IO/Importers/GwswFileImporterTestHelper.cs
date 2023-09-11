@@ -6,6 +6,8 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
@@ -102,10 +104,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         protected static void CheckThatGwswAttributeValidationLogMessageIsReturned(string fileName, int lineNumber,
             string localKey, string key, GwswAttribute invalidAttribute)
         {
-            var expectedMessage = string.Format(
-                (string) Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_
-                , fileName, lineNumber, localKey, key, string.Empty);
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => invalidAttribute.IsValidAttribute(), expectedMessage);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            invalidAttribute.IsValidAttribute(logHandler);
+            logHandler.Received().ReportErrorFormat(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_
+                                                   , fileName, lineNumber, localKey, key, invalidAttribute.ValueAsString);
         }
     }
 }

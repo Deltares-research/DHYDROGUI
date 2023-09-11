@@ -1,9 +1,13 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerConnectionPipeGenerator: SewerConnectionGenerator
     {
+        public SewerConnectionPipeGenerator(ILogHandler logHandler) : base(logHandler)
+        {
+        }
         public override ISewerFeature Generate(GwswElement gwswElement)
         {
             if (gwswElement == null) return null;
@@ -17,8 +21,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
             base.SetSewerConnectionAttributes(newPipe, gwswElement);
             
-            newPipe.PipeId = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.PipeId);
-            newPipe.CrossSectionDefinitionName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId);
+            newPipe.PipeId = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.PipeId, logHandler);
+            newPipe.CrossSectionDefinitionName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId, logHandler);
         }
     }
 }

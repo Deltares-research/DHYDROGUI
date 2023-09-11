@@ -1,16 +1,18 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
-using log4net;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerOutletCompartmentGenerator : ASewerCompartmentGenerator
     {
-        private static ILog Log = LogManager.GetLogger(typeof(SewerOutletCompartmentGenerator));
-        
+        public SewerOutletCompartmentGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
+        }
         public override ISewerFeature Generate(GwswElement gwswElement)
         {
-            bool validGwswStructure = gwswElement.IsValidGwswStructure();
+            bool validGwswStructure = gwswElement.IsValidGwswStructure(logHandler);
 
             if (validGwswStructure)
             {
@@ -22,19 +24,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         protected override void SetCompartmentProperties(Compartment compartment, GwswElement gwswElement)
         {
-            if (!gwswElement.IsValidGwswCompartment()) return;
+            if (!gwswElement.IsValidGwswCompartment(logHandler)) return;
 
             double auxDouble;
             var outletCompartment = compartment as OutletCompartment;
             if (outletCompartment != null)
             {
-                var surfaceWaterLevelAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel);
-                if (surfaceWaterLevelAttribute.TryGetValueAsDouble(out auxDouble))
+                var surfaceWaterLevelAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel, logHandler);
+                if (surfaceWaterLevelAttribute.TryGetValueAsDouble(logHandler, out auxDouble))
                     outletCompartment.SurfaceWaterLevel = auxDouble;
             }
             else
             {
-                Log.WarnFormat($"Missing surface water level value for '{compartment.Name}', using default value: {compartment.SurfaceLevel}");
+                logHandler?.ReportWarning($"Missing surface water level value for '{compartment.Name}', using default value: {compartment.SurfaceLevel}");
             }
             
             if (compartment is GwswStructureOutletCompartment)

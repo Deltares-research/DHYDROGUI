@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             
             if (Equals(catchmentType, CatchmentType.Unpaved))
             {
-                var modelData = new List<CatchmentModelData> { new UnpavedData(catchment1) };
+                var modelData = new EventedList<CatchmentModelData> { new UnpavedData(catchment1) };
                 source.Expect(m => m.ModelData).Return(modelData).Repeat.Any();
             }
             

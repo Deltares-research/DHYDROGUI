@@ -224,6 +224,15 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="Water_type__0__is_not_a_valid_water_type_Setting_water_type_to_none" xml:space="preserve">
     <value>Water type {0} is not a valid water type. Setting the water type to 'none'.</value>
   </data>
+  <data name="NwrwDischargeData_CalculateLateralFlow_In_CalculateLateralFlow_parameter_nwrwDryWeatherFlowDefinitionByName_is_null" xml:space="preserve">
+    <value>In CalculateLateralFlow parameter nwrwDryWeatherFlowDefinitionByName is null</value>
+  </data>
+  <data name="NwrwDischargeData_CalculateLateralFlow_Cannot_find_NwrwDryWeatherFlowDefinition_in_RR_model_by_name___0" xml:space="preserve">
+    <value>Cannot find NwrwDryWeatherFlowDefinition in RR model by name: {0}</value>
+  </data>
+  <data name="GwswElementExtensions_GetValueFromDescription_The_description_is_not_set__using_default" xml:space="preserve">
+    <value>The description is not set, using default</value>
+  </data>
   <data name="GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbinding_csv_for_pipe__0___Using_default_pipe_profile" xml:space="preserve">
     <value>No cross-section id defined in Verbinding.csv for pipe {0}. Using default pipe profile</value>
   </data>

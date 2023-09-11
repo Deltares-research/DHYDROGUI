@@ -7,6 +7,8 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -40,8 +42,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var connectionGwswElement = GetSewerConnectionGwswElement(orificeId, sourceCompartmentId, targetCompartmentId, connectionTypeString,
                 levelStart, levelEnd, nvgString, length, nvgString, nvgString, waterTypeString, nvgDouble,
                 nvgDouble, nvgDouble, nvgDouble);
-
-            var orifice = new SewerOrificeGenerator().Generate(connectionGwswElement) as GwswConnectionOrifice;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var orifice = new SewerOrificeGenerator(logHandler).Generate(connectionGwswElement) as GwswConnectionOrifice;
             Assert.IsNotNull(orifice);
 
             Assert.That(orifice.Name, Is.EqualTo(orificeId));
@@ -74,7 +76,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var generator = new SewerOrificeGenerator();
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var generator = new SewerOrificeGenerator(logHandler);
             var createdOrifice = generator.Generate(structureOrificeGwswElement) as Orifice;
             
             Assert.IsNotNull(createdOrifice);
@@ -100,8 +103,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, "orifice123", string.Empty),
                 }
             };
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var createdElement = new SewerOrificeGenerator(logHandler).Generate(structureOrificeGwswElement) as Orifice;
+            Assert.IsNotNull(createdElement);
 
-            var generator = new SewerOrificeGenerator();
+            var generator = new SewerOrificeGenerator(logHandler);
             var createdOrifice = generator.Generate(structureOrificeGwswElement) as Orifice;
             
             Assert.IsNotNull(createdOrifice);
@@ -127,7 +133,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         public void Generate_IsValidGwswSewerConnection_SetsExpectedFlowDirection(string flowDirectionString,
                                                                                   bool expectedPositiveFlow,
                                                                                   bool expectedNegativeFlow,
-                                                                                  bool expectedLogMessagge)
+                                                                                  bool expectedLogMessage)
         {
             // Setup
             const string randomString = "randomString";
@@ -137,14 +143,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                                                                     random.NextDouble(), random.NextDouble(), flowDirectionString, random.NextDouble(),
                                                                     randomString, randomString, randomString, random.NextDouble(),
                                                                     random.NextDouble(), random.NextDouble(), random.NextDouble());
-
-            var generator = new SewerOrificeGenerator();
+            
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var generator = new SewerOrificeGenerator(logHandler);
 
             // Call
             ISewerFeature orificeSewerFeature = null;
-            if (expectedLogMessagge)
+            if (expectedLogMessage)
             {
-                TestHelper.AssertAtLeastOneLogMessagesContains(()=> orificeSewerFeature = generator.Generate(gwswElement), string.Format(GWSW.Properties.Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, flowDirectionString));
+                orificeSewerFeature = generator.Generate(gwswElement);
+                if (string.IsNullOrWhiteSpace(flowDirectionString))
+                    logHandler.Received().ReportWarningFormat(Properties.Resources.GwswElementExtensions_GetValueFromDescription_The_description_is_not_set__using_default);
+                else
+                    logHandler.Received().ReportWarningFormat(Properties.Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, flowDirectionString);
             }
             else
             {

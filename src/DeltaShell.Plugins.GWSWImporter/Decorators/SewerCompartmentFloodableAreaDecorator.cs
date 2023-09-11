@@ -24,11 +24,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             }
             
             SetFloodableArea(compartment, element);
-            
+
             return aCompartment;
         }
         
-        private static void SetFloodableArea(ICompartment compartment, GwswElement gwswElement)
+        private void SetFloodableArea(ICompartment compartment, GwswElement gwswElement)
         {
             double defaultValue = 0;
             if (compartment.CompartmentStorageType == CompartmentStorageType.Reservoir)
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             
             var logMessage = $"Missing floodable area value for '{compartment.Name}', using default value: {defaultValue}";
             
-            double floodableArea = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.FloodableArea, defaultValue, logMessage);
+            double floodableArea = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.FloodableArea, LogHandler, defaultValue, logMessage);
             
             compartment.FloodableArea = floodableArea;
         }

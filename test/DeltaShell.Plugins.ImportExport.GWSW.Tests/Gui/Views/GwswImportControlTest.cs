@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         public void GivenImporter_WithGwswAttributesDefinition_OnConfigureImporter_SetsEmptyList_To_Importer_FilesToImport_IfNoGwswFeatureFilesExist()
         {
             var importer = new GwswFileImporter(new DefinitionsProvider());
-            importer.GwswAttributesDefinition.Add(new GwswAttributeType());
+            importer.GwswAttributesDefinition.Add(new GwswAttributeType(importer.LogHandler));
 
             var testfile = "TestFile";
             importer.FilesToImport.Add(testfile);
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         public void GivenImporter_WithGwswAttributesDefinition_OnConfigureImporter_SetsSelectedFiles_Or_EmptyList_To_Importer_FilesToImport(bool selectedFiles)
         {
             var importer = new GwswFileImporter(new DefinitionsProvider());
-            importer.GwswAttributesDefinition.Add(new GwswAttributeType());
+            importer.GwswAttributesDefinition.Add(new GwswAttributeType(importer.LogHandler));
 
             var testfile = "TestFile";
             importer.FilesToImport.Add(testfile);

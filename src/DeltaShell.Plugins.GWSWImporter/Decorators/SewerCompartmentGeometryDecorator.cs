@@ -29,15 +29,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             return aCompartment;
         }
         
-        private static void SetGeometry(ICompartment compartment, GwswElement gwswElement)
+        private void SetGeometry(ICompartment compartment, GwswElement gwswElement)
         {
             double defaultX = 0;
             string logMessageX = $"Missing xCoordinate value for compartment '{compartment.Name}', using default value: {defaultX}";
-            double xCoordinate = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.XCoordinate, defaultX, logMessageX);
+            double xCoordinate = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.XCoordinate, LogHandler, defaultX, logMessageX);
             
             double defaultY = 0;
             string logMessageY = $"Missing yCoordinate value for compartment '{compartment.Name}', using default value: {defaultY}";
-            double yCoordinate = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.YCoordinate, defaultY, logMessageY);
+            double yCoordinate = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.YCoordinate, LogHandler, defaultY, logMessageY);
             
             compartment.Geometry = new Point(xCoordinate, yCoordinate);
         }

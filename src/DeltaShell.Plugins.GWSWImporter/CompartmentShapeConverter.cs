@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro;
-using log4net;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -9,14 +9,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     /// </summary>
     public static class CompartmentShapeConverter
     {
-        private static ILog Log = LogManager.GetLogger(typeof(CompartmentShapeConverter));
-
         /// <summary>
         /// Converts a string to a <see cref="CompartmentShape"/>.
         /// </summary>
         /// <param name="compartmentShapeString">The string for a compartment shape.</param>
+        /// <param name="logHandler">Do not log to the static logger but to this handler to report all warnings in 1 report.</param>
         /// <returns>The corresponding <see cref="CompartmentShape"/></returns>
-        public static CompartmentShape ConvertStringToCompartmentShape(string compartmentShapeString)
+        public static CompartmentShape ConvertStringToCompartmentShape(string compartmentShapeString, ILogHandler logHandler)
         {
             switch (compartmentShapeString?.ToLower())
             {
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 case "unknown":
                     return CompartmentShape.Unknown;
                 default:
-                    Log.WarnFormat(GWSW.Properties.Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, compartmentShapeString);
+                    logHandler?.ReportWarningFormat(GWSW.Properties.Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, compartmentShapeString);
                     return CompartmentShape.Unknown;
             }
         }

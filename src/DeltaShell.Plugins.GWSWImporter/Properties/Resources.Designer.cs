@@ -81,6 +81,16 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The description is not set, using default.
+        /// </summary>
+        public static string GwswElementExtensions_GetValueFromDescription_The_description_is_not_set__using_default {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_GetValueFromDescription_The_description_is_not_set__using_d" +
+                        "efault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File {0}, line {1}, element {2}. It was not possible to parse attribute {3} with value {4} from type {5} to type {6}..
         /// </summary>
         public static string GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__ {
@@ -258,6 +268,26 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
             get {
                 return ResourceManager.GetString("GwswImportDialogViewModel_AddFeatureFile_Feature_file__0__added_to_the_list_corre" +
                         "ctly__Path___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot find NwrwDryWeatherFlowDefinition in RR model by name: {0}.
+        /// </summary>
+        public static string NwrwDischargeData_CalculateLateralFlow_Cannot_find_NwrwDryWeatherFlowDefinition_in_RR_model_by_name___0 {
+            get {
+                return ResourceManager.GetString("NwrwDischargeData_CalculateLateralFlow_Cannot_find_NwrwDryWeatherFlowDefinition_i" +
+                        "n_RR_model_by_name___0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In CalculateLateralFlow parameter nwrwDryWeatherFlowDefinitionByName is null.
+        /// </summary>
+        public static string NwrwDischargeData_CalculateLateralFlow_In_CalculateLateralFlow_parameter_nwrwDryWeatherFlowDefinitionByName_is_null {
+            get {
+                return ResourceManager.GetString("NwrwDischargeData_CalculateLateralFlow_In_CalculateLateralFlow_parameter_nwrwDryW" +
+                        "eatherFlowDefinitionByName_is_null", resourceCulture);
             }
         }
         

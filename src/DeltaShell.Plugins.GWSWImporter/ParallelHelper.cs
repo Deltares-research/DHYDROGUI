@@ -1,23 +1,17 @@
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DelftTools.Shell.Core;
-using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.Utils;
-using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     internal static class ParallelHelper
     {
-        private static ILog Log = LogManager.GetLogger(typeof(ParallelHelper));
-
-        public static void RunActionInParallel<T>(IFileImporter importer, T[] elementUsedInAction, Action<T> action, string importTo)
+        public static void RunActionInParallel<T>(GwswFileImporter importer, T[] elementUsedInAction, Action<T> action, string importTo)
         {
             var nrOfElements = elementUsedInAction.Length;
-            var listOfErrors = new ConcurrentQueue<string>();
             var current = 0;
             
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -39,7 +33,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 }
                 catch (Exception exception)
                 {
-                    listOfErrors.Enqueue(exception.Message + Environment.NewLine);
+                    importer.LogHandler?.ReportError(exception.Message);
                 }
                 finally
                 {
@@ -48,13 +42,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }));
             EventingHelper.DoWithoutEvents(() =>
             {
-                ProcessAction(importer, importTo, t, ref current, nrOfElements, cts, listOfErrors);                
+                ProcessAction(importer, importTo, t, ref current, nrOfElements, cts);                
                 
             });
         }
-        
-
-        private static void ProcessAction(IFileImporter importer, string importTo, Task actionTaskToBeExecuted, ref int current, int nrOfElements, CancellationTokenSource cts, ConcurrentQueue<string> listOfErrors)
+        private static void ProcessAction(IFileImporter importer, string importTo, Task actionTaskToBeExecuted, ref int current, int nrOfElements, CancellationTokenSource cts)
         {
             var stepSize = nrOfElements < 500 ?
                                nrOfElements / 20 :
@@ -77,10 +69,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     cts.Cancel();
             }
 
-            ReportProgress(importer, importTo, nrOfElements, nrOfElements); 
-
-            if (listOfErrors.Any())
-                Log.ErrorFormat($"While {importTo} we encountered the following errors: {Environment.NewLine}{String.Join(Environment.NewLine, listOfErrors)}");
+            ReportProgress(importer, importTo, nrOfElements, nrOfElements);
         }
 
         private static void ReportProgress(IFileImporter importer, string importTo, int current, int nrOfElements)

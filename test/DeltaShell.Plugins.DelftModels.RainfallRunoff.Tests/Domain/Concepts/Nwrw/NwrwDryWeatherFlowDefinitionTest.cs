@@ -22,7 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             using (var model = new RainfallRunoffModel())
             {
                 // Setup
-                var dryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition()
+                ILogHandler logHandler = Substitute.For<ILogHandler>();
+                var dryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition(logHandler)
                 {
                     Name = NwrwDryWeatherFlowDefinition.DefaultDwaId,
                     DayNumber = 123,
@@ -54,7 +55,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         [Test]
         public void Constructor_NameIsNotEmptyUponInitialization()
         {
-            var definition = new NwrwDryWeatherFlowDefinition();
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var definition = new NwrwDryWeatherFlowDefinition(logHandler);
 
             Assert.That(string.IsNullOrWhiteSpace(definition.Name), Is.False);
         }
@@ -71,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             var rrModel = new RainfallRunoffModel();
 
             // Call
-            var definition = new NwrwDryWeatherFlowDefinition();
+            var definition = new NwrwDryWeatherFlowDefinition(logHandler);
 
             // Assert
             Assert.That(definition.HourlyPercentageDailyVolume, Is.EqualTo(hourlyPercentageDailyVolume));
@@ -82,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         {
             if (!string.IsNullOrWhiteSpace(NwrwDryWeatherFlowDefinition.DefaultDwaId))
             {
-                TypeUtils.SetPrivatePropertyValue(new NwrwDryWeatherFlowDefinition(), "DefaultDwaId",string.Empty);
+                TypeUtils.SetPrivatePropertyValue(new NwrwDryWeatherFlowDefinition(null), "DefaultDwaId",string.Empty);
             }
         }
 

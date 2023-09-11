@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 {
@@ -62,7 +65,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, materialString, string.Empty)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(profileGwswElement, ProfileId, expectedDiameter, materialString);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(logHandler,profileGwswElement, ProfileId, expectedDiameter, materialString);
         }
 
         [Test]
@@ -76,9 +80,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty)
                 }
             };
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(profileGwswElement, ProfileId, 0.160d, unknownMaterialValue),
-                "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(logHandler, profileGwswElement, ProfileId, 0.160d, unknownMaterialValue);
+            logHandler.Received().ReportWarningFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.",ProfileId,"width");
         }
 
         #endregion
@@ -99,7 +103,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, concreteMaterialValue, string.Empty)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<RectangleCrossSectionShapeGenerator, CrossSectionStandardShapeRectangle>(profileGwswElement, ProfileId, 2.0, 1.2, concreteMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<RectangleCrossSectionShapeGenerator, CrossSectionStandardShapeRectangle>(logHandler, profileGwswElement, ProfileId, 2.0, 1.2, concreteMaterialValue);
         }
 
         [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileWidth)]
@@ -116,9 +121,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(key, "2000", string.Empty, TypeDouble)
                 }
             };
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<RectangleCrossSectionShapeGenerator, CrossSectionStandardShapeRectangle>(profileGwswElement, ProfileId, 1.0, 1.0, unknownMaterialValue),
-                "Sewer profile 'PRO1' is missing its width and/or height. Default profile property values are used for this profile.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<RectangleCrossSectionShapeGenerator, CrossSectionStandardShapeRectangle>(logHandler, profileGwswElement, ProfileId, 1.0, 1.0, unknownMaterialValue);
+            logHandler.Received().ReportWarningFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", ProfileId, "width and/or height");
         }
 
         #endregion
@@ -138,7 +143,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, concreteMaterialValue, string.Empty)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, ProfileId, 0.25, 0.375, concreteMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(logHandler, profileGwswElement, ProfileId, 0.25, 0.375, concreteMaterialValue);
         }
 
         [Test]
@@ -152,9 +158,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty)
                 }
             };
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, ProfileId, 2.0, 3.0, unknownMaterialValue),
-                "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(logHandler, profileGwswElement, ProfileId, 2.0, 3.0, unknownMaterialValue);
+            logHandler.Received().ReportWarningFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", ProfileId, "width");
         }
 
         [Test]
@@ -170,7 +176,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "375", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, ProfileId, 0.25, 0.375, unknownMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(logHandler, profileGwswElement, ProfileId, 0.25, 0.375, unknownMaterialValue);
         }
 
         [Test]
@@ -187,9 +194,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var generator = new EggCrossSectionShapeGenerator();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => generator.Generate(profileGwswElement), 
-                "The width and height of sewer profile 'PRO1' are not in the right proportion (2:3). Width is now 250 mm and height is now 375 mm.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var generator = new EggCrossSectionShapeGenerator(logHandler);
+            generator.Generate(profileGwswElement);
+            logHandler.Received().ReportWarningFormat("The width and height of sewer profile '{0}' are not in the right proportion {1}. Width is now {2} mm and height is now {3} mm.", ProfileId, "(2:3)", 250d, 375d);
         }
 
         [Test]
@@ -205,7 +213,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "375", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, ProfileId, 0.25, 0.375, unknownMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(logHandler, profileGwswElement, ProfileId, 0.25, 0.375, unknownMaterialValue);
         }
 
         #endregion
@@ -225,7 +234,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, concreteMaterialValue, string.Empty)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, ProfileId, 2.0, 1.268, concreteMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(logHandler, profileGwswElement, ProfileId, 2.0, 1.268, concreteMaterialValue);
         }
 
         [Test]
@@ -241,7 +251,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "1268", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, ProfileId, 2.0, 1.268, unknownMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(logHandler, profileGwswElement, ProfileId, 2.0, 1.268, unknownMaterialValue);
         }
 
         [Test]
@@ -255,9 +266,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty)
                 }
             };
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, ProfileId, 1.0, 0.634, unknownMaterialValue),
-                "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(logHandler, profileGwswElement, ProfileId, 1.0, 0.634, unknownMaterialValue);
+            logHandler.Received().ReportWarningFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", ProfileId, "width");
         }
 
         [Test]
@@ -274,9 +285,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var cunetteGenerator = new CunetteCrossSectionShapeGenerator();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => cunetteGenerator.Generate(profileGwswElement),
-                "The width and height of sewer profile 'PRO1' are not in the right proportion (1:0.634). Width is now 250 mm and height is now 158.5 mm.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+
+            var cunetteGenerator = new CunetteCrossSectionShapeGenerator(logHandler);
+            
+            cunetteGenerator.Generate(profileGwswElement);
+            logHandler.Received().ReportWarningFormat("The width and height of sewer profile '{0}' are not in the right proportion {1}. Width is now {2} mm and height is now {3} mm.", ProfileId, "(1:0.634)", 250d, 158.5);
         }
 
         [Test]
@@ -292,7 +306,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "400", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, ProfileId, 0.25, 0.1585, unknownMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(logHandler, profileGwswElement, ProfileId, 0.25, 0.1585, unknownMaterialValue);
         }
 
         #endregion
@@ -313,8 +328,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, concreteMaterialValue, string.Empty)
                 }
             };
-
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<ArchCrossSectionShapeGenerator, CrossSectionStandardShapeArch>(profileGwswElement, ProfileId, 1.2, 2.5, concreteMaterialValue, 2.5);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<ArchCrossSectionShapeGenerator, CrossSectionStandardShapeArch>(logHandler, profileGwswElement, ProfileId, 1.2, 2.5, concreteMaterialValue, 2.5);
         }
 
         [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileWidth)]
@@ -330,9 +345,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(key, "1000", string.Empty, TypeDouble)
                 }
             };
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<ArchCrossSectionShapeGenerator, CrossSectionStandardShapeArch>(profileGwswElement, ProfileId, 1.0, 2.0, unknownMaterialValue, 1.0),
-                "Sewer profile 'PRO1' is missing its width and/or height. Default profile property values are used for this profile.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<ArchCrossSectionShapeGenerator, CrossSectionStandardShapeArch>(logHandler, profileGwswElement, ProfileId, 1.0, 2.0, unknownMaterialValue, 1.0);
+            logHandler.Received().ReportWarningFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", ProfileId, "width and/or height");
         }
 
         #endregion
@@ -356,7 +371,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, concreteMaterialValue, string.Empty)
                 }
             };
-            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 1.0, 2.0, 2.0, concreteMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(logHandler, profileGwswElement, ProfileId, 1.0, 2.0, 2.0, concreteMaterialValue);
         }
 
         [TestCase(SewerProfileMapping.PropertyKeys.Slope1)]
@@ -374,7 +390,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(slopeKey, "2", string.Empty, TypeDouble)
                 }
             };
-            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 1.0, 2.0, 2.0, unknownMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(logHandler, profileGwswElement, ProfileId, 1.0, 2.0, 2.0, unknownMaterialValue);
 
         }
 
@@ -392,9 +409,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.Slope2, "1,5", string.Empty, TypeDouble)
                 }
             };
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 10.0, 2.0, 20.0, unknownMaterialValue),
-                "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(logHandler, profileGwswElement, ProfileId, 10.0, 2.0, 20.0, unknownMaterialValue);
+            logHandler.Received().ReportWarningFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", ProfileId, "width, height and/or slope");
         }
 
         [Test]
@@ -411,9 +428,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.Slope2, "1,5", string.Empty, TypeDouble)
                 }
             };
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 10.0, 2.0, 20.0, unknownMaterialValue),
-                "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(logHandler, profileGwswElement, ProfileId, 10.0, 2.0, 20.0, unknownMaterialValue);
+            logHandler.Received().ReportWarningFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", ProfileId, "width, height and/or slope");
         }
 
         [Test]
@@ -429,9 +446,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "1000", string.Empty, TypeDouble)
                 }
             };
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 10.0, 2.0, 20.0, unknownMaterialValue),
-                "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(logHandler, profileGwswElement, ProfileId, 10.0, 2.0, 20.0, unknownMaterialValue);
+            logHandler.Received().ReportWarningFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.",ProfileId,"width, height and/or slope");
         }
 
         #endregion
@@ -450,7 +467,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "3000", "400", TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<DefaultCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(profileGwswElement, ProfileId, 0.4, concreteMaterialValue);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<DefaultCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(logHandler, profileGwswElement, ProfileId, 0.4, concreteMaterialValue);
         }
 
         [Test]
@@ -464,50 +482,52 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty)
                 }
             };
-            var defaultGenerator = new DefaultCrossSectionShapeGenerator();
-            var expectedMessage =
-                "Shape was not defined for sewer profile 'PRO1' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => defaultGenerator.Generate(profileGwswElement), expectedMessage);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var defaultGenerator = new DefaultCrossSectionShapeGenerator(logHandler);
+            defaultGenerator.Generate(profileGwswElement);
+            logHandler.Received().ReportWarningFormat(Properties.Resources.SewerFeatureFactory_CreateSewerProfile_Shape_was_not_defined_for_sewer_profile___0___in__Profiel_csv___A_default_round_profile_with_diameter_of_400_mm_is_used_for_this_profile_, ProfileId);
         }
 
         #endregion
 
         #region Test helpers
 
-        private static void GenerateCrossSectionDefinitionAndCheckForNull<T>(GwswElement gwswElement) where T : ASewerCrossSectionShapeGenerator, new()
+        private static void GenerateCrossSectionDefinitionAndCheckForNull<T>(GwswElement gwswElement) where T : ASewerCrossSectionShapeGenerator
         {
-            var generator = new T();
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var generator = (T)Activator.CreateInstance(typeof(T), logHandler);
             var network = new HydroNetwork();
             generator.Generate(gwswElement);
             Assert.IsEmpty(network.SharedCrossSectionDefinitions);
         }
 
-        private void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, string expectedName, double expectedWidth, string expectedMaterial)
-            where TGenerator : ASewerCrossSectionShapeGenerator, new()
+        private void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(ILogHandler logHandler, GwswElement gwswElement, string expectedName, double expectedWidth, string expectedMaterial)
+            where TGenerator : ASewerCrossSectionShapeGenerator
             where TShape : CrossSectionStandardShapeBase, new()
         {
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedName, expectedWidth, double.NaN, double.NaN, double.NaN, double.NaN, expectedMaterial);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(logHandler, gwswElement, expectedName, expectedWidth, double.NaN, double.NaN, double.NaN, double.NaN, expectedMaterial);
         }
 
-        private void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, string expectedName, double expectedWidth, double expectedHeight, string expectedMaterial, double expectedArcHeight = double.NaN)
-            where TGenerator : ASewerCrossSectionShapeGenerator, new()
+        private void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(ILogHandler logHandler, GwswElement gwswElement, string expectedName, double expectedWidth, double expectedHeight, string expectedMaterial, double expectedArcHeight = double.NaN)
+            where TGenerator : ASewerCrossSectionShapeGenerator
             where TShape : CrossSectionStandardShapeBase, new()
         {
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedName, expectedWidth, expectedHeight, expectedArcHeight, double.NaN, double.NaN, expectedMaterial);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(logHandler, gwswElement, expectedName, expectedWidth, expectedHeight, expectedArcHeight, double.NaN, double.NaN, expectedMaterial);
         }
 
-        private void GenerateTrapezoidCrossSectionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, string expectedName, double expectedBottomWidth, double expectedSlope, double expectedMaxFlowWidth, string expectedMaterial)
-            where TGenerator : ASewerCrossSectionShapeGenerator, new()
+        private void GenerateTrapezoidCrossSectionAndCheckShapeProperties<TGenerator, TShape>(ILogHandler logHandler, GwswElement gwswElement, string expectedName, double expectedBottomWidth, double expectedSlope, double expectedMaxFlowWidth, string expectedMaterial)
+            where TGenerator : ASewerCrossSectionShapeGenerator
             where TShape : CrossSectionStandardShapeBase, new()
         {
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedName, expectedBottomWidth, double.NaN, double.NaN, expectedSlope, expectedMaxFlowWidth, expectedMaterial);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(logHandler, gwswElement, expectedName, expectedBottomWidth, double.NaN, double.NaN, expectedSlope, expectedMaxFlowWidth, expectedMaterial);
         }
 
-        private static void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, string expectedName, double expectedWidth, double expectedHeight, double expectedArcHeight, double expectedSlope, double expectedMaxFlowWidth, string expectedMaterial)
-            where TGenerator : ASewerCrossSectionShapeGenerator, new()
+        private static void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(ILogHandler logHandler, GwswElement gwswElement, string expectedName, double expectedWidth, double expectedHeight, double expectedArcHeight, double expectedSlope, double expectedMaxFlowWidth, string expectedMaterial)
+            where TGenerator : ASewerCrossSectionShapeGenerator
             where TShape : CrossSectionStandardShapeBase, new()
         {
-            var createdShape = new TGenerator().Generate(gwswElement) as TShape;
+
+            var createdShape = ((TGenerator)Activator.CreateInstance(typeof(TGenerator), logHandler)).Generate(gwswElement) as TShape;
             Assert.IsNotNull(createdShape);
 
             Assert.That(createdShape.Name, Is.EqualTo(expectedName));

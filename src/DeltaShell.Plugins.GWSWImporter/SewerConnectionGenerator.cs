@@ -1,17 +1,21 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
+using DHYDRO.Common.Logging;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
-    public class SewerConnectionGenerator : IGwswFeatureGenerator<ISewerFeature>
+    public class SewerConnectionGenerator : ASewerGenerator, IGwswFeatureGenerator<ISewerFeature>
     {
+        public SewerConnectionGenerator(ILogHandler logHandler) : base(logHandler)
+        {
+        }
         public virtual ISewerFeature Generate(GwswElement gwswElement)
         {
-            if (!gwswElement.IsValidGwswSewerConnection()) return null;
+            if (!gwswElement.IsValidGwswSewerConnection(logHandler)) return null;
             return CreateSewerConnection<SewerConnection>(gwswElement);
         }
 
-        protected  T CreateSewerConnection<T>(GwswElement gwswElement) where T : SewerConnection, new()
+        protected T CreateSewerConnection<T>(GwswElement gwswElement) where T : SewerConnection, new()
         {
             if (gwswElement == null) return null;
 
@@ -23,11 +27,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return connection;
         }
 
-        private static T CreateNewConnection<T>(GwswElement gwswElement) where T : SewerConnection, new()
+        private T CreateNewConnection<T>(GwswElement gwswElement) where T : SewerConnection, new()
         {
-            var sewerConnectionIdAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId);
+            var sewerConnectionIdAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId, logHandler);
             var connectionName = string.Empty;
-            if (sewerConnectionIdAttribute.IsValidAttribute())
+            if (sewerConnectionIdAttribute.IsValidAttribute(logHandler))
             {
                 connectionName = sewerConnectionIdAttribute.ValueAsString;
             }
@@ -37,32 +41,32 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         protected virtual void SetSewerConnectionAttributes(ISewerConnection sewerConnection, GwswElement gwswElement)
         {
-            if(!gwswElement.IsValidGwswSewerConnection()) return;
+            if(!gwswElement.IsValidGwswSewerConnection(logHandler)) return;
             
-            sewerConnection.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            sewerConnection.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
+            sewerConnection.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, logHandler, logMessage:$"Cannot find and load source compartment name for sewer connection: {sewerConnection.Name}");
+            sewerConnection.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, logHandler, logMessage: $"Cannot find and load target compartment name for sewer connection: {sewerConnection.Name}");
 
             double auxDouble;
 
-            var levelStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelStart);
-            if( levelStart.TryGetValueAsDouble(out auxDouble))
-                sewerConnection.LevelSource = auxDouble;
+            var levelStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelStart, logHandler);
+            if( levelStart.TryGetValueAsDouble(logHandler, out auxDouble))
+                sewerConnection.LevelSource = auxDouble;    
 
-            var levelEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelEnd);
-            if( levelEnd.TryGetValueAsDouble(out auxDouble))
+            var levelEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelEnd, logHandler);
+            if( levelEnd.TryGetValueAsDouble(logHandler, out auxDouble))
                 sewerConnection.LevelTarget = auxDouble;
 
-            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);
-            if (length.TryGetValueAsDouble(out auxDouble))
+            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length, logHandler);
+            if (length.TryGetValueAsDouble(logHandler, out auxDouble))
             {
                 sewerConnection.IsLengthCustom = true;
                 sewerConnection.Length = auxDouble;
             }
 
-            var waterTypeString = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.WaterType);
+            var waterTypeString = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.WaterType, logHandler);
             if (waterTypeString != null)
             {
-                sewerConnection.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterTypeString);
+                sewerConnection.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterTypeString, logHandler);
             }
         }
 

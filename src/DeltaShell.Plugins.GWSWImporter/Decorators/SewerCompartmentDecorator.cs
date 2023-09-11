@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
 {
@@ -8,6 +9,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
     public abstract class SewerCompartmentDecorator : ACompartment
     {
         private readonly ACompartment compartment;
+
+        public override ILogHandler LogHandler => compartment?.LogHandler;
 
         /// <summary>
         /// Creates a new instance of <see cref="SewerCompartmentDecorator"/>.

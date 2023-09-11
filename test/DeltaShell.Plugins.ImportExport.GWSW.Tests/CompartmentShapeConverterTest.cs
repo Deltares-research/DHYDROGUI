@@ -1,5 +1,7 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -18,7 +20,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         public void GivenCompartmentShapeString_WhenCallingWaterTypeConverter_ThenReturnsCorrectCompartmentShapeType(
             string compartmentShapeString, CompartmentShape expectedCompartmentShape)
         {
-            var actualCompartmentShape = CompartmentShapeConverter.ConvertStringToCompartmentShape(compartmentShapeString);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var actualCompartmentShape = CompartmentShapeConverter.ConvertStringToCompartmentShape(compartmentShapeString, logHandler);
             Assert.That(actualCompartmentShape, Is.EqualTo(expectedCompartmentShape));
         }
 
@@ -28,13 +31,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var invalidCompartmentShapeString = "InvalidCompartmentShape";
             var expectedCompartmentShape = CompartmentShape.Unknown;
             var expectedMessage = $"Shape {invalidCompartmentShapeString} is not a valid shape. Setting the shape to 'unknown'";
-
-            CompartmentShape actualCompartmentShape = CompartmentShapeConverter.ConvertStringToCompartmentShape(invalidCompartmentShapeString);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            CompartmentShape actualCompartmentShape = CompartmentShapeConverter.ConvertStringToCompartmentShape(invalidCompartmentShapeString, logHandler);
 
             Assert.That(actualCompartmentShape, Is.EqualTo(expectedCompartmentShape));
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => actualCompartmentShape = CompartmentShapeConverter.ConvertStringToCompartmentShape(invalidCompartmentShapeString), expectedMessage);
-            
+            logHandler.Received().ReportWarningFormat(GWSW.Properties.Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, invalidCompartmentShapeString);
         }
     }
 }

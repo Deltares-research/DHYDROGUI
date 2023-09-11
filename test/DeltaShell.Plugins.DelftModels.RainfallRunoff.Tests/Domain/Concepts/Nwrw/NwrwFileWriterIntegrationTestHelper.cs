@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nwrw
@@ -13,7 +15,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         {
             const string catchment1Name = "Catchment1";
             var nwrwImportHelper = new NwrwImporterHelper();
-            NwrwData.CreateNewNwrwDataWithCatchment(rrModel, catchment1Name, nwrwImportHelper);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            NwrwData.CreateNewNwrwDataWithCatchment(rrModel, catchment1Name, nwrwImportHelper, logHandler);
             NwrwData nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
                 md.Catchment.Name.Equals(catchment1Name, StringComparison.InvariantCultureIgnoreCase));
             Assert.That(nwrwData, Is.Not.Null);
@@ -24,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             nwrwData.DryWeatherFlows = GenerateSingleDryWeatherFlow();
 
             const string catchment2Name = "Catchment2";
-            NwrwData.CreateNewNwrwDataWithCatchment(rrModel, catchment2Name, nwrwImportHelper);
+            NwrwData.CreateNewNwrwDataWithCatchment(rrModel, catchment2Name, nwrwImportHelper, logHandler);
             NwrwData anotherNwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
                 md.Catchment.Name.Equals(catchment2Name, StringComparison.InvariantCultureIgnoreCase));
             Assert.That(anotherNwrwData, Is.Not.Null);
@@ -104,8 +107,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         public static EventedList<NwrwDefinition> GenerateNwrwDefinitions()
         {
             var nwrwDefinitions = new EventedList<NwrwDefinition>();
-
-            var gvhHelDefinition = new NwrwDefinition()
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var gvhHelDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "GVH_HEL",
                 SurfaceStorage = 0,
@@ -118,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(gvhHelDefinition);
 
-            var gvhVlaDefinition = new NwrwDefinition()
+            var gvhVlaDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "GVH_VLA",
                 SurfaceStorage = 0.5,
@@ -131,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(gvhVlaDefinition);
 
-            var gvhVluDefinition = new NwrwDefinition()
+            var gvhVluDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "GVH_VLU",
                 SurfaceStorage = 1,
@@ -144,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(gvhVluDefinition);
 
-            var ovhHelDefinition = new NwrwDefinition()
+            var ovhHelDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "OVH_HEL",
                 SurfaceStorage = 0,
@@ -157,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(ovhHelDefinition);
 
-            var ovhVlaDefinition = new NwrwDefinition()
+            var ovhVlaDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "OVH_VLA",
                 SurfaceStorage = 0.5,
@@ -170,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(ovhVlaDefinition);
 
-            var ovhVluDefinition = new NwrwDefinition()
+            var ovhVluDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "OVH_VLU",
                 SurfaceStorage = 1,
@@ -183,7 +186,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(ovhVluDefinition);
 
-            var dakHelDefinition = new NwrwDefinition()
+            var dakHelDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "DAK_HEL",
                 SurfaceStorage = 0,
@@ -196,7 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(dakHelDefinition);
 
-            var dakVlaDefinition = new NwrwDefinition()
+            var dakVlaDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "DAK_VLA",
                 SurfaceStorage = 2,
@@ -209,7 +212,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(dakVlaDefinition);
 
-            var dakVluDefinition = new NwrwDefinition()
+            var dakVluDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "dak_VLU",
                 SurfaceStorage = 4,
@@ -222,7 +225,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(dakVluDefinition);
 
-            var onvHelDefinition = new NwrwDefinition()
+            var onvHelDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "ONV_HEL",
                 SurfaceStorage = 2,
@@ -235,7 +238,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(onvHelDefinition);
 
-            var onvVlaDefinition = new NwrwDefinition()
+            var onvVlaDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "ONV_VLA",
                 SurfaceStorage = 4,
@@ -248,7 +251,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             nwrwDefinitions.Add(onvVlaDefinition);
 
-            var onvVluDefinition = new NwrwDefinition()
+            var onvVluDefinition = new NwrwDefinition(logHandler)
             {
                 Name = "ONV_VLU",
                 SurfaceStorage = 6,
@@ -268,8 +271,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         public static IEventedList<NwrwDryWeatherFlowDefinition> GenerateNwrwDryWeatherFlowDefinitions()
         {
             var dryweatherFlowDefinitions = new EventedList<NwrwDryWeatherFlowDefinition>();
-
-            var constantDwfDefinition = new NwrwDryWeatherFlowDefinition()
+            
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            
+            var constantDwfDefinition = new NwrwDryWeatherFlowDefinition(logHandler)
             {
                 Name = "Constant DWF definition",
                 DailyVolumeConstant = 240,
@@ -281,7 +286,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             };
             dryweatherFlowDefinitions.Add(constantDwfDefinition);
 
-            var dailyDwfDefinition = new NwrwDryWeatherFlowDefinition()
+            var dailyDwfDefinition = new NwrwDryWeatherFlowDefinition(logHandler)
             {
                 Name = "Daily DWF definition",
                 DailyVolumeConstant = 2952,

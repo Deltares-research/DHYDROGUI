@@ -2,11 +2,17 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class TrapezoidCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {
+        public TrapezoidCrossSectionShapeGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
+        }
+        
         public override ISewerFeature Generate(GwswElement gwswElement)
         {
             var trapezoidShape = CreateTrapezoidShapeFromGwsw(gwswElement);
@@ -25,10 +31,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             double slope1;
             double slope2;
 
-            var slope1Attribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.Slope1);
-            var slope2Attribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.Slope2);
-            var slope1PresentAndWellFormatted = slope1Attribute.TryGetValueAsDouble(out slope1);
-            var slope2PresentAndWellFormatted = slope2Attribute.TryGetValueAsDouble(out slope2);
+            var slope1Attribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.Slope1, logHandler);
+            var slope2Attribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.Slope2, logHandler);
+            var slope1PresentAndWellFormatted = slope1Attribute.TryGetValueAsDouble(logHandler, out slope1);
+            var slope2PresentAndWellFormatted = slope2Attribute.TryGetValueAsDouble(logHandler, out slope2);
             if (slope1PresentAndWellFormatted && !slope2PresentAndWellFormatted)
             {
                 slope = slope1;
@@ -47,9 +53,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 return GetDefaultTrapezoid(shapeName);
             }
 
-            var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
-            var heightAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileHeight);
-            if (widthAttribute.TryGetValueAsDouble(out width) && heightAttribute.TryGetValueAsDouble(out height))
+            var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth, logHandler);
+            var heightAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileHeight, logHandler);
+            if (widthAttribute.TryGetValueAsDouble(logHandler, out width) && heightAttribute.TryGetValueAsDouble(logHandler, out height))
             {
                 var trapezoidWidth = width / 1000;
                 return new CrossSectionStandardShapeTrapezium
@@ -73,5 +79,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             defaultTrapezoid.MaterialName = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
             return defaultTrapezoid;
         }
+
+        
     }
 }

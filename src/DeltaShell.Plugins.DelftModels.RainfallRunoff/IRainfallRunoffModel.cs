@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// <summary>
         /// Data defined on the basin catchments
         /// </summary>
-        IEnumerable<CatchmentModelData> ModelData { get; }
+        IEventedList<CatchmentModelData> ModelData { get; }
 
         /// <summary>
         /// Retrieve all ModelData defined on the basin catchments and its child catchments

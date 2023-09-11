@@ -9,7 +9,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using log4net;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -18,7 +18,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     /// </summary>
     public class DefinitionsProvider : IDefinitionsProvider
     {
-        private readonly ILog log = LogManager.GetLogger(typeof(DefinitionsProvider));
+        public DefinitionsProvider():this(new LogHandler("Definitions Provider"))
+        {
+        }
+        public DefinitionsProvider(ILogHandler logHandler)
+        {
+            LogHandler = logHandler;
+        }
 
         private static readonly CsvMappingData csvMappingData = new CsvMappingData
         {
@@ -79,11 +85,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         
         public IEventedList<GwswAttributeType> GetDefinitions(string gwswDirectory)
         {
-            string definitionVersionName = DefinitionsVersionProvider.GetDefinitionVersionName(gwswDirectory);
+            var definitionsVersionProvider = new DefinitionsVersionProvider(LogHandler);
+
+            string definitionVersionName = definitionsVersionProvider.GetDefinitionVersionName(gwswDirectory);
             var definitionFilePath = $"{definitionVersionName}.csv";
 
             return LoadDefinitions(definitionFilePath);
         }
+
+        public ILogHandler LogHandler { get; set; }
 
         private IEventedList<GwswAttributeType> LoadDefinitions(string gwswFileDefinitionPath)
         {
@@ -94,7 +104,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 if (stream == null)
                 {
-                    log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_,
+                    LogHandler?.ReportErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_,
                         resourceName);
                     return null;
                 }
@@ -105,8 +115,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     importedTable = ImportFileAsDataTable(streamReader, mappingData);
                     if (importedTable == null || importedTable.Rows.Count == 0)
                     {
-                        log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_,
-                            resourceName);
+                        LogHandler?.ReportErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_,
+                                                     resourceName);
                         return null;
                     }
                 }
@@ -128,7 +138,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 var attributeType = row.ItemArray[6].ToString();
                 var attributeDefaultValue = row.ItemArray[9].ToString();
 
-                var attribute = new GwswAttributeType
+                var attribute = new GwswAttributeType(LogHandler)
                 {
                     Name = attributeName,
                     ElementName = attributeElement,
@@ -136,10 +146,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     FileName = attributeFile,
                     Key = attributeCodeInt,
                     LocalKey = attributeCode,
-                    AttributeType = GwswAttributeType.TryGetParsedValueType(attributeName, attributeType,
-                        attributeDefinition, attributeFile, importedTable.Rows.IndexOf(row)),
                     DefaultValue = attributeDefaultValue
                 };
+                attribute.AttributeType = attribute.TryGetParsedValueType(attributeName, attributeType, attributeDefinition, attributeFile, importedTable.Rows.IndexOf(row));
 
                 attributeCollection.Add(attribute);
             }
@@ -150,14 +159,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 var mismatchedElementNames = gr.Select(el => el.ElementName).Distinct().ToList();
                 if (mismatchedElementNames.Count > 1)
                 {
-                    log.ErrorFormat(
+                    LogHandler?.ReportErrorFormat(
                         Resources
                             .GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__,
                         gr.Key, string.Concat(mismatchedElementNames));
                 }
             });
 
-            log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_,
+            LogHandler?.ReportInfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_,
                 attributeCollection.Count);
 
             return attributeCollection;
@@ -167,7 +176,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             if (mappingData == null)
             {
-                log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__,
+                LogHandler?.ReportErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__,
                     streamReader);
                 return null;
             }
@@ -181,7 +190,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
             catch (Exception e)
             {
-                log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_,
+                LogHandler?.ReportErrorFormat(Resources.GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_,
                     streamReader, e.Message);
             }
 

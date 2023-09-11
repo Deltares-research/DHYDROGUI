@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
                 return aCompartment;
             }
             
-            compartment.ParentManholeName = element.GetAttributeValueFromList<string>(ManholeMapping.PropertyKeys.ManholeId);
+            compartment.ParentManholeName = element.GetAttributeValueFromList<string>(ManholeMapping.PropertyKeys.ManholeId, LogHandler);
             
             return aCompartment;
         }

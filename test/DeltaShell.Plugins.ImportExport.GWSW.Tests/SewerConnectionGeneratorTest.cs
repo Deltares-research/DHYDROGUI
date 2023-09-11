@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -14,18 +16,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         [Test]
         public void SewerFeatureCannotBeCreatedIfTargetAndSourceAreNotGivenAndLogMessageIsGiven()
         {
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
             var nodeGwswElement = new GwswElement { ElementTypeName = SewerFeatureType.Connection.ToString() };
 
-            var expectedMessage =
-                "Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => CreateSewerFeature<SewerConnection>(nodeGwswElement), expectedMessage);
-            Assert.IsNull(CreateSewerFeature<SewerConnection>(nodeGwswElement));
+            var sewerConnection = CreateSewerFeature<SewerConnection>(nodeGwswElement, logHandler);
+            logHandler.Received(1).ReportErrorFormat(Properties.Resources.SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields); ;
+            Assert.IsNull(sewerConnection);
         }
 
         [Test]
         public void SewerFeatureCanNotBeCreatedIfTargetIsNotGivenAndLogMessageIsGiven()
         {
             var sourceNode = "node001";
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
             var connectionGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
@@ -35,16 +38,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var expectedMessage =
-                "Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => CreateSewerFeature<SewerConnection>(connectionGwswElement), expectedMessage);
-            Assert.IsNull(CreateSewerFeature<SewerConnection>(connectionGwswElement));
+            var sewerConnection = CreateSewerFeature<SewerConnection>(connectionGwswElement, logHandler);
+            logHandler.Received(1).ReportErrorFormat(Properties.Resources.SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields); ;
+            Assert.IsNull(sewerConnection);
         }
 
         [Test]
         public void SewerFeatureCanNotBeCreatedIfSourceIsNotGivenAndLogMessageIsGiven()
         {
             var targetNode = "node002";
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+
             var connectionGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
@@ -54,10 +58,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var expectedMessage =
-                "Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => CreateSewerFeature<SewerConnection>(connectionGwswElement), expectedMessage);
-            Assert.IsNull(CreateSewerFeature<SewerConnection>(connectionGwswElement));
+            var sewerConnection = CreateSewerFeature<SewerConnection>(connectionGwswElement, logHandler);
+            logHandler.Received(1).ReportErrorFormat(Properties.Resources.SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields); ;
+            Assert.IsNull(sewerConnection);
         }
 
         [Test]

@@ -48,6 +48,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                             return null;
                         }
 
+                        importer.ActivityRunner = Application.ActivityRunner;
                         var fileImportActivity = new FileImportActivity(importer, project);
                         fileImportActivity.OnImportFinished += (activity, importedObject, fileImporter) =>
                         {

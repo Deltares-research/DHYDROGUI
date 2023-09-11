@@ -28,12 +28,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             return aCompartment;
         }
         
-        private static void SetSurfaceLevel(ICompartment compartment, GwswElement gwswElement)
+        private void SetSurfaceLevel(ICompartment compartment, GwswElement gwswElement)
         {
             double defaultSurfaceLevel = compartment.SurfaceLevel;
             string logMessage = $"Missing surface level value for '{compartment.Name}', using default value: {defaultSurfaceLevel}";
             
-            double surfaceLevel = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.SurfaceLevel, defaultSurfaceLevel, logMessage);
+            double surfaceLevel = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.SurfaceLevel, LogHandler, defaultSurfaceLevel, logMessage);
             
             compartment.SurfaceLevel = surfaceLevel;
         }

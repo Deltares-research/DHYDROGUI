@@ -2,11 +2,16 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     class InvertedEggCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {
+        public InvertedEggCrossSectionShapeGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
+        }
         public override ISewerFeature Generate(GwswElement gwswElement)
         {
             var invertedEggShape = CreateInvertedEggShapeFromGwsw(gwswElement);
@@ -18,8 +23,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var shapeName = GetCrossSectionShapeName(gwswElement);
 
             double width;
-            var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
-            if (widthAttribute.TryGetValueAsDouble(out width))
+            var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth, logHandler);
+            if (widthAttribute.TryGetValueAsDouble(logHandler, out width))
             {
                 var csInvertedEggShape = new CrossSectionStandardShapeInvertedEgg
                 {
@@ -42,5 +47,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             defaultInvertedEgg.MaterialName = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
             return defaultInvertedEgg;
         }
+
+        
     }
 }

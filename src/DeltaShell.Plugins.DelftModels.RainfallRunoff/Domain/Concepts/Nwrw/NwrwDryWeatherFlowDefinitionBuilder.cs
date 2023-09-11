@@ -25,8 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public NwrwDryWeatherFlowDefinition Build(SobekRRDryWeatherFlow readDefinition, ILogHandler logHandler = null)
         {
             Ensure.NotNull(readDefinition, nameof(readDefinition));
-
-            var newDefinition = new NwrwDryWeatherFlowDefinition
+            
+            var newDefinition = new NwrwDryWeatherFlowDefinition(logHandler)
             {
                 Name = readDefinition.Id,
                 DistributionType = GetDistributionType(readDefinition.ComputationOption),

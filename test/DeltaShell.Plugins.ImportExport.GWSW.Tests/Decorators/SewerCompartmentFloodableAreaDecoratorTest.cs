@@ -4,7 +4,9 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.GWSW.Decorators;
+using DHYDRO.Common.Logging;
 using log4net.Core;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Decorators
@@ -16,9 +18,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Decorators
         public void ProcessInput_ForReservoirCompartment_ValueMissing_SetsTheFloodableAreaWith500_AndLogsWarning()
         {
             // Setup
-            var compartment = new Compartment
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var compartment = new Compartment(logHandler, "some_compartment")
             {
-                Name = "some_compartment",
                 CompartmentStorageType = CompartmentStorageType.Reservoir
             };
             var gwswElement = new GwswElement();
@@ -26,11 +28,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Decorators
             var decorator = new SewerCompartmentFloodableAreaDecorator(compartment);
 
             // Call
-            void Call() => decorator.ProcessInput(gwswElement);
+            decorator.ProcessInput(gwswElement);
 
             // Assert
-            IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
-            Assert.That(warnings, Does.Contain("Missing floodable area value for 'some_compartment', using default value: 500"));
+            logHandler.Received().ReportWarningFormat("Missing floodable area value for 'some_compartment', using default value: 500");
             Assert.That(compartment.FloodableArea, Is.EqualTo(500.0));
         }
 
@@ -46,7 +47,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Decorators
             var gwswElement = new GwswElement();
 
             var decorator = new SewerCompartmentFloodableAreaDecorator(compartment);
-            GwswAttribute floodableAreaAttribute = CreateGwswAttribute("FLOODABLE_AREA", 1.23);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GwswAttribute floodableAreaAttribute = CreateGwswAttribute("FLOODABLE_AREA", 1.23, logHandler);
             gwswElement.GwswAttributeList.Add(floodableAreaAttribute);
 
             // Call
@@ -61,21 +63,21 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Decorators
         public void ProcessInput_ForClosedCompartment_ValueMissing_SetsTheFloodableAreaWith0_AndLogsWarning()
         {
             // Setup
-            var compartment = new Compartment
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var compartment = new Compartment(logHandler, "some_compartment")
             {
-                Name = "some_compartment",
-                CompartmentStorageType = CompartmentStorageType.Closed
+                CompartmentStorageType = CompartmentStorageType.Closed,
             };
             var gwswElement = new GwswElement();
 
             var decorator = new SewerCompartmentFloodableAreaDecorator(compartment);
 
             // Call
-            void Call() => decorator.ProcessInput(gwswElement);
+            decorator.ProcessInput(gwswElement);
 
             // Assert
-            IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
-            Assert.That(warnings, Does.Contain("Missing floodable area value for 'some_compartment', using default value: 0"));
+            
+            logHandler.Received().ReportWarningFormat("Missing floodable area value for 'some_compartment', using default value: 0");
             Assert.That(compartment.FloodableArea, Is.EqualTo(0.0));
         }
 
@@ -91,7 +93,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Decorators
             var gwswElement = new GwswElement();
 
             var decorator = new SewerCompartmentFloodableAreaDecorator(compartment);
-            GwswAttribute floodableAreaAttribute = CreateGwswAttribute("FLOODABLE_AREA", 1.23);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            GwswAttribute floodableAreaAttribute = CreateGwswAttribute("FLOODABLE_AREA", 1.23, logHandler);
             gwswElement.GwswAttributeList.Add(floodableAreaAttribute);
 
             // Call
@@ -101,9 +104,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Decorators
             Assert.That(compartment.FloodableArea, Is.EqualTo(1.23));
         }
 
-        private static GwswAttribute CreateGwswAttribute(string key, double value)
+        private static GwswAttribute CreateGwswAttribute(string key, double value, ILogHandler logHandler)
         {
-            var attributeType = new GwswAttributeType
+            var attributeType = new GwswAttributeType(logHandler)
             {
                 Key = key,
                 AttributeType = typeof(double)

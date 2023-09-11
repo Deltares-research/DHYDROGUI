@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 
             DateTime modelStartTime = DateTime.Today;
             var modelBoundaryData = new EventedList<RunoffBoundaryData>();
-            var modelCatchmentData = new List<CatchmentModelData>();
+            var modelCatchmentData = new EventedList<CatchmentModelData>();
 
             rainfallRunoffModel.StartTime.Returns(modelStartTime);
             rainfallRunoffModel.BoundaryData.Returns(modelBoundaryData);
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 
             DateTime modelStartTime = DateTime.Today;
             var modelBoundaryData = new EventedList<RunoffBoundaryData>();
-            var modelCatchmentData = new List<CatchmentModelData>();
+            var modelCatchmentData = new EventedList<CatchmentModelData>();
 
             rainfallRunoffModel.StartTime.Returns(modelStartTime);
             rainfallRunoffModel.BoundaryData.Returns(modelBoundaryData);
@@ -269,7 +269,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 
             DateTime modelStartTime = DateTime.Today;
             var modelBoundaryData = new EventedList<RunoffBoundaryData>();
-            var modelCatchmentData = new List<CatchmentModelData>();
+            var modelCatchmentData = new EventedList<CatchmentModelData>();
 
             rainfallRunoffModel.StartTime.Returns(modelStartTime);
             rainfallRunoffModel.BoundaryData.Returns(modelBoundaryData);
@@ -318,7 +318,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             
             var rainfallRunoffModel = Substitute.For<IRainfallRunoffModel>();
             var modelBoundaryData = new EventedList<RunoffBoundaryData>();
-            var modelCatchmentData = new List<CatchmentModelData>();
+            var modelCatchmentData = new EventedList<CatchmentModelData>();
             rainfallRunoffModel.BoundaryData.Returns(modelBoundaryData);
             rainfallRunoffModel.ModelData.Returns(modelCatchmentData);
 

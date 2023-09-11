@@ -1,26 +1,31 @@
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
-    public class SewerOrificeGenerator : IGwswFeatureGenerator<ISewerFeature>
+    public class SewerOrificeGenerator : ASewerGenerator, IGwswFeatureGenerator<ISewerFeature>
     {
+        public SewerOrificeGenerator(ILogHandler logHandler)
+            : base(logHandler)
+        {
+        }
         public ISewerFeature Generate(GwswElement gwswElement)
         {
             var orifice = CreateNewOrifice(gwswElement);
             return orifice;
         }
 
-        private static Orifice CreateNewOrifice(GwswElement gwswElement)
+        private Orifice CreateNewOrifice(GwswElement gwswElement)
         {
-            var uniqueIdKey = gwswElement.IsValidGwswSewerConnection() 
+            var uniqueIdKey = gwswElement.IsValidGwswSewerConnection(logHandler) 
                 ? SewerConnectionMapping.PropertyKeys.UniqueId 
                 : SewerStructureMapping.PropertyKeys.UniqueId;
 
-            string orificeId = gwswElement.GetAttributeValueFromList<string>(uniqueIdKey);
+            string orificeId = gwswElement.GetAttributeValueFromList<string>(uniqueIdKey, logHandler);
 
-            if (gwswElement.IsValidGwswSewerConnection())
+            if (gwswElement.IsValidGwswSewerConnection(logHandler))
             {
                 var gwswConnectionOrifice = new GwswConnectionOrifice(orificeId);
                 AddSewerConnectionAttributesToOrifice(gwswConnectionOrifice, gwswElement);
@@ -32,37 +37,37 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return gwswStructureOrifice;
         }
 
-        private static void AddSewerConnectionAttributesToOrifice(GwswConnectionOrifice orifice, GwswElement gwswElement)
+        private void AddSewerConnectionAttributesToOrifice(GwswConnectionOrifice orifice, GwswElement gwswElement)
         {
-            if (!gwswElement.IsValidGwswSewerConnection()) return;
+            if (!gwswElement.IsValidGwswSewerConnection(logHandler)) return;
 
-            orifice.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            orifice.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
+            orifice.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, logHandler);
+            orifice.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, logHandler);
 
             double auxDouble;
 
-            var levelStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelStart);
-            if (levelStart.TryGetValueAsDouble(out auxDouble))
+            var levelStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelStart, logHandler);
+            if (levelStart.TryGetValueAsDouble(logHandler, out auxDouble))
                 orifice.LevelSource = auxDouble;
 
-            var levelEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelEnd);
-            if (levelEnd.TryGetValueAsDouble(out auxDouble))
+            var levelEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelEnd, logHandler);
+            if (levelEnd.TryGetValueAsDouble(logHandler, out auxDouble))
                 orifice.LevelTarget = auxDouble;
 
-            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);
-            if (length.TryGetValueAsDouble(out auxDouble))
+            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length, logHandler);
+            if (length.TryGetValueAsDouble(logHandler, out auxDouble))
                 orifice.Length = auxDouble;
             
-            var waterTypeString = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.WaterType);
+            var waterTypeString = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.WaterType, logHandler);
             if (waterTypeString != null)
             {
-                orifice.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterTypeString);
+                orifice.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterTypeString, logHandler);
             }
             
-            var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection);
-            if (flowDirection.IsValidAttribute())
+            var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection, logHandler);
+            if (flowDirection.IsValidAttribute(logHandler))
             {
-                var flowDirectionValue = flowDirection.GetValueFromDescription<SewerConnectionMapping.FlowDirection>();
+                var flowDirectionValue = flowDirection.GetValueFromDescription<SewerConnectionMapping.FlowDirection>(logHandler);
                 switch (flowDirectionValue)
                 {
                     case SewerConnectionMapping.FlowDirection.Closed://this is also the default....
@@ -84,27 +89,27 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 }
             }
             
-            orifice.CrossSectionDefinitionName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId);
+            orifice.CrossSectionDefinitionName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId, logHandler);
         }
 
-        private static void AddStructureAttributesToOrifice(IOrifice orifice, GwswElement gwswElement)
+        private void AddStructureAttributesToOrifice(IOrifice orifice, GwswElement gwswElement)
         {
             var gatedWeirFormula = orifice.WeirFormula as GatedWeirFormula;
-            if (!gwswElement.IsValidGwswStructure() || gatedWeirFormula == null) return;
+            if (!gwswElement.IsValidGwswStructure(logHandler) || gatedWeirFormula == null) return;
             
             double auxDouble;
             //Add Attributes
-            var bottomLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.BottomLevel);
-            if (bottomLevel.TryGetValueAsDouble(out auxDouble))
+            var bottomLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.BottomLevel, logHandler);
+            if (bottomLevel.TryGetValueAsDouble(logHandler, out auxDouble))
                 orifice.CrestLevel = auxDouble;
 
-            var contractionCoefficient = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.ContractionCoefficient);
-            if (contractionCoefficient.TryGetValueAsDouble(out auxDouble))
+            var contractionCoefficient = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.ContractionCoefficient, logHandler);
+            if (contractionCoefficient.TryGetValueAsDouble(logHandler, out auxDouble))
                 gatedWeirFormula.ContractionCoefficient = auxDouble;
 
-            var maxDischarge = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.MaxDischarge);
+            var maxDischarge = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.MaxDischarge, logHandler);
             
-            if (maxDischarge.TryGetValueAsDouble(out auxDouble))
+            if (maxDischarge.TryGetValueAsDouble(logHandler, out auxDouble))
             {
                 gatedWeirFormula.UseMaxFlowPos = true;
                 gatedWeirFormula.UseMaxFlowNeg = true;

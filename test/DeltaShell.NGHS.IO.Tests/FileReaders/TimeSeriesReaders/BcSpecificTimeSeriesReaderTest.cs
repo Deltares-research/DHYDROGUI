@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
     {
         private IDelftBcReader reader;
         private IBcCategoryParser parser;
-        private ILogHandler handler;
+        private ILogHandler logHandler;
         private IStructureTimeSeries structureTimeSeries;
         private const string filePath = "path";
         private const string quantity = "weir_crestLevel";
@@ -39,7 +39,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
         {
             reader = Substitute.For<IDelftBcReader>();
             parser = Substitute.For<IBcCategoryParser>();
-            handler = Substitute.For<ILogHandler>();
+            logHandler = Substitute.For<ILogHandler>();
             structureTimeSeries = Substitute.For<IStructureTimeSeries>();
             structureTimeSeries.Structure.Name.Returns(structureName);
             structureTimeSeries.Structure.Returns(new Weir());
@@ -93,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
         public void WhenReadingBcFile_ArgumentsAreNull_ThrowArgumentNullException(string filePath, IStructureTimeSeries structureTimeSeries, DateTime refDate)
         {
             // Setup
-            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, handler);
+            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, logHandler);
 
             // Call
             void Call() => bcSpecificTimeSeriesReader.Read(filePath, structureTimeSeries, refDate);
@@ -108,7 +108,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
             //Arrange
             parser.TryParseDateTimes(null, null, 0, out IEnumerable<DateTime> dateTimes).ReturnsForAnyArgs(true);
             parser.TryParseDoubles(null, 0, out IEnumerable<double> values).ReturnsForAnyArgs(true);
-            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, handler);
+            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, logHandler);
 
             //Act & Assert
             bcSpecificTimeSeriesReader.Read(filePath, structureTimeSeries, time);
@@ -123,7 +123,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
         {
             //Arrange
             parser.TryParseDateTimes(null, null, 0, out IEnumerable<DateTime> _).ReturnsForAnyArgs(false);
-            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, handler);
+            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, logHandler);
 
             //Act & Assert
             bcSpecificTimeSeriesReader.Read(filePath, structureTimeSeries, time);
@@ -139,7 +139,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
             //Arrange
             parser.TryParseDateTimes(null, null, 0, out IEnumerable<DateTime> _).ReturnsForAnyArgs(true);
             parser.TryParseDoubles(null, 0, out IEnumerable<double> _).ReturnsForAnyArgs(false);
-            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, handler);
+            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, logHandler);
 
             //Act & Assert
             bcSpecificTimeSeriesReader.Read(filePath, structureTimeSeries, time);
@@ -155,7 +155,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
             //Arrange
             parser.TryParseDateTimes(null, null, 0, out IEnumerable<DateTime> dateTimes).ReturnsForAnyArgs(true);
             parser.TryParseDoubles(null, 0, out IEnumerable<double> functionValues).ReturnsForAnyArgs(false);
-            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, handler);
+            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, logHandler);
             const string differentName = "DifferentName";
             structureTimeSeries.Structure.Name = differentName;
 
@@ -169,7 +169,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
                                            structureTimeSeries.Structure.Name,
                                            quantity,
                                            filePath);
-            handler.Received(1).ReportWarning(message);
+            logHandler.Received(1).ReportWarning(message);
         }
         
         [Test]
@@ -180,7 +180,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
             //Arrange
             parser.TryParseDateTimes(null, null, 0, out IEnumerable<DateTime> _).ReturnsForAnyArgs(true);
             parser.TryParseDoubles(null, 0, out IEnumerable<double> _).ReturnsForAnyArgs(true);
-            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, handler);
+            BcSpecificTimeSeriesReader bcSpecificTimeSeriesReader = new BcSpecificTimeSeriesReader(reader, parser, logHandler);
             
             //Act & Assert
             Assert.That(bcSpecificTimeSeriesReader.CanReadProperty(fileName), Is.EqualTo(expectedReturnValue));

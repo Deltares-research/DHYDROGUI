@@ -2,6 +2,8 @@
 using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -20,8 +22,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         {
             // Setup
             var random = new Random(80085);
-
-            var generator = new TestSewerCompartmentGenerator();
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var generator = new TestSewerCompartmentGenerator(logHandler);
             var compartment = new Compartment("randomName");
 
             GwswElement gwswElement = GetNodeGwswElement("randomString", "randomString", "randomString",
@@ -44,10 +46,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         {
             // Setup
             var random = new Random(707);
-            
-            
 
-            var generator = new TestSewerCompartmentGenerator();
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var generator = new TestSewerCompartmentGenerator(logHandler);
+
             var compartment = new Compartment("randomName");
 
             GwswElement gwswElement = GetNodeGwswElement("randomString", "randomString", "randomString",
@@ -80,7 +82,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             double floodableArea = random.NextDouble();
 
-            var generator = new TestSewerCompartmentGenerator();
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var generator = new TestSewerCompartmentGenerator(logHandler);
+
             var compartment = new Compartment("randomName");
 
             GwswElement gwswElement = GetNodeGwswElement("randomString", "randomString", "randomString",
@@ -102,8 +106,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
         private class TestSewerCompartmentGenerator : ASewerCompartmentGenerator
         {
+            public TestSewerCompartmentGenerator(ILogHandler logHandler)
+                : base(logHandler)
+            {
+            }
             public void TestSetBaseCompartmentProperties(Compartment compartment, GwswElement gwswElement)
             {
+                ILogHandler logHandler = Substitute.For<ILogHandler>();
                 SetBaseCompartmentProperties(compartment, gwswElement);
             }
 

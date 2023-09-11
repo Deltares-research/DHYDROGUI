@@ -27,10 +27,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using DeltaShell.Plugins.ImportExport.GWSW.ViewModels;
+using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
@@ -41,20 +43,23 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void TestImport_UnknownFeature_FromGwsw_WithPreviousMapping_Fails_AndLogMessageIsShown()
         {
-            var gwswImporter = new GwswFileImporter(new DefinitionsProvider());
+            // Arrange
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var gwswImporter = new GwswFileImporter(new DefinitionsProvider(logHandler));
+            TypeUtils.SetField(gwswImporter,"logHandler", logHandler);
             gwswImporter.CsvDelimeter = ',';
             string filePath = GetFileAndCreateLocalCopy(@"gwswFiles\UnknownFeature.csv");
             string folderPath = Path.GetDirectoryName(filePath);
-            string message =
-                string.Format(
-                    (string)Resources
-                        .GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_,
-                    filePath);
-            var importedList = new List<GwswElement>();
+            
             gwswImporter.CsvDelimeter = ';';
+
+            // Act
             gwswImporter.LoadFeatureFiles(folderPath);
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => importedList = gwswImporter.ImportGwswElementsFromGwswFiles(filePath).SelectMany(e => e).ToList(), message);
+            var importedList = gwswImporter.ImportGwswElementsFromGwswFiles(filePath).SelectMany(e => e).ToList();
+            
+            // Asserts
+            logHandler.Received().ReportInfoFormat(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_,
+                                                   filePath);
             Assert.IsFalse(importedList.Any());
         }
 
@@ -959,22 +964,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         public void GetEnumTypeFromGwswAttribute_ReturnsDefaultValueAndLogMessage_IfNotFound()
         {
             var elementName = "test_element";
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
             var attributeTest = new GwswAttribute
             {
                 ValueAsString = elementName,
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+                GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(string) }
             };
 
             var value = SewerConnectionWaterType.StormWater;
             //Just to make sure the test is setting the default value later on.
             Assert.AreNotEqual((object)default(SewerConnectionWaterType), (object)value);
 
-            string msg = string.Format(
-                (string)Resources
-                    .SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax,
-                elementName);
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>(), msg);
+            value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>(logHandler);
+            logHandler.Received().ReportWarningFormat(Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, elementName);
 
             Assert.IsNotNull(value);
             Assert.AreEqual((object)default(SewerConnectionWaterType), (object)value);
@@ -984,13 +986,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         public void GetEnumTypeFromGwswAttribute_ReturnsCorrectValue_IfFound()
         {
             var elementName = "Dry weather";
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
             var attributeTest = new GwswAttribute
             {
                 ValueAsString = elementName,
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+                GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(string) }
             };
-
-            var value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>();
+            var value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>(logHandler);
             Assert.IsNotNull(value);
             Assert.AreEqual((object)SewerConnectionWaterType.DryWater, (object)value);
         }
@@ -998,8 +1000,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GwswAttributeIsValid_ReturnsFalseWithoutLogMessageIfNoTypeIsPresent()
         {
-            var invalidAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType() };
-            CheckThatGwswAttributeValidationLogMessageIsReturned(null, 0, null, string.Empty, invalidAttribute);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var invalidAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType(logHandler) };
+            CheckThatGwswAttributeValidationLogMessageIsReturned(null, 0, null, null, invalidAttribute);
         }
 
         [TestCase("")]
@@ -1011,8 +1014,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             const int lineNumber = 3;
             const string localKey = "XXX_YYY";
             const string key = "MY_KEY";
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
 
-            var attributeType = new GwswAttributeType
+            var attributeType = new GwswAttributeType(logHandler)
             {
                 FileName = fileName,
                 LocalKey = localKey,
@@ -1032,37 +1036,43 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GwswAttributeIsValid_ReturnsTrueIfEverythingIsPresent()
         {
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+
             var emptyAttribute = new GwswAttribute
             {
                 ValueAsString = "test",
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+                GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(string) }
             };
-            Assert.IsTrue(emptyAttribute.IsValidAttribute());
+            
+            Assert.IsTrue(emptyAttribute.IsValidAttribute(logHandler));
         }
 
         [Test]
         public void GwswAttributeIsValid_ReturnsFalseIfNoTypeIsPresent()
         {
-            var emptyAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType() };
-            Assert.IsFalse(emptyAttribute.IsValidAttribute());
+            ILogHandler logHandler = Substitute.For<ILogHandler>(); 
+            var emptyAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType(logHandler) };
+            Assert.IsFalse(emptyAttribute.IsValidAttribute(logHandler));
         }
 
         [TestCase("")]
         [TestCase(null)]
         public void GwswAttributeIsValid_ReturnsFalseIfValueAsStringIsNullOrEmpty(string valueAsString)
         {
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
             var invalidAttribute = new GwswAttribute
             {
                 ValueAsString = valueAsString,
-                GwswAttributeType = new GwswAttributeType()
+                GwswAttributeType = new GwswAttributeType(logHandler)
             };
-            Assert.IsFalse(invalidAttribute.IsValidAttribute());
+            Assert.IsFalse(invalidAttribute.IsValidAttribute(logHandler));
         }
 
         [Test]
         public void GwswAttribute_IsTypeOfInt_Test()
         {
-            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType { AttributeType = typeof(int) } };
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(int) } };
             Assert.IsTrue(attr.IsTypeOf(typeof(int)));
             Assert.IsFalse(attr.IsTypeOf(typeof(double)));
             Assert.IsFalse(attr.IsTypeOf(typeof(string)));
@@ -1071,28 +1081,32 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GwswAttribute_IsNumerical_GivenInt_Test()
         {
-            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType { AttributeType = typeof(int) } };
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(int) } };
             Assert.IsTrue(attr.IsNumerical());
         }
 
         [Test]
         public void GwswAttribute_IsNumerical_GivenDouble_Test()
         {
-            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType { AttributeType = typeof(double) } };
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(double) } };
             Assert.IsTrue(attr.IsNumerical());
         }
 
         [Test]
         public void GwswAttribute_IsNumerical_GivenString_Test()
         {
-            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) } };
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(string) } };
             Assert.IsFalse(attr.IsNumerical());
         }
 
         [Test]
         public void GwswAttribute_IsTypeOfDouble_Test()
         {
-            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType { AttributeType = typeof(double) } };
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(double) } };
             Assert.IsFalse(attr.IsTypeOf(typeof(int)));
             Assert.IsTrue(attr.IsTypeOf(typeof(double)));
             Assert.IsFalse(attr.IsTypeOf(typeof(string)));
@@ -1101,7 +1115,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GwswAttribute_IsTypeOfString_Test()
         {
-            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) } };
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var attr = new GwswAttribute { GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(string) } };
             Assert.IsFalse(attr.IsTypeOf(typeof(int)));
             Assert.IsFalse(attr.IsTypeOf(typeof(double)));
             Assert.IsTrue(attr.IsTypeOf(typeof(string)));
@@ -1111,6 +1126,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         public void GetElementLine_ReturnsLineIfAvailable()
         {
             var elementName = "DWA";
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+
             var gwswElement = new GwswElement
             {
                 GwswAttributeList = new List<GwswAttribute>
@@ -1119,7 +1136,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     {
                         LineNumber = 2,
                         ValueAsString = elementName,
-                        GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+                        GwswAttributeType = new GwswAttributeType(logHandler) { AttributeType = typeof(string) }
                     }
                 }
             };
@@ -1146,15 +1163,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GwswAttributeReturnsElementNameWithoutExtension()
         {
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+
             var elementName = "test_element";
-            var attributeTest = new GwswAttributeType
+            var attributeTest = new GwswAttributeType(logHandler)
             {
                 ElementName = elementName + ".csv",
             };
             Assert.AreEqual(elementName, attributeTest.ElementName);
 
             /* If the name is originally given without extension, it should remain the same.*/
-            attributeTest = new GwswAttributeType
+            attributeTest = new GwswAttributeType(logHandler)
             {
                 ElementName = elementName,
             };
@@ -1168,8 +1187,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         {
             try
             {
+                ILogHandler logHandler = Substitute.For<ILogHandler>();
                 GwswAttributeType attributeTest = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
-                                                                                                     "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                                                                                                     "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks", logHandler);
                 Assert.IsNotNull(attributeTest);
                 Assert.AreEqual(expectedType, attributeTest.AttributeType);
             }
@@ -1183,6 +1203,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GwswElementExtensionsGetAttributeFromList()
         {
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
             var attributeOne = "attributeOne";
             var attributeTwo = "attributeTwo";
             var valueAsString = "valueAttrOne";
@@ -1195,17 +1216,16 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     {
                         GwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile", 5,
                                                                                                "columnName", "string", attributeOne,
-                                                                                               "unkownDefinition", "mandatoryMaybe", string.Empty, "noRemarks"),
+                                                                                               "unkownDefinition", "mandatoryMaybe", string.Empty, "noRemarks", logHandler),
                         ValueAsString = valueAsString
                     },
                 }
             };
-
-            GwswAttribute retrievedAttr = gwswElement.GetAttributeFromList(attributeOne);
+            GwswAttribute retrievedAttr = gwswElement.GetAttributeFromList(attributeOne, logHandler);
             Assert.IsNotNull(retrievedAttr);
             Assert.AreEqual(valueAsString, retrievedAttr.ValueAsString);
 
-            Assert.IsNull(gwswElement.GetAttributeFromList(attributeTwo));
+            Assert.IsNull(gwswElement.GetAttributeFromList(attributeTwo, logHandler));
         }
 
         [Test]
@@ -1216,8 +1236,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var typeAsString = "string";
             try
             {
+                ILogHandler logHandler = Substitute.For<ILogHandler>(); 
                 GwswAttributeType gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
-                                                                                                         "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                                                                                                                                                                 "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks", logHandler);
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 
@@ -1227,8 +1248,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     ValueAsString = valueAsString
                 };
                 Assert.IsNotNull(attribute);
-
-                string testVariable = attribute.GetValidStringValue();
+                
+                string testVariable = attribute.GetValidStringValue(logHandler);
                 Assert.AreEqual(expectedValue, testVariable);
             }
             catch (Exception e)
@@ -1247,8 +1268,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var testVariable = 0.0;
             try
             {
+                ILogHandler logHandler = Substitute.For<ILogHandler>();
                 GwswAttributeType gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
-                                                                                                         "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                                                                                                         "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks", logHandler);
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(double), gwswAttributeType.AttributeType);
 
@@ -1258,8 +1280,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     ValueAsString = valueAsString
                 };
                 Assert.IsNotNull(attribute);
-
-                Assert.IsTrue(attribute.TryGetValueAsDouble(out testVariable));
+                Assert.IsTrue(attribute.TryGetValueAsDouble(logHandler, out testVariable));
                 Assert.AreEqual(expectedValue, testVariable);
             }
             catch (Exception e)
@@ -1276,8 +1297,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var typeAsString = "string";
             try
             {
+                ILogHandler logHandler = Substitute.For<ILogHandler>();
                 GwswAttributeType gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
-                                                                                                         "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                                                                                                         "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks", logHandler);
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 
@@ -1289,17 +1311,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 };
                 Assert.IsNotNull(attribute);
 
-                string logError =
-                    string.Format(
-                        (string)Resources
-                            .GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__,
-                        gwswAttributeType.FileName, attribute.LineNumber, gwswAttributeType.ElementName,
-                        gwswAttributeType.Name, attribute.ValueAsString, gwswAttributeType.AttributeType,
-                        typeof(double));
-
-                Assert.IsFalse(attribute.TryGetValueAsDouble(out double _));
-                TestHelper.AssertAtLeastOneLogMessagesContains(() => attribute.TryGetValueAsDouble(out double _),
-                                                               logError);
+                attribute.TryGetValueAsDouble(logHandler, out double _);
+                logHandler.Received(1).ReportErrorFormat(Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__,
+                                                             gwswAttributeType.FileName, attribute.LineNumber, gwswAttributeType.ElementName,
+                                                             gwswAttributeType.Name, attribute.ValueAsString, gwswAttributeType.AttributeType,
+                                                             typeof(double));
             }
             catch (Exception e)
             {
@@ -1311,8 +1327,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GivenGwswAttributeWithEmptyStringAsValue_WhenTryGetDoubleValue_ThenReturnFalseAndDefaultValue()
         {
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
             GwswAttributeType gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
-                                                                                                     "attributeName", "double", "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                                                                                                     "attributeName", "double", "testCode", "test definition", "mandatory", string.Empty, "remarks", logHandler);
             var attribute = new GwswAttribute
             {
                 GwswAttributeType = gwswAttributeType,
@@ -1320,7 +1337,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             };
 
             double doubleValue;
-            bool gettingValueSucceeded = attribute.TryGetValueAsDouble(out doubleValue);
+            bool gettingValueSucceeded = attribute.TryGetValueAsDouble(logHandler, out doubleValue);
             Assert.IsFalse(gettingValueSucceeded);
             Assert.That(doubleValue, Is.EqualTo(0.0));
         }

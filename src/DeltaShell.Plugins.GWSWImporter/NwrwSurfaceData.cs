@@ -1,48 +1,46 @@
 ﻿using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using GeoAPI.Geometries;
-using log4net;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// File Object Model for Gwsw oppervlak.csv.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.INwrwFeature" />
-    public class NwrwSurfaceData: INwrwFeature
+    /// <seealso cref="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.ANwrwFeature" />
+    public class NwrwSurfaceData: ANwrwFeature
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwSurfaceData));
-
-        public string Name { get; set; } // UNI_IDE
+        public NwrwSurfaceData(ILogHandler logHandler) : base(logHandler)
+        {
+        }
         public string MeteoStationId { get; set; } // NSL_DEF
         public string RunoffDefinitionFile  { get; set; } // AFV_DEF (we only support nwrw.csv for now)
         public NwrwSurfaceType NwrwSurfaceType { get; set; } // AFV_IDE
         public double SurfaceArea { get; set; } // AFV_OPP
         public string Remark { get; set; } // ALG_TOE
-
-        public IGeometry Geometry { get; set; }
-
-        public void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
+        
+        public override void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
         {
             if (rrModel == null)
             {
+                logHandler?.ReportError("Cannot add NWRW catchment if model is not provided");
                 return;
             }
 
             if (Geometry == null)
             {
-                Log.Warn(
+                logHandler?.ReportWarning(
                     $"Could not add {NwrwSurfaceType} to {Name}, because the geometry of the catchment is not set.");
                 return;
             }
 
             if (!helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId.ContainsKey(Name))
             {
-                NwrwData.CreateNewNwrwDataWithCatchment(rrModel, Name, helper);
+                NwrwData.CreateNewNwrwDataWithCatchment(rrModel, Name, helper, logHandler);
             }
         }
 
-        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
+        public override void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
         {
             nwrwData.MeteoStationId = MeteoStationId;
             nwrwData.Catchment.Geometry = Geometry;

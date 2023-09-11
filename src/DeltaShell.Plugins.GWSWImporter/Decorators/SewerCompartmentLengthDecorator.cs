@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             return aCompartment;
         }
         
-        private static void SetNodeLength(ICompartment compartment, GwswElement gwswElement)
+        private void SetNodeLength(ICompartment compartment, GwswElement gwswElement)
         {
             double defaultLength = 0.8d * 1000;
             
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
                 logMessage = $"Missing length value for '{compartment.Name}', using default value: {defaultLength}";
             }
             
-            double length = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.NodeLength, defaultLength, logMessage);
+            double length = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.NodeLength, LogHandler, defaultLength, logMessage);
             compartment.ManholeLength = length / 1000.0; // Conversion from mm to m
         }
     }

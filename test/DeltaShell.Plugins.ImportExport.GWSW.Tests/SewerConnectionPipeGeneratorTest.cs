@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Reflection;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -25,8 +27,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, endNode, string.Empty)
                 }
             };
-
-            var element = new SewerConnectionPipeGenerator().Generate(pipeGwswElement);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var element = new SewerConnectionPipeGenerator(logHandler).Generate(pipeGwswElement);
 
             //A pipe is created.
             var pipe = element as IPipe;
@@ -54,7 +56,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var element = new SewerConnectionPipeGenerator().Generate(pipeGwswElement);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var element = new SewerConnectionPipeGenerator(logHandler).Generate(pipeGwswElement); 
             Assert.IsTrue(element is Pipe);
             
             var pipe = element as Pipe;
@@ -81,7 +84,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var pipeGwswElement = GetSewerConnectionGwswElement(string.Empty, sourceCompartmentId, targetCompartmentId, pipeTypeString, sourceLevel, targetLevel, defaultString, length, crossSectionDefinitionName, defaultString, defaultString, defaultDouble, defaultDouble, defaultDouble, defaultDouble);
 
-            var createdPipe = new SewerConnectionPipeGenerator().Generate(pipeGwswElement) as IPipe;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var createdPipe = new SewerConnectionPipeGenerator(logHandler).Generate(pipeGwswElement) as IPipe;
             Assert.IsNotNull(createdPipe);
 
             Assert.That(createdPipe.SourceCompartmentName, Is.EqualTo(sourceCompartmentId));
@@ -117,8 +121,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, endNode, string.Empty)
                 }
             };
-
-            var createdPipe = new SewerConnectionPipeGenerator().Generate(pipeGwswElement) as IPipe;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var createdPipe = new SewerConnectionPipeGenerator(logHandler).Generate(pipeGwswElement) as IPipe;
             Assert.IsNotNull(createdPipe);
             Assert.That(createdPipe.CrossSectionDefinitionName, Is.EqualTo(crossSectionDefinitionName));
             Assert.IsNull(createdPipe.CrossSection?.Definition);

@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
@@ -29,10 +30,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var model = Substitute.For<IRainfallRunoffModel>();
             var app = Substitute.For<IApplication>();
             var gui = Substitute.For<IGui>();
+            var modelData = new EventedList<CatchmentModelData>(){catchmentData};
             
             gui.Application.Returns(app);
             app.GetAllModelsInProject().Returns(new List<IModel>(new []{model}));
-            model.ModelData.Returns(new CatchmentModelData[] { catchmentData });
+
+            model.ModelData.Returns(modelData);
 
             var plugin = new RainfallRunoffGuiPlugin { Gui = gui };
 

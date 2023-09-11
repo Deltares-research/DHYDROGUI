@@ -3,7 +3,9 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
+using DHYDRO.Common.Logging;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -60,7 +62,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             #endregion
 
             var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, nodeType, xCoordinate, yCoordinate, manholeLength, manholeWidth, compartmentShapeAsString, floodableArea, bottomLevel, surfaceLevel);
-            var compartment = new SewerCompartmentGenerator().Generate(nodeGwswElement) as Compartment;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var compartment = new SewerCompartmentGenerator(logHandler).Generate(nodeGwswElement) as Compartment;
             Assert.IsNotNull(compartment);
             
             // Check Properties
@@ -92,8 +95,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var existingXCoord = 5;
             var existingYCoord = 3;
             network.Nodes.Add(new Manhole(manholeId){Geometry = new Point(existingXCoord,existingYCoord)});
-            
-            var compartment = new SewerCompartmentGenerator().Generate(nodeGwswElement) as Compartment;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var compartment = new SewerCompartmentGenerator(logHandler).Generate(nodeGwswElement) as Compartment;
             Assert.IsNotNull(compartment);
 
             // Check Compartment properties
@@ -120,8 +123,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             #endregion
 
             var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, nodeType, xCoordinate, yCoordinate, manholeLength, manholeWidth, compartmentShapeAsString, floodableArea, bottomLevel, surfaceLevel);
-            
-            var compartment = new SewerCompartmentGenerator().Generate(nodeGwswElement) as Compartment;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var compartment = new SewerCompartmentGenerator(logHandler).Generate(nodeGwswElement) as Compartment;
             Assert.IsNotNull(compartment);
 
             // Check Compartment properties
@@ -167,8 +170,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var expectedLogMsg = string.Format(Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, unknownShapeValue);
-            var compartment = TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(manholeId, badGwswElement, compartmentId, expectedLogMsg);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+
+            Compartment compartment = CreateSewerFeature<Compartment>(badGwswElement, logHandler);
+
+            logHandler.Received().ReportWarningFormat(Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, unknownShapeValue);
+
+            Assert.IsNotNull(compartment);
+            Assert.That(compartment.Name, Is.EqualTo(compartmentId));
+            Assert.That(compartment.ParentManholeName, Is.EqualTo(manholeId));
             Assert.AreEqual(default(CompartmentShape), compartment.Shape);
         }
 
@@ -200,6 +210,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         {
             var manholeId = "01001";
             var lineNumber = 2;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
             var badGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -210,7 +221,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                         LineNumber = lineNumber,
                         ValueAsString = manholeId,
                         GwswAttributeType = GetGwswAttributeType("Knooppunt.csv", 0, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription",  null, null, null)
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription",  null, null, null, logHandler)
                     }
                 }
             };
@@ -260,15 +271,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
         private static Compartment GenerateCompartmentAndCheckForLogMessages(GwswElement badGwswElement, string componentType, int lineNumber, string newName)
         {
-            Compartment compartment = null;
-            var message =
-                string.Format(
-                    Resources
-                        .SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_will_be_added_to_the_network_with_a_unique_name,
-                    componentType, lineNumber, newName);
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => compartment = new SewerCompartmentGenerator().Generate(badGwswElement) as Compartment, message);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            Compartment compartment = new SewerCompartmentGenerator(logHandler).Generate(badGwswElement) as Compartment;
             Assert.IsNotNull(compartment);
+            string logMessage = string.Format(Resources.SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_will_be_added_to_the_network_with_a_unique_name, componentType, lineNumber, newName);
+            logHandler.Received().ReportWarningFormat(logMessage);
             
             return compartment;
         }
@@ -278,8 +285,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         private static Compartment TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(string manholeId, GwswElement badGwswElement, string compartmentId, string expectedMsg)
         {
             Compartment compartment = null;
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => compartment = CreateSewerFeature<Compartment>(badGwswElement),
-                expectedMsg);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+
+            compartment = CreateSewerFeature<Compartment>(badGwswElement, logHandler);
+            logHandler.Received().ReportWarningFormat(Arg.Is<string>(m => m.Contains(expectedMsg)));
             
             Assert.IsNotNull(compartment);
             Assert.That(compartment.Name, Is.EqualTo(compartmentId));

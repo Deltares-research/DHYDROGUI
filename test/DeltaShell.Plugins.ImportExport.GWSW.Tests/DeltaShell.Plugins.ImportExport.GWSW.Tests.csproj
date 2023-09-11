@@ -2,6 +2,7 @@
   <ItemGroup>
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
     <PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="DHYDRO.Common" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit.ConsoleRunner" />
     <PackageReference Include="NUnit3TestAdapter" />

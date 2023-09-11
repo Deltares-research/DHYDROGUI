@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.Utils;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
@@ -54,11 +53,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 {
                     if (po.CancellationToken.IsCancellationRequested)
                         s.Break();
-                    generator = SewerFeatureFactory.GetGwswFeatureGenerator<T>(elementType, gwswElement);
+                    generator = SewerFeatureFactory.GetGwswFeatureGenerator<T>(elementType, gwswElement, gwswFileImporter.LogHandler);
                     if (generator != null)
                     {
                         var generatedFeature = generator.Generate(gwswElement);
-                        Features.Enqueue(generatedFeature);
+                        if (generatedFeature != null)
+                        {
+                            Features.Enqueue(generatedFeature);
+                        }
                     }
 
                 }
@@ -90,7 +92,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 if (gwswFileImporter != null && gwswFileImporter.ShouldCancel)
                     cts.Cancel();
             }
-
             Status = ActivityStatus.Done;
         }
 

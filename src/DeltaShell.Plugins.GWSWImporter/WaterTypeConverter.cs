@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro;
-using log4net;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -9,14 +9,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     /// </summary>
     public static class WaterTypeConverter
     {
-        private static ILog Log = LogManager.GetLogger(typeof(WaterTypeConverter));
-
         /// <summary>
         /// Converts a string to a <see cref="SewerConnectionWaterType"/>. />
         /// </summary>
         /// <param name="waterTypeString"></param>
         /// <returns>The corresponding <see cref="SewerConnectionWaterType"/>.</returns>
-        public static SewerConnectionWaterType ConvertStringToSewerConnectionWaterType(string waterTypeString)
+        public static SewerConnectionWaterType ConvertStringToSewerConnectionWaterType(string waterTypeString, ILogHandler logHandler)
         {
             switch (waterTypeString.ToLower())
             {
@@ -33,7 +31,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 case "none":
                     return SewerConnectionWaterType.None;
                 default:
-                    Log.WarnFormat(GWSW.Properties.Resources.Water_type__0__is_not_a_valid_water_type_Setting_water_type_to_none, waterTypeString);
+                    logHandler?.ReportWarningFormat(Properties.Resources.Water_type__0__is_not_a_valid_water_type_Setting_water_type_to_none, waterTypeString);
                     return SewerConnectionWaterType.None;
             }
         }

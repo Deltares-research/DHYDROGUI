@@ -652,11 +652,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         /// <inheritdoc cref="IRainfallRunoffModel.ModelData"/>
-        IEnumerable<CatchmentModelData> IRainfallRunoffModel.ModelData
-        {
-            get { return ModelData; }
-        }
-        
         public IEventedList<CatchmentModelData> ModelData
         {
             get { return modelData; }

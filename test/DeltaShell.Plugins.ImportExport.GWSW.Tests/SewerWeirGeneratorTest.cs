@@ -4,6 +4,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -33,8 +35,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
                 }
             };
-            
-            var weir = new SewerWeirGenerator().Generate(connectionGwswElement) as GwswConnectionWeir;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var weir = new SewerWeirGenerator(logHandler).Generate(connectionGwswElement) as GwswConnectionWeir;
             Assert.IsNotNull(weir);
             Assert.That((object) weir.Name, Is.EqualTo(WeirName));
             Assert.That(weir.SourceCompartmentName, Is.EqualTo(SourceCompartmentName));
@@ -66,8 +68,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
 
             #endregion
-
-            var createdWeir = new SewerWeirGenerator().Generate(structureGwswElement) as GwswStructureWeir;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var createdWeir = new SewerWeirGenerator(logHandler).Generate(structureGwswElement) as GwswStructureWeir;
             Assert.IsNotNull(createdWeir);
             Assert.That(createdWeir.CrestWidth, Is.EqualTo(crestWidth));
             Assert.That(createdWeir.CrestLevel, Is.EqualTo(crestLevel));
@@ -96,8 +98,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.FlowDirection, flowDirectionId, string.Empty)
                 }
             };
-            
-            var createdWeir = new SewerWeirGenerator().Generate(sewerConnectionGwswElement) as GwswConnectionWeir;
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var createdWeir = new SewerWeirGenerator(logHandler).Generate(sewerConnectionGwswElement) as GwswConnectionWeir;
             Assert.IsNotNull(createdWeir);
             Assert.That(createdWeir.FlowDirection, Is.EqualTo(expectedFlowDirection));
         }

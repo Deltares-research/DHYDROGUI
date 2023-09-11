@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     public interface INwrwFeature : INameable
     {
         IGeometry Geometry { get; set; }
-        
+
         /// <summary>
         /// Adds the NWRW catchments data to the provided <paramref name="rrModel"/>.
         /// </summary>

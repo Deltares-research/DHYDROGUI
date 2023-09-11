@@ -1,5 +1,7 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -17,7 +19,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         [TestCase("nVT", SewerConnectionWaterType.None)]
         public void GivenWaterTypeString_WhenCallingWaterTypeConverter_ThenReturnsCorrectSewerConnectionWaterType(string waterTypeString, SewerConnectionWaterType expectedSewerConnectionWaterType)
         {
-            var actualSewerConnectionWaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterTypeString);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            var actualSewerConnectionWaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterTypeString, logHandler);
             Assert.That(actualSewerConnectionWaterType, Is.EqualTo(expectedSewerConnectionWaterType));
         }
 
@@ -26,13 +29,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         {
             var invalidWaterTypeString = "InvalidWaterType";
             var expectedWaterType = SewerConnectionWaterType.None;
-            var expectedMessage = $"Water type {invalidWaterTypeString} is not a valid water type. Setting the water type to 'none'.";
-
-            SewerConnectionWaterType actualWaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(invalidWaterTypeString);
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            SewerConnectionWaterType actualWaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(invalidWaterTypeString, logHandler);
 
             Assert.That(actualWaterType, Is.EqualTo(expectedWaterType));
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => actualWaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(invalidWaterTypeString), expectedMessage);
+            logHandler.Received(1).ReportWarningFormat(Properties.Resources.Water_type__0__is_not_a_valid_water_type_Setting_water_type_to_none, invalidWaterTypeString);
 
         }
     }

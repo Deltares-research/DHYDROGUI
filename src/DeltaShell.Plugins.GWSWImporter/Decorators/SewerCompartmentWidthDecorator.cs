@@ -28,12 +28,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             return aCompartment;
         }
         
-        private static void SetNodeWidth(ICompartment compartment, GwswElement gwswElement)
+        private void SetNodeWidth(ICompartment compartment, GwswElement gwswElement)
         {
             double defaultWidth = 0.8d * 1000;
             var logMessage = $"Missing width value for '{compartment.Name}', using default value: {defaultWidth}";
             
-            double manholeWidth = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.NodeWidth, defaultWidth, logMessage);
+            double manholeWidth = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.NodeWidth, LogHandler, defaultWidth, logMessage);
             
             compartment.ManholeWidth = manholeWidth / 1000;
         }

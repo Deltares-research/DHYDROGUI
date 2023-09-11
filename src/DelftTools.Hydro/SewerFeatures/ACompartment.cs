@@ -1,10 +1,13 @@
-﻿namespace DelftTools.Hydro.SewerFeatures
+﻿using DHYDRO.Common.Logging;
+
+namespace DelftTools.Hydro.SewerFeatures
 {
     /// <summary>
     /// Base compartment class.
     /// </summary>
     public abstract class ACompartment
     {
+        public abstract ILogHandler LogHandler { get; }
         /// <summary>
         /// Processes a compartment and then returns the processed compartment.
         /// </summary>

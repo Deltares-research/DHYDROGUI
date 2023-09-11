@@ -1,4 +1,5 @@
 ﻿using DelftTools.Utils.Collections.Generic;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -13,5 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// <param name="gwswDirectory">The GWSW directory.</param>
         /// <returns>A collection of <see cref="GwswAttributeType"/>.</returns>
         IEventedList<GwswAttributeType> GetDefinitions(string gwswDirectory);
+
+        ILogHandler LogHandler { get; set; }
     }
 }

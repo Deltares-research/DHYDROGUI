@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Linq;
+using DelftTools.Shell.Core.Properties;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using DHYDRO.Common.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -19,16 +22,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             {
                 // given
                 var random = new Random(21);
+                ILogHandler logHandler = Substitute.For<ILogHandler>();
+
                 var name = "Test_dwf_def";
 
-                var dwf = new NwrwDryWeatherFlowDefinition
+                var dwf = new NwrwDryWeatherFlowDefinition(logHandler)
                 {
                     Name = name,
                     DailyVolumeConstant = random.NextDouble() // dm³/day
                 };
                 rrModel.NwrwDryWeatherFlowDefinitions.Add(dwf);
-
-                var nwrwDischargeData = new NwrwDischargeData
+                
+                var nwrwDischargeData = new NwrwDischargeData(logHandler)
                 {
                     DryWeatherFlowId = name
                 };
@@ -47,26 +52,31 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         [Test]
         public void SetCorrectLateralSurface_DictionaryNull_ThrowsArgumentNullException()
         {
+            // Arrange
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+
             // Call
-            TestDelegate call = () => new NwrwDischargeData().CalculateLateralFlow(null);
+            TestDelegate call = () => new NwrwDischargeData(logHandler).CalculateLateralFlow(null);
 
             // Assert
-            Assert.That(call, Throws.TypeOf<ArgumentNullException>());
+            Assert.That(call, Throws.Nothing);
+            logHandler.Received().ReportError(Properties.Resources.NwrwDischargeData_CalculateLateralFlow_In_CalculateLateralFlow_parameter_nwrwDryWeatherFlowDefinitionByName_is_null);
         }
 
         [Test]
         public void SetCorrectLaterSurface_DictionaryIsNull_ThrowsArgumentNullException()
         {
             // Setup
-            var mocks = new MockRepository();
-            mocks.ReplayAll();
-
+            ILogHandler logHandler = Substitute.For<ILogHandler>();
+            ILookup<string, NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitionByName = Substitute.For<ILookup<string, NwrwDryWeatherFlowDefinition>>();
+            const string dryWeatherFlowId = "myId";
+            
             // Call
-            TestDelegate call = () => new NwrwDischargeData().CalculateLateralFlow(null);
+            TestDelegate call = () => new NwrwDischargeData(logHandler) { DryWeatherFlowId = dryWeatherFlowId }.CalculateLateralFlow(nwrwDryWeatherFlowDefinitionByName);
 
             // Assert
-            Assert.That(call, Throws.TypeOf<ArgumentNullException>());
-            mocks.VerifyAll();
+            Assert.That(call, Throws.Nothing);
+            logHandler.Received().ReportError(string.Format(Properties.Resources.NwrwDischargeData_CalculateLateralFlow_Cannot_find_NwrwDryWeatherFlowDefinition_in_RR_model_by_name___0, dryWeatherFlowId));
         }
     }
 }

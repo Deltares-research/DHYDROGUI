@@ -4,10 +4,8 @@ using System.Threading;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using log4net;
+using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -47,35 +45,35 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         
         #endregion
 
-        public static IGwswFeatureGenerator<T> GetGwswFeatureGenerator<T>(SewerFeatureType featureType, GwswElement gwswElement)
+        public static IGwswFeatureGenerator<T> GetGwswFeatureGenerator<T>(SewerFeatureType featureType, GwswElement gwswElement, ILogHandler logHandler)
         {
             if (typeof(T) == typeof(ISewerFeature))
-                return (IGwswFeatureGenerator<T>) GetSewerFeatureGenerator(featureType, gwswElement);
+                return (IGwswFeatureGenerator<T>) GetSewerFeatureGenerator(featureType, gwswElement, logHandler);
             if (typeof(T) == typeof(INwrwFeature))
-                return (IGwswFeatureGenerator<T>) GetNwrwFeatureGenerator(featureType);
+                return (IGwswFeatureGenerator<T>)GetNwrwFeatureGenerator(featureType, logHandler);
             return null;
         }
 
-        private static IGwswFeatureGenerator<INwrwFeature> GetNwrwFeatureGenerator(SewerFeatureType elementType)
+        private static IGwswFeatureGenerator<INwrwFeature> GetNwrwFeatureGenerator(SewerFeatureType elementType, ILogHandler logHandler)
         {
             IGwswFeatureGenerator<INwrwFeature> generator;
             switch (elementType)
             {
                 case SewerFeatureType.Surface:
                     // Surface types (oppervlak.csv)
-                    generator = new GwswNwrwSurfaceDataGenerator();
+                    generator = new GwswNwrwSurfaceDataGenerator(logHandler);
                     break;
                 case SewerFeatureType.Runoff:
                     // Runoff types (nwrw.csv)
-                    generator = new GwswNwrwRunoffDefinitionGenerator();
+                    generator = new GwswNwrwRunoffDefinitionGenerator(logHandler);
                     break;
                 case SewerFeatureType.Distribution:
                     // Distribution types (verloop.csv)
-                    generator = new GwswNwrwDryWeatherFlowDefinitionGenerator();
+                    generator = new GwswNwrwDryWeatherFlowDefinitionGenerator(logHandler);
                     break;
                 case SewerFeatureType.Discharge:
                     // Discharge types (debiet.csv)
-                    generator = new GwswNwrwDischargeDataGenerator();
+                    generator = new GwswNwrwDischargeDataGenerator(logHandler);
                     break;
                 default:
                     generator = null;
@@ -84,22 +82,22 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return generator;
         }
 
-        private static IGwswFeatureGenerator<ISewerFeature> GetSewerFeatureGenerator(SewerFeatureType elementType, GwswElement gwswElement)
+        private static IGwswFeatureGenerator<ISewerFeature> GetSewerFeatureGenerator(SewerFeatureType elementType, GwswElement gwswElement, ILogHandler logHandler)
         {
             IGwswFeatureGenerator<ISewerFeature> generator;
             switch (elementType)
             {
                 case SewerFeatureType.Node:
-                    generator = gwswElement.GetSewerCompartmentGenerator();
+                    generator = gwswElement.GetSewerCompartmentGenerator(logHandler);
                     break;
                 case SewerFeatureType.Crosssection:
-                    generator = gwswElement.GetCrossSectionGenerator();
+                    generator = gwswElement.GetCrossSectionGenerator(logHandler);
                     break;
                 case SewerFeatureType.Connection:
-                    generator = gwswElement.GetSewerConnectionGenerator();
+                    generator = gwswElement.GetSewerConnectionGenerator(logHandler);
                     break;
                 case SewerFeatureType.Structure:
-                    generator = gwswElement.GetSewerStructureGenerator();
+                    generator = gwswElement.GetSewerStructureGenerator(logHandler);
                     break;
                 default:
                     generator = null;
@@ -108,79 +106,79 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return generator;
         }
 
-        private static IGwswFeatureGenerator<ISewerFeature> GetCrossSectionGenerator(this GwswElement gwswElement)
+        private static IGwswFeatureGenerator<ISewerFeature> GetCrossSectionGenerator(this GwswElement gwswElement, ILogHandler logHandler )
         {
-            if (!gwswElement.IsValidGwswSewerProfile()) return null;
+            if (!gwswElement.IsValidGwswSewerProfile(logHandler)) return null;
 
-            var profileShapeAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileShape);
-            var structureType = profileShapeAttribute.GetValueFromDescription<SewerProfileMapping.SewerProfileType>();
+            var profileShapeAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileShape, logHandler);
+            var structureType = profileShapeAttribute.GetValueFromDescription<SewerProfileMapping.SewerProfileType>(logHandler);
             switch (structureType)
             {
                 case SewerProfileMapping.SewerProfileType.InvertedEgg:
-                    return new InvertedEggCrossSectionShapeGenerator();
+                    return new InvertedEggCrossSectionShapeGenerator(logHandler);
                 case SewerProfileMapping.SewerProfileType.Egg:
-                    return new EggCrossSectionShapeGenerator();
+                    return new EggCrossSectionShapeGenerator(logHandler);
                 case SewerProfileMapping.SewerProfileType.UShape:
-                    return new UShapeCrossSectionShapeGenerator();
+                    return new UShapeCrossSectionShapeGenerator(logHandler);
                 case SewerProfileMapping.SewerProfileType.Arch:
-                    return new ArchCrossSectionShapeGenerator();
+                    return new ArchCrossSectionShapeGenerator(logHandler);
                 case SewerProfileMapping.SewerProfileType.Cunette:
-                    return new CunetteCrossSectionShapeGenerator();
+                    return new CunetteCrossSectionShapeGenerator(logHandler);
                 case SewerProfileMapping.SewerProfileType.Rectangle:
-                    return new RectangleCrossSectionShapeGenerator();
+                    return new RectangleCrossSectionShapeGenerator(logHandler);
                 case SewerProfileMapping.SewerProfileType.Elliptical:
-                    return new EllipticalCrossSectionShapeGenerator();
+                    return new EllipticalCrossSectionShapeGenerator(logHandler);
                 case SewerProfileMapping.SewerProfileType.Circle:
-                    return new CircleCrossSectionShapeGenerator();
+                    return new CircleCrossSectionShapeGenerator(logHandler);
                 case SewerProfileMapping.SewerProfileType.Trapezoid:
-                    return new TrapezoidCrossSectionShapeGenerator();
+                    return new TrapezoidCrossSectionShapeGenerator(logHandler);
                 default:
-                    return new DefaultCrossSectionShapeGenerator();
+                    return new DefaultCrossSectionShapeGenerator(logHandler);
             }
         }
 
-        private static IGwswFeatureGenerator<ISewerFeature> GetSewerStructureGenerator(this GwswElement gwswElement)
+        private static IGwswFeatureGenerator<ISewerFeature> GetSewerStructureGenerator(this GwswElement gwswElement, ILogHandler logHandler)
         {
-            var structureTypeAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.StructureType);
-            if (!structureTypeAttribute.IsValidAttribute()) return null;
+            var structureTypeAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.StructureType, logHandler);
+            if (!structureTypeAttribute.IsValidAttribute(logHandler)) return null;
 
-            var structureType = structureTypeAttribute.GetValueFromDescription<SewerStructureMapping.StructureType>();
+            var structureType = structureTypeAttribute.GetValueFromDescription<SewerStructureMapping.StructureType>(logHandler);
             switch (structureType)
             {
                 case SewerStructureMapping.StructureType.Pump:
-                    return new SewerPumpGenerator();
+                    return new SewerPumpGenerator(logHandler);
                 case SewerStructureMapping.StructureType.Crest:
-                    return new SewerWeirGenerator();
+                    return new SewerWeirGenerator(logHandler);
                 case SewerStructureMapping.StructureType.Orifice:
-                    return new SewerOrificeGenerator();
+                    return new SewerOrificeGenerator(logHandler);
                 case SewerStructureMapping.StructureType.Outlet:
-                    return new SewerOutletCompartmentGenerator();
+                    return new SewerOutletCompartmentGenerator(logHandler);
                 default:
-                    return new SewerConnectionGenerator();
+                    return new SewerConnectionGenerator(logHandler);
             }
         }
 
-        private static ASewerCompartmentGenerator GetSewerCompartmentGenerator(this GwswElement gwswElement)
+        private static ASewerCompartmentGenerator GetSewerCompartmentGenerator(this GwswElement gwswElement, ILogHandler logHandler)
         {
-            ASewerCompartmentGenerator compartmentGenerator = new SewerCompartmentGenerator();
-
-            var nodeTypeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeType);
-            if (nodeTypeAttribute.IsValidAttribute() && nodeTypeAttribute.IsGwswOutlet())
-                compartmentGenerator = new SewerOutletCompartmentGenerator();
+            ASewerCompartmentGenerator compartmentGenerator = new SewerCompartmentGenerator(logHandler);
+                
+            var nodeTypeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeType, logHandler);
+            if (nodeTypeAttribute.IsValidAttribute(logHandler) && nodeTypeAttribute.IsGwswOutlet(logHandler))
+                compartmentGenerator = new SewerOutletCompartmentGenerator(logHandler);
 
             return compartmentGenerator;
         }
 
-        private static IGwswFeatureGenerator<ISewerFeature> GetSewerConnectionGenerator(this GwswElement gwswElement)
+        private static IGwswFeatureGenerator<ISewerFeature> GetSewerConnectionGenerator(this GwswElement gwswElement, ILogHandler logHandler)
         {
-            var sewerTypeAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PipeType);
-            var basicGenerator = new SewerConnectionGenerator();
-            if (!sewerTypeAttribute.IsValidAttribute()) return basicGenerator;
+            var sewerTypeAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PipeType, logHandler);
+            var basicGenerator = new SewerConnectionGenerator(logHandler);
+            if (!sewerTypeAttribute.IsValidAttribute(logHandler)) return basicGenerator;
 
-            if (sewerTypeAttribute.IsGwswPipe()) return new SewerConnectionPipeGenerator();
-            if (sewerTypeAttribute.IsGwswOrifice()) return new SewerOrificeGenerator();
-            if (sewerTypeAttribute.IsGwswPump()) return new SewerPumpGenerator();
-            if (sewerTypeAttribute.IsGwswWeir()) return new SewerWeirGenerator();
+            if (sewerTypeAttribute.IsGwswPipe(logHandler)) return new SewerConnectionPipeGenerator(logHandler);
+            if (sewerTypeAttribute.IsGwswOrifice(logHandler)) return new SewerOrificeGenerator(logHandler);
+            if (sewerTypeAttribute.IsGwswPump(logHandler)) return new SewerPumpGenerator(logHandler);
+            if (sewerTypeAttribute.IsGwswWeir(logHandler)) return new SewerWeirGenerator(logHandler);
 
             return basicGenerator;
         }
@@ -209,120 +207,5 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 .SelectMany(l => l.Features);
         }
         
-    }
-
-    internal static class GwswElementValidationExtensions
-    {
-        private static ILog Log = LogManager.GetLogger(typeof(GwswElementValidationExtensions));
-
-        public static bool IsGwswOutlet(this GwswAttribute sewerTypeAttribute)
-        {
-            var nodeType = sewerTypeAttribute.GetValueFromDescription<ManholeMapping.NodeType>();
-            return nodeType == ManholeMapping.NodeType.Outlet;
-        }
-
-        public static bool IsGwswOrifice(this GwswAttribute sewerTypeAttribute)
-        {
-            var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
-            return connectionType == SewerConnectionMapping.ConnectionType.Orifice;
-        }
-
-        public static bool IsGwswPump(this GwswAttribute sewerTypeAttribute)
-        {
-            var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
-            return connectionType == SewerConnectionMapping.ConnectionType.Pump;
-        }
-
-        public static bool IsGwswPipe(this GwswAttribute sewerTypeAttribute)
-        {
-            var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
-            if (connectionType == SewerConnectionMapping.ConnectionType.ClosedConnection ||
-                connectionType == SewerConnectionMapping.ConnectionType.InfiltrationPipe ||
-                connectionType == SewerConnectionMapping.ConnectionType.Open)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public static bool IsGwswWeir(this GwswAttribute sewerTypeAttribute)
-        {
-            var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
-            return connectionType == SewerConnectionMapping.ConnectionType.Crest;
-        }
-
-        public static bool IsValidGwswCompartment(this GwswElement gwswElement)
-        {
-            if (gwswElement == null) return false;
-
-            var featureType = GetEnumValueFromDescription<SewerFeatureType>(gwswElement.ElementTypeName);
-            var isNodeGwswElement = featureType == SewerFeatureType.Node;
-            if (isNodeGwswElement) return true;
-
-            bool isOutletGwswElement;
-            var structureTypeAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.StructureType);
-            if (structureTypeAttribute == null)
-            {
-                isOutletGwswElement = false;
-            }
-            else
-            {
-                var structureType = GetEnumValueFromDescription<SewerStructureMapping.StructureType>(structureTypeAttribute.ValueAsString);
-                isOutletGwswElement = featureType == SewerFeatureType.Structure && structureType == SewerStructureMapping.StructureType.Outlet;
-            }
-
-            return isOutletGwswElement;
-        }
-
-        private static TEnum GetEnumValueFromDescription<TEnum>(string valueAsString)
-        {
-            return (TEnum) typeof(TEnum).GetEnumValueFromDescription(valueAsString);
-        }
-
-        public static bool IsValidGwswSewerConnection(this GwswElement gwswElement)
-        {
-            if (gwswElement == null || gwswElement.ElementTypeName != SewerFeatureType.Connection.ToString()) return false;
-
-            var nodeIdStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            var nodeIdEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
-            if (nodeIdStart == null || nodeIdEnd == null)
-            {
-                Log.ErrorFormat(Resources
-                    .SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields);
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool IsValidGwswSewerProfile(this GwswElement gwswElement)
-        {
-            if (gwswElement == null) return false;
-
-            var profileId = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
-            if (!profileId.IsValidAttribute())
-            {
-                Log.Error(Resources.GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s);
-                return false;
-            }
-
-            var featureType = (SewerFeatureType)typeof(SewerFeatureType).GetEnumValueFromDescription(gwswElement.ElementTypeName);
-            return featureType == SewerFeatureType.Crosssection;
-        }
-
-        public static bool IsValidGwswStructure(this GwswElement gwswElement)
-        {
-            if (gwswElement == null) return false;
-
-            var profileId = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.UniqueId);
-            if (!profileId.IsValidAttribute())
-            {
-                Log.Error(Resources.GwswElementValidationExtensions_IsValidGwswStructure_Cannot_import_sewer_structure_s__without_a_unique_id__Please_check__Kunstwerk_csv__for_empty_unique_id_s);
-                return false;
-            }
-
-            var featureType = (SewerFeatureType)typeof(SewerFeatureType).GetEnumValueFromDescription(gwswElement.ElementTypeName);
-            return featureType == SewerFeatureType.Structure;
-        }
     }
 }

@@ -28,12 +28,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
             return aCompartment;
         }
         
-        private static void SetBottomLevel(ICompartment compartment, GwswElement gwswElement)
+        private void SetBottomLevel(ICompartment compartment, GwswElement gwswElement)
         {
             double defaultValue = compartment.BottomLevel;
             var logMessage = $"Missing bottom level value for '{compartment.Name}', using default value: {defaultValue}";
             
-            double bottomLevel = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.BottomLevel, defaultValue, logMessage);
+            double bottomLevel = gwswElement.GetAttributeValueFromList<double>(ManholeMapping.PropertyKeys.BottomLevel, LogHandler, defaultValue, logMessage);
             
             compartment.BottomLevel = bottomLevel;
         }
