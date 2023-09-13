@@ -13,6 +13,7 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
 using log4net;

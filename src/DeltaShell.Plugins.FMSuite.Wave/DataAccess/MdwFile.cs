@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess

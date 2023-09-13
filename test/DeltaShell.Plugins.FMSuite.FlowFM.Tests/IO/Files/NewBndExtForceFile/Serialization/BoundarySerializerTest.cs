@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Serialization;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Serialization

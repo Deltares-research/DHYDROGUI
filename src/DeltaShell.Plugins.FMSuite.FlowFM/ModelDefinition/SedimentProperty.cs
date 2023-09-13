@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Aop;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
+using DHYDRO.Common.IO.Ini;
 using SharpMap;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using DeltaShell.NGHS.IO.Ini;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {

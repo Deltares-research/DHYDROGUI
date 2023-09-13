@@ -1,4 +1,4 @@
-﻿using DeltaShell.NGHS.IO.Ini;
+﻿using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations

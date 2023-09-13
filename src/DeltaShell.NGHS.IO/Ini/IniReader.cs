@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Ini
 {

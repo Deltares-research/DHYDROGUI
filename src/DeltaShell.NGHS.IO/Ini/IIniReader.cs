@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Ini
 {

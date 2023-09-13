@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using log4net;
 

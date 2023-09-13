@@ -5,6 +5,7 @@ using System.Linq;
 using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations.PostBehaviours;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;

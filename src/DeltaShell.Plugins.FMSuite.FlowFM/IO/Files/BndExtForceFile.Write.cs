@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -15,6 +14,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Serialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DHYDRO.Common.IO.Ini;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files

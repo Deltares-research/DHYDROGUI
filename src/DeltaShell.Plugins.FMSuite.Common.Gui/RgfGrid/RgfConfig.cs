@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Collections.Extensions;
-using DeltaShell.NGHS.IO.Ini;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid

@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.NGHS.IO.Ini
+﻿using DHYDRO.Common.IO.Ini;
+
+namespace DeltaShell.NGHS.IO.Ini
 {
     /// <summary>
     /// <see cref="IniWriter"/> implements the interface with which to write

@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers
 {

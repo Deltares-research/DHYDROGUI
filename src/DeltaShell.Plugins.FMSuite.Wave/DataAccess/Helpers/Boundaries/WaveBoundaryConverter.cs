@@ -5,7 +5,6 @@ using DelftTools.Functions;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Utils;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
@@ -16,6 +15,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
 

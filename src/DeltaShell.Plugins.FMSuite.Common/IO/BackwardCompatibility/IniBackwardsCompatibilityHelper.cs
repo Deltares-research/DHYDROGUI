@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility

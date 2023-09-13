@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {

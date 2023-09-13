@@ -28,6 +28,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DHYDRO.Common.Extensions;
+using EnumerableExtensions = DHYDRO.Common.Extensions.EnumerableExtensions;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -1432,7 +1433,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 else if (featureFilePath.EndsWith(FileConstants.PolylineFileExtension))
                 {
                     IList<GroupableFeature2DPolygon> dryAreasToAdd = dryAreaFile.Read(featureFilePath);
-                    dryAreasToAdd.ForEach(f =>
+                    EnumerableExtensions.ForEach(dryAreasToAdd, f =>
                     {
                         f.GroupName = groupName;
                         f.IsDefaultGroup = groupName != null &&
@@ -1640,7 +1641,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="bridgePillars"> The bridge pillars. </param>
         internal static void CleanBridgePillarAttributes(IEnumerable<BridgePillar> bridgePillars)
         {
-            bridgePillars?.ForEach(bp => bp.Attributes.Clear());
+            if (bridgePillars != null)
+            {
+                EnumerableExtensions.ForEach(bridgePillars, bp => bp.Attributes.Clear());
+            }
         }
 
         #endregion

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.IniOperations;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;

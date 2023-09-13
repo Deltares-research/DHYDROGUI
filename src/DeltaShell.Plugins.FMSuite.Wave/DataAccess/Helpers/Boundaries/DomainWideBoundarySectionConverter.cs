@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
-using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
 {
