@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 previousCompartment = connection.TargetCompartment;
             }
 
-            if (string.Equals(e.PropertyName, nameof(connection.TargetCompartment)))
+            if (string.Equals(e.PropertyName, nameof(connection.SourceCompartment)))
             {
                 previousCompartment = connection.SourceCompartment;
             }

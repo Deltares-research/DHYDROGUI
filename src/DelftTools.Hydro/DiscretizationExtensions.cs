@@ -141,10 +141,19 @@ namespace DelftTools.Hydro
                 discretization.Locations.AddValues(new[] { missingLocation });
             }
 
-            var duplicateLocations = discretization.GetLocationsForCompartment(toCompartment).Skip(1).ToArray();
-            if (duplicateLocations.Any())
+            missingLocation = discretization.GetMissingLocationForCompartment(toCompartment);
+            if (missingLocation != null)
             {
-                discretization.Locations.RemoveValues(new VariableValueFilter<INetworkLocation>(discretization.Locations, duplicateLocations));
+                discretization.Locations.AddValues(new[] { missingLocation });
+            }
+            else
+            {
+                var duplicateLocations = discretization.GetLocationsForCompartment(toCompartment).Skip(1).ToArray();
+
+                if (duplicateLocations.Any())
+                {
+                    discretization.Locations.RemoveValues(new VariableValueFilter<INetworkLocation>(discretization.Locations, duplicateLocations));
+                }
             }
         }
 

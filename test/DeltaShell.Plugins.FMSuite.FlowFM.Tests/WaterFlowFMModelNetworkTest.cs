@@ -5,7 +5,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DataObjects;
-using GeoAPI.Extensions.Networks;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -121,7 +121,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var discretizationLocations = discretization.Locations.Values;
             Assert.That(discretizationLocations.Count(l => l.Branch.Equals(sewerConnection)), Is.EqualTo(0));
         }
+        
+        [Test]
+        public void Reconnecting_SewerConnectionFromNetwork_To_A_New_Compartment_Should_Give_Correct_DiscretizationPoints()
+        {
+            //model: compartment 1 - sewerconnection 1 - compartment 2 - sewerconnection 2 - compartment 3
+            IDiscretization discretization = CreateFmModelWith3ManholesAnd2SewerConnections(out Manhole manhole2, out SewerConnection sewerConnection1, out SewerConnection sewerConnection2);
 
+            //Action reconnect sewer connection from compartment 2 to the new compartment 4
+            var compartment4 = new Compartment() { Name = "Compartment4" };
+            manhole2.Compartments.Add(compartment4);
+            sewerConnection2.SourceCompartment = compartment4;
+            
+            //check calculation points
+            var locationsSewerConnection1 = discretization.Locations.Values.Where(l => l.Branch.Equals(sewerConnection1)).ToList();
+            var firstLocation = locationsSewerConnection1.First();
+            var lastLocation = locationsSewerConnection1.Last();
+            Assert.AreEqual(0.0,firstLocation.Chainage);
+            Assert.AreEqual(sewerConnection1.Length,lastLocation.Chainage);
+            
+            var locationsSewerConnection2 = discretization.Locations.Values.Where(l => l.Branch.Equals(sewerConnection2)).ToList();
+            Assert.AreEqual(2,locationsSewerConnection2.Count());
+            firstLocation = locationsSewerConnection2.First();
+            lastLocation = locationsSewerConnection2.Last();
+            Assert.AreEqual(0.0,firstLocation.Chainage);
+            Assert.AreEqual(sewerConnection2.Length,lastLocation.Chainage);
+        }
+
+        [Test]
+        public void Reconnecting_SewerConnectionFromNetwork_To_An_Existing_Compartment_Should_Give_Correct_DiscretizationPoints()
+        {
+            //model: compartment 1 - sewerconnection 1 - compartment 2 - compartment 3 - sewerconnection 2 - compartment 4
+            //                                                |--- manhole 2 ---|
+            IDiscretization discretization = CreateFmModelWith3Manholes2SewerConnectionsConnectedToDifferentCompartmentsInSecondManhole(out Compartment compartment2, out SewerConnection sewerConnection1, out SewerConnection sewerConnection2);
+
+            //Action reconnect sewer connection 2 from compartment 3 to compartment 2
+            sewerConnection2.SourceCompartment = compartment2;
+            
+            //check calculation points
+            var locationsSewerConnection1 = discretization.Locations.Values.Where(l => l.Branch.Equals(sewerConnection1)).ToList();
+            var firstLocation = locationsSewerConnection1.First();
+            var lastLocation = locationsSewerConnection1.Last();
+            Assert.AreEqual(0.0,firstLocation.Chainage);
+            Assert.AreEqual(sewerConnection1.Length,lastLocation.Chainage);
+            
+            var locationsSewerConnection2 = discretization.Locations.Values.Where(l => l.Branch.Equals(sewerConnection2)).ToList();
+            Assert.AreEqual(1,locationsSewerConnection2.Count());
+            var location = locationsSewerConnection2.First();
+            Assert.AreEqual(sewerConnection2.Length,location.Chainage);
+
+        }
+        
         [Test]
         public void AddingLateralSourceToManholeDownstreamOfSewerConnection_ShouldCreateLateralSourcesDataWithCorrectManholeSet()
         {
@@ -156,5 +206,143 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(lateralSourcesData.Feature, Is.EqualTo(lateralSource));
             }
         }
+        #region ModelSetups
+        
+        
+        private IDiscretization CreateFmModelWith3ManholesAnd2SewerConnections(out Manhole manhole2, out SewerConnection sewerConnection1, out SewerConnection sewerConnection2)
+        {
+            //initialize test
+            var fmModel = new WaterFlowFMModel();
+            var network = fmModel.Network;
+            var discretization = fmModel.NetworkDiscretization;
+
+            var manhole1 = new Manhole
+            {
+                Name = "Manhole1",
+                Compartments = { new Compartment() { Name = "Compartment1" } }
+            };
+            manhole2 = new Manhole
+            {
+                Name = "Manhole2",
+                Compartments = { new Compartment() { Name = "Compartment2" } }
+            };
+            var manhole3 = new Manhole
+            {
+                Name = "Manhole3",
+                Compartments = { new Compartment() { Name = "Compartment3" } }
+            };
+            sewerConnection1 = new SewerConnection
+            {
+                Name = "SewerConnection1",
+                Length = 100,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }),
+                Source = manhole1,
+                Target = manhole2
+            };
+
+            sewerConnection2 = new SewerConnection
+            {
+                Name = "SewerConnection2",
+                Length = 200,
+                Geometry = new LineString(new[] { new Coordinate(0, 100), new Coordinate(0, 300) }),
+                Source = manhole2,
+                Target = manhole3
+            };
+
+            network.Branches.Add(sewerConnection1);
+            network.Branches.Add(sewerConnection2);
+
+            //check assumption
+            SewerConnection connection = sewerConnection1;
+            var locationsSewerConnection1 = discretization.Locations.Values.Where(l => l.Branch.Equals(connection)).ToList();
+            var firstLocation = locationsSewerConnection1.First();
+            var lastLocation = locationsSewerConnection1.Last();
+            Assert.AreEqual(0.0, firstLocation.Chainage);
+            Assert.AreEqual(sewerConnection1.Length, lastLocation.Chainage);
+
+            SewerConnection connection2 = sewerConnection2;
+            var locationsSewerConnection2 = discretization.Locations.Values.Where(l => l.Branch.Equals(connection2)).ToList();
+            Assert.AreEqual(1, locationsSewerConnection2.Count());
+            var location = locationsSewerConnection2.First();
+            Assert.AreEqual(sewerConnection2.Length, location.Chainage);
+            return discretization;
+        }
+        
+        private IDiscretization CreateFmModelWith3Manholes2SewerConnectionsConnectedToDifferentCompartmentsInSecondManhole(out Compartment compartment2, out SewerConnection sewerConnection1, out SewerConnection sewerConnection2)
+        {
+            INetworkLocation firstLocation;
+            INetworkLocation lastLocation;
+            INetworkLocation location;
+
+            var nameSecondSewerConnection = "SewerConnection2";
+            var fmModel = new WaterFlowFMModel();
+            var network = fmModel.Network;
+            var discretization = fmModel.NetworkDiscretization;
+
+            compartment2 = new Compartment() { Name = "Compartment2" };
+            var compartment3 = new Compartment() { Name = "Compartment3" };
+
+            var manhole1 = new Manhole
+            {
+                Name = "Manhole1",
+                Compartments = { new Compartment() { Name = "Compartment1" } }
+            };
+            var manhole2 = new Manhole
+            {
+                Name = "Manhole2",
+                Compartments =
+                {
+                    compartment2,
+                    compartment3
+                }
+            };
+            var manhole3 = new Manhole
+            {
+                Name = "Manhole3",
+                Compartments = { new Compartment() { Name = "Compartment4" } }
+            };
+            sewerConnection1 = new SewerConnection
+            {
+                Name = "SewerConnection1",
+                Length = 100,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }),
+                Source = manhole1,
+                Target = manhole2,
+                TargetCompartment = compartment2
+            };
+
+            sewerConnection2 = new SewerConnection
+            {
+                Name = nameSecondSewerConnection,
+                Length = 200,
+                Geometry = new LineString(new[] { new Coordinate(0, 100), new Coordinate(0, 300) }),
+                Source = manhole2,
+                SourceCompartment = compartment3,
+                Target = manhole3
+            };
+
+            network.Branches.Add(sewerConnection1);
+            network.Branches.Add(sewerConnection2);
+
+            //check assumption
+            SewerConnection connection = sewerConnection1;
+            var locationsSewerConnection1 = discretization.Locations.Values.Where(l => l.Branch.Equals(connection)).ToList();
+            firstLocation = locationsSewerConnection1.First();
+            lastLocation = locationsSewerConnection1.Last();
+            Assert.AreEqual(0.0, firstLocation.Chainage);
+            Assert.AreEqual(sewerConnection1.Length, lastLocation.Chainage);
+
+            SewerConnection connection2 = sewerConnection2;
+            var locationsSewerConnection2 = discretization.Locations.Values.Where(l => l.Branch.Equals(connection2)).ToList();
+
+            Assert.AreEqual(2, locationsSewerConnection2.Count());
+            firstLocation = locationsSewerConnection2.First();
+            lastLocation = locationsSewerConnection2.Last();
+            Assert.AreEqual(0.0, firstLocation.Chainage);
+            Assert.AreEqual(sewerConnection2.Length, lastLocation.Chainage);
+            return discretization;
+        }
+              
+        #endregion ModelSetups
     }
 }
