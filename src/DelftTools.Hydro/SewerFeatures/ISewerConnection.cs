@@ -82,5 +82,7 @@ namespace DelftTools.Hydro.SewerFeatures
         /// This is not applicable for sewer connections of type <see cref="Pipe"/>.
         /// </remarks>
         SewerConnectionSpecialConnectionType SpecialConnectionType { get; }
+
+        double GetDefaultLevelValue();
     }
 }

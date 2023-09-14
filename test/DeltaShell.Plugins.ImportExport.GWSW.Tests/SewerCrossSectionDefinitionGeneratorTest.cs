@@ -467,8 +467,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "3000", "400", TypeDouble)
                 }
             };
+
             ILogHandler logHandler = Substitute.For<ILogHandler>();
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<DefaultCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(logHandler, profileGwswElement, ProfileId, 0.4, concreteMaterialValue);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<DefaultCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(logHandler, profileGwswElement, ProfileId, 0.1, concreteMaterialValue);
         }
 
         [Test]

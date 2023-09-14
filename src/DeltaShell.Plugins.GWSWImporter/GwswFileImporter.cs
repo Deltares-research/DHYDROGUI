@@ -736,6 +736,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
                     crossSection.UseSharedDefinition(defaultProfile);
                     pipe.CrossSection = crossSection;
+                    pipe.LevelSource = pipe.LevelSource.Equals(0.0d) ? pipe.GetDefaultLevelValue() : pipe.LevelSource;
+                    pipe.LevelTarget = pipe.LevelTarget.Equals(0.0d) ? pipe.GetDefaultLevelValue() : pipe.LevelTarget;
+
                     helper.PipeCrossSections?.Enqueue(crossSection);
                 }
 

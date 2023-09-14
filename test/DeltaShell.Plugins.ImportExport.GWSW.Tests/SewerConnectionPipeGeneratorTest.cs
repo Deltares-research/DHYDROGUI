@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.IsNull(createdPipe.Source);
             Assert.IsNull(createdPipe.Target);
             Assert.IsNull(createdPipe.CrossSection?.Definition);
-
+            
             //Defined
             Assert.That(createdPipe.LevelSource, Is.EqualTo(sourceLevel));
             Assert.That(createdPipe.LevelTarget, Is.EqualTo(targetLevel));

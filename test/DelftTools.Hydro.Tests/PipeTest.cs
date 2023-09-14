@@ -75,5 +75,25 @@ namespace DelftTools.Hydro.Tests
 
             Assert.That(pipe.CrossSectionDefinitionName, Is.EqualTo(csDefinitionName));
         }
+        
+        [Test]
+        public void GivenPipe_WhenNoCrossSectionNull_ThenAlwaysCreateDefaultPipeCrossSectionDefinitionWithDefaultLevels()
+        {
+            // arrange
+            HydroNetwork hydroNetwork = new HydroNetwork();
+            var pipe = new Pipe(){Network = hydroNetwork};
+            
+            // act and assert
+            Assert.That(pipe.HydroNetwork.SharedCrossSectionDefinitions.Select(def => def.Name).Any(name => name.Equals(SewerCrossSectionDefinitionFactory.DefaultPipeProfileName)), Is.False);
+            Assert.That(pipe.LevelSource, Is.EqualTo(0.0d));
+            Assert.That(pipe.LevelTarget, Is.EqualTo(0.0d));
+            // pipe.CrossSection getter will create the default pipe profile.
+            Assert.That(pipe.CrossSection.Definition.Name, Is.EqualTo(SewerCrossSectionDefinitionFactory.DefaultPipeProfileName));
+            Assert.That(pipe.HydroNetwork.SharedCrossSectionDefinitions.Select(def => def.Name).Any(name => name.Equals(SewerCrossSectionDefinitionFactory.DefaultPipeProfileName)), Is.True);
+            Assert.That(pipe.LevelSource, Is.EqualTo(-10.0d));
+            Assert.That(pipe.LevelTarget, Is.EqualTo(-10.0d));
+
+
+        }
     }
 }

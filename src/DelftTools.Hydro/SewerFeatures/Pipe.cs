@@ -50,6 +50,15 @@ namespace DelftTools.Hydro.SewerFeatures
                 AddCrossSectionSectionToDefinition(HydroNetwork);
             }
         }
+        protected override ICrossSectionDefinition GetDefaultProfile()
+        {
+            return SewerFactory.GetDefaultPipeProfile(HydroNetwork);
+        }
+
+        public override double GetDefaultLevelValue()
+        {
+            return -10.0d;
+        }
 
         private void OnPipePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -112,7 +121,7 @@ namespace DelftTools.Hydro.SewerFeatures
         private void AddCrossSectionSectionToDefinition(IHydroNetwork hydroNetwork)
         {
             var sewerCrossSectionSectionType = hydroNetwork?.CrossSectionSectionTypes?.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
-            var crossSectionDefinition = CrossSection?.Definition;
+            var crossSectionDefinition = crossSection?.Definition;
 
             if (sewerCrossSectionSectionType != null &&
                 crossSectionDefinition != null &&

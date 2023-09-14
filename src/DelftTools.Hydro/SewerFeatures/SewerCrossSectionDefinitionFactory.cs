@@ -6,19 +6,19 @@ namespace DelftTools.Hydro.SewerFeatures
     /// <summary>
     /// An instance creator for sewer cross section definitions.
     /// </summary>
-    internal static class SewerCrossSectionDefinitionFactory
+    public static class SewerCrossSectionDefinitionFactory
     {
-        internal const string DefaultPipeProfileName = "Default Pipe Profile";
+        public const string DefaultPipeProfileName = "Default Pipe Profile";
 
         /// <summary>
         /// The name of the default pump sewer structure profile.
         /// </summary>
-        internal const string DefaultPumpSewerStructureProfileName = "Default Pump sewer structure profile";
+        public const string DefaultPumpSewerStructureProfileName = "Default Pump sewer structure profile";
 
         /// <summary>
         /// The name of the default weir/orifice sewer structure profile.
         /// </summary>
-        internal const string DefaultWeirSewerStructureProfileName = "Default Weir/Orifice sewer structure profile";
+        public const string DefaultWeirSewerStructureProfileName = "Default Weir/Orifice sewer structure profile";
 
         /// <summary>
         /// Creates the default pipe cross section definition.
@@ -52,12 +52,8 @@ namespace DelftTools.Hydro.SewerFeatures
         /// </returns>
         internal static CrossSectionDefinition CreateDefaultWeirSewerStructureProfile()
         {
-            var rectangleShape = new CrossSectionStandardShapeRectangle
-            {
-                Height = 10,
-                Width = 10
-            };
-            return new CrossSectionDefinitionStandard(rectangleShape) { Name = DefaultWeirSewerStructureProfileName };
+            var circleShape = new CrossSectionStandardShapeCircle { Diameter = 0.1 };
+            return new CrossSectionDefinitionStandard(circleShape) { Name = DefaultWeirSewerStructureProfileName };
         }
     }
 }
