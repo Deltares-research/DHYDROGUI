@@ -1990,6 +1990,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             HydroLink link = lateral.Links.First();
             Assert.That(link.Target, Is.SameAs(lateral));
 
+            List<Model1DLateralSourceData> lateralDatas = fmModel.LateralSourcesData.ToList();
+            Assert.That(lateralDatas.Count, Is.EqualTo(1));
+            Model1DLateralSourceData lateralData = lateralDatas.First();
+            Assert.That(lateralData.Feature, Is.SameAs(lateral));
+            const string expectedCompartmentName = "0WADI1a";
+            Assert.That(lateralData.Compartment.Name, Is.EqualTo(expectedCompartmentName));
+
             RainfallRunoffModel rrModel = hydroModel.Models.OfType<RainfallRunoffModel>().FirstOrDefault();
             Assert.That(rrModel, Is.Not.Null);
 

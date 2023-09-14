@@ -19,7 +19,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
@@ -38,15 +37,17 @@ using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
+using EnumerableExtensions = DelftTools.Utils.Collections.EnumerableExtensions;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// Importer for GWSW files
     /// </summary>
-    /// <seealso cref="DelftTools.Shell.Core.IFileImporter" />
+    /// <seealso cref="DelftTools.Shell.Core.IFileImporter"/>
     public class GwswFileImporter : IFileImporter
     {
         private readonly IDefinitionsProvider definitionsProvider;
@@ -55,7 +56,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         private CsvSettings csvSettings;
         public IActivityRunner ActivityRunner { get; set; }
-        
+
         public GwswFileImporter(IDefinitionsProvider definitionsProvider)
         {
             this.definitionsProvider = definitionsProvider ?? throw new ArgumentNullException(nameof(definitionsProvider));
@@ -69,7 +70,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         }
 
         /// <summary>
-        /// Imports the given file as path. If it is null, then the list of files (FilesToImport) will be imported instead. 
+        /// Imports the given file as path. If it is null, then the list of files (FilesToImport) will be imported instead.
         /// A Gwsw Definition file needs to be loaded beforehand with method LoadDefinitionFile.
         /// By default, all files referenced in the GwswDefinitionFile are selected to import.
         /// </summary>
@@ -93,24 +94,32 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 return null;
             }
 
-            if (!string.IsNullOrEmpty(path)) FilesToImport = new EventedList<string> { path };
-            if (FilesToImport == null || FilesToImport.Count == 0) return null;
+            if (!string.IsNullOrEmpty(path))
+            {
+                FilesToImport = new EventedList<string> { path };
+            }
+
+            if (FilesToImport == null || FilesToImport.Count == 0)
+            {
+                return null;
+            }
 
             Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
             if (ShouldCancel)
+            {
                 return null;
+            }
 
             HydroModel hydroModel = null;
             WaterFlowFMModel fmModel = null;
             RainfallRunoffModel rrModel = null;
             try
             {
-                var elementTypesList = ImportGwswElementsFromGwswFiles();
-                
+                ILookup<SewerFeatureType, GwswElement> elementTypesList = ImportGwswElementsFromGwswFiles();
+
                 hydroModel = target is Project || target == null
                                  ? new HydroModelBuilder().BuildModel(ModelGroup.RHUModels)
                                  : target as HydroModel;
-
 
                 fmModel = hydroModel?.GetAllActivitiesRecursive<WaterFlowFMModel>()?.FirstOrDefault() ??
                           target as WaterFlowFMModel;
@@ -145,17 +154,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             watch.Stop();
             Log.Info($"Done importing and generating model in {watch.ElapsedMilliseconds / 1000} sec");
             logHandler?.LogReport();
-            ProgressChanged?.Invoke($"Done importing and generating model in {watch.ElapsedMilliseconds/1000} sec from gwsw files, loading into DeltaShell", 10, 10);
-            return (target is Project || target == null) && !ShouldCancel ? hydroModel : fmModel != null ? (object) fmModel : rrModel != null ? rrModel : null;
+            ProgressChanged?.Invoke($"Done importing and generating model in {watch.ElapsedMilliseconds / 1000} sec from gwsw files, loading into DeltaShell", 10, 10);
+            return (target is Project || target == null) && !ShouldCancel ? hydroModel : fmModel != null ? (object)fmModel : rrModel != null ? rrModel : null;
         }
 
         private void SetDefaultModelSettings(IWaterFlowFMModel fmModel, HydroModel hydroModel)
         {
             var timeStep = new TimeSpan(0, 1, 0);
-            hydroModel.TimeStep = timeStep; 
+            hydroModel.TimeStep = timeStep;
             double timeStepInSeconds = timeStep.TotalSeconds;
 
-            string timeStepValue = timeStepInSeconds.ToString(CultureInfo.InvariantCulture);
+            var timeStepValue = timeStepInSeconds.ToString(CultureInfo.InvariantCulture);
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.DtUser, timeStepValue);
             fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, timeStepValue);
             fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, timeStepValue);
@@ -171,33 +180,50 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             if (fmModel != null && rrModel == null)
             {
-                var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 2);
-                var hydroModelCurrentWorkflow =
+                IEnumerable<ICompositeActivity> wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 2);
+                ICompositeActivity hydroModelCurrentWorkflow =
                     wfs.FirstOrDefault(wf => wf.GetActivitiesOfType<IWaterFlowFMModel>().Any());
-                if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+                if (hydroModelCurrentWorkflow != null)
+                {
+                    hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+                }
             }
             else if (fmModel != null && rrModel != null)
             {
-                var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 3);
-                var hydroModelCurrentWorkflow = wfs.FirstOrDefault(wf =>
-                    wf.GetActivitiesOfType<IWaterFlowFMModel>().Any() &&
-                    wf.GetActivitiesOfType<RainfallRunoffModel>().Any());
-                if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+                IEnumerable<ICompositeActivity> wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 3);
+                ICompositeActivity hydroModelCurrentWorkflow = wfs.FirstOrDefault(wf =>
+                                                                                      wf.GetActivitiesOfType<IWaterFlowFMModel>().Any() &&
+                                                                                      wf.GetActivitiesOfType<RainfallRunoffModel>().Any());
+                if (hydroModelCurrentWorkflow != null)
+                {
+                    hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+                }
             }
             else if (fmModel == null && rrModel != null)
             {
-                var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 2);
-                var hydroModelCurrentWorkflow =
+                IEnumerable<ICompositeActivity> wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 2);
+                ICompositeActivity hydroModelCurrentWorkflow =
                     wfs.FirstOrDefault(wf => wf.GetActivitiesOfType<RainfallRunoffModel>().Any());
-                if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+                if (hydroModelCurrentWorkflow != null)
+                {
+                    hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+                }
             }
         }
 
         private void AddRRtoFMNwrwLinks(RainfallRunoffModel rrModel, WaterFlowFMModel fmModel)
         {
-            if (rrModel == null) throw new ArgumentNullException(nameof(rrModel));
-            if (fmModel == null) throw new ArgumentNullException(nameof(fmModel));
-            var network = fmModel.Network;
+            if (rrModel == null)
+            {
+                throw new ArgumentNullException(nameof(rrModel));
+            }
+
+            if (fmModel == null)
+            {
+                throw new ArgumentNullException(nameof(fmModel));
+            }
+
+            IHydroNetwork network = fmModel.Network;
 
             if (network == null)
             {
@@ -207,13 +233,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
             network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
             fmModel.UnSubscribeFromNetwork(network);
-            
-            var branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
-            var sewerConnectionsBySourceCompartmentName = network.SewerConnections.ToLookup(sc => sc.SourceCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
-            var sewerConnectionsByTargetCompartmentName = network.SewerConnections.ToLookup(sc => sc.TargetCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
-            var sewerConnectionsAsBranchesByCompartmentName = sewerConnectionsBySourceCompartmentName.Concat(sewerConnectionsByTargetCompartmentName)
-                .GroupBy(e => e.Key)
-                .ToDictionary(l => l.Key, l => l.First().First() as IBranch);
+
+            Dictionary<string, IBranch> branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
+            ILookup<string, ISewerConnection> sewerConnectionsBySourceCompartmentName = network.SewerConnections.ToLookup(sc => sc.SourceCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
+            ILookup<string, ISewerConnection> sewerConnectionsByTargetCompartmentName = network.SewerConnections.ToLookup(sc => sc.TargetCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, IBranch> sewerConnectionsAsBranchesByCompartmentName = sewerConnectionsBySourceCompartmentName.Concat(sewerConnectionsByTargetCompartmentName)
+                                                                                                                             .GroupBy(e => e.Key)
+                                                                                                                             .ToDictionary(l => l.Key, l => l.First().First() as IBranch);
             var lateralSources = new ConcurrentQueue<LateralSource>();
             var lateralSourcesDataByLaterSource = new ConcurrentDictionary<LateralSource, Model1DLateralSourceData>();
             var linksOfNwrwDataToLateralSource = new ConcurrentDictionary<NwrwData, LateralSource>();
@@ -221,53 +247,52 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 ProgressChanged?.Invoke("Adding links from Rainfall Runoff Model to FM model.", 0, 0);
                 ParallelHelper.RunActionInParallel(this, rrModel.GetAllModelData().OfType<NwrwData>().ToArray(),
-                    nwrwData =>
-                    {
-                        try
-                        {
-                            IBranch branch = FindTargetBranchForNwrwCatchmentBranch(branchesByName,
-                                sewerConnectionsAsBranchesByCompartmentName, nwrwData.Name);
+                                                   nwrwData =>
+                                                   {
+                                                       try
+                                                       {
+                                                           IBranch branch = FindTargetBranchForNwrwCatchmentBranch(branchesByName,
+                                                                                                                   sewerConnectionsAsBranchesByCompartmentName, nwrwData.Name);
 
-                            if (branch != null)
-                            {
-                                LateralSource lateralSource = new LateralSource
-                                {
-                                    Branch = branch,
-                                    Chainage = branch.Length,
-                                    Name = nwrwData.Name,
-                                    LongName = nwrwData.Name
-                                };
-                                lateralSources.Enqueue(lateralSource);
-                                AddLateralSourceToBranch(branch, lateralSource);
+                                                           if (branch != null)
+                                                           {
+                                                               var lateralSource = new LateralSource
+                                                               {
+                                                                   Branch = branch,
+                                                                   Chainage = branch.Length,
+                                                                   Name = nwrwData.Name,
+                                                                   LongName = nwrwData.Name
+                                                               };
+                                                               lateralSources.Enqueue(lateralSource);
+                                                               AddLateralSourceToBranch(branch, lateralSource);
 
-                                var model1DLateralSourceData = new Model1DLateralSourceData
-                                {
-                                    Feature = lateralSource,
-                                    UseSalt = fmModel.UseSalinity,
-                                    UseTemperature = fmModel.UseTemperature
-                                };
-                                if (lateralSource.Branch is IPipe pipe)
-                                {
-                                    model1DLateralSourceData.Compartment =
-                                        pipe.SourceCompartmentName != null &&
-                                        pipe.SourceCompartmentName.Equals(lateralSource.Name)
-                                            ? pipe.SourceCompartment
-                                            : pipe.TargetCompartment;
-                                }
+                                                               var model1DLateralSourceData = new Model1DLateralSourceData
+                                                               {
+                                                                   Feature = lateralSource,
+                                                                   UseSalt = fmModel.UseSalinity,
+                                                                   UseTemperature = fmModel.UseTemperature
+                                                               };
+                                                               if (lateralSource.Branch is ISewerConnection sewerConnection)
+                                                               {
+                                                                   model1DLateralSourceData.Compartment = GetLateralSourceDataCompartment(sewerConnection, lateralSource);
+                                                               }
 
-                                lateralSourcesDataByLaterSource.AddOrUpdate(lateralSource, model1DLateralSourceData,
-                                    (ls, m1lsd) => model1DLateralSourceData);
+                                                               lateralSourcesDataByLaterSource.AddOrUpdate(lateralSource, model1DLateralSourceData,
+                                                                                                           (ls, m1lsd) => model1DLateralSourceData);
 
-                                lock (fmModel.LateralSourcesData)
-                                    fmModel.LateralSourcesData.Add(model1DLateralSourceData);
-                                linksOfNwrwDataToLateralSource.AddOrUpdate(nwrwData, lateralSource, (ls, nwrw) => nwrw);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            logHandler?.ReportError(e.Message);
-                        }
-                    }, "Generating Hydrolinks");
+                                                               lock (fmModel.LateralSourcesData)
+                                                               {
+                                                                   fmModel.LateralSourcesData.Add(model1DLateralSourceData);
+                                                               }
+
+                                                               linksOfNwrwDataToLateralSource.AddOrUpdate(nwrwData, lateralSource, (ls, nwrw) => nwrw);
+                                                           }
+                                                       }
+                                                       catch (Exception e)
+                                                       {
+                                                           logHandler?.ReportError(e.Message);
+                                                       }
+                                                   }, "Generating Hydrolinks");
                 while (!network.LateralSources.Select(ls => ls.Name).AllUnique())
                 {
                     NamingHelper.MakeNamesUnique(network.LateralSources);
@@ -300,9 +325,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             if (!lateralSourcesDataByFeature.TryGetValue(lateralSource, out Model1DLateralSourceData model1DLateralSourceData))
             {
-                 logHandler?.ReportError($"Cannot find lateral source data generated for lateral source: {lateralSource}");
-                 return;
+                logHandler?.ReportError($"Cannot find lateral source data generated for lateral source: {lateralSource}");
+                return;
             }
+
             model1DLateralSourceData.DataType = model1DBoundaryDataType;
             model1DLateralSourceData.Flow = flow;
         }
@@ -326,11 +352,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         private void AddLateralSourceToBranch(IBranch branch, LateralSource lateralSource)
         {
             if (branch is ISewerConnection sewerConnection && sewerConnection.Target is IManhole manhole && manhole.Name.Equals(lateralSource.Name, StringComparison.InvariantCultureIgnoreCase))
+            {
                 lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
+            }
             else
+            {
                 lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, 0);
-            lock(branch.BranchFeatures)
+            }
+
+            lock (branch.BranchFeatures)
+            {
                 branch.BranchFeatures.Add(lateralSource);
+            }
         }
 
         private void ImportGwswNetworkInRrModel(
@@ -344,48 +377,55 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     $"One or more errors occured during the import process: {string.Join(Environment.NewLine, errorsDuringImport)}");
             }
 
-            if (rrModel == null || fmModel == null || ShouldCancel) return;
+            if (rrModel == null || fmModel == null || ShouldCancel)
+            {
+                return;
+            }
+
             ProgressChanged?.Invoke("Adding features to Rainfall Runoff Model.", 0, 0);
             AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, fmModel);
         }
 
         private void AddNwrwFeaturesToRainfallRunoffModel(IEnumerable<INwrwFeature> importedFeatureElements,
-            RainfallRunoffModel rrModel, WaterFlowFMModel fmModel)
+                                                          RainfallRunoffModel rrModel, WaterFlowFMModel fmModel)
         {
-            var featureElements = importedFeatureElements.ToArray();
-            var featureElementsByName = featureElements.ToGroupedDictionary(e => e.Name);
-            var network = fmModel.Network;
-            
-            var branchesGeometryDict = network.Branches.ToLookup(b => b.Name, b => b.Target?.Geometry);
+            INwrwFeature[] featureElements = importedFeatureElements.ToArray();
+            Dictionary<string, IEnumerable<INwrwFeature>> featureElementsByName = featureElements.ToGroupedDictionary(e => e.Name);
+            IHydroNetwork network = fmModel.Network;
+
+            ILookup<string, IGeometry> branchesGeometryDict = network.Branches.ToLookup(b => b.Name, b => b.Target?.Geometry);
             var compartmentsGeometryDict = network.Compartments.ToLookup(c => c.Name, c => c.Geometry);
             var networkFeatureNameAndGeometries = branchesGeometryDict.Concat(compartmentsGeometryDict)
-                .ToDictionary(nameGeometryLookup => nameGeometryLookup.Key, nameGeometryLookup => nameGeometryLookup.FirstOrDefault(), StringComparer.InvariantCultureIgnoreCase);
-            var branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
-            var sewerConnectionsBySourceCompartmentName = network.SewerConnections.ToLookup(sc => sc.SourceCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
-            var sewerConnectionsByTargetCompartmentName = network.SewerConnections.ToLookup(sc => sc.TargetCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
-            var sewerConnetionsAsBranchesByCompartmentName = sewerConnectionsBySourceCompartmentName.Concat(sewerConnectionsByTargetCompartmentName)
-                .GroupBy(e => e.Key)
-                .ToDictionary(l => l.Key, l => l.First().First() as IBranch);
+                                                                      .ToDictionary(nameGeometryLookup => nameGeometryLookup.Key, nameGeometryLookup => nameGeometryLookup.FirstOrDefault(), StringComparer.InvariantCultureIgnoreCase);
+            Dictionary<string, IBranch> branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
+            ILookup<string, ISewerConnection> sewerConnectionsBySourceCompartmentName = network.SewerConnections.ToLookup(sc => sc.SourceCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
+            ILookup<string, ISewerConnection> sewerConnectionsByTargetCompartmentName = network.SewerConnections.ToLookup(sc => sc.TargetCompartmentName, sc => sc, StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, IBranch> sewerConnetionsAsBranchesByCompartmentName = sewerConnectionsBySourceCompartmentName.Concat(sewerConnectionsByTargetCompartmentName)
+                                                                                                                            .GroupBy(e => e.Key)
+                                                                                                                            .ToDictionary(l => l.Key, l => l.First().First() as IBranch);
             var flowByLateralSources = new ConcurrentDictionary<LateralSource, double>();
-            NwrwImporterHelper helper = new NwrwImporterHelper();
+            var helper = new NwrwImporterHelper();
             helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId = new ConcurrentDictionary<string, NwrwData>(rrModel.GetAllModelData().OfType<NwrwData>().ToDictionary(md => md.Name, md => md, StringComparer.InvariantCultureIgnoreCase));
             var lateralSourcesDataByLaterSource = new ConcurrentDictionary<LateralSource, Model1DLateralSourceData>();
-            
+
             fmModel.UnSubscribeFromNetwork(network);
             try
             {
-                ParallelHelper.RunActionInParallel(this, featureElements, featureElement =>  
+                ParallelHelper.RunActionInParallel(this, featureElements, featureElement =>
                 {
                     try
                     {
                         if (featureElement is NwrwDefinition ||
                             featureElement is NwrwDryWeatherFlowDefinition ||
-                            featureElement.Name != null &&
-                            networkFeatureNameAndGeometries.ContainsKey(featureElement.Name))
+                            (featureElement.Name != null &&
+                             networkFeatureNameAndGeometries.ContainsKey(featureElement.Name)))
                         {
                             if (featureElement.Name != null &&
                                 networkFeatureNameAndGeometries.ContainsKey(featureElement.Name))
+                            {
                                 featureElement.Geometry = networkFeatureNameAndGeometries[featureElement.Name];
+                            }
+
                             lock (rrModel.Basin.Catchments)
                             {
                                 featureElement.AddNwrwCatchmentModelDataToModel(rrModel, helper);
@@ -396,13 +436,16 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     {
                         logHandler?.ReportError(exception.Message);
                     }
-
-                },"Add nwrw feature to rainfall runoff model");
-                ParallelHelper.RunActionInParallel(this, rrModel.GetAllModelData().OfType<NwrwData>().ToArray(), nwrwData => {
-                    featureElementsByName[nwrwData.Name].ForEach((featureElement, indexOf) =>
+                }, "Add nwrw feature to rainfall runoff model");
+                ParallelHelper.RunActionInParallel(this, rrModel.GetAllModelData().OfType<NwrwData>().ToArray(), nwrwData =>
+                {
+                    EnumerableExtensions.ForEach(featureElementsByName[nwrwData.Name], (featureElement, indexOf) =>
                     {
                         if (ShouldCancel)
+                        {
                             return;
+                        }
+
                         try
                         {
                             featureElement.InitializeNwrwCatchmentModelData(nwrwData);
@@ -413,7 +456,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         }
                     });
                 }, "Initialize nwrw feature in rainfall runoff model");
-                
+
                 var nwrwDryWeatherFlowDefinitionByName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
 
                 ParallelHelper.RunActionInParallel(this, featureElements.OfType<NwrwDischargeData>().Where(nwrwDischargeData => !nwrwDischargeData.IsSpecialCase() && nwrwDischargeData.DischargeType == DischargeType.Lateral).ToArray(), nwrwDischargeData =>
@@ -421,23 +464,22 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     try
                     {
                         IBranch branch = FindTargetBranchForNwrwCatchmentBranch(branchesByName,
-                            sewerConnetionsAsBranchesByCompartmentName, nwrwDischargeData.Name);
+                                                                                sewerConnetionsAsBranchesByCompartmentName, nwrwDischargeData.Name);
                         if (branch != null)
                         {
-                            LateralSource lateralSource = new LateralSource
+                            var lateralSource = new LateralSource
                             {
                                 Branch = branch,
                                 Chainage = branch.Length,
-                                Name = "lat_"+ nwrwDischargeData.Name,
+                                Name = "lat_" + nwrwDischargeData.Name,
                                 LongName = Name
                             };
 
                             AddLateralSourceToBranch(branch, lateralSource);
                             double calculateLateralFlow = nwrwDischargeData.CalculateLateralFlow(nwrwDryWeatherFlowDefinitionByName);
-                            if(!double.IsNaN(calculateLateralFlow))
+                            if (!double.IsNaN(calculateLateralFlow))
                             {
-                                flowByLateralSources.AddOrUpdate(lateralSource, calculateLateralFlow,(ls, oldSurfaceValue) => oldSurfaceValue);
-
+                                flowByLateralSources.AddOrUpdate(lateralSource, calculateLateralFlow, (ls, oldSurfaceValue) => oldSurfaceValue);
                             }
 
                             var model1DLateralSourceData = new Model1DLateralSourceData
@@ -446,28 +488,25 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                                 UseSalt = fmModel.UseSalinity,
                                 UseTemperature = fmModel.UseTemperature
                             };
-                            if (lateralSource.Branch is IPipe pipe)
+                            if (lateralSource.Branch is ISewerConnection sewerConnection)
                             {
-                                model1DLateralSourceData.Compartment =
-                                    pipe.SourceCompartmentName != null &&
-                                    pipe.SourceCompartmentName.Equals(lateralSource.Name)
-                                        ? pipe.SourceCompartment
-                                        : pipe.TargetCompartment;
+                                model1DLateralSourceData.Compartment = GetLateralSourceDataCompartment(sewerConnection, lateralSource);
                             }
 
                             lateralSourcesDataByLaterSource[lateralSource] = model1DLateralSourceData;
 
                             lock (fmModel.LateralSourcesData)
+                            {
                                 fmModel.LateralSourcesData.Add(model1DLateralSourceData);
+                            }
                         }
                     }
                     catch (Exception exception)
                     {
                         logHandler?.ReportError(exception.Message);
                     }
-
                 }, "Add nwrw lateral to fm model");
-                
+
                 // at FM-side, create lateral data of type CONSTANT
                 ParallelHelper.RunActionInParallel(this, flowByLateralSources.ToArray(), flowByLs => AddLateralDataToFmModel(lateralSourcesDataByLaterSource, flowByLs.Key, Model1DLateralDataType.FlowConstant, flowByLs.Value), "At FM - side, create lateral data of type CONSTANT");
             }
@@ -475,6 +514,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 fmModel.SubscribeToNetwork(network);
             }
+        }
+
+        private static ICompartment GetLateralSourceDataCompartment(ISewerConnection sewerConnection, LateralSource lateralSource)
+        {
+            return sewerConnection.SourceCompartmentName != null &&
+                   sewerConnection.SourceCompartmentName.Equals(lateralSource.Name)
+                       ? sewerConnection.SourceCompartment
+                       : sewerConnection.TargetCompartment;
         }
 
         private IBranch FindTargetBranchForNwrwCatchmentBranch(Dictionary<string, IBranch> branchesByName, Dictionary<string, IBranch> pipesByCompartmentName, string name)
@@ -496,12 +543,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 logHandler?.ReportError($"Cannot find target branch because branch name to search for is null or empty");
                 return null;
             }
-            
+
             IBranch branch = null;
             if (branchesByName.TryGetValue(name, out branch))
+            {
                 return branch;
-            if(!pipesByCompartmentName.TryGetValue(name, out branch))
+            }
+
+            if (!pipesByCompartmentName.TryGetValue(name, out branch))
+            {
                 logHandler?.ReportWarning($"Cannot find branch for {name}");
+            }
+
             return branch;
         }
 
@@ -512,8 +565,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 return;
             }
 
-            var network = fmModel.Network;
-            
+            IHydroNetwork network = fmModel.Network;
+
             network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
             fmModel.DisableNetworkSynchronization = true;
             try
@@ -550,33 +603,42 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 network?.EndEdit();
             }
         }
-        
+
         private void AddModel1DLateralSourceToFmModel(IHydroNetwork network, WaterFlowFMModel fmModel)
         {
-            var lateralSources = network.Channels.SelectMany(c => c.BranchSources).ToArray();
-            
+            LateralSource[] lateralSources = network.Channels.SelectMany(c => c.BranchSources).ToArray();
+
             ParallelHelper.RunActionInParallel(this, lateralSources,
-                lateralSource =>
-                {
-                    if (fmModel.LateralSourcesData.Any(lsd => lsd.Feature == lateralSource)) return;
-                    var model1DLateralSourceData = new Model1DLateralSourceData
-                        {Feature = lateralSource, UseSalt = fmModel.UseSalinity, UseTemperature = fmModel.UseTemperature};
-                    lock (fmModel.LateralSourcesData)
-                    {
-                        fmModel.LateralSourcesData.Add(model1DLateralSourceData);
-                    }
-                }, "adding model1d lateral sources to fm model");
+                                               lateralSource =>
+                                               {
+                                                   if (fmModel.LateralSourcesData.Any(lsd => lsd.Feature == lateralSource))
+                                                   {
+                                                       return;
+                                                   }
+
+                                                   var model1DLateralSourceData = new Model1DLateralSourceData
+                                                   {
+                                                       Feature = lateralSource,
+                                                       UseSalt = fmModel.UseSalinity,
+                                                       UseTemperature = fmModel.UseTemperature
+                                                   };
+                                                   lock (fmModel.LateralSourcesData)
+                                                   {
+                                                       fmModel.LateralSourcesData.Add(model1DLateralSourceData);
+                                                   }
+                                               }, "adding model1d lateral sources to fm model");
         }
+
         private void AddModel1DBoundaryNodesToFmModel(IHydroNetwork network, WaterFlowFMModel fmModel)
         {
-            var networkManholes = network.Manholes.ToArray();
+            IManhole[] networkManholes = network.Manholes.ToArray();
             var listOfErrors = new List<string>();
 
             EventingHelper.DoWithoutEvents(() =>
             {
                 ParallelHelper.RunActionInParallel(this, networkManholes, manhole =>
                 {
-                    var bc = Helper1D.CreateDefaultBoundaryCondition(manhole, false, false);
+                    Model1DBoundaryNodeData bc = Helper1D.CreateDefaultBoundaryCondition(manhole, false, false);
                     bc.SetBoundaryConditionDataForOutlet();
                     lock (fmModel.BoundaryConditions1D)
                     {
@@ -585,9 +647,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 }, "Add Model 1D Boundary Nodes to Fm Model");
 
                 if (listOfErrors.Any())
+                {
                     Log.ErrorFormat(
                         $"While adding model1d boundary data nodes to fm model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
-
+                }
             });
         }
 
@@ -598,24 +661,26 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 NamingHelper.MakeNamesUnique(network.Branches);
             }
 
-            var networkSewerConnections = network.SewerConnections.ToArray();
-            var nrOfImportedFeatureElements = networkSewerConnections.Length;
-            var stepSize = nrOfImportedFeatureElements / 20;
+            ISewerConnection[] networkSewerConnections = network.SewerConnections.ToArray();
+            int nrOfImportedFeatureElements = networkSewerConnections.Length;
+            int stepSize = nrOfImportedFeatureElements / 20;
             var listOfErrors = new List<string>();
             var newLocations = new List<NetworkLocation>();
 
-            networkSewerConnections.ForEach((sewerConnection, indexOf) =>
+            EnumerableExtensions.ForEach(networkSewerConnections, (sewerConnection, indexOf) =>
             {
                 try
                 {
                     if (ShouldCancel)
+                    {
                         return;
+                    }
 
                     if (stepSize != 0 && indexOf % stepSize == 0)
                     {
                         EventingHelper.DoWithEvents(() =>
                         {
-                            ProgressChanged?.Invoke($"Adding network discretizations points of sewer connection to model ({((double)((double)indexOf / (double)nrOfImportedFeatureElements)):P0})", indexOf, nrOfImportedFeatureElements);
+                            ProgressChanged?.Invoke($"Adding network discretizations points of sewer connection to model ({((double)indexOf / (double)nrOfImportedFeatureElements):P0})", indexOf, nrOfImportedFeatureElements);
                         });
                     }
 
@@ -635,22 +700,23 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             networkDiscretization.UpdateNetworkLocations(newLocations);
 
             if (listOfErrors.Any())
+            {
                 Log.ErrorFormat(
                     $"While adding discretisation points to network discretisation we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
-            
+            }
         }
 
         private void AddSewerFeaturesToNetwork(IEnumerable<ISewerFeature> importedFeatureElements,
-            IHydroNetwork network)
+                                               IHydroNetwork network)
         {
             var helper = new SewerImporterHelper();
             ParallelHelper.RunActionInParallel(this, importedFeatureElements.ToArray(), feature => feature.AddToHydroNetwork(network, helper), "Network");
-            ParallelHelper.RunActionInParallel(this, helper.SewerConnectionsByName.Values.Where(sc => sc.BranchFeatures.Count >0).ToArray(),sewerConnection => sewerConnection.UpdateBranchFeatureGeometries(),"");
+            ParallelHelper.RunActionInParallel(this, helper.SewerConnectionsByName.Values.Where(sc => sc.BranchFeatures.Count > 0).ToArray(), sewerConnection => sewerConnection.UpdateBranchFeatureGeometries(), "");
             ParallelHelper.RunActionInParallel(this, network.SewerConnections.Where(sc => sc.Geometry == null).ToArray(), sc => network.FindAndConnectManholesInNetwork(sc), "Update empty geometries");
             ParallelHelper.RunActionInParallel(this, helper.SewerConnectionsByName.Values.Where(sc => Math.Abs(sc.Length) < 1.0e-6).ToArray(), sewerConnection => sewerConnection.SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake(), "Update length of sewer connections");
             ParallelHelper.RunActionInParallel(this, network.Pipes.ToArray(), pipe =>
             {
-                if (helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var crossSectionDefinition))
+                if (helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out CrossSectionDefinitionProxy crossSectionDefinition))
                 {
                     ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2, false);
                     crossSection.Name = $"SewerProfile_";
@@ -658,38 +724,40 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     pipe.CrossSection = crossSection;
                     helper.PipeCrossSections?.Enqueue(crossSection);
                 }
-                else if(string.IsNullOrWhiteSpace(pipe.CrossSectionDefinitionName))
+                else if (string.IsNullOrWhiteSpace(pipe.CrossSectionDefinitionName))
                 {
                     // use default!
                     Log.Warn(string.Format(Resources.GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbinding_csv_for_pipe__0___Using_default_pipe_profile, pipe.PipeId));
                     ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2, false);
                     crossSection.Name = $"SewerProfile_";
-                    var defaultProfile = pipe.SpecialConnectionType == SewerConnectionSpecialConnectionType.Weir
-                                                                         ? SewerFactory.GetDefaultWeirSewerStructureProfile(pipe.HydroNetwork)
-                                                                         : SewerFactory.GetDefaultPumpSewerStructureProfile(pipe.HydroNetwork);
-                    
+                    ICrossSectionDefinition defaultProfile = pipe.SpecialConnectionType == SewerConnectionSpecialConnectionType.Weir
+                                                                 ? SewerFactory.GetDefaultWeirSewerStructureProfile(pipe.HydroNetwork)
+                                                                 : SewerFactory.GetDefaultPumpSewerStructureProfile(pipe.HydroNetwork);
+
                     crossSection.UseSharedDefinition(defaultProfile);
                     pipe.CrossSection = crossSection;
                     helper.PipeCrossSections?.Enqueue(crossSection);
                 }
 
-                if (helper.SewerProfileMaterialsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var material))
+                if (helper.SewerProfileMaterialsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out SewerProfileMapping.SewerProfileMaterial material))
+                {
                     pipe.Material = material;
+                }
             }, "Update cross sections in network");
-            
+
             ParallelHelper.RunActionInParallel(this, network.Orifices.OfType<GwswConnectionOrifice>().Cast<GwswConnectionOrifice>().ToArray(), (orifice) =>
             {
                 try
                 {
-                    ICrossSectionDefinition definition = network.GetNetworkCrossSectionDefinitions().SingleOrDefault(csd => string.Equals(csd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase)) 
+                    ICrossSectionDefinition definition = network.GetNetworkCrossSectionDefinitions().SingleOrDefault(csd => string.Equals(csd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase))
                                                          ?? network.SharedCrossSectionDefinitions.SingleOrDefault(scsd => string.Equals(scsd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
                     if (definition == null)
                     {
                         return;
                     }
-                    
-                    var formula = (GatedWeirFormula) orifice.WeirFormula;
-                    
+
+                    var formula = (GatedWeirFormula)orifice.WeirFormula;
+
                     if (definition.CrossSectionType == CrossSectionType.Standard && definition is CrossSectionDefinitionStandard csdefStandard)
                     {
                         switch (csdefStandard.Shape)
@@ -701,7 +769,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                             case CrossSectionStandardShapeCircle circle:
                             {
                                 double diameter = circle.Diameter;
-                                double crestWidth = Math.Sqrt(diameter * diameter / 4 * Math.PI);
+                                double crestWidth = Math.Sqrt(((diameter * diameter) / 4) * Math.PI);
                                 orifice.CrestWidth = crestWidth;
                                 formula.GateOpening = crestWidth;
                                 formula.LowerEdgeLevel = orifice.CrestLevel + orifice.CrestWidth;
@@ -726,7 +794,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     logHandler?.ReportWarning($"Could not update the orifice crest width or level for '{orifice.Name}'.");
                 }
             }, "Update orifices width and level");
-            
+
             ParallelHelper.RunActionInParallel(this, network.SewerConnections.ToArray(), connection =>
             {
                 if (connection.Source == null)
@@ -737,14 +805,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         network.Branches.Remove(connection);
                     }
                 }
-            
+
                 if (connection.Target == null)
                 {
                     logHandler?.ReportWarning($"Could not find target node for connection '{connection.Name}'. Removing it from the model.");
                     network.Branches.Remove(connection);
                 }
             }, "Remove unconnected sewer connections.");
-            
+
             NamingHelper.MakeNamesUnique(helper.PipeCrossSections);
             NamingHelper.MakeNamesUnique(helper.CompositeBranchStructures);
         }
@@ -755,7 +823,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// <param name="directoryPath">The directory path.</param>
         public void LoadFeatureFiles(string directoryPath)
         {
-            if (string.IsNullOrWhiteSpace(directoryPath)) return;
+            if (string.IsNullOrWhiteSpace(directoryPath))
+            {
+                return;
+            }
 
             GwswAttributesDefinition = definitionsProvider.GetDefinitions(directoryPath);
             try
@@ -765,7 +836,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             catch (Exception)
             {
                 Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_,
-                    directoryPath);
+                                directoryPath);
             }
 
             FilesToImport = new EventedList<string>(GwswDefaultFeatures?.Select(f => f.Value[2]));
@@ -779,8 +850,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 ActivityRunner.Activities.Add(new FileImportActivity(this));
             }
 
-            var importGwswFileActivity = ActivityRunner.Activities.OfType<FileImportActivity>().FirstOrDefault(fia => fia.FileImporter.Equals(this));
-            if (importGwswFileActivity == null) return null;
+            FileImportActivity importGwswFileActivity = ActivityRunner.Activities.OfType<FileImportActivity>().FirstOrDefault(fia => fia.FileImporter.Equals(this));
+            if (importGwswFileActivity == null)
+            {
+                return Enumerable.Empty<GwswElement>().ToLookup(gwswElement => default(SewerFeatureType));
+            }
 
             ActivityRunner.MaxRunningTaskCount = 2 * Environment.ProcessorCount;
 
@@ -788,30 +862,33 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             if (!string.IsNullOrEmpty(path))
             {
                 var gwswFileImportActivity = new GwswFileImportActivity(path, GwswAttributesDefinition,
-                    CsvDelimeter, CsvSettingsSemiColonDelimeted, this);
+                                                                        CsvDelimeter, CsvSettingsSemiColonDelimeted, this);
                 listOfImportedGwswFileImportActivities.Add(gwswFileImportActivity);
             }
             else
             {
-                foreach (var filePath in FilesToImport)
+                foreach (string filePath in FilesToImport)
                 {
                     if (ShouldCancel)
+                    {
                         break;
+                    }
+
                     if (!File.Exists(filePath))
                     {
                         logHandler?.ReportErrorFormat(
                             Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__,
-                            (object) filePath);
+                            (object)filePath);
                         continue;
                     }
 
                     var gwswFileImportActivity = new GwswFileImportActivity(filePath, GwswAttributesDefinition,
-                        CsvDelimeter, CsvSettingsSemiColonDelimeted, this);
+                                                                            CsvDelimeter, CsvSettingsSemiColonDelimeted, this);
                     listOfImportedGwswFileImportActivities.Add(gwswFileImportActivity);
                 }
             }
 
-            foreach (var gwswFileImportActivity in listOfImportedGwswFileImportActivities)
+            foreach (GwswFileImportActivity gwswFileImportActivity in listOfImportedGwswFileImportActivities)
             {
                 ActivityRunner.Enqueue(gwswFileImportActivity);
             }
@@ -822,49 +899,60 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
 
             return listOfImportedGwswFileImportActivities
-                .SelectMany(l => l.Elements)
-                .Where(gwswElement => Enum.IsDefined(typeof(SewerFeatureType), gwswElement.ElementTypeName))
-                .ToLookup(gwswElement => (SewerFeatureType)Enum.Parse(typeof(SewerFeatureType), gwswElement.ElementTypeName), gwswElement => gwswElement);
+                   .SelectMany(l => l.Elements)
+                   .Where(gwswElement => Enum.IsDefined(typeof(SewerFeatureType), gwswElement.ElementTypeName))
+                   .ToLookup(gwswElement => (SewerFeatureType)Enum.Parse(typeof(SewerFeatureType), gwswElement.ElementTypeName), gwswElement => gwswElement);
         }
 
         private void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(IWaterFlowFMModel fmModel)
         {
-            var boundaryConditionsByNode = fmModel.BoundaryConditions1D.ToLookup(bc => bc.Node, bc => bc);
+            ILookup<INode, Model1DBoundaryNodeData> boundaryConditionsByNode = fmModel.BoundaryConditions1D.ToLookup(bc => bc.Node, bc => bc);
 
-            var networkOutletCompartments = fmModel.Network.OutletCompartments.ToArray();
+            OutletCompartment[] networkOutletCompartments = fmModel.Network.OutletCompartments.ToArray();
             ParallelHelper.RunActionInParallel(this, networkOutletCompartments, outletCompartment =>
             {
                 if (ShouldCancel)
+                {
                     return;
+                }
+
                 if (!boundaryConditionsByNode.Contains(outletCompartment.ParentManhole))
+                {
                     return;
-                foreach (var boundaryCondition in boundaryConditionsByNode[outletCompartment.ParentManhole])
+                }
+
+                foreach (Model1DBoundaryNodeData boundaryCondition in boundaryConditionsByNode[outletCompartment.ParentManhole])
                 {
                     boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                     boundaryCondition.WaterLevel = outletCompartment.SurfaceWaterLevel;
                 }
             }, "Add Boundaries of Network OutletCompartments to model");
         }
-        
+
         /// <summary>
         /// Transforms a CSV data file, into tables that we can handle internally
         /// </summary>
         /// <param name="path">Location of the CSV file to import.</param>
         /// <param name="mappingData">Delimeters and properties for handling the CSV file.</param>
-        /// <returns>DataTable with the content of the CSV file of <param name="path"/>.</returns>
+        /// <returns>DataTable with the content of the CSV file of
+        /// <param name="path"/>
+        /// .
+        /// </returns>
         public DataTable ImportFileAsDataTable(string path, CsvMappingData mappingData = null)
         {
             if (mappingData == null)
+            {
                 mappingData = GetCsvMappingDataForFileFromDefinition(path);
+            }
 
             if (mappingData == null)
             {
                 logHandler?.ReportErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__,
-                    path);
+                                              path);
                 return null;
             }
 
-            var csvImporter = new CsvImporter {AllowEmptyCells = true};
+            var csvImporter = new CsvImporter { AllowEmptyCells = true };
             var importedCsv = new DataTable();
             try
             {
@@ -874,7 +962,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             catch (Exception e)
             {
                 Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_, path,
-                    e.Message);
+                                e.Message);
             }
 
             return importedCsv;
@@ -901,11 +989,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             get
             {
                 return csvSettings ?? (csvSettings = new CsvSettings
-                {
-                    Delimiter = CsvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                });
+                                          {
+                                              Delimiter = CsvDelimeter,
+                                              FirstRowIsHeader = true,
+                                              SkipEmptyLines = true
+                                          });
             }
         }
 
@@ -915,34 +1003,46 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// Dictionary content:
         /// Key = Feature FileName.
         /// Value = List containing 3 strings:
-        ///     [0] <string>ElementName</string>
-        ///     [1] <string>SewerFeatureType (mapped value)</string>
-        ///     [2] <string>Full path</string>
+        /// [0] <string>ElementName</string>
+        /// [1] <string>SewerFeatureType (mapped value)</string>
+        /// [2] <string>Full path</string>
         /// </summary>
         public IDictionary<string, List<string>> GwswDefaultFeatures { get; private set; }
-        
+
         public ILogHandler LogHandler => logHandler;
 
         #region IFileImporter
 
         public string Name
         {
-            get { return "GWSW Feature Files"; }
+            get
+            {
+                return "GWSW Feature Files";
+            }
         }
 
         public string Description
         {
-            get { return "Import model data from GWSW feature files"; }
+            get
+            {
+                return "Import model data from GWSW feature files";
+            }
         }
 
         public string Category
         {
-            get { return ProductCategories.OneDTwoDModelImportCategory; }
+            get
+            {
+                return ProductCategories.OneDTwoDModelImportCategory;
+            }
         }
 
         public Bitmap Image
         {
-            get { return Resources.StructureFeatureSmall; }
+            get
+            {
+                return Resources.StructureFeatureSmall;
+            }
         }
 
         public IEnumerable<Type> SupportedItemTypes
@@ -957,12 +1057,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         public bool CanImportOnRootLevel
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public string FileFilter
         {
-            get { return "GWSW Csv Files (*.csv)|*.csv"; }
+            get
+            {
+                return "GWSW Csv Files (*.csv)|*.csv";
+            }
         }
 
         public string TargetDataDirectory { get; set; }
@@ -971,7 +1077,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         public bool OpenViewAfterImport
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public bool CanImportOn(object targetObject)
@@ -985,19 +1094,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             //Get the items to import
             var dictionary = GwswAttributesDefinition?.GroupBy(i => i.FileName)
-                .ToDictionary(
-                    grp => grp.Key,
-                    grp =>
-                    {
-                        var valueList = new List<string>();
-                        var elementName = grp.FirstOrDefault(g => !String.IsNullOrEmpty(g.ElementName))?.ElementName;
-                        SewerFeatureType featureName;
-                        Enum.TryParse(elementName, out featureName);
-                        valueList.Add(elementName);
-                        valueList.Add(featureName.ToString());
-                        valueList.Add(Path.Combine(directoryPath, grp.Key));
-                        return valueList;
-                    });
+                                                     .ToDictionary(
+                                                         grp => grp.Key,
+                                                         grp =>
+                                                         {
+                                                             var valueList = new List<string>();
+                                                             var elementName = grp.FirstOrDefault(g => !string.IsNullOrEmpty(g.ElementName))?.ElementName;
+                                                             SewerFeatureType featureName;
+                                                             Enum.TryParse(elementName, out featureName);
+                                                             valueList.Add(elementName);
+                                                             valueList.Add(featureName.ToString());
+                                                             valueList.Add(Path.Combine(directoryPath, grp.Key));
+                                                             return valueList;
+                                                         });
 
             return dictionary;
         }
@@ -1008,22 +1117,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             if (GwswAttributesDefinition == null || !GwswAttributesDefinition.Any())
             {
                 Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__,
-                    fileName);
+                                fileName);
                 return null;
             }
 
-            var fileAttributes = GwswAttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(fileName)))
-                .ToList();
+            List<GwswAttributeType> fileAttributes = GwswAttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(fileName)))
+                                                                             .ToList();
             var fileColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>();
             //Create column mapping
             fileAttributes.ForEach(
                 attr =>
                     fileColumnMapping.Add(
                         new CsvRequiredField(attr.Key, attr.AttributeType),
-                        attr.AttributeType == typeof(DateTime)? new CsvColumnInfo(fileAttributes.IndexOf(attr), new DateTimeFormatInfo()
-                        {
-                            FullDateTimePattern = "yyyyMMdd"
-                        }) : new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
+                        attr.AttributeType == typeof(DateTime) ? new CsvColumnInfo(fileAttributes.IndexOf(attr), new DateTimeFormatInfo() { FullDateTimePattern = "yyyyMMdd" }) : new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
 
             var mapping = new CsvMappingData
             {
