@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             
             var shape = CreateSewerFeature<CrossSectionStandardShapeCircle>(sewerProfileGwswElement);
             Assert.IsNotNull(shape);
-            Assert.That(shape.Diameter, Is.EqualTo(0.1));
+            Assert.That(shape.Diameter, Is.EqualTo(0.4));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var shape = CreateSewerFeature<CrossSectionStandardShapeCircle>(sewerProfileGwswElement);
             Assert.IsNotNull(shape);
-            Assert.That(shape.Diameter, Is.EqualTo(0.1));
+            Assert.That(shape.Diameter, Is.EqualTo(0.4));
         }
 
         [Test]

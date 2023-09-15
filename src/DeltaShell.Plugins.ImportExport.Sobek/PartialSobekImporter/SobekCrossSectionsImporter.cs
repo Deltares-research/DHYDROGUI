@@ -155,8 +155,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                     if (definition == null)
                     {
-                        // For pipe & sewer connections
-                        // we set default in SewerConnection.get_CrossSection
                         continue;
                     }
 
@@ -171,9 +169,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         offset = branch.Length;
                     }
 
-                    if (branch is ISewerConnection sewerConnection)
+
+                    var pipe = branch as Pipe;
+                    var sewerConnection = branch as SewerConnection;
+                    if (pipe != null)
                     {
-                        SetSewerConnectionProperties(sewerConnection, definition, sobekCrossSectionMapping);
+                        SetPipeProperties(pipe, definition, sobekCrossSectionMapping);
+                    }
+                    else if (sewerConnection != null)
+                    {
+                        LogWarning("Cross-sections can not be set on a sewer connection.", $"id \"{location.ID}\", \"{sewerConnection.Name}\"");
                     }
                     else
                     {
@@ -234,9 +239,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private void SetSewerConnectionProperties(ISewerConnection sewerConnection, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping)
+        private void SetPipeProperties(IPipe pipe, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping)
         {
-            if (definition.Sections != null && !definition.Sections.Any())
+            if (!definition.Sections.Any())
             {
                 var sewerCrossSectionType = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(RoughnessDataSet.SewerSectionTypeName));
                 if (sewerCrossSectionType == null) return;
@@ -248,11 +253,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     definition.AddSection(sewerCrossSectionType, definition.FlowWidth());
                 }
+                
             }
 
-            sewerConnection.CrossSection = new CrossSection(definition);
-            sewerConnection.LevelSource = sobekCrossSectionMapping.RefLevel2;
-            sewerConnection.LevelTarget = sobekCrossSectionMapping.RefLevel1;
+            pipe.CrossSection = new CrossSection(definition);
+            pipe.LevelSource = sobekCrossSectionMapping.RefLevel2;
+            pipe.LevelTarget = sobekCrossSectionMapping.RefLevel1;
         }
 
         private static Dictionary<string, ICrossSectionDefinition> GetDefinitionIDToDefinitionDictionary(IEnumerable<SobekCrossSectionMapping> mappings, Dictionary<string, SobekCrossSectionDefinition> sobekCrossSectionDefinitionsLookup, IHydroNetwork hydroNetwork)

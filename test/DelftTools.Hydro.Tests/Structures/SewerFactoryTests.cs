@@ -40,8 +40,8 @@ namespace DelftTools.Hydro.Tests.Structures
             var network = new HydroNetwork();
             Pipe retrievedPipe = AddPipeToNetworkAndReturn(network);
 
-            Assert.AreEqual(-10.0, retrievedPipe.LevelSource);
-            Assert.AreEqual(-10.0, retrievedPipe.LevelTarget);
+            Assert.AreEqual(-2.0, retrievedPipe.LevelSource);
+            Assert.AreEqual(-2.0, retrievedPipe.LevelTarget);
             Assert.AreEqual(retrievedPipe.Geometry.Length, retrievedPipe.Length);
             Assert.That(retrievedPipe.WaterType, Is.EqualTo(SewerConnectionWaterType.Combined));
             Assert.That(retrievedPipe.Material, Is.EqualTo(SewerProfileMapping.SewerProfileMaterial.Concrete));
@@ -70,8 +70,8 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
 
             ICompartment compartment = manhole.Compartments.First();
-            Assert.That(compartment.SurfaceLevel, Is.EqualTo(0.0));            
-            Assert.That(compartment.BottomLevel, Is.EqualTo(-10.0));            
+            Assert.That(compartment.SurfaceLevel, Is.EqualTo(0.0));
+            Assert.That(compartment.BottomLevel, Is.EqualTo(-2.0));
             Assert.That(compartment.FloodableArea, Is.EqualTo(500.0));
             Assert.That(compartment.ManholeLength, Is.EqualTo(0.64));
             Assert.That(compartment.ManholeWidth, Is.EqualTo(0.64));

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return new CrossSectionStandardShapeCircle
             {
                 Name = GetCrossSectionShapeName(gwswElement),
-                Diameter = 0.1,
+                Diameter = 0.4,
                 MaterialName = SewerProfileMapping.SewerProfileMaterial.Concrete.GetDescription()
             };
         }

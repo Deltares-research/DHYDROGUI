@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         
             Assert.IsNotNull(compartment);
             Assert.IsNotNull(compartment.ParentManholeName);
-            CheckCompartmentPropertyValues(compartment, uniqueId, 800, 800, CompartmentShape.Unknown, 500, -10.0, 0.0);
+            CheckCompartmentPropertyValues(compartment, uniqueId, 800, 800, CompartmentShape.Unknown, 500, -2.0, 0.0);
         }
 
         [Test]
@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.IsNotNull(compartment);
             Assert.IsNotNull(compartment.ParentManholeName);
 
-            CheckCompartmentPropertyValues(compartment, uniqueId, 800, 800, CompartmentShape.Unknown, 500, -10.0, 0.0);
+            CheckCompartmentPropertyValues(compartment, uniqueId, 800, 800, CompartmentShape.Unknown, 500, -2.0, 0.0);
         }
 
         private static Compartment GenerateCompartmentAndCheckForLogMessages(GwswElement badGwswElement, string componentType, int lineNumber, string newName)

@@ -652,8 +652,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var createdSewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(createdSewerConnection);
-            // weir / orifice level source is default -10
-            Assert.That(createdSewerConnection.LevelSource, Is.EqualTo(-10.0).Within(0.01));
+            Assert.That(createdSewerConnection.LevelSource, Is.EqualTo(0.0).Within(0.01));
 
             var gwswOrifice = new GwswConnectionOrifice(orificeName)
             {
@@ -712,8 +711,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var createdSewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(createdSewerConnection);
-            // weir / orifice level source is default -10
-            Assert.That(createdSewerConnection.LevelSource, Is.EqualTo(-10.0).Within(0.01));
+            Assert.That(createdSewerConnection.LevelSource, Is.EqualTo(0.0).Within(0.01));
 
 
             var gwswOrifice = new GwswConnectionOrifice(orificeName){ LevelSource = 80.1 };
@@ -1269,14 +1267,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         public void GivenPipes_WhenAddingShapeWithSameCsDefinitionId_ThenShapeIsAddedToAllCorrectPipes()
         {
             var crossSectionDefinitionName = "myCsDefinition";
-            const string otherCrossSectionDefinitionName = "otherId"; 
             var materialType = SewerProfileMapping.SewerProfileMaterial.CastIron;
 
             var network = new HydroNetwork();
             var pipe1 = new Pipe { Name = "myPipe1", CrossSectionDefinitionName = crossSectionDefinitionName };
             var pipe2 = new Pipe { Name = "myPipe2", CrossSectionDefinitionName = crossSectionDefinitionName };
-            
-            var pipe3 = new Pipe { Name = "myPipe3", CrossSectionDefinitionName = otherCrossSectionDefinitionName };
+            var pipe3 = new Pipe { Name = "myPipe3", CrossSectionDefinitionName = "otherId" };
             AddSewerFeatureToNetwork(pipe1, network);
             AddSewerFeatureToNetwork(pipe2, network);
             AddSewerFeatureToNetwork(pipe3, network);
@@ -1298,8 +1294,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.That((pipe2.CrossSection?.Definition).Name, Is.EqualTo(crossSectionDefinitionName));
             Assert.That(pipe2.Material, Is.EqualTo(materialType));
 
-            Assert.IsNotNull(pipe3.CrossSection?.Definition);
-            Assert.That(pipe3.CrossSection?.Definition.Name, Is.Not.EqualTo(otherCrossSectionDefinitionName));
+            Assert.IsNull(pipe3.CrossSection?.Definition);
         }
 
         [Test]
