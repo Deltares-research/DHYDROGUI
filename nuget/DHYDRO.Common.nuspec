@@ -13,6 +13,5 @@
   </metadata>
   <files>
     <file src="..\bin\$configuration$\src\*" target="lib\net48" />
-    <file src="build\**\*" target="build"/>
   </files>
 </package>
