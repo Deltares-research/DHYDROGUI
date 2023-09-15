@@ -45,7 +45,7 @@
     <PackageReference Include="Castle.Core" />
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="DeltaShell.TestProject" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="DHYDRO.Common" />
+    <PackageReference Include="DHYDRO.Common" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="Fare" />
     <PackageReference Include="log4net" />
     <PackageReference Include="Mono.Addins" />
