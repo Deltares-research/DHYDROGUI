@@ -24,8 +24,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             Assert.AreEqual("TestSection", section.Name);
             Assert.IsEmpty(section.Properties);
+            Assert.IsEmpty(section.Comments);
             Assert.AreEqual(0, section.LineNumber);
             Assert.AreEqual(0, section.PropertyCount);
+            Assert.AreEqual(0, section.CommentCount);
         }
 
         [Test]
@@ -47,20 +49,24 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Constructor_ValidSection_InitializesProperties()
         {
+            var comment = "TestComment";
             var section = new IniSection("TestSection") { LineNumber = 2 };
             var property = new IniProperty("TestProperty");
 
             section.AddProperty(property);
+            section.AddComment(comment);
 
             var copiedSection = new IniSection("OtherSection", section);
 
-            IniProperty copiedIniProperty = copiedSection.Properties.FirstOrDefault();
+            IniProperty copiedProperty = copiedSection.Properties.FirstOrDefault();
+            string copiedComment = copiedSection.Comments.FirstOrDefault();
 
             Assert.AreEqual("OtherSection", copiedSection.Name);
             Assert.AreEqual(2, copiedSection.LineNumber);
-            Assert.NotNull(copiedIniProperty);
-            Assert.AreNotSame(property, copiedIniProperty);
-            Assert.AreEqual(property, copiedIniProperty);
+            Assert.NotNull(copiedProperty);
+            Assert.AreNotSame(property, copiedProperty);
+            Assert.AreEqual(property, copiedProperty);
+            Assert.AreEqual(comment, copiedComment);
         }
 
         [Test]
@@ -98,7 +104,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniProperty property1 = section.AddProperty("TestKey", "TestValue");
             IniProperty property2 = section.AddProperty("TestKey", "TestValue");
 
-            IniProperty[] expected = new[] { property1, property2 };
+            IniProperty[] expected = { property1, property2 };
 
             Assert.That(section.Properties, Is.EqualTo(expected));
         }
@@ -148,7 +154,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddProperty(property1);
             section.AddProperty(property2);
 
-            IniProperty[] expected = new[] { property1, property2 };
+            IniProperty[] expected = { property1, property2 };
 
             Assert.That(section.Properties, Is.EqualTo(expected));
         }
@@ -165,7 +171,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddProperty(property2);
             section.AddProperty(property1);
 
-            IniProperty[] expected = new[] { property3, property2, property1 };
+            IniProperty[] expected = { property3, property2, property1 };
 
             Assert.That(section.Properties, Is.EqualTo(expected));
         }
@@ -186,7 +192,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var property1 = new IniProperty("TestKey1", "TestValue1");
             var property2 = new IniProperty("TestKey2", "TestValue2");
 
-            IniProperty[] properties = new[] { property1, property2 };
+            IniProperty[] properties = { property1, property2 };
 
             section.AddMultipleProperties(properties);
 
@@ -504,7 +510,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddProperty(property1);
             section.RemoveProperty(property2);
 
-            IniProperty[] expected = new[] { property1 };
+            IniProperty[] expected = { property1 };
 
             Assert.That(section.Properties, Is.EqualTo(expected));
         }
@@ -520,7 +526,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.RemoveProperty(property1);
 
             IniProperty property4 = section.AddProperty("Key3", "Value4");
-            IniProperty[] expected = new[] { property2, property3, property4 };
+            IniProperty[] expected = { property2, property3, property4 };
 
             Assert.That(section.Properties, Is.EqualTo(expected));
         }
@@ -597,23 +603,23 @@ namespace DHYDRO.Common.Tests.IO.Ini
         }
 
         [Test]
-        public void Clear_WithProperties_RemovesAllProperties()
+        public void ClearProperties_WithProperties_RemovesAllProperties()
         {
             var section = new IniSection("TestSection");
             section.AddProperty("Key1", "Value1");
             section.AddProperty("Key2", "Value2");
 
-            section.Clear();
+            section.ClearProperties();
 
             Assert.IsEmpty(section.Properties);
         }
 
         [Test]
-        public void Clear_WithoutProperties_DoesNothing()
+        public void ClearProperties_WithoutProperties_DoesNothing()
         {
             var section = new IniSection("TestSection");
 
-            section.Clear();
+            section.ClearProperties();
 
             Assert.IsEmpty(section.Properties);
         }
@@ -669,6 +675,83 @@ namespace DHYDRO.Common.Tests.IO.Ini
             };
 
             Assert.That(section.Properties, Is.EqualTo(expected));
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase(null)]
+        public void AddComment_CommentIsNullOrEmpty_ThrowsArgumentException(string comment)
+        {
+            var section = new IniSection("TestSection");
+
+            Assert.Throws<ArgumentException>(() => section.AddComment(comment));
+        }
+
+        [Test]
+        public void AddComment_ValidComment_AddsComment()
+        {
+            var section = new IniSection("TestSection");
+
+            section.AddComment("TestComment");
+
+            Assert.AreEqual(1, section.CommentCount);
+            Assert.AreEqual("TestComment", section.Comments.First());
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase(null)]
+        public void RemoveComment_CommentIsNullOrEmpty_ThrowsArgumentException(string comment)
+        {
+            var section = new IniSection("TestSection");
+
+            Assert.Throws<ArgumentException>(() => section.RemoveComment(comment));
+        }
+
+        [Test]
+        public void RemoveComment_ExistingComment_RemovesComment()
+        {
+            var section = new IniSection("TestSection");
+            var comment = "TestComment";
+
+            section.AddComment(comment);
+            section.RemoveComment(comment);
+
+            Assert.IsEmpty(section.Comments);
+        }
+
+        [Test]
+        public void RemoveComment_DifferentComment_DoesNotRemoveComment()
+        {
+            var section = new IniSection("TestSection");
+
+            section.AddComment("TestComment");
+            section.RemoveComment("OtherComment");
+
+            Assert.AreEqual(1, section.CommentCount);
+            Assert.AreEqual("TestComment", section.Comments.First());
+        }
+
+        [Test]
+        public void ClearComments_WithComments_RemovesAllComments()
+        {
+            var section = new IniSection("TestSection");
+            section.AddComment("Comment1");
+            section.AddComment("Comment2");
+
+            section.ClearComments();
+
+            Assert.IsEmpty(section.Comments);
+        }
+
+        [Test]
+        public void ClearComments_WithoutComments_DoesNothing()
+        {
+            var section = new IniSection("TestSection");
+
+            section.ClearComments();
+
+            Assert.IsEmpty(section.Comments);
         }
 
         [Test]
@@ -742,7 +825,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var section2 = new IniSection("TESTSECTION") { LineNumber = 3 };
 
             section1.AddProperty("TestKey", "TestValue");
-            section2.AddProperty("TESTKEY", "testvalue");
+            section2.AddProperty("TESTKEY", "TESTVALUE");
+            
+            section1.AddComment("TestComment");
+            section2.AddComment("TESTCOMMENT");
 
             bool result = section1.Equals(section2);
 
@@ -774,6 +860,20 @@ namespace DHYDRO.Common.Tests.IO.Ini
             Assert.IsFalse(result);
         }
 
+        [Test]
+        public void Equals_SameSectionsDifferentComments_ReturnsFalse()
+        {
+            var section1 = new IniSection("TestSection");
+            var section2 = new IniSection("TestSection");
+
+            section1.AddComment("TestComment");
+            section1.AddComment("OtherComment");
+
+            bool result = section1.Equals(section2);
+
+            Assert.IsFalse(result);
+        }
+        
         [Test]
         public void GetHashCode_SameCaseInsensitiveNames_SameHashCode()
         {

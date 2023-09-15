@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DHYDRO.Common.IO.Ini;
+using DHYDRO.Common.IO.Ini.Configuration;
 using NUnit.Framework;
 
 namespace DHYDRO.Common.Tests.IO.Ini
@@ -13,52 +14,61 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniMerger iniMerger = CreateIniMerger();
 
-            Assert.That(iniMerger.Original, Is.Not.Null);
-            Assert.That(iniMerger.Modified, Is.Not.Null);
-            Assert.That(iniMerger.AddAddedSections, Is.True);
-            Assert.That(iniMerger.AddAddedProperties, Is.True);
-            Assert.That(iniMerger.RemoveRemovedSections, Is.True);
-            Assert.That(iniMerger.RemoveRemovedProperties, Is.True);
+            Assert.That(iniMerger.Configuration, Is.Not.Null);
+            Assert.That(iniMerger.Configuration.AddAddedSections, Is.True);
+            Assert.That(iniMerger.Configuration.AddAddedProperties, Is.True);
+            Assert.That(iniMerger.Configuration.RemoveRemovedSections, Is.True);
+            Assert.That(iniMerger.Configuration.RemoveRemovedProperties, Is.True);
+        }
+        
+        [Test]
+        public void Configuration_SetToNull_ThrowsArgumentNullException()
+        {
+            IniMerger iniMerger = CreateIniMerger();
+
+            Assert.Throws<ArgumentNullException>(() => iniMerger.Configuration = null);
+        }
+        
+        [Test]
+        public void Configuration_SetToValidConfiguration_ReturnsSameInstance()
+        {
+            IniMergeConfiguration configuration = CreateConfiguration();
+            IniMerger iniMerger = CreateIniMerger();
+            
+            iniMerger.Configuration = configuration;
+         
+            Assert.That(configuration, Is.SameAs(iniMerger.Configuration));
         }
 
         [Test]
-        public void Constructor_OriginalIsNull_ThrowsArgumentNullException()
+        public void Merge_OriginalIsNull_ThrowsArgumentNullException()
         {
             IniData modified = CreateIniData();
 
-            Assert.Throws<ArgumentNullException>(() => CreateIniMerger(null, modified));
+            IniMerger iniMerger = CreateIniMerger();
+
+            Assert.Throws<ArgumentNullException>(() => iniMerger.Merge(null, modified));
         }
 
         [Test]
-        public void Constructor_ModifiedIsNull_ThrowsArgumentNullException()
+        public void Merge_ModifiedIsNull_ThrowsArgumentNullException()
         {
             IniData original = CreateIniData();
 
-            Assert.Throws<ArgumentNullException>(() => CreateIniMerger(original, null));
-        }
-
-        [Test]
-        public void Original_SetToNull_ThrowsArgumentNullException()
-        {
             IniMerger iniMerger = CreateIniMerger();
 
-            Assert.Throws<ArgumentNullException>(() => iniMerger.Original = null);
-        }
-
-        [Test]
-        public void Modified_SetToNull_ThrowsArgumentNullException()
-        {
-            IniMerger iniMerger = CreateIniMerger();
-
-            Assert.Throws<ArgumentNullException>(() => iniMerger.Modified = null);
+            Assert.Throws<ArgumentNullException>(() => iniMerger.Merge(original, null));
         }
 
         [Test]
         public void Merge_OriginalAndModifiedIniDataAreEmpty_ReturnsEmpty()
         {
+            IniData original = CreateEmptyIniData();
+            IniData modified = CreateEmptyIniData();
+
             IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged.Sections, Is.Empty);
         }
@@ -69,9 +79,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData();
             IniData modified = CreateIniData();
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged, Is.EqualTo(original));
             Assert.That(merged, Is.EqualTo(modified));
@@ -83,9 +93,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData();
             IniData modified = CreateIniData();
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged.Sections.All(m => !original.Sections.Any(s => ReferenceEquals(m, s))));
             Assert.That(merged.Sections.All(m => !modified.Sections.Any(t => ReferenceEquals(m, t))));
@@ -100,9 +110,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSections);
             IniData modified = CreateIniData(modifiedSections);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged, Is.EqualTo(original));
             Assert.That(merged.Sections.Select(x => x.Name), Is.EqualTo(original.Sections.Select(x => x.Name)));
@@ -117,9 +127,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSections);
             IniData modified = CreateIniData(modifiedSections);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged, Is.EqualTo(original));
             Assert.That(merged, Is.EqualTo(modified));
@@ -131,10 +141,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateEmptyIniData();
             IniData modified = CreateIniData();
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
-            iniMerger.AddAddedSections = true;
+            IniMerger iniMerger = CreateIniMerger();
+            iniMerger.Configuration.AddAddedSections = true;
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged, Is.EqualTo(modified));
         }
@@ -145,10 +155,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateEmptyIniData();
             IniData modified = CreateIniData();
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
-            iniMerger.AddAddedSections = false;
+            IniMerger iniMerger = CreateIniMerger();
+            iniMerger.Configuration.AddAddedSections = false;
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged.Sections, Is.Empty);
         }
@@ -159,10 +169,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData();
             IniData modified = CreateEmptyIniData();
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
-            iniMerger.RemoveRemovedSections = true;
+            IniMerger iniMerger = CreateIniMerger();
+            iniMerger.Configuration.RemoveRemovedSections = true;
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged.Sections, Is.Empty);
         }
@@ -173,10 +183,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData();
             IniData modified = CreateEmptyIniData();
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
-            iniMerger.RemoveRemovedSections = false;
+            IniMerger iniMerger = CreateIniMerger();
+            iniMerger.Configuration.RemoveRemovedSections = false;
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
 
             Assert.That(merged, Is.EqualTo(original));
         }
@@ -190,9 +200,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties, Is.Empty);
@@ -207,9 +217,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties, Is.EqualTo(originalSection.Properties));
@@ -225,9 +235,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties.All(m => !originalSection.Properties.Any(s => ReferenceEquals(m, s))));
@@ -246,9 +256,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties, Is.EqualTo(originalSection.Properties));
@@ -267,9 +277,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties, Is.EqualTo(originalSection.Properties));
@@ -289,9 +299,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
+            IniMerger iniMerger = CreateIniMerger();
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             // Only the property value should be updated; preserve the name, comment & line number
@@ -310,10 +320,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
-            iniMerger.AddAddedProperties = true;
+            IniMerger iniMerger = CreateIniMerger();
+            iniMerger.Configuration.AddAddedProperties = true;
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties, Is.EqualTo(modifiedSection.Properties));
@@ -328,10 +338,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
-            iniMerger.AddAddedProperties = false;
+            IniMerger iniMerger = CreateIniMerger();
+            iniMerger.Configuration.AddAddedProperties = false;
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties, Is.Empty);
@@ -346,10 +356,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
-            iniMerger.RemoveRemovedProperties = true;
+            IniMerger iniMerger = CreateIniMerger();
+            iniMerger.Configuration.RemoveRemovedProperties = true;
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties, Is.Empty);
@@ -364,10 +374,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData original = CreateIniData(originalSection);
             IniData modified = CreateIniData(modifiedSection);
 
-            IniMerger iniMerger = CreateIniMerger(original, modified);
-            iniMerger.RemoveRemovedProperties = false;
+            IniMerger iniMerger = CreateIniMerger();
+            iniMerger.Configuration.RemoveRemovedProperties = false;
 
-            IniData merged = iniMerger.Merge();
+            IniData merged = iniMerger.Merge(original, modified);
             IniSection mergedSection = merged.Sections.First();
 
             Assert.That(mergedSection.Properties, Is.EqualTo(originalSection.Properties));
@@ -378,9 +388,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             return new IniMerger();
         }
 
-        private static IniMerger CreateIniMerger(IniData original, IniData modified)
+        private static IniMergeConfiguration CreateConfiguration()
         {
-            return new IniMerger(original, modified);
+            return new IniMergeConfiguration();
         }
 
         private static IniData CreateIniData()

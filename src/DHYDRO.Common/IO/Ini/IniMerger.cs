@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DHYDRO.Common.Extensions;
 using DHYDRO.Common.Guards;
+using DHYDRO.Common.IO.Ini.Configuration;
 
 namespace DHYDRO.Common.IO.Ini
 {
@@ -10,22 +11,18 @@ namespace DHYDRO.Common.IO.Ini
     /// Merges the contents of two INI files.
     /// </summary>
     /// <remarks>
-    /// The <see cref="Merge"/> method merges the <see cref="Original"/> and the <see cref="Modified"/> INI data into a
-    /// new <see cref="IniData"/> instance. The <see cref="Original"/> and the <see cref="Modified"/> instances are not
-    /// modified.
-    /// <para/>
-    /// By default any additions and/or removals are applied to the merge result. The merge behavior can be controlled through
-    /// <see cref="AddAddedSections"/>, <see cref="AddAddedProperties"/>, <see cref="RemoveRemovedSections"/> and
-    /// <see cref="RemoveRemovedProperties"/>.
+    /// The <see cref="Merge"/> method merges the original and the modified INI data into a new <see cref="IniData"/> instance.
+    /// By default any additions and/or removals are applied to the merge result. The merge behavior can be controlled
+    /// through <see cref="IniMergeConfiguration.AddAddedSections"/>, <see cref="IniMergeConfiguration.AddAddedProperties"/>,
+    /// <see cref="IniMergeConfiguration.RemoveRemovedSections"/> and
+    /// <see cref="IniMergeConfiguration.RemoveRemovedProperties"/>.
     /// <para/>
     /// Merging INI files with duplicate section names and/or duplicate property keys within the same section is supported,
     /// with the assumption that these INI sections and/or properties have the same order.
     /// </remarks>
     public sealed class IniMerger
     {
-        private IniData original;
-        private IniData modified;
-
+        private IniMergeConfiguration configuration;
         private UniqueIniData source;
         private UniqueIniData target;
 
@@ -33,98 +30,52 @@ namespace DHYDRO.Common.IO.Ini
         /// Initializes a new instance of the <see cref="IniMerger"/> class.
         /// </summary>
         public IniMerger()
-            : this(new IniData(), new IniData())
         {
+            configuration = new IniMergeConfiguration();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IniMerger"/> class.
+        /// Gets or sets the configuration that controls the merge behavior.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">When <paramref name="value"/> is <c>null</c>.</exception>
+        public IniMergeConfiguration Configuration
+        {
+            get => configuration;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                configuration = value;
+            }
+        }
+
+        /// <summary>
+        /// Merges the contents of the <paramref name="original"/> and <paramref name="modified"/> INI data.
         /// </summary>
         /// <param name="original">The original INI data to merge from.</param>
         /// <param name="modified">The modified INI data to merge with.</param>
+        /// <returns>A new <see cref="IniData"/> instance containing the merged INI contents.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="original"/> or <paramref name="modified"/> is <c>null</c>.</exception>
-        public IniMerger(IniData original, IniData modified)
+        /// <remarks>
+        /// The merging process takes the <paramref name="original"/> INI data as the base and applies modifications from
+        /// the <paramref name="modified"/> INI data. The result is a new <see cref="IniData"/> instance representing
+        /// the merged INI data contents. The <paramref name="original"/> and the <paramref name="modified"/> instances are not
+        /// modified.
+        /// </remarks>
+        public IniData Merge(IniData original, IniData modified)
         {
             Ensure.NotNull(original, nameof(original));
             Ensure.NotNull(modified, nameof(modified));
 
-            this.original = original;
-            this.modified = modified;
-        }
-
-        /// <summary>
-        /// Gets or sets the original INI data to merge from.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">When <paramref name="value"/> is <c>null</c>.</exception>
-        public IniData Original
-        {
-            get => original;
-            set
-            {
-                Ensure.NotNull(value, nameof(value));
-                original = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the modified INI data to merge with.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">When <paramref name="value"/> is <c>null</c>.</exception>
-        public IniData Modified
-        {
-            get => modified;
-            set
-            {
-                Ensure.NotNull(value, nameof(value));
-                modified = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether new sections should be added
-        /// to the merge result. The default value is <c>true</c>.
-        /// </summary>
-        public bool AddAddedSections { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether new properties should be added
-        /// to the merge result. The default value is <c>true</c>.
-        /// </summary>
-        public bool AddAddedProperties { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether removed sections should be removed
-        /// from the merge result. The default value is <c>true</c>.
-        /// </summary>
-        public bool RemoveRemovedSections { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether removed properties should be removed
-        /// from the merge result. The default value is <c>true</c>.
-        /// </summary>
-        public bool RemoveRemovedProperties { get; set; } = true;
-
-        /// <summary>
-        /// Merges the contents of the <see cref="Original"/> and <see cref="Modified"/> INI data.
-        /// </summary>
-        /// <returns>A new <see cref="IniData"/> instance containing the merged INI contents.</returns>
-        /// <remarks>
-        /// The merging process takes the <see cref="Original"/> INI data as the base and applies modifications from
-        /// the <see cref="Modified"/> INI data. The result is a new <see cref="IniData"/> instance representing
-        /// the merged INI data contents.
-        /// </remarks>
-        public IniData Merge()
-        {
-            InitializeUniqueIniData();
+            InitializeUniqueIniData(original, modified);
 
             ProcessChanged();
 
-            if (AddAddedSections || AddAddedProperties)
+            if (Configuration.AddAddedSections || Configuration.AddAddedProperties)
             {
                 ProcessAdded();
             }
 
-            if (RemoveRemovedSections || RemoveRemovedProperties)
+            if (Configuration.RemoveRemovedSections || Configuration.RemoveRemovedProperties)
             {
                 ProcessRemoved();
             }
@@ -133,9 +84,11 @@ namespace DHYDRO.Common.IO.Ini
         }
 
         /// <summary>
-        /// Creates unique copies of the <see cref="Original"/> and <see cref="Modified"/> INI data for merging.
+        /// Creates unique copies of the <paramref name="original"/> and <paramref name="modified"/> INI data for merging.
         /// </summary>
-        private void InitializeUniqueIniData()
+        /// <param name="original">The original INI data to merge from.</param>
+        /// <param name="modified">The modified INI data to merge with.</param>
+        private void InitializeUniqueIniData(IniData original, IniData modified)
         {
             var originalCopy = new IniData(original);
             var modifiedCopy = new IniData(modified);
@@ -175,7 +128,6 @@ namespace DHYDRO.Common.IO.Ini
         /// <summary>
         /// This method adds new sections and properties from the <see cref="source"/> INI data into the <see cref="target"/>
         /// INI data. If a section or property already exists in the <see cref="target"/> INI data, it remains unaffected.
-        /// The inclusion behavior is determined by <see cref="AddAddedSections"/> and <see cref="AddAddedProperties"/>.
         /// </summary>
         private void ProcessAdded()
         {
@@ -183,12 +135,12 @@ namespace DHYDRO.Common.IO.Ini
             {
                 UniqueIniSection targetSection = target.GetSection(sourceSection.Id);
 
-                if (targetSection == null && AddAddedSections)
+                if (targetSection == null && Configuration.AddAddedSections)
                 {
                     target.AddSection(sourceSection);
                 }
 
-                if (targetSection == null || !AddAddedProperties)
+                if (targetSection == null || !Configuration.AddAddedProperties)
                 {
                     continue;
                 }
@@ -205,8 +157,7 @@ namespace DHYDRO.Common.IO.Ini
 
         /// <summary>
         /// This method removes sections and properties from the <see cref="target"/> INI data that are not present in the
-        /// <see cref="source"/> INI data. The removal behavior is determined by <see cref="RemoveRemovedSections"/>
-        /// and <see cref="RemoveRemovedProperties"/>.
+        /// <see cref="source"/> INI data.
         /// </summary>
         private void ProcessRemoved()
         {
@@ -215,12 +166,12 @@ namespace DHYDRO.Common.IO.Ini
                 UniqueIniSection targetSection = target.SectionAt(i);
                 UniqueIniSection sourceSection = source.GetSection(targetSection.Id);
 
-                if (sourceSection == null && RemoveRemovedSections)
+                if (sourceSection == null && Configuration.RemoveRemovedSections)
                 {
                     target.RemoveSection(targetSection.Id);
                 }
 
-                if (sourceSection != null && RemoveRemovedProperties)
+                if (sourceSection != null && Configuration.RemoveRemovedProperties)
                 {
                     targetSection.RemoveAllProperties(
                         targetProperty => !sourceSection.ContainsProperty(targetProperty.Id));
@@ -274,7 +225,7 @@ namespace DHYDRO.Common.IO.Ini
 
             public IniData ToIniData()
             {
-                iniData.Clear();
+                iniData.ClearSections();
                 iniData.AddMultipleSections(
                     Sections.Select(x => x.ToIniSection()));
                 return iniData;
@@ -328,7 +279,7 @@ namespace DHYDRO.Common.IO.Ini
 
             public IniSection ToIniSection()
             {
-                section.Clear();
+                section.ClearProperties();
                 section.AddMultipleProperties(
                     Properties.Select(x => x.ToIniProperty()));
                 return section;

@@ -113,6 +113,50 @@ namespace DHYDRO.Common.Tests.IO.Ini
         }
 
         [Test]
+        public void HasValue_ValidValue_ReturnsTrue()
+        {
+            var property = new IniProperty("TestKey", "TestValue");
+
+            bool result = property.HasValue();
+            
+            Assert.IsTrue(result);
+        }
+        
+        [Test]
+        [TestCase("")]
+        [TestCase(null)]
+        public void HasComment_CommentIsNullOrEmpty_ReturnsFalse(string comment)
+        {
+            var property = new IniProperty("TestKey", "TestValue", comment);
+
+            bool result = property.HasComment();
+            
+            Assert.IsFalse(result);
+        }
+        
+        [Test]
+        public void HasComment_ValidComment_ReturnsTrue()
+        {
+            var property = new IniProperty("TestKey", "TestValue", "TestComment");
+
+            bool result = property.HasComment();
+            
+            Assert.IsTrue(result);
+        }
+        
+        [Test]
+        [TestCase("")]
+        [TestCase(null)]
+        public void HasValue_ValueIsNullOrEmpty_ReturnsFalse(string value)
+        {
+            var property = new IniProperty("TestKey", value);
+
+            bool result = property.HasValue();
+            
+            Assert.IsFalse(result);
+        }
+        
+        [Test]
         [TestCase("", "")]
         [TestCase("42", 42)]
         [TestCase("2.7100000e+000", 2.71)]

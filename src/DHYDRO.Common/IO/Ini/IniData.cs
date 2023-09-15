@@ -26,8 +26,6 @@ namespace DHYDRO.Common.IO.Ini
         public IniData()
         {
             sections = new List<IniSection>();
-
-            Comment = string.Empty;
         }
 
         /// <summary>
@@ -42,14 +40,7 @@ namespace DHYDRO.Common.IO.Ini
             sections = other.Sections
                             .Select(s => new IniSection(s.Name, s))
                             .ToList();
-
-            Comment = other.Comment;
         }
-
-        /// <summary>
-        /// Gets or sets the comment associated with the INI data. The default value is an empty string.
-        /// </summary>
-        public string Comment { get; set; }
 
         /// <summary>
         /// Gets the sections within the INI data.
@@ -102,7 +93,7 @@ namespace DHYDRO.Common.IO.Ini
         }
 
         /// <summary>
-        /// Determines whether the INI data contains a section with the specified name.
+        /// Returns whether the INI data contains a section with the specified name.
         /// </summary>
         /// <param name="name">The name of the section to locate in the data.</param>
         /// <returns><c>true</c> if a section with the specified name is found; otherwise, <c>false</c>.</returns>
@@ -184,7 +175,7 @@ namespace DHYDRO.Common.IO.Ini
         /// <summary>
         /// Clears all sections from the INI data.
         /// </summary>
-        public void Clear()
+        public void ClearSections()
         {
             sections.Clear();
         }
@@ -232,10 +223,7 @@ namespace DHYDRO.Common.IO.Ini
                 return true;
             }
 
-            const StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
-
-            return string.Equals(Comment, other.Comment, comparison) &&
-                   Sections.SequenceEqual(other.Sections);
+            return Sections.SequenceEqual(other.Sections);
         }
 
         /// <inheritdoc/>

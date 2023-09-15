@@ -23,6 +23,7 @@ namespace DHYDRO.Common.IO.Ini
     public sealed class IniSection : IEquatable<IniSection>
     {
         private readonly List<IniProperty> properties;
+        private readonly List<string> comments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IniSection"/> class.
@@ -34,6 +35,7 @@ namespace DHYDRO.Common.IO.Ini
             Ensure.NotNullOrEmpty(name, nameof(name));
 
             properties = new List<IniProperty>();
+            comments = new List<string>();
 
             Name = name;
         }
@@ -53,6 +55,8 @@ namespace DHYDRO.Common.IO.Ini
             properties = other.Properties
                               .Select(p => new IniProperty(p.Key, p))
                               .ToList();
+
+            comments = other.Comments.ToList();
 
             Name = name;
             LineNumber = other.LineNumber;
@@ -74,9 +78,19 @@ namespace DHYDRO.Common.IO.Ini
         public IEnumerable<IniProperty> Properties => properties;
 
         /// <summary>
+        /// Gets the comments associated with the section.
+        /// </summary>
+        public IEnumerable<string> Comments => comments;
+
+        /// <summary>
         /// Gets the number of properties within the section.
         /// </summary>
         public int PropertyCount => properties.Count;
+
+        /// <summary>
+        /// Gets the number of comments associated with the section.
+        /// </summary>
+        public int CommentCount => comments.Count;
 
         /// <summary>
         /// Adds a new property with the specified key and value to the section.
@@ -149,7 +163,7 @@ namespace DHYDRO.Common.IO.Ini
         }
 
         /// <summary>
-        /// Determines whether the section contains a property with the specified key.
+        /// Returns whether the section contains a property with the specified key.
         /// </summary>
         /// <param name="key">The key of the property to locate in the section.</param>
         /// <returns><c>true</c> if a property with the specified key is found; otherwise, <c>false</c>.</returns>
@@ -275,7 +289,7 @@ namespace DHYDRO.Common.IO.Ini
         /// <summary>
         /// Clears all properties from the section.
         /// </summary>
-        public void Clear()
+        public void ClearProperties()
         {
             properties.Clear();
         }
@@ -304,7 +318,40 @@ namespace DHYDRO.Common.IO.Ini
         }
 
         /// <summary>
-        /// Checks if the name of the section is equal to the specified name.
+        /// Adds a comment line to the section's comments.
+        /// </summary>
+        /// <param name="comment">The comment line to add.</param>
+        /// <exception cref="ArgumentException">When <paramref name="comment"/> is <c>null</c> or empty.</exception>
+        public void AddComment(string comment)
+        {
+            Ensure.NotNullOrEmpty(comment, nameof(comment));
+
+            comments.Add(comment);
+        }
+
+        /// <summary>
+        /// Removes the specified comment line from the section's comments.
+        /// </summary>
+        /// <param name="comment">The comment line to remove.</param>
+        /// <exception cref="ArgumentException">When <paramref name="comment"/> is <c>null</c> or empty.</exception>
+        /// <remarks>Returns silently if the comment was not found in the section's comments.</remarks>
+        public void RemoveComment(string comment)
+        {
+            Ensure.NotNullOrEmpty(comment, nameof(comment));
+
+            comments.Remove(comment);
+        }
+
+        /// <summary>
+        /// Clears all comments associated with the section.
+        /// </summary>
+        public void ClearComments()
+        {
+            comments.Clear();
+        }
+
+        /// <summary>
+        /// Returns whether the name of the section is equal to the specified name.
         /// </summary>
         /// <param name="name">The name to compare against.</param>
         /// <returns><c>true</c> if the names are equal; otherwise, <c>false</c>.</returns>
@@ -336,11 +383,13 @@ namespace DHYDRO.Common.IO.Ini
                 return true;
             }
 
-            const StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
+            StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
+            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
 
             return string.Equals(Name, other.Name, comparison) &&
                    Equals(LineNumber, other.LineNumber) &&
-                   Properties.SequenceEqual(other.Properties);
+                   Properties.SequenceEqual(other.Properties) &&
+                   Comments.SequenceEqual(other.comments, comparer);
         }
 
         /// <inheritdoc/>

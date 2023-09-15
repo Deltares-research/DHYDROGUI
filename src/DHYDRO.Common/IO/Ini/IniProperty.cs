@@ -86,6 +86,24 @@ namespace DHYDRO.Common.IO.Ini
         }
 
         /// <summary>
+        /// Returns whether the property has a non-null and non-empty value.
+        /// </summary>
+        /// <returns><c>true</c> if the property has a value; otherwise, <c>false</c>.</returns>
+        public bool HasValue()
+        {
+            return !string.IsNullOrEmpty(Value);
+        }
+        
+        /// <summary>
+        /// Returns whether the property has a non-null and non-empty comment.
+        /// </summary>
+        /// <returns><c>true</c> if the property has a comment; otherwise, <c>false</c>.</returns>
+        public bool HasComment()
+        {
+            return !string.IsNullOrEmpty(Comment);
+        }
+
+        /// <summary>
         /// Tries to convert the property value to the specified type and retrieves the converted value.
         /// </summary>
         /// <param name="convertedValue">The converted value if the conversion succeeded; otherwise, the default value.</param>
@@ -118,7 +136,7 @@ namespace DHYDRO.Common.IO.Ini
         }
 
         /// <summary>
-        /// Returns whether the specified key is equal to this property's key.
+        /// Returns whether the key of the property is equal to the specified key.
         /// </summary>
         /// <param name="key">The key to compare against.</param>
         /// <returns><c>true</c> if the keys are equal; otherwise <c>false</c>.</returns>

@@ -15,7 +15,6 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var iniData = new IniData();
 
             Assert.IsEmpty(iniData.Sections);
-            Assert.IsEmpty(iniData.Comment);
             Assert.AreEqual(0, iniData.SectionCount);
         }
 
@@ -33,12 +32,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             var iniData = new IniData();
             iniData.AddSection(section);
-            iniData.Comment = "TestComment";
 
             var copiedIniData = new IniData(iniData);
 
             Assert.AreEqual(1, copiedIniData.SectionCount);
-            Assert.AreEqual("TestComment", copiedIniData.Comment);
 
             IniSection copiedIniSection = copiedIniData.Sections.FirstOrDefault();
             Assert.NotNull(copiedIniSection);
@@ -76,7 +73,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniSection section1 = iniData.AddSection("TestSection");
             IniSection section2 = iniData.AddSection("TestSection");
 
-            IniSection[] expected = new[] { section1, section2 };
+            IniSection[] expected = { section1, section2 };
 
             Assert.That(iniData.Sections, Is.EqualTo(expected));
         }
@@ -112,7 +109,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData.AddSection(section1);
             iniData.AddSection(section2);
 
-            IniSection[] expected = new[] { section1, section2 };
+            IniSection[] expected = { section1, section2 };
 
             Assert.That(iniData.Sections, Is.EqualTo(expected));
         }
@@ -129,7 +126,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData.AddSection(section2);
             iniData.AddSection(section1);
 
-            IniSection[] expected = new[] { section3, section2, section1 };
+            IniSection[] expected = { section3, section2, section1 };
 
             Assert.That(iniData.Sections, Is.EqualTo(expected));
         }
@@ -149,7 +146,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var section1 = new IniSection("Section1");
             var section2 = new IniSection("Section2");
 
-            IniSection[] sections = new[] { section1, section2 };
+            IniSection[] sections = { section1, section2 };
 
             iniData.AddMultipleSections(sections);
 
@@ -309,7 +306,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData.AddSection(section1);
             iniData.RemoveSection(section2);
 
-            IniSection[] expected = new[] { section1 };
+            IniSection[] expected = { section1 };
 
             Assert.That(iniData.Sections, Is.EqualTo(expected));
         }
@@ -325,7 +322,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData.RemoveSection(section1);
 
             IniSection section4 = iniData.AddSection("Section4");
-            IniSection[] expected = new[] { section2, section3, section4 };
+            IniSection[] expected = { section2, section3, section4 };
 
             Assert.That(iniData.Sections, Is.EqualTo(expected));
         }
@@ -402,23 +399,23 @@ namespace DHYDRO.Common.Tests.IO.Ini
         }
 
         [Test]
-        public void Clear_WithSections_RemovesAllSections()
+        public void ClearSections_WithSections_RemovesAllSections()
         {
             var iniData = new IniData();
             iniData.AddSection("Section1");
             iniData.AddSection("Section2");
 
-            iniData.Clear();
+            iniData.ClearSections();
 
             Assert.IsEmpty(iniData.Sections);
         }
 
         [Test]
-        public void Clear_WithoutSections_DoesNothing()
+        public void ClearSections_WithoutSections_DoesNothing()
         {
             var iniData = new IniData();
 
-            iniData.Clear();
+            iniData.ClearSections();
 
             Assert.IsEmpty(iniData.Sections);
         }
