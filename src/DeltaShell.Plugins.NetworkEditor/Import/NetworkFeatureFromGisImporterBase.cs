@@ -18,15 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(NetworkFeatureFromGisImporterBase));
 
-        protected HydroNetwork HydroNetwork
-        {
-            get
-            {
-                return HydroRegion is HydroNetwork
-                           ? HydroRegion as HydroNetwork
-                           : HydroRegion.SubRegions.OfType<HydroNetwork>().First();
-            }
-        }
+        protected IHydroNetwork HydroNetwork => HydroRegion as IHydroNetwork ?? HydroRegion.SubRegions.OfType<IHydroNetwork>().First();
 
         protected T AddOrUpdateBranchFeatureFromNetwork<T>(IFeature feature, string columnName, Func<IBranch, T> builder) where T : class, IBranchFeature
         {

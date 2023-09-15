@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Aop;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -10,6 +11,7 @@ using log4net;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using SharpMap.CoordinateSystems.Transformations;
 
 namespace DeltaShell.Plugins.NetworkEditor.Import
 {
@@ -183,7 +185,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             return HydroNetwork;
         }
 
-        public static void UpdateGeometry(IBranch branch, ILineString newLineString)
+        private double GetGeodeticDistance(ICoordinateSystem coordinateSystem, IGeometry channelGeometry)
+        {
+            if (coordinateSystem == null)
+            {
+                return double.NaN;
+            }
+
+            var geodeticDistance = new GeodeticDistance(coordinateSystem);
+
+
+            var distance = 0.0;
+
+            for (int index = 1; index < channelGeometry.Coordinates.Length; ++index)
+                distance += geodeticDistance.Distance(channelGeometry.Coordinates[index - 1],
+                                                      channelGeometry.Coordinates[index]);
+
+            return distance;
+
+        }
+
+        private void UpdateGeometry(IBranch branch, ILineString newLineString)
         {
             double factor = branch.IsLengthCustom ? 1.0 : newLineString.Length / branch.Geometry.Length;
             branch.Geometry = newLineString;
@@ -223,6 +245,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                     branchFeature.Geometry = GeometryHelper.SetCoordinate(branchFeature.Geometry, 0, coordinate);
                 }
             }
+            branch.GeodeticLength = GetGeodeticDistance(HydroNetwork.CoordinateSystem, branch.Geometry);
         }
 
         private ILineString AdjustGeometryToFitNodeLocations(IChannel channel, ILineString newGeometry)
