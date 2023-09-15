@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
-using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
@@ -13,8 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(MdwFile));
         
-        private readonly IniMerger mdwFileMerger = new IniMerger();
-
         /// <summary>
         /// These mdw sections can have multiplicity greater than 1 (or gui only),
         /// excluded them from the generic property treatment..

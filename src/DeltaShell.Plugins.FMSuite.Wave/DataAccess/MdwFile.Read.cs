@@ -32,6 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
     /// </summary>
     public partial class MdwFile
     {
+        private IniData originalIniData = new IniData();
+        
         /// <summary>
         /// Reads an MDW file from the specified location.
         /// </summary>
@@ -50,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 iniData = new IniReader().ReadIniFile(fileStream, MdwFilePath);
             }
             
-            mdwFileMerger.Original = iniData;
+            originalIniData = iniData;
             
             string mdwDir = Path.GetDirectoryName(filePath);
 

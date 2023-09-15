@@ -9,7 +9,7 @@
     <PackageVersion Include="Castle.Core" Version="5.1.1" />
     <PackageVersion Include="DeltaShell.Framework" Version="3.0.0.2586" />
     <PackageVersion Include="DeltaShell.TestProject" Version="3.0.0.2586" />
-    <PackageVersion Include="DHYDRO.Common" Version="1.2.0.148" />
+    <PackageVersion Include="DHYDRO.Common" Version="1.2.0.152" />
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="4.0.0.8" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="4.0.0.8" />
     <PackageVersion Include="DIDO" Version="7.0.0.74073" />

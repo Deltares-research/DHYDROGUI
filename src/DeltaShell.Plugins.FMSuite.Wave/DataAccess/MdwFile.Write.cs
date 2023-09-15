@@ -134,11 +134,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             iniData.AddMultipleSections(mdwSections);
             
             // merge mdw
-            mdwFileMerger.Modified = iniData;
-            IniData merged = mdwFileMerger.Merge();
+            var mdwFileMerger = new IniMerger();
+            IniData mergedIniData = mdwFileMerger.Merge(originalIniData, iniData);
             
             // write mdw
-            new IniWriter().WriteIniFile(merged, mdwTargetFilePath);
+            new IniWriter().WriteIniFile(mergedIniData, mdwTargetFilePath);
 
             // switch
             if (switchTo)
