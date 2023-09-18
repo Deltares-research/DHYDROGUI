@@ -9,12 +9,12 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
-using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils.EqualityComparers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Builders;
+using DHYDRO.Common.IO.Ini;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -51,16 +51,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 
             var delftBcReader = new DelftBcReader();
             var categories = delftBcReader.ReadDelftBcFile(bcFile);
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            
+
             // Test BoundaryNode Data
-            var boundaryNodeCategories = categories.Where(c => c.Name == BoundaryRegion.BcBoundaryHeader).ToList();
+            var boundaryNodeCategories = categories.Where(c => c.Section.Name == BoundaryRegion.BcBoundaryHeader).ToList();
             Assert.AreEqual(2, boundaryNodeCategories.Count); // 2 RR BC
 
             // Constant WaterLevel
-            Assert.AreEqual(2, boundaryNodeCategories[0].Properties.Count);
-            Assert.AreEqual("RBC1", boundaryNodeCategories[0].ReadProperty<string>(BoundaryRegion.Name.Key));
-            Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, boundaryNodeCategories[0].ReadProperty<string>(BoundaryRegion.Function.Key));
+            Assert.AreEqual(2, boundaryNodeCategories[0].Section.Properties.Count());
+            Assert.AreEqual("RBC1", boundaryNodeCategories[0].Section.ReadProperty<string>(BoundaryRegion.Name.Key));
+            Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, boundaryNodeCategories[0].Section.ReadProperty<string>(BoundaryRegion.Function.Key));
             Assert.AreEqual(1, boundaryNodeCategories[0].Table.Count);
             Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR, boundaryNodeCategories[0].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterLevel, boundaryNodeCategories[0].Table[0].Unit.Value);
@@ -68,11 +67,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             Assert.AreEqual("123.4", boundaryNodeCategories[0].Table[0].Values[0]);
 
             // WaterLevel TimeSeries
-            Assert.AreEqual(4, boundaryNodeCategories[1].Properties.Count);
-            Assert.AreEqual("RBC2", boundaryNodeCategories[1].ReadProperty<string>(BoundaryRegion.Name.Key));
-            Assert.AreEqual(BoundaryRegion.FunctionStrings.TimeSeries, boundaryNodeCategories[1].ReadProperty<string>(BoundaryRegion.Function.Key));
-            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.BlockFrom, boundaryNodeCategories[1].ReadProperty<string>(BoundaryRegion.Interpolation.Key));
-            Assert.AreEqual(true, boundaryNodeCategories[1].ReadProperty<bool>(BoundaryRegion.Periodic.Key));
+            Assert.AreEqual(4, boundaryNodeCategories[1].Section.Properties.Count());
+            Assert.AreEqual("RBC2", boundaryNodeCategories[1].Section.ReadProperty<string>(BoundaryRegion.Name.Key));
+            Assert.AreEqual(BoundaryRegion.FunctionStrings.TimeSeries, boundaryNodeCategories[1].Section.ReadProperty<string>(BoundaryRegion.Function.Key));
+            Assert.AreEqual(BoundaryRegion.TimeInterpolationStrings.BlockFrom, boundaryNodeCategories[1].Section.ReadProperty<string>(BoundaryRegion.Interpolation.Key));
+            Assert.AreEqual(true, boundaryNodeCategories[1].Section.ReadProperty<bool>(BoundaryRegion.Periodic.Key));
             Assert.AreEqual(2, boundaryNodeCategories[1].Table.Count);
             Assert.AreEqual(BoundaryRegion.QuantityStrings.Time, boundaryNodeCategories[1].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.TimeMinutes + " " + model.StartTime.ToString(BoundaryRegion.UnitStrings.TimeFormat), boundaryNodeCategories[1].Table[0].Unit.Value);
@@ -166,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             rainfallRunoffBoundaryDataFileWriter.WriteFile(filePath, rainfallRunoffModel);
 
             // Assert
-            var expectedCategories = new List<IDelftIniCategory>
+            var expectedCategories = new List<DelftBcCategory>
             {
                 CreateExpectedGeneralCategory(),
                 CreateExpectedConstantBcCategory("runoff_boundary_constant", 1),
@@ -242,7 +241,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             rainfallRunoffBoundaryDataFileWriter.WriteFile(filePath, rainfallRunoffModel);
 
             // Assert
-            var expectedCategories = new List<IDelftIniCategory>
+            var expectedCategories = new List<DelftBcCategory>
             {
                 CreateExpectedGeneralCategory(),
                 CreateExpectedConstantBcCategory("unpaved_catchment_constant_boundary", 1),
@@ -296,7 +295,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             rainfallRunoffBoundaryDataFileWriter.WriteFile(filePath, rainfallRunoffModel);
 
             // Assert
-            var expectedCategories = new List<IDelftIniCategory>
+            var expectedCategories = new List<DelftBcCategory>
             {
                 CreateExpectedGeneralCategory(),
                 CreateExpectedConstantBcCategory("catchment_boundary", 0),
@@ -337,7 +336,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             rrBoundaryDataFileWriter.WriteFile(filePath, rainfallRunoffModel);
 
             // Assert
-            var expectedCategories = new List<IDelftIniCategory>
+            var expectedCategories = new List<DelftBcCategory>
             {
                 CreateExpectedGeneralCategory(),
                 CreateExpectedConstantBcCategory(lateralSourceName, 0)
@@ -346,21 +345,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             delftBcWriter.Received(1).WriteBcFile(MatchingCategories(expectedCategories), filePath);
         }
 
-        private static DelftIniCategory CreateExpectedGeneralCategory()
+        private static DelftBcCategory CreateExpectedGeneralCategory()
         {
-            var generalCategory = new DelftIniCategory("General");
-            generalCategory.AddProperty("fileVersion", "1.01", "File version. Do not edit this.");
-            generalCategory.AddProperty("fileType", "boundConds", "File type. Do not edit this.");
+            var generalIniSection = new IniSection("General");
+            generalIniSection.AddPropertyWithOptionalComment("fileVersion", "1.01", "File version. Do not edit this.");
+            generalIniSection.AddPropertyWithOptionalComment("fileType", "boundConds", "File type. Do not edit this.");
 
-            return generalCategory;
+            return new DelftBcCategory(generalIniSection);
         }
 
         private static DelftBcCategory CreateExpectedConstantBcCategory(string name, double value)
         {
             var bcCategory = new DelftBcCategory("Boundary");
-            bcCategory.AddProperty("name", name, "Name of the boundary location (node id)");
-            bcCategory.AddProperty("function", "constant", "Possible values: TimeSeries, QHTable");
-            bcCategory.AddProperty("timeInterpolation", (string)null, "Possible values: linear, block-from (value holds from specified time step), block-to (value holds until next specified time step)");
+            bcCategory.Section.AddPropertyWithOptionalComment("name", name, "Name of the boundary location (node id)");
+            bcCategory.Section.AddPropertyWithOptionalComment("function", "constant", "Possible values: TimeSeries, QHTable");
+            bcCategory.Section.AddPropertyWithOptionalComment("timeInterpolation", (string)null, "Possible values: linear, block-from (value holds from specified time step), block-to (value holds until next specified time step)");
 
             bcCategory.Table.Add(CreateWaterLevelQuantityData(value));
 
@@ -370,9 +369,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         private static DelftBcCategory CreateExpectedTimeSeriesBcCategory(string name, DateTime startDate, params double[] values)
         {
             var bcCategory = new DelftBcCategory("Boundary");
-            bcCategory.AddProperty("name", name, "Name of the boundary location (node id)");
-            bcCategory.AddProperty("function", "timeseries", "Possible values: TimeSeries, QHTable");
-            bcCategory.AddProperty("timeInterpolation", "linear", "Possible values: linear, block-from (value holds from specified time step), block-to (value holds until next specified time step)");
+            bcCategory.Section.AddPropertyWithOptionalComment("name", name, "Name of the boundary location (node id)");
+            bcCategory.Section.AddPropertyWithOptionalComment("function", "timeseries", "Possible values: TimeSeries, QHTable");
+            bcCategory.Section.AddPropertyWithOptionalComment("timeInterpolation", "linear", "Possible values: linear, block-from (value holds from specified time step), block-to (value holds until next specified time step)");
 
             double[] times = Enumerable.Range(0, values.Length).Select(i => (startDate.AddDays(i) - startDate).TotalMinutes).ToArray();
             bcCategory.Table.Add(CreateTimeQuantityData(startDate, times));
@@ -383,44 +382,35 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 
         private static DelftBcQuantityData CreateWaterLevelQuantityData(params double[] values)
         {
-            var waterLevelQuantityProperty = new DelftIniProperty("quantity", "water_level", "Possible values (netcdf-CF standard): time, water_level, water_discharge, sea_water_salinity");
-            var waterLevelUnitProperty = new DelftIniProperty("unit", "m", "Possible values for 'time' column: yyyy-MM-dd hh:mm:ss, seconds since begintime format: yyyy-MM-dd hh:mm:ss +00:00 (+00:00: time zone), minutes since begintime, hours since begintime");
+            var waterLevelQuantityProperty = new IniProperty("quantity", "water_level", "Possible values (netcdf-CF standard): time, water_level, water_discharge, sea_water_salinity");
+            var waterLevelUnitProperty = new IniProperty("unit", "m", "Possible values for 'time' column: yyyy-MM-dd hh:mm:ss, seconds since begintime format: yyyy-MM-dd hh:mm:ss +00:00 (+00:00: time zone), minutes since begintime, hours since begintime");
             return new DelftBcQuantityData(waterLevelQuantityProperty, waterLevelUnitProperty, values);
         }
 
         private static DelftBcQuantityData CreateTimeQuantityData(DateTime startDate, double[] values)
         {
-            var timeQuantityProperty = new DelftIniProperty("quantity", "time", "Possible values (netcdf-CF standard): time, water_level, water_discharge, sea_water_salinity");
-            var timeLevelUnitProperty = new DelftIniProperty("unit", $"minutes since {startDate:yyyy-MM-dd HH:mm:ss}", "Possible values for 'time' column: yyyy-MM-dd hh:mm:ss, seconds since begintime format: yyyy-MM-dd hh:mm:ss +00:00 (+00:00: time zone), minutes since begintime, hours since begintime");
+            var timeQuantityProperty = new IniProperty("quantity", "time", "Possible values (netcdf-CF standard): time, water_level, water_discharge, sea_water_salinity");
+            var timeLevelUnitProperty = new IniProperty("unit", $"minutes since {startDate:yyyy-MM-dd HH:mm:ss}", "Possible values for 'time' column: yyyy-MM-dd hh:mm:ss, seconds since begintime format: yyyy-MM-dd hh:mm:ss +00:00 (+00:00: time zone), minutes since begintime, hours since begintime");
             return new DelftBcQuantityData(timeQuantityProperty, timeLevelUnitProperty, values);
         }
 
-        private static IEnumerable<IDelftIniCategory> MatchingCategories(IEnumerable<IDelftIniCategory> expectedCategories)
+        private static IEnumerable<DelftBcCategory> MatchingCategories(IEnumerable<DelftBcCategory> expectedCategories)
         {
-            return Arg.Is<IEnumerable<IDelftIniCategory>>(actualCategories => CategoriesEqual(actualCategories.ToArray(), expectedCategories.ToArray()));
+            return Arg.Is<IEnumerable<DelftBcCategory>>(actualCategories => CategoriesEqual(actualCategories.ToArray(), expectedCategories.ToArray()));
         }
 
-        private static bool CategoriesEqual(IDelftIniCategory[] actualCategories, IDelftIniCategory[] expectedCategories)
+        private static bool CategoriesEqual(DelftBcCategory[] actualCategories, DelftBcCategory[] expectedCategories)
         {
             if (actualCategories.Length != expectedCategories.Length)
             {
                 return false;
             }
 
-            var categoryComparer = new DelftIniCategoryEqualityComparer();
             var bcCategoryComparer = new DelftBcCategoryEqualityComparer();
 
             for (var i = 0; i < actualCategories.Length; i++)
             {
-                if (actualCategories[i] is IDelftBcCategory actualBc && expectedCategories[i] is IDelftBcCategory expectedBc)
-                {
-                    if (!bcCategoryComparer.Equals(actualBc, expectedBc))
-                    {
-                        return false;
-                    }
-                }
-
-                else if (!categoryComparer.Equals(actualCategories[i], expectedCategories[i]))
+                if (!bcCategoryComparer.Equals(actualCategories[i], expectedCategories[i]))
                 {
                     return false;
                 }

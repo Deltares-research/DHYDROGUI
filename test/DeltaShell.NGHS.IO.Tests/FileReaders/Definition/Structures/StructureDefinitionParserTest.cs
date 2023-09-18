@@ -6,8 +6,8 @@ using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NSubstitute;
 using NUnit.Framework;
@@ -22,29 +22,29 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
 
         private static IEnumerable<TestCaseData> ReadStructureParameterNullData()
         {
-            IDelftIniCategory category = new DelftIniCategory("structure");
+            IniSection iniSection = new IniSection("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
             const string type = "bridge";
 
-            yield return new TestCaseData(null, crossSectionDefinitions, branch, type, structuresFilename, "category");
-            yield return new TestCaseData(category, null, branch, type, structuresFilename, "crossSectionDefinitions");
-            yield return new TestCaseData(category, crossSectionDefinitions, null, type, structuresFilename, "branch");
-            yield return new TestCaseData(category, crossSectionDefinitions, branch, null, structuresFilename, "type");
-            yield return new TestCaseData(category, crossSectionDefinitions, branch, type, null, "structuresFilePath");
+            yield return new TestCaseData(null, crossSectionDefinitions, branch, type, structuresFilename, "iniSection");
+            yield return new TestCaseData(iniSection, null, branch, type, structuresFilename, "crossSectionDefinitions");
+            yield return new TestCaseData(iniSection, crossSectionDefinitions, null, type, structuresFilename, "branch");
+            yield return new TestCaseData(iniSection, crossSectionDefinitions, branch, null, structuresFilename, "type");
+            yield return new TestCaseData(iniSection, crossSectionDefinitions, branch, type, null, "structuresFilePath");
         }
 
         [Test]
         [TestCaseSource(nameof(ReadStructureParameterNullData))]
         public void ReadStructure_ParameterNull_ThrowsArgumentNullException(
-            IDelftIniCategory category,
+            IniSection iniSection,
             ICollection<ICrossSectionDefinition> crossSectionDefinitions,
             IBranch branch,
             string type,
             string structuresFilePath,
             string expectedName)
         {
-            void Call() => category.ReadStructure(crossSectionDefinitions, 
+            void Call() => iniSection.ReadStructure(crossSectionDefinitions, 
                                                   branch, 
                                                   type, 
                                                   structuresFilePath, 
@@ -59,13 +59,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
         public void ReadStructure_UnknownType_ThrowsFileReadingException()
         {
             // Setup
-            IDelftIniCategory category = new DelftIniCategory("structure");
+            IniSection iniSection = new IniSection("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
             const string type = "UnknownStructureType";
 
             // Call
-            void Call() => category.ReadStructure(crossSectionDefinitions, 
+            void Call() => iniSection.ReadStructure(crossSectionDefinitions, 
                                                   branch, 
                                                   type, 
                                                   structuresFilename, 

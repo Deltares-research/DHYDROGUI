@@ -14,6 +14,7 @@ using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -36,7 +37,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// </summary>
         /// <param name="fileReader">The file reader</param>
         /// <param name="structureType">The structure type.</param>
-        /// <param name="category">The <see cref="IDelftIniCategory"/> to parse a structure from.</param>
+        /// <param name="iniSection">The <see cref="IniSection"/> to parse a structure from.</param>
         /// <param name="crossSectionDefinitions">A collection of cross-section definitions.</param>
         /// <param name="branch">The branch to import the bridge on.</param>
         /// <param name="structuresFilePath">The path to the structures file.</param>
@@ -47,12 +48,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// </exception>
         public CulvertDefinitionParser(ITimeSeriesFileReader fileReader,
                                        StructureType structureType,
-                                       IDelftIniCategory category,
+                                       IniSection iniSection,
                                        ICollection<ICrossSectionDefinition> crossSectionDefinitions,
                                        IBranch branch,
                                        string structuresFilePath,
                                        DateTime referenceDateTime)
-            : base(structureType, category, crossSectionDefinitions, branch, Path.GetFileName(structuresFilePath))
+            : base(structureType, iniSection, crossSectionDefinitions, branch, Path.GetFileName(structuresFilePath))
         {
             Ensure.NotNull(fileReader, nameof(fileReader));
 
@@ -63,46 +64,46 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 
         protected override IStructure1D Parse()
         {
-            var crossSectionDefinitionId = Category.ReadProperty<string>(StructureRegion.CsDefId.Key);
+            var crossSectionDefinitionId = IniSection.ReadProperty<string>(StructureRegion.CsDefId.Key);
             var definition = CrossSectionDefinitions.FirstOrDefault(cd => string.Equals(cd.Name, crossSectionDefinitionId, StringComparison.InvariantCultureIgnoreCase));
 
             var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
 
             var culvert = new Culvert
             {
-                Name = Category.ReadProperty<string>(StructureRegion.Id.Key),
-                LongName = Category.ReadProperty<string>(StructureRegion.Name.Key, true),
+                Name = IniSection.ReadProperty<string>(StructureRegion.Id.Key),
+                LongName = IniSection.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = Branch,
-                Chainage = Branch.GetBranchSnappedChainage(Category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = Branch.GetBranchSnappedChainage(IniSection.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 GeometryType = GetGeometryType(standardCrossSectionDefinition?.ShapeType),
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW
                     ? definition as CrossSectionDefinitionZW
                     : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() ?? CrossSectionDefinitionZW.CreateDefault(),
-                FlowDirection = EnumUtils.GetEnumValueByDescription<FlowDirection>(Category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key)),
-                InletLevel = Category.ReadProperty<double>(StructureRegion.LeftLevel.Key),
-                OutletLevel = Category.ReadProperty<double>(StructureRegion.RightLevel.Key),
-                Length = Category.ReadProperty<double>(StructureRegion.Length.Key),
-                InletLossCoefficient = Category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key),
-                OutletLossCoefficient = Category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key),
-                IsGated = Category.ReadProperty<string>(StructureRegion.ValveOnOff.Key) != "0",
-                BendLossCoefficient = Category.ReadProperty<double>(StructureRegion.BendLossCoef.Key, true),
-                FrictionDataType = (Friction)Enum.Parse(typeof(Friction), Category.ReadProperty<string>(StructureRegion.BedFrictionType.Key), true),
-                Friction = Category.ReadProperty<double>(StructureRegion.BedFriction.Key)
+                FlowDirection = EnumUtils.GetEnumValueByDescription<FlowDirection>(IniSection.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key)),
+                InletLevel = IniSection.ReadProperty<double>(StructureRegion.LeftLevel.Key),
+                OutletLevel = IniSection.ReadProperty<double>(StructureRegion.RightLevel.Key),
+                Length = IniSection.ReadProperty<double>(StructureRegion.Length.Key),
+                InletLossCoefficient = IniSection.ReadProperty<double>(StructureRegion.InletLossCoeff.Key),
+                OutletLossCoefficient = IniSection.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key),
+                IsGated = IniSection.ReadProperty<string>(StructureRegion.ValveOnOff.Key) != "0",
+                BendLossCoefficient = IniSection.ReadProperty<double>(StructureRegion.BendLossCoef.Key, true),
+                FrictionDataType = (Friction)Enum.Parse(typeof(Friction), IniSection.ReadProperty<string>(StructureRegion.BedFrictionType.Key), true),
+                Friction = IniSection.ReadProperty<double>(StructureRegion.BedFriction.Key)
             };
             SetGateInitialOpening(culvert);
 
             SetCulvertDimensionsBasedOnProfile(culvert, definition);
-            var numLossCoeff = Category.ReadProperty<int>(StructureRegion.LossCoeffCount.Key, true);
+            var numLossCoeff = IniSection.ReadProperty<int>(StructureRegion.LossCoeffCount.Key, true);
             if (numLossCoeff > 0)
             {
-                var relOpening = Category.ReadProperty<string>(StructureRegion.RelativeOpening.Key).ToDoubleArray();
-                var lossCoeff = Category.ReadProperty<string>(StructureRegion.LossCoefficient.Key).ToDoubleArray();
+                var relOpening = IniSection.ReadProperty<string>(StructureRegion.RelativeOpening.Key).ToDoubleArray();
+                var lossCoeff = IniSection.ReadProperty<string>(StructureRegion.LossCoefficient.Key).ToDoubleArray();
 
                 culvert.GateOpeningLossCoefficientFunction =
                     culvert.GateOpeningLossCoefficientFunction.CreateFunctionFromArrays(relOpening, lossCoeff);
             }
 
-            culvert.CulvertType = string.Equals(Category.GetProperty(StructureRegion.SubType.Key)?.Value, invertedSiphonTypeName, StringComparison.InvariantCultureIgnoreCase)
+            culvert.CulvertType = string.Equals(IniSection.GetPropertyValueOrDefault(StructureRegion.SubType.Key), invertedSiphonTypeName, StringComparison.InvariantCultureIgnoreCase)
                                       ? CulvertType.InvertedSiphon
                                       : CulvertType.Culvert;
 
@@ -111,7 +112,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 
         private void SetGateInitialOpening(ICulvert culvert)
         {
-            var gateInitialOpeningValue = Category.ReadProperty<string>(StructureRegion.IniValveOpen.Key, !culvert.IsGated, defaultValue: null);
+            var gateInitialOpeningValue = IniSection.ReadProperty<string>(StructureRegion.IniValveOpen.Key, !culvert.IsGated, defaultValue: null);
 
             if (gateInitialOpeningValue == null)
             {
@@ -125,7 +126,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
             else
             { 
                 culvert.GateInitialOpening = 
-                    Category.ReadProperty<double>(StructureRegion.IniValveOpen.Key, !culvert.IsGated);
+                    IniSection.ReadProperty<double>(StructureRegion.IniValveOpen.Key, !culvert.IsGated);
             }
         }
 

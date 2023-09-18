@@ -45,12 +45,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public ModelProperty GetProperty(string name)
         {
-            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() == name.ToLower());
+            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.ToLower() == name.ToLower());
         }
 
         public ModelProperty GetProperty(KnownGeneralStructureProperties property)
         {
-            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() ==  property.GetDescription().ToLower());
+            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.ToLower() ==  property.GetDescription().ToLower());
         }
     }
 }

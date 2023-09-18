@@ -4,6 +4,7 @@ using System.IO;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils.Extensions;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -26,41 +27,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="LateralSourceExtCategory"/> class.
         /// </summary>
-        /// <param name="category"> The delft ini category to parse from. </param>
+        /// <param name="iniSection"> The INI section to parse from. </param>
         /// <param name="logHandler"> Optional parameter; the log handler to report errors. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="category"/> is <c>null</c>.
+        /// Thrown when <paramref name="iniSection"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown when the <paramref name="category"/> is not a lateral category.
-        /// This means that the category should have name 'Lateral'.
+        /// Thrown when the <paramref name="iniSection"/> is not a lateral section.
+        /// This means that the section should have name 'Lateral'.
         /// </exception>
         /// <remarks>
-        /// The category is expected to have the following properties:
+        /// The section is expected to have the following properties:
         /// - 'id'
         /// - 'name'
         /// - 'nodeId' OR 'branchId' with 'chainage'
         /// - 'discharge'
         /// If a property is missing, an error will be logged.
         /// </remarks>
-        public LateralSourceExtCategory(IDelftIniCategory category, ILogHandler logHandler = null)
+        public LateralSourceExtCategory(IniSection iniSection, ILogHandler logHandler = null)
         {
-            Ensure.NotNull(category, nameof(category));
-            EnsureLateralCategory(category, nameof(category));
+            Ensure.NotNull(iniSection, nameof(iniSection));
+            EnsureLateralSection(iniSection, nameof(iniSection));
 
             this.logHandler = logHandler;
-            lineNumber = category.LineNumber;
+            lineNumber = iniSection.LineNumber;
 
-            Id = category.GetPropertyValue(idKey);
-            Name = category.GetPropertyValue(nameKey);
-            NodeName = category.GetPropertyValue(nodeIdKey);
-            BranchName = category.GetPropertyValue(branchIdKey);
+            Id = iniSection.GetPropertyValueWithOptionalDefaultValue(idKey);
+            Name = iniSection.GetPropertyValueWithOptionalDefaultValue(nameKey);
+            NodeName = iniSection.GetPropertyValueWithOptionalDefaultValue(nodeIdKey);
+            BranchName = iniSection.GetPropertyValueWithOptionalDefaultValue(branchIdKey);
             if (!string.IsNullOrEmpty(BranchName))
             {
-                Chainage = category.ReadProperty<double>(chainageKey);
+                Chainage = iniSection.ReadProperty<double>(chainageKey);
             }
 
-            SetDischargeData(category);
+            SetDischargeData(iniSection);
         }
 
         /// <summary>
@@ -98,18 +99,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// </summary>
         public double Discharge { get; private set; } = double.NaN;
 
-        private static void EnsureLateralCategory(IDelftIniCategory category, string paramName)
+        private static void EnsureLateralSection(IniSection iniSection, string paramName)
         {
-            if (!category.Name.EqualsCaseInsensitive(BndExtForceFile.LateralHeaderKey))
+            if (!iniSection.Name.EqualsCaseInsensitive(BndExtForceFile.LateralHeaderKey))
             {
-                throw new ArgumentException($"{nameof(category)} should have header {BndExtForceFile.LateralHeaderKey}" +
+                throw new ArgumentException($"{nameof(iniSection)} should have header {BndExtForceFile.LateralHeaderKey}" +
                                             $" for laterals.", paramName);
             }
         }
 
-        private void SetDischargeData(IDelftIniCategory category)
+        private void SetDischargeData(IniSection iniSection)
         {
-            string dischargeVal = category.GetPropertyValue(dischargeKey);
+            string dischargeVal = iniSection.GetPropertyValueWithOptionalDefaultValue(dischargeKey);
             if (TryParseDouble(dischargeVal, out double discharge))
             {
                 Discharge = discharge;

@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -18,7 +19,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             string defaultFrictionId)
         {
             base.AddEnhancedCommonProperties(crossSectionDefinition, writeFrictionFromDefinition, defaultFrictionId);
-            IniCategory.AddProperty(DefinitionPropertySettings.Template, templateType);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Template, templateType);
         }
 
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)

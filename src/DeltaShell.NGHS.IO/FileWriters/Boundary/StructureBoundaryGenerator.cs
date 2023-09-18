@@ -15,11 +15,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
     {
         private const string boundaryHeader = "forcing";
 
-        public IEnumerable<IDelftIniCategory> GenerateBoundaries(IEnumerable<IStructureTimeSeries> structureData, DateTime startTime)
+        public IEnumerable<DelftBcCategory> GenerateBoundaries(IEnumerable<IStructureTimeSeries> structureData, DateTime startTime)
         {
             Ensure.NotNull(structureData, nameof(structureData));
 
-            var categories = new List<IDelftIniCategory>();
+            var categories = new List<DelftBcCategory>();
 
             foreach (IStructureTimeSeries structureTimeSeries in structureData)
             {
@@ -33,12 +33,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return categories;
         }
         
-        public IEnumerable<IDelftIniCategory> GenerateBoundary(string structureName, ITimeSeries structureData, DateTime startTime)
+        public IEnumerable<DelftBcCategory> GenerateBoundary(string structureName, ITimeSeries structureData, DateTime startTime)
         {
             Ensure.NotNull(structureName, nameof(structureName));
             Ensure.NotNull(structureData, nameof(structureData));
             
-            var categories = new List<IDelftIniCategory>
+            var categories = new List<DelftBcCategory>
             {
                 GenerateBoundaryConditionDefinition(structureName, startTime, structureData, string.Empty)
             };
@@ -46,13 +46,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return categories;
         }
 
-        private static IDelftBcCategory GenerateBoundaryConditionDefinition(string name, DateTime startTime, IFunction boundaryNodeData, string quantity)
+        private static DelftBcCategory GenerateBoundaryConditionDefinition(string name, DateTime startTime, IFunction boundaryNodeData, string quantity)
         {
             string periodic = GetTimeSeriesIsPeriodicProperty(boundaryNodeData);
 
             IDefinitionGeneratorBoundary definitionGenerator = new DefinitionGeneratorBoundary(boundaryHeader);
 
-            IDelftBcCategory boundaryDefinition = definitionGenerator.CreateRegion(name,
+            DelftBcCategory boundaryDefinition = definitionGenerator.CreateRegion(name,
                                                                                    BoundaryRegion.FunctionStrings.TimeSeries,
                                                                                    BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate,
                                                                                    periodic);

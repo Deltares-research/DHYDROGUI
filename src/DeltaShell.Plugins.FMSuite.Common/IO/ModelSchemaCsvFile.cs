@@ -121,8 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 var propertyDefinition = new TDef
                 {
                     Category = propertyGroup.Name,
-                    FileCategoryName = mduGroupName,
-                    FilePropertyName = mduPropertyName,
+                    FileSectionName = mduGroupName,
+                    FilePropertyKey = mduPropertyName,
                     SubCategory = subCategoryField,
                     Caption = captionField,
                     DataType = dataType,

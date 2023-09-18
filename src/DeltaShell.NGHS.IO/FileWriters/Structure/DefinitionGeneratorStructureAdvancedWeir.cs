@@ -2,35 +2,36 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureAdvancedWeir : DefinitionGeneratorStructure
     {
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.AdvancedWeir);
 
             var weir = hydroObject as Weir;
-            if (weir == null) return IniCategory;
+            if (weir == null) return IniSection;
 
             var formula = weir.WeirFormula as PierWeirFormula;
-            if (formula == null) return IniCategory;
+            if (formula == null) return IniSection;
 
-            IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
-            IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
-            IniCategory.AddProperty(StructureRegion.NPiers.Key, formula.NumberOfPiers, StructureRegion.NPiers.Description);
-            IniCategory.AddProperty(StructureRegion.PosHeight.Key, formula.UpstreamFacePos, StructureRegion.PosHeight.Description, StructureRegion.PosHeight.Format);
-            IniCategory.AddProperty(StructureRegion.PosDesignHead.Key, formula.DesignHeadPos, StructureRegion.PosDesignHead.Description, StructureRegion.PosDesignHead.Format);
-            IniCategory.AddProperty(StructureRegion.PosPierContractCoef.Key, formula.PierContractionPos, StructureRegion.PosPierContractCoef.Description, StructureRegion.PosPierContractCoef.Format);
-            IniCategory.AddProperty(StructureRegion.PosAbutContractCoef.Key, formula.AbutmentContractionPos, StructureRegion.PosAbutContractCoef.Description, StructureRegion.PosAbutContractCoef.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
+            IniSection.AddProperty(StructureRegion.NPiers.Key, formula.NumberOfPiers, StructureRegion.NPiers.Description);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosHeight.Key, formula.UpstreamFacePos, StructureRegion.PosHeight.Description, StructureRegion.PosHeight.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosDesignHead.Key, formula.DesignHeadPos, StructureRegion.PosDesignHead.Description, StructureRegion.PosDesignHead.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosPierContractCoef.Key, formula.PierContractionPos, StructureRegion.PosPierContractCoef.Description, StructureRegion.PosPierContractCoef.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosAbutContractCoef.Key, formula.AbutmentContractionPos, StructureRegion.PosAbutContractCoef.Description, StructureRegion.PosAbutContractCoef.Format);
 
-            IniCategory.AddProperty(StructureRegion.NegHeight.Key, formula.UpstreamFaceNeg, StructureRegion.NegHeight.Description, StructureRegion.NegHeight.Format);
-            IniCategory.AddProperty(StructureRegion.NegDesignHead.Key, formula.DesignHeadNeg, StructureRegion.NegDesignHead.Description, StructureRegion.NegDesignHead.Format);
-            IniCategory.AddProperty(StructureRegion.NegPierContractCoef.Key, formula.PierContractionNeg, StructureRegion.NegPierContractCoef.Description, StructureRegion.NegPierContractCoef.Format);
-            IniCategory.AddProperty(StructureRegion.NegAbutContractCoef.Key, formula.AbutmentContractionNeg, StructureRegion.NegAbutContractCoef.Description, StructureRegion.NegAbutContractCoef.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegHeight.Key, formula.UpstreamFaceNeg, StructureRegion.NegHeight.Description, StructureRegion.NegHeight.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegDesignHead.Key, formula.DesignHeadNeg, StructureRegion.NegDesignHead.Description, StructureRegion.NegDesignHead.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegPierContractCoef.Key, formula.PierContractionNeg, StructureRegion.NegPierContractCoef.Description, StructureRegion.NegPierContractCoef.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegAbutContractCoef.Key, formula.AbutmentContractionNeg, StructureRegion.NegAbutContractCoef.Description, StructureRegion.NegAbutContractCoef.Format);
 
-            return IniCategory;
+            return IniSection;
         }
     }
 }

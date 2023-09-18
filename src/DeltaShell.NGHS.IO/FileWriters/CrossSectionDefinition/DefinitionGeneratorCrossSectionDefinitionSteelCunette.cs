@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -21,13 +22,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var steelCunetteShape = shape as CrossSectionStandardShapeSteelCunette;
             if (steelCunetteShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteHeight, steelCunetteShape.Height);
-            IniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteR, steelCunetteShape.RadiusR);
-            IniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteR1, steelCunetteShape.RadiusR1);
-            IniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteR2, steelCunetteShape.RadiusR2);
-            IniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteR3, steelCunetteShape.RadiusR3);
-            IniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteA, steelCunetteShape.AngleA);
-            IniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteA1, steelCunetteShape.AngleA1);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SteelCunetteHeight, steelCunetteShape.Height);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SteelCunetteR, steelCunetteShape.RadiusR);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SteelCunetteR1, steelCunetteShape.RadiusR1);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SteelCunetteR2, steelCunetteShape.RadiusR2);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SteelCunetteR3, steelCunetteShape.RadiusR3);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SteelCunetteA, steelCunetteShape.AngleA);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SteelCunetteA1, steelCunetteShape.AngleA1);
         }
     }
 }

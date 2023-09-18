@@ -5,7 +5,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Location
@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
     {
         public static void WriteFileLateralDischargeLocations(string targetFile, IEnumerable<ILateralSource> lateralSources)
         {
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.LateralDischargeLocationsMajorVersion, 
                                       GeneralRegion.LateralDischargeLocationsMinorVersion, 
@@ -23,32 +23,32 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
 
             var lateralDischargeDefinitions = GenerateFeatureDefinition(lateralSources);
             if (lateralDischargeDefinitions != null) 
-                categories.AddRange(lateralDischargeDefinitions);
+                iniSections.AddRange(lateralDischargeDefinitions);
 
             if (File.Exists(targetFile)) File.Delete(targetFile);
-            new IniFileWriter().WriteIniFile(categories, targetFile);
+            new IniFileWriter().WriteIniFile(iniSections, targetFile);
         }
 
         public static void WriteFileCrossSectionLocations(string targetFile, IEnumerable<ICrossSection> crossSections)
         {
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.CrossSectionLocationsMajorVersion, 
                                       GeneralRegion.CrossSectionLocationsMinorVersion, 
                                       GeneralRegion.FileTypeName.CrossSectionLocation),
             };
             
-            var crossSectionLocationsCategories = GenerateFeatureDefinition(crossSections);
-            if (crossSectionLocationsCategories != null)
-                categories.AddRange(crossSectionLocationsCategories);
+            var crossSectionLocationsIniSections = GenerateFeatureDefinition(crossSections);
+            if (crossSectionLocationsIniSections != null)
+                iniSections.AddRange(crossSectionLocationsIniSections);
 
             if (File.Exists(targetFile)) File.Delete(targetFile);
-            new IniFileWriter().WriteIniFile(categories, targetFile);
+            new IniFileWriter().WriteIniFile(iniSections, targetFile);
         }
 
         public static void WriteFileObservationPointLocations(string targetFile, IEnumerable<IObservationPoint> observationPointLocations, bool useObsCrs = false)
         {
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.ObservationPointLocationsMajorVersion,
                     GeneralRegion.ObservationPointLocationsMinorVersion,
@@ -59,16 +59,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
             
             var observationPointLocationsDefinitions = GenerateFeatureDefinition(observationPointLocations, useObsCrs);
             if (observationPointLocationsDefinitions != null)
-                categories.AddRange(observationPointLocationsDefinitions);
+                iniSections.AddRange(observationPointLocationsDefinitions);
 
             if (File.Exists(targetFile)) File.Delete(targetFile);
-            new IniFileWriter().WriteIniFile(categories, targetFile);
+            new IniFileWriter().WriteIniFile(iniSections, targetFile);
         }
 
-        private static IEnumerable<DelftIniCategory> GenerateFeatureDefinition(
+        private static IEnumerable<IniSection> GenerateFeatureDefinition(
             IEnumerable<IBranchFeature> branchFeatures, bool useObsCrs = false)
         {
-            var definitions = new List<DelftIniCategory>(); 
+            var definitions = new List<IniSection>(); 
             if (branchFeatures == null) return null;
             
             branchFeatures.ForEach(branchFeature =>

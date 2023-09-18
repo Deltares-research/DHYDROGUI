@@ -14,6 +14,7 @@ using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils.Extensions;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Networks;
 
@@ -72,20 +73,20 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             Ensure.NotNull(branches, nameof(branches));
             Ensure.NotNull(delftIniWriter, nameof(delftIniWriter));
             
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
-                CreateGeneralCategory()
+                CreateGeneralIniSection()
             };
 
             foreach (var branch in branches)
             {
                 var properties = branch.GetBranchProperties();
 
-                var iniCategory = new DelftIniCategory(NetworkRegion.BranchIniHeader);
-                iniCategory.AddProperty(NetworkRegion.BranchId, properties.Name);
+                var iniSection = new IniSection(NetworkRegion.BranchIniHeader);
+                iniSection.AddPropertyFromConfiguration(NetworkRegion.BranchId, properties.Name);
                 
-                iniCategory.AddProperty(NetworkRegion.BranchType, ((int)properties.BranchType).ToString());
-                iniCategory.AddProperty(NetworkRegion.IsLengthCustom, properties.IsCustomLength);
+                iniSection.AddPropertyFromConfiguration(NetworkRegion.BranchType, ((int)properties.BranchType).ToString());
+                iniSection.AddPropertyFromConfiguration(NetworkRegion.IsLengthCustom, properties.IsCustomLength);
 
                 if (properties.BranchType == BranchType.Channel && !properties.IsCustomLength)
                 {
@@ -95,27 +96,27 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
                 if (properties.SourceCompartmentName != null)
                 {
-                    iniCategory.AddProperty(NetworkRegion.SourceCompartmentName, properties.SourceCompartmentName);
+                    iniSection.AddPropertyFromConfiguration(NetworkRegion.SourceCompartmentName, properties.SourceCompartmentName);
                 }
 
                 if (properties.TargetCompartmentName != null)
                 {
-                    iniCategory.AddProperty(NetworkRegion.TargetCompartmentName, properties.TargetCompartmentName);
+                    iniSection.AddPropertyFromConfiguration(NetworkRegion.TargetCompartmentName, properties.TargetCompartmentName);
                 }
 
                 if (properties.BranchType == BranchType.Pipe)
                 {
-                    iniCategory.AddProperty(NetworkRegion.BranchMaterial, (int) properties.Material);
+                    iniSection.AddPropertyFromConfiguration(NetworkRegion.BranchMaterial, (int) properties.Material);
                 }
 
-                categories.Add(iniCategory);
+                iniSections.Add(iniSection);
             }
 
             // write branch file
-            delftIniWriter.WriteDelftIniFile(categories, filePath);
+            delftIniWriter.WriteDelftIniFile(iniSections, filePath);
         }
 
-        private static DelftIniCategory CreateGeneralCategory()
+        private static IniSection CreateGeneralIniSection()
         {
             return GeneralRegionGenerator.GenerateGeneralRegion(
                 version.Major,
@@ -134,9 +135,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         /// A collection of the branch properties that were collected from file.
         /// Returns an empty collection when:
         /// <list type="bullet">
-        /// <item><description> The file does not contain any branch categories. </description></item>
-        /// <item><description> The file misses a fileVersion in the general category. </description></item>
-        /// <item><description> The file contains an invalid fileVersion in the general category.</description></item>
+        /// <item><description> The file does not contain any branch INI sections. </description></item>
+        /// <item><description> The file misses a fileVersion in the general INI section. </description></item>
+        /// <item><description> The file contains an invalid fileVersion in the general INI section.</description></item>
         /// </list>
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -152,12 +153,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             Ensure.NotNull(delftIniReader, nameof(delftIniReader));
             Ensure.NotNull(logHandler, nameof(logHandler));
             
-            IList<DelftIniCategory> categories = delftIniReader.ReadDelftIniFile(filePath);
+            IList<IniSection> iniSections = delftIniReader.ReadDelftIniFile(filePath);
             
-            Dictionary<string, IEnumerable<DelftIniCategory>> groupedCategories = categories.ToGroupedDictionary(category => category.Name);
-            if (groupedCategories.TryGetValue(GeneralRegion.IniHeader, out IEnumerable<DelftIniCategory> generalCategories))
+            Dictionary<string, IEnumerable<IniSection>> groupedIniSections = iniSections.ToGroupedDictionary(iniSection => iniSection.Name);
+            if (groupedIniSections.TryGetValue(GeneralRegion.IniHeader, out IEnumerable<IniSection> generalIniSections))
             {
-                if (!ValidateGeneralCategory(generalCategories.First(), logHandler))
+                if (!ValidateGeneralIniSection(generalIniSections.First(), logHandler))
                 {
                     return new List<BranchProperties>();
                 }
@@ -167,29 +168,29 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 logHandler.ReportWarning(Resources.BranchesGui_file_does_not_contain_a_general_section);
             }
             
-            if (!groupedCategories.TryGetValue(NetworkRegion.BranchIniHeader, out IEnumerable<DelftIniCategory> branchCategories))
+            if (!groupedIniSections.TryGetValue(NetworkRegion.BranchIniHeader, out IEnumerable<IniSection> branchIniSections))
             {
                 return new List<BranchProperties>();
             }
 
-            return ReadBranchProperties(branchCategories, netFilePath).Values.ToList();
+            return ReadBranchProperties(branchIniSections, netFilePath).Values.ToList();
         }
 
-        private static IDictionary<string, BranchProperties> ReadBranchProperties(IEnumerable<DelftIniCategory> branchCategories, string netFilePath)
+        private static IDictionary<string, BranchProperties> ReadBranchProperties(IEnumerable<IniSection> branchIniSections, string netFilePath)
         {
             var propertiesPerBranch = new Dictionary<string, BranchProperties>();
 
-            foreach (var category in branchCategories)
+            foreach (var iniSection in branchIniSections)
             {
                 var branchProperties = new BranchProperties
                 {
-                    Name = category.ReadProperty<string>(NetworkRegion.BranchId.Key),
-                    BranchType = category.GetEnumValueByKey<BranchType>(NetworkRegion.BranchType.Key),
-                    IsCustomLength = category.ReadProperty<bool>(NetworkRegion.IsLengthCustom.Key, true),
-                    /* WaterType = category.GetEnumValueByKey<SewerConnectionWaterType>(KnownPropertyNames.WaterType),*/
-                    Material = category.GetEnumValueByKey<SewerProfileMapping.SewerProfileMaterial>(NetworkRegion.BranchMaterial.Key),
-                    SourceCompartmentName = category.ReadProperty<string>(NetworkRegion.SourceCompartmentName.Key, true),
-                    TargetCompartmentName = category.ReadProperty<string>(NetworkRegion.TargetCompartmentName.Key, true)
+                    Name = iniSection.ReadProperty<string>(NetworkRegion.BranchId.Key),
+                    BranchType = iniSection.GetEnumValueByKey<BranchType>(NetworkRegion.BranchType.Key),
+                    IsCustomLength = iniSection.ReadProperty<bool>(NetworkRegion.IsLengthCustom.Key, true),
+                    /* WaterType = iniSection.GetEnumValueByKey<SewerConnectionWaterType>(KnownPropertyNames.WaterType),*/
+                    Material = iniSection.GetEnumValueByKey<SewerProfileMapping.SewerProfileMaterial>(NetworkRegion.BranchMaterial.Key),
+                    SourceCompartmentName = iniSection.ReadProperty<string>(NetworkRegion.SourceCompartmentName.Key, true),
+                    TargetCompartmentName = iniSection.ReadProperty<string>(NetworkRegion.TargetCompartmentName.Key, true)
                 };
                 propertiesPerBranch.Add(branchProperties.Name, branchProperties);
             }
@@ -228,9 +229,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             return propertiesPerBranch;
         }
 
-        private static bool ValidateGeneralCategory(IDelftIniCategory generalCategory, ILogHandler logHandler)
+        private static bool ValidateGeneralIniSection(IniSection generalIniSection, ILogHandler logHandler)
         {
-            string fileVersionStr = generalCategory.GetPropertyValue(GeneralRegion.FileVersion.Key);
+            string fileVersionStr = generalIniSection.GetPropertyValueWithOptionalDefaultValue(GeneralRegion.FileVersion.Key);
 
             if (string.IsNullOrWhiteSpace(fileVersionStr))
             {
@@ -271,9 +272,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             }
         }
 
-        private static T GetEnumValueByKey<T>(this IDelftIniCategory category, string propertyKey)
+        private static T GetEnumValueByKey<T>(this IniSection iniSection, string propertyKey)
         {
-            return (T) Enum.Parse(typeof(T), category.ReadProperty<int>(propertyKey, true).ToString());
+            return (T) Enum.Parse(typeof(T), iniSection.ReadProperty<int>(propertyKey, true).ToString());
         }
 
         private static void SetSewerConnectionProperties(BranchProperties branchProperties, ISewerConnection pipe)

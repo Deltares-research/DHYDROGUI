@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
@@ -28,30 +28,30 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
         /// <exception cref="IOException"><paramref name="iniFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
         /// <exception cref="FormatException">When an invalid line was encountered.</exception>
-        public IList<DelftIniCategory> ReadDelftIniFile(string iniFile)
+        public IList<IniSection> ReadDelftIniFile(string iniFile)
         {
-            var content = new List<DelftIniCategory>();
+            var content = new List<IniSection>();
 
             OpenInputFile(iniFile);
             try
             {
                 string line;
-                DelftIniCategory currentCategory = null;
-                string categoryName = null;
+                IniSection currentIniSection = null;
+                string iniSectionName = null;
                 while ((line = GetNextLine()) != null)
                 {
                     line = line.Trim();
                     if(string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
 
-                    if (IsNewCategory(line, ref categoryName))
+                    if (IsNewIniSection(line, ref iniSectionName))
                     {
-                        currentCategory = new DelftIniCategory(categoryName) {LineNumber = LineNumber};
-                        content.Add(currentCategory);
+                        currentIniSection = new IniSection(iniSectionName) {LineNumber = LineNumber};
+                        content.Add(currentIniSection);
                         continue;
                     }
-                    if (currentCategory == null) continue;
+                    if (currentIniSection == null) continue;
 
-                    ReadFields(line, currentCategory);
+                    ReadFields(line, currentIniSection);
                 }
             }
             finally
@@ -66,12 +66,12 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// Parses a line into a DelftIniProperty.
         /// </summary>
         /// <param name="line">Line to be parsed.</param>
-        /// <param name="currentCategory">The current category.</param>
-        protected virtual void ReadFields(string line, DelftIniCategory currentCategory)
+        /// <param name="currentIniSection">The current INI section.</param>
+        protected virtual void ReadFields(string line, IniSection currentIniSection)
         {
             var fields = GetKeyValueComment(line);
-            currentCategory.Properties.Add(new DelftIniProperty
-                {Name = fields[0], Value = fields[1], Comment = fields[2], LineNumber = LineNumber});
+            currentIniSection.AddProperty(new IniProperty
+                (fields[0], fields[1], fields[2]) { LineNumber = LineNumber});
         }
 
         /// <summary>
@@ -96,13 +96,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
         }
 
         /// <summary>
-        /// Reads the line and checks if it represents a new category/group.
+        /// Reads the line and checks if it represents a new INI section/group.
         /// </summary>
         /// <param name="line">Line to be interpreted.</param>
-        /// <param name="newCategory">Set to the name of the category/group, when returning true.</param>
-        /// <returns>True if the line represents a new category/group; False otherwise.</returns>
-        /// <exception cref="FormatException">When an invalid category/group line was encountered.</exception>
-        protected bool IsNewCategory(string line, ref string newCategory)
+        /// <param name="newIniSection">Set to the name of the INI section/group, when returning true.</param>
+        /// <returns>True if the line represents a new INI section/group; False otherwise.</returns>
+        /// <exception cref="FormatException">When an invalid INI section/group line was encountered.</exception>
+        protected bool IsNewIniSection(string line, ref string newIniSection)
         {
             if (line.StartsWith("["))
             {
@@ -112,7 +112,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 {
                     throw new FormatException(String.Format("Invalid group on line {0} in file {1}", LineNumber, InputFilePath));
                 }
-                newCategory = line.Substring(1, endIndex - 1).Trim();
+                newIniSection = line.Substring(1, endIndex - 1).Trim();
                 return true;
             }
             return false;

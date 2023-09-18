@@ -6,6 +6,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders.Retention;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net.Core;
@@ -18,33 +19,33 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     [TestFixture]
     public class RetentionCategoryParserTest
     {
-        private static IDelftIniCategory CreateDefaultCategory(string headerName = RetentionRegion.StorageNodeHeader)
+        private static IniSection CreateDefaultIniSection(string headerName = RetentionRegion.StorageNodeHeader)
         {
-            var category = new DelftIniCategory(headerName);
-            category.AddProperty("id", "some_id");
-            category.AddProperty("name", "some_name");
-            category.AddProperty("useTable", true);
-            category.AddProperty("numLevels", 1);
-            category.AddProperty("levels", 1.23);
-            category.AddProperty("storageArea", 4.56);
-            category.AddProperty("interpolate", "block");
+            var iniSection = new IniSection(headerName);
+            iniSection.AddProperty("id", "some_id");
+            iniSection.AddProperty("name", "some_name");
+            iniSection.AddProperty("useTable", true);
+            iniSection.AddProperty("numLevels", 1);
+            iniSection.AddProperty("levels", 1.23);
+            iniSection.AddProperty("storageArea", 4.56);
+            iniSection.AddProperty("interpolate", "block");
 
-            return category;
+            return iniSection;
 
         }
 
         [Test]
-        public void ParseCategories_WithRetentionWithOneLevel_AddCorrectRetentionToNetwork()
+        public void ParseIniSections_WithRetentionWithOneLevel_AddCorrectRetentionToNetwork()
         {
             // Setup
-            var category = CreateDefaultCategory();
-            category.AddProperty("branchId", "some_branch");
-            category.AddProperty("chainage", 50.0);
+            var iniSection = CreateDefaultIniSection();
+            iniSection.AddProperty("branchId", "some_branch");
+            iniSection.AddProperty("chainage", 50.0);
             
             IHydroNetwork network = GetNetworkWithChannel(100, "some_branch");
 
             // Call
-            var retentions = RetentionCategoryParser.ParseCategories(new []{category}, network);
+            var retentions = RetentionCategoryParser.ParseIniSections(new []{iniSection}, network);
 
             // Assert
             IRetention retention = retentions.Single();
@@ -59,19 +60,19 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void ParseCategories_UseTablePropertyNotInFile_LogsError()
+        public void ParseIniSections_UseTablePropertyNotInFile_LogsError()
         {
             // Setup
-            var category = CreateDefaultCategory();
-            category.AddProperty("branchId", "some_branch");
-            category.AddProperty("chainage", 50.0);
-            category.LineNumber = 6;
-            category.Properties.Remove((DelftIniProperty) category.GetProperty("useTable"));
+            var iniSection = CreateDefaultIniSection();
+            iniSection.AddProperty("branchId", "some_branch");
+            iniSection.AddProperty("chainage", 50.0);
+            iniSection.LineNumber = 6;
+            iniSection.RemoveProperty(iniSection.GetProperty("useTable"));
 
             IHydroNetwork network = GetNetworkWithChannel(100, "some_branch");
 
             // Call
-            void Call() => RetentionCategoryParser.ParseCategories(new []{category}, network).ToArray();
+            void Call() => RetentionCategoryParser.ParseIniSections(new []{iniSection}, network).ToArray();
 
             // Assert
             string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
@@ -80,24 +81,24 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void ParseCategories_WithRetentionWithMultipleLevels_AddCorrectRetentionToNetwork()
+        public void ParseIniSections_WithRetentionWithMultipleLevels_AddCorrectRetentionToNetwork()
         {
             // Setup
-            var category = new DelftIniCategory(RetentionRegion.StorageNodeHeader);
-            category.AddProperty("id", "some_id");
-            category.AddProperty("name", "some_name");
-            category.AddProperty("branchId", "some_branch");
-            category.AddProperty("chainage", 50.0);
-            category.AddProperty("useTable", true);
-            category.AddProperty("numLevels", 3);
-            category.AddProperty("levels", new []{ 1.11, 2.22, 3.33 });
-            category.AddProperty("storageArea", new []{ 4.44, 5.55, 6.66 });
-            category.AddProperty("interpolate", "linear");
+            var iniSection = new IniSection(RetentionRegion.StorageNodeHeader);
+            iniSection.AddProperty("id", "some_id");
+            iniSection.AddProperty("name", "some_name");
+            iniSection.AddProperty("branchId", "some_branch");
+            iniSection.AddProperty("chainage", 50.0);
+            iniSection.AddProperty("useTable", true);
+            iniSection.AddProperty("numLevels", 3);
+            iniSection.AddPropertyWithMultipleValuesWithOptionalComment("levels", new []{ 1.11, 2.22, 3.33 });
+            iniSection.AddPropertyWithMultipleValuesWithOptionalComment("storageArea", new []{ 4.44, 5.55, 6.66 });
+            iniSection.AddProperty("interpolate", "linear");
 
             IHydroNetwork network = GetNetworkWithChannel(100, "some_branch");
 
             // Call
-            var retentions = RetentionCategoryParser.ParseCategories(new []{category}, network);
+            var retentions = RetentionCategoryParser.ParseIniSections(new []{iniSection}, network);
 
             // Assert
             IRetention retention = retentions.Single();
@@ -145,11 +146,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void GivenRetentionFileReader_ParseCategories_ShouldCorrectlyParseNodeId()
+        public void GivenRetentionFileReader_ParseIniSections_ShouldCorrectlyParseNodeId()
         {
             //Arrange
-            var category = CreateDefaultCategory();
-            category.AddProperty("nodeId", "some_node");
+            var iniSection = CreateDefaultIniSection();
+            iniSection.AddProperty("nodeId", "some_node");
             
             var network = Substitute.For<IHydroNetwork>();
             var expectedBranch = Substitute.For<IBranch>();
@@ -173,7 +174,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             network.Nodes.Returns(new EventedList<INode> { node });
 
             // Act
-            var retentions = RetentionCategoryParser.ParseCategories(new []{category}, network);
+            var retentions = RetentionCategoryParser.ParseIniSections(new []{iniSection}, network);
 
             // Assert
             var retention = retentions.FirstOrDefault();
@@ -183,11 +184,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void GivenRetentionFileReader_ParseCategories_ShouldGiveMessageIfNodeIdCanNotBeFound()
+        public void GivenRetentionFileReader_ParseIniSections_ShouldGiveMessageIfNodeIdCanNotBeFound()
         {
             //Arrange
-            var category = CreateDefaultCategory();
-            category.AddProperty("nodeId", "some_node");
+            var iniSection = CreateDefaultIniSection();
+            iniSection.AddProperty("nodeId", "some_node");
 
             var network = Substitute.For<IHydroNetwork>();
 
@@ -195,16 +196,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             const string expectedLogMessage = "Could not find node with nodeId some_node (retention some_id, line number 0)";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
             {
-                RetentionCategoryParser.ParseCategories(new[] { category }, network).ToArray();
+                RetentionCategoryParser.ParseIniSections(new[] { iniSection }, network).ToArray();
             }, expectedLogMessage);
         }
 
         [Test]
-        public void GivenRetentionFileReader_ParseCategories_ShouldGiveMessageIfNoBranchCanNotBeFoundForNode()
+        public void GivenRetentionFileReader_ParseIniSections_ShouldGiveMessageIfNoBranchCanNotBeFoundForNode()
         {
             //Arrange
-            var category = CreateDefaultCategory();
-            category.AddProperty("nodeId", "some_node");
+            var iniSection = CreateDefaultIniSection();
+            iniSection.AddProperty("nodeId", "some_node");
             
             var network = Substitute.For<IHydroNetwork>();
             var node = Substitute.For<INode>();
@@ -216,17 +217,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var expectedLogMessage = "Could not find a branch for node with nodeId some_node (retention some_id, line number 0)";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
             {
-                RetentionCategoryParser.ParseCategories(new[] { category }, network).ToArray();
+                RetentionCategoryParser.ParseIniSections(new[] { iniSection }, network).ToArray();
             }, expectedLogMessage);
         }
 
         [Test]
-        public void GivenRetentionFileReader_ParseCategories_ShouldGiveMessageIfNoBranchCanNotBeFoundForBranchId()
+        public void GivenRetentionFileReader_ParseIniSections_ShouldGiveMessageIfNoBranchCanNotBeFoundForBranchId()
         {
             //Arrange
-            var category = CreateDefaultCategory();
-            category.AddProperty("chainage", 0);
-            category.AddProperty("branchId", "some_branch"); 
+            var iniSection = CreateDefaultIniSection();
+            iniSection.AddProperty("chainage", 0);
+            iniSection.AddProperty("branchId", "some_branch"); 
             
             var network = Substitute.For<IHydroNetwork>();
             
@@ -234,22 +235,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var expectedLogMessage = "Could not find branch for branch id \"some_branch\" (retention some_id, line number 0)";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
             {
-                RetentionCategoryParser.ParseCategories(new[] { category }, network).ToArray();
+                RetentionCategoryParser.ParseIniSections(new[] { iniSection }, network).ToArray();
             }, expectedLogMessage);
         }
 
         [Test]
-        public void GivenRetentionFileReader_ParseCategories_SkipsCategoriesWithDifferentCategoryName()
+        public void GivenRetentionFileReader_ParseIniSections_SkipsIniSectionsWithDifferentIniSectionName()
         {
             //Arrange
-            var category = CreateDefaultCategory("ABC");
-            category.AddProperty("chainage", 0);
-            category.AddProperty("branchId", "some_branch");
+            var iniSection = CreateDefaultIniSection("ABC");
+            iniSection.AddProperty("chainage", 0);
+            iniSection.AddProperty("branchId", "some_branch");
 
             var network = Substitute.For<IHydroNetwork>();
 
             // Act
-            var retentions = RetentionCategoryParser.ParseCategories(new[] { category }, network);
+            var retentions = RetentionCategoryParser.ParseIniSections(new[] { iniSection }, network);
 
             // Assert
             Assert.AreEqual(0, retentions.Count());

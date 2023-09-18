@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// Reads a Delft INI format file from the specified file path.
         /// </summary>
         /// <param name="iniFile"> The file path to the Delft INI file. </param>
-        /// <returns> A collection of all parsed Delft INI categories read from file. </returns>
-        IList<DelftIniCategory> ReadDelftIniFile(string iniFile);
+        /// <returns> A collection of all parsed Delft INI sections read from file. </returns>
+        IList<IniSection> ReadDelftIniFile(string iniFile);
     }
 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -42,23 +42,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            var categories = new DelftIniReader().ReadDelftIniFile(filePath);
-            if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
+            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath);
+            if (iniSections.Count == 0) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
 
             // [Global]
-            var globalCategory = categories.FirstOrDefault(category => category.Name.Equals(InitialConditionRegion.GlobalDefinitionIniHeader));
-            if (globalCategory == null) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly_no_global_property_was_found, filePath));
-            SetGlobalDefinition(globalCategory, modelDefinition);
+            var globalIniSection = iniSections.FirstOrDefault(iniSection => iniSection.Name.Equals(InitialConditionRegion.GlobalDefinitionIniHeader));
+            if (globalIniSection == null) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly_no_global_property_was_found, filePath));
+            SetGlobalDefinition(globalIniSection, modelDefinition);
 
             // [Branch]
-            var channelInitialConditionDefinitionsCategories = categories.Where(category => category.Name.Equals(InitialConditionRegion.ChannelInitialConditionDefinitionIniHeader));
+            var channelInitialConditionDefinitionsIniSections = iniSections.Where(iniSection => iniSection.Name.Equals(InitialConditionRegion.ChannelInitialConditionDefinitionIniHeader));
             var channelInitialConditionDefinitionDictionary = channelInitialConditionDefinitions.ToDictionary(def => def.Channel.Name, def => def, StringComparer.InvariantCultureIgnoreCase);
-            ReadChannelInitialConditionDefinitions(branchDictionary, channelInitialConditionDefinitionDictionary, channelInitialConditionDefinitionsCategories);
+            ReadChannelInitialConditionDefinitions(branchDictionary, channelInitialConditionDefinitionDictionary, channelInitialConditionDefinitionsIniSections);
         }
 
-        private static void SetGlobalDefinition(IDelftIniCategory globalCategory, WaterFlowFMModelDefinition modelDefinition)
+        private static void SetGlobalDefinition(IniSection globalIniSection, WaterFlowFMModelDefinition modelDefinition)
         {
-            var globalValue = globalCategory.ReadProperty<string>(InitialConditionRegion.Value.Key);
+            var globalValue = globalIniSection.ReadProperty<string>(InitialConditionRegion.Value.Key);
             if (string.IsNullOrWhiteSpace(globalValue))
             {
                 Log.Warn("No global value is specified. Using default value.");
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalValue1D, globalValue);
             }
 
-            var globalQuantityString = globalCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
+            var globalQuantityString = globalIniSection.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
             var globalQuantity = InitialConditionQuantityTypeConverter.ConvertStringToInitialConditionQuantity(globalQuantityString);
 
             modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, $"{ (int) globalQuantity }");
@@ -79,11 +79,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void ReadChannelInitialConditionDefinitions(
             IReadOnlyDictionary<string, IBranch> branchDictionary,
             IReadOnlyDictionary<string, ChannelInitialConditionDefinition> channelInitialConditionDefinitionDictionary, 
-            IEnumerable<DelftIniCategory> channelInitialConditionDefinitionsCategories)
+            IEnumerable<IniSection> channelInitialConditionDefinitionsIniSections)
         {
-            foreach (var channelInitialConditionDefinitionsCategory in channelInitialConditionDefinitionsCategories)
+            foreach (var channelInitialConditionDefinitionsIniSection in channelInitialConditionDefinitionsIniSections)
             {
-                var branchId = channelInitialConditionDefinitionsCategory.ReadProperty<string>(InitialConditionRegion.BranchId.Key);
+                var branchId = channelInitialConditionDefinitionsIniSection.ReadProperty<string>(InitialConditionRegion.BranchId.Key);
                 if (!branchDictionary.ContainsKey(branchId)) throw new FileReadingException(string.Format(Resources.ChannelInitialConditionDefinitionFileReader_ReadFile_Branch___0___where_the_initial_condition_should_be_put_on_is_not_available_in_the_model, branchId));
 
                 var branch = branchDictionary[branchId];
@@ -94,45 +94,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 var channelInitialConditionDefinition = channelInitialConditionDefinitionDictionary[branchName];
 
-                if (IsSpatialDefinition(channelInitialConditionDefinitionsCategory))
+                if (IsSpatialDefinition(channelInitialConditionDefinitionsIniSection))
                 {
-                    ReadSpatialDefinition(channelInitialConditionDefinitionsCategory, channelInitialConditionDefinition);
+                    ReadSpatialDefinition(channelInitialConditionDefinitionsIniSection, channelInitialConditionDefinition);
                 }
                 else
                 {
-                    ReadConstantDefinition(channelInitialConditionDefinitionsCategory, channelInitialConditionDefinition);
+                    ReadConstantDefinition(channelInitialConditionDefinitionsIniSection, channelInitialConditionDefinition);
                 }
             }
         }
 
-        private static bool IsSpatialDefinition(IDelftIniCategory channelInitialConditionDefinitionsCategory)
+        private static bool IsSpatialDefinition(IniSection channelInitialConditionDefinitionsIniSection)
         {
-            return channelInitialConditionDefinitionsCategory.Properties.Any(p => p.Name.Equals(InitialConditionRegion.NumLocations.Key));
+            return channelInitialConditionDefinitionsIniSection.Properties.Any(p => p.Key.Equals(InitialConditionRegion.NumLocations.Key));
         }
 
         private static void ReadConstantDefinition(
-            IDelftIniCategory channelInitialConditionDefinitionsCategory, 
+            IniSection channelInitialConditionDefinitionsIniSection, 
             ChannelInitialConditionDefinition channelInitialConditionDefinition)
         {
             channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
             channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Quantity = readQuantity;
 
-            var value = channelInitialConditionDefinitionsCategory.ReadProperty<double>(InitialConditionRegion.Values.Key);
+            var value = channelInitialConditionDefinitionsIniSection.ReadProperty<double>(InitialConditionRegion.Values.Key);
             channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = value;
         }
 
         private static void ReadSpatialDefinition(
-            IDelftIniCategory channelInitialConditionDefinitionsCategory, 
+            IniSection channelInitialConditionDefinitionsIniSection, 
             ChannelInitialConditionDefinition channelInitialConditionDefinition)
         {
             channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
             channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.Quantity = readQuantity;
 
-            var numLocations = channelInitialConditionDefinitionsCategory.ReadProperty<int>(InitialConditionRegion.NumLocations.Key);
+            var numLocations = channelInitialConditionDefinitionsIniSection.ReadProperty<int>(InitialConditionRegion.NumLocations.Key);
             if (numLocations == 0) return;
 
-            var chainages = channelInitialConditionDefinitionsCategory.ReadPropertiesToListOfType<double>(InitialConditionRegion.Chainage.Key);
-            var values = channelInitialConditionDefinitionsCategory.ReadPropertiesToListOfType<double>(InitialConditionRegion.Values.Key);
+            var chainages = channelInitialConditionDefinitionsIniSection.ReadPropertiesToListOfType<double>(InitialConditionRegion.Chainage.Key);
+            var values = channelInitialConditionDefinitionsIniSection.ReadPropertiesToListOfType<double>(InitialConditionRegion.Values.Key);
 
             for (var i = 0; i < numLocations; i++)
             {

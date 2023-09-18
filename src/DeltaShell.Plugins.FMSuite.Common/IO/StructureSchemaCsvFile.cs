@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var propertyDefinition = new StructurePropertyDefinition
                         {
                             Category = structureType, // Category being 'refitted' to be used for property <-> structuretype association
-                            FilePropertyName = attributeName,
+                            FilePropertyKey = attributeName,
                             Caption = captionField,
                             DataType = dataType,
                             DefaultValueAsString = defaultField,

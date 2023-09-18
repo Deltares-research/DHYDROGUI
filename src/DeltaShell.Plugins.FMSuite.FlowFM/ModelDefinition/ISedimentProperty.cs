@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -15,8 +15,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         bool IsVisible { get; set; }
         string Description { get; set; }
         string DataTemplateName { get; }
-        void SedimentPropertyLoad(IDelftIniCategory category);
-        void SedimentPropertyWrite(IDelftIniCategory category); 
+        void SedimentPropertyLoad(IniSection iniSection);
+        void SedimentPropertyWrite(IniSection iniSection); 
     }
     public interface ISedimentProperty<T> : ISedimentProperty
     {

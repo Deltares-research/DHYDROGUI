@@ -3,20 +3,21 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
 {
     class CSDYZDefinitionReader : CrossSectionDefinitionReaderBase
     {
-        public override ICrossSectionDefinition ReadDefinition(IDelftIniCategory category)
+        public override ICrossSectionDefinition ReadDefinition(IniSection iniSection)
         {
             var crossSectionDefinition = new CrossSectionDefinitionYZ();
-            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
+            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, iniSection);
 
-            var yList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YCoors.Key);
-            var zList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZCoors.Key);
+            var yList = iniSection.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YCoors.Key);
+            var zList = iniSection.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZCoors.Key);
 
-            var yzCount = category.ReadProperty<int>(DefinitionPropertySettings.YZCount.Key);
+            var yzCount = iniSection.ReadProperty<int>(DefinitionPropertySettings.YZCount.Key);
 
             if (yzCount == yList.Count && yList.Count != zList.Count)
             {

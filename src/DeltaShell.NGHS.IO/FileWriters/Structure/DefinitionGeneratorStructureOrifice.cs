@@ -4,6 +4,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -11,7 +12,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     {
         public DefinitionGeneratorStructureOrifice(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
         
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
 
@@ -20,7 +21,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             if (!(hydroObject is IOrifice orifice) ||
                 !(orifice.WeirFormula is GatedWeirFormula formula))
             {
-                return IniCategory;
+                return IniSection;
             }
 
             AddAllowedFlowDir(orifice);
@@ -32,11 +33,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             AddLimitFlowPos(orifice, formula);
             AddLimitFlowNeg(orifice, formula);
 
-            return IniCategory;
+            return IniSection;
         }
 
         private void AddAllowedFlowDir(IOrifice orifice) => 
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.AllowedFlowDir.Key, 
                                     orifice.FlowDirection.ToString().ToLower(), 
                                     StructureRegion.AllowedFlowDir.Description);
 
@@ -50,7 +51,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         }
 
         private void AddCrestWidth(IOrifice orifice) => 
-            IniCategory.AddProperty(StructureRegion.CrestWidth.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CrestWidth.Key, 
                                     orifice.CrestWidth, 
                                     StructureRegion.CrestWidth.Description, 
                                     StructureRegion.CrestWidth.Format);
@@ -65,29 +66,29 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         }
 
         private void AddCorrectionCoeff(GatedWeirFormula formula) => 
-            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CorrectionCoeff.Key, 
                                     formula.ContractionCoefficient * formula.LateralContraction, 
                                     StructureRegion.CorrectionCoeff.Description, 
                                     StructureRegion.CorrectionCoeff.Format);
 
         private void AddUseVelocityHeight(IOrifice orifice) => 
-            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.UseVelocityHeight.Key, 
                                     orifice.UseVelocityHeight.ToString().ToLower());
 
         private void AddLimitFlowPos(IOrifice orifice, GatedWeirFormula formula)
         {
             if (!formula.UseMaxFlowPos || !orifice.AllowPositiveFlow) return;
 
-            IniCategory.AddProperty(StructureRegion.UseLimitFlowPos.Key, formula.UseMaxFlowPos, StructureRegion.UseLimitFlowPos.Description);
-            IniCategory.AddProperty(StructureRegion.LimitFlowPos.Key, formula.MaxFlowPos, StructureRegion.LimitFlowPos.Description, StructureRegion.LimitFlowPos.Format);
+            IniSection.AddProperty(StructureRegion.UseLimitFlowPos.Key, formula.UseMaxFlowPos, StructureRegion.UseLimitFlowPos.Description);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.LimitFlowPos.Key, formula.MaxFlowPos, StructureRegion.LimitFlowPos.Description, StructureRegion.LimitFlowPos.Format);
         }
 
         private void AddLimitFlowNeg(IOrifice orifice, GatedWeirFormula formula)
         {
             if (!formula.UseMaxFlowNeg || !orifice.AllowNegativeFlow) return;
 
-            IniCategory.AddProperty(StructureRegion.UseLimitFlowNeg.Key, formula.UseMaxFlowNeg, StructureRegion.UseLimitFlowNeg.Description);
-            IniCategory.AddProperty(StructureRegion.LimitFlowNeg.Key, formula.MaxFlowNeg, StructureRegion.LimitFlowNeg.Description, StructureRegion.LimitFlowNeg.Format);
+            IniSection.AddProperty(StructureRegion.UseLimitFlowNeg.Key, formula.UseMaxFlowNeg, StructureRegion.UseLimitFlowNeg.Description);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.LimitFlowNeg.Key, formula.MaxFlowNeg, StructureRegion.LimitFlowNeg.Description, StructureRegion.LimitFlowNeg.Format);
         }
     }
 }

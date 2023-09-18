@@ -5,28 +5,29 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     /// <summary>
-    /// <see cref="DefinitionGeneratorStructureUniversalWeir"/> generates the <see cref="DelftIniCategory"/> corresponding with a
+    /// <see cref="DefinitionGeneratorStructureUniversalWeir"/> generates the <see cref="IniSection"/> corresponding with a
     /// <see cref="Weir"/> with a <see cref="FreeFormWeirFormula"/> in the structures.ini file.
     /// </summary>
     public class DefinitionGeneratorStructureUniversalWeir : DefinitionGeneratorTimeSeriesStructure
     {
         public DefinitionGeneratorStructureUniversalWeir(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
         
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
 
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.UniversalWeir);
 
             var weir = hydroObject as Weir;
-            if (weir == null) return IniCategory;
+            if (weir == null) return IniSection;
 
             var formula = weir.WeirFormula as FreeFormWeirFormula;
-            if (formula == null) return IniCategory;
+            if (formula == null) return IniSection;
       
             AddAllowedFlowDir(weir);
             AddLevelsCount(formula);
@@ -35,11 +36,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             AddCrestLevel(weir);
             AddDischargeCoeff(formula);
             
-            return IniCategory;
+            return IniSection;
         }
 
         private void AddDischargeCoeff(FreeFormWeirFormula formula) =>
-            IniCategory.AddProperty(StructureRegion.DischargeCoeff, formula.DischargeCoefficient);
+            IniSection.AddPropertyFromConfiguration(StructureRegion.DischargeCoeff, formula.DischargeCoefficient);
 
         private void AddCrestLevel(IWeir weir)
         {
@@ -49,15 +50,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         }
 
         private void AddZValues(FreeFormWeirFormula formula) => 
-            IniCategory.AddProperty(StructureRegion.ZValues, formula.Z);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(StructureRegion.ZValues, formula.Z);
 
         private void AddYValues(FreeFormWeirFormula formula) => 
-            IniCategory.AddProperty(StructureRegion.YValues, formula.Y);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(StructureRegion.YValues, formula.Y);
 
         private void AddLevelsCount(FreeFormWeirFormula formula) => 
-            IniCategory.AddProperty(StructureRegion.LevelsCount, formula.Y.ToList().Count);
+            IniSection.AddPropertyFromConfiguration(StructureRegion.LevelsCount, formula.Y.ToList().Count);
 
         private void AddAllowedFlowDir(IWeir weir) => 
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir, weir.FlowDirection.ToString().ToLower());
+            IniSection.AddPropertyFromConfiguration(StructureRegion.AllowedFlowDir, weir.FlowDirection.ToString().ToLower());
     }
 }

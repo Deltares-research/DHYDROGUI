@@ -6,8 +6,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     {
         public string MduPropertyName
         {
-            get { return base.FilePropertyName; }
-            set { base.FilePropertyName = value; }
+            get { return base.FilePropertyKey; }
+            set { base.FilePropertyKey = value; }
         }
     }
 

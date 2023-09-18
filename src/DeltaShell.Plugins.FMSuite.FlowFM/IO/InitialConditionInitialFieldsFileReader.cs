@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DHYDRO.Common.IO.Ini;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
@@ -37,47 +37,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
             }
 
-            var categories = new DelftIniReader().ReadDelftIniFile(filePath);
-            if (categories.Count == 0)
+            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath);
+            if (iniSections.Count == 0)
             {
                 throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
             }
             
-            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
+            ReadSpatialOperation(Path.GetDirectoryName(filePath), iniSections, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
             
-            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFile.Quantity.BedLevel, WaterFlowFMModelDefinition.BathymetryDataItemName, modelDefinition);
-            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFile.Quantity.Infiltration, WaterFlowFMModelDefinition.InfiltrationDataItemName, modelDefinition);
+            ReadSpatialOperation(Path.GetDirectoryName(filePath), iniSections, InitialFieldsFile.Quantity.BedLevel, WaterFlowFMModelDefinition.BathymetryDataItemName, modelDefinition);
+            ReadSpatialOperation(Path.GetDirectoryName(filePath), iniSections, InitialFieldsFile.Quantity.Infiltration, WaterFlowFMModelDefinition.InfiltrationDataItemName, modelDefinition);
             
-            if (categories.Any(IsInitialField(InitialFieldsFile.Quantity.WaterLevel)))
+            if (iniSections.Any(IsInitialField(InitialFieldsFile.Quantity.WaterLevel)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterLevel).ToString());
-                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFile.Quantity.WaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), iniSections, InitialFieldsFile.Quantity.WaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
             }
-            else if (categories.Any(IsInitialField(InitialFieldsFile.Quantity.WaterDepth)))
+            else if (iniSections.Any(IsInitialField(InitialFieldsFile.Quantity.WaterDepth)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterDepth).ToString());
-                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFile.Quantity.WaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), iniSections, InitialFieldsFile.Quantity.WaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
             }
 
 
             // [Initial 1d]
             
 
-            var initialConditionCategories = categories.Where(category => category.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.CurrentCultureIgnoreCase) &&
-                                                                        (category.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all").Equals("1d", StringComparison.InvariantCultureIgnoreCase) ||
-                                                                         category.ReadProperty<string>(InitialConditionRegion.DataFileType.Key).Equals("1dField", StringComparison.InvariantCultureIgnoreCase))).ToArray();
+            var initialConditionIniSections = iniSections.Where(iniSection => iniSection.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.CurrentCultureIgnoreCase) &&
+                                                                        (iniSection.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all").Equals("1d", StringComparison.InvariantCultureIgnoreCase) ||
+                                                                         iniSection.ReadProperty<string>(InitialConditionRegion.DataFileType.Key).Equals("1dField", StringComparison.InvariantCultureIgnoreCase))).ToArray();
             
-            if (initialConditionCategories.Length > 1)
+            if (initialConditionIniSections.Length > 1)
             {
                 Log.Warn(Properties.Resources.Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others);
             }
-            return initialConditionCategories.Any() 
-                ? ReadInitialConditionCategory(initialConditionCategories.First())
+            return initialConditionIniSections.Any() 
+                ? ReadInitialConditionIniSection(initialConditionIniSections.First())
                 : (InitialConditionQuantity.WaterLevel, "");
 
         }
 
-        private static Func<DelftIniCategory, bool> IsInitialField(string quantity)
+        private static Func<IniSection, bool> IsInitialField(string quantity)
         {
             return c => c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
                         c.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all")
@@ -88,19 +88,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void ReadSpatialOperation(
             string filePath, 
-            IList<DelftIniCategory> categories, 
+            IList<IniSection> iniSections, 
             string quantity, 
             string dataItemName, 
             WaterFlowFMModelDefinition modelDefinition)
         {
-            var parameterCategories = GetParameterCategoriesAndFilterByFrictionType(categories, modelDefinition);
-            ReadSpatialOperationData(filePath, parameterCategories, modelDefinition, quantity, dataItemName);
+            var parameterIniSections = GetParameterIniSectionsAndFilterByFrictionType(iniSections, modelDefinition);
+            ReadSpatialOperationData(filePath, parameterIniSections, modelDefinition, quantity, dataItemName);
         }
 
-        private static void ReadSpatialOperationData(string filePath, IEnumerable<DelftIniCategory> parameterCategories,
+        private static void ReadSpatialOperationData(string filePath, IEnumerable<IniSection> parameterIniSections,
             WaterFlowFMModelDefinition modelDefinition, string quantity, string dataItemName)
         {
-            var parameterItems = parameterCategories
+            var parameterItems = parameterIniSections
                 .Where(c => (c.Name.Equals(InitialConditionRegion.ParameterIniHeader, StringComparison.InvariantCultureIgnoreCase) ||
                              c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase)) &&
                             c.ReadProperty<string>(InitialConditionRegion.Quantity.Key, true, string.Empty).Equals(quantity, StringComparison.InvariantCultureIgnoreCase) && 
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static ISpatialOperation CreateSpatialOperation(DelftIniCategory parameterItem, string path)
+        private static ISpatialOperation CreateSpatialOperation(IniSection parameterItem, string path)
         {
             var dataFile = parameterItem.ReadProperty<string>(InitialConditionRegion.DataFile.Key);
             var dataFileType = parameterItem.ReadProperty<string>(InitialConditionRegion.DataFileType.Key).ToLower();
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
         
 
-        private static ISpatialOperation CreatePolygonOperation(DelftIniCategory parameterItem, string polFile)
+        private static ISpatialOperation CreatePolygonOperation(IniSection parameterItem, string polFile)
         {
             var features = new PolFile<Feature2DPolygon>().Read(polFile).Select(f => new Feature { Geometry = f.Geometry, Attributes = f.Attributes });
 
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return operation;
         }
 
-        private static T CreateSamplesOperation<T>(DelftIniCategory parameterItem, string sampleFile) where T: ImportSamplesOperationImportData, new()
+        private static T CreateSamplesOperation<T>(IniSection parameterItem, string sampleFile) where T: ImportSamplesOperationImportData, new()
         {
             var operationName = Path.GetFileNameWithoutExtension(sampleFile);
 
@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return GridCellAveragingMethod.SimpleAveraging;
         }
 
-        private static IEnumerable<DelftIniCategory> GetParameterCategoriesAndFilterByFrictionType(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition modelDefinition)
+        private static IEnumerable<IniSection> GetParameterIniSectionsAndFilterByFrictionType(IEnumerable<IniSection> iniSections, WaterFlowFMModelDefinition modelDefinition)
         {
             var frictionTypeProperty =
                 modelDefinition.Properties.FirstOrDefault(
@@ -241,19 +241,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if(!int.TryParse(frictionTypeProperty?.GetValueAsString(), out var modelFrictionType))
                 modelFrictionType = 1;
 
-            foreach (var iniCategory in categories.Where(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader, StringComparison.InvariantCultureIgnoreCase) || 
+            foreach (var iniSection in iniSections.Where(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader, StringComparison.InvariantCultureIgnoreCase) || 
                                                               c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
                                                               c.ReadProperty<string>(InitialConditionRegion.LocationType.Key,true,"all").Equals("2d", StringComparison.CurrentCultureIgnoreCase)))
             {
-                var quantity = iniCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
+                var quantity = iniSection.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
                 if (quantity != ExtForceQuantNames.FrictCoef)
                 {
-                    yield return iniCategory;
+                    yield return iniSection;
                     continue;
                 }
 
                 //we don't write this... how do i do this (the writing part)?
-                var frictionType = iniCategory.ReadProperty<int>(ExtForceFile.FricTypeKey,true,defaultValue:modelFrictionType);
+                var frictionType = iniSection.ReadProperty<int>(ExtForceFile.FricTypeKey,true,defaultValue:modelFrictionType);
 
                 if (frictionType != modelFrictionType)
                 {
@@ -263,15 +263,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else
                 {
-                    yield return iniCategory;
+                    yield return iniSection;
                 }
             }
         }
-        private static (InitialConditionQuantity, string) ReadInitialConditionCategory(DelftIniCategory initialConditionCategory)
+        private static (InitialConditionQuantity, string) ReadInitialConditionIniSection(IniSection initialConditionIniSection)
         {
-            var quantityString = initialConditionCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
+            var quantityString = initialConditionIniSection.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
             var quantity = InitialConditionQuantityTypeConverter.ConvertStringToInitialConditionQuantity(quantityString);
-            var dataFile = initialConditionCategory.ReadProperty<string>(InitialConditionRegion.DataFile.Key);
+            var dataFile = initialConditionIniSection.ReadProperty<string>(InitialConditionRegion.DataFile.Key);
 
             return (quantity, dataFile);
         }

@@ -17,31 +17,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "A",
+                            FilePropertyKey = "A",
                             EnabledDependencies = "B",
                             DataType = typeof(bool)
                         }, "0"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "B",
+                            FilePropertyKey = "B",
                             EnabledDependencies = "A",
                             DataType = typeof(bool)
                         }, "1"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "C",
+                            FilePropertyKey = "C",
                             EnabledDependencies = "double < 1.0",
                             DataType = typeof(bool)
                         }, "0"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "double",
+                            FilePropertyKey = "double",
                             DataType = typeof(double),
                             EnabledDependencies = "int = 3"
                         }, "1.2"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "int",
+                            FilePropertyKey = "int",
                             DataType = typeof(int),
                             EnabledDependencies = ""
                         }, "2")
@@ -77,13 +77,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "A",
+                            FilePropertyKey = "A",
                             EnabledDependencies = "string > 1", // This should not compile
                             DataType = typeof (string)
                         }, "1"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "string",
+                            FilePropertyKey = "string",
                             DataType = typeof (string)
                         }, "1.2"),
                 };
@@ -124,8 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             propertyDefinition.DefaultValueAsStringArray.Add("10");
             propertyDefinition.DefaultValueAsStringArray.Add("11");
             const string propertyName = "UnifFrictCoefChannels";
-            propertyDefinition.FilePropertyName = propertyName;
-            propertyDefinition.DefaultsIndexer = property.PropertyDefinition.FilePropertyName;
+            propertyDefinition.FilePropertyKey = propertyName;
+            propertyDefinition.DefaultsIndexer = property.PropertyDefinition.FilePropertyKey;
             propertyDefinition.DataType = typeof(double);
             ModelProperty property2 = new TestModelProperty(propertyDefinition, "10");
             return property2;
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             string caption = "Uniform friction type:Chezy|Manning";
             const string typeField = "0|1";
             const string propertyName = "UnifFrictTypeChannels";
-            propertyDefinition.FilePropertyName = propertyName;
+            propertyDefinition.FilePropertyKey = propertyName;
             propertyDefinition.DataType = DataTypeValueParser.GetClrType(propertyName, typeField, ref caption, caption, 0);
 
             ModelProperty property = new TestModelProperty(propertyDefinition, "0");

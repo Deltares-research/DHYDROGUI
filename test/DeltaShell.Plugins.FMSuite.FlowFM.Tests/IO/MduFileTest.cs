@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     MduPropertyName = KnownProperties.BndExtForceFile,
                     DataType = typeof(IList<string>),
                     IsMultipleFile = true,
-                    FileCategoryName = "TestCategory"
+                    FileSectionName = "TestCategory"
                 };
                 modelDefinition.AddProperty(new WaterFlowFMProperty(propertyDefinition, string.Empty));
                 modelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
@@ -1017,14 +1017,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("transporttimestepping", "numerics")]
         [TestCase("hdam", "numerics")]
         [TestCase("writebalancefile", "output")]
-        public void Read_WithObsoleteProperty_LogsWarningAndPropertyIsRemovedFromModelDefinition(string property, string category)
+        public void Read_WithObsoleteProperty_LogsWarningAndPropertyIsRemovedFromModelDefinition(string property, string iniSection)
         {
             using (var temp = new TemporaryDirectory())
             {
                 // Setup
                 var mduFile = new MduFile();
                 string mduFileContent =
-                    $"[{category}]{Environment.NewLine}" +
+                    $"[{iniSection}]{Environment.NewLine}" +
                     $"{property}=";
                 string mduFilePath = temp.CreateFile($"with_obsolete_property_{property}.mdu", mduFileContent);
 

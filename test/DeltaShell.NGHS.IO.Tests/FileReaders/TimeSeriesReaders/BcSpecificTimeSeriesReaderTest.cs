@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -45,22 +45,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
             structureTimeSeries.Structure.Returns(new Weir());
             structureTimeSeries.TimeSeries.Returns(new TimeSeries {Name = quantity});
             time = new DateTime(10, 10, 10, 10, 10, 10);
-            IList<IDelftBcCategory> structuresFromFile = new List<IDelftBcCategory>();
+            IList<DelftBcCategory> structuresFromFile = new List<DelftBcCategory>();
             structuresFromFile.Add(GetCategory());
             reader.ReadDelftBcFile(filePath).Returns(structuresFromFile);
         }
 
-        private IDelftBcCategory GetCategory()
+        private DelftBcCategory GetCategory()
         {
-            IDelftBcCategory category = new DelftBcCategory("");
-            category.Properties.AddRange(GetProperties());
+            DelftBcCategory category = new DelftBcCategory("boundary");
+            category.Section.AddMultipleProperties(GetProperties());
             category.Table = GetTable();
             return category;
         }
 
-        private List<DelftIniProperty> GetProperties()
+        private List<IniProperty> GetProperties()
         {
-            List<DelftIniProperty> list = new List<DelftIniProperty> {new DelftIniProperty(propertyName,structureName," ")};
+            List<IniProperty> list = new List<IniProperty> {new IniProperty(propertyName,structureName," ")};
             return list;
         }
         
@@ -76,8 +76,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
 
         private static DelftBcQuantityData GetDelftBcQuantityData(string quantityString, string unitString, string valueString)
         {
-            var delftBcQuantityDataTime = new DelftBcQuantityData(new DelftIniProperty(tableQuantity, quantityString, ""));
-            delftBcQuantityDataTime.Unit = new DelftIniProperty(tableUnit, unitString, "");
+            var delftBcQuantityDataTime = new DelftBcQuantityData(new IniProperty(tableQuantity, quantityString, ""));
+            delftBcQuantityDataTime.Unit = new IniProperty(tableUnit, unitString, "");
             delftBcQuantityDataTime.Values = new List<string>() {valueString};
             return delftBcQuantityDataTime;
         }

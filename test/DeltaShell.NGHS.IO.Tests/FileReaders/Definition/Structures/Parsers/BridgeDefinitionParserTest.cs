@@ -5,7 +5,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
@@ -18,15 +18,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         private const StructureType structureType = StructureType.Bridge;
 
         [Test]
-        public void Constructor_CategoryNull_ThrowsArgumentNullException()
+        public void Constructor_IniSectionNull_ThrowsArgumentNullException()
         {
             // Setup
-            IDelftIniCategory category = null;
+            IniSection iniSection = null;
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
 
             // Call
-            TestDelegate call = () => new BridgeDefinitionParser(structureType, category, crossSectionDefinitions, 
+            TestDelegate call = () => new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, 
                                                                  branch, structuresFilename);
             
             // Assert
@@ -37,12 +37,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_CrossSectionDefinitionsNull_ThrowsArgumentNullException()
         {
             // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = null;
             IBranch branch = new Channel();
 
             // Call
-            TestDelegate call = () => new BridgeDefinitionParser(structureType, category, crossSectionDefinitions, 
+            TestDelegate call = () => new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, 
                                                                  branch, structuresFilename);
             
             // Assert
@@ -53,12 +53,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_BranchNull_ThrowsArgumentNullException()
         {
             // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = null;
 
             // Call
-            TestDelegate call = () => new BridgeDefinitionParser(structureType, category, crossSectionDefinitions, 
+            TestDelegate call = () => new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, 
                                                                  branch, structuresFilename);
             
             // Assert
@@ -69,12 +69,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_StructuresFilenameNull_ThrowsArgumentNullException()
         {
             // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
 
             // Call
-            TestDelegate call = () => new BridgeDefinitionParser(structureType, category, crossSectionDefinitions, 
+            TestDelegate call = () => new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, 
                                                                  branch, null);
             
             // Assert
@@ -85,12 +85,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var category = StructureParserTestHelper.CreateStructureCategory();
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
             var crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             var branch = new Channel();
 
             // Call
-            var parser = new BridgeDefinitionParser(structureType, category, crossSectionDefinitions, branch, structuresFilename);
+            var parser = new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, branch, structuresFilename);
 
             // Assert
             Assert.That(parser, Is.InstanceOf<CrossSectionDependentStructureParserBase>());
@@ -124,22 +124,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
             
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
-            category.AddProperty(StructureRegion.Shift.Key, shift);
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
-            category.AddProperty(StructureRegion.Length.Key, length);
-            category.AddProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
-            category.AddProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
-            category.AddProperty(StructureRegion.PillarWidth.Key, pillarWidth);
-            category.AddProperty(StructureRegion.FormFactor.Key, shapeFactor);
-            category.AddProperty(StructureRegion.FrictionType.Key, frictionType);
-            category.AddProperty(StructureRegion.Friction.Key, friction);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
+            iniSection.AddProperty(StructureRegion.Shift.Key, shift);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.Length.Key, length);
+            iniSection.AddProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.PillarWidth.Key, pillarWidth);
+            iniSection.AddProperty(StructureRegion.FormFactor.Key, shapeFactor);
+            iniSection.AddProperty(StructureRegion.FrictionType.Key, frictionType);
+            iniSection.AddProperty(StructureRegion.Friction.Key, friction);
             
-            var parser = new BridgeDefinitionParser(structureType, category, crossSectionDefinitions, branch, structuresFilename);
+            var parser = new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, branch, structuresFilename);
 
             // Call
             IStructure1D parsedStructure = parser.ParseStructure();
@@ -191,22 +191,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
             
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
-            category.AddProperty(StructureRegion.Shift.Key, shift);
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
-            category.AddProperty(StructureRegion.Length.Key, length);
-            category.AddProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
-            category.AddProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
-            category.AddProperty(StructureRegion.PillarWidth.Key, pillarWidth);
-            category.AddProperty(StructureRegion.FormFactor.Key, shapeFactor);
-            category.AddProperty(StructureRegion.FrictionType.Key, frictionType);
-            category.AddProperty(StructureRegion.Friction.Key, friction);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
+            iniSection.AddProperty(StructureRegion.Shift.Key, shift);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.Length.Key, length);
+            iniSection.AddProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.PillarWidth.Key, pillarWidth);
+            iniSection.AddProperty(StructureRegion.FormFactor.Key, shapeFactor);
+            iniSection.AddProperty(StructureRegion.FrictionType.Key, frictionType);
+            iniSection.AddProperty(StructureRegion.Friction.Key, friction);
             
-            var parser = new BridgeDefinitionParser(structureType, category, crossSectionDefinitions, 
+            var parser = new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, 
                                                     branch, structuresFilename);
 
             // Call

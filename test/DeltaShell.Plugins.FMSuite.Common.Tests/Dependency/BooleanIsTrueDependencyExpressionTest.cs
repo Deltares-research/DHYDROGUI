@@ -36,23 +36,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "A",
+                            FilePropertyKey = "A",
                             EnabledDependencies = null,
                             DataType = typeof (string)
                         }, "1"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "B",
+                            FilePropertyKey = "B",
                             DataType = typeof (bool)
                         }, "1"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "C",
+                            FilePropertyKey = "C",
                             DataType = typeof (bool)
                         }, "0"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
-                            FilePropertyName = "string",
+                            FilePropertyKey = "string",
                             DataType = typeof (string)
                         }, "1.2"),
                 };

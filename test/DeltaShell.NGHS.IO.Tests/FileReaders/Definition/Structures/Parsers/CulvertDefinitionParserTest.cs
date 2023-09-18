@@ -9,7 +9,7 @@ using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NSubstitute;
 using NUnit.Framework;
@@ -26,21 +26,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         private static IEnumerable<TestCaseData> ConstructorParameterNullData()
         {
             ITimeSeriesFileReader specificTimeSeriesFileReader = Substitute.For<ITimeSeriesFileReader>();
-            IDelftIniCategory category = Substitute.For<IDelftIniCategory>();
+            var iniSection = new IniSection("some_section");
             ICrossSectionDefinition[] crossSectionDefinitions = {};
             var branch = Substitute.For<IBranch>();
 
-            yield return new TestCaseData(null, category, crossSectionDefinitions, branch, structuresFilename, "fileReader");
-            yield return new TestCaseData(specificTimeSeriesFileReader, null, crossSectionDefinitions, branch, structuresFilename, "category");
-            yield return new TestCaseData(specificTimeSeriesFileReader, category, null, branch, structuresFilename, "crossSectionDefinitions");
-            yield return new TestCaseData(specificTimeSeriesFileReader, category, crossSectionDefinitions, null, structuresFilename, "branch");
-            yield return new TestCaseData(specificTimeSeriesFileReader, category, crossSectionDefinitions, branch, null, "structuresFilename");
+            yield return new TestCaseData(null, iniSection, crossSectionDefinitions, branch, structuresFilename, "fileReader");
+            yield return new TestCaseData(specificTimeSeriesFileReader, null, crossSectionDefinitions, branch, structuresFilename, "iniSection");
+            yield return new TestCaseData(specificTimeSeriesFileReader, iniSection, null, branch, structuresFilename, "crossSectionDefinitions");
+            yield return new TestCaseData(specificTimeSeriesFileReader, iniSection, crossSectionDefinitions, null, structuresFilename, "branch");
+            yield return new TestCaseData(specificTimeSeriesFileReader, iniSection, crossSectionDefinitions, branch, null, "structuresFilename");
         }
 
         [Test]
         [TestCaseSource(nameof(ConstructorParameterNullData))]
         public void Constructor_ParameterNull_ThrowsArgumentNullException(ITimeSeriesFileReader specificTimeFileReader,
-                                                                          IDelftIniCategory category,
+                                                                          IniSection iniSection,
                                                                           ICollection<ICrossSectionDefinition> crossSectionDefinitions,
                                                                           IBranch branch, 
                                                                           string structuresFilePath,
@@ -48,7 +48,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         {
             void Call() => new CulvertDefinitionParser(specificTimeFileReader,
                                                        structureType, 
-                                                       category, 
+                                                       iniSection, 
                                                        crossSectionDefinitions, 
                                                        branch, 
                                                        structuresFilePath, 
@@ -61,14 +61,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var category = StructureParserTestHelper.CreateStructureCategory();
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
             var crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             var branch = new Channel();
 
             // Call
             var parser = new CulvertDefinitionParser(Substitute.For<ITimeSeriesFileReader>(),
                                                      structureType, 
-                                                     category, 
+                                                     iniSection, 
                                                      crossSectionDefinitions, 
                                                      branch, 
                                                      structuresFilename, 
@@ -93,20 +93,20 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
             
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
-            category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
-            category.AddProperty(StructureRegion.IniValveOpen.Key, valveOpeningHeightTimeSeries);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
+            iniSection.AddProperty(StructureRegion.IniValveOpen.Key, valveOpeningHeightTimeSeries);
 
             var reader = Substitute.For<ITimeSeriesFileReader>();
             reader.IsTimeSeriesProperty("").ReturnsForAnyArgs(true);
 
             var parser = new CulvertDefinitionParser(reader,
                                                      structureType, 
-                                                     category, 
+                                                     iniSection, 
                                                      crossSectionDefinitions, 
                                                      branch, 
                                                      structuresFilename, 
@@ -166,32 +166,32 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
             
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
-            category.AddProperty(StructureRegion.LeftLevel.Key, inletLevel);
-            category.AddProperty(StructureRegion.RightLevel.Key, outletLevel);
-            category.AddProperty(StructureRegion.Length.Key, length);
-            category.AddProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
-            category.AddProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
-            category.AddProperty(StructureRegion.ValveOnOff.Key, isGated ? "1" : "0");
-            category.AddProperty(StructureRegion.BendLossCoef.Key, bendLossCoefficient);
-            category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
-            category.AddProperty(StructureRegion.BedFriction.Key, friction);
-            category.AddProperty(StructureRegion.IniValveOpen.Key, gateInitialOpening);
-            category.AddProperty(StructureRegion.LossCoeffCount.Key, numLossCoefficient);
-            category.AddProperty(StructureRegion.RelativeOpening.Key, string.Join(", ", relativeOpening));
-            category.AddProperty(StructureRegion.LossCoefficient.Key, string.Join(", ", lossCoefficient));
-            category.AddProperty(StructureRegion.SubType.Key, subType);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.LeftLevel.Key, inletLevel);
+            iniSection.AddProperty(StructureRegion.RightLevel.Key, outletLevel);
+            iniSection.AddProperty(StructureRegion.Length.Key, length);
+            iniSection.AddProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.ValveOnOff.Key, isGated ? "1" : "0");
+            iniSection.AddProperty(StructureRegion.BendLossCoef.Key, bendLossCoefficient);
+            iniSection.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
+            iniSection.AddProperty(StructureRegion.BedFriction.Key, friction);
+            iniSection.AddProperty(StructureRegion.IniValveOpen.Key, gateInitialOpening);
+            iniSection.AddProperty(StructureRegion.LossCoeffCount.Key, numLossCoefficient);
+            iniSection.AddProperty(StructureRegion.RelativeOpening.Key, string.Join(", ", relativeOpening));
+            iniSection.AddProperty(StructureRegion.LossCoefficient.Key, string.Join(", ", lossCoefficient));
+            iniSection.AddProperty(StructureRegion.SubType.Key, subType);
             
             var fileReaderSubstitute = Substitute.For<ITimeSeriesFileReader>();
 
             var parser = new CulvertDefinitionParser(fileReaderSubstitute,
                                                      structureType, 
-                                                     category, 
+                                                     iniSection, 
                                                      crossSectionDefinitions, 
                                                      branch, 
                                                      structuresFilename, 
@@ -239,16 +239,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
             
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
-            category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
 
             var parser = new CulvertDefinitionParser(Substitute.For<ITimeSeriesFileReader>(),
                                                      structureType, 
-                                                     category, 
+                                                     iniSection, 
                                                      crossSectionDefinitions, 
                                                      branch, 
                                                      structuresFilename, 
@@ -292,17 +292,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
             
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
-            category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
-            category.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
+            iniSection.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
 
             var parser = new CulvertDefinitionParser(Substitute.For<ITimeSeriesFileReader>(), 
                                                      structureType, 
-                                                     category, 
+                                                     iniSection, 
                                                      crossSectionDefinitions, 
                                                      branch, 
                                                      structuresFilename, 

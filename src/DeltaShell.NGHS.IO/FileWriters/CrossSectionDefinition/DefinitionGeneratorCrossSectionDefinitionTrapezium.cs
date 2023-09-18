@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -21,9 +22,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var trapeziumShape = shape as CrossSectionStandardShapeTrapezium;
             if (trapeziumShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.Slope, trapeziumShape.Slope);
-            IniCategory.AddProperty(DefinitionPropertySettings.MaximumFlowWidth, trapeziumShape.MaximumFlowWidth);
-            IniCategory.AddProperty(DefinitionPropertySettings.BottomWidth, trapeziumShape.BottomWidthB);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Slope, trapeziumShape.Slope);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.MaximumFlowWidth, trapeziumShape.MaximumFlowWidth);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.BottomWidth, trapeziumShape.BottomWidthB);
         }
     }
 }

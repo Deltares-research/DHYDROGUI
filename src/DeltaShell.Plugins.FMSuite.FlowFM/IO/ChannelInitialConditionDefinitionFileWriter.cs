@@ -7,6 +7,7 @@ using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -34,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (channelInitialConditionDefinitions == null) throw new ArgumentNullException();
 
             // [General]
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.InitialConditionDataMajorVersion,
                     GeneralRegion.InitialConditionDataMinorVersion,
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             };
 
             // [Global]
-            categories.Add(CreateGlobalInitialConditionCategory(initialConditionQuantity, initialConditionValue));
+            iniSections.Add(CreateGlobalInitialConditionIniSection(initialConditionQuantity, initialConditionValue));
 
             // [Branch]
             var channelInitialConditionDefinitionArray = channelInitialConditionDefinitions.ToArray();
@@ -53,10 +54,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 switch (quantity)
                 {
                     case ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition:
-                        categories.Add(CreateConstantChannelInitialCondition(channelInitialConditionDefinition));
+                        iniSections.Add(CreateConstantChannelInitialCondition(channelInitialConditionDefinition));
                         break;
                     case ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition:
-                        categories.Add(CreateSpatialChannelInitialConditionCategory(channelInitialConditionDefinition));
+                        iniSections.Add(CreateSpatialChannelInitialConditionIniSection(channelInitialConditionDefinition));
                         break;
                     case ChannelInitialConditionSpecificationType.ModelSettings: // not written, takes global value by default
                         break;
@@ -66,57 +67,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             if (File.Exists(filename)) File.Delete(filename);
-            new IniFileWriter().WriteIniFile(categories, filename);
+            new IniFileWriter().WriteIniFile(iniSections, filename);
         }
 
-        private static DelftIniCategory CreateSpatialChannelInitialConditionCategory(
+        private static IniSection CreateSpatialChannelInitialConditionIniSection(
             ChannelInitialConditionDefinition channelInitialConditionDefinition)
         {
-            var category = new DelftIniCategory(InitialConditionRegion.ChannelInitialConditionDefinitionIniHeader);
+            var iniSection = new IniSection(InitialConditionRegion.ChannelInitialConditionDefinitionIniHeader);
 
             var spatialDefinition = channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition;
 
             var branch = channelInitialConditionDefinition.Channel;
-            category.AddProperty(InitialConditionRegion.BranchId.Key, branch.Name);
+            iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.BranchId.Key, branch.Name);
 
             var locationCount = spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions.Count;
-            category.AddProperty(InitialConditionRegion.NumLocations.Key, locationCount);
+            iniSection.AddProperty(InitialConditionRegion.NumLocations.Key, locationCount);
 
             IEnumerable<double> chainages =
                 spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions.Select(definition => definition.Chainage);
-            category.AddProperty(InitialConditionRegion.Chainage.Key, chainages, "", InitialConditionRegion.Chainage.Format);
+            iniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(InitialConditionRegion.Chainage.Key, chainages, "", InitialConditionRegion.Chainage.Format);
 
             IEnumerable<double> values =
                 spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions.Select(definition => definition.Value);
-            category.AddProperty(InitialConditionRegion.Values.Key, values, InitialConditionRegion.Values.Description, InitialConditionRegion.Values.Format);
+            iniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(InitialConditionRegion.Values.Key, values, InitialConditionRegion.Values.Description, InitialConditionRegion.Values.Format);
 
-            return category;
+            return iniSection;
         }
 
-        private static DelftIniCategory CreateConstantChannelInitialCondition(
+        private static IniSection CreateConstantChannelInitialCondition(
             ChannelInitialConditionDefinition channelInitialConditionDefinition)
         {
-            var category = new DelftIniCategory(InitialConditionRegion.ChannelInitialConditionDefinitionIniHeader);
+            var iniSection = new IniSection(InitialConditionRegion.ChannelInitialConditionDefinitionIniHeader);
 
             var branch = channelInitialConditionDefinition.Channel;
-            category.AddProperty(InitialConditionRegion.BranchId.Key, branch.Name);
+            iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.BranchId.Key, branch.Name);
 
             double value = channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value;
-            category.AddProperty(InitialConditionRegion.Values.Key, value, InitialConditionRegion.Values.Description, InitialConditionRegion.Values.Format);
+            iniSection.AddPropertyWithOptionalCommentAndFormat(InitialConditionRegion.Values.Key, value, InitialConditionRegion.Values.Description, InitialConditionRegion.Values.Format);
 
-            return category;
+            return iniSection;
         }
 
-        private static DelftIniCategory CreateGlobalInitialConditionCategory(
+        private static IniSection CreateGlobalInitialConditionIniSection(
             InitialConditionQuantity initialConditionQuantity, 
             double initialConditionValue)
         {
-            var category = new DelftIniCategory(InitialConditionRegion.GlobalDefinitionIniHeader);
-            category.AddProperty(InitialConditionRegion.Quantity.Key, initialConditionQuantity.ToString());
-            category.AddProperty(InitialConditionRegion.Unit.Key, DefaultUnit);
-            category.AddProperty(InitialConditionRegion.Value.Key, initialConditionValue, InitialConditionRegion.Value.Description, InitialConditionRegion.Value.Format);
+            var iniSection = new IniSection(InitialConditionRegion.GlobalDefinitionIniHeader);
+            iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.Quantity.Key, initialConditionQuantity.ToString());
+            iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.Unit.Key, DefaultUnit);
+            iniSection.AddPropertyWithOptionalCommentAndFormat(InitialConditionRegion.Value.Key, initialConditionValue, InitialConditionRegion.Value.Description, InitialConditionRegion.Value.Format);
 
-            return category;
+            return iniSection;
         }
     }
 }

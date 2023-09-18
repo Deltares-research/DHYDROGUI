@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro.Structures;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -6,8 +7,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     {
         protected void AddCommonBridgeElements(IBridge bridge)
         {
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, bridge.FlowDirection.ToString().ToLower(), StructureRegion.AllowedFlowDir.Description);
-            IniCategory.AddProperty(StructureRegion.Shift.Key, bridge.Shift, StructureRegion.Shift.Description, StructureRegion.Shift.Format);
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.AllowedFlowDir.Key, bridge.FlowDirection.ToString().ToLower(), StructureRegion.AllowedFlowDir.Description);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Shift.Key, bridge.Shift, StructureRegion.Shift.Description, StructureRegion.Shift.Format);
         }
     }
 }

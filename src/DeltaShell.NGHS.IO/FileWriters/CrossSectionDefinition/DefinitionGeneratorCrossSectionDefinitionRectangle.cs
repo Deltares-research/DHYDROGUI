@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -21,8 +22,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var rectangleShape = shape as CrossSectionStandardShapeRectangle;
             if (rectangleShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.RectangleWidth, rectangleShape.Width);
-            IniCategory.AddProperty(DefinitionPropertySettings.RectangleHeight, rectangleShape.Height);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.RectangleWidth, rectangleShape.Width);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.RectangleHeight, rectangleShape.Height);
         }
     }
 }

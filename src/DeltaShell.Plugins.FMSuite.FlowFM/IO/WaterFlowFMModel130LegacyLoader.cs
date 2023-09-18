@@ -12,7 +12,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
@@ -20,6 +19,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -296,9 +296,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             try
             {
                 var reader = new DelftIniReader();
-                IList<DelftIniCategory> categories = reader.ReadDelftIniFile(mduFilePath);
-                DelftIniCategory category = categories.FirstOrDefault(c => string.Equals(c.Name, "geometry", StringComparison.OrdinalIgnoreCase));
-                gridFileName = category?.ReadProperty<string>(KnownProperties.NetFile);
+                IList<IniSection> iniSections = reader.ReadDelftIniFile(mduFilePath);
+                IniSection iniSection = iniSections.FirstOrDefault(c => string.Equals(c.Name, "geometry", StringComparison.OrdinalIgnoreCase));
+                gridFileName = iniSection?.ReadProperty<string>(KnownProperties.NetFile);
                 return gridFileName != null;
             }
             catch (Exception e)

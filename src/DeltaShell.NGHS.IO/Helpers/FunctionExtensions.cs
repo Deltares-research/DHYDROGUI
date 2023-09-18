@@ -3,12 +3,13 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
     public static class FunctionExtensions
     {
-        public static void AddStorageTable(this IFunction storageDataTable, DelftIniCategory definition, string name)
+        public static void AddStorageTable(this IFunction storageDataTable, IniSection definition, string name)
         {
             IVariable argument = storageDataTable?.Arguments.Count > 0 ? storageDataTable.Arguments[0] : null;
             IVariable component = storageDataTable?.Components.Count > 0 ? storageDataTable.Components[0] : null;
@@ -36,10 +37,10 @@ namespace DeltaShell.NGHS.IO.Helpers
                 throw new FileWritingException(cannotWriteArea);
             }
 
-            definition.AddProperty(RetentionRegion.NumLevels, levels.Count);
-            definition.AddProperty(RetentionRegion.Levels, levels);
-            definition.AddProperty(RetentionRegion.StorageArea, storageAreas);
-            definition.AddProperty(RetentionRegion.Interpolate, argument.InterpolationType == InterpolationType.Linear ? "linear" : "block");
+            definition.AddPropertyFromConfiguration(RetentionRegion.NumLevels, levels.Count);
+            definition.AddPropertyFromConfigurationWithMultipleValues(RetentionRegion.Levels, levels);
+            definition.AddPropertyFromConfigurationWithMultipleValues(RetentionRegion.StorageArea, storageAreas);
+            definition.AddPropertyFromConfiguration(RetentionRegion.Interpolate, argument.InterpolationType == InterpolationType.Linear ? "linear" : "block");
         }
     }
 }

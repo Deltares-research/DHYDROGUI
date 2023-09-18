@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -22,7 +23,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var circleShape = shape as CrossSectionStandardShapeCircle;
             if (circleShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.Diameter, circleShape.Diameter);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Diameter, circleShape.Diameter);
         }
     }
 }

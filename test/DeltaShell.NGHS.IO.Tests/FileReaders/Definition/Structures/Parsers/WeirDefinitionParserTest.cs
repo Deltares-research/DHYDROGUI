@@ -7,7 +7,7 @@ using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NSubstitute;
 using NUnit.Framework;
@@ -24,26 +24,26 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         private static IEnumerable<TestCaseData> ConstructorParameterNullData()
         {
             var timeSeriesFileReader = Substitute.For<ITimeSeriesFileReader>();
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             IBranch branch = new Channel();
 
-            yield return new TestCaseData(null, category, branch, structuresFilename, "fileReader");
-            yield return new TestCaseData(timeSeriesFileReader, null, branch, structuresFilename, "category");
-            yield return new TestCaseData(timeSeriesFileReader, category, null, structuresFilename, "branch");
-            yield return new TestCaseData(timeSeriesFileReader, category, branch, null, "structuresFilename");
+            yield return new TestCaseData(null, iniSection, branch, structuresFilename, "fileReader");
+            yield return new TestCaseData(timeSeriesFileReader, null, branch, structuresFilename, "iniSection");
+            yield return new TestCaseData(timeSeriesFileReader, iniSection, null, structuresFilename, "branch");
+            yield return new TestCaseData(timeSeriesFileReader, iniSection, branch, null, "structuresFilename");
         }
 
         [Test]
         [TestCaseSource(nameof(ConstructorParameterNullData))]
         public void Constructor_ParameterNull_ThrowsArgumentNullException(ITimeSeriesFileReader specificTimeSeriesFileReader,
-                                                                          IDelftIniCategory category,
+                                                                          IniSection iniSection,
                                                                           IBranch branch,
                                                                           string structuresFileName,
                                                                           string expectedParam)
         {
             void Call() => new WeirDefinitionParser(specificTimeSeriesFileReader,
                                                     structureType,
-                                                    category,
+                                                    iniSection,
                                                     branch,
                                                     structuresFileName,
                                                     referenceDateTime);
@@ -56,13 +56,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var category = StructureParserTestHelper.CreateStructureCategory();
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
             var branch = new Channel();
 
             // Call
             var parser = new WeirDefinitionParser(Substitute.For<ITimeSeriesFileReader>(),
                                                   structureType, 
-                                                  category, 
+                                                  iniSection, 
                                                   branch, 
                                                   structuresFilename, 
                                                   referenceDateTime);
@@ -89,21 +89,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
             
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.CrestLevel.Key, crestLevel);
-            category.AddProperty(StructureRegion.CrestWidth.Key, crestWidth);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.UseVelocityHeight.Key, useVelocityHeight.ToString());
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
-            category.AddProperty(StructureRegion.DefinitionType.Key, weirFormula);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.CrestLevel.Key, crestLevel);
+            iniSection.AddProperty(StructureRegion.CrestWidth.Key, crestWidth);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.UseVelocityHeight.Key, useVelocityHeight.ToString());
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, weirFormula);
             
             var fileReaderSubstitute = Substitute.For<ITimeSeriesFileReader>();
 
             var parser = new WeirDefinitionParser(fileReaderSubstitute,
                                                   structureType, 
-                                                  category, 
+                                                  iniSection, 
                                                   branch, 
                                                   structuresFilename, 
                                                   referenceDateTime);
@@ -136,22 +136,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
 
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, "Weir");
-            category.AddProperty(StructureRegion.Name.Key, name);
-            category.AddProperty(StructureRegion.CrestLevel.Key, crestLevelTimeSeriesName);
-            category.AddProperty(StructureRegion.CrestWidth.Key, 3.3);
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, "both");
-            category.AddProperty(StructureRegion.Chainage.Key, 1.1);
-            category.AddProperty(StructureRegion.DefinitionType.Key, "weir");
-            category.AddProperty(StructureRegion.UseVelocityHeight.Key, false.ToString());
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, "Weir");
+            iniSection.AddProperty(StructureRegion.Name.Key, name);
+            iniSection.AddProperty(StructureRegion.CrestLevel.Key, crestLevelTimeSeriesName);
+            iniSection.AddProperty(StructureRegion.CrestWidth.Key, 3.3);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, "both");
+            iniSection.AddProperty(StructureRegion.Chainage.Key, 1.1);
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, "weir");
+            iniSection.AddProperty(StructureRegion.UseVelocityHeight.Key, false.ToString());
 
             var reader = Substitute.For<ITimeSeriesFileReader>();
             reader.IsTimeSeriesProperty("").ReturnsForAnyArgs(true);
 
             var parser = new OrificeDefinitionParser(reader,
                                                      structureType, 
-                                                     category, 
+                                                     iniSection, 
                                                      branch, 
                                                      structuresFilename,
                                                      referenceDateTime);

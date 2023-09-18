@@ -13,6 +13,7 @@ using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils.EqualityComparers;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -265,13 +266,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             var delftIniReader = Substitute.For<IDelftIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
-            var readCategories = new List<DelftIniCategory>
+            var readIniSections = new List<IniSection>
             {
-                CreateGeneralCategory(fileVersion),
-                CreateBranchCategory("1"),
-                CreateBranchCategory("2")
+                CreateGeneralIniSection(fileVersion),
+                CreateBranchIniSection("1"),
+                CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
 
             // Call
             IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
@@ -289,13 +290,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             var delftIniReader = Substitute.For<IDelftIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
-            var readCategories = new List<DelftIniCategory>
+            var readIniSections = new List<IniSection>
             {
-                CreateGeneralCategory("abc"),
-                CreateBranchCategory("1"),
-                CreateBranchCategory("2")
+                CreateGeneralIniSection("abc"),
+                CreateBranchIniSection("1"),
+                CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
 
             // Call
             IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
@@ -315,13 +316,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 
             const string fileVersion = "1.01";
 
-            var readCategories = new List<DelftIniCategory>
+            var readIniSections = new List<IniSection>
             {
-                CreateGeneralCategory(fileVersion),
-                CreateBranchCategory("1"),
-                CreateBranchCategory("2")
+                CreateGeneralIniSection(fileVersion),
+                CreateBranchIniSection("1"),
+                CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
 
             // Call
             IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
@@ -332,19 +333,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
-        public void Read_MissingGeneralCategory_LogsWarningAndReadsFileCorrectly()
+        public void Read_MissingGeneralIniSection_LogsWarningAndReadsFileCorrectly()
         {
             // Setup
             var filePath = "branches.gui";
             var delftIniReader = Substitute.For<IDelftIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
-            var readCategories = new List<DelftIniCategory>
+            var readIniSections = new List<IniSection>
             {
-                CreateBranchCategory("1"),
-                CreateBranchCategory("2")
+                CreateBranchIniSection("1"),
+                CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
 
             // Call
             IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
@@ -377,13 +378,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             var delftIniReader = Substitute.For<IDelftIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
-            var readCategories = new List<DelftIniCategory>
+            var readIniSections = new List<IniSection>
             {
-                CreateGeneralCategory(),
-                CreateBranchCategory("1"),
-                CreateBranchCategory("2")
+                CreateGeneralIniSection(),
+                CreateBranchIniSection("1"),
+                CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readCategories);
+            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
 
             // Call
             IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
@@ -440,16 +441,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
-        public void Write_AddsGeneralCategory()
+        public void Write_AddsGeneralIniSection()
         {
             // Setup
             var delftIniWriter = Substitute.For<IDelftIniWriter>();
 
-            DelftIniCategory generalCategory = CreateGeneralCategory();
+            IniSection generalIniSection = CreateGeneralIniSection();
 
-            DelftIniCategory[] expectedCategories =
+            IniSection[] expectedIniSections =
             {
-                generalCategory
+                generalIniSection
             };
 
             // Call
@@ -457,7 +458,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 
             // Assert
             delftIniWriter.Received(1).WriteDelftIniFile(
-                MatchingCategories(expectedCategories),
+                MatchingIniSections(expectedIniSections),
                 "branches.gui",
                 true);
         }
@@ -495,44 +496,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 
         }
 
-        private static IEnumerable<IDelftIniCategory> MatchingCategories(IEnumerable<IDelftIniCategory> expectedCategories)
+        private static IEnumerable<IniSection> MatchingIniSections(IEnumerable<IniSection> expectedIniSections)
         {
-            return Arg.Is<IEnumerable<IDelftIniCategory>>(actualCategories => CategoriesEqual(actualCategories, expectedCategories));
+            return Arg.Is<IEnumerable<IniSection>>(actualIniSections => IniSectionsEqual(actualIniSections, expectedIniSections));
         }
 
-        private static bool CategoriesEqual(IEnumerable<IDelftIniCategory> actualCategories, IEnumerable<IDelftIniCategory> expectedCategories)
+        private static bool IniSectionsEqual(IEnumerable<IniSection> actualIniSections, IEnumerable<IniSection> expectedIniSections)
         {
-            if (actualCategories.Count() != expectedCategories.Count())
+            if (actualIniSections.Count() != expectedIniSections.Count())
             {
                 return false;
             }
 
-            var categoryComparer = new DelftIniCategoryEqualityComparer();
+            var iniSectionComparer = new DelftIniCategoryEqualityComparer();
 
-            IEnumerable<bool> categoryEqualities = actualCategories.Zip(expectedCategories,
-                                                                        (x, y) => categoryComparer.Equals(x, y));
-            return categoryEqualities.All(equal => equal);
+            IEnumerable<bool> iniSectionEqualities = actualIniSections.Zip(expectedIniSections,
+                                                                        (x, y) => iniSectionComparer.Equals(x, y));
+            return iniSectionEqualities.All(equal => equal);
         }
 
-        private static DelftIniCategory CreateGeneralCategory(string fileVersion = "2.00")
+        private static IniSection CreateGeneralIniSection(string fileVersion = "2.00")
         {
-            var generalCategory = new DelftIniCategory("General");
-            generalCategory.AddProperty("fileVersion", fileVersion, "File version. Do not edit this.");
-            generalCategory.AddProperty("fileType", "branches", "File type. Do not edit this.");
+            var generalIniSection = new IniSection("General");
+            generalIniSection.AddPropertyWithOptionalComment("fileVersion", fileVersion, "File version. Do not edit this.");
+            generalIniSection.AddPropertyWithOptionalComment("fileType", "branches", "File type. Do not edit this.");
 
-            return generalCategory;
+            return generalIniSection;
         }
 
-        private static DelftIniCategory CreateBranchCategory(string id)
+        private static IniSection CreateBranchIniSection(string id)
         {
-            var branchCategory = new DelftIniCategory("Branch");
-            branchCategory.AddProperty("name", $"some_branch_{id}", "Unique branch id");
-            branchCategory.AddProperty("branchType", "1", "Channel = 0, SewerConnection = 1, Pipe = 2");
-            branchCategory.AddProperty("isLengthCustom", "True", "branch length specified by user");
-            branchCategory.AddProperty("sourceCompartmentName", $"some_source_compartment_{id}", "Source compartment name this sewer connection is beginning");
-            branchCategory.AddProperty("targetCompartmentName", $"some_target_compartment_{id}", "Target compartment name this sewer connection is ending");
+            var branchIniSection = new IniSection("Branch");
+            branchIniSection.AddPropertyWithOptionalComment("name", $"some_branch_{id}", "Unique branch id");
+            branchIniSection.AddPropertyWithOptionalComment("branchType", "1", "Channel = 0, SewerConnection = 1, Pipe = 2");
+            branchIniSection.AddPropertyWithOptionalComment("isLengthCustom", "True", "branch length specified by user");
+            branchIniSection.AddPropertyWithOptionalComment("sourceCompartmentName", $"some_source_compartment_{id}", "Source compartment name this sewer connection is beginning");
+            branchIniSection.AddPropertyWithOptionalComment("targetCompartmentName", $"some_target_compartment_{id}", "Target compartment name this sewer connection is ending");
 
-            return branchCategory;
+            return branchIniSection;
         }
     }
 }

@@ -5,13 +5,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public static class DefinitionIniCategoryGeneratorFactory
     {
-        public static DefinitionGeneratorCrossSectionDefinition GetCrossSectionDefinitionIniCategoryGenerator(ICrossSectionDefinition crossSectionDefinition)
+        public static DefinitionGeneratorCrossSectionDefinition GetCrossSectionDefinitionIniSectionGenerator(ICrossSectionDefinition crossSectionDefinition)
         {
             var standardCrossSectionDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
-            return standardCrossSectionDefinition != null ? GetCrossSectionDefinitionIniCategoryGenerator(standardCrossSectionDefinition.ShapeType) : null;
+            return standardCrossSectionDefinition != null ? GetCrossSectionDefinitionIniSectionGenerator(standardCrossSectionDefinition.ShapeType) : null;
         }
 
-        public static DefinitionGeneratorCrossSectionDefinitionStandard GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType shapeType)
+        public static DefinitionGeneratorCrossSectionDefinitionStandard GetCrossSectionDefinitionIniSectionGenerator(CrossSectionStandardShapeType shapeType)
         {
             switch (shapeType)
             {

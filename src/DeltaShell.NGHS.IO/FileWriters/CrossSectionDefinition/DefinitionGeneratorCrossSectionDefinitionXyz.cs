@@ -2,6 +2,7 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -12,7 +13,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(
+        public override IniSection CreateDefinitionRegion(
             ICrossSectionDefinition crossSectionDefinition,
             bool writeFrictionFromDefinition,
             string defaultFrictionId)
@@ -21,12 +22,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
             AddCoordinates(crossSectionDefinition);
 
-            IniCategory.AddProperty(DefinitionPropertySettings.Conveyance, DefinitionPropertySettings.Conveyance.DefaultValue);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Conveyance, DefinitionPropertySettings.Conveyance.DefaultValue);
 
             AddFrictionData(crossSectionDefinition, writeFrictionFromDefinition, defaultFrictionId);
             // can't create a protected base function! (because CrossSectionDefinitionXYZ != CrossSectionDefinitionYZ)
             
-            return IniCategory;
+            return IniSection;
         }
 
         private void AddCoordinates(ICrossSectionDefinition crossSectionDefinition)
@@ -35,16 +36,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             if (crossSectionDefinitionXyz == null) return;
 
             var xyzCount = crossSectionDefinitionXyz.Geometry.Coordinates.ToList().Count;
-            IniCategory.AddProperty(DefinitionPropertySettings.XYZCount, xyzCount);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.XYZCount, xyzCount);
 
             var xCoordinates = crossSectionDefinitionXyz.Geometry.Coordinates.Select(c => c.X);
-            IniCategory.AddProperty(DefinitionPropertySettings.XCoors, xCoordinates);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.XCoors, xCoordinates);
 
             var yCoordinates = crossSectionDefinitionXyz.Geometry.Coordinates.Select(c => c.Y);
-            IniCategory.AddProperty(DefinitionPropertySettings.YCoors, yCoordinates);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.YCoors, yCoordinates);
 
             var zCoordinates = crossSectionDefinitionXyz.Geometry.Coordinates.Select(c => c.Z);
-            IniCategory.AddProperty(DefinitionPropertySettings.ZCoors, zCoordinates);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.ZCoors, zCoordinates);
         }
     }
 }

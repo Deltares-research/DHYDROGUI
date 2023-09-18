@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.IO;
@@ -7,6 +6,7 @@ using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Retention
 {
@@ -14,46 +14,46 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
     {
         public static void WriteFile(string filename, IEnumerable<IRetention> retentions)
         {
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.RetentionMajorVersion, 
                                                              GeneralRegion.RetentionMinorVersion, 
                                                              GeneralRegion.FileTypeName.Retention),
             };
 
-            categories.AddRange(retentions.Select(GenerateSpatialDataDefinition));
+            iniSections.AddRange(retentions.Select(r => GenerateSpatialDataDefinition(r, RetentionRegion.Header)));
 
             FileUtils.DeleteIfExists(filename);
             
             var iniFileWriter = new IniFileWriter();
-            iniFileWriter.WriteIniFile(categories, filename);
+            iniFileWriter.WriteIniFile(iniSections, filename);
         }
 
-        public static DelftIniCategory GenerateSpatialDataDefinition(IRetention retention)
+        public static IniSection GenerateSpatialDataDefinition(IRetention retention, string sectionName)
         {
             if (retention.Branch == null)
             {
                 throw new FileWritingException(Resources.RetentionFileWriter_GenerateSpatialDataDefinition_Retention_does_not_have_a_valid_Branch_property);
             }
 
-            var definition = new DelftIniCategory(RetentionRegion.Header);
+            var definition = new IniSection(sectionName);
 
-            definition.AddProperty(RetentionRegion.Id.Key, retention.Name, RetentionRegion.Id.Description);
-            definition.AddProperty(RetentionRegion.Name.Key, retention.LongName ?? retention.Name, RetentionRegion.Name.Description);
+            definition.AddPropertyWithOptionalComment(RetentionRegion.Id.Key, retention.Name, RetentionRegion.Id.Description);
+            definition.AddPropertyWithOptionalComment(RetentionRegion.Name.Key, retention.LongName ?? retention.Name, RetentionRegion.Name.Description);
 
             if (retention.TryGetNode(out var node))
             {
-                definition.AddProperty(RetentionRegion.NodeId.Key, node.Name, RetentionRegion.BranchId.Description);
+                definition.AddPropertyWithOptionalComment(RetentionRegion.NodeId.Key, node.Name, RetentionRegion.BranchId.Description);
             }
             else
             {
-                definition.AddProperty(RetentionRegion.BranchId.Key, retention.Branch.Name, RetentionRegion.BranchId.Description);
-                definition.AddProperty(RetentionRegion.Chainage.Key, retention.Branch.GetBranchSnappedChainage(retention.Chainage), RetentionRegion.Chainage.Description, RetentionRegion.Chainage.Format);
+                definition.AddPropertyWithOptionalComment(RetentionRegion.BranchId.Key, retention.Branch.Name, RetentionRegion.BranchId.Description);
+                definition.AddPropertyWithOptionalCommentAndFormat(RetentionRegion.Chainage.Key, retention.Branch.GetBranchSnappedChainage(retention.Chainage), RetentionRegion.Chainage.Description, RetentionRegion.Chainage.Format);
 
                 if (retention.Geometry?.Coordinate != null)
                 {
-                    definition.AddProperty(RetentionRegion.X.Key, retention.Geometry.Coordinate.X, RetentionRegion.X.Description);
-                    definition.AddProperty(RetentionRegion.Y.Key, retention.Geometry.Coordinate.Y, RetentionRegion.Y.Description);
+                    definition.AddPropertyWithOptionalCommentAndFormat(RetentionRegion.X.Key, retention.Geometry.Coordinate.X, RetentionRegion.X.Description);
+                    definition.AddPropertyWithOptionalCommentAndFormat(RetentionRegion.Y.Key, retention.Geometry.Coordinate.Y, RetentionRegion.Y.Description);
                 }
             }
 
@@ -65,10 +65,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
                 return definition;
             }
 
-            definition.AddProperty(RetentionRegion.NumLevels, 1);
-            definition.AddProperty(RetentionRegion.Levels, retention.BedLevel);
-            definition.AddProperty(RetentionRegion.StorageArea, retention.StorageArea);
-            definition.AddProperty(RetentionRegion.Interpolate, "block");
+            definition.AddPropertyFromConfiguration(RetentionRegion.NumLevels, 1);
+            definition.AddPropertyFromConfiguration(RetentionRegion.Levels, retention.BedLevel);
+            definition.AddPropertyFromConfiguration(RetentionRegion.StorageArea, retention.StorageArea);
+            definition.AddPropertyFromConfiguration(RetentionRegion.Interpolate, "block");
 
             return definition;
         }

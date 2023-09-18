@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -24,8 +25,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var eggShape = shape as CrossSectionStandardShapeEgg;
             if (eggShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.EggWidth, eggShape.Width);
-            IniCategory.AddProperty(DefinitionPropertySettings.EggHeight, eggShape.Height);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.EggWidth, eggShape.Width);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.EggHeight, eggShape.Height);
         }
     }
 }

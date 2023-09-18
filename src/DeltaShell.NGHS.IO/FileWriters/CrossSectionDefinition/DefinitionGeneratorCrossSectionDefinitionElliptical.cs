@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -21,8 +22,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var ellipticalShape = shape as CrossSectionStandardShapeElliptical;
             if (ellipticalShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.EllipseWidth, ellipticalShape.Width);
-            IniCategory.AddProperty(DefinitionPropertySettings.EllipseHeight, ellipticalShape.Height);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.EllipseWidth, ellipticalShape.Width);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.EllipseHeight, ellipticalShape.Height);
         }
     }
 }

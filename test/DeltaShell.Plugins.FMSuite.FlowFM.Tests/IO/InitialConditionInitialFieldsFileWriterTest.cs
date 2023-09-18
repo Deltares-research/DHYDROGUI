@@ -126,8 +126,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int)InitialConditionQuantity.WaterLevel).ToString());
                     // call
                     InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, true);
-                    var categories = new DelftIniReader().ReadDelftIniFile(actualFile);
-                    var parameterFriction = categories.FirstOrDefault(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader));
+                    var iniSections = new DelftIniReader().ReadDelftIniFile(actualFile);
+                    var parameterFriction = iniSections.FirstOrDefault(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader));
 
                     // assert
                     Assert.That(File.Exists(actualFile), Is.True);
@@ -208,8 +208,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int) InitialConditionQuantity.WaterLevel).ToString());
                     // call
                     InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, true);
-                    var categories = new DelftIniReader().ReadDelftIniFile(actualFile);
-                    var parameterFriction = categories.FirstOrDefault(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader));
+                    var iniSections = new DelftIniReader().ReadDelftIniFile(actualFile);
+                    var parameterFriction = iniSections.FirstOrDefault(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader));
 
                     // assert
                     Assert.That(File.Exists(actualFile), Is.True);

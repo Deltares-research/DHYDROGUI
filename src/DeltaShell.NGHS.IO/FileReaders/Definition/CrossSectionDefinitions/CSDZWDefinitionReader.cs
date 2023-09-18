@@ -4,6 +4,7 @@ using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
@@ -12,15 +13,15 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CSDZWDefinitionReader));
 
-        public override ICrossSectionDefinition ReadDefinition(IDelftIniCategory category)
+        public override ICrossSectionDefinition ReadDefinition(IniSection iniSection)
         {
             var crossSectionDefinition = new CrossSectionDefinitionZW();
-            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
+            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, iniSection);
 
-            var numLevels = category.ReadProperty<int>(DefinitionPropertySettings.NumLevels.Key);
-            var levels = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.Levels.Key);
-            var flowWidths = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths.Key);
-            var totalWidths = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.TotalWidths.Key);
+            var numLevels = iniSection.ReadProperty<int>(DefinitionPropertySettings.NumLevels.Key);
+            var levels = iniSection.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.Levels.Key);
+            var flowWidths = iniSection.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths.Key);
+            var totalWidths = iniSection.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.TotalWidths.Key);
 
             if (numLevels == levels.Count
                 && numLevels == flowWidths.Count
@@ -41,7 +42,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
                 table.EndLoadData();
                 crossSectionDefinition.ZWDataTable = table;
                 CrossSectionHelper.SetDefaultThalweg(crossSectionDefinition);
-                crossSectionDefinition.Thalweg = category.ReadProperty<double>(DefinitionPropertySettings.Thalweg.Key);
+                crossSectionDefinition.Thalweg = iniSection.ReadProperty<double>(DefinitionPropertySettings.Thalweg.Key);
             }
             else
             {
@@ -49,10 +50,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
                 throw new FileReadingException(errorMessage);
             }
             // summer dike
-            var crestLevel = category.ReadProperty<double>(DefinitionPropertySettings.CrestLevee.Key,true);
-            var flowArea = category.ReadProperty<double>(DefinitionPropertySettings.FlowAreaLevee.Key, true);
-            var totalArea = category.ReadProperty<double>(DefinitionPropertySettings.TotalAreaLevee.Key, true);
-            var baseLevel = category.ReadProperty<double>(DefinitionPropertySettings.BaseLevelLevee.Key, true);
+            var crestLevel = iniSection.ReadProperty<double>(DefinitionPropertySettings.CrestLevee.Key,true);
+            var flowArea = iniSection.ReadProperty<double>(DefinitionPropertySettings.FlowAreaLevee.Key, true);
+            var totalArea = iniSection.ReadProperty<double>(DefinitionPropertySettings.TotalAreaLevee.Key, true);
+            var baseLevel = iniSection.ReadProperty<double>(DefinitionPropertySettings.BaseLevelLevee.Key, true);
             
             if (Math.Abs(flowArea) > double.Epsilon && Math.Abs(totalArea) > double.Epsilon)//(flowArea and totalArea are larger than 0, so you can do something with this
             {

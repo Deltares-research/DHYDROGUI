@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 {
@@ -10,28 +10,28 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
     public static class StructureParserTestHelper
     {
         /// <summary>
-        /// Creates a new <see cref="IDelftIniCategory"/> for a structure.
+        /// Creates a new <see cref="IniSection"/> for a structure.
         /// </summary>
-        /// <param name="lineNumber">Optional: the line number the category starts on.</param>
+        /// <param name="lineNumber">Optional: the line number the INI section starts on.</param>
         /// <returns></returns>
-        public static IDelftIniCategory CreateStructureCategory(int lineNumber = 0)
+        public static IniSection CreateStructureIniSection(int lineNumber = 0)
         {
-            return new DelftIniCategory("[structure]") { LineNumber = lineNumber };
+            return new IniSection("[structure]") { LineNumber = lineNumber };
         }
 
         /// <summary>
-        /// Adds a new key-value property to an existing category.
+        /// Adds a new key-value property to an existing INI section.
         /// </summary>
-        /// <param name="category"></param>
+        /// <param name="iniSection"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="lineNumber"></param>
-        public static void AddProperty(this IDelftIniCategory category, string key, string value, int lineNumber = 0)
+        public static void AddProperty(this IniSection iniSection, string key, string value, int lineNumber = 0)
         {
-            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(iniSection, nameof(iniSection));
 
-            category.Properties.Add(new DelftIniProperty(key, value, string.Empty));
-            category.Properties.Last().LineNumber = lineNumber;
+            iniSection.AddProperty(new IniProperty(key, value, string.Empty));
+            iniSection.Properties.Last().LineNumber = lineNumber;
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -14,20 +15,20 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             UseTabulatedProfile = useTabulatedProfile;
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(
+        public override IniSection CreateDefinitionRegion(
             ICrossSectionDefinition crossSectionDefinition,
             bool writeFrictionFromDefinition,
             string defaultFrictionId)
         {
             var standardDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
-            if (!IsCorrectCrossSectionDefinitionForGenerator(standardDefinition)) return IniCategory;
+            if (!IsCorrectCrossSectionDefinitionForGenerator(standardDefinition)) return IniSection;
 
             AddProperties(standardDefinition, writeFrictionFromDefinition, defaultFrictionId);
             if (standardDefinition?.Shape is ICrossSectionStandardShapeOpenClosed shape)
             {
-                IniCategory.AddProperty(DefinitionPropertySettings.Closed, shape.Closed ? "yes" : "no");
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Closed, shape.Closed ? "yes" : "no");
             }
-            return IniCategory;
+            return IniSection;
         }
 
         private bool IsCorrectCrossSectionDefinitionForGenerator(CrossSectionDefinitionStandard standardDefinition)
@@ -69,14 +70,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
             if (!writeFrictionFromDefinition)
             {
-                IniCategory.AddProperty(DefinitionPropertySettings.FrictionId, defaultFrictionId);
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FrictionId, defaultFrictionId);
                 return;
             }
 
             var crossSectionSection = crossSectionDefinition.Sections.FirstOrDefault();
             if (crossSectionSection != null)
             {
-                IniCategory.AddProperty(DefinitionPropertySettings.FrictionId, crossSectionSection.SectionType?.Name);
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FrictionId, crossSectionSection.SectionType?.Name);
             }
         }
     }

@@ -7,6 +7,7 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils.Extensions;
+using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
@@ -39,10 +40,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
         /// </returns>
         /// <remarks>
         /// - When the file at <paramref name="filePath"/> does not exist, an empty collection is returned.
-        /// - Skips INI categories that do not have a "CrossSection" header.
-        /// - Logs an error and skips the category when this category does not contain an "id", "branchId",
+        /// - Skips INI sections that do not have a "CrossSection" header.
+        /// - Logs an error and skips the section when this section does not contain an "id", "branchId",
         ///   "chainage", "shift" or "definitionId" property, or when any of these properties is empty.
-        /// - Logs an error and skips the category when this category  contains a "chainage" or "shift"
+        /// - Logs an error and skips the section when this section  contains a "chainage" or "shift"
         ///   property that contain invalid doubles.
         /// </remarks>
         public IEnumerable<CrossSectionLocation> Read(string filePath)
@@ -52,42 +53,42 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
                 yield break;
             }
 
-            IEnumerable<DelftIniCategory> categories = delftIniReader.ReadDelftIniFile(filePath)
-                                                                     .Where(IsCrossSectionCategory);
+            IEnumerable<IniSection> iniSections = delftIniReader.ReadDelftIniFile(filePath)
+                                                                     .Where(IsCrossSectionIniSection);
 
-            foreach (DelftIniCategory crossSectionCategory in categories)
+            foreach (IniSection crossSectionIniSection in iniSections)
             {
-                if (!TryReadString(crossSectionCategory, LocationRegion.Id, out string id) ||
-                    !TryReadString(crossSectionCategory, LocationRegion.Definition, out string definitionId) ||
-                    !TryReadDouble(crossSectionCategory, LocationRegion.Chainage, out double chainage) ||
-                    !TryReadString(crossSectionCategory, LocationRegion.BranchId, out string branchId) ||
-                    !TryReadDouble(crossSectionCategory, LocationRegion.Shift, out double shift))
+                if (!TryReadString(crossSectionIniSection, LocationRegion.Id, out string id) ||
+                    !TryReadString(crossSectionIniSection, LocationRegion.Definition, out string definitionId) ||
+                    !TryReadDouble(crossSectionIniSection, LocationRegion.Chainage, out double chainage) ||
+                    !TryReadString(crossSectionIniSection, LocationRegion.BranchId, out string branchId) ||
+                    !TryReadDouble(crossSectionIniSection, LocationRegion.Shift, out double shift))
                 {
                     continue;
                 }
 
-                var longName = crossSectionCategory.ReadProperty<string>(LocationRegion.Name, true);
+                var longName = crossSectionIniSection.ReadProperty<string>(LocationRegion.Name, true);
 
                 yield return new CrossSectionLocation(id, longName, branchId, chainage, shift, definitionId);
             }
         }
 
-        private static bool TryReadString(IDelftIniCategory category, ConfigurationSetting setting, out string value)
+        private static bool TryReadString(IniSection iniSection, ConfigurationSetting setting, out string value)
         {
             value = null;
             string key = setting.Key;
 
-            IDelftIniProperty property = category.GetProperty(key);
+            IniProperty property = iniSection.GetProperty(key);
             if (property == null)
             {
-                log.ErrorFormat(Resources.IniProperty_NotFound, key, category.Name, category.LineNumber);
+                log.ErrorFormat(Resources.IniProperty_NotFound, key, iniSection.Name, iniSection.LineNumber);
                 return false;
             }
 
             string propertyValue = property.Value;
             if (string.IsNullOrEmpty(propertyValue))
             {
-                log.ErrorFormat(Resources.IniProperty_EmptyValue, key, category.Name, property.LineNumber);
+                log.ErrorFormat(Resources.IniProperty_EmptyValue, key, iniSection.Name, property.LineNumber);
                 return false;
             }
 
@@ -95,19 +96,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
             return true;
         }
 
-        private static bool TryReadDouble(IDelftIniCategory category, ConfigurationSetting setting, out double value)
+        private static bool TryReadDouble(IniSection iniSection, ConfigurationSetting setting, out double value)
         {
             value = double.NaN;
 
-            if (!TryReadString(category, setting, out string strValue))
+            if (!TryReadString(iniSection, setting, out string strValue))
             {
                 return false;
             }
 
             if (!double.TryParse(strValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleValue))
             {
-                int lineNumber = category.GetProperty(setting.Key).LineNumber;
-                log.ErrorFormat(Resources.IniProperty_InvalidDouble, setting.Key, category.Name, lineNumber, strValue);
+                int lineNumber = iniSection.GetProperty(setting.Key).LineNumber;
+                log.ErrorFormat(Resources.IniProperty_InvalidDouble, setting.Key, iniSection.Name, lineNumber, strValue);
                 return false;
             }
 
@@ -115,7 +116,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
             return true;
         }
 
-        private static bool IsCrossSectionCategory(DelftIniCategory category) => 
-            category.Name.EqualsCaseInsensitive(CrossSectionRegion.IniHeader);
+        private static bool IsCrossSectionIniSection(IniSection iniSection) => 
+            iniSection.Name.EqualsCaseInsensitive(CrossSectionRegion.IniHeader);
     }
 }

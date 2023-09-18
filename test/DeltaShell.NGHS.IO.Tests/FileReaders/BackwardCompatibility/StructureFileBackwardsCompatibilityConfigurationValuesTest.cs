@@ -23,9 +23,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.BackwardCompatibility
                                                                           .Matches(IsPropertyInfo("structure", "type", "extraresistance")));
         }
 
-        private static Predicate<DelftIniPropertyInfo> IsPropertyInfo(string category, string property, string value)
+        private static Predicate<DelftIniPropertyInfo> IsPropertyInfo(string iniSection, string property, string value)
         {
-            return info => info.Category.Equals(category) &&
+            return info => info.Category.Equals(iniSection) &&
                            info.Property.Equals(property) &&
                            info.Value.Equals(value);
         }

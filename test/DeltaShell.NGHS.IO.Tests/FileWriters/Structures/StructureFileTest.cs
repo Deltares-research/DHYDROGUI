@@ -8,8 +8,8 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DHYDRO.Common.IO.Ini;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     public class StructureFileTest
     {
         private const string expectedStructureFileName = "FlowFM_structures.bc";
-        private const string expectedCategoryName = "Structure";
+        private const string expectedIniSectionName = "Structure";
         private static readonly DateTime referenceTime = new DateTime(2018, 8, 25);
 
         [SetUp]
@@ -47,23 +47,23 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Area.Pumps.Add(pump2D);
 
             // Action
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
 
             // Assert
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.That(structureCategory, Is.Not.Null);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
+            IniSection structureIniSection = iniSections.First();
+            Assert.That(structureIniSection, Is.Not.Null);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(6));
 
-            CheckCommon2DDelftIniProperties(structureCategory, pump2D.Name, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacity);
+            CheckCommon2DDelftIniProperties(structureIniSection, pump2D.Name, expectedType);
+            CheckKeyValuePair(structureIniSection, StructureRegion.Capacity.Key, expectedCapacity);
         }
 
         [Test]
-        public void GivenAnHydroAreaWithPump2DThatHasATimeSeriesForCapacity_WhenGeneratingStructures_ThenThePumpCategoryHasTheCorrectCapacityValue()
+        public void GivenAnHydroAreaWithPump2DThatHasATimeSeriesForCapacity_WhenGeneratingStructures_ThenThePumpIniSectionHasTheCorrectCapacityValue()
         {
             Pump2D pump2D = StructureFileTestHelper.CreateDefaultPump2D();
             pump2D.UseCapacityTimeSeries = true;
@@ -75,17 +75,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Area.Pumps.Add(pump2D);
 
             // Action
-            IEnumerable<DelftIniCategory> categories =
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections =
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(6));
 
-            CheckCommon2DDelftIniProperties(structureCategory, pump2D.Name, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expected2DStructureFileName);
+            CheckCommon2DDelftIniProperties(structureIniSection, pump2D.Name, expectedType);
+            CheckKeyValuePair(structureIniSection, StructureRegion.Capacity.Key, expected2DStructureFileName);
         }
 
         [Test]
@@ -103,19 +103,19 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             
             var expected2DStructureFileName = $"{weir2D.Name}_crest_level.tim";
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(9));
 
-            CheckCommon2DDelftIniProperties(structureCategory, weir2D.Name, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expected2DStructureFileName);
-            CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
-            CheckKeyValuePair(structureCategory, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoeff);
+            CheckCommon2DDelftIniProperties(structureIniSection, weir2D.Name, expectedType);
+            CheckKeyValuePair(structureIniSection, StructureRegion.CrestLevel.Key, expected2DStructureFileName);
+            CheckKeyValuePair(structureIniSection, StructureRegion.CrestWidth.Key, expectedCrestWidth);
+            CheckKeyValuePair(structureIniSection, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoeff);
         }
 
         [Test]
@@ -132,19 +132,19 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             weir2D.WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = expectedCorrectionCoef };
             Area.Weirs.Add(weir2D);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(9));
 
-            CheckCommon2DDelftIniProperties(structureCategory, weir2D.Name, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevel);
-            CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
-            CheckKeyValuePair(structureCategory, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoef);
+            CheckCommon2DDelftIniProperties(structureIniSection, weir2D.Name, expectedType);
+            CheckKeyValuePair(structureIniSection, StructureRegion.CrestLevel.Key, expectedCrestLevel);
+            CheckKeyValuePair(structureIniSection, StructureRegion.CrestWidth.Key, expectedCrestWidth);
+            CheckKeyValuePair(structureIniSection, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoef);
         }
 
         [Test]
@@ -161,16 +161,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             
             Area.Weirs.Add(weir2D);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(32));
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(32));
 
-            CheckCommon2DDelftIniProperties(structureCategory, weir2D.Name, expectedType);
+            CheckCommon2DDelftIniProperties(structureIniSection, weir2D.Name, expectedType);
         }
 
         [Test]
@@ -192,21 +192,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             
             Area.Gates.Add(gate2D);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
 
-            Assert.That(categories.Count, Is.EqualTo(1));
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(11));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(11));
 
-            CheckCommon2DDelftIniProperties(structureCategory, gate2D.Name, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateCrestLevel.Key, expectedSillLevel);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateCrestWidth.Key, expectedSillWidth);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateLowerEdgeLevel.Key, expectedLowerEdgeLevel);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateOpeningWidth.Key, expectedOpeningWidth);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateHorizontalOpeningDirection.Key, expectedHorizontalOpeningDirection);
+            CheckCommon2DDelftIniProperties(structureIniSection, gate2D.Name, expectedType);
+            CheckKeyValuePair(structureIniSection, StructureRegion.GateCrestLevel.Key, expectedSillLevel);
+            CheckKeyValuePair(structureIniSection, StructureRegion.GateCrestWidth.Key, expectedSillWidth);
+            CheckKeyValuePair(structureIniSection, StructureRegion.GateLowerEdgeLevel.Key, expectedLowerEdgeLevel);
+            CheckKeyValuePair(structureIniSection, StructureRegion.GateOpeningWidth.Key, expectedOpeningWidth);
+            CheckKeyValuePair(structureIniSection, StructureRegion.GateHorizontalOpeningDirection.Key, expectedHorizontalOpeningDirection);
         }
 
         [Test]
@@ -219,12 +219,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             Area.Gates.Add(gate2D);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
 
-            DelftIniCategory structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateCrestLevel.Key, expected2DStructureFileName);
+            IniSection structureIniSection = iniSections.FirstOrDefault(c => c.Name == expectedIniSectionName);
+            CheckKeyValuePair(structureIniSection, StructureRegion.GateCrestLevel.Key, expected2DStructureFileName);
         }
 
         [Test]
@@ -237,12 +237,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             Area.Gates.Add(gate2D);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
 
-            DelftIniCategory structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateLowerEdgeLevel.Key, expected2DStructureFileName);
+            IniSection structureIniSection = iniSections.FirstOrDefault(c => c.Name == expectedIniSectionName);
+            CheckKeyValuePair(structureIniSection, StructureRegion.GateLowerEdgeLevel.Key, expected2DStructureFileName);
         }
 
         [Test]
@@ -255,12 +255,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             gate2D.UseOpeningWidthTimeSeries = true;
             Area.Gates.Add(gate2D);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
 
-            DelftIniCategory structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-            CheckKeyValuePair(structureCategory, StructureRegion.GateOpeningWidth.Key, expected2DStructureFileName);
+            IniSection structureIniSection = iniSections.FirstOrDefault(c => c.Name == expectedIniSectionName);
+            CheckKeyValuePair(structureIniSection, StructureRegion.GateOpeningWidth.Key, expected2DStructureFileName);
         }
 
         [Test]
@@ -278,20 +278,20 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             
             Area.LeveeBreaches.Add(leveeBreach);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
 
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(9));
 
-            CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
-            CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
-            CheckKeyValuePair(structureCategory, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
-            CheckKeyValuePair(structureCategory, StructureRegion.BreachGrowthActivated.Key, expectedBreachGrowthActivated);
+            CheckKeyValuePair(structureIniSection, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
+            CheckKeyValuePair(structureIniSection, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
+            CheckKeyValuePair(structureIniSection, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
+            CheckKeyValuePair(structureIniSection, StructureRegion.BreachGrowthActivated.Key, expectedBreachGrowthActivated);
         }
 
         [Test]
@@ -323,28 +323,28 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             Area.LeveeBreaches.Add(leveeBreach);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(17));
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(17));
 
-            CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
-            CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
-            CheckKeyValuePair(structureCategory, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
-            CheckKeyValuePair(structureCategory, StructureRegion.BreachGrowthActivated.Key, expectedBreachGrowthActivated);
+            CheckKeyValuePair(structureIniSection, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
+            CheckKeyValuePair(structureIniSection, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
+            CheckKeyValuePair(structureIniSection, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
+            CheckKeyValuePair(structureIniSection, StructureRegion.BreachGrowthActivated.Key, expectedBreachGrowthActivated);
 
-            CheckKeyValuePair(structureCategory, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
-            CheckKeyValuePair(structureCategory, StructureRegion.InitialCrestLevel.Key, expectedSettingsValue);
-            CheckKeyValuePair(structureCategory, StructureRegion.MinimumCrestLevel.Key, expectedSettingsValue);
-            CheckKeyValuePair(structureCategory, StructureRegion.InitalBreachWidth.Key, expectedSettingsValue);
-            CheckKeyValuePair(structureCategory, StructureRegion.TimeToReachMinimumCrestLevel.Key, expectedTimeToReachMinimumCrestLevel);
-            CheckKeyValuePair(structureCategory, StructureRegion.Factor1.Key, expectedSettingsValue);
-            CheckKeyValuePair(structureCategory, StructureRegion.Factor2.Key, expectedSettingsValue);
-            CheckKeyValuePair(structureCategory, StructureRegion.CriticalFlowVelocity.Key, expectedSettingsValue);
+            CheckKeyValuePair(structureIniSection, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
+            CheckKeyValuePair(structureIniSection, StructureRegion.InitialCrestLevel.Key, expectedSettingsValue);
+            CheckKeyValuePair(structureIniSection, StructureRegion.MinimumCrestLevel.Key, expectedSettingsValue);
+            CheckKeyValuePair(structureIniSection, StructureRegion.InitalBreachWidth.Key, expectedSettingsValue);
+            CheckKeyValuePair(structureIniSection, StructureRegion.TimeToReachMinimumCrestLevel.Key, expectedTimeToReachMinimumCrestLevel);
+            CheckKeyValuePair(structureIniSection, StructureRegion.Factor1.Key, expectedSettingsValue);
+            CheckKeyValuePair(structureIniSection, StructureRegion.Factor2.Key, expectedSettingsValue);
+            CheckKeyValuePair(structureIniSection, StructureRegion.CriticalFlowVelocity.Key, expectedSettingsValue);
             
         }
 
@@ -361,22 +361,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             Area.LeveeBreaches.Add(leveeBreach);
 
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(Regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(Regions, referenceTime)
                              .ToArray();
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(11));
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            Assert.That(structureIniSection.Properties.Count, Is.EqualTo(11));
 
-            CheckKeyValuePair(structureCategory, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
-            CheckKeyValuePair(structureCategory, StructureRegion.TimeFileName.Key, expected2DStructureFileName);
+            CheckKeyValuePair(structureIniSection, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
+            CheckKeyValuePair(structureIniSection, StructureRegion.TimeFileName.Key, expected2DStructureFileName);
         }
 
-        private static void AssertCorrectProperty(IDelftIniCategory category, string key, string value)
+        private static void AssertCorrectProperty(IniSection iniSection, string key, string value)
         {
-            DelftIniProperty property = category.Properties.FirstOrDefault(p => p.Name == key);
+            IniProperty property = iniSection.Properties.FirstOrDefault(p => p.Key == key);
             Assert.That(property, Is.Not.Null, $"{key} should not be null.");
             Assert.That(property.Value, Is.EqualTo(value), $"{key} should be {value}");
         }
@@ -384,7 +384,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         private static IEnumerable<TestCaseData> NetworkGenerateStructureData()
         {
             TestCaseData GenerateTestCaseData(IStructure1D structure,
-                                              Action<IDelftIniCategory> assertAction)
+                                              Action<IniSection> assertAction)
             {
                 var network = Substitute.For<IHydroNetwork>();
                 network.Structures.Returns(_ => new[] { structure });
@@ -392,7 +392,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
 
             var weir = new Weir(nameof(Weir), true);
-            void AssertCorrectWeir(IDelftIniCategory result)
+            void AssertCorrectWeir(IniSection result)
             {
                 Assert.That(result.Properties.Count, Is.EqualTo(5));
                 AssertCorrectProperty(result, StructureRegion.AllowedFlowDir.Key, "both");
@@ -404,7 +404,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             yield return GenerateTestCaseData(weir, AssertCorrectWeir);
 
-            void AssertCorrectBridge(IDelftIniCategory result)
+            void AssertCorrectBridge(IniSection result)
             {
                 Assert.That(result.Properties.Count, Is.EqualTo(8));
                 AssertCorrectProperty(result, StructureRegion.AllowedFlowDir.Key, "both");
@@ -419,7 +419,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var bridge = new Bridge(nameof(Bridge));
             yield return GenerateTestCaseData(bridge, AssertCorrectBridge);
 
-            void AssertCorrectCulvert(IDelftIniCategory result)
+            void AssertCorrectCulvert(IniSection result)
             {
                 Assert.That(result.Properties.Count, Is.EqualTo(11));
                 AssertCorrectProperty(result, StructureRegion.AllowedFlowDir.Key, "both");
@@ -438,7 +438,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var culvert = new Culvert(nameof(Culvert));
             yield return GenerateTestCaseData(culvert, AssertCorrectCulvert);
 
-            void AssertCorrectOrifice(IDelftIniCategory result)
+            void AssertCorrectOrifice(IniSection result)
             {
                 Assert.That(result.Properties.Count, Is.EqualTo(6));
                 AssertCorrectProperty(result, StructureRegion.AllowedFlowDir.Key, "both");
@@ -451,7 +451,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var orifice = new Orifice(nameof(Orifice), true);
             yield return GenerateTestCaseData(orifice, AssertCorrectOrifice);
 
-            void AssertCorrectPump(IDelftIniCategory result)
+            void AssertCorrectPump(IniSection result)
             {
                 Assert.That(result.Properties.Count, Is.EqualTo(11));
                 AssertCorrectProperty(result, StructureRegion.Orientation.Key, "positive");
@@ -473,23 +473,23 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
         [Test]
         [TestCaseSource(nameof(NetworkGenerateStructureData))]
-        public void GivenAnHydroNetworkWithAStructure_WhenGeneratingStructures_CorrectCategoryGenerated(IHydroNetwork network,
-                                                                                                        Action<IDelftIniCategory> assertAction)
+        public void GivenAnHydroNetworkWithAStructure_WhenGeneratingStructures_CorrectIniSectionGenerated(IHydroNetwork network,
+                                                                                                        Action<IniSection> assertAction)
         {
             IHydroRegion[] regions = { network };
-            IEnumerable<DelftIniCategory> categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(regions, referenceTime)
+            IEnumerable<IniSection> iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(regions, referenceTime)
                              .ToArray();
             
-            Assert.That(categories.Count, Is.EqualTo(1));
+            Assert.That(iniSections.Count, Is.EqualTo(1));
 
-            DelftIniCategory structureCategory = categories.First();
-            Assert.IsNotNull(structureCategory);
-            assertAction(structureCategory);
+            IniSection structureIniSection = iniSections.First();
+            Assert.IsNotNull(structureIniSection);
+            assertAction(structureIniSection);
         }
 
         [Test]
-        public void GivenAnHydroNetworkWithACompositeStructure_WhenGeneratingStructures_CorrectCategoriesGenerated()
+        public void GivenAnHydroNetworkWithACompositeStructure_WhenGeneratingStructures_CorrectIniSectionsGenerated()
         {
             var weir = new Weir(nameof(Weir), true);
             var compositeStructure = new CompositeBranchStructure(nameof(CompositeBranchStructure), 0.5);
@@ -498,42 +498,42 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Network.Structures.Returns(_ => new[] { compositeStructure });
 
             IHydroRegion[] regions = { Network };
-            DelftIniCategory[] categories = 
-                StructureFile.GenerateStructureCategoriesFromFmModel(regions, referenceTime)
+            IniSection[] iniSections = 
+                StructureFile.GenerateStructureIniSectionsFromFmModel(regions, referenceTime)
                              .ToArray();
             
-            Assert.That(categories.Count, Is.EqualTo(2));
-            DelftIniCategory weirCategory = categories[0];
-            Assert.That(weirCategory.Properties.Count, Is.EqualTo(5));
-            AssertCorrectProperty(weirCategory, StructureRegion.AllowedFlowDir.Key, "both");
-            AssertCorrectProperty(weirCategory, StructureRegion.CrestLevel.Key, "1.000");
-            AssertCorrectProperty(weirCategory, StructureRegion.CrestWidth.Key, "5.000");
-            AssertCorrectProperty(weirCategory, StructureRegion.CorrectionCoeff.Key, "1.000");
-            AssertCorrectProperty(weirCategory, StructureRegion.UseVelocityHeight.Key, "true");
+            Assert.That(iniSections.Count, Is.EqualTo(2));
+            IniSection weirIniSection = iniSections[0];
+            Assert.That(weirIniSection.Properties.Count, Is.EqualTo(5));
+            AssertCorrectProperty(weirIniSection, StructureRegion.AllowedFlowDir.Key, "both");
+            AssertCorrectProperty(weirIniSection, StructureRegion.CrestLevel.Key, "1.000");
+            AssertCorrectProperty(weirIniSection, StructureRegion.CrestWidth.Key, "5.000");
+            AssertCorrectProperty(weirIniSection, StructureRegion.CorrectionCoeff.Key, "1.000");
+            AssertCorrectProperty(weirIniSection, StructureRegion.UseVelocityHeight.Key, "true");
 
-            DelftIniCategory compositeCategory = categories[1];
-            Assert.That(compositeCategory.Properties.Count, Is.EqualTo(2));
-            AssertCorrectProperty(compositeCategory, StructureRegion.NumberOfCompoundStructures.Key, "1");
-            AssertCorrectProperty(compositeCategory, StructureRegion.StructureIds.Key, weir.Name);
+            IniSection compositeIniSection = iniSections[1];
+            Assert.That(compositeIniSection.Properties.Count, Is.EqualTo(2));
+            AssertCorrectProperty(compositeIniSection, StructureRegion.NumberOfCompoundStructures.Key, "1");
+            AssertCorrectProperty(compositeIniSection, StructureRegion.StructureIds.Key, weir.Name);
         }
 
-        private static void CheckCommon2DDelftIniProperties(IDelftIniCategory structureCategory, string structureName, string expectedType)
+        private static void CheckCommon2DDelftIniProperties(IniSection structureIniSection, string structureName, string expectedType)
         {
-            CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, structureName);
-            CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
+            CheckKeyValuePair(structureIniSection, StructureRegion.Id.Key, structureName);
+            CheckKeyValuePair(structureIniSection, StructureRegion.DefinitionType.Key, expectedType);
         }
 
-        private static void CheckKeyValuePair(IDelftIniCategory structureCategory, string key, string expectedValue)
+        private static void CheckKeyValuePair(IniSection structureIniSection, string key, string expectedValue)
         {
-            DelftIniProperty property = structureCategory.Properties.FirstOrDefault(p => p.Name == key);
+            IniProperty property = structureIniSection.Properties.FirstOrDefault(p => p.Key == key);
             Assert.That(property?.Value, Is.EqualTo(expectedValue));
         }
 
-        private static void CheckKeyValuePair(IDelftIniCategory structureCategory, string key, double expectedValue)
+        private static void CheckKeyValuePair(IniSection structureIniSection, string key, double expectedValue)
         {
-            DelftIniProperty property = structureCategory.Properties.FirstOrDefault(p => p.Name == key);
+            IniProperty property = structureIniSection.Properties.FirstOrDefault(p => p.Key == key);
             Assert.That(property, Is.Not.Null,
-                        $"The requested property with name \"{key}\" was not present in the DelftIniCategory.");
+                        $"The requested property with name \"{key}\" was not present in the IniSection.");
             double valueAsDouble = double.Parse(property.Value, CultureInfo.InvariantCulture);
             Assert.That(valueAsDouble, Is.EqualTo(expectedValue));
         }

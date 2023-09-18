@@ -3,29 +3,30 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureRiverWeir : DefinitionGeneratorStructure
     {
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.RiverWeir);
 
             var weir = hydroObject as Weir;
-            if (weir == null) return IniCategory;
+            if (weir == null) return IniSection;
 
             var formula = weir.WeirFormula as RiverWeirFormula;
-            if (formula == null) return IniCategory;
+            if (formula == null) return IniSection;
 
-            IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
-            IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
 
-            IniCategory.AddProperty(StructureRegion.PosCwCoef.Key, formula.CorrectionCoefficientPos, StructureRegion.PosCwCoef.Description, StructureRegion.PosCwCoef.Format);
-            IniCategory.AddProperty(StructureRegion.PosSlimLimit.Key, formula.SubmergeLimitPos, StructureRegion.PosSlimLimit.Description, StructureRegion.PosSlimLimit.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosCwCoef.Key, formula.CorrectionCoefficientPos, StructureRegion.PosCwCoef.Description, StructureRegion.PosCwCoef.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosSlimLimit.Key, formula.SubmergeLimitPos, StructureRegion.PosSlimLimit.Description, StructureRegion.PosSlimLimit.Format);
 
-            IniCategory.AddProperty(StructureRegion.NegCwCoef.Key, formula.CorrectionCoefficientNeg, StructureRegion.NegCwCoef.Description, StructureRegion.NegCwCoef.Format);
-            IniCategory.AddProperty(StructureRegion.NegSlimLimit.Key, formula.SubmergeLimitNeg, StructureRegion.NegSlimLimit.Description, StructureRegion.NegSlimLimit.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegCwCoef.Key, formula.CorrectionCoefficientNeg, StructureRegion.NegCwCoef.Description, StructureRegion.NegCwCoef.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegSlimLimit.Key, formula.SubmergeLimitNeg, StructureRegion.NegSlimLimit.Description, StructureRegion.NegSlimLimit.Format);
 
             if (formula.SubmergeReductionPos != null)
             {
@@ -36,13 +37,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 {
                     var posSf = arguments[0].Values.Cast<double>().ToList();
                     var posRed = components[0].Values.Cast<double>();
-                    IniCategory.AddProperty(StructureRegion.PosSfCount.Key, posSf.Count, StructureRegion.PosSfCount.Description);
-                    IniCategory.AddProperty(StructureRegion.PosSf.Key, posSf, StructureRegion.PosSf.Description, StructureRegion.PosSf.Format);
-                    IniCategory.AddProperty(StructureRegion.PosRed.Key, posRed, StructureRegion.PosRed.Description, StructureRegion.PosRed.Format);
+                    IniSection.AddProperty(StructureRegion.PosSfCount.Key, posSf.Count, StructureRegion.PosSfCount.Description);
+                    IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.PosSf.Key, posSf, StructureRegion.PosSf.Description, StructureRegion.PosSf.Format);
+                    IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.PosRed.Key, posRed, StructureRegion.PosRed.Description, StructureRegion.PosRed.Format);
                 }
                 else
                 {
-                    IniCategory.AddProperty(StructureRegion.PosSfCount.Key, 0, StructureRegion.PosSfCount.Description);
+                    IniSection.AddProperty(StructureRegion.PosSfCount.Key, 0, StructureRegion.PosSfCount.Description);
                 }
             }
 
@@ -56,17 +57,17 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                     var negSf = arguments[0].Values.Cast<double>().ToList();
                     var negRed = components[0].Values.Cast<double>();
                     
-                    IniCategory.AddProperty(StructureRegion.NegSfCount.Key, negSf.Count, StructureRegion.NegSfCount.Description);
-                    IniCategory.AddProperty(StructureRegion.NegSf.Key, negSf, StructureRegion.NegSf.Description, StructureRegion.NegSf.Format);
-                    IniCategory.AddProperty(StructureRegion.NegRed.Key, negRed, StructureRegion.NegRed.Description, StructureRegion.NegRed.Format);
+                    IniSection.AddProperty(StructureRegion.NegSfCount.Key, negSf.Count, StructureRegion.NegSfCount.Description);
+                    IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.NegSf.Key, negSf, StructureRegion.NegSf.Description, StructureRegion.NegSf.Format);
+                    IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.NegRed.Key, negRed, StructureRegion.NegRed.Description, StructureRegion.NegRed.Format);
                 }
                 else
                 {
-                    IniCategory.AddProperty(StructureRegion.NegSfCount.Key, 0, StructureRegion.NegSfCount.Description);
+                    IniSection.AddProperty(StructureRegion.NegSfCount.Key, 0, StructureRegion.NegSfCount.Description);
                 }
             }
 
-            return IniCategory;
+            return IniSection;
         }
 
     }

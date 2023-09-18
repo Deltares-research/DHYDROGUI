@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
@@ -52,24 +53,24 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         public void CreateStructureRegion_TStructure_ExpectedResult(Culvert structure,
                                                                     string expectedGateInitialOpening)
         {
-            IDelftIniCategory category = Generator.CreateStructureRegion(structure);
+            IniSection iniSection = Generator.CreateStructureRegion(structure);
 
-            Assert.That(category.Properties.Count, Is.EqualTo(14));
-            AssertCorrectCommonRegionElements(category,
+            Assert.That(iniSection.Properties.Count(), Is.EqualTo(14));
+            AssertCorrectCommonRegionElements(iniSection,
                                               nameof(Culvert),
                                               expectedLongName,
                                               expectedBranchName,
                                               chainageStr,
                                               TStructureDefinitionType);
-            AssertCorrectProperty(category, StructureRegion.AllowedFlowDir.Key, "both");
-            AssertCorrectProperty(category, StructureRegion.LeftLevel.Key, "0.000");
-            AssertCorrectProperty(category, StructureRegion.RightLevel.Key, "0.000");
-            AssertCorrectProperty(category, StructureRegion.CsDefId.Key, "Culvert");
-            AssertCorrectProperty(category, StructureRegion.Length.Key, "0.000");
-            AssertCorrectProperty(category, StructureRegion.InletLossCoeff.Key, "0.000");
-            AssertCorrectProperty(category, StructureRegion.OutletLossCoeff.Key, "0.000");
-            AssertCorrectProperty(category, StructureRegion.ValveOnOff.Key, "0");
-            AssertCorrectProperty(category, StructureRegion.IniValveOpen.Key, expectedGateInitialOpening);
+            AssertCorrectProperty(iniSection, StructureRegion.AllowedFlowDir.Key, "both");
+            AssertCorrectProperty(iniSection, StructureRegion.LeftLevel.Key, "0.000");
+            AssertCorrectProperty(iniSection, StructureRegion.RightLevel.Key, "0.000");
+            AssertCorrectProperty(iniSection, StructureRegion.CsDefId.Key, "Culvert");
+            AssertCorrectProperty(iniSection, StructureRegion.Length.Key, "0.000");
+            AssertCorrectProperty(iniSection, StructureRegion.InletLossCoeff.Key, "0.000");
+            AssertCorrectProperty(iniSection, StructureRegion.OutletLossCoeff.Key, "0.000");
+            AssertCorrectProperty(iniSection, StructureRegion.ValveOnOff.Key, "0");
+            AssertCorrectProperty(iniSection, StructureRegion.IniValveOpen.Key, expectedGateInitialOpening);
         }
     }
 }

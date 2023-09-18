@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -25,9 +26,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var archShape = shape as CrossSectionStandardShapeArch;
             if (archShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.ArchCrossSectionWidth, archShape.Width);
-            IniCategory.AddProperty(DefinitionPropertySettings.ArchCrossSectionHeight, archShape.Height);
-            IniCategory.AddProperty(DefinitionPropertySettings.ArchHeight, archShape.ArcHeight);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.ArchCrossSectionWidth, archShape.Width);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.ArchCrossSectionHeight, archShape.Height);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.ArchHeight, archShape.ArcHeight);
         }
     }
 }

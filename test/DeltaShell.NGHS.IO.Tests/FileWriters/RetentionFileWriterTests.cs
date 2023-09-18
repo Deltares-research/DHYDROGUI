@@ -298,10 +298,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             };
 
             // Act
-            var category = RetentionFileWriter.GenerateSpatialDataDefinition(retention);
+            var iniSection = RetentionFileWriter.GenerateSpatialDataDefinition(retention, "Retention");
 
             // Assert
-            var nodeIdProperty = category.GetProperty(RetentionRegion.NodeId.Key);
+            var nodeIdProperty = iniSection.GetProperty(RetentionRegion.NodeId.Key);
             Assert.AreEqual(expectedNodeId, nodeIdProperty != null, $"NodeId tag should {(expectedNodeId ? "" : "not ")}be added");
 
             if (expectedNodeId)
@@ -311,10 +311,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 Assert.AreEqual(expectedNodeName, nodeIdProperty.Value, $"Expected nodeId value to be {expectedNodeName} instead of {nodeIdProperty.Value}");
             }
 
-            var branchProperty = category.GetProperty(RetentionRegion.BranchId.Key);
+            var branchProperty = iniSection.GetProperty(RetentionRegion.BranchId.Key);
             Assert.AreEqual(expectedNodeId, branchProperty == null, $"Branch property should {(expectedNodeId ? "not " : "")}be added (because there is a NodeId)");
 
-            var chainageProperty = category.GetProperty(RetentionRegion.Chainage.Key);
+            var chainageProperty = iniSection.GetProperty(RetentionRegion.Chainage.Key);
             Assert.AreEqual(expectedNodeId, chainageProperty == null, $"Chainage property should {(expectedNodeId ? "not " : "")}be added (because there is a NodeId)");
         }
     }

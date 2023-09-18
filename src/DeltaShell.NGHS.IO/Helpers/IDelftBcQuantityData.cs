@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
     public interface IDelftBcQuantityData
     {
-        DelftIniProperty Quantity { get; set; }
-        DelftIniProperty Unit { get; set; }
+        IniProperty Quantity { get; set; }
+        IniProperty Unit { get; set; }
 
         /// <summary>
         /// The line where this property was read in the file.

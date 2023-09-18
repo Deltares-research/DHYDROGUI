@@ -12,9 +12,9 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -928,28 +928,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         private static void CompareStructureIniFiles(string iniFilePathA, string iniFilePathB)
         {
-            var iniCategoriesA = new DelftIniReader().ReadDelftIniFile(iniFilePathA);
-            var iniCategoriesB = new DelftIniReader().ReadDelftIniFile(iniFilePathB);
+            var iniSectionsA = new DelftIniReader().ReadDelftIniFile(iniFilePathA);
+            var iniSectionsB = new DelftIniReader().ReadDelftIniFile(iniFilePathB);
 
-            CompareCategories(iniCategoriesA, iniCategoriesB);
+            CompareCategories(iniSectionsA, iniSectionsB);
         }
 
-        private static void CompareCategories(IList<DelftIniCategory> iniCategoriesA, IList<DelftIniCategory> iniCategoriesB)
+        private static void CompareCategories(IList<IniSection> iniSectionsA, IList<IniSection> iniSectionsB)
         {
-            Assert.AreEqual(iniCategoriesA.Count, iniCategoriesB.Count, "Expected the same number of categories.");
-            for (var i = 0; i < iniCategoriesA.Count; i++)
+            Assert.AreEqual(iniSectionsA.Count, iniSectionsB.Count, "Expected the same number of INI sections.");
+            for (var i = 0; i < iniSectionsA.Count; i++)
             {
-                Assert.AreEqual(iniCategoriesA[i].Name, iniCategoriesB[i].Name, String.Format("Names are not the same at index = {0}.", i));
-                CompareProperties(iniCategoriesA[i].Properties, iniCategoriesB[i].Properties);
+                Assert.AreEqual(iniSectionsA[i].Name, iniSectionsB[i].Name, String.Format("Names are not the same at index = {0}.", i));
+                CompareProperties(iniSectionsA[i].Properties.ToList(), iniSectionsB[i].Properties.ToList());
             }
         }
 
-        private static void CompareProperties(IList<DelftIniProperty> propertiesA, IList<DelftIniProperty> propertiesB)
+        private static void CompareProperties(IList<IniProperty> propertiesA, IList<IniProperty> propertiesB)
         {
             Assert.AreEqual(propertiesA.Count, propertiesB.Count, "Expected the same number of properties.");
             for (var i = 0; i < propertiesA.Count; i++)
             {
-                Assert.AreEqual(propertiesA[i].Name.ToLower(), propertiesB[i].Name.ToLower(), String.Format("Names are not the same at index = {0}.", i));
+                Assert.AreEqual(propertiesA[i].Key.ToLower(), propertiesB[i].Key.ToLower(), String.Format("Names are not the same at index = {0}.", i));
                 Assert.AreEqual(propertiesA[i].Value, propertiesB[i].Value, String.Format("Values are not the same at index = {0}.", i));
                 // Don't care about comments
             }
@@ -982,7 +982,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.DataType, propertiesB[i].PropertyDefinition.DataType);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.DefaultValueAsString, propertiesB[i].PropertyDefinition.DefaultValueAsString);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.Description, propertiesB[i].PropertyDefinition.Description);
-                Assert.AreEqual(propertiesA[i].PropertyDefinition.FilePropertyName, propertiesB[i].PropertyDefinition.FilePropertyName);
+                Assert.AreEqual(propertiesA[i].PropertyDefinition.FilePropertyKey, propertiesB[i].PropertyDefinition.FilePropertyKey);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.IsDefinedInSchema, propertiesB[i].PropertyDefinition.IsDefinedInSchema);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.ModelFileOnly, propertiesB[i].PropertyDefinition.ModelFileOnly);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.MaxValueAsString, propertiesB[i].PropertyDefinition.MaxValueAsString);

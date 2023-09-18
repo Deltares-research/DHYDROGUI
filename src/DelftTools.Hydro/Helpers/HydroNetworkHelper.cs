@@ -205,7 +205,7 @@ namespace DelftTools.Hydro.Helpers
         /// <summary>
         /// This method generates cross sections out of the network pipes. We do this, such that we can use the static method
         /// LocationFileWriter.WriteFileCrossSectionLocations. Through the generated cross section, we can get to the pipes and
-        /// generate two DelftIniCategory objects for every one of the pipes. One with chainage equal to zero and one with the
+        /// generate two IniSection objects for every one of the pipes. One with chainage equal to zero and one with the
         /// chainage equal to the length of the pipe.
         /// </summary>
         /// <param name="network">The model network</param>

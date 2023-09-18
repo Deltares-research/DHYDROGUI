@@ -6,63 +6,64 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     /// <summary>
-    /// <see cref="DefinitionGeneratorStructureUniversalWeir"/> generates the <see cref="DelftIniCategory"/> corresponding with a
+    /// <see cref="DefinitionGeneratorStructureUniversalWeir"/> generates the <see cref="IniSection"/> corresponding with a
     /// <see cref="Weir"/> with a <see cref="GeneralStructureWeirFormula"/> in the structures.ini file.
     /// </summary>
     public class DefinitionGeneratorStructureGeneralStructure : DefinitionGeneratorTimeSeriesStructure
     {
         public DefinitionGeneratorStructureGeneralStructure(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
         
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
 
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.GeneralStructure);
 
             var weir = hydroObject as Weir;
-            if (weir == null) return IniCategory;
+            if (weir == null) return IniSection;
 
             var formula = weir.WeirFormula as GeneralStructureWeirFormula;
-            if (formula == null) return IniCategory;
+            if (formula == null) return IniSection;
 
-            IniCategory.AddProperty(StructureRegion.Upstream1Width.Key, formula.WidthLeftSideOfStructure, StructureRegion.Upstream1Width.Description, StructureRegion.Upstream1Width.Format);
-            IniCategory.AddProperty(StructureRegion.Upstream2Width.Key, formula.WidthStructureLeftSide, StructureRegion.Upstream2Width.Description, StructureRegion.Upstream2Width.Format);
-            IniCategory.AddProperty(StructureRegion.CrestWidth.Key, formula.WidthStructureCentre, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
-            IniCategory.AddProperty(StructureRegion.Downstream1Width.Key, formula.WidthStructureRightSide, StructureRegion.Downstream1Width.Description, StructureRegion.Downstream1Width.Format);
-            IniCategory.AddProperty(StructureRegion.Downstream2Width.Key, formula.WidthRightSideOfStructure, StructureRegion.Downstream2Width.Description, StructureRegion.Downstream2Width.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Upstream1Width.Key, formula.WidthLeftSideOfStructure, StructureRegion.Upstream1Width.Description, StructureRegion.Upstream1Width.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Upstream2Width.Key, formula.WidthStructureLeftSide, StructureRegion.Upstream2Width.Description, StructureRegion.Upstream2Width.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CrestWidth.Key, formula.WidthStructureCentre, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Downstream1Width.Key, formula.WidthStructureRightSide, StructureRegion.Downstream1Width.Description, StructureRegion.Downstream1Width.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Downstream2Width.Key, formula.WidthRightSideOfStructure, StructureRegion.Downstream2Width.Description, StructureRegion.Downstream2Width.Format);
 
-            IniCategory.AddProperty(StructureRegion.Upstream1Level.Key, formula.BedLevelLeftSideOfStructure, StructureRegion.Upstream1Level.Description, StructureRegion.Upstream1Level.Format);
-            IniCategory.AddProperty(StructureRegion.Upstream2Level.Key, formula.BedLevelLeftSideStructure, StructureRegion.Upstream2Level.Description, StructureRegion.Upstream2Level.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Upstream1Level.Key, formula.BedLevelLeftSideOfStructure, StructureRegion.Upstream1Level.Description, StructureRegion.Upstream1Level.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Upstream2Level.Key, formula.BedLevelLeftSideStructure, StructureRegion.Upstream2Level.Description, StructureRegion.Upstream2Level.Format);
             AddCrestLevel(weir, formula);
-            IniCategory.AddProperty(StructureRegion.Downstream1Level.Key, formula.BedLevelRightSideStructure, StructureRegion.Downstream1Level.Description, StructureRegion.Downstream1Level.Format);
-            IniCategory.AddProperty(StructureRegion.Downstream2Level.Key, formula.BedLevelRightSideOfStructure, StructureRegion.Downstream2Level.Description, StructureRegion.Downstream2Level.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Downstream1Level.Key, formula.BedLevelRightSideStructure, StructureRegion.Downstream1Level.Description, StructureRegion.Downstream1Level.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Downstream2Level.Key, formula.BedLevelRightSideOfStructure, StructureRegion.Downstream2Level.Description, StructureRegion.Downstream2Level.Format);
 
-            IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, formula.LowerEdgeLevel, StructureRegion.GateLowerEdgeLevel.Description, StructureRegion.GateLowerEdgeLevel.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.GateLowerEdgeLevel.Key, formula.LowerEdgeLevel, StructureRegion.GateLowerEdgeLevel.Description, StructureRegion.GateLowerEdgeLevel.Format);
 
-            IniCategory.AddProperty(StructureRegion.PosFreeGateFlowCoeff.Key, formula.PositiveFreeGateFlow, StructureRegion.PosFreeGateFlowCoeff.Description, StructureRegion.PosFreeGateFlowCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.PosDrownGateFlowCoeff.Key, formula.PositiveDrownedGateFlow, StructureRegion.PosDrownGateFlowCoeff.Description, StructureRegion.PosDrownGateFlowCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.PosFreeWeirFlowCoeff.Key, formula.PositiveFreeWeirFlow, StructureRegion.PosFreeWeirFlowCoeff.Description, StructureRegion.PosFreeWeirFlowCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.PosDrownWeirFlowCoeff.Key, formula.PositiveDrownedWeirFlow, StructureRegion.PosDrownWeirFlowCoeff.Description, StructureRegion.PosDrownWeirFlowCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.PosContrCoefFreeGate.Key, formula.PositiveContractionCoefficient, StructureRegion.PosContrCoefFreeGate.Description, StructureRegion.PosContrCoefFreeGate.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosFreeGateFlowCoeff.Key, formula.PositiveFreeGateFlow, StructureRegion.PosFreeGateFlowCoeff.Description, StructureRegion.PosFreeGateFlowCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosDrownGateFlowCoeff.Key, formula.PositiveDrownedGateFlow, StructureRegion.PosDrownGateFlowCoeff.Description, StructureRegion.PosDrownGateFlowCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosFreeWeirFlowCoeff.Key, formula.PositiveFreeWeirFlow, StructureRegion.PosFreeWeirFlowCoeff.Description, StructureRegion.PosFreeWeirFlowCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosDrownWeirFlowCoeff.Key, formula.PositiveDrownedWeirFlow, StructureRegion.PosDrownWeirFlowCoeff.Description, StructureRegion.PosDrownWeirFlowCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PosContrCoefFreeGate.Key, formula.PositiveContractionCoefficient, StructureRegion.PosContrCoefFreeGate.Description, StructureRegion.PosContrCoefFreeGate.Format);
 
-            IniCategory.AddProperty(StructureRegion.NegFreeGateFlowCoeff.Key, formula.NegativeFreeGateFlow, StructureRegion.NegFreeGateFlowCoeff.Description, StructureRegion.NegFreeGateFlowCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.NegDrownGateFlowCoeff.Key, formula.NegativeDrownedGateFlow, StructureRegion.NegDrownGateFlowCoeff.Description, StructureRegion.NegDrownGateFlowCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.NegFreeWeirFlowCoeff.Key, formula.NegativeFreeWeirFlow, StructureRegion.NegFreeWeirFlowCoeff.Description, StructureRegion.NegFreeWeirFlowCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.NegDrownWeirFlowCoeff.Key, formula.NegativeDrownedWeirFlow, StructureRegion.NegDrownWeirFlowCoeff.Description, StructureRegion.NegDrownWeirFlowCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.NegContrCoefFreeGate.Key, formula.NegativeContractionCoefficient, StructureRegion.NegContrCoefFreeGate.Description, StructureRegion.NegContrCoefFreeGate.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegFreeGateFlowCoeff.Key, formula.NegativeFreeGateFlow, StructureRegion.NegFreeGateFlowCoeff.Description, StructureRegion.NegFreeGateFlowCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegDrownGateFlowCoeff.Key, formula.NegativeDrownedGateFlow, StructureRegion.NegDrownGateFlowCoeff.Description, StructureRegion.NegDrownGateFlowCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegFreeWeirFlowCoeff.Key, formula.NegativeFreeWeirFlow, StructureRegion.NegFreeWeirFlowCoeff.Description, StructureRegion.NegFreeWeirFlowCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegDrownWeirFlowCoeff.Key, formula.NegativeDrownedWeirFlow, StructureRegion.NegDrownWeirFlowCoeff.Description, StructureRegion.NegDrownWeirFlowCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.NegContrCoefFreeGate.Key, formula.NegativeContractionCoefficient, StructureRegion.NegContrCoefFreeGate.Description, StructureRegion.NegContrCoefFreeGate.Format);
 
-            IniCategory.AddProperty(StructureRegion.CrestLength.Key, formula.CrestLength, StructureRegion.CrestLength.Description, StructureRegion.CrestLength.Format);
-            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, weir.UseVelocityHeight.ToString().ToLower());
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CrestLength.Key, formula.CrestLength, StructureRegion.CrestLength.Description, StructureRegion.CrestLength.Format);
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.UseVelocityHeight.Key, weir.UseVelocityHeight.ToString().ToLower());
 
             var extraResistance = formula.UseExtraResistance ? formula.ExtraResistance : 0.0;
-            IniCategory.AddProperty(StructureRegion.ExtraResistance.Key, extraResistance, StructureRegion.ExtraResistance.Description, StructureRegion.ExtraResistance.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.ExtraResistance.Key, extraResistance, StructureRegion.ExtraResistance.Description, StructureRegion.ExtraResistance.Format);
             
-            IniCategory.AddProperty(StructureRegion.GateHeight.Key, formula.GateHeight, StructureRegion.GateHeight.Description , StructureRegion.GateHeight.Format);
-            IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, formula.GateOpeningWidth, StructureRegion.GateOpeningWidth.Description , StructureRegion.GateOpeningWidth.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.GateHeight.Key, formula.GateHeight, StructureRegion.GateHeight.Description , StructureRegion.GateHeight.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.GateOpeningWidth.Key, formula.GateOpeningWidth, StructureRegion.GateOpeningWidth.Description , StructureRegion.GateOpeningWidth.Format);
 
             // switch the horizontal direction, because enums aren't used very nicely in the csv file (structure definition).
             string horizontalDirection;
@@ -77,10 +78,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 default:
                     throw new ArgumentException("We can't write " + formula.GateOpeningHorizontalDirection);
             }
-            IniCategory.AddProperty(StructureRegion.GateHorizontalOpeningDirection.Key, horizontalDirection,StructureRegion.GateHorizontalOpeningDirection.Description);
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.GateHorizontalOpeningDirection.Key, horizontalDirection,StructureRegion.GateHorizontalOpeningDirection.Description);
 
 
-            return IniCategory;
+            return IniSection;
         }
 
         private void AddCrestLevel(IWeir weir, GeneralStructureWeirFormula formula)

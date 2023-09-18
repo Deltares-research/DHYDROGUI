@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         }
 
         /// <summary>
-        /// Add property to IniCategory, either as time series or normally.
+        /// Add property to IniSection, either as time series or normally.
         /// </summary>
         /// <param name="isTimeSeries">Signifies property should be handled as time series.</param>
         /// <param name="key">Name for property.</param>
@@ -36,16 +36,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (isTimeSeries)
             {
-                IniCategory.AddProperty(key, structureFileNameGenerator.Generate(), description);
+                IniSection.AddPropertyWithOptionalComment(key, structureFileNameGenerator.Generate(), description);
             }
             else
             {
-                IniCategory.AddProperty(key, value, description, format);
+                IniSection.AddPropertyWithOptionalCommentAndFormat(key, value, description, format);
             }
         }
 
         /// <summary>
-        /// Add property to IniCategory, either as time series or normally.
+        /// Add property to IniSection, either as time series or normally.
         /// </summary>
         /// <param name="isTimeSeries">Signifies property should be handled as time series.</param>
         /// <param name="propertyConfiguration">propertyConfiguration of structure</param>
@@ -54,11 +54,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (isTimeSeries)
             {
-                IniCategory.AddProperty(propertyConfiguration, structureFileNameGenerator.Generate());
+                IniSection.AddPropertyFromConfiguration(propertyConfiguration, structureFileNameGenerator.Generate());
             }
             else
             {
-                IniCategory.AddProperty(propertyConfiguration, value);
+                IniSection.AddPropertyFromConfiguration(propertyConfiguration, value);
             }
         }
     }

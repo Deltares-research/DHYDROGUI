@@ -6,6 +6,7 @@ using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DHYDRO.Common.IO.Ini;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 
@@ -19,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void WriteFile(string filename, WaterFlowFMModelDefinition modelDefinition, bool networkIsEmpty)
         {
             // [General]
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.InitialConditionDataMajorVersion,
                     GeneralRegion.InitialConditionDataMinorVersion,
@@ -28,24 +29,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!networkIsEmpty)
             {
                 var globalInitialConditionQuantity1D = (InitialConditionQuantity) (int) modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D).Value;
-                categories.Add(CreateInitialConditionQuantityCategory(globalInitialConditionQuantity1D));
+                iniSections.Add(CreateInitialConditionQuantityIniSection(globalInitialConditionQuantity1D));
             }
-            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,ExtForceQuantNames.FrictCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName), true));
-            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,InitialFieldsFile.Quantity.BedLevel, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.BathymetryDataItemName), false));
-            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,InitialFieldsFile.Quantity.Infiltration, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InfiltrationDataItemName), false));
+            iniSections.AddRange(CreateSpatialOperationQuantityIniSection(filename,ExtForceQuantNames.FrictCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName), true));
+            iniSections.AddRange(CreateSpatialOperationQuantityIniSection(filename,InitialFieldsFile.Quantity.BedLevel, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.BathymetryDataItemName), false));
+            iniSections.AddRange(CreateSpatialOperationQuantityIniSection(filename,InitialFieldsFile.Quantity.Infiltration, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InfiltrationDataItemName), false));
             
             var globalInitialConditionQuantity2D = (InitialConditionQuantity)(int)modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
-            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,globalInitialConditionQuantity2D == InitialConditionQuantity.WaterLevel 
+            iniSections.AddRange(CreateSpatialOperationQuantityIniSection(filename,globalInitialConditionQuantity2D == InitialConditionQuantity.WaterLevel 
                 ? InitialFieldsFile.Quantity.WaterLevel 
                 : InitialFieldsFile.Quantity.WaterDepth, modelDefinition.GetSpatialOperations(globalInitialConditionQuantity2D == InitialConditionQuantity.WaterLevel 
                                                                                                     ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
                                                                                                     : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName), false));
 
             if (File.Exists(filename)) File.Delete(filename);
-            new IniFileWriter().WriteIniFile(categories, filename);
+            new IniFileWriter().WriteIniFile(iniSections, filename);
         }
 
-        private static IEnumerable<DelftIniCategory> CreateSpatialOperationQuantityCategory(string filename, string quantity, IEnumerable<ISpatialOperation> spatialOperations, bool isParameter)
+        private static IEnumerable<IniSection> CreateSpatialOperationQuantityIniSection(string filename, string quantity, IEnumerable<ISpatialOperation> spatialOperations, bool isParameter)
         {
             if (spatialOperations != null)
             {
@@ -53,31 +54,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 foreach (var forceFileItem in forceFileItems)
                 {
-                    var category = new DelftIniCategory(isParameter
+                    var iniSection = new IniSection(isParameter
                         ? InitialConditionRegion.ParameterIniHeader
                         : InitialConditionRegion.InitialConditionIniHeader);
-                    category.AddProperty(InitialConditionRegion.Quantity.Key, quantity);
-                    category.AddProperty(InitialConditionRegion.DataFile.Key, forceFileItem.FileName);
-                    category.AddProperty(InitialConditionRegion.DataFileType.Key, GetDataFileType(forceFileItem.FileType));
-                    category.AddProperty(InitialConditionRegion.InterpolationMethod.Key, GetSpatialOperationMethod(forceFileItem.Method));
-                    category.AddProperty(InitialConditionRegion.Operand.Key, forceFileItem.Operand);
-                    category.AddProperty(InitialConditionRegion.LocationType.Key, "2d");
+                    iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.Quantity.Key, quantity);
+                    iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.DataFile.Key, forceFileItem.FileName);
+                    iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.DataFileType.Key, GetDataFileType(forceFileItem.FileType));
+                    iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.InterpolationMethod.Key, GetSpatialOperationMethod(forceFileItem.Method));
+                    iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.Operand.Key, forceFileItem.Operand);
+                    iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.LocationType.Key, "2d");
                     if (forceFileItem.Method == 6 && forceFileItem.ModelData != null)
                     {
                         if(forceFileItem.ModelData.TryGetValue(ExtForceFile.AveragingTypeKey, out var averagingType) && int.TryParse(averagingType.ToString(),out var averagingTypeInt))
-                            category.AddProperty(InitialConditionRegion.AveragingType.Key, GetAveragingType(averagingTypeInt));
+                            iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.AveragingType.Key, GetAveragingType(averagingTypeInt));
                         if (forceFileItem.ModelData.TryGetValue(ExtForceFile.RelSearchCellSizeKey, out var relSearchCellSize))
-                            category.AddProperty(InitialConditionRegion.AveragingRelSize.Key, (double) relSearchCellSize, format: "G");
+                            iniSection.AddPropertyWithOptionalCommentAndFormat(InitialConditionRegion.AveragingRelSize.Key, (double) relSearchCellSize, format: "G");
                         if (forceFileItem.ModelData.TryGetValue(ExtForceFile.MinSamplePointsKey, out var minSamplePoints))
-                            category.AddProperty(InitialConditionRegion.AveragingNumMin.Key, minSamplePoints.ToString());
+                            iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.AveragingNumMin.Key, minSamplePoints.ToString());
                     }
 
                     if (!Double.IsNaN(forceFileItem.Value) && forceFileItem.FileType == ExtForceQuantNames.FileTypes.InsidePolygon)
                     {
-                        category.AddProperty(InitialConditionRegion.Value.Key, forceFileItem.Value);
+                        iniSection.AddPropertyWithOptionalCommentAndFormat(InitialConditionRegion.Value.Key, forceFileItem.Value);
                     }
 
-                    yield return category;
+                    yield return iniSection;
                 }
             }
         }
@@ -159,16 +160,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return string.Empty;
         }
 
-        private static DelftIniCategory CreateInitialConditionQuantityCategory(
+        private static IniSection CreateInitialConditionQuantityIniSection(
             InitialConditionQuantity globalInitialConditionQuantity)
         {
-            var category = new DelftIniCategory(InitialConditionRegion.InitialConditionIniHeader);
+            var iniSection = new IniSection(InitialConditionRegion.InitialConditionIniHeader);
 
-            category.AddProperty(InitialConditionRegion.Quantity.Key, globalInitialConditionQuantity.ToString().ToLower());
-            category.AddProperty(InitialConditionRegion.DataFile.Key, $"Initial{globalInitialConditionQuantity}.ini");
-            category.AddProperty(InitialConditionRegion.DataFileType, "1dField");
+            iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.Quantity.Key, globalInitialConditionQuantity.ToString().ToLower());
+            iniSection.AddPropertyWithOptionalComment(InitialConditionRegion.DataFile.Key, $"Initial{globalInitialConditionQuantity}.ini");
+            iniSection.AddPropertyFromConfiguration(InitialConditionRegion.DataFileType, "1dField");
 
-            return category;
+            return iniSection;
         }
     }
 }

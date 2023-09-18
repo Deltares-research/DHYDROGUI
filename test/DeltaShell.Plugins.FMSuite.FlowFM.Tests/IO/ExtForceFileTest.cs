@@ -571,8 +571,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             //is not done via external forcing file
             var def = new WaterFlowFMModelDefinition();
-            var validInitial2DWaterLevelCategoriesFile = TestHelper.GetTestFilePath(@"IO\Initial2DWaterLevel_expected.ini");
-            InitialConditionInitialFieldsFileReader.ReadFile(validInitial2DWaterLevelCategoriesFile, def);
+            var validInitial2DWaterLevelIniSectionsFile = TestHelper.GetTestFilePath(@"IO\Initial2DWaterLevel_expected.ini");
+            InitialConditionInitialFieldsFileReader.ReadFile(validInitial2DWaterLevelIniSectionsFile, def);
             
             Assert.AreEqual(1, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
 
@@ -781,7 +781,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data["M2"] = new[] { 0.7, 60 };
             AddBoundaryCondition(model, bc1);
 
-            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Harmonics)
+            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.Harmonics)
             {
                 Feature = feature
             };

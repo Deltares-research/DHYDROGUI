@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Location
 {
     public class DefinitionGeneratorCrossSectionLocationForChannel : DefinitionGeneratorLocation
     {
-        public DefinitionGeneratorCrossSectionLocationForChannel(string iniCategoryName)
-            : base(iniCategoryName)
+        public DefinitionGeneratorCrossSectionLocationForChannel(string iniSectionName)
+            : base(iniSectionName)
         {
         }
 
-        public override IEnumerable<DelftIniCategory> CreateIniRegion(IBranchFeature branchFeature)
+        public override IEnumerable<IniSection> CreateIniRegion(IBranchFeature branchFeature)
         {
             AddCommonRegionElements(branchFeature);
             var crossSection = branchFeature as ICrossSection;
             if (crossSection == null)
             {
-                yield return IniCategory;
+                yield return IniSection;
                 yield break;
             }
 
@@ -33,10 +34,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
                 shift = ((CrossSectionDefinitionProxy)crossSection.Definition).LevelShift;
             }
             
-            IniCategory.AddProperty(LocationRegion.Shift.Key, shift, LocationRegion.Shift.Description, LocationRegion.Shift.Format);
-            IniCategory.AddProperty(LocationRegion.Definition.Key, crossSection.Definition.Name, LocationRegion.Definition.Description);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(LocationRegion.Shift.Key, shift, LocationRegion.Shift.Description, LocationRegion.Shift.Format);
+            IniSection.AddPropertyWithOptionalComment(LocationRegion.Definition.Key, crossSection.Definition.Name, LocationRegion.Definition.Description);
 
-            yield return IniCategory;
+            yield return IniSection;
         }
     }
 }

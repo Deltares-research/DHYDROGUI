@@ -1,6 +1,7 @@
 ﻿using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 
@@ -8,16 +9,16 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
 {
     class CSDXYZDefinitionReader : CrossSectionDefinitionReaderBase
     {
-        public override ICrossSectionDefinition ReadDefinition(IDelftIniCategory category)
+        public override ICrossSectionDefinition ReadDefinition(IniSection iniSection)
         {
             var crossSectionDefinition = new CrossSectionDefinitionXYZ();
-            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
+            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, iniSection);
 
-            var xCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.XCoors.Key);
-            var yCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YCoors.Key);
-            var zCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZCoors.Key);
+            var xCoorList = iniSection.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.XCoors.Key);
+            var yCoorList = iniSection.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YCoors.Key);
+            var zCoorList = iniSection.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZCoors.Key);
 
-            var xyzCount = category.ReadProperty<int>(DefinitionPropertySettings.XYZCount.Key);
+            var xyzCount = iniSection.ReadProperty<int>(DefinitionPropertySettings.XYZCount.Key);
 
             if (xyzCount != xCoorList.Count || xyzCount != yCoorList.Count ||
                 xyzCount != zCoorList.Count)

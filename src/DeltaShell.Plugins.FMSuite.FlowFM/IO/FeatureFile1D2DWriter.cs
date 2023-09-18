@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     MduPropertyName = GuiProperties.TargetMduPath,
                     Category = GuiProperties.GUIonly,
-                    FileCategoryName = GuiProperties.GUIonly,
+                    FileSectionName = GuiProperties.GUIonly,
                     DataType = typeof(string)
                 };
 
@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 StructureFileWriter.WriteFile(structuresFilePath, 
                                               regions, 
                                               referenceTime,
-                                              StructureFile.GenerateStructureCategoriesFromFmModel);
+                                              StructureFile.GenerateStructureIniSectionsFromFmModel);
                 StructureFile.WriteStructureFiles(regions, targetMduFilePath, referenceTime);
 
                 modelDefinition.Properties.Remove(targetMduFilePathProperty);

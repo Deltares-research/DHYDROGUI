@@ -1,19 +1,19 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructurePump2D : DefinitionGeneratorTimeSeriesStructure2D
     {
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Pump);
 
             var pump = (IPump) hydroObject;
             AddCapacityProperty(pump);
 
-            return IniCategory;
+            return IniSection;
         }
 
         private void AddCapacityProperty(IPump pump)

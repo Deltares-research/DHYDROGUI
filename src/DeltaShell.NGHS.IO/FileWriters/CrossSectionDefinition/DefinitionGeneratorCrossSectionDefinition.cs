@@ -1,6 +1,7 @@
 using System.IO;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -8,25 +9,25 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
     {
         protected BinaryWriter BinFileForLevelTables;
 
-        protected DelftIniCategory IniCategory { get; }
+        protected IniSection IniSection { get; }
         private readonly string definitiontype;
 
         protected DefinitionGeneratorCrossSectionDefinition(string definitiontype)
         {
             this.definitiontype = definitiontype;
-            IniCategory = new DelftIniCategory(DefinitionPropertySettings.Header);
+            IniSection = new IniSection(DefinitionPropertySettings.Header);
         }
 
-        public abstract DelftIniCategory CreateDefinitionRegion(
+        public abstract IniSection CreateDefinitionRegion(
             ICrossSectionDefinition crossSectionDefinition,
             bool writeFrictionFromDefinition,
             string defaultFrictionId);
 
         protected void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
         {
-            IniCategory.AddProperty(DefinitionPropertySettings.Id, crossSectionDefinition.Name);
-            IniCategory.AddProperty(DefinitionPropertySettings.DefinitionType, definitiontype);
-            IniCategory.AddProperty(DefinitionPropertySettings.Thalweg, crossSectionDefinition.Thalweg);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Id, crossSectionDefinition.Name);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.DefinitionType, definitiontype);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Thalweg, crossSectionDefinition.Thalweg);
         }
     }
 }

@@ -13,6 +13,7 @@ using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void WriteFile(string filename, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions, RoughnessType globalFrictionType, double globalFrictionValue)
         {
             // [General]
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.RoughnessDataMajorVersion,
                     GeneralRegion.RoughnessDataMinorVersion,
@@ -40,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             };
 
             // [Global]
-            categories.Add(CreateGlobalFrictionCategory(globalFrictionType, globalFrictionValue));
+            iniSections.Add(CreateGlobalFrictionIniSection(globalFrictionType, globalFrictionValue));
 
             // [Branch]
             foreach (var channelFrictionDefinition in channelFrictionDefinitions)
@@ -50,10 +51,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 switch (specificationType)
                 {
                     case ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition:
-                        categories.Add(CreateConstantFrictionCategory(channelFrictionDefinition));
+                        iniSections.Add(CreateConstantFrictionIniSection(channelFrictionDefinition));
                         break;
                     case ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition:
-                        categories.Add(CreateSpatialChannelFrictionCategory(channelFrictionDefinition));
+                        iniSections.Add(CreateSpatialChannelFrictionIniSection(channelFrictionDefinition));
                         break;
                     case ChannelFrictionSpecificationType.ModelSettings: // not written, takes global value by default
                     case ChannelFrictionSpecificationType.RoughnessSections: // written in lane files
@@ -65,103 +66,103 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             if (File.Exists(filename)) File.Delete(filename);
-            new IniFileWriter().WriteIniFile(categories, filename);
+            new IniFileWriter().WriteIniFile(iniSections, filename);
         }
 
-        private static DelftIniCategory CreateGlobalFrictionCategory(RoughnessType frictionType, double frictionValue)
+        private static IniSection CreateGlobalFrictionIniSection(RoughnessType frictionType, double frictionValue)
         {
-            var category = new DelftIniCategory(RoughnessDataRegion.GlobalIniHeader);
-            category.AddProperty(RoughnessDataRegion.SectionId.Key, RoughnessDataRegion.SectionId.DefaultValue, RoughnessDataRegion.SectionId.Description);
-            category.AddProperty(RoughnessDataRegion.FrictionType.Key, frictionType.ToString(), RoughnessDataRegion.FrictionType.Description);
-            category.AddProperty(RoughnessDataRegion.FrictionValue.Key, frictionValue, RoughnessDataRegion.FrictionValue.Description, RoughnessDataRegion.GlobalValue.Format);
-            return category;
+            var iniSection = new IniSection(RoughnessDataRegion.GlobalIniHeader);
+            iniSection.AddPropertyWithOptionalComment(RoughnessDataRegion.SectionId.Key, RoughnessDataRegion.SectionId.DefaultValue, RoughnessDataRegion.SectionId.Description);
+            iniSection.AddPropertyWithOptionalComment(RoughnessDataRegion.FrictionType.Key, frictionType.ToString(), RoughnessDataRegion.FrictionType.Description);
+            iniSection.AddPropertyWithOptionalCommentAndFormat(RoughnessDataRegion.FrictionValue.Key, frictionValue, RoughnessDataRegion.FrictionValue.Description, RoughnessDataRegion.GlobalValue.Format);
+            return iniSection;
         }
 
         /// <summary>
-        /// Creates a DelftIniCategory for a channel with a spatial friction specification.
+        /// Creates a IniSection for a channel with a spatial friction specification.
         /// </summary>
         /// <param name="channelFrictionDefinition">A ChannelFrictionDefinition.</param>
-        /// <returns>A DelftInitCategory for a channel with a spatial friction specification.</returns>
+        /// <returns>A IniSection for a channel with a spatial friction specification.</returns>
         /// <exception cref="NotSupportedException">When invalid <see cref="RoughnessFunction"/> is provided.</exception>
-        private static DelftIniCategory CreateSpatialChannelFrictionCategory(ChannelFrictionDefinition channelFrictionDefinition)
+        private static IniSection CreateSpatialChannelFrictionIniSection(ChannelFrictionDefinition channelFrictionDefinition)
         {
-            var category = new DelftIniCategory(RoughnessDataRegion.BranchPropertiesIniHeader);
+            var iniSection = new IniSection(RoughnessDataRegion.BranchPropertiesIniHeader);
 
             var spatialDefinition = channelFrictionDefinition.SpatialChannelFrictionDefinition;
 
             var channel = channelFrictionDefinition.Channel;
-            category.AddProperty(SpatialDataRegion.BranchId.Key, channel.Name,
+            iniSection.AddPropertyWithOptionalComment(SpatialDataRegion.BranchId.Key, channel.Name,
                 SpatialDataRegion.BranchId.Description);
 
             var roughnessType = spatialDefinition.Type;
-            category.AddProperty(RoughnessDataRegion.RoughnessType.Key, roughnessType.ToString(),
+            iniSection.AddPropertyWithOptionalComment(RoughnessDataRegion.RoughnessType.Key, roughnessType.ToString(),
                 RoughnessDataRegion.RoughnessType.Description);
 
             var functionType = spatialDefinition.FunctionType;
-            category.AddProperty(RoughnessDataRegion.FunctionType.Key, RoughnessHelper.ConvertRoughnessFunctionToString(functionType),
+            iniSection.AddPropertyWithOptionalComment(RoughnessDataRegion.FunctionType.Key, RoughnessHelper.ConvertRoughnessFunctionToString(functionType),
                 RoughnessDataRegion.FunctionType.Description);
 
             switch (functionType)
             {
                 case RoughnessFunction.Constant:
-                    AddConstantFunctionPropertiesToCategory(spatialDefinition, category);
+                    AddConstantFunctionPropertiesToIniSection(spatialDefinition, iniSection);
                     break;
                 case RoughnessFunction.FunctionOfH:
                 case RoughnessFunction.FunctionOfQ:
-                    AddFunctionPropertiesToCategory(spatialDefinition, category);
+                    AddFunctionPropertiesToIniSection(spatialDefinition, iniSection);
                     break;
                 default:
                     throw new NotSupportedException();
             }
             
-            return category;
+            return iniSection;
         }
 
         /// <summary>
-        /// Create a DelftIniCategory for a channel with a constant friction specification.
+        /// Create a IniSection for a channel with a constant friction specification.
         /// </summary>
         /// <param name="channelFrictionDefinition">A ChannelFrictionDefinition.</param>
-        /// <returns>A DelftInitCategory for a channel with a constant friction specification.</returns>
-        private static DelftIniCategory CreateConstantFrictionCategory(ChannelFrictionDefinition channelFrictionDefinition)
+        /// <returns>A IniSection for a channel with a constant friction specification.</returns>
+        private static IniSection CreateConstantFrictionIniSection(ChannelFrictionDefinition channelFrictionDefinition)
         {
-            var category = new DelftIniCategory(RoughnessDataRegion.BranchPropertiesIniHeader);
+            var iniSection = new IniSection(RoughnessDataRegion.BranchPropertiesIniHeader);
 
-            category.AddProperty(SpatialDataRegion.BranchId.Key, channelFrictionDefinition.Channel.Name,
+            iniSection.AddPropertyWithOptionalComment(SpatialDataRegion.BranchId.Key, channelFrictionDefinition.Channel.Name,
                 SpatialDataRegion.BranchId.Description);
 
             var roughnessType = channelFrictionDefinition.ConstantChannelFrictionDefinition.Type;
-            category.AddProperty(RoughnessDataRegion.RoughnessType.Key, roughnessType.ToString(),
+            iniSection.AddPropertyWithOptionalComment(RoughnessDataRegion.RoughnessType.Key, roughnessType.ToString(),
                 RoughnessDataRegion.RoughnessType.Description);
 
-            category.AddProperty(RoughnessDataRegion.FunctionType.Key, CONSTANT_FUNCTION_TYPE,
+            iniSection.AddPropertyWithOptionalComment(RoughnessDataRegion.FunctionType.Key, CONSTANT_FUNCTION_TYPE,
                 RoughnessDataRegion.FunctionType.Description);
 
             double roughnessValue = channelFrictionDefinition.ConstantChannelFrictionDefinition.Value;
-            category.AddProperty(RoughnessDataRegion.Values.Key, roughnessValue, 
+            iniSection.AddPropertyWithOptionalCommentAndFormat(RoughnessDataRegion.Values.Key, roughnessValue, 
                 null, RoughnessDataRegion.Values.Format);
 
-            return category;
+            return iniSection;
         }
 
         /// <summary>
-        /// Adds FunctionOfQ and FunctionOfH related properties to a given category.
+        /// Adds FunctionOfQ and FunctionOfH related properties to a given INI section.
         /// </summary>
         /// <param name="spatialDefinition"></param>
-        /// <param name="category"></param>
-        private static void AddFunctionPropertiesToCategory(SpatialChannelFrictionDefinition spatialDefinition,
-            DelftIniCategory category)
+        /// <param name="iniSection"></param>
+        private static void AddFunctionPropertiesToIniSection(SpatialChannelFrictionDefinition spatialDefinition,
+            IniSection iniSection)
         {
             IFunction function = spatialDefinition.Function;
             var levels = function.Arguments[1].GetValues<double>();
-            category.AddProperty(RoughnessDataRegion.NumberOfLevels.Key, levels.Count,
+            iniSection.AddProperty(RoughnessDataRegion.NumberOfLevels.Key, levels.Count,
                 RoughnessDataRegion.NumberOfLevels.Description);
-            category.AddProperty(RoughnessDataRegion.Levels.Key, levels, null,
+            iniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(RoughnessDataRegion.Levels.Key, levels, null,
                 RoughnessDataRegion.Levels.Format);
 
             var locations = function.Arguments[0].GetValues<double>();
-            category.AddProperty(RoughnessDataRegion.NumberOfLocations.Key, locations.Count,
+            iniSection.AddProperty(RoughnessDataRegion.NumberOfLocations.Key, locations.Count,
                 RoughnessDataRegion.NumberOfLocations.Description);
-            category.AddProperty(SpatialDataRegion.Chainage.Key, locations,
+            iniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(SpatialDataRegion.Chainage.Key, locations,
                 SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
 
             var values = new double[levels.Count][];
@@ -175,30 +176,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 valuesAsString += new string(' ', 28);
             }
 
-            category.AddProperty(RoughnessDataRegion.Values.Key, valuesAsString.TrimEnd(), 
+            iniSection.AddPropertyWithOptionalComment(RoughnessDataRegion.Values.Key, valuesAsString.TrimEnd(), 
                 RoughnessDataRegion.Values.Description);
         }
 
         /// <summary>
-        /// Adds ConstantFunction related properties to a given category.
+        /// Adds ConstantFunction related properties to a given INI section.
         /// </summary>
         /// <param name="spatialDefinition">A SpatialChannelFrictionDefinition.</param>
-        /// <param name="category">A DelftInitCategory.</param>
-        private static void AddConstantFunctionPropertiesToCategory(SpatialChannelFrictionDefinition spatialDefinition,
-            DelftIniCategory category)
+        /// <param name="iniSection">A IniSection.</param>
+        private static void AddConstantFunctionPropertiesToIniSection(SpatialChannelFrictionDefinition spatialDefinition,
+            IniSection iniSection)
         {
             var locationCount = spatialDefinition.ConstantSpatialChannelFrictionDefinitions.Count;
-            category.AddProperty(RoughnessDataRegion.NumberOfLocations.Key, locationCount,
+            iniSection.AddProperty(RoughnessDataRegion.NumberOfLocations.Key, locationCount,
                 RoughnessDataRegion.NumberOfLocations.Description);
 
             IEnumerable<double> chainages =
                 spatialDefinition.ConstantSpatialChannelFrictionDefinitions.Select(cscfd => cscfd.Chainage);
-            category.AddProperty(SpatialDataRegion.Chainage.Key, chainages,
+            iniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(SpatialDataRegion.Chainage.Key, chainages,
                 SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
 
             IEnumerable<double> frictionValues =
                 spatialDefinition.ConstantSpatialChannelFrictionDefinitions.Select(cscfd => cscfd.Value);
-            category.AddProperty(RoughnessDataRegion.Values.Key, frictionValues, null, RoughnessDataRegion.Values.Format);
+            iniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(RoughnessDataRegion.Values.Key, frictionValues, null, RoughnessDataRegion.Values.Format);
         }
 
         /// <summary>

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
@@ -80,21 +81,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                                                                     string expectedCrestLevel,
                                                                     string expectedLowerEdgeLevel) 
         {
-            IDelftIniCategory category = Generator.CreateStructureRegion(structure);
+            IniSection iniSection = Generator.CreateStructureRegion(structure);
 
-            Assert.That(category.Properties.Count, Is.EqualTo(11)); 
-            AssertCorrectCommonRegionElements(category, 
+            Assert.That(iniSection.Properties.Count(), Is.EqualTo(11)); 
+            AssertCorrectCommonRegionElements(iniSection, 
                                               nameof(Orifice), 
                                               expectedLongName,
                                               expectedBranchName, 
                                               chainageStr, 
                                               TStructureDefinitionType); 
-            AssertCorrectProperty(category, StructureRegion.AllowedFlowDir.Key, "both"); 
-            AssertCorrectProperty(category, StructureRegion.CrestLevel.Key, expectedCrestLevel); 
-            AssertCorrectProperty(category, StructureRegion.CrestWidth.Key, "5.000"); 
-            AssertCorrectProperty(category, StructureRegion.GateLowerEdgeLevel.Key, expectedLowerEdgeLevel); 
-            AssertCorrectProperty(category, StructureRegion.CorrectionCoeff.Key, "0.630"); 
-            AssertCorrectProperty(category, StructureRegion.UseVelocityHeight.Key, "true");
+            AssertCorrectProperty(iniSection, StructureRegion.AllowedFlowDir.Key, "both"); 
+            AssertCorrectProperty(iniSection, StructureRegion.CrestLevel.Key, expectedCrestLevel); 
+            AssertCorrectProperty(iniSection, StructureRegion.CrestWidth.Key, "5.000"); 
+            AssertCorrectProperty(iniSection, StructureRegion.GateLowerEdgeLevel.Key, expectedLowerEdgeLevel); 
+            AssertCorrectProperty(iniSection, StructureRegion.CorrectionCoeff.Key, "0.630"); 
+            AssertCorrectProperty(iniSection, StructureRegion.UseVelocityHeight.Key, "true");
         }
     }
 }

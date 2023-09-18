@@ -5,6 +5,7 @@ using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,14 +16,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     [TestFixture]
     public class LateralSourceBcCategoryTest
     {
-        private IDelftBcCategory delftBcCategorySubstitute;
+        private DelftBcCategory delftBcCategory;
         private ILogHandler logHandlerSubstitute;
         private IBcCategoryParser bcCategoryParser;
         
         [SetUp]
         public void SetUp()
         {
-            delftBcCategorySubstitute = Substitute.For<IDelftBcCategory>();
+            delftBcCategory = new DelftBcCategory("boundary");
             logHandlerSubstitute = Substitute.For<ILogHandler>();
             bcCategoryParser = new BcCategoryParser(logHandlerSubstitute);
         }
@@ -42,7 +43,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void Constructor_CategoryParserNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new LateralSourceBcCategory(delftBcCategorySubstitute, null);
+            void Call() => new LateralSourceBcCategory(delftBcCategory, null);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -62,13 +63,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [TestCase("forcing")]
         [TestCase("LateralDischarge")]
-        public void Constructor_DataTypeConstant_InitializesInstanceCorrectly(string categoryName)
+        public void Constructor_DataTypeConstant_InitializesInstanceCorrectly(string iniSectionName)
         {
             // Setup
-            var bcCategory = new DelftBcCategory(categoryName);
-            bcCategory.Properties.Add(CreateProperty("name", "lateral_source_name"));
-            bcCategory.Properties.Add(CreateProperty("function", "constant"));
-            bcCategory.Properties.Add(CreateProperty("timeInterpolation", "linear"));
+            var bcCategory = new DelftBcCategory(iniSectionName);
+            bcCategory.Section.AddProperty(CreateProperty("name", "lateral_source_name"));
+            bcCategory.Section.AddProperty(CreateProperty("function", "constant"));
+            bcCategory.Section.AddProperty(CreateProperty("timeInterpolation", "linear"));
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23));
 
             // Call
@@ -83,13 +84,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [TestCase("forcing")]
         [TestCase("LateralDischarge")]
-        public void Constructor_DataTypeTimeSeries_SecondsSinceReference_InitializesInstanceCorrectly(string categoryName)
+        public void Constructor_DataTypeTimeSeries_SecondsSinceReference_InitializesInstanceCorrectly(string iniSectionName)
         {
             // Setup
-            var bcCategory = new DelftBcCategory(categoryName);
-            bcCategory.Properties.Add(CreateProperty("name", "lateral_source_name"));
-            bcCategory.Properties.Add(CreateProperty("function", "timeseries"));
-            bcCategory.Properties.Add(CreateProperty("timeInterpolation", "linear"));
+            var bcCategory = new DelftBcCategory(iniSectionName);
+            bcCategory.Section.AddProperty(CreateProperty("name", "lateral_source_name"));
+            bcCategory.Section.AddProperty(CreateProperty("function", "timeseries"));
+            bcCategory.Section.AddProperty(CreateProperty("timeInterpolation", "linear"));
             bcCategory.Table.Add(CreateQuantity("time", "seconds since 2021-01-01 00:00:00", 100, 200, 300));
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
@@ -122,13 +123,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [TestCase("forcing")]
         [TestCase("LateralDischarge")]
-        public void Constructor_DataTypeTimeSeries_MinutesSinceReference_InitializesInstanceCorrectly(string categoryName)
+        public void Constructor_DataTypeTimeSeries_MinutesSinceReference_InitializesInstanceCorrectly(string iniSectionName)
         {
             // Setup
-            var bcCategory = new DelftBcCategory(categoryName);
-            bcCategory.Properties.Add(CreateProperty("name", "lateral_source_name"));
-            bcCategory.Properties.Add(CreateProperty("function", "timeseries"));
-            bcCategory.Properties.Add(CreateProperty("timeInterpolation", "linear"));
+            var bcCategory = new DelftBcCategory(iniSectionName);
+            bcCategory.Section.AddProperty(CreateProperty("name", "lateral_source_name"));
+            bcCategory.Section.AddProperty(CreateProperty("function", "timeseries"));
+            bcCategory.Section.AddProperty(CreateProperty("timeInterpolation", "linear"));
             bcCategory.Table.Add(CreateQuantity("time", "minutes since 2021-01-01 00:00:00", 100, 200, 300));
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
@@ -161,13 +162,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [TestCase("forcing")]
         [TestCase("LateralDischarge")]
-        public void Constructor_DataTypeTimeSeries_HoursSinceReference_InitializesInstanceCorrectly(string categoryName)
+        public void Constructor_DataTypeTimeSeries_HoursSinceReference_InitializesInstanceCorrectly(string iniSectionName)
         {
             // Setup
-            var bcCategory = new DelftBcCategory(categoryName);
-            bcCategory.Properties.Add(CreateProperty("name", "lateral_source_name"));
-            bcCategory.Properties.Add(CreateProperty("function", "timeseries"));
-            bcCategory.Properties.Add(CreateProperty("timeInterpolation", "linear"));
+            var bcCategory = new DelftBcCategory(iniSectionName);
+            bcCategory.Section.AddProperty(CreateProperty("name", "lateral_source_name"));
+            bcCategory.Section.AddProperty(CreateProperty("function", "timeseries"));
+            bcCategory.Section.AddProperty(CreateProperty("timeInterpolation", "linear"));
             bcCategory.Table.Add(CreateQuantity("time", "hours since 2021-01-01 00:00:00", 100, 200, 300));
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
@@ -200,13 +201,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [TestCase("forcing")]
         [TestCase("LateralDischarge")]
-        public void Constructor_DataTypeQhTable_InitializesInstanceCorrectly(string categoryName)
+        public void Constructor_DataTypeQhTable_InitializesInstanceCorrectly(string iniSectionName)
         {
             // Setup
-            var bcCategory = new DelftBcCategory(categoryName);
-            bcCategory.Properties.Add(CreateProperty("name", "lateral_source_name"));
-            bcCategory.Properties.Add(CreateProperty("function", "qhtable"));
-            bcCategory.Properties.Add(CreateProperty("timeInterpolation", "linear"));
+            var bcCategory = new DelftBcCategory(iniSectionName);
+            bcCategory.Section.AddProperty(CreateProperty("name", "lateral_source_name"));
+            bcCategory.Section.AddProperty(CreateProperty("function", "qhtable"));
+            bcCategory.Section.AddProperty(CreateProperty("timeInterpolation", "linear"));
             bcCategory.Table.Add(CreateQuantity("qhbnd waterlevel", "m", 10.1, 20.2, 30.3));
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
@@ -243,10 +244,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void Constructor_DataTypeTimeSeries_CannotInterpretUnit_ReportsError(string timeUnit, string expError)
         {
             // Setup
-            var bcCategory = new DelftBcCategory("forcing") {LineNumber = 7};
-            bcCategory.Properties.Add(CreateProperty("name", "lateral_source_name"));
-            bcCategory.Properties.Add(CreateProperty("function", "timeseries"));
-            bcCategory.Properties.Add(CreateProperty("timeInterpolation", "linear"));
+            var bcCategory = new DelftBcCategory("forcing");
+            bcCategory.Section.LineNumber = 7;
+            bcCategory.Section.AddProperty(CreateProperty("name", "lateral_source_name"));
+            bcCategory.Section.AddProperty(CreateProperty("function", "timeseries"));
+            bcCategory.Section.AddProperty(CreateProperty("timeInterpolation", "linear"));
             bcCategory.Table.Add(CreateQuantity("time", timeUnit, 100, 200, 300));
             bcCategory.Table.Add(CreateQuantity("lateral_discharge", "m³/s", 1.23, 4.56, 7.89));
 
@@ -266,20 +268,20 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         private static DelftBcQuantityData CreateQuantity(string quantity, string unit, params double[] values)
         {
-            DelftIniProperty quantityProperty = CreateProperty("quantity", quantity);
-            DelftIniProperty unitProperty = CreateProperty("unit", unit);
+            IniProperty quantityProperty = CreateProperty("quantity", quantity);
+            IniProperty unitProperty = CreateProperty("unit", unit);
 
             return new DelftBcQuantityData(quantityProperty, unitProperty, values);
         }
 
-        private static DelftIniProperty CreateProperty(string name, string value)
+        private static IniProperty CreateProperty(string name, string value)
         {
-            return new DelftIniProperty
-            {
-                Name = name,
-                Value = value,
-                Comment = string.Empty
-            };
+            return new IniProperty
+            (
+                name,
+                value,
+                string.Empty
+            );
         }
     }
 }

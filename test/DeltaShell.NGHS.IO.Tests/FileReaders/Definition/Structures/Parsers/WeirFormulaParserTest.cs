@@ -4,9 +4,8 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
-using NSubstitute;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
@@ -19,22 +18,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
         private static IEnumerable<TestCaseData> ReadFormulaFromDefinitionArgumentNullData()
         {
-            var category = Substitute.For<IDelftIniCategory>();
+            var iniSection = new IniSection("some_section");
             var weir = new Weir();
 
-            yield return new TestCaseData(null, weir, structuresFilePath, "category");
-            yield return new TestCaseData(category, null, structuresFilePath, "weir");
-            yield return new TestCaseData(category, weir, null, "structuresFilePath");
+            yield return new TestCaseData(null, weir, structuresFilePath, "iniSection");
+            yield return new TestCaseData(iniSection, null, structuresFilePath, "weir");
+            yield return new TestCaseData(iniSection, weir, null, "structuresFilePath");
         }
 
         [Test]
         [TestCaseSource(nameof(ReadFormulaFromDefinitionArgumentNullData))]
-        public void ReadFormulaFromDefinition_ArgumentNull_ThrowsArgumentNullException(IDelftIniCategory category,
+        public void ReadFormulaFromDefinition_ArgumentNull_ThrowsArgumentNullException(IniSection iniSection,
                                                                                        Weir weir,
                                                                                        string localStructuresFilePath,
                                                                                        string expectedParamName)
         {
-            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(category, weir, localStructuresFilePath, referenceDateTime);
+            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(iniSection, weir, localStructuresFilePath, referenceDateTime);
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
@@ -45,13 +44,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             // Setup
             const string unknownFormulaType = "UnknownFormulaType";
 
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.DefinitionType.Key, unknownFormulaType);
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, unknownFormulaType);
 
             var weir = new Weir();
 
             // Call
-            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(category, 
+            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(iniSection, 
                                                                        weir, 
                                                                        structuresFilePath, 
                                                                        referenceDateTime);
@@ -69,14 +68,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             const string formulaType = "weir";
             const double correctionCoefficient = 123.456;
             
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
-            category.AddProperty(StructureRegion.CorrectionCoeff.Key, correctionCoefficient);
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
+            iniSection.AddProperty(StructureRegion.CorrectionCoeff.Key, correctionCoefficient);
 
             var weir = new Weir();
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, weir, structuresFilePath, referenceDateTime);
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(iniSection, weir, structuresFilePath, referenceDateTime);
 
             // Assert
             Assert.That(parsedWeirFormula, Is.TypeOf<SimpleWeirFormula>());
@@ -96,16 +95,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             double[] yValues = {1.0, 2.0, 3.0};
             double[] zValues = {4.0, 5.0, 6.0};
 
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
-            category.AddProperty(StructureRegion.DischargeCoeff.Key, dischargeCoefficient);
-            category.AddProperty(StructureRegion.YValues.Key, string.Join(", ", yValues));
-            category.AddProperty(StructureRegion.ZValues.Key, string.Join(", ", zValues));
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
+            iniSection.AddProperty(StructureRegion.DischargeCoeff.Key, dischargeCoefficient);
+            iniSection.AddProperty(StructureRegion.YValues.Key, string.Join(", ", yValues));
+            iniSection.AddProperty(StructureRegion.ZValues.Key, string.Join(", ", zValues));
 
             var weir = new Weir() { CrestLevel = crestLevel };
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(iniSection, 
                                                                                          weir, 
                                                                                          structuresFilePath, 
                                                                                          referenceDateTime);
@@ -135,22 +134,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             const double pierContractionNeg = 78.90;
             const double abutmentContractionNeg = 89.01;
 
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
-            category.AddProperty(StructureRegion.NPiers.Key, numberOfPiers);
-            category.AddProperty(StructureRegion.PosHeight.Key, upstreamFacePos);
-            category.AddProperty(StructureRegion.PosDesignHead.Key, designHeadPos);
-            category.AddProperty(StructureRegion.PosPierContractCoef.Key, pierContractionPos);
-            category.AddProperty(StructureRegion.PosAbutContractCoef.Key, abutmentContractionPos);
-            category.AddProperty(StructureRegion.NegHeight.Key, upstreamFaceNeg);
-            category.AddProperty(StructureRegion.NegDesignHead.Key, designHeadNeg);
-            category.AddProperty(StructureRegion.NegPierContractCoef.Key, pierContractionNeg);
-            category.AddProperty(StructureRegion.NegAbutContractCoef.Key, abutmentContractionNeg);
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
+            iniSection.AddProperty(StructureRegion.NPiers.Key, numberOfPiers);
+            iniSection.AddProperty(StructureRegion.PosHeight.Key, upstreamFacePos);
+            iniSection.AddProperty(StructureRegion.PosDesignHead.Key, designHeadPos);
+            iniSection.AddProperty(StructureRegion.PosPierContractCoef.Key, pierContractionPos);
+            iniSection.AddProperty(StructureRegion.PosAbutContractCoef.Key, abutmentContractionPos);
+            iniSection.AddProperty(StructureRegion.NegHeight.Key, upstreamFaceNeg);
+            iniSection.AddProperty(StructureRegion.NegDesignHead.Key, designHeadNeg);
+            iniSection.AddProperty(StructureRegion.NegPierContractCoef.Key, pierContractionNeg);
+            iniSection.AddProperty(StructureRegion.NegAbutContractCoef.Key, abutmentContractionNeg);
 
             var weir = new Weir();
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(iniSection, 
                                                                                          weir,
                                                                                          structuresFilePath,
                                                                                          referenceDateTime);
@@ -185,20 +184,20 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             const double lowerEdgeLevel = 5.678;
             double gateOpening = lowerEdgeLevel - crestLevel;
             
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
-            category.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, lowerEdgeLevel);
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
+            iniSection.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, lowerEdgeLevel);
 
-            category.AddProperty(StructureRegion.CorrectionCoeff.Key, contractionCoefficient);
-            category.AddProperty(StructureRegion.UseLimitFlowPos.Key, useMaxFlowPos.ToString());
-            category.AddProperty(StructureRegion.LimitFlowPos.Key, maxFlowPos);
-            category.AddProperty(StructureRegion.UseLimitFlowNeg.Key, useMaxFlowNeg.ToString());
-            category.AddProperty(StructureRegion.LimitFlowNeg.Key, maxFlowNeg);
+            iniSection.AddProperty(StructureRegion.CorrectionCoeff.Key, contractionCoefficient);
+            iniSection.AddProperty(StructureRegion.UseLimitFlowPos.Key, useMaxFlowPos.ToString());
+            iniSection.AddProperty(StructureRegion.LimitFlowPos.Key, maxFlowPos);
+            iniSection.AddProperty(StructureRegion.UseLimitFlowNeg.Key, useMaxFlowNeg.ToString());
+            iniSection.AddProperty(StructureRegion.LimitFlowNeg.Key, maxFlowNeg);
 
             var weir = new Weir() { CrestLevel = crestLevel };
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(iniSection, 
                                                                                          weir, 
                                                                                          structuresFilePath, 
                                                                                          referenceDateTime);
@@ -251,38 +250,38 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             const double tolerance = 1e-10;
             bool useExtraResistance = Math.Abs(extraResistance) > tolerance;
             
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
-            category.AddProperty(StructureRegion.Upstream1Width.Key, widthLeftSideOfStructure);
-            category.AddProperty(StructureRegion.Upstream2Width.Key, widthStructureLeftSide);
-            category.AddProperty(StructureRegion.CrestWidth.Key, widthStructureCentre);
-            category.AddProperty(StructureRegion.Downstream1Width.Key, widthStructureRightSide);
-            category.AddProperty(StructureRegion.Downstream2Width.Key, widthRightSideOfStructure);
-            category.AddProperty(StructureRegion.Upstream1Level.Key, bedLevelLeftSideOfStructure);
-            category.AddProperty(StructureRegion.Upstream2Level.Key, bedLevelLeftSideStructure);
-            category.AddProperty(StructureRegion.CrestLevel.Key, bedLevelStructureCentre);
-            category.AddProperty(StructureRegion.Downstream1Level.Key, bedLevelRightSideStructure);
-            category.AddProperty(StructureRegion.Downstream2Level.Key, bedLevelRightSideOfStructure);
-            category.AddProperty(StructureRegion.PosFreeGateFlowCoeff.Key, positiveFreeGateFlow);
-            category.AddProperty(StructureRegion.PosDrownGateFlowCoeff.Key, positiveDrownedGateFlow);
-            category.AddProperty(StructureRegion.PosFreeWeirFlowCoeff.Key, positiveFreeWeirFlow);
-            category.AddProperty(StructureRegion.PosDrownWeirFlowCoeff.Key, positiveDrownedWeirFlow);
-            category.AddProperty(StructureRegion.PosContrCoefFreeGate.Key, positiveContractionCoefficient);
-            category.AddProperty(StructureRegion.NegFreeGateFlowCoeff.Key, negativeFreeGateFlow);
-            category.AddProperty(StructureRegion.NegDrownGateFlowCoeff.Key, negativeDrownedGateFlow);
-            category.AddProperty(StructureRegion.NegFreeWeirFlowCoeff.Key, negativeFreeWeirFlow);
-            category.AddProperty(StructureRegion.NegDrownWeirFlowCoeff.Key, negativeDrownedWeirFlow);
-            category.AddProperty(StructureRegion.NegContrCoefFreeGate.Key, negativeContractionCoefficient);
-            category.AddProperty(StructureRegion.GateHeight.Key, gateHeight);
-            category.AddProperty(StructureRegion.CrestLength.Key, crestLength);
-            category.AddProperty(StructureRegion.GateOpeningWidth.Key, gateOpeningWidth);
-            category.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, lowerEdgeLevel);
-            category.AddProperty(StructureRegion.ExtraResistance.Key, extraResistance);
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
+            iniSection.AddProperty(StructureRegion.Upstream1Width.Key, widthLeftSideOfStructure);
+            iniSection.AddProperty(StructureRegion.Upstream2Width.Key, widthStructureLeftSide);
+            iniSection.AddProperty(StructureRegion.CrestWidth.Key, widthStructureCentre);
+            iniSection.AddProperty(StructureRegion.Downstream1Width.Key, widthStructureRightSide);
+            iniSection.AddProperty(StructureRegion.Downstream2Width.Key, widthRightSideOfStructure);
+            iniSection.AddProperty(StructureRegion.Upstream1Level.Key, bedLevelLeftSideOfStructure);
+            iniSection.AddProperty(StructureRegion.Upstream2Level.Key, bedLevelLeftSideStructure);
+            iniSection.AddProperty(StructureRegion.CrestLevel.Key, bedLevelStructureCentre);
+            iniSection.AddProperty(StructureRegion.Downstream1Level.Key, bedLevelRightSideStructure);
+            iniSection.AddProperty(StructureRegion.Downstream2Level.Key, bedLevelRightSideOfStructure);
+            iniSection.AddProperty(StructureRegion.PosFreeGateFlowCoeff.Key, positiveFreeGateFlow);
+            iniSection.AddProperty(StructureRegion.PosDrownGateFlowCoeff.Key, positiveDrownedGateFlow);
+            iniSection.AddProperty(StructureRegion.PosFreeWeirFlowCoeff.Key, positiveFreeWeirFlow);
+            iniSection.AddProperty(StructureRegion.PosDrownWeirFlowCoeff.Key, positiveDrownedWeirFlow);
+            iniSection.AddProperty(StructureRegion.PosContrCoefFreeGate.Key, positiveContractionCoefficient);
+            iniSection.AddProperty(StructureRegion.NegFreeGateFlowCoeff.Key, negativeFreeGateFlow);
+            iniSection.AddProperty(StructureRegion.NegDrownGateFlowCoeff.Key, negativeDrownedGateFlow);
+            iniSection.AddProperty(StructureRegion.NegFreeWeirFlowCoeff.Key, negativeFreeWeirFlow);
+            iniSection.AddProperty(StructureRegion.NegDrownWeirFlowCoeff.Key, negativeDrownedWeirFlow);
+            iniSection.AddProperty(StructureRegion.NegContrCoefFreeGate.Key, negativeContractionCoefficient);
+            iniSection.AddProperty(StructureRegion.GateHeight.Key, gateHeight);
+            iniSection.AddProperty(StructureRegion.CrestLength.Key, crestLength);
+            iniSection.AddProperty(StructureRegion.GateOpeningWidth.Key, gateOpeningWidth);
+            iniSection.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, lowerEdgeLevel);
+            iniSection.AddProperty(StructureRegion.ExtraResistance.Key, extraResistance);
 
             var weir = new Weir();
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(iniSection, 
                                                                                          weir, 
                                                                                          structuresFilePath, 
                                                                                          referenceDateTime);
@@ -329,14 +328,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             // Setup
             const string formulaType = "GeneralStructure";
             
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
-            category.AddProperty(StructureRegion.GateHorizontalOpeningDirection.Key, gateOpeningDirection);
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
+            iniSection.AddProperty(StructureRegion.GateHorizontalOpeningDirection.Key, gateOpeningDirection);
 
             var weir = new Weir();
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(iniSection, 
                                                                                          weir, 
                                                                                          structuresFilePath, 
                                                                                          referenceDateTime);
@@ -355,14 +354,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             const string formulaType = "GeneralStructure";
             const string unknownGateOpeningDirection = "SlightlyLeftButAlsoSlightlyRight";
             
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
-            category.AddProperty(StructureRegion.GateHorizontalOpeningDirection.Key, unknownGateOpeningDirection);
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.DefinitionType.Key, formulaType);
+            iniSection.AddProperty(StructureRegion.GateHorizontalOpeningDirection.Key, unknownGateOpeningDirection);
 
             var weir = new Weir();
 
             // Call
-            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(category, weir, structuresFilePath, referenceDateTime);
+            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(iniSection, weir, structuresFilePath, referenceDateTime);
 
             // Assert
             string expectedMessage = string.Format(Resources.WeirFormulaParser_Could_not_parse_horizontal_gate_opening,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -16,31 +17,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static readonly string createdBy = "Deltares, FM-Suite DFlowFM Model Version " + FMSuiteFlowModelVersion + ", DFlow FM Version " + FMDllVersion;
 
         private const string SEDFILEVERSION = "02.00";
-        public static DelftIniCategory GenerateSedimentGeneralRegion()
+        public static IniSection GenerateSedimentGeneralRegion()
         {
-            var generalCategory = new DelftIniCategory(SedimentFile.GeneralHeader);
-            AddGeneralProperties(generalCategory);
-            return generalCategory;
+            var generalIniSection = new IniSection(SedimentFile.GeneralHeader);
+            AddGeneralProperties(generalIniSection);
+            return generalIniSection;
         }
 
-        private static void AddGeneralProperties(DelftIniCategory generalCategory)
+        private static void AddGeneralProperties(IniSection generalIniSection)
         {
             DateTime creationTime = DateTime.Now;
-            generalCategory.AddProperty(SedimentFile.FileCreatedBy, createdBy);
-            generalCategory.AddProperty(SedimentFile.FileCreationDate, creationTime.ToString("ddd MMM dd yyyy, HH:mm:ss"));
-            generalCategory.AddProperty(SedimentFile.FileVersion, SEDFILEVERSION);
+            generalIniSection.AddPropertyWithOptionalComment(SedimentFile.FileCreatedBy, createdBy);
+            generalIniSection.AddPropertyWithOptionalComment(SedimentFile.FileCreationDate, creationTime.ToString("ddd MMM dd yyyy, HH:mm:ss"));
+            generalIniSection.AddPropertyWithOptionalComment(SedimentFile.FileVersion, SEDFILEVERSION);
         }
 
-        public static DelftIniCategory GenerateMorpologyGeneralRegion()
+        public static IniSection GenerateMorpologyGeneralRegion()
         {
-            var generalCategory = new DelftIniCategory(MorphologyFile.GeneralHeader);
-            AddGeneralProperties(generalCategory);
-            return generalCategory;
+            var generalIniSection = new IniSection(MorphologyFile.GeneralHeader);
+            AddGeneralProperties(generalIniSection);
+            return generalIniSection;
         }
             
-        public static DelftIniCategory GenerateOverallRegion(IEnumerable<ISedimentProperty> sedimentOverallProperties)
+        public static IniSection GenerateOverallRegion(IEnumerable<ISedimentProperty> sedimentOverallProperties)
         {
-            var overallRegion = new DelftIniCategory(SedimentFile.OverallHeader);
+            var overallRegion = new IniSection(SedimentFile.OverallHeader);
             foreach (var sedimentOverallProperty in sedimentOverallProperties)
             {
                 sedimentOverallProperty.SedimentPropertyWrite(overallRegion);

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Aop;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DHYDRO.Common.IO.Ini;
 using SharpMap;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
@@ -58,14 +58,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        public virtual void SedimentPropertyWrite(IDelftIniCategory category)
+        public virtual void SedimentPropertyWrite(IniSection iniSection)
         {
-            category.AddSedimentProperty(Name, string.Format(CultureInfo.InvariantCulture, "{0}", Value), Unit, Description);
+            iniSection.AddSedimentProperty(Name, string.Format(CultureInfo.InvariantCulture, "{0}", Value), Unit, Description);
         }
 
-        public virtual void SedimentPropertyLoad(IDelftIniCategory category)
+        public virtual void SedimentPropertyLoad(IniSection iniSection)
         {
-            var prop = category.Properties.FirstOrDefault(p => p.Name == Name);
+            var prop = iniSection.Properties.FirstOrDefault(p => p.Key == Name);
             if (prop == null) return;
             Value = (T) Convert.ChangeType(prop.Value, typeof(T), CultureInfo.InvariantCulture);
         }
@@ -126,30 +126,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         #region Overrides of SedimentProperty<T>
 
-        public override void SedimentPropertyWrite(IDelftIniCategory category)
+        public override void SedimentPropertyWrite(IniSection iniSection)
         {
             if (!IsSpatiallyVarying)
             {
-                base.SedimentPropertyWrite(category);
+                base.SedimentPropertyWrite(iniSection);
             }
             else
             {
                 /* DFlowFM Kernel requires this field to include the extension. */
-                category.AddSedimentProperty(Name, string.Format("#{0}#", SpatiallyVaryingName + "." + XyzFile.Extension), Unit, Description);
+                iniSection.AddSedimentProperty(Name, string.Format("#{0}#", SpatiallyVaryingName + "." + XyzFile.Extension), Unit, Description);
             }
         }
 
 
-        public override void SedimentPropertyLoad(IDelftIniCategory category)
+        public override void SedimentPropertyLoad(IniSection iniSection)
         {
             try
             {
-                base.SedimentPropertyLoad(category);
+                base.SedimentPropertyLoad(iniSection);
             }
             catch 
             {
                 // check if we can cast to string so we can find out if it is a spatially varying property
-                var prop = category.Properties.FirstOrDefault(p => p.Name == Name);
+                var prop = iniSection.Properties.FirstOrDefault(p => p.Key == Name);
                 if (prop == null) return;
                 var spatVaryingFile = (string)Convert.ChangeType(prop.Value, typeof(string));
                 IsSpatiallyVarying = !string.IsNullOrEmpty(spatVaryingFile);

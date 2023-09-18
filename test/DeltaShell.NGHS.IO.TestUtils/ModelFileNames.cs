@@ -97,12 +97,12 @@ namespace DeltaShell.NGHS.IO.TestUtils
             if (!File.Exists(filename))
                 throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.",
                     filename));
-            var categories = new DelftIniReader().ReadDelftIniFile(filename);
-            if (categories.Count == 0)
+            var iniSections = new DelftIniReader().ReadDelftIniFile(filename);
+            if (iniSections.Count == 0)
                 throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty",
                     filename));
             var fileSection =
-                categories.Where(category => category.Name == ModelDefinitionsRegion.FilesIniHeader).ToList();
+                iniSections.Where(iniSection => iniSection.Name == ModelDefinitionsRegion.FilesIniHeader).ToList();
             if (fileSection.Count() > 1 && fileSection.Any())
                 throw new FileReadingException(String.Format("Could not read files section {0} properly", filename));
 

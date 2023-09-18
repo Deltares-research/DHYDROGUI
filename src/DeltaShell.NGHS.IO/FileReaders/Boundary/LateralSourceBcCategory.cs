@@ -38,18 +38,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
         /// Moreover, depending on the discharge data type, the quantities are expected to be in the correct order:
         /// First the argument, then the component.
         /// </remarks>
-        public LateralSourceBcCategory(IDelftBcCategory category, IBcCategoryParser categoryParser)
+        public LateralSourceBcCategory(DelftBcCategory category, IBcCategoryParser categoryParser)
         {
             Ensure.NotNull(categoryParser, nameof(categoryParser));
             Ensure.NotNull(category, nameof(category));
             EnsureLateralCategory(category, nameof(category));
             
             this.categoryParser = categoryParser;
-            lineNumber = category.LineNumber;
+            lineNumber = category.Section.LineNumber;
 
-            var name = category.ReadProperty<string>(BoundaryRegion.Name.Key);
-            var function = category.ReadProperty<string>(BoundaryRegion.Function.Key);
-            var periodic = category.ReadProperty<string>(BoundaryRegion.Periodic.Key, true);
+            var name = category.Section.ReadProperty<string>(BoundaryRegion.Name.Key);
+            var function = category.Section.ReadProperty<string>(BoundaryRegion.Function.Key);
+            var periodic = category.Section.ReadProperty<string>(BoundaryRegion.Periodic.Key, true);
 
             Name = name;
             DataType = ToDataType(function);
@@ -76,10 +76,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
         /// </summary>
         public IFunction DischargeFunction { get; private set; }
 
-        private static void EnsureLateralCategory(IDelftIniCategory category, string paramName)
+        private static void EnsureLateralCategory(DelftBcCategory category, string paramName)
         {
-            if (!category.Name.EqualsCaseInsensitive(BoundaryRegion.BcLateralHeader) &&
-                !category.Name.EqualsCaseInsensitive(BoundaryRegion.BcForcingHeader))
+            if (!category.Section.Name.EqualsCaseInsensitive(BoundaryRegion.BcLateralHeader) &&
+                !category.Section.Name.EqualsCaseInsensitive(BoundaryRegion.BcForcingHeader))
             {
                 throw new ArgumentException($"{nameof(category)} should have header {BoundaryRegion.BcLateralHeader} or " +
                                             $"{BoundaryRegion.BcForcingHeader} for laterals.", paramName);

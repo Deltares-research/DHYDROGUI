@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
     public sealed class DelftBcWriter : DelftIniWriter, IBcFileWriter
     {
-        public void WriteBcFile(IEnumerable<IDelftIniCategory> categories, string iniFile)
+        public void WriteBcFile(IEnumerable<DelftBcCategory> categories, string iniFile)
         {
             OpenOutputFile(iniFile,true);
 
@@ -20,40 +22,48 @@ namespace DeltaShell.NGHS.IO.FileWriters
             }
         }
 
-        private void WriteBcCategoriesToFile(IEnumerable<IDelftIniCategory> categories)
+        private void WriteBcCategoriesToFile(IEnumerable<DelftBcCategory> categories)
         {
-            foreach (IDelftIniCategory category in categories)
+            foreach (DelftBcCategory bcCategory in categories)
             {
-                var bcCategory = category as DelftBcCategory;
                 if (IsBcCategoryWithoutTableData(bcCategory))
                 {
                     return;
                 }
 
-                WriteBcCategoryToFile(category, bcCategory);
+                WriteBcCategoryToFile(bcCategory);
             }
         }
 
-        private static bool IsBcCategoryWithoutTableData(IDelftBcCategory bcCategory)
+        private static bool IsBcCategoryWithoutTableData(DelftBcCategory bcCategory)
         {
-            return bcCategory != null && bcCategory.Table.Count == 0;
+            if (IsGeneralSection(bcCategory))
+            {
+                return false;
+            }
+            return bcCategory.Table.Count == 0;
         }
 
-        private void WriteBcCategoryToFile(IDelftIniCategory category, IDelftBcCategory bcCategory)
+        private void WriteBcCategoryToFile(DelftBcCategory category)
         {
-            WriteLine("[" + category.Name + "]");
+            WriteLine("[" + category.Section.Name + "]");
 
-            foreach (DelftIniProperty property in category.Properties)
+            foreach (IniProperty property in category.Section.Properties)
             {
                 WriteProperty(property);
             }
 
-            if (bcCategory != null)
+            if (!IsGeneralSection(category))
             {
-                WriteTable(bcCategory.Table);
+                WriteTable(category.Table);
             }
 
             WriteLine(string.Empty);
+        }
+
+        private static bool IsGeneralSection(DelftBcCategory category)
+        {
+            return category.Section.IsNameEqualTo(GeneralRegion.IniHeader);
         }
 
         private void WriteTable(IList<IDelftBcQuantityData> table)

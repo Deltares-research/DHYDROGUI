@@ -7,6 +7,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.TimeSeriesWriters
 {
@@ -41,7 +42,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.TimeSeriesWriters
             Ensure.NotNull(filePath, nameof(filePath));
             Ensure.NotNull(structureData, nameof(structureData));
 
-            IEnumerable<IDelftIniCategory> boundaries = structureBoundaryGenerator.GenerateBoundaries(structureData, modelReferenceDate);
+            IEnumerable<DelftBcCategory> boundaries = structureBoundaryGenerator.GenerateBoundaries(structureData, modelReferenceDate);
 
             FileUtils.DeleteIfExists(filePath);
             WriteToBcFile(filePath, GetDataWithHeader(boundaries));
@@ -53,25 +54,25 @@ namespace DeltaShell.NGHS.IO.FileWriters.TimeSeriesWriters
             Ensure.NotNull(structureName, nameof(structureName));
             Ensure.NotNull(structureData, nameof(structureData));
             
-            IEnumerable<IDelftIniCategory> boundary = structureBoundaryGenerator.GenerateBoundary(structureName, structureData, modelReferenceDate);
+            IEnumerable<DelftBcCategory> boundary = structureBoundaryGenerator.GenerateBoundary(structureName, structureData, modelReferenceDate);
 
             WriteToBcFile(filePath, boundary);
         }
 
-        private static IEnumerable<IDelftIniCategory> GetDataWithHeader(IEnumerable<IDelftIniCategory> dataToWrite)
+        private static IEnumerable<DelftBcCategory> GetDataWithHeader(IEnumerable<DelftBcCategory> dataToWrite)
         {
-            DelftIniCategory generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+            IniSection generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
                 GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
                 GeneralRegion.FileTypeName.BoundaryConditions);
 
-            List<IDelftIniCategory> listOfData = new List<IDelftIniCategory>();
-            listOfData.Add(generalRegion);
+            List<DelftBcCategory> listOfData = new List<DelftBcCategory>();
+            listOfData.Add(new DelftBcCategory(generalRegion));
             listOfData.AddRange(dataToWrite);
             
             return listOfData;
         }
 
-        private void WriteToBcFile(string filePath, IEnumerable<IDelftIniCategory> dataToWrite)
+        private void WriteToBcFile(string filePath, IEnumerable<DelftBcCategory> dataToWrite)
         {
             if (dataToWrite.Any())
             {

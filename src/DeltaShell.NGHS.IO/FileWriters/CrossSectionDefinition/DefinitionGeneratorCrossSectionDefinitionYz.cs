@@ -3,6 +3,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -18,21 +19,21 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(
+        public override IniSection CreateDefinitionRegion(
             ICrossSectionDefinition crossSectionDefinition,
             bool writeFrictionFromDefinition,
             string defaultFrictionId)
         {
             AddCommonProperties(crossSectionDefinition);
 
-            IniCategory.AddProperty(DefinitionPropertySettings.SingleValuedZ, DefinitionPropertySettings.SingleValuedZ.DefaultValue);
-            IniCategory.AddProperty(DefinitionPropertySettings.YZCount, crossSectionDefinition.GetProfile().ToList().Count);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SingleValuedZ, DefinitionPropertySettings.SingleValuedZ.DefaultValue);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.YZCount, crossSectionDefinition.GetProfile().ToList().Count);
             
             AddCoordinates(crossSectionDefinition);
             
             AddFrictionData(crossSectionDefinition, writeFrictionFromDefinition, defaultFrictionId);
 
-            return IniCategory;
+            return IniSection;
         }
 
         protected void AddFrictionData(
@@ -42,17 +43,17 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
             if (!writeFrictionFromDefinition)
             {
-                IniCategory.AddProperty(DefinitionPropertySettings.SectionCount, 1);
-                IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, defaultFrictionId);
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SectionCount, 1);
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FrictionIds, defaultFrictionId);
                 return;
             }
 
             var crossSectionSections = crossSectionDefinition.Sections;
             if (crossSectionSections != null && crossSectionSections.Any())
             {
-                IniCategory.AddProperty(DefinitionPropertySettings.SectionCount, crossSectionSections.Count);
-                IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, string.Join(";", crossSectionSections.Select(css => css.SectionType.Name)));
-                IniCategory.AddProperty(DefinitionPropertySettings.FrictionPositions, crossSectionSections.Select(css => css.MinY).Plus(crossSectionSections.Max(css => css.MaxY)));
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.SectionCount, crossSectionSections.Count);
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FrictionIds, string.Join(";", crossSectionSections.Select(css => css.SectionType.Name)));
+                IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.FrictionPositions, crossSectionSections.Select(css => css.MinY).Plus(crossSectionSections.Max(css => css.MaxY)));
             }
         }
 
@@ -64,8 +65,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
             var yCoordinates = crossSectionDefinition.GetProfile().Select(p => p.X);
 
-            IniCategory.AddProperty(DefinitionPropertySettings.YCoors, yCoordinates);
-            IniCategory.AddProperty(DefinitionPropertySettings.ZCoors, zCoordinates);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.YCoors, yCoordinates);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.ZCoors, zCoordinates);
         }
     }
 }

@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NSubstitute;
 using NUnit.Framework;
@@ -14,30 +15,30 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         protected abstract TGenerator CreateGenerator();
         protected IStructureFileNameGenerator StructureFileNameGeneratorSubstitute;
         protected const string ExpectedStructureFileName = "FlowFM_structures.bc";
-        protected static void AssertCorrectProperty(IDelftIniCategory category, string key, string value)
+        protected static void AssertCorrectProperty(IniSection iniSection, string key, string value)
         {
-            DelftIniProperty property = category.Properties.FirstOrDefault(p => p.Name == key);
+            IniProperty property = iniSection.Properties.FirstOrDefault(p => p.Key == key);
             Assert.That(property, Is.Not.Null, $"{key} should not be null.");
             Assert.That(property.Value, Is.EqualTo(value), $"{key} should be {value}");
         }
 
-        protected static void AssertCorrectCommonRegionElements(IDelftIniCategory category,
+        protected static void AssertCorrectCommonRegionElements(IniSection iniSection,
                                                                 string name,
                                                                 string longName = null,
                                                                 string branchId = null,
                                                                 string chainage = null,
                                                                 string definitionType = null)
         {
-            AssertCorrectProperty(category, StructureRegion.Id.Key, name);
+            AssertCorrectProperty(iniSection, StructureRegion.Id.Key, name);
 
             if (longName != null) 
-                AssertCorrectProperty(category, StructureRegion.Name.Key, longName);
+                AssertCorrectProperty(iniSection, StructureRegion.Name.Key, longName);
             if (branchId != null) 
-                AssertCorrectProperty(category, StructureRegion.BranchId.Key, branchId);
+                AssertCorrectProperty(iniSection, StructureRegion.BranchId.Key, branchId);
             if (chainage != null)
-                AssertCorrectProperty(category, StructureRegion.Chainage.Key, chainage);
+                AssertCorrectProperty(iniSection, StructureRegion.Chainage.Key, chainage);
             if (definitionType != null) 
-                AssertCorrectProperty(category, StructureRegion.DefinitionType.Key, definitionType);
+                AssertCorrectProperty(iniSection, StructureRegion.DefinitionType.Key, definitionType);
         }
 
         protected static IBranch CreateBranchMock(string name, double inputChainage, double snappedChainage)
@@ -73,8 +74,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         public void CreateStructureRegion_InvalidHydroObject_NoBranch_ReturnsOnlyCommonProperties()
         {
             var hydroObject = Substitute.For<IHydroObject>();
-            DelftIniCategory category = Generator.CreateStructureRegion(hydroObject);
-            Assert.That(category.Properties, Is.Empty);
+            IniSection iniSection = Generator.CreateStructureRegion(hydroObject);
+            Assert.That(iniSection.Properties, Is.Empty);
         }
 
         [Test]
@@ -99,9 +100,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             ((IHydroNetworkFeature)hydroObject).LongName.Returns(expectedLongName);
 
-            DelftIniCategory category = Generator.CreateStructureRegion((IHydroObject) hydroObject);
-            Assert.That(category.Properties.Count, Is.EqualTo(5));
-            AssertCorrectCommonRegionElements(category, 
+            IniSection iniSection = Generator.CreateStructureRegion((IHydroObject) hydroObject);
+            Assert.That(iniSection.Properties.Count, Is.EqualTo(5));
+            AssertCorrectCommonRegionElements(iniSection, 
                                               expectedName, 
                                               expectedLongName, 
                                               expectedBranchName,

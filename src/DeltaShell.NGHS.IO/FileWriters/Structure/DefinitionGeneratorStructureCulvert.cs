@@ -5,6 +5,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -12,7 +13,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     {
         public DefinitionGeneratorStructureCulvert(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
         
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
 
@@ -20,11 +21,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             var culvert = hydroObject as Culvert;
             
-            if (culvert == null) return IniCategory;
+            if (culvert == null) return IniSection;
          
             AddCommonCulvertElements(culvert);
            
-            return IniCategory;
+            return IniSection;
         }
 
         protected void AddCommonCulvertElements(ICulvert culvert)
@@ -42,48 +43,48 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         }
 
         private void AddAllowedFlowDir(ICulvert culvert) => 
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.AllowedFlowDir.Key, 
                                     culvert.FlowDirection.ToString().ToLower(), 
                                     StructureRegion.AllowedFlowDir.Description);
 
 
         private void AddLeftLevel(ICulvert culvert) => 
-            IniCategory.AddProperty(StructureRegion.LeftLevel.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.LeftLevel.Key, 
                                     culvert.InletLevel, 
                                     StructureRegion.LeftLevel.Description, 
                                     StructureRegion.LeftLevel.Format);
 
         private void AddRightLevel(ICulvert culvert) => 
-            IniCategory.AddProperty(StructureRegion.RightLevel.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.RightLevel.Key, 
                                     culvert.OutletLevel, 
                                     StructureRegion.RightLevel.Description, 
                                     StructureRegion.RightLevel.Format);
 
         private void AddCsDefId(ICulvert culvert) => 
-            IniCategory.AddProperty(StructureRegion.CsDefId.Key, 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.CsDefId.Key, 
                                     culvert.CrossSectionDefinition.Name, 
                                     StructureRegion.CsDefId.Description);
 
         private void AddLength(ICulvert culvert) => 
-            IniCategory.AddProperty(StructureRegion.Length.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Length.Key, 
                                     culvert.Length, 
                                     StructureRegion.Length.Description, 
                                     StructureRegion.Length.Format);
 
         private void AddInletLossCoeff(ICulvert culvert) => 
-            IniCategory.AddProperty(StructureRegion.InletLossCoeff.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.InletLossCoeff.Key, 
                                     culvert.InletLossCoefficient, 
                                     StructureRegion.InletLossCoeff.Description, 
                                     StructureRegion.InletLossCoeff.Format);
 
         private void AddOutletLossCoeff(ICulvert culvert) => 
-            IniCategory.AddProperty(StructureRegion.OutletLossCoeff.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.OutletLossCoeff.Key, 
                                     culvert.OutletLossCoefficient, 
                                     StructureRegion.OutletLossCoeff.Description, 
                                     StructureRegion.OutletLossCoeff.Format);
 
         private void AddValveOnOff(ICulvert culvert) => 
-            IniCategory.AddProperty(StructureRegion.ValveOnOff.Key, 
+            IniSection.AddProperty(StructureRegion.ValveOnOff.Key, 
                                     Convert.ToInt32(culvert.IsGated), 
                                     StructureRegion.ValveOnOff.Description);
 
@@ -106,9 +107,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 var relOpening = arguments[0].Values.Cast<double>();
                 var lossCoeff = components[0].Values.Cast<double>().ToList();
 
-                IniCategory.AddProperty(StructureRegion.LossCoeffCount.Key, lossCoeff.Count, StructureRegion.LossCoeffCount.Description);
-                IniCategory.AddProperty(StructureRegion.RelativeOpening.Key, relOpening, StructureRegion.RelativeOpening.Description, StructureRegion.RelativeOpening.Format);
-                IniCategory.AddProperty(StructureRegion.LossCoefficient.Key, lossCoeff, StructureRegion.LossCoefficient.Description, StructureRegion.LossCoefficient.Format);
+                IniSection.AddProperty(StructureRegion.LossCoeffCount.Key, lossCoeff.Count, StructureRegion.LossCoeffCount.Description);
+                IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.RelativeOpening.Key, relOpening, StructureRegion.RelativeOpening.Description, StructureRegion.RelativeOpening.Format);
+                IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.LossCoefficient.Key, lossCoeff, StructureRegion.LossCoefficient.Description, StructureRegion.LossCoefficient.Format);
             }
         }
     }

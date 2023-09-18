@@ -41,15 +41,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenFileWithNoCategories_WhenCallingReadFile_ThenThrowsException()
+        public void GivenFileWithNoIniSections_WhenCallingReadFile_ThenThrowsException()
         {
-            var noCategoriesFile = TestHelper.GetTestFilePath(@"IO\noCategories.ini");
+            var noIniSectionsFile = TestHelper.GetTestFilePath(@"IO\noCategories.ini");
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;
 
                 TestDelegate action = () =>
-                    InitialConditionInitialFieldsFileReader.ReadFile(noCategoriesFile, modelDefinition);
+                    InitialConditionInitialFieldsFileReader.ReadFile(noIniSectionsFile, modelDefinition);
 
                 Assert.Throws<FileReadingException>(action);
             }
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenInitialFieldsFile_WhenCallingReadFile_ThenReturnsExpectedTuple()
         {
-            var multipleValidCategoriesFile = TestHelper.GetTestFilePath(@"IO\initialFieldsWaterLevel_expected.ini");
+            var multipleValidIniSectionsFile = TestHelper.GetTestFilePath(@"IO\initialFieldsWaterLevel_expected.ini");
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;
@@ -67,16 +67,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     (InitialConditionQuantity.WaterLevel, "InitialWaterLevel.ini");
 
                 (InitialConditionQuantity, string) actualReturnValue =
-                    InitialConditionInitialFieldsFileReader.ReadFile(multipleValidCategoriesFile, modelDefinition);
+                    InitialConditionInitialFieldsFileReader.ReadFile(multipleValidIniSectionsFile, modelDefinition);
 
                 Assert.That(actualReturnValue, Is.EqualTo(expectedReturnValue)); 
             }
         }
 
         [Test]
-        public void GivenFileWithMultipleValidCategories_WhenCallingReadFile_ThenReturnsDataFromFirstCategoryAndLogsWarning()
+        public void GivenFileWithMultipleValidIniSections_WhenCallingReadFile_ThenReturnsDataFromFirstCategoryAndLogsWarning()
         {
-            var multipleValidCategoriesFile = TestHelper.GetTestFilePath(@"IO\multipleValidCategories.ini");
+            var multipleValidIniSectionsFile = TestHelper.GetTestFilePath(@"IO\multipleValidCategories.ini");
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;
@@ -86,10 +86,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
 
                 (InitialConditionQuantity, string) actualReturnValue =
-                    InitialConditionInitialFieldsFileReader.ReadFile(multipleValidCategoriesFile, modelDefinition);
+                    InitialConditionInitialFieldsFileReader.ReadFile(multipleValidIniSectionsFile, modelDefinition);
 
                 Action action = () =>
-                    InitialConditionInitialFieldsFileReader.ReadFile(multipleValidCategoriesFile, modelDefinition);
+                    InitialConditionInitialFieldsFileReader.ReadFile(multipleValidIniSectionsFile, modelDefinition);
                 TestHelper.AssertLogMessageIsGenerated(action, Properties.Resources.Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others, 1);
 
 

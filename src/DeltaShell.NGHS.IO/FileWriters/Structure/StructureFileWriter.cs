@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileWriters.General;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     /// <summary>
     /// <see cref="StructureFileWriter"/> provides a convenience <see cref="WriteFile"/>
-    /// method to generate <see cref="DelftIniCategory"/> and write the files to the
+    /// method to generate <see cref="IniSection"/> and write the files to the
     /// specified target path.
     /// </summary>
     public static class StructureFileWriter
     {
         /// <summary>
-        /// Write the set of <see cref="DelftIniCategory"/> generated with
-        /// <paramref name="createStructureCategoriesFunction"/> to the specified
+        /// Write the set of <see cref="IniSection"/> generated with
+        /// <paramref name="createStructureIniSectionsFunction"/> to the specified
         /// <paramref name="targetIniFile"/>.
         /// </summary>
         /// <param name="targetIniFile">
@@ -28,15 +28,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         /// <param name="referenceTime">
         /// The reference time used to write the time series contained in the model.
         /// </param>
-        /// <param name="createStructureCategoriesFunction">
-        /// The function to generate the categories with.
+        /// <param name="createStructureIniSectionsFunction">
+        /// The function to generate the INI sections with.
         /// </param>
         public static void WriteFile(string targetIniFile, 
                                      IEnumerable<IHydroRegion> regionsWithStructures, 
                                      DateTime referenceTime, 
-                                     Func<IEnumerable<IHydroRegion>, DateTime, IEnumerable<DelftIniCategory>> createStructureCategoriesFunction)
+                                     Func<IEnumerable<IHydroRegion>, DateTime, IEnumerable<IniSection>> createStructureIniSectionsFunction)
         {
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(
                     GeneralRegion.StructureDefinitionsMajorVersion, 
@@ -44,10 +44,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                     GeneralRegion.FileTypeName.StructureDefinition)
             };
 
-            categories.AddRange(createStructureCategoriesFunction(regionsWithStructures, referenceTime));
+            iniSections.AddRange(createStructureIniSectionsFunction(regionsWithStructures, referenceTime));
             
             if (File.Exists(targetIniFile)) File.Delete(targetIniFile);
-            new IniFileWriter().WriteIniFile(categories, targetIniFile);
+            new IniFileWriter().WriteIniFile(iniSections, targetIniFile);
         }
     }
 }

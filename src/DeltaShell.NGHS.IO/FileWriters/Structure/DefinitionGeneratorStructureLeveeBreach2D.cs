@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -15,66 +16,66 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             ReferenceDateTime = referenceDateTime;
         }
 
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             var leveeBreach = hydroObject as ILeveeBreach;
-            if (leveeBreach == null) return IniCategory;
+            if (leveeBreach == null) return IniSection;
 
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.LeveeBreach);
 
             
-            AddPropertyToIniCategory(leveeBreach.BreachLocationX, StructureRegion.BreachLocationX);
-            AddPropertyToIniCategory(leveeBreach.BreachLocationY, StructureRegion.BreachLocationY);
+            AddPropertyToIniSection(leveeBreach.BreachLocationX, StructureRegion.BreachLocationX);
+            AddPropertyToIniSection(leveeBreach.BreachLocationY, StructureRegion.BreachLocationY);
 
             var leveeBreachSettings = leveeBreach.GetActiveLeveeBreachSettings();
 
             if (ReferenceDateTime != null)
             {
                 var secondsSinceRefDate = (int) (leveeBreachSettings.StartTimeBreachGrowth - (DateTime) ReferenceDateTime).TotalSeconds;
-                IniCategory.AddProperty(StructureRegion.StartTimeBreachGrowth.Key, secondsSinceRefDate, StructureRegion.StartTimeBreachGrowth.Description);
+                IniSection.AddProperty(StructureRegion.StartTimeBreachGrowth.Key, secondsSinceRefDate, StructureRegion.StartTimeBreachGrowth.Description);
             }
 
             if (leveeBreach.WaterLevelFlowLocationsActive)
             {
-                AddPropertyToIniCategory(leveeBreach.WaterLevelUpstreamLocationX,
+                AddPropertyToIniSection(leveeBreach.WaterLevelUpstreamLocationX,
                     StructureRegion.WaterLevelUpstreamLocationX);
-                AddPropertyToIniCategory(leveeBreach.WaterLevelUpstreamLocationY,
+                AddPropertyToIniSection(leveeBreach.WaterLevelUpstreamLocationY,
                     StructureRegion.WaterLevelUpstreamLocationY);
-                AddPropertyToIniCategory(leveeBreach.WaterLevelDownstreamLocationX,
+                AddPropertyToIniSection(leveeBreach.WaterLevelDownstreamLocationX,
                     StructureRegion.WaterLevelDownstreamLocationX);
-                AddPropertyToIniCategory(leveeBreach.WaterLevelDownstreamLocationY,
+                AddPropertyToIniSection(leveeBreach.WaterLevelDownstreamLocationY,
                     StructureRegion.WaterLevelDownstreamLocationY);
             }
 
-            IniCategory.AddProperty(StructureRegion.BreachGrowthActivated.Key, leveeBreachSettings.BreachGrowthActive ? "1" : "0", StructureRegion.BreachGrowthActivated.Description);
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.BreachGrowthActivated.Key, leveeBreachSettings.BreachGrowthActive ? "1" : "0", StructureRegion.BreachGrowthActivated.Description);
 
-            if (!leveeBreachSettings.BreachGrowthActive) return IniCategory;
+            if (!leveeBreachSettings.BreachGrowthActive) return IniSection;
 
-            IniCategory.AddProperty(StructureRegion.Algorithm.Key, (int)leveeBreach.LeveeBreachFormula);
+            IniSection.AddProperty(StructureRegion.Algorithm.Key, (int)leveeBreach.LeveeBreachFormula);
 
             var verheijLeveeBreachSettings = leveeBreachSettings as VerheijVdKnaap2002BreachSettings;
             if (verheijLeveeBreachSettings != null)
             {
-                AddPropertyToIniCategory(verheijLeveeBreachSettings.InitialCrestLevel, StructureRegion.InitialCrestLevel);
-                AddPropertyToIniCategory(verheijLeveeBreachSettings.MinimumCrestLevel, StructureRegion.MinimumCrestLevel);
-                AddPropertyToIniCategory(verheijLeveeBreachSettings.InitialBreachWidth, StructureRegion.InitalBreachWidth);
+                AddPropertyToIniSection(verheijLeveeBreachSettings.InitialCrestLevel, StructureRegion.InitialCrestLevel);
+                AddPropertyToIniSection(verheijLeveeBreachSettings.MinimumCrestLevel, StructureRegion.MinimumCrestLevel);
+                AddPropertyToIniSection(verheijLeveeBreachSettings.InitialBreachWidth, StructureRegion.InitalBreachWidth);
 
                 var value = DataTypeValueParser.ToString(verheijLeveeBreachSettings.PeriodToReachZmin, typeof(TimeSpan));
-                IniCategory.AddProperty(StructureRegion.TimeToReachMinimumCrestLevel.Key, value);
+                IniSection.AddPropertyWithOptionalComment(StructureRegion.TimeToReachMinimumCrestLevel.Key, value);
 
-                AddPropertyToIniCategory(verheijLeveeBreachSettings.Factor1Alfa, StructureRegion.Factor1);
-                AddPropertyToIniCategory(verheijLeveeBreachSettings.Factor2Beta, StructureRegion.Factor2);
-                AddPropertyToIniCategory(verheijLeveeBreachSettings.CriticalFlowVelocity, StructureRegion.CriticalFlowVelocity);
+                AddPropertyToIniSection(verheijLeveeBreachSettings.Factor1Alfa, StructureRegion.Factor1);
+                AddPropertyToIniSection(verheijLeveeBreachSettings.Factor2Beta, StructureRegion.Factor2);
+                AddPropertyToIniSection(verheijLeveeBreachSettings.CriticalFlowVelocity, StructureRegion.CriticalFlowVelocity);
             }
 
             var userDefinedBreachSettings = leveeBreachSettings as UserDefinedBreachSettings;
             if (userDefinedBreachSettings != null)
             {
                 var timeSeriesFileName = $"{leveeBreach.Name}{FileSuffices.TimFile}";
-                IniCategory.AddProperty(StructureRegion.TimeFileName.Key, timeSeriesFileName);
+                IniSection.AddPropertyWithOptionalComment(StructureRegion.TimeFileName.Key, timeSeriesFileName);
             }
 
-            return IniCategory;
+            return IniSection;
         }
     }
 }

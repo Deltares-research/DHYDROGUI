@@ -7,6 +7,7 @@ using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
@@ -21,9 +22,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         private readonly string structureName;
 
         /// <summary>
-        /// The <see cref="IDelftIniCategory"/> for a structure.
+        /// The <see cref="IniSection"/> for a structure.
         /// </summary>
-        protected IDelftIniCategory Category { get; }
+        protected IniSection IniSection { get; }
         
         /// <summary>
         /// The branch the structure should be imported on.
@@ -39,7 +40,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// Initializes a new instance of <see cref="StructureParserBase"/>.
         /// </summary>
         /// <param name="structureType">The structure type.</param>
-        /// <param name="category">The structure <see cref="IDelftIniCategory"/> to parse.</param>
+        /// <param name="iniSection">The structure <see cref="DHYDRO.Common.IO.Ini.IniSection"/> to parse.</param>
         /// <param name="branch">The branch the structure should be imported to.</param>
         /// <param name="structuresFilename">The structures filename.</param>
         /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
@@ -47,29 +48,29 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// Thrown when an invalid <paramref name="structureType"/> is provided.
         /// </exception>
         protected StructureParserBase(StructureType structureType, 
-                                      IDelftIniCategory category, 
+                                      IniSection iniSection, 
                                       IBranch branch, 
                                       string structuresFilename)
         {
             Ensure.IsDefined(structureType, nameof(structureType));
-            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(iniSection, nameof(iniSection));
             Ensure.NotNull(branch, nameof(branch));
             Ensure.NotNull(structuresFilename, nameof(structuresFilename));
 
             StructureType = structureType;
-            Category = category;
+            IniSection = iniSection;
             Branch = branch;
             this.structuresFilename = structuresFilename;
-            structureName = category.ReadProperty<string>(StructureRegion.Id.Key, false, string.Empty);
+            structureName = iniSection.ReadProperty<string>(StructureRegion.Id.Key, false, string.Empty);
 
             errorMessages = new List<string>();
         }
 
         /// <summary>
-        /// Parses a structure from the structure <see cref="IDelftIniCategory"/>.
+        /// Parses a structure from the structure <see cref="DHYDRO.Common.IO.Ini.IniSection"/>.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="FileReadingException">Thrown when any property in the DelftInitCategory is missing a value.</exception>
+        /// <exception cref="FileReadingException">Thrown when any property in the IniSection is missing a value.</exception>
         public IStructure1D ParseStructure()
         {
             ValidateStructureProperties();
@@ -83,18 +84,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         }
 
         /// <summary>
-        /// Parses a structure from the <see cref="IDelftIniCategory"/>.
+        /// Parses a structure from the <see cref="DHYDRO.Common.IO.Ini.IniSection"/>.
         /// </summary>
         /// <returns>The parsed structure.</returns>
         protected abstract IStructure1D Parse();
 
         private void ValidateStructureProperties()
         {
-            foreach (DelftIniProperty property in Category.Properties
+            foreach (IniProperty property in IniSection.Properties
                                                           .Where(p => string.IsNullOrWhiteSpace(p.Value)))
             {
                 errorMessages.Add(string.Format(Resources.StructureParserBase_Missing_structure_property,
-                                                StructureType.ToString(), structureName, property.Name, structuresFilename,
+                                                StructureType.ToString(), structureName, property.Key, structuresFilename,
                                                 property.LineNumber));
             }
         }

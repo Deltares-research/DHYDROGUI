@@ -10,6 +10,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
@@ -21,7 +22,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
         public static void WriteFile(string filename, RoughnessSection roughnessSection)
         {
             var networkCoverage = roughnessSection.RoughnessNetworkCoverage;
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.RoughnessDataMajorVersion, 
                                                              GeneralRegion.RoughnessDataMinorVersion, 
@@ -39,20 +40,20 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
                 {
                     case RoughnessFunction.FunctionOfQ:
                         if (roughnessSection.FunctionOfQ(branch).Components[0].Values.Count > 0)
-                            categories.Add(GenerateBranchProperties(roughnessSection, branch, RoughnessFunction.FunctionOfQ));
+                            iniSections.Add(GenerateBranchProperties(roughnessSection, branch, RoughnessFunction.FunctionOfQ));
                         break;
                     case RoughnessFunction.FunctionOfH:
                         if (roughnessSection.FunctionOfH(branch).Components[0].Values.Count > 0)
-                            categories.Add(GenerateBranchProperties(roughnessSection, branch, RoughnessFunction.FunctionOfH));
+                            iniSections.Add(GenerateBranchProperties(roughnessSection, branch, RoughnessFunction.FunctionOfH));
                         break;
                     case RoughnessFunction.Constant:
-                        categories.Add(GenerateBranchProperties(roughnessSection, branch, RoughnessFunction.Constant));
+                        iniSections.Add(GenerateBranchProperties(roughnessSection, branch, RoughnessFunction.Constant));
                         break;
                 }
             }
 
             if (File.Exists(filename)) File.Delete(filename);
-            new IniFileWriter().WriteIniFile(categories, filename);
+            new IniFileWriter().WriteIniFile(iniSections, filename);
         }
 
         private static bool HasSpatialRoughnessDefinedOnBranch(RoughnessSection roughnessSection, IBranch branch)
@@ -69,23 +70,23 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             return locations.Any(networkLocation => networkLocation.Branch == branch);
         }
 
-        private static DelftIniCategory GenerateGlobal(RoughnessSection roughnessSection, INetworkCoverage networkCoverage)
+        private static IniSection GenerateGlobal(RoughnessSection roughnessSection, INetworkCoverage networkCoverage)
         {
             var reversedRoughnessSection = roughnessSection as ReverseRoughnessSection;
 
-            var content = new DelftIniCategory(RoughnessDataRegion.GlobalIniHeader);
+            var content = new IniSection(RoughnessDataRegion.GlobalIniHeader);
 
             var roughnessSectionId = reversedRoughnessSection?.NormalSection.Name ?? roughnessSection.Name;
 
-            content.AddProperty(RoughnessDataRegion.SectionId.Key, roughnessSectionId);
+            content.AddPropertyWithOptionalComment(RoughnessDataRegion.SectionId.Key, roughnessSectionId);
 
             var frictionType = ConvertFrictionTypeToTextForFM(roughnessSection);
             var frictionValue = roughnessSection.GetDefaultRoughnessValue();
 
             if (reversedRoughnessSection == null || !reversedRoughnessSection.UseNormalRoughness)
             {
-                content.AddProperty(RoughnessDataRegion.FrictionType.Key, frictionType, RoughnessDataRegion.FrictionType.Description);
-                content.AddProperty(RoughnessDataRegion.FrictionValue.Key, frictionValue, RoughnessDataRegion.FrictionValue.Description, RoughnessDataRegion.GlobalValue.Format);
+                content.AddPropertyWithOptionalComment(RoughnessDataRegion.FrictionType.Key, frictionType, RoughnessDataRegion.FrictionType.Description);
+                content.AddPropertyWithOptionalCommentAndFormat(RoughnessDataRegion.FrictionValue.Key, frictionValue, RoughnessDataRegion.FrictionValue.Description, RoughnessDataRegion.GlobalValue.Format);
             }
 
             return content;
@@ -114,21 +115,21 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             }
         }
 
-        private static DelftIniCategory GenerateBranchProperties(RoughnessSection roughnessSection, IBranch branch,
+        private static IniSection GenerateBranchProperties(RoughnessSection roughnessSection, IBranch branch,
             RoughnessFunction roughnessFunctionType)
         {
 
-            var branchProperties = new DelftIniCategory(RoughnessDataRegion.BranchPropertiesIniHeader);
-            branchProperties.AddProperty(SpatialDataRegion.BranchId.Key, branch.Name,
+            var branchProperties = new IniSection(RoughnessDataRegion.BranchPropertiesIniHeader);
+            branchProperties.AddPropertyWithOptionalComment(SpatialDataRegion.BranchId.Key, branch.Name,
                 SpatialDataRegion.BranchId.Description);
             var roughnessType =
                 FrictionTypeConverter.ConvertFrictionType(
                     roughnessSection.EvaluateRoughnessType(new NetworkLocation(branch,
                         0)));
-            branchProperties.AddProperty(RoughnessDataRegion.RoughnessType.Key, roughnessType.GetDisplayName(),
+            branchProperties.AddPropertyWithOptionalComment(RoughnessDataRegion.RoughnessType.Key, roughnessType.GetDisplayName(),
                 RoughnessDataRegion.RoughnessType.Description);
 
-            branchProperties.AddProperty(RoughnessDataRegion.FunctionType.Key, roughnessFunctionType.GetDescription(),
+            branchProperties.AddPropertyWithOptionalComment(RoughnessDataRegion.FunctionType.Key, roughnessFunctionType.GetDescription(),
                 RoughnessDataRegion.FunctionType.Description);
 
 
@@ -137,7 +138,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             if (roughnessFunctionType != RoughnessFunction.Constant && levels != null)
             {
                 branchProperties.AddProperty(RoughnessDataRegion.NumberOfLevels.Key, levels.Count, RoughnessDataRegion.NumberOfLevels.Description);
-                branchProperties.AddProperty(RoughnessDataRegion.Levels.Key, levels, null, RoughnessDataRegion.Levels.Format);
+                branchProperties.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(RoughnessDataRegion.Levels.Key, levels, null, RoughnessDataRegion.Levels.Format);
             }
 
             var locations = GetLocations(roughnessSection, branch);
@@ -160,7 +161,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
                     }
                 }
 
-                branchProperties.AddProperty(SpatialDataRegion.Chainage.Key, locations, null, SpatialDataRegion.Chainage.Format);
+                branchProperties.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(SpatialDataRegion.Chainage.Key, locations, null, SpatialDataRegion.Chainage.Format);
                 var valuesAsString = string.Empty;
                 for (int j = 0; j < nrOfLevels; j++)
                 {
@@ -168,7 +169,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
                     valuesAsString += Environment.NewLine;
                 }
                 
-                branchProperties.AddProperty(RoughnessDataRegion.Values.Key, valuesAsString);
+                branchProperties.AddPropertyWithOptionalComment(RoughnessDataRegion.Values.Key, valuesAsString);
             }
             else
             {
@@ -179,8 +180,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
 
                 branchProperties.AddProperty(RoughnessDataRegion.NumberOfLocations.Key, networkLocations.Count);
 
-                branchProperties.AddProperty(SpatialDataRegion.Chainage.Key, networkLocations.Select(nl => nl.Branch.GetBranchSnappedChainage(nl.Chainage)), SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
-                branchProperties.AddProperty(RoughnessDataRegion.Values.Key, networkLocations.Select(nl => roughnessSection.RoughnessNetworkCoverage.GetValues<double>(new VariableValueFilter<INetworkLocation>(roughnessSection.RoughnessNetworkCoverage.Locations, nl)).FirstOrDefault()), RoughnessDataRegion.Values.Description, RoughnessDataRegion.Values.Format);
+                branchProperties.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(SpatialDataRegion.Chainage.Key, networkLocations.Select(nl => nl.Branch.GetBranchSnappedChainage(nl.Chainage)), SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
+                branchProperties.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(RoughnessDataRegion.Values.Key, networkLocations.Select(nl => roughnessSection.RoughnessNetworkCoverage.GetValues<double>(new VariableValueFilter<INetworkLocation>(roughnessSection.RoughnessNetworkCoverage.Locations, nl)).FirstOrDefault()), RoughnessDataRegion.Values.Description, RoughnessDataRegion.Values.Format);
             }
             return branchProperties;
         }

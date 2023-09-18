@@ -409,10 +409,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var breachLocationX = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationX, 0.0);
             var breachLocationY = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationY, 0.0);
             
-            var isWaterLevelStreamActive =  structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyName.Equals(StructureRegion.WaterLevelUpstreamLocationX.Key,StringComparison.InvariantCultureIgnoreCase)) &&
-                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyName.Equals(StructureRegion.WaterLevelUpstreamLocationY.Key, StringComparison.InvariantCultureIgnoreCase)) &&
-                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyName.Equals(StructureRegion.WaterLevelDownstreamLocationX.Key, StringComparison.InvariantCultureIgnoreCase)) &&
-                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyName.Equals(StructureRegion.WaterLevelDownstreamLocationY.Key, StringComparison.InvariantCultureIgnoreCase));
+            var isWaterLevelStreamActive =  structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyKey.Equals(StructureRegion.WaterLevelUpstreamLocationX.Key,StringComparison.InvariantCultureIgnoreCase)) &&
+                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyKey.Equals(StructureRegion.WaterLevelUpstreamLocationY.Key, StringComparison.InvariantCultureIgnoreCase)) &&
+                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyKey.Equals(StructureRegion.WaterLevelDownstreamLocationX.Key, StringComparison.InvariantCultureIgnoreCase)) &&
+                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyKey.Equals(StructureRegion.WaterLevelDownstreamLocationY.Key, StringComparison.InvariantCultureIgnoreCase));
             
             var leveeBreach = new LeveeBreach
             {

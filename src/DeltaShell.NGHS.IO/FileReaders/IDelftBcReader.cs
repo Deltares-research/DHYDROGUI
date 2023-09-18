@@ -13,10 +13,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// </summary>
         /// <param name="bcFile">Location to read the file from</param>
         /// <returns>
-        /// The list of <see cref="IDelftBcCategory"/> read from <paramref name="bcFile"/>.
+        /// The list of <see cref="DelftBcCategory"/> read from <paramref name="bcFile"/>.
         /// </returns>
         /// <exception cref="IOException"><paramref name="iniFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
         /// <exception cref="FormatException">When an invalid line was encountered.</exception>
-        IList<IDelftBcCategory> ReadDelftBcFile(string bcFile);
+        IList<DelftBcCategory> ReadDelftBcFile(string bcFile);
     }
 }

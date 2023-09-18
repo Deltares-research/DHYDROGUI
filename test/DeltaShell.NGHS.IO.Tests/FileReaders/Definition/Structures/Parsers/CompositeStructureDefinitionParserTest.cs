@@ -2,7 +2,7 @@
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
@@ -15,14 +15,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         private const StructureType structureType = StructureType.CompositeBranchStructure;
 
         [Test]
-        public void Constructor_CategoryNull_ThrowsArgumentNullException()
+        public void Constructor_IniSectionNull_ThrowsArgumentNullException()
         {
             // Setup
-            IDelftIniCategory category = null;
+            IniSection iniSection = null;
             IBranch branch = new Channel();
 
             // Call
-            TestDelegate call = () => new CompositeStructureDefinitionParser(structureType, category, branch, structuresFilename);
+            TestDelegate call = () => new CompositeStructureDefinitionParser(structureType, iniSection, branch, structuresFilename);
 
             // Assert
             Assert.That(call, Throws.ArgumentNullException);
@@ -32,11 +32,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_BranchNull_ThrowsArgumentNullException()
         {
             // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             IBranch branch = null;
 
             // Call
-            TestDelegate call = () => new CompositeStructureDefinitionParser(structureType, category, 
+            TestDelegate call = () => new CompositeStructureDefinitionParser(structureType, iniSection, 
                                                                              branch, structuresFilename);
             
             // Assert
@@ -47,11 +47,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_StructuresFilenameNull_ThrowsArgumentNullException()
         {
             // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             IBranch branch = new Channel();
 
             // Call
-            TestDelegate call = () => new CompositeStructureDefinitionParser(structureType, category, branch, null);
+            TestDelegate call = () => new CompositeStructureDefinitionParser(structureType, iniSection, branch, null);
             
             // Assert
             Assert.That(call, Throws.ArgumentNullException);
@@ -61,11 +61,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var category = StructureParserTestHelper.CreateStructureCategory();
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
             var branch = new Channel();
 
             // Call
-            var parser = new CompositeStructureDefinitionParser(structureType, category, branch, structuresFilename);
+            var parser = new CompositeStructureDefinitionParser(structureType, iniSection, branch, structuresFilename);
 
             // Assert
             Assert.That(parser, Is.InstanceOf<StructureParserBase>());
@@ -82,13 +82,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
             
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.StructureIds.Key, tag);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.StructureIds.Key, tag);
 
-            var parser = new CompositeStructureDefinitionParser(structureType, category, branch, structuresFilename);
+            var parser = new CompositeStructureDefinitionParser(structureType, iniSection, branch, structuresFilename);
 
             // Call
             IStructure1D parsedStructure = parser.ParseStructure();

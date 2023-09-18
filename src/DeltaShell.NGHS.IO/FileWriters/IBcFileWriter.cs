@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
@@ -15,6 +16,6 @@ namespace DeltaShell.NGHS.IO.FileWriters
         /// <param name="categories">Data to be written.</param>
         /// <param name="iniFile">Location to write to.</param>
         /// <exception cref="IOException">An I/O error occurs. </exception>
-        void WriteBcFile(IEnumerable<IDelftIniCategory> categories, string iniFile);
+        void WriteBcFile(IEnumerable<DelftBcCategory> categories, string iniFile);
     }
 }

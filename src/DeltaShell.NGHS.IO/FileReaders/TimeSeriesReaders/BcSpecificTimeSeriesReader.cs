@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
         private readonly IDelftBcReader reader;
         private readonly IBcCategoryParser parser;
         private readonly ILogHandler logHandler;
-        private Dictionary<string, IDelftBcCategory[]> structureDictionary;
+        private Dictionary<string, DelftBcCategory[]> structureDictionary;
         
         public bool CanReadProperty(string propertyValue)
         {
@@ -64,7 +64,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
 
             string retrievedQuantity = QuantityHelper.GetQuantity(structureTimeSeries.Structure, structureTimeSeries.TimeSeries.Name);
 
-            IDelftBcCategory retrievedStructureCategory = RetrieveStructuresCategory(structureTimeSeries.Structure.Name, retrievedQuantity);
+            DelftBcCategory retrievedStructureCategory = RetrieveStructuresCategory(structureTimeSeries.Structure.Name, retrievedQuantity);
 
             if (retrievedStructureCategory == null)
             {
@@ -82,25 +82,25 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
         {
             if (structureDictionary == null)
             {
-                IList<IDelftBcCategory> structuresFromFile = reader.ReadDelftBcFile(filePath);
+                IList<DelftBcCategory> structuresFromFile = reader.ReadDelftBcFile(filePath);
                 structureDictionary = ConvertStructureListToDictionary(structuresFromFile);
             }
         }
 
-        private static Dictionary<string, IDelftBcCategory[]> ConvertStructureListToDictionary(IList<IDelftBcCategory> structuresFromFile)
+        private static Dictionary<string, DelftBcCategory[]> ConvertStructureListToDictionary(IList<DelftBcCategory> structuresFromFile)
         {
             return GroupStructuresByNameAndNotNull(structuresFromFile).ToDictionary(group => @group.Key, grouping => grouping.ToArray());
         }
 
-        private static IEnumerable<IGrouping<string, IDelftBcCategory>> GroupStructuresByNameAndNotNull(IList<IDelftBcCategory> structuresFromFile)
+        private static IEnumerable<IGrouping<string, DelftBcCategory>> GroupStructuresByNameAndNotNull(IList<DelftBcCategory> structuresFromFile)
         {
-            IEnumerable<IGrouping<string, IDelftBcCategory>> structuresGroupedByName = structuresFromFile.GroupBy(category => category.GetPropertyValue("name"));
+            IEnumerable<IGrouping<string, DelftBcCategory>> structuresGroupedByName = structuresFromFile.GroupBy(category => category.Section.GetPropertyValueWithOptionalDefaultValue("name"));
             return structuresGroupedByName.Where(group => @group.Key != null);
         }
 
-        private IDelftBcCategory RetrieveStructuresCategory(string structureName, string relevantQuantity)
+        private DelftBcCategory RetrieveStructuresCategory(string structureName, string relevantQuantity)
         {
-            if (structureDictionary.TryGetValue(structureName, out IDelftBcCategory[] categories))
+            if (structureDictionary.TryGetValue(structureName, out DelftBcCategory[] categories))
             {
                 return categories.FirstOrDefault(category => category.Table.Any(data => data.Quantity.Value.Equals(relevantQuantity)));
             }
@@ -108,10 +108,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
             return null;
         }
 
-        private void ReadTimeSeriesIntoFunction(ITimeSeries givenTimeSeries, IDelftBcCategory bcCategory)
+        private void ReadTimeSeriesIntoFunction(ITimeSeries givenTimeSeries, DelftBcCategory bcCategory)
         {
             IList<IDelftBcQuantityData> table = bcCategory.Table;
-            CreateTimeSeries(table, table.First().Unit.Value, givenTimeSeries, bcCategory.LineNumber);
+            CreateTimeSeries(table, table.First().Unit.Value, givenTimeSeries, bcCategory.Section.LineNumber);
         }
 
         private void CreateTimeSeries(IList<IDelftBcQuantityData> table, string periodic, ITimeSeries givenTimeSeries, int lineNumber)

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
@@ -11,9 +11,9 @@ namespace DeltaShell.NGHS.IO.FileWriters
         /// <summary>
         /// Creates a Delft .ini format file at target location.
         /// </summary>
-        /// <param name="categories"> Data to be written. </param>
+        /// <param name="iniSections"> Data to be written. </param>
         /// <param name="iniFile"> File path to write to.</param>
         /// <param name="writeComment"> Optional; whether or not to write the comments. Defaults to <c>true</c>. </param>
-        void WriteDelftIniFile(IEnumerable<IDelftIniCategory> categories, string iniFile, bool writeComment = true);
+        void WriteDelftIniFile(IEnumerable<IniSection> iniSections, string iniFile, bool writeComment = true);
     }
 }

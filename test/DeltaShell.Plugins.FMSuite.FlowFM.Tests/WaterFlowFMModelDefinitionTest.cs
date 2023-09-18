@@ -263,8 +263,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
             };
             mduFileInA.Read(mduFilePathA, convertedFileObjectsForFMModelA);
-            var fileCategories = modelDefinitionA.Properties.Select(p => p.PropertyDefinition.FileCategoryName);
-            Assert.IsTrue(fileCategories.Contains("group_A"));
+            var fileIniSections = modelDefinitionA.Properties.Select(p => p.PropertyDefinition.FileSectionName);
+            Assert.IsTrue(fileIniSections.Contains("group_A"));
             Assert.AreEqual("A", modelDefinitionA.GetModelProperty("parametera").Value);
 
 

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// Initializes a new instance of <see cref="CrossSectionDependentStructureParserBase"/>.
         /// </summary>
         /// <param name="structureType">The structure type.</param>
-        /// <param name="category">A structure <see cref="IDelftIniCategory"/>.</param>
+        /// <param name="iniSection">A structure <see cref="IniSection"/>.</param>
         /// <param name="crossSectionDefinitions">A collection of cross-section definitions.</param>
         /// <param name="branch">The branch the structure should be imported to.</param>
         /// <param name="structuresFilename">The structures filename.</param>
@@ -33,11 +33,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// Thrown when an invalid <paramref name="structureType"/> is provided.
         /// </exception>
         protected CrossSectionDependentStructureParserBase(StructureType structureType,
-                                                           IDelftIniCategory category,
+                                                           IniSection iniSection,
                                                            ICollection<ICrossSectionDefinition> crossSectionDefinitions,
                                                            IBranch branch, 
                                                            string structuresFilename) 
-            : base(structureType, category, branch, structuresFilename)
+            : base(structureType, iniSection, branch, structuresFilename)
         {
             Ensure.NotNull(crossSectionDefinitions, nameof(crossSectionDefinitions));
 

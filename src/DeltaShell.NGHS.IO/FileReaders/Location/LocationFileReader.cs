@@ -7,6 +7,7 @@ using DelftTools.Hydro.Helpers;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
@@ -23,17 +24,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         public static void ReadFileObservationPointLocations(string filename, IHydroNetwork network)
         {
             if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
-            var categories = new DelftIniReader().ReadDelftIniFile(filename);
-            if (categories.Count == 0) return;
+            var iniSections = new DelftIniReader().ReadDelftIniFile(filename);
+            if (iniSections.Count == 0) return;
             
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();  
 
             IList<LocationPropertyValues> locationPropertyValuesList = new List<LocationPropertyValues>();
-            foreach (var observationPointCategory in categories.Where(category => category.Name == ObservationPointRegion.IniHeader))
+            foreach (var observationPointIniSection in iniSections.Where(iniSection => iniSection.Name == ObservationPointRegion.IniHeader))
             {
                 try
                 {
-                    var locationPropertyValues = GetCommonLocationPropertyValues(observationPointCategory, network);
+                    var locationPropertyValues = GetCommonLocationPropertyValues(observationPointIniSection, network);
                     if (locationPropertyValues == null) continue;
                     locationPropertyValuesList.Add(locationPropertyValues);
                 }
@@ -65,17 +66,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         public static void ReadFileLateralDischargeLocations(string filename, IHydroNetwork network)
         {
             if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
-            var categories = new DelftIniReader().ReadDelftIniFile(filename);
-            if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
+            var iniSections = new DelftIniReader().ReadDelftIniFile(filename);
+            if (iniSections.Count == 0) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
             IList<LocationPropertyValues> locationPropertyValuesList = new List<LocationPropertyValues>();
-            foreach (var lateralDischargeCategory in categories.Where(category => category.Name == BoundaryRegion.LateralDischargeHeader))
+            foreach (var lateralDischargeIniSection in iniSections.Where(iniSection => iniSection.Name == BoundaryRegion.LateralDischargeHeader))
             {
                 try
                 {
-                    var locationPropertyValues = GetCommonLocationPropertyValues(lateralDischargeCategory, network);
+                    var locationPropertyValues = GetCommonLocationPropertyValues(lateralDischargeIniSection, network);
                     if (locationPropertyValues == null) continue;
                     locationPropertyValuesList.Add(locationPropertyValues);
                 }
@@ -106,32 +107,32 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             }
         }
    
-        private static LocationPropertyValues GetCommonLocationPropertyValues(IDelftIniCategory category, IHydroNetwork network)
+        private static LocationPropertyValues GetCommonLocationPropertyValues(IniSection iniSection, IHydroNetwork network)
         {
             var locationPropertyValues = new LocationPropertyValues();
-            if (category.GetPropertyValue(LocationRegion.Chainage.Key) == null ||
-                category.GetPropertyValue(LocationRegion.BranchId.Key) == null) return null; //2d obs point do not add as a 1d obs point
+            if (iniSection.GetPropertyValueWithOptionalDefaultValue(LocationRegion.Chainage.Key) == null ||
+                iniSection.GetPropertyValueWithOptionalDefaultValue(LocationRegion.BranchId.Key) == null) return null; //2d obs point do not add as a 1d obs point
             
             // Essential Properties (an error will be generated if these fail)
             locationPropertyValues.name =
-                string.IsNullOrEmpty(category.ReadProperty<string>(LocationRegion.Id.Key, true))
-                    ? category.ReadProperty<string>(LocationRegion.ObsId.Key)
-                    : category.ReadProperty<string>(LocationRegion.Id.Key);
+                string.IsNullOrEmpty(iniSection.ReadProperty<string>(LocationRegion.Id.Key, true))
+                    ? iniSection.ReadProperty<string>(LocationRegion.ObsId.Key)
+                    : iniSection.ReadProperty<string>(LocationRegion.Id.Key);
 
             
-            var branchName = category.ReadProperty<string>(LocationRegion.BranchId.Key);
+            var branchName = iniSection.ReadProperty<string>(LocationRegion.BranchId.Key);
             locationPropertyValues.branch = network.Channels.FirstOrDefault(c => c.Name == branchName);
             if (locationPropertyValues.branch == null)
             {
-                var errorMessage = string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name, LocationRegion.BranchId.Key, Environment.NewLine);
+                var errorMessage = string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}", iniSection.Name, LocationRegion.BranchId.Key, Environment.NewLine);
                 throw new FileReadingException(errorMessage);
             }
 
-            locationPropertyValues.chainage = locationPropertyValues.branch.GetBranchSnappedChainage(category.ReadProperty<double>(LocationRegion.Chainage.Key));
+            locationPropertyValues.chainage = locationPropertyValues.branch.GetBranchSnappedChainage(iniSection.ReadProperty<double>(LocationRegion.Chainage.Key));
             
             // Optional Properties (an error will not be generated if these fail) 
-            locationPropertyValues.longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
-            locationPropertyValues.diffuseLength = category.ReadProperty<double?>(LateralSourceLocationRegion.Length.Key, true); 
+            locationPropertyValues.longName = iniSection.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
+            locationPropertyValues.diffuseLength = iniSection.ReadProperty<double?>(LateralSourceLocationRegion.Length.Key, true); 
 
             return locationPropertyValues;
         }

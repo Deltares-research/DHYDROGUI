@@ -5,11 +5,11 @@ using DeltaShell.NGHS.IO.Helpers;
 namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
 {
     /// <summary>
-    /// An equality comparer for <see cref="IDelftBcCategory"/>.
+    /// An equality comparer for <see cref="DelftBcCategory"/>.
     /// </summary>
-    public class DelftBcCategoryEqualityComparer : IEqualityComparer<IDelftBcCategory>
+    public class DelftBcCategoryEqualityComparer : IEqualityComparer<DelftBcCategory>
     {
-        private static readonly DelftIniCategoryEqualityComparer categoryComparer = new DelftIniCategoryEqualityComparer();
+        private static readonly DelftIniCategoryEqualityComparer iniSectionComparer = new DelftIniCategoryEqualityComparer();
         private static readonly DelftBcQuantityDataEqualityComparer quantityDataEqualityComparer = new DelftBcQuantityDataEqualityComparer();
 
         /// <summary>
@@ -20,14 +20,14 @@ namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
         /// <returns>
         /// <see langword="true"/> if the specified categories are equal; otherwise, <see langword="false"/>.
         /// </returns>
-        public bool Equals(IDelftBcCategory x, IDelftBcCategory y)
+        public bool Equals(DelftBcCategory x, DelftBcCategory y)
         {
             if (ReferenceEquals(x, y))
             {
                 return true;
             }
 
-            if (!categoryComparer.Equals(x, y))
+            if (!iniSectionComparer.Equals(x.Section, y.Section))
             {
                 return false;
             }
@@ -42,11 +42,11 @@ namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
         }
 
         /// <inheritdoc/>
-        public int GetHashCode(IDelftBcCategory obj)
+        public int GetHashCode(DelftBcCategory obj)
         {
-            int hashCode = obj.Name != null ? obj.Name.GetHashCode() : 0;
-            hashCode = (hashCode * 397) ^ (obj.Properties != null ? obj.Properties.GetHashCode() : 0);
-            hashCode = (hashCode * 397) ^ obj.LineNumber;
+            int hashCode = obj.Section.Name != null ? obj.Section.Name.GetHashCode() : 0;
+            hashCode = (hashCode * 397) ^ (obj.Section.Properties != null ? obj.Section.Properties.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ obj.Section.LineNumber;
             hashCode = (hashCode * 397) ^ (obj.Table != null ? obj.Table.GetHashCode() : 0);
             return hashCode;
         }

@@ -4,8 +4,8 @@ using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         private const StructureType structureType = StructureType.Pump;
 
         [Test]
-        public void Constructor_CategoryNull_ThrowsArgumentNullException()
+        public void Constructor_IniSectionNull_ThrowsArgumentNullException()
         {
             // Setup
             IBranch branch = new Channel();
@@ -34,10 +34,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_BranchNull_ThrowsArgumentNullException()
         {
             // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
 
             // Call
-            TestDelegate call = () => new TestStructureParser(structureType, category, null, structuresFilename);
+            TestDelegate call = () => new TestStructureParser(structureType, iniSection, null, structuresFilename);
 
             // Assert
             Assert.That(call, Throws.ArgumentNullException);
@@ -48,10 +48,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         {
             // Setup
             IBranch branch = new Channel();
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             
             // Call
-            TestDelegate call = () => new TestStructureParser(structureType, category, branch, null);
+            TestDelegate call = () => new TestStructureParser(structureType, iniSection, branch, null);
 
             // Assert
             Assert.That(call, Throws.ArgumentNullException);
@@ -63,10 +63,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             // Setup
             StructureType structureType = (StructureType) 9999;
             IBranch branch = new Channel();
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             
             // Call
-            TestDelegate call = () => new TestStructureParser(structureType, category, branch, structuresFilename);
+            TestDelegate call = () => new TestStructureParser(structureType, iniSection, branch, structuresFilename);
 
             // Assert
             Assert.That(call, Throws.Exception.TypeOf<InvalidEnumArgumentException>());
@@ -76,11 +76,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_ExpectedValues()
         {
             // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             IBranch branch = new Channel();
             
             // Call
-            var parser = new TestStructureParser(structureType, category, branch, structuresFilename);
+            var parser = new TestStructureParser(structureType, iniSection, branch, structuresFilename);
 
             // Assert
             Assert.That(parser, Is.InstanceOf<IStructureParser>());
@@ -95,13 +95,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             const string propertyName = "PropertyWithMissingValue";
             const int propertyLineNumber = 456;
                          
-            IDelftIniCategory category = CreateStructureCategoryWithPropertyAndMissingValue(structureLineNumber,
+            IniSection iniSection = CreateStructureIniSectionWithPropertyAndMissingValue(structureLineNumber,
                                                                                             structureName,
                                                                                             propertyName,
                                                                                             propertyLineNumber);
             IBranch branch = new Channel();
             
-            var parser = new TestStructureParser(structureType, category, branch, structuresFilename);
+            var parser = new TestStructureParser(structureType, iniSection, branch, structuresFilename);
 
             // Call
             TestDelegate call = () => parser.ParseStructure();
@@ -122,9 +122,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void ParseStructure_CallsAbstractParseMethod()
         {
             // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
             IBranch branch = new Channel();
-            var parser = new TestStructureParser(structureType, category, branch, structuresFilename);
+            var parser = new TestStructureParser(structureType, iniSection, branch, structuresFilename);
 
             // Call
             IStructure1D parsedStructure = parser.ParseStructure();
@@ -133,25 +133,25 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             Assert.That(parsedStructure.Name, Is.EqualTo("ParsedStructure"));
         }
 
-        private IDelftIniCategory CreateStructureCategoryWithPropertyAndMissingValue(int structureLineNumber,
+        private IniSection CreateStructureIniSectionWithPropertyAndMissingValue(int structureLineNumber,
                                                                                      string structureName,
                                                                                      string propertyName, 
                                                                                      int lineNumber)
         {
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory(structureLineNumber);
-            category.AddProperty(StructureRegion.Id.Key, structureName, lineNumber);
-            category.AddProperty(propertyName, string.Empty, lineNumber);
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection(structureLineNumber);
+            iniSection.AddProperty(StructureRegion.Id.Key, structureName, lineNumber);
+            iniSection.AddProperty(propertyName, string.Empty, lineNumber);
             
-            return category;
+            return iniSection;
         }
 
         private class TestStructureParser : StructureParserBase
         {
             public TestStructureParser(StructureType structureType,
-                                       IDelftIniCategory category,
+                                       IniSection iniSection,
                                        IBranch branch,
                                        string structuresFilename) 
-                : base(structureType, category, branch, structuresFilename) {}
+                : base(structureType, iniSection, branch, structuresFilename) {}
             
             protected override IStructure1D Parse()
             {

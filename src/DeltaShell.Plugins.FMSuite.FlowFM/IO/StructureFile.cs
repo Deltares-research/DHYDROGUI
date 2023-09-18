@@ -16,15 +16,15 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.FileWriters.TimeSeriesWriters;
 using DeltaShell.NGHS.IO.Helpers;
-
+using DHYDRO.Common.IO.Ini;
 using WriteTimeSeriesAction = System.Action<string, System.DateTime, object>;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     /// <summary>
-    /// <see cref="StructureFile"/> provides the logic to generate the <see cref="DelftIniCategory"/>
+    /// <see cref="StructureFile"/> provides the logic to generate the <see cref="IniSection"/>
     /// objects corresponding with the structures in a set of <see cref="IHydroRegion"/> through
-    /// <see cref="GenerateStructureCategoriesFromFmModel"/>.
+    /// <see cref="GenerateStructureIniSectionsFromFmModel"/>.
     /// </summary>
     public static class StructureFile
     {
@@ -48,18 +48,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         /// <summary>
-        /// Generate the <see cref="DelftIniCategory"/> objects corresponding with the structures in the provided <paramref name="regions"/>.
+        /// Generate the <see cref="IniSection"/> objects corresponding with the structures in the provided <paramref name="regions"/>.
         /// </summary>
         /// <param name="regions">The regions from which the structures should be obtained.</param>
         /// <param name="referenceTime">The reference time of the model.</param>
         /// <returns>
-        /// A collection of <see cref="DelftIniCategory"/> corresponding with the structures in the provided <paramref name="regions"/>.
+        /// A collection of <see cref="IniSection"/> corresponding with the structures in the provided <paramref name="regions"/>.
         /// </returns>
         /// <remarks>
         /// Note that only the first <see cref="HydroArea"/> and first <see cref="IHydroNetwork"/> in the <paramref name="regions"/>
         /// are generated.
         /// </remarks>
-        public static IEnumerable<DelftIniCategory> GenerateStructureCategoriesFromFmModel(IEnumerable<IHydroRegion> regions, DateTime referenceTime)
+        public static IEnumerable<IniSection> GenerateStructureIniSectionsFromFmModel(IEnumerable<IHydroRegion> regions, DateTime referenceTime)
         {
             IHydroRegion[] regionsArray = regions.ToArray();
             return Enumerable.Concat(Generate1DStructureDescriptions(regionsArray),
@@ -82,18 +82,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteStructure2DTimeSeries(regionsArray, mduFilePath, referenceTime);
         }
 
-        private static IEnumerable<DelftIniCategory> Generate1DStructureDescriptions(IEnumerable<IHydroRegion> regions)
+        private static IEnumerable<IniSection> Generate1DStructureDescriptions(IEnumerable<IHydroRegion> regions)
         {
             IHydroNetwork network = regions.OfType<IHydroNetwork>().FirstOrDefault();
             return network != null ? ExtractFunctionStructuresOfNetworkGenerator(network)
-                                   : Enumerable.Empty<DelftIniCategory>();
+                                   : Enumerable.Empty<IniSection>();
         }
 
-        private static IEnumerable<DelftIniCategory> Generate2DStructureDescriptions(IEnumerable<IHydroRegion> regions, DateTime referenceTime)
+        private static IEnumerable<IniSection> Generate2DStructureDescriptions(IEnumerable<IHydroRegion> regions, DateTime referenceTime)
         {
             HydroArea area = regions.OfType<HydroArea>().FirstOrDefault();
             return area != null ? ExtractFunctionStructuresOfAreaGenerator(area, referenceTime)
-                                : Enumerable.Empty<DelftIniCategory>();
+                                : Enumerable.Empty<IniSection>();
         }
 
         private static void WriteStructure1DTimeSeries(IEnumerable<IHydroRegion> regions,
@@ -147,15 +147,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static IEnumerable<IStructure1D> GetSimpleStructures(this IHydroNetwork network) =>
             network.Structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure);
 
-        private static IEnumerable<DelftIniCategory> ExtractFunctionStructuresOfNetworkGenerator(IHydroNetwork network)
+        private static IEnumerable<IniSection> ExtractFunctionStructuresOfNetworkGenerator(IHydroNetwork network)
         {
             List<ICompositeBranchStructure> compositeStructures = network.GetCompositeStructures().ToList();
 
             foreach (IStructure1D structure in network.GetStructures(compositeStructures))
             {
-                DelftIniCategory category = ExtractStructureCategory(structure);
-                if (category != null)
-                    yield return category;
+                IniSection iniSection = ExtractStructureIniSection(structure);
+                if (iniSection != null)
+                    yield return iniSection;
             }
 
             foreach (ICompositeBranchStructure compositeStructure in compositeStructures.Where(ShouldCreateRegion))
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             branchStructure.Structures.Count > 0 ||
             branchStructure.Branch is SewerConnection;
 
-        private static DelftIniCategory ExtractStructureCategory(IStructure1D structure)
+        private static IniSection ExtractStructureIniSection(IStructure1D structure)
         {
             StructureType structureType = structure.GetStructureType();
             IDefinitionGeneratorStructure definitionGeneratorStructure =
@@ -176,46 +176,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (definitionGeneratorStructure == null)
                 return null;
 
-            DelftIniCategory structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure);
+            IniSection structureIniSection = definitionGeneratorStructure.CreateStructureRegion(structure);
             if (structure is IFrictionData structureFrictionData)
             {
                 if (structure is IBridge)
                 {
                     //key is friction
-                    AddFrictionData(structureCategory,
+                    AddFrictionData(structureIniSection,
                                     structureFrictionData.FrictionDataType,
                                     structureFrictionData.Friction);
                 }
                 else
                 {
                     //key is bed friction
-                    AddBedFrictionData(structureCategory,
+                    AddBedFrictionData(structureIniSection,
                                        structureFrictionData.FrictionDataType,
                                        structureFrictionData.Friction);
                 }
             }
 
-            return structureCategory;
+            return structureIniSection;
         }
 
-        private static void AddBedFrictionData(IDelftIniCategory category, Friction frictionType, double friction)
+        private static void AddBedFrictionData(IniSection iniSection, Friction frictionType, double friction)
         {
-            category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType.ToString().ToLower(), StructureRegion.BedFrictionType.Description);
-            category.AddProperty(StructureRegion.BedFriction.Key, friction, StructureRegion.BedFriction.Description, StructureRegion.BedFriction.Format);
+            iniSection.AddPropertyWithOptionalComment(StructureRegion.BedFrictionType.Key, frictionType.ToString().ToLower(), StructureRegion.BedFrictionType.Description);
+            iniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.BedFriction.Key, friction, StructureRegion.BedFriction.Description, StructureRegion.BedFriction.Format);
         }
-        private static void AddFrictionData(IDelftIniCategory category, Friction frictionType, double friction)
+        private static void AddFrictionData(IniSection iniSection, Friction frictionType, double friction)
         {
-            category.AddProperty(StructureRegion.FrictionType.Key, frictionType.ToString().ToLower(), StructureRegion.FrictionType.Description);
-            category.AddProperty(StructureRegion.Friction.Key, friction, StructureRegion.Friction.Description, StructureRegion.Friction.Format);
+            iniSection.AddPropertyWithOptionalComment(StructureRegion.FrictionType.Key, frictionType.ToString().ToLower(), StructureRegion.FrictionType.Description);
+            iniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Friction.Key, friction, StructureRegion.Friction.Description, StructureRegion.Friction.Format);
         }
 
-        private static IEnumerable<DelftIniCategory> ExtractFunctionStructuresOfAreaGenerator(HydroArea area, DateTime referenceDateTime) =>
-            GetStructures2D(area).Select(structure => CreateStructure2DDelftIniCategory(structure, referenceDateTime));
+        private static IEnumerable<IniSection> ExtractFunctionStructuresOfAreaGenerator(HydroArea area, DateTime referenceDateTime) =>
+            GetStructures2D(area).Select(structure => CreateStructure2DIniSection(structure, referenceDateTime));
 
         private static IEnumerable<IStructure2D> GetStructures2D(HydroArea area) =>
             area.AllHydroObjects.Cast<IStructure2D>();
 
-        private static DelftIniCategory CreateStructure2DDelftIniCategory(IStructure2D structure, DateTime referenceDateTime)
+        private static IniSection CreateStructure2DIniSection(IStructure2D structure, DateTime referenceDateTime)
         {
             DefinitionGeneratorStructure2D definitionGeneratorStructure =
                 DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure.Structure2DType, referenceDateTime);

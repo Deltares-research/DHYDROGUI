@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
@@ -50,26 +51,26 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         public void CreateStructureRegion_TStructure_ExpectedResult(Pump structure,
                                                                     string expectedCapacity)
         {
-            IDelftIniCategory category = Generator.CreateStructureRegion(structure);
+            IniSection iniSection = Generator.CreateStructureRegion(structure);
 
-            Assert.That(category.Properties.Count, Is.EqualTo(16));
-            AssertCorrectCommonRegionElements(category, 
+            Assert.That(iniSection.Properties.Count(), Is.EqualTo(16));
+            AssertCorrectCommonRegionElements(iniSection, 
                                               nameof(Pump),
                                               expectedLongName,
                                               expectedBranchName,
                                               chainageStr,
                                               TStructureDefinitionType);
-            AssertCorrectProperty(category, StructureRegion.Orientation.Key, "positive");
-            AssertCorrectProperty(category, "controlSide", "suctionSide");
-            AssertCorrectProperty(category, "numStages", "1");
-            AssertCorrectProperty(category, StructureRegion.Capacity.Key, expectedCapacity);
-            AssertCorrectProperty(category, StructureRegion.StartLevelSuctionSide.Key, "3.000");
-            AssertCorrectProperty(category, StructureRegion.StopLevelSuctionSide.Key, "2.000");
-            AssertCorrectProperty(category, StructureRegion.StartLevelDeliverySide.Key, "0.000");
-            AssertCorrectProperty(category, StructureRegion.StopLevelDeliverySide.Key, "0.000");
-            AssertCorrectProperty(category, StructureRegion.ReductionFactorLevels.Key, "0");
-            AssertCorrectProperty(category, StructureRegion.Head.Key, "0.0000000e+000");
-            AssertCorrectProperty(category, StructureRegion.ReductionFactor.Key, "1.0000000e+000");
+            AssertCorrectProperty(iniSection, StructureRegion.Orientation.Key, "positive");
+            AssertCorrectProperty(iniSection, "controlSide", "suctionSide");
+            AssertCorrectProperty(iniSection, "numStages", "1");
+            AssertCorrectProperty(iniSection, StructureRegion.Capacity.Key, expectedCapacity);
+            AssertCorrectProperty(iniSection, StructureRegion.StartLevelSuctionSide.Key, "3.000");
+            AssertCorrectProperty(iniSection, StructureRegion.StopLevelSuctionSide.Key, "2.000");
+            AssertCorrectProperty(iniSection, StructureRegion.StartLevelDeliverySide.Key, "0.000");
+            AssertCorrectProperty(iniSection, StructureRegion.StopLevelDeliverySide.Key, "0.000");
+            AssertCorrectProperty(iniSection, StructureRegion.ReductionFactorLevels.Key, "0");
+            AssertCorrectProperty(iniSection, StructureRegion.Head.Key, "0.0000000e+000");
+            AssertCorrectProperty(iniSection, StructureRegion.ReductionFactor.Key, "1.0000000e+000");
         } 
     }
 }

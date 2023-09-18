@@ -465,7 +465,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return line[0] == '[' && line.Length >= BlockKey.Length && line.Substring(0, BlockKey.Length).Equals(BlockKey, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public void Write(IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories, string file, string path)
+        public void Write(IEnumerable<DelftBcCategory> generateModel1DNodeBoundaryDelftBcCategories, string file, string path)
         {
             var delftBcWriter = new DelftBcWriter();
             switch (MultiFileMode)
@@ -473,16 +473,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 case WriteMode.SingleFile:
                 {
                     var filename = Path.Combine(path, file);
-                    WriteBc1DFile(generateModel1DNodeBoundaryDelftIniCategories, filename, delftBcWriter);
+                    WriteBc1DFile(generateModel1DNodeBoundaryDelftBcCategories, filename, delftBcWriter);
                     break;
                 }
                 case WriteMode.FilePerQuantity:
                 {
                     //werkt nog niet!
-                    var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories as IDelftIniCategory[] ?? generateModel1DNodeBoundaryDelftIniCategories.ToArray();
-                    var quantityNameWithBoundaryDataDictionary = model1DNodeBoundaryDelftIniCategories
-                            .GroupBy(GetQuantityNameFromDelftIniCategory).ToDictionary(grp => grp.Key,
-                                grp => { return GetSubListOfItemsOfThisQuantity(grp.FirstOrDefault(), model1DNodeBoundaryDelftIniCategories).ToList(); });
+                    var model1DNodeBoundaryDelftBcCategories = generateModel1DNodeBoundaryDelftBcCategories as DelftBcCategory[] ?? generateModel1DNodeBoundaryDelftBcCategories.ToArray();
+                    var quantityNameWithBoundaryDataDictionary = model1DNodeBoundaryDelftBcCategories
+                            .GroupBy(GetQuantityNameFromDelftBcCategory).ToDictionary(grp => grp.Key,
+                                grp => { return GetSubListOfItemsOfThisQuantity(grp.FirstOrDefault(), model1DNodeBoundaryDelftBcCategories).ToList(); });
 
                     foreach (var quantityNameWithBoundaryData in quantityNameWithBoundaryDataDictionary)
                     {
@@ -499,10 +499,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
         }
 
-        private static void WriteBc1DFile(IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories, string filename, DelftBcWriter delftBcWriter)
+        private static void WriteBc1DFile(IEnumerable<DelftBcCategory> generateModel1DNodeBoundaryDelftBcCategories, string filename, DelftBcWriter delftBcWriter)
         {
-            var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories.ToList();
-            model1DNodeBoundaryDelftIniCategories = model1DNodeBoundaryDelftIniCategories.Except(model1DNodeBoundaryDelftIniCategories.OfType<DelftBcCategory>().Where(bc => bc.Table.Count == 0)).ToList();
+            var model1DNodeBoundaryDelftBcCategories = generateModel1DNodeBoundaryDelftBcCategories.ToList();
+            model1DNodeBoundaryDelftBcCategories = model1DNodeBoundaryDelftBcCategories.Except(model1DNodeBoundaryDelftBcCategories.OfType<DelftBcCategory>().Where(bc => bc.Table.Count == 0)).ToList();
             FileUtils.DeleteIfExists(filename);
             if (!File.Exists(filename))
             {
@@ -512,27 +512,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 new IniFileWriter().WriteIniFile(new[] {generalRegion}, filename);
             }
 
-            delftBcWriter.WriteBcFile(model1DNodeBoundaryDelftIniCategories, filename);
+            delftBcWriter.WriteBcFile(model1DNodeBoundaryDelftBcCategories, filename);
         }
 
-        private IEnumerable<IDelftIniCategory> GetSubListOfItemsOfThisQuantity(IDelftIniCategory dic, IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories)
+        private IEnumerable<DelftBcCategory> GetSubListOfItemsOfThisQuantity(DelftBcCategory dic, IEnumerable<DelftBcCategory> generateModel1DNodeBoundaryDelftBcCategories)
         {
-            var q = GetQuantityNameFromDelftIniCategory(dic);
-            var subListOfItemsOfThisQuantity = generateModel1DNodeBoundaryDelftIniCategories.Where( d => GetQuantityNameFromDelftIniCategory(dic) != q).ToList();
+            var q = GetQuantityNameFromDelftBcCategory(dic);
+            var subListOfItemsOfThisQuantity = generateModel1DNodeBoundaryDelftBcCategories.Where( d => GetQuantityNameFromDelftBcCategory(dic) != q).ToList();
             return subListOfItemsOfThisQuantity;
         }
 
 
-        private string GetQuantityNameFromDelftIniCategory(IDelftIniCategory delftIniCategory)
+        private string GetQuantityNameFromDelftBcCategory(DelftBcCategory delftBcCategory)
         {
             var quantityName = string.Empty;
-            var function = delftIniCategory.GetPropertyValue(BoundaryRegion.Function.Key);
+            var function = delftBcCategory.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Function.Key);
             if (function == BoundaryRegion.FunctionStrings.QhTable)
                 quantityName = BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency;
             else
             {
-                var delftBcCategory = delftIniCategory as IDelftBcCategory;
-                if (delftBcCategory == null) return quantityName;
                 var delftBcQuantityData = delftBcCategory.Table.LastOrDefault();
                 quantityName = delftBcQuantityData?.Quantity?.Value;
             }

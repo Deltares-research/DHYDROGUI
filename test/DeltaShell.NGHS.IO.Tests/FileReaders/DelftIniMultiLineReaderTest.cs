@@ -19,13 +19,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var localCopy = TestHelper.CreateLocalCopy(originalFile);
             try
             {
-                var categories = new DelftIniMultiLineReader().ReadDelftIniFile(localCopy);
-                Assert.That(categories.Count, Is.EqualTo(1));
+                var iniSections = new DelftIniMultiLineReader().ReadDelftIniFile(localCopy);
+                Assert.That(iniSections.Count, Is.EqualTo(1));
 
-                var properties = categories[0].Properties;
+                var properties = iniSections[0].Properties;
                 Assert.That(properties.Count, Is.EqualTo(8));
 
-                var multiLineValueProperty = properties.FirstOrDefault(p => p.Name.Equals(RoughnessDataRegion.Values.Key));
+                var multiLineValueProperty = properties.FirstOrDefault(p => p.Key.Equals(RoughnessDataRegion.Values.Key));
                 Assert.That(multiLineValueProperty, Is.Not.Null);
 
                 var values = multiLineValueProperty.Value.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
@@ -52,13 +52,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var localCopy = TestHelper.CreateLocalCopy(originalFile);
             try
             {
-                var categories = new DelftIniMultiLineReader().ReadDelftIniFile(localCopy);
-                Assert.That(categories.Count, Is.EqualTo(1));
+                var iniSections = new DelftIniMultiLineReader().ReadDelftIniFile(localCopy);
+                Assert.That(iniSections.Count, Is.EqualTo(1));
 
-                var properties = categories[0].Properties;
+                var properties = iniSections[0].Properties;
                 Assert.That(properties.Count, Is.EqualTo(8));
 
-                var multiLineValueProperty = properties.FirstOrDefault(p => p.Name.Equals(RoughnessDataRegion.Values.Key));
+                var multiLineValueProperty = properties.FirstOrDefault(p => p.Key.Equals(RoughnessDataRegion.Values.Key));
                 Assert.That(multiLineValueProperty, Is.Not.Null);
 
                 var comments = multiLineValueProperty.Comment.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);

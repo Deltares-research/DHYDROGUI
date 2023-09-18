@@ -2,22 +2,23 @@
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
 {
     class CSDSteelCunetteDefinitionReader : CrossSectionDefinitionReaderBase
     {
-        public override ICrossSectionDefinition ReadDefinition(IDelftIniCategory category)
+        public override ICrossSectionDefinition ReadDefinition(IniSection iniSection)
         {
 
-            var height = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteHeight.Key);
-            var radiusR = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR.Key);
-            var radiusR1 = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR1.Key);
-            var radiusR2 = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR2.Key);
-            var radiusR3 = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR3.Key);
+            var height = iniSection.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteHeight.Key);
+            var radiusR = iniSection.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR.Key);
+            var radiusR1 = iniSection.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR1.Key);
+            var radiusR2 = iniSection.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR2.Key);
+            var radiusR3 = iniSection.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR3.Key);
             
-            var angleA = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteA.Key);
-            var angleA1 = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteA1.Key);
+            var angleA = iniSection.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteA.Key);
+            var angleA1 = iniSection.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteA1.Key);
             
             var shape = new CrossSectionStandardShapeSteelCunette {Height = height, 
                 RadiusR = radiusR,
@@ -28,7 +29,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
                 AngleA1 = angleA1
             };
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
-            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
+            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, iniSection);
             return crossSectionDefinition;
         }
     }

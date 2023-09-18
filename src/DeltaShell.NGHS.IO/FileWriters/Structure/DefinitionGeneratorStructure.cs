@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
@@ -11,74 +12,74 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     public abstract class DefinitionGeneratorStructure : IDefinitionGeneratorStructure
     {
         /// <summary>
-        /// Gets the <see cref="DelftIniCategory"/> which is being constructed.
+        /// Gets the <see cref="DHYDRO.Common.IO.Ini.IniSection"/> which is being constructed.
         /// </summary>
-        protected DelftIniCategory IniCategory { get; }
+        protected IniSection IniSection { get; }
 
         /// <summary>
         /// Creates a new <see cref="DefinitionGeneratorStructure"/>
         /// </summary>
         /// <remarks>
-        /// This initializes the <see cref="DefinitionGeneratorStructure.IniCategory"/>.
+        /// This initializes the <see cref="IniSection"/>.
         /// </remarks>
         protected DefinitionGeneratorStructure()
         {
-            IniCategory = new DelftIniCategory(StructureRegion.Header);
+            IniSection = new IniSection(StructureRegion.Header);
         }
 
-        public abstract DelftIniCategory CreateStructureRegion(IHydroObject hydroObject);
+        public abstract IniSection CreateStructureRegion(IHydroObject hydroObject);
 
         protected virtual void AddCommonRegionElements(IHydroObject hydroObject, string definitionType)
         {
             var branchFeature = hydroObject as IBranchFeature;
             if (branchFeature?.Branch == null) return;
 
-            AddIdPropertyToIniCategory(hydroObject);
+            AddIdPropertyToIniSection(hydroObject);
 
             if(hydroObject is IHydroNetworkFeature hydroNetworkFeature) 
-                IniCategory.AddProperty(StructureRegion.Name.Key, 
+                IniSection.AddPropertyWithOptionalComment(StructureRegion.Name.Key, 
                                         hydroNetworkFeature.LongName, 
                                         StructureRegion.Name.Description);
 
-            IniCategory.AddProperty(StructureRegion.BranchId.Key, 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.BranchId.Key, 
                                     branchFeature.Branch.Name, 
                                     StructureRegion.BranchId.Description);
-            IniCategory.AddProperty(StructureRegion.Chainage.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Chainage.Key, 
                                     branchFeature.Branch.GetBranchSnappedChainage(branchFeature.Chainage), 
                                     StructureRegion.Chainage.Description, 
                                     StructureRegion.Chainage.Format);
 
-            AddDefinitionTypePropertyToIniCategory(definitionType);
+            AddDefinitionTypePropertyToIniSection(definitionType);
         }
 
         /// <summary>
-        /// Add an Id property to this <see cref="DefinitionGeneratorStructure.IniCategory"/>.
+        /// Add an Id property to this <see cref="IniSection"/>.
         /// </summary>
         /// <param name="hydroObject">The hydro object</param>
-        protected void AddIdPropertyToIniCategory(IHydroObject hydroObject)
+        protected void AddIdPropertyToIniSection(IHydroObject hydroObject)
         {
             string nameWithoutHashSigns = hydroObject.Name.Replace("##", "~~");
-            IniCategory.AddProperty(StructureRegion.Id.Key, 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.Id.Key, 
                                     nameWithoutHashSigns, 
                                     StructureRegion.Id.Description);
         }
 
         /// <summary>
-        /// Add an definition type property to this <see cref="DefinitionGeneratorStructure.IniCategory"/>.
+        /// Add an definition type property to this <see cref="IniSection"/>.
         /// </summary>
         /// <param name="definitionType">The definition type to add</param>
-        protected void AddDefinitionTypePropertyToIniCategory(string definitionType) => 
-            IniCategory.AddProperty(StructureRegion.DefinitionType.Key, 
+        protected void AddDefinitionTypePropertyToIniSection(string definitionType) => 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.DefinitionType.Key, 
                                     definitionType, 
                                     StructureRegion.DefinitionType.Description);
 
         /// <summary>
         /// Add a property with the given <paramref name="value"/> with the given <see cref="setting"/>
-        /// to the <see cref="DefinitionGeneratorStructure.IniCategory"/>.
+        /// to the <see cref="IniSection"/>.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="setting"></param>
-        protected void AddPropertyToIniCategory(double value, ConfigurationSetting setting) => 
-            IniCategory.AddProperty(setting.Key, value, setting.Description, setting.Format);
+        protected void AddPropertyToIniSection(double value, ConfigurationSetting setting) => 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(setting.Key, value, setting.Description, setting.Format);
     }
 }

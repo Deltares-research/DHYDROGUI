@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             var dependencyProperty =
                 allProperties?.FirstOrDefault(
                     p =>
-                    p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
+                    p.PropertyDefinition.FilePropertyKey.Equals(dependencyPropertyName,
                                                                  StringComparison.InvariantCultureIgnoreCase));
             if (dependencyProperty != null && dependencyProperty.PropertyDefinition.DataType != typeof(bool) &&
                 dependencyProperty.PropertyDefinition.DataType != typeof(int) &&
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                     var dependencyProperty =
                         properties?.FirstOrDefault(
                             p =>
-                            p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
+                            p.PropertyDefinition.FilePropertyKey.Equals(dependencyPropertyName,
                                                                          StringComparison.InvariantCultureIgnoreCase));
 
                     if (dependencyProperty != null)

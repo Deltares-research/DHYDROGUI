@@ -468,17 +468,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup = 
                 properties.Where(IsMduFileProperty)
                           .OrderBy(GetPropertySortIndex)
-                          .GroupBy(p => p.PropertyDefinition.FileCategoryName);
+                          .GroupBy(p => p.PropertyDefinition.FileSectionName);
 
             return RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, properties, writeExtForcings, writeFeatures);
         }
         
         private static bool IsMduFileProperty(WaterFlowFMProperty property)
         {
-            return property.PropertyDefinition.FileCategoryName != "GUIOnly"
+            return property.PropertyDefinition.FileSectionName != "GUIOnly"
                    // remove unknown properties that should be located on the sed/mor files
-                   && property.PropertyDefinition.FileCategoryName != MorphologyFile.MorphologyUnknownProperty
-                   && property.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty;
+                   && property.PropertyDefinition.FileSectionName != MorphologyFile.MorphologyUnknownProperty
+                   && property.PropertyDefinition.FileSectionName != SedimentFile.SedimentUnknownProperty;
         }
         
         private static int GetPropertySortIndex(WaterFlowFMProperty property)

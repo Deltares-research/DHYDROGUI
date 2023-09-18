@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 {
@@ -21,8 +22,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
  
         protected static IList<IDelftBcQuantityData> GenerateTableForConstantData(string quantityType, string unitType, double value)
         {
-            var quantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, quantityType, BoundaryRegion.Quantity.Description);
-            var unit = new DelftIniProperty(BoundaryRegion.Unit.Key, unitType, BoundaryRegion.Unit.Description);
+            var quantity = new IniProperty(BoundaryRegion.Quantity.Key, quantityType, BoundaryRegion.Quantity.Description);
+            var unit = new IniProperty(BoundaryRegion.Unit.Key, unitType, BoundaryRegion.Unit.Description);
             return new List<IDelftBcQuantityData>() { new DelftBcQuantityData(quantity, unit, new List<double>() { value }) };
         }
  
@@ -31,9 +32,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             var table = new List<IDelftBcQuantityData>();
             if (!functionData.Arguments.Any()) return table;
             
-            var timeQuantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.Time, BoundaryRegion.Quantity.Description);
+            var timeQuantity = new IniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.Time, BoundaryRegion.Quantity.Description);
             var timeUnitString = String.Format("{0} {1}", BoundaryRegion.UnitStrings.TimeMinutes, startTime.ToString(BoundaryRegion.UnitStrings.TimeFormat));
-            var timeUnit = new DelftIniProperty(BoundaryRegion.Unit.Key, timeUnitString, BoundaryRegion.Unit.Description);
+            var timeUnit = new IniProperty(BoundaryRegion.Unit.Key, timeUnitString, BoundaryRegion.Unit.Description);
             
             var timeData = ((MultiDimensionalArray<DateTime>)functionData.Arguments[0].Values).ToList();
             var formattedDateTimes = ConvertDateTimeDataToMinutesSinceReferenceDateTime(timeData, startTime).ToList();
@@ -42,8 +43,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             table.Add(new DelftBcQuantityData(timeQuantity, timeUnit, formattedDateTimes));
 
 
-            var quantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, quantityUnitPair.Quantity, BoundaryRegion.Quantity.Description);
-            var unit = new DelftIniProperty(BoundaryRegion.Unit.Key, quantityUnitPair.Unit, BoundaryRegion.Unit.Description);
+            var quantity = new IniProperty(BoundaryRegion.Quantity.Key, quantityUnitPair.Quantity, BoundaryRegion.Quantity.Description);
+            var unit = new IniProperty(BoundaryRegion.Unit.Key, quantityUnitPair.Unit, BoundaryRegion.Unit.Description);
 
             var data = new List<double>();
             if (functionData.Components.Any())
@@ -61,12 +62,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
         protected static IList<IDelftBcQuantityData> GenerateTableForDischargeWaterLevelData(IFunction data,
             string lateralDischarge = null)
         {
-            var levelQuantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency + " " + BoundaryRegion.QuantityStrings.QHWaterLevelDependencyKey, BoundaryRegion.Quantity.Description);
-            var levelUnit = new DelftIniProperty(BoundaryRegion.Unit.Key, BoundaryRegion.UnitStrings.WaterLevel, BoundaryRegion.Unit.Description);
+            var levelQuantity = new IniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency + " " + BoundaryRegion.QuantityStrings.QHWaterLevelDependencyKey, BoundaryRegion.Quantity.Description);
+            var levelUnit = new IniProperty(BoundaryRegion.Unit.Key, BoundaryRegion.UnitStrings.WaterLevel, BoundaryRegion.Unit.Description);
             var levelData = ((MultiDimensionalArray<double>)(data.Arguments[0].Values)).ToList();
 
-            var dischargeQuantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, lateralDischarge ?? BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency + " " + BoundaryRegion.QuantityStrings.QHDischargeDependencyKey, BoundaryRegion.Quantity.Description);
-            var dischargeUnit = new DelftIniProperty(BoundaryRegion.Unit.Key, BoundaryRegion.UnitStrings.WaterDischarge, BoundaryRegion.Unit.Description);
+            var dischargeQuantity = new IniProperty(BoundaryRegion.Quantity.Key, lateralDischarge ?? BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency + " " + BoundaryRegion.QuantityStrings.QHDischargeDependencyKey, BoundaryRegion.Quantity.Description);
+            var dischargeUnit = new IniProperty(BoundaryRegion.Unit.Key, BoundaryRegion.UnitStrings.WaterDischarge, BoundaryRegion.Unit.Description);
             var dischargeData = ((MultiDimensionalArray<double>)(data.Components[0].Values)).ToList();
             if (levelData.Count == 0 && dischargeData.Count == 0)
             {

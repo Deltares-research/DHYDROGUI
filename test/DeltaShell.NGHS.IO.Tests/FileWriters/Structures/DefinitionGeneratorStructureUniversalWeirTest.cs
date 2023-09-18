@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
@@ -52,24 +53,24 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         public void CreateStructureRegion_TStructure_ExpectedResult(Weir structure,
                                                                     string expectedCrestLevel) 
         {
-            IDelftIniCategory category = Generator.CreateStructureRegion(structure);
+            IniSection iniSection = Generator.CreateStructureRegion(structure);
 
-            Assert.That(category.Properties.Count, Is.EqualTo(11));
+            Assert.That(iniSection.Properties.Count(), Is.EqualTo(11));
 
             Assert.Multiple(() =>
             {
-                AssertCorrectCommonRegionElements(category,
+                AssertCorrectCommonRegionElements(iniSection,
                                                   nameof(Weir),
                                                   expectedLongName,
                                                   expectedBranchName,
                                                   chainageStr,
                                                   TStructureDefinitionType);
-                AssertCorrectProperty(category, StructureRegion.AllowedFlowDir.Key, "both");
-                AssertCorrectProperty(category, StructureRegion.LevelsCount.Key, "2");
-                AssertCorrectProperty(category, StructureRegion.YValues.Key, "0.000 10.000");
-                AssertCorrectProperty(category, StructureRegion.ZValues.Key, "10.000 10.000");
-                AssertCorrectProperty(category, StructureRegion.CrestLevel.Key, expectedCrestLevel);
-                AssertCorrectProperty(category, StructureRegion.DischargeCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.AllowedFlowDir.Key, "both");
+                AssertCorrectProperty(iniSection, StructureRegion.LevelsCount.Key, "2");
+                AssertCorrectProperty(iniSection, StructureRegion.YValues.Key, "0.000 10.000");
+                AssertCorrectProperty(iniSection, StructureRegion.ZValues.Key, "10.000 10.000");
+                AssertCorrectProperty(iniSection, StructureRegion.CrestLevel.Key, expectedCrestLevel);
+                AssertCorrectProperty(iniSection, StructureRegion.DischargeCoeff.Key, "1.000");
             });
         }
     }

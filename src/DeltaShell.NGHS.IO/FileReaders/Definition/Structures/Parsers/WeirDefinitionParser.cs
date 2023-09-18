@@ -8,6 +8,7 @@ using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -31,7 +32,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// </summary>
         /// <param name="fileReader">The file reader</param>
         /// <param name="structureType">The structure type.</param>
-        /// <param name="category">The <see cref="IDelftIniCategory"/> to parse a structure from.</param>
+        /// <param name="iniSection">The <see cref="IniSection"/> to parse a structure from.</param>
         /// <param name="branch">The branch to import the bridge on.</param>
         /// <param name="structuresFilePath">The structures filename.</param>
         /// <param name="referenceDateTime">The reference time date.</param>
@@ -41,11 +42,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// </exception>
         public WeirDefinitionParser(ITimeSeriesFileReader fileReader,
                                     StructureType structureType,
-                                    IDelftIniCategory category,
+                                    IniSection iniSection,
                                     IBranch branch,
                                     string structuresFilePath,
                                     DateTime referenceDateTime)
-            : base(structureType, category, branch, Path.GetFileName(structuresFilePath))
+            : base(structureType, iniSection, branch, Path.GetFileName(structuresFilePath))
         {
             Ensure.NotNull(fileReader, nameof(fileReader));
 
@@ -56,23 +57,23 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 
         protected override IStructure1D Parse()
         {
-            var allowedFlowDirValue = Category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key, true);
+            var allowedFlowDirValue = IniSection.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key, true);
             var allowedFlowDir = allowedFlowDirValue != null
                                      ? (FlowDirection)Enum.Parse(typeof(FlowDirection), allowedFlowDirValue, true)
                                      : 0;
 
             Weir weir = CreateStructure();
 
-            weir.Name = Category.ReadProperty<string>(StructureRegion.Id.Key);
-            weir.LongName = Category.ReadProperty<string>(StructureRegion.Name.Key, true);
-            weir.CrestWidth = Category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true);
+            weir.Name = IniSection.ReadProperty<string>(StructureRegion.Id.Key);
+            weir.LongName = IniSection.ReadProperty<string>(StructureRegion.Name.Key, true);
+            weir.CrestWidth = IniSection.ReadProperty<double>(StructureRegion.CrestWidth.Key, true);
             weir.FlowDirection = allowedFlowDir;
             weir.Branch = Branch;
-            weir.Chainage = Branch.GetBranchSnappedChainage(Category.ReadProperty<double>(StructureRegion.Chainage.Key));
-            weir.UseVelocityHeight = Category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true, true);
+            weir.Chainage = Branch.GetBranchSnappedChainage(IniSection.ReadProperty<double>(StructureRegion.Chainage.Key));
+            weir.UseVelocityHeight = IniSection.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true, true);
             SetCrestLevel(weir);
 
-            weir.WeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(Category, 
+            weir.WeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(IniSection, 
                                                                            weir, 
                                                                            structuresFilePath, 
                                                                            referenceDateTime,
@@ -82,12 +83,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 
         private void SetCrestLevel(Weir weir)
         {
-            var crestLevelValue = Category.ReadProperty<string>(StructureRegion.CrestLevel.Key);
+            var crestLevelValue = IniSection.ReadProperty<string>(StructureRegion.CrestLevel.Key);
 
             if (fileReader.IsTimeSeriesProperty(crestLevelValue))
                 ReadCrestLevelTimeSeries(weir, crestLevelValue);
             else
-                weir.CrestLevel = Category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
+                weir.CrestLevel = IniSection.ReadProperty<double>(StructureRegion.CrestLevel.Key);
         }
 
         private void ReadCrestLevelTimeSeries(Weir weir, string relativeCrestLevelPath)

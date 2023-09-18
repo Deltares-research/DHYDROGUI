@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
@@ -21,27 +22,27 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
         private static IEnumerable<TestCaseData> WriteFileData()
         {
-            DelftIniCategory GenerateCategory(int index)
+            IniSection GenerateCategory(int index)
             {
-                var result = new DelftIniCategory("Structure");
-                result.AddProperty("a", random.NextDouble(), $"comment {index * 3 + 0}");
-                result.AddProperty("b", random.Next(), $"comment {index * 3 + 1}");
-                result.AddProperty("c", random.Next().ToString("X"), $"comment {index * 3 + 2}");
+                var result = new IniSection("Structure");
+                result.AddPropertyWithOptionalComment("a", random.NextDouble(), $"comment {index * 3 + 0}");
+                result.AddPropertyWithOptionalComment("b", random.Next(), $"comment {index * 3 + 1}");
+                result.AddPropertyWithOptionalComment("c", random.Next().ToString("X"), $"comment {index * 3 + 2}");
 
                 return result;
             }
 
-            DelftIniCategory[] noCategories = {};
-            yield return new TestCaseData((IList<DelftIniCategory>)noCategories).SetName("No Categories");
+            IniSection[] noCategories = {};
+            yield return new TestCaseData((IList<IniSection>)noCategories).SetName("No Categories");
 
-            DelftIniCategory[] someCategories = 
+            IniSection[] someCategories = 
                 Enumerable.Range(0, 5).Select(GenerateCategory).ToArray();
-            yield return new TestCaseData((IList<DelftIniCategory>)someCategories).SetName("Multiple Categories");
+            yield return new TestCaseData((IList<IniSection>)someCategories).SetName("Multiple Categories");
         }
 
         [Test]
         [TestCaseSource(nameof(WriteFileData))]
-        public void WriteFile_ExpectedResult(IList<DelftIniCategory> categories)
+        public void WriteFile_ExpectedResult(IList<IniSection> categories)
         {
             // Setup
             DateTime referenceTime = DateTime.Today;
@@ -50,7 +51,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             bool isCalled = false;
             IHydroRegion[] hydroRegions = {};
 
-            IEnumerable<DelftIniCategory> CreateStructureCategories(IEnumerable<IHydroRegion> regions,
+            IEnumerable<IniSection> CreateStructureCategories(IEnumerable<IHydroRegion> regions,
                                                                     DateTime refTime)
             {
                 Assert.That(regions, Is.EqualTo(hydroRegions));
@@ -70,40 +71,40 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.That(isCalled, Is.True);
             Assert.That(File.Exists(filePath), Is.True);
 
-            IList<DelftIniCategory> result = 
+            IList<IniSection> result = 
                 new DelftIniReader().ReadDelftIniFile(filePath);
 
-            IList<DelftIniCategory> expectedCategories = 
+            IList<IniSection> expectedCategories = 
                 GetExpectedCategories(categories);
 
             Assert.That(result.Count, Is.EqualTo(expectedCategories.Count));
 
-            IEnumerable<(DelftIniCategory, DelftIniCategory)> resultCategories = result.Zip(expectedCategories, (c1, c2) => (c1, c2));
-            foreach ((DelftIniCategory resultCat, DelftIniCategory expectedCat) in resultCategories)
+            IEnumerable<(IniSection, IniSection)> resultCategories = result.Zip(expectedCategories, (c1, c2) => (c1, c2));
+            foreach ((IniSection resultCat, IniSection expectedCat) in resultCategories)
                 AssertSameCategory(resultCat, expectedCat);
         }
 
-        private static void AssertSameCategory(IDelftIniCategory resultCat, IDelftIniCategory expectedCat)
+        private static void AssertSameCategory(IniSection resultCat, IniSection expectedCat)
         {
             Assert.That(resultCat.Name, Is.EqualTo(expectedCat.Name));
-            Assert.That(resultCat.Properties.Count, Is.EqualTo(expectedCat.Properties.Count));
+            Assert.That(resultCat.Properties.Count, Is.EqualTo(expectedCat.Properties.Count()));
 
-            IEnumerable<(DelftIniProperty, DelftIniProperty)> resultProps = resultCat.Properties.Zip(expectedCat.Properties, (p1, p2) => (p1, p2));
-            foreach ((DelftIniProperty resProp, DelftIniProperty expectedProp) in resultProps)
+            IEnumerable<(IniProperty, IniProperty)> resultProps = resultCat.Properties.Zip(expectedCat.Properties, (p1, p2) => (p1, p2));
+            foreach ((IniProperty resProp, IniProperty expectedProp) in resultProps)
                 AssertSameProperty(resProp, expectedProp);
         }
 
-        private static void AssertSameProperty(IDelftIniProperty resProp, 
-                                               IDelftIniProperty expectedProp)
+        private static void AssertSameProperty(IniProperty resProp, 
+                                               IniProperty expectedProp)
         {
-            Assert.That(resProp.Name, Is.EqualTo(expectedProp.Name));
+            Assert.That(resProp.Key, Is.EqualTo(expectedProp.Key));
             Assert.That(resProp.Value, Is.EqualTo(expectedProp.Value));
         }
 
-        private static IList<DelftIniCategory> GetExpectedCategories(
-            IEnumerable<DelftIniCategory> providedCategories)
+        private static IList<IniSection> GetExpectedCategories(
+            IEnumerable<IniSection> providedCategories)
         {
-            List<DelftIniCategory> result = new List<DelftIniCategory>()
+            List<IniSection> result = new List<IniSection>()
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(
                     GeneralRegion.StructureDefinitionsMajorVersion,

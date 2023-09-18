@@ -41,10 +41,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenFileWithNoCategories_WhenCallingReadFile_ThenThrowsException()
+        public void GivenFileWithNoIniSections_WhenCallingReadFile_ThenThrowsException()
         {
             // Given
-            var noCategoriesFile = TestHelper.GetTestFilePath(@"IO\noCategories.ini");
+            var noIniSectionsFile = TestHelper.GetTestFilePath(@"IO\noCategories.ini");
 
             using (var fmModel = new WaterFlowFMModel())
             {
@@ -52,19 +52,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When
                 TestDelegate action = () =>
-                    ChannelInitialConditionDefinitionFileReader.ReadFile(noCategoriesFile, modelDefinition, null, null);
+                    ChannelInitialConditionDefinitionFileReader.ReadFile(noIniSectionsFile, modelDefinition, null, null);
 
                 // Then
                 var exception = Assert.Throws<FileReadingException>(action);
-                Assert.AreEqual($"Could not read file {noCategoriesFile} properly, it seems empty.", exception.Message);
+                Assert.AreEqual($"Could not read file {noIniSectionsFile} properly, it seems empty.", exception.Message);
             }
         }
 
         [Test]
-        public void GivenFileWithMissingGlobalCategory_WhenCallingReadFile_ThenThrowsException()
+        public void GivenFileWithMissingGlobalIniSection_WhenCallingReadFile_ThenThrowsException()
         {
             // Given
-            var missingGlobalCategoryFile = TestHelper.GetTestFilePath(@"IO\missingGlobalCategory.ini");
+            var missingGlobalIniSectionFile = TestHelper.GetTestFilePath(@"IO\missingGlobalCategory.ini");
 
             using (var fmModel = new WaterFlowFMModel())
             {
@@ -72,19 +72,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When
                 TestDelegate action = () =>
-                    ChannelInitialConditionDefinitionFileReader.ReadFile(missingGlobalCategoryFile, modelDefinition, null, null);
+                    ChannelInitialConditionDefinitionFileReader.ReadFile(missingGlobalIniSectionFile, modelDefinition, null, null);
 
                 // Then
                 var exception = Assert.Throws<FileReadingException>(action);
-                Assert.AreEqual($"Could not read file {missingGlobalCategoryFile} properly, no global property was found.", exception.Message);
+                Assert.AreEqual($"Could not read file {missingGlobalIniSectionFile} properly, no global property was found.", exception.Message);
             }
         }
 
         [Test]
-        public void GivenFileWithOnlyInvalidCategories_WhenCallingReadFile_ThenThrowsException()
+        public void GivenFileWithOnlyInvalidIniSections_WhenCallingReadFile_ThenThrowsException()
         {
             // Given
-            var invalidCategoriesOnlyFile = TestHelper.GetTestFilePath(@"IO\invalidCategoriesOnly.ini");
+            var invalidIniSectionsOnlyFile = TestHelper.GetTestFilePath(@"IO\invalidCategoriesOnly.ini");
 
             using (var fmModel = new WaterFlowFMModel())
             {
@@ -92,11 +92,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When
                 TestDelegate action = () =>
-                    ChannelInitialConditionDefinitionFileReader.ReadFile(invalidCategoriesOnlyFile, modelDefinition, null, null);
+                    ChannelInitialConditionDefinitionFileReader.ReadFile(invalidIniSectionsOnlyFile, modelDefinition, null, null);
 
                 // Then
                 var exception = Assert.Throws<FileReadingException>(action);
-                Assert.AreEqual($"Could not read file {invalidCategoriesOnlyFile} properly, no global property was found.", exception.Message);
+                Assert.AreEqual($"Could not read file {invalidIniSectionsOnlyFile} properly, no global property was found.", exception.Message);
             }
         }
 

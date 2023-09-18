@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
             var group = StructurePropertyGroups[structureType];
-            return group.PropertyDefinitions.Concat(StructurePropertyGroups["structure"].PropertyDefinitions).FirstOrDefault(p => string.Equals(p.FilePropertyName, name, StringComparison.CurrentCultureIgnoreCase));
+            return group.PropertyDefinitions.Concat(StructurePropertyGroups["structure"].PropertyDefinitions).FirstOrDefault(p => string.Equals(p.FilePropertyKey, name, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

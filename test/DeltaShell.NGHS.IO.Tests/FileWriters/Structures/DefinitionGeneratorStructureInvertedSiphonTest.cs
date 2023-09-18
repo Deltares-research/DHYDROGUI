@@ -2,7 +2,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     public class DefinitionGeneratorStructureInvertedSiphonTest
     {
         [Test]
-        public void CreateStructureRegion_CreatesCorrectCategory()
+        public void CreateStructureRegion_CreatesCorrectIniSection()
         {
             // Setup
             var culvert = new Culvert
@@ -30,25 +30,25 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var generator = new DefinitionGeneratorStructureInvertedSiphon(Substitute.For<IStructureFileNameGenerator>());
 
             // Call
-            DelftIniCategory category = generator.CreateStructureRegion(culvert);
+            IniSection iniSection = generator.CreateStructureRegion(culvert);
 
             // Assert
-            AssertProperty(category, "allowedFlowDir", "both");
-            AssertProperty(category, "leftLevel", "1.230");
-            AssertProperty(category, "rightLevel", "2.340");
-            AssertProperty(category, "csDefId", "Culvert");
-            AssertProperty(category, "length", "3.450");
-            AssertProperty(category, "inletLossCoeff", "4.560");
-            AssertProperty(category, "outletLossCoeff", "5.670");
-            AssertProperty(category, "valveOnOff", "0");
-            AssertProperty(category, "valveOpeningHeight", "6.780");
-            AssertProperty(category, "subType", "invertedSiphon");
-            AssertProperty(category, "bendLossCoeff", "7.890");
+            AssertProperty(iniSection, "allowedFlowDir", "both");
+            AssertProperty(iniSection, "leftLevel", "1.230");
+            AssertProperty(iniSection, "rightLevel", "2.340");
+            AssertProperty(iniSection, "csDefId", "Culvert");
+            AssertProperty(iniSection, "length", "3.450");
+            AssertProperty(iniSection, "inletLossCoeff", "4.560");
+            AssertProperty(iniSection, "outletLossCoeff", "5.670");
+            AssertProperty(iniSection, "valveOnOff", "0");
+            AssertProperty(iniSection, "valveOpeningHeight", "6.780");
+            AssertProperty(iniSection, "subType", "invertedSiphon");
+            AssertProperty(iniSection, "bendLossCoeff", "7.890");
         }
 
-        private void AssertProperty(IDelftIniCategory category, string propertyName, string expValue)
+        private void AssertProperty(IniSection iniSection, string propertyName, string expValue)
         {
-            IDelftIniProperty property = category.GetProperty(propertyName);
+            IniProperty property = iniSection.GetProperty(propertyName);
             Assert.That(property, Is.Not.Null);
 
             Assert.That(property.Value, Is.EqualTo(expValue));

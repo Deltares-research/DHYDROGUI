@@ -1,19 +1,19 @@
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
     public class IniFileWriter : DelftIniWriter
     {
-        public void WriteIniFile(IEnumerable<DelftIniCategory> categories, string iniFile, bool writeComments = false, bool append = false)
+        public void WriteIniFile(IEnumerable<IniSection> iniSections, string iniFile, bool writeComments = false, bool append = false)
         {
             OpenOutputFile(iniFile, append);
             try
             {
-                foreach (var category in categories)
+                foreach (var iniSection in iniSections)
                 {
-                    WriteLine("[" + category.Name + "]");
-                    foreach (var property in category.Properties)
+                    WriteLine("[" + iniSection.Name + "]");
+                    foreach (var property in iniSection.Properties)
                     {
                         WriteProperty(property, writeComments);
                     }

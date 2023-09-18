@@ -14,6 +14,7 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DHYDRO.Common.IO.BackwardCompatibility;
+using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using log4net;
 
@@ -31,9 +32,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
         {
             var fileReadingExceptions = new List<FileReadingException>();
 
-            var structuresCategories = ReadStructureDelftIniCategories(structureFilename);
+            var structuresIniSections = ReadStructureIniSections(structureFilename);
 
-            IList<IStructure1D> structures = GetAllStructuresFromCategories(structuresCategories, 
+            IList<IStructure1D> structures = GetAllStructuresFromIniSections(structuresIniSections, 
                                                                             crossSectionDefinitions, 
                                                                             network, 
                                                                             structureFilename, 
@@ -93,47 +94,47 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
             });
         }
 
-        private static IList<DelftIniCategory> ReadStructureDelftIniCategories(string structureFilename)
+        private static IList<IniSection> ReadStructureIniSections(string structureFilename)
         {
             if (!File.Exists(structureFilename))
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, structureFilename));
 
-            var structuresCategories = new DelftIniReader().ReadDelftIniFile(structureFilename);
-            if (structuresCategories.Count == 0)
+            var structuresIniSections = new DelftIniReader().ReadDelftIniFile(structureFilename);
+            if (structuresIniSections.Count == 0)
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, structureFilename));
 
-            return ApplyBackwardCompatibility(structuresCategories).ToList();
+            return ApplyBackwardCompatibility(structuresIniSections).ToList();
         }
      
-        private static IEnumerable<DelftIniCategory> ApplyBackwardCompatibility(IEnumerable<DelftIniCategory> categories)
+        private static IEnumerable<IniSection> ApplyBackwardCompatibility(IEnumerable<IniSection> iniSections)
         {
-            foreach (DelftIniCategory category in categories)
+            foreach (IniSection iniSection in iniSections)
             {
-                DelftIniProperty[] propertiesWithUnsupportedValue = GetPropertiesWithUnsupportedValues(category).ToArray();
+                IniProperty[] propertiesWithUnsupportedValue = GetPropertiesWithUnsupportedValues(iniSection).ToArray();
                 if (!propertiesWithUnsupportedValue.Any())
                 {
-                    yield return category;
+                    yield return iniSection;
                 }
 
-                foreach (DelftIniProperty property in propertiesWithUnsupportedValue)
+                foreach (IniProperty property in propertiesWithUnsupportedValue)
                 {
                     log.WarnFormat(Resources.Property_0_contains_unsupported_value_1_2_at_line_number_3_will_be_skipped, 
-                                   property.Name, 
+                                   property.Key, 
                                    property.Value, 
-                                   category.Name, 
-                                   category.LineNumber);
+                                   iniSection.Name, 
+                                   iniSection.LineNumber);
                 }
             }
         }
 
-        private static IEnumerable<DelftIniProperty> GetPropertiesWithUnsupportedValues(IDelftIniCategory category)
+        private static IEnumerable<IniProperty> GetPropertiesWithUnsupportedValues(IniSection iniSection)
         {
-            return category.Properties.Where(p => backwardsCompatibilityHelper.IsUnsupportedPropertyValue(category.Name,
-                                                                                                          p.Name,
+            return iniSection.Properties.Where(p => backwardsCompatibilityHelper.IsUnsupportedPropertyValue(iniSection.Name,
+                                                                                                          p.Key,
                                                                                                           p.Value));
         }
 
-        private static IList<IStructure1D> GetAllStructuresFromCategories(IList<DelftIniCategory> structuresCategories, 
+        private static IList<IStructure1D> GetAllStructuresFromIniSections(IList<IniSection> structuresIniSections, 
                                                                           IList<ICrossSectionDefinition> crossSectionDefinitions, 
                                                                           IHydroNetwork network, 
                                                                           string structuresFilePath, 
@@ -151,18 +152,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
                                                                                                                  new BcCategoryParser(new LogHandler(nameof(StructureFileReader))),
                                                                                                                  timeSeriesFileReaderLogHandler));
 
-            foreach (var structureDefinitionCategory in structuresCategories.Where(category => string.Equals(category.Name, StructureRegion.Header, StringComparison.InvariantCultureIgnoreCase)))
+            foreach (var structureDefinitionIniSection in structuresIniSections.Where(iniSection => string.Equals(iniSection.Name, StructureRegion.Header, StringComparison.InvariantCultureIgnoreCase)))
             {
                 try
                 {
-                    var branchId = structureDefinitionCategory.ReadProperty<string>(StructureRegion.BranchId.Key, true);
+                    var branchId = structureDefinitionIniSection.ReadProperty<string>(StructureRegion.BranchId.Key, true);
                     if (string.IsNullOrWhiteSpace(branchId) || !branchLookup.TryGetValue(branchId, out var branch))
                     {
                         continue;
                     }
                     
-                    var type = structureDefinitionCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
-                    var structure1D = structureDefinitionCategory.ReadStructure(crossSectionDefinitions, 
+                    var type = structureDefinitionIniSection.ReadProperty<string>(StructureRegion.DefinitionType.Key);
+                    var structure1D = structureDefinitionIniSection.ReadStructure(crossSectionDefinitions, 
                                                                                 branch, 
                                                                                 type, 
                                                                                 structuresFilePath, 

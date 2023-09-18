@@ -8,6 +8,7 @@ using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -24,7 +25,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// Initializes a new instance of <see cref="BridgeDefinitionParser"/>.
         /// </summary>
         /// <param name="structureType">The structure type.</param>
-        /// <param name="category">The <see cref="IDelftIniCategory"/> to parse a structure from.</param>
+        /// <param name="iniSection">The <see cref="IniSection"/> to parse a structure from.</param>
         /// <param name="crossSectionDefinitions">A collection of cross-section definitions.</param>
         /// <param name="branch">The branch to import the bridge on.</param>
         /// <param name="structuresFilename">The structures filename.</param>
@@ -33,30 +34,30 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// Thrown when an invalid <paramref name="structureType"/> is provided.
         /// </exception>
         public BridgeDefinitionParser(StructureType structureType,
-                                      IDelftIniCategory category,
+                                      IniSection iniSection,
                                       ICollection<ICrossSectionDefinition> crossSectionDefinitions,
                                       IBranch branch,
                                       string structuresFilename) 
-            : base(structureType, category, crossSectionDefinitions, branch, structuresFilename) { }
+            : base(structureType, iniSection, crossSectionDefinitions, branch, structuresFilename) { }
 
         protected override IStructure1D Parse()
         {
-            string crossSectionDefinitionId = Category.ReadProperty<string>(StructureRegion.CsDefId.Key, true); // pillar does not need cs def
+            string crossSectionDefinitionId = IniSection.ReadProperty<string>(StructureRegion.CsDefId.Key, true); // pillar does not need cs def
             var definition = crossSectionDefinitionId == default(string) 
                                  ? null 
                                  : CrossSectionDefinitions.FirstOrDefault(cd => string.Equals(cd.Name, crossSectionDefinitionId, StringComparison.CurrentCultureIgnoreCase));
 
             var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
 
-            var name = Category.ReadProperty<string>(StructureRegion.Id.Key);
+            var name = IniSection.ReadProperty<string>(StructureRegion.Id.Key);
             double shift = 0d;
-            if (Category.ContainsProperty(StructureRegion.Shift.Key))
+            if (IniSection.ContainsProperty(StructureRegion.Shift.Key))
             {
-                shift = Category.ReadProperty<double>(StructureRegion.Shift.Key);
+                shift = IniSection.ReadProperty<double>(StructureRegion.Shift.Key);
             }
             else
             {
-                if (Category.ContainsProperty("bedLevel"))
+                if (IniSection.ContainsProperty("bedLevel"))
                 {
                     Log.Warn($"Bridge {name}: \"bedLevel\" is not supported any more. Please provide the proper shift value (which has been set to 0)");
                 }
@@ -68,11 +69,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
             return new Bridge
             {
                 Name = name,
-                LongName = Category.ReadProperty<string>(StructureRegion.Name.Key, true),
+                LongName = IniSection.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = Branch,
-                Chainage = Branch.GetBranchSnappedChainage(Category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = Branch.GetBranchSnappedChainage(IniSection.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 BridgeType = DetermineBridgeType(definition),
-                FlowDirection = EnumUtils.GetEnumValueByDescription<FlowDirection>(Category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key)),
+                FlowDirection = EnumUtils.GetEnumValueByDescription<FlowDirection>(IniSection.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key)),
                 Shift = shift,
                 Width = width,
                 Height = height,
@@ -85,13 +86,13 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                                                                              standardCrossSectionDefinition,
                                                                              crossSectionDefinitionId,
                                                                              shift, width, height),
-                Length = Category.ReadProperty<double>(StructureRegion.Length.Key, true),
-                InletLossCoefficient = Category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key, true),
-                OutletLossCoefficient = Category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key, true),
-                PillarWidth = Category.ReadProperty<double>(StructureRegion.PillarWidth.Key, true),
-                ShapeFactor = Category.ReadProperty<double>(StructureRegion.FormFactor.Key, true),
-                FrictionDataType = (Friction)Enum.Parse(typeof(Friction), Category.ReadProperty<string>(StructureRegion.FrictionType.Key), true),
-                Friction = Category.ReadProperty<double>(StructureRegion.Friction.Key)
+                Length = IniSection.ReadProperty<double>(StructureRegion.Length.Key, true),
+                InletLossCoefficient = IniSection.ReadProperty<double>(StructureRegion.InletLossCoeff.Key, true),
+                OutletLossCoefficient = IniSection.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key, true),
+                PillarWidth = IniSection.ReadProperty<double>(StructureRegion.PillarWidth.Key, true),
+                ShapeFactor = IniSection.ReadProperty<double>(StructureRegion.FormFactor.Key, true),
+                FrictionDataType = (Friction)Enum.Parse(typeof(Friction), IniSection.ReadProperty<string>(StructureRegion.FrictionType.Key), true),
+                Friction = IniSection.ReadProperty<double>(StructureRegion.Friction.Key)
             };
         }
 

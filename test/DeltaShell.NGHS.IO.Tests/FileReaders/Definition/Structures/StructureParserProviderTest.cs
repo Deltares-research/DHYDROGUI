@@ -8,8 +8,8 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NSubstitute;
 using NUnit.Framework;
@@ -24,27 +24,27 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
 
         private static IEnumerable<TestCaseData> GetStructureParserParameterNullData()
         {
-            IDelftIniCategory category = new DelftIniCategory("structure");
+            IniSection iniSection = new IniSection("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
 
-            yield return new TestCaseData(null, crossSectionDefinitions, branch, structuresFilename, "category");
-            yield return new TestCaseData(category, null, branch, structuresFilename, "crossSectionDefinitions");
-            yield return new TestCaseData(category, crossSectionDefinitions, null, structuresFilename, "branch");
-            yield return new TestCaseData(category, crossSectionDefinitions, branch, null, "structuresFilePath");
+            yield return new TestCaseData(null, crossSectionDefinitions, branch, structuresFilename, "iniSection");
+            yield return new TestCaseData(iniSection, null, branch, structuresFilename, "crossSectionDefinitions");
+            yield return new TestCaseData(iniSection, crossSectionDefinitions, null, structuresFilename, "branch");
+            yield return new TestCaseData(iniSection, crossSectionDefinitions, branch, null, "structuresFilePath");
         }
 
         [Test]
         [TestCaseSource(nameof(GetStructureParserParameterNullData))]
         public void GetStructureParser_ParameterNull_ThrowsArgumentNullException(
-            DelftIniCategory category,
+            IniSection iniSection,
             ICollection<ICrossSectionDefinition> crossSectionDefinitions,
             IBranch branch,
             string filePath,
             string expectedParam)
         {
             void Call() => StructureParserProvider.GetStructureParser(StructureType.Bridge,
-                                                                      category,
+                                                                      iniSection,
                                                                       crossSectionDefinitions,
                                                                       branch,
                                                                       filePath,
@@ -60,13 +60,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
         {
             // Setup
             StructureType unknownType = (StructureType)99999;
-            IDelftIniCategory category = new DelftIniCategory("structure");
+            IniSection iniSection = new IniSection("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
 
             // Call
             TestDelegate call = () => StructureParserProvider.GetStructureParser(unknownType, 
-                                                                                 category, 
+                                                                                 iniSection, 
                                                                                  crossSectionDefinitions, 
                                                                                  branch, 
                                                                                  structuresFilename, 
@@ -84,13 +84,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
         {
             // Setup
             StructureType structureWithoutParser = StructureType.InvertedSiphon;
-            IDelftIniCategory category = new DelftIniCategory("structure");
+            IniSection iniSection = new IniSection("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
 
             // Call
             TestDelegate call = () => StructureParserProvider.GetStructureParser(structureWithoutParser, 
-                                                                                 category, 
+                                                                                 iniSection, 
                                                                                  crossSectionDefinitions, 
                                                                                  branch, 
                                                                                  structuresFilename, 
@@ -117,13 +117,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
         public void GetStructureParser_ReturnsCorrectParserForStructureType(StructureType type, Type expectedType)
         {
             // Setup
-            IDelftIniCategory category = new DelftIniCategory("structure");
+            IniSection iniSection = new IniSection("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
             
             // Call
             IStructureParser parser = StructureParserProvider.GetStructureParser(type, 
-                                                                                 category, 
+                                                                                 iniSection, 
                                                                                  crossSectionDefinitions,
                                                                                  branch, 
                                                                                  structuresFilename, 

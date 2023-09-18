@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
@@ -14,6 +13,7 @@ using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -38,26 +38,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (!File.Exists(filePath)) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
 
-            var categories = new DelftIniMultiLineReader().ReadDelftIniFile(filePath);
-            if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
+            var iniSections = new DelftIniMultiLineReader().ReadDelftIniFile(filePath);
+            if (iniSections.Count == 0) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
 
             // [Global]
-            var globalCategory = categories.FirstOrDefault(category => category.Name.Equals(RoughnessDataRegion.GlobalIniHeader));
-            if (globalCategory == null) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly_no_global_property_was_found, filePath));
-            SetGlobalDefinition(globalCategory, modelDefinition, filePath);
+            var globalIniSection = iniSections.FirstOrDefault(iniSection => iniSection.Name.Equals(RoughnessDataRegion.GlobalIniHeader));
+            if (globalIniSection == null) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly_no_global_property_was_found, filePath));
+            SetGlobalDefinition(globalIniSection, modelDefinition, filePath);
 
             // [Branch]
-            var channelFrictionDefinitionsCategories = categories.Where(category => category.Name.Equals(RoughnessDataRegion.BranchPropertiesIniHeader));
-            ReadChannelFrictionDefinitions(network, channelFrictionDefinitions, channelFrictionDefinitionsCategories);
+            var channelFrictionDefinitionsIniSections = iniSections.Where(iniSection => iniSection.Name.Equals(RoughnessDataRegion.BranchPropertiesIniHeader));
+            ReadChannelFrictionDefinitions(network, channelFrictionDefinitions, channelFrictionDefinitionsIniSections);
             
             var channelFrictionDefinitionsLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel);
             SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(network, channelFrictionDefinitionsLookup);
         }
 
-        private static void SetGlobalDefinition(IDelftIniCategory globalCategory, WaterFlowFMModelDefinition modelDefinition, string filePath)
+        private static void SetGlobalDefinition(IniSection globalIniSection, WaterFlowFMModelDefinition modelDefinition, string filePath)
         {
-            var globalValue = globalCategory.ReadProperty<string>(RoughnessDataRegion.FrictionValue.Key);
-            var globalTypeString = globalCategory.ReadProperty<string>(RoughnessDataRegion.FrictionType.Key);
+            var globalValue = globalIniSection.ReadProperty<string>(RoughnessDataRegion.FrictionValue.Key);
+            var globalTypeString = globalIniSection.ReadProperty<string>(RoughnessDataRegion.FrictionType.Key);
             
             if (string.IsNullOrWhiteSpace(globalValue) || Enum.TryParse(globalTypeString, out RoughnessType globalType) == false)
             {
@@ -71,40 +71,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void ReadChannelFrictionDefinitions(
             IHydroNetwork network,
             IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions,
-            IEnumerable<DelftIniCategory> channelFrictionDefinitionsCategories)
+            IEnumerable<IniSection> channelFrictionDefinitionsIniSections)
         {
-            foreach (var channelFrictionDefinitionCategory in channelFrictionDefinitionsCategories)
+            foreach (var channelFrictionDefinitionIniSection in channelFrictionDefinitionsIniSections)
             {
-                var branchId = channelFrictionDefinitionCategory.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
+                var branchId = channelFrictionDefinitionIniSection.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
                 var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
                 if (!(branch is IChannel)) throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1, branchId));
 
                 var channelFrictionDefinition = channelFrictionDefinitions.FirstOrDefault(cfd => cfd.Channel.Name.Equals(branch.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (channelFrictionDefinition == null) throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1, branchId));
 
-                var functionTypeString = channelFrictionDefinitionCategory.ReadProperty<string>(RoughnessDataRegion.FunctionType.Key);
+                var functionTypeString = channelFrictionDefinitionIniSection.ReadProperty<string>(RoughnessDataRegion.FunctionType.Key);
                 var functionType = RoughnessHelper.ConvertStringToRoughnessFunction(functionTypeString);
 
-                var roughnessTypeString = channelFrictionDefinitionCategory.ReadProperty<string>(RoughnessDataRegion.RoughnessType.Key);
+                var roughnessTypeString = channelFrictionDefinitionIniSection.ReadProperty<string>(RoughnessDataRegion.RoughnessType.Key);
                 var roughnessType = RoughnessHelper.ConvertStringToRoughnessType(roughnessTypeString);
                 
                 switch (functionType)
                 {
                     case RoughnessFunction.Constant:
-                        if (IsSpatialDefinition(channelFrictionDefinitionCategory))
+                        if (IsSpatialDefinition(channelFrictionDefinitionIniSection))
                         {
-                            ReadConstantSpatialChannelFrictionDefinitions(channelFrictionDefinition, channelFrictionDefinitionCategory, roughnessType);
+                            ReadConstantSpatialChannelFrictionDefinitions(channelFrictionDefinition, channelFrictionDefinitionIniSection, roughnessType);
                         }
                         else
                         {
-                            ReadConstantChannelFrictionDefinition(channelFrictionDefinition, roughnessType, channelFrictionDefinitionCategory);
+                            ReadConstantChannelFrictionDefinition(channelFrictionDefinition, roughnessType, channelFrictionDefinitionIniSection);
                         }
                         break;
                     case RoughnessFunction.FunctionOfQ:
-                        ReadSpatialFunctionDefinition(channelFrictionDefinitionCategory, channelFrictionDefinition, roughnessType, RoughnessFunction.FunctionOfQ);
+                        ReadSpatialFunctionDefinition(channelFrictionDefinitionIniSection, channelFrictionDefinition, roughnessType, RoughnessFunction.FunctionOfQ);
                         break;
                     case RoughnessFunction.FunctionOfH:
-                        ReadSpatialFunctionDefinition(channelFrictionDefinitionCategory, channelFrictionDefinition, roughnessType, RoughnessFunction.FunctionOfH);
+                        ReadSpatialFunctionDefinition(channelFrictionDefinitionIniSection, channelFrictionDefinition, roughnessType, RoughnessFunction.FunctionOfH);
                         break;
                     default:
                         throw new InvalidOperationException();
@@ -135,25 +135,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static bool IsSpatialDefinition(IDelftIniCategory channelFrictionDefinitionCategory)
+        private static bool IsSpatialDefinition(IniSection channelFrictionDefinitionIniSection)
         {
-            return channelFrictionDefinitionCategory.Properties.Any(p => p.Name.Equals(RoughnessDataRegion.NumberOfLocations.Key));
+            return channelFrictionDefinitionIniSection.Properties.Any(p => p.Key.Equals(RoughnessDataRegion.NumberOfLocations.Key));
         }
 
         private static void ReadConstantSpatialChannelFrictionDefinitions(
             ChannelFrictionDefinition channelFrictionDefinition,
-            IDelftIniCategory channelFrictionDefinitionCategory,
+            IniSection channelFrictionDefinitionIniSection,
             RoughnessType roughnessType)
         {
             channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
             channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = roughnessType;
 
-            var numLocations = channelFrictionDefinitionCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
+            var numLocations = channelFrictionDefinitionIniSection.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
             if (numLocations == 0) return;
 
-            var chainages = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key);
-            var frictionValues = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key);
+            var chainages = channelFrictionDefinitionIniSection.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key);
+            var frictionValues = channelFrictionDefinitionIniSection.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key);
             
             for (var i = 0; i < numLocations; i++)
             {
@@ -169,17 +169,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void ReadConstantChannelFrictionDefinition(
             ChannelFrictionDefinition channelFrictionDefinition,
             RoughnessType roughnessType,
-            IDelftIniCategory channelFrictionDefinitionCategory)
+            IniSection channelFrictionDefinitionIniSection)
         {
             channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
             channelFrictionDefinition.ConstantChannelFrictionDefinition.Type = roughnessType;
 
-            var frictionValue = channelFrictionDefinitionCategory.ReadProperty<double>(RoughnessDataRegion.Values.Key);
+            var frictionValue = channelFrictionDefinitionIniSection.ReadProperty<double>(RoughnessDataRegion.Values.Key);
             channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = frictionValue;
         }
 
         private static void ReadSpatialFunctionDefinition(
-            IDelftIniCategory channelFrictionDefinitionCategory,
+            IniSection channelFrictionDefinitionIniSection,
             ChannelFrictionDefinition channelFrictionDefinition,
             RoughnessType roughnessType,
             RoughnessFunction roughnessFunctionType)
@@ -190,18 +190,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var function = channelFrictionDefinition.SpatialChannelFrictionDefinition.Function;
 
-            var numLocations = channelFrictionDefinitionCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
-            var chainages = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key).ToArray();
+            var numLocations = channelFrictionDefinitionIniSection.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
+            var chainages = channelFrictionDefinitionIniSection.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key).ToArray();
 
-            var numLevels = channelFrictionDefinitionCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLevels.Key);
+            var numLevels = channelFrictionDefinitionIniSection.ReadProperty<int>(RoughnessDataRegion.NumberOfLevels.Key);
             if (numLevels == 0)
             {
                 function.Arguments[0].SetValues(chainages);
                 return;
             }
 
-            var levels = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Levels.Key).ToArray();
-            var frictionValuesList = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key);
+            var levels = channelFrictionDefinitionIniSection.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Levels.Key).ToArray();
+            var frictionValuesList = channelFrictionDefinitionIniSection.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key);
             var frictionValues = Create2dArrayOfFrictionValuesFromList(frictionValuesList, numLevels, chainages.Length);
 
             for (var i = 0; i < numLevels; i++)

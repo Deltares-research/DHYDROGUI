@@ -2,12 +2,13 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureWeir2D : DefinitionGeneratorTimeSeriesStructure2D
     {
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Weir);
 
@@ -17,7 +18,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             AddCorrectionCoefficientProperty(weir);
             AddUseVelocityHeightProperty(weir);
 
-            return IniCategory;
+            return IniSection;
         }
 
         private void AddCrestLevelProperty(IWeir weir)
@@ -35,19 +36,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (weir.CrestWidth > 0)
             {
-                IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
+                IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
             }
         }
 
         private void AddCorrectionCoefficientProperty(IWeir weir)
         {
             var weirFormula = (SimpleWeirFormula) weir.WeirFormula;
-            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, weirFormula.CorrectionCoefficient, StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CorrectionCoeff.Key, weirFormula.CorrectionCoefficient, StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
         }
 
         private void AddUseVelocityHeightProperty(IWeir weir)
         {
-            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, weir.UseVelocityHeight.ToString().ToLower());
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.UseVelocityHeight.Key, weir.UseVelocityHeight.ToString().ToLower());
         }
     }
 }

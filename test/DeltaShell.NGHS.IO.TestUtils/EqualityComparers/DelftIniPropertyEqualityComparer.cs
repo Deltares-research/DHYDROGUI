@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
 {
     /// <summary>
-    /// An equality comparer for <see cref="IDelftIniProperty"/>.
+    /// An equality comparer for <see cref="IniProperty"/>.
     /// </summary>
-    public class DelftIniPropertyEqualityComparer : IEqualityComparer<IDelftIniProperty>
+    public class DelftIniPropertyEqualityComparer : IEqualityComparer<IniProperty>
     {
         /// <summary>
         /// Determines whether the specified Delft INI properties are equal.
@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
         /// <returns>
         /// <see langword="true"/> if the specified properties are equal; otherwise, <see langword="false"/>.
         /// </returns>
-        public bool Equals(IDelftIniProperty x, IDelftIniProperty y)
+        public bool Equals(IniProperty x, IniProperty y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -38,15 +38,15 @@ namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
                 return false;
             }
 
-            return x.Name == y.Name && x.Value == y.Value && x.Comment == y.Comment && x.LineNumber == y.LineNumber;
+            return x.Key == y.Key && x.Value == y.Value && x.Comment == y.Comment && x.LineNumber == y.LineNumber;
         }
 
         /// <inheritdoc/>
-        public int GetHashCode(IDelftIniProperty obj)
+        public int GetHashCode(IniProperty obj)
         {
             unchecked
             {
-                int hashCode = obj.Name != null ? obj.Name.GetHashCode() : 0;
+                int hashCode = obj.Key != null ? obj.Key.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ (obj.Value != null ? obj.Value.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (obj.Comment != null ? obj.Comment.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ obj.LineNumber;

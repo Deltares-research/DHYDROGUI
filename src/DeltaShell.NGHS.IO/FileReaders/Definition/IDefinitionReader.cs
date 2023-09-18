@@ -1,13 +1,13 @@
-﻿using DeltaShell.NGHS.IO.Helpers;
+﻿using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition
 {
     public interface IDefinitionReader<T>
     {
         /// <summary>
-        /// Creates an object of type T for an <see cref="IDelftIniCategory"/>
+        /// Creates an object of type T for an <see cref="IniSection"/>
         /// </summary>
-        /// <param name="category">Category to parse</param>
-        T ReadDefinition(IDelftIniCategory category);
+        /// <param name="iniSection">INI section to parse</param>
+        T ReadDefinition(IniSection iniSection);
     }
 }

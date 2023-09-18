@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                         var locationFiles =
                             bndExtForceFileItems.Select(
-                                item => item.GetPropertyValue(BndExtForceFile.LocationFileKey)).ToList();
+                                item => item.GetPropertyValueWithOptionalDefaultValue(BndExtForceFile.LocationFileKey)).ToList();
 
                         foreach (var locationFile in locationFiles.Distinct())
                         {
@@ -74,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         }
 
                         var forcingFiles =
-                            bndExtForceFileItems.Select(item => item.GetPropertyValue(BndExtForceFile.ForcingFileKey));
+                            bndExtForceFileItems.Select(item => item.GetPropertyValueWithOptionalDefaultValue(BndExtForceFile.ForcingFileKey));
 
                         foreach (var forcingFile in forcingFiles.Distinct())
                         {

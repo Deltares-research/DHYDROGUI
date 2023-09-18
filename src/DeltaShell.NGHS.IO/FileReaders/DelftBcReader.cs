@@ -2,14 +2,15 @@
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils.Extensions;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
     public class DelftBcReader : DelftIniReader, IDelftBcReader
     {
-        public IList<IDelftBcCategory> ReadDelftBcFile(string bcFile)
+        public IList<DelftBcCategory> ReadDelftBcFile(string bcFile)
         {
-            var content = new List<IDelftBcCategory>();
+            var content = new List<DelftBcCategory>();
             OpenInputFile(bcFile);
             try
             {
@@ -21,9 +22,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     line = line.Trim();
                     if (string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
 
-                    if (IsNewCategory(line, ref categoryName))
+                    if (IsNewIniSection(line, ref categoryName))
                     {
-                        currentCategory = new DelftBcCategory(categoryName) { LineNumber = LineNumber };
+                        currentCategory = new DelftBcCategory(categoryName);
+                        currentCategory.Section.LineNumber = LineNumber;
                         content.Add(currentCategory);
                         continue;
                     }
@@ -32,25 +34,25 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     if (line.Contains('='))
                     {
                         var fields = GetKeyValueComment(line);
-                        var property = new DelftIniProperty
-                        {
-                            Name = fields[0],
-                            Value = fields[1],
-                            Comment = fields[2],
+                        var property = new IniProperty
+                        (
+                            fields[0],
+                            fields[1],
+                            fields[2]) {
                             LineNumber = LineNumber
                         };
                         
-                        if (property.Name == "quantity") 
+                        if (property.IsKeyEqualTo("quantity")) 
                         {
                             currentCategory.Table.Add(new DelftBcQuantityData(property));
                         }
-                        else if (property.Name == "unit")
+                        else if (property.Key == "unit")
                         {
                             currentCategory.Table.Last().Unit = property;
                         }
                         else
                         {
-                            currentCategory.Properties.Add(property);
+                            currentCategory.Section.AddProperty(property);
                         }
                     }
                     else

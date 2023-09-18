@@ -5,7 +5,7 @@ using DHYDRO.Common.IO.BackwardCompatibility;
 namespace DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility
 {
     /// <summary>
-    /// <see cref="StructureFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy categories
+    /// <see cref="StructureFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy INI sections
     /// and properties for the structure file.
     /// </summary>
     /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>

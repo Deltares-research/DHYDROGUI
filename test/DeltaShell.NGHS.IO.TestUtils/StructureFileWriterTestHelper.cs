@@ -12,6 +12,7 @@ using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -500,7 +501,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         {
             // Mock of StructureFileWriter
 
-            var categories = new List<DelftIniCategory>
+            var iniSections = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.StructureDefinitionsMajorVersion, 
                                                              GeneralRegion.StructureDefinitionsMinorVersion, 
@@ -512,7 +513,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure.GetStructureType());
                 if (definitionGeneratorStructure != null)
                 {
-                    var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure);
+                    var structureIniSection = definitionGeneratorStructure.CreateStructureRegion(structure);
 
                     switch (structure.GetStructureType())
                     {
@@ -521,7 +522,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                             var culvert = structure as Culvert;
                             if (culvert != null)
                             {
-                                AddFrictionData(structureCategory, Friction.Chezy, culvert.Friction,
+                                AddFrictionData(structureIniSection, Friction.Chezy, culvert.Friction,
                                     culvert.GroundLayerEnabled ? culvert.GroundLayerRoughness : culvert.Friction);
                             }
                             break;
@@ -529,25 +530,25 @@ namespace DeltaShell.NGHS.IO.TestUtils
                             var bridge = structure as Bridge;
                             if (bridge != null)
                             {
-                                AddFrictionData(structureCategory, Friction.Chezy, bridge.Friction,
+                                AddFrictionData(structureIniSection, Friction.Chezy, bridge.Friction,
                                     bridge.GroundLayerEnabled ? bridge.GroundLayerRoughness : bridge.Friction);
                             }
                             break;
                     }
-                    categories.Add(structureCategory);
+                    iniSections.Add(structureIniSection);
                 }
             });
             
             if (File.Exists(FileWriterTestHelper.ModelFileNames.Structures)) File.Delete(FileWriterTestHelper.ModelFileNames.Structures);
-            new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.Structures);
+            new IniFileWriter().WriteIniFile(iniSections, FileWriterTestHelper.ModelFileNames.Structures);
         }
 
-        private static void AddFrictionData(DelftIniCategory category, Friction frictionType, double friction, double groundLayerRoughness)
+        private static void AddFrictionData(IniSection iniSection, Friction frictionType, double friction, double groundLayerRoughness)
         {
-            category.AddProperty(StructureRegion.BedFrictionType.Key, ((int)frictionType).ToString(), StructureRegion.BedFrictionType.Description);
-            category.AddProperty(StructureRegion.BedFriction.Key, friction, StructureRegion.BedFriction.Description, StructureRegion.BedFriction.Format);
-            category.AddProperty(StructureRegion.GroundFrictionType.Key, ((int)frictionType).ToString(), StructureRegion.GroundFrictionType.Description); // This may be removed, but for now just duplicate
-            category.AddProperty(StructureRegion.GroundFriction.Key, groundLayerRoughness, StructureRegion.GroundFriction.Description, StructureRegion.GroundFriction.Format);
+            iniSection.AddPropertyWithOptionalComment(StructureRegion.BedFrictionType.Key, ((int)frictionType).ToString(), StructureRegion.BedFrictionType.Description);
+            iniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.BedFriction.Key, friction, StructureRegion.BedFriction.Description, StructureRegion.BedFriction.Format);
+            iniSection.AddPropertyWithOptionalComment(StructureRegion.GroundFrictionType.Key, ((int)frictionType).ToString(), StructureRegion.GroundFrictionType.Description); // This may be removed, but for now just duplicate
+            iniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.GroundFriction.Key, groundLayerRoughness, StructureRegion.GroundFriction.Description, StructureRegion.GroundFriction.Format);
         }
 
         private static void AddStructure(this IBranch branch, IStructure1D structure)

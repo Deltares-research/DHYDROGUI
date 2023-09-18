@@ -2,6 +2,7 @@
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -9,23 +10,23 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     {
         public DefinitionGeneratorStructureInvertedSiphon(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
         
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Culvert);
 
             var culvert = hydroObject as Culvert;
-            if (culvert == null) return IniCategory;
+            if (culvert == null) return IniSection;
 
             AddCommonCulvertElements(culvert);
             AddInvertedSiphonElements(culvert);
             
-            return IniCategory;
+            return IniSection;
         }
 
         protected void AddInvertedSiphonElements(ICulvert culvert)
         {
-            IniCategory.AddProperty(StructureRegion.SubType.Key, StructureRegion.StructureTypeName.InvertedSiphon, StructureRegion.SubType.Description);
-            IniCategory.AddProperty(StructureRegion.BendLossCoef.Key, culvert.BendLossCoefficient, StructureRegion.BendLossCoef.Description, StructureRegion.BendLossCoef.Format);
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.SubType.Key, StructureRegion.StructureTypeName.InvertedSiphon, StructureRegion.SubType.Description);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.BendLossCoef.Key, culvert.BendLossCoefficient, StructureRegion.BendLossCoef.Description, StructureRegion.BendLossCoef.Format);
         }
     }
 }

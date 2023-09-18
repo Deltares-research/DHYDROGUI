@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
@@ -52,10 +53,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         public void CreateStructureRegion_TStructure_ExpectedResult(Weir structure,
                                                                     string expectedCrestLevel) 
         {
-            IDelftIniCategory category = Generator.CreateStructureRegion(structure);
+            IniSection iniSection = Generator.CreateStructureRegion(structure);
 
-            Assert.That(category.Properties.Count, Is.EqualTo(32)); 
-            AssertCorrectCommonRegionElements(category, 
+            Assert.That(iniSection.Properties.Count(), Is.EqualTo(32)); 
+            AssertCorrectCommonRegionElements(iniSection, 
                                               nameof(Weir), 
                                               expectedLongName,
                                               expectedBranchName, 
@@ -63,38 +64,38 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                                               TStructureDefinitionType);
             Assert.Multiple(() =>
             {
-                AssertCorrectProperty(category, StructureRegion.Upstream1Width.Key, "0.000");
-                AssertCorrectProperty(category, StructureRegion.Upstream2Width.Key, "0.000");
-                AssertCorrectProperty(category, StructureRegion.CrestWidth.Key, "0.000");
-                AssertCorrectProperty(category, StructureRegion.Downstream1Width.Key, "0.000");
-                AssertCorrectProperty(category, StructureRegion.Downstream2Width.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.Upstream1Width.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.Upstream2Width.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.CrestWidth.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.Downstream1Width.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.Downstream2Width.Key, "0.000");
 
-                AssertCorrectProperty(category, StructureRegion.Upstream1Level.Key, "0.000");
-                AssertCorrectProperty(category, StructureRegion.Upstream2Level.Key, "0.000");
-                AssertCorrectProperty(category, StructureRegion.CrestLevel.Key, expectedCrestLevel);
-                AssertCorrectProperty(category, StructureRegion.Downstream1Level.Key, "0.000");
-                AssertCorrectProperty(category, StructureRegion.Downstream2Level.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.Upstream1Level.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.Upstream2Level.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.CrestLevel.Key, expectedCrestLevel);
+                AssertCorrectProperty(iniSection, StructureRegion.Downstream1Level.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.Downstream2Level.Key, "0.000");
 
-                AssertCorrectProperty(category, StructureRegion.GateLowerEdgeLevel.Key, "11.000");
+                AssertCorrectProperty(iniSection, StructureRegion.GateLowerEdgeLevel.Key, "11.000");
 
-                AssertCorrectProperty(category, StructureRegion.PosFreeGateFlowCoeff.Key, "1.000");
-                AssertCorrectProperty(category, StructureRegion.PosDrownGateFlowCoeff.Key, "1.000");
-                AssertCorrectProperty(category, StructureRegion.PosFreeWeirFlowCoeff.Key, "1.000");
-                AssertCorrectProperty(category, StructureRegion.PosDrownWeirFlowCoeff.Key, "1.000");
-                AssertCorrectProperty(category, StructureRegion.PosContrCoefFreeGate.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.PosFreeGateFlowCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.PosDrownGateFlowCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.PosFreeWeirFlowCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.PosDrownWeirFlowCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.PosContrCoefFreeGate.Key, "1.000");
 
-                AssertCorrectProperty(category, StructureRegion.NegFreeGateFlowCoeff.Key, "1.000");
-                AssertCorrectProperty(category, StructureRegion.NegDrownGateFlowCoeff.Key, "1.000");
-                AssertCorrectProperty(category, StructureRegion.NegFreeWeirFlowCoeff.Key, "1.000");
-                AssertCorrectProperty(category, StructureRegion.NegDrownWeirFlowCoeff.Key, "1.000");
-                AssertCorrectProperty(category, StructureRegion.NegContrCoefFreeGate.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.NegFreeGateFlowCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.NegDrownGateFlowCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.NegFreeWeirFlowCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.NegDrownWeirFlowCoeff.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.NegContrCoefFreeGate.Key, "1.000");
 
-                AssertCorrectProperty(category, StructureRegion.CrestLength.Key, "0.000");
-                AssertCorrectProperty(category, StructureRegion.ExtraResistance.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.CrestLength.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.ExtraResistance.Key, "0.000");
 
-                AssertCorrectProperty(category, StructureRegion.GateHeight.Key, "1.000");
+                AssertCorrectProperty(iniSection, StructureRegion.GateHeight.Key, "1.000");
 
-                AssertCorrectProperty(category, StructureRegion.GateOpeningWidth.Key, "0.000");
+                AssertCorrectProperty(iniSection, StructureRegion.GateOpeningWidth.Key, "0.000");
             });
         }
     }

@@ -44,13 +44,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             var content = categories.Where(c => c.Name == CrossSectionRegion.IniHeader).ToList().First();
 
-            var idProperty = content.Properties.First(p => p.Name == LocationRegion.Id.Key);
+            var idProperty = content.Properties.First(p => p.Key == LocationRegion.Id.Key);
             Assert.AreEqual(expectedId, idProperty.Value);
 
-            var branchIdProperty = content.Properties.First(p => p.Name == LocationRegion.BranchId.Key);
+            var branchIdProperty = content.Properties.First(p => p.Key == LocationRegion.BranchId.Key);
             Assert.AreEqual(branch.Name, branchIdProperty.Value);
 
-            var chainageProperty = content.Properties.First(p => p.Name == LocationRegion.Chainage.Key);
+            var chainageProperty = content.Properties.First(p => p.Key == LocationRegion.Chainage.Key);
             Assert.AreEqual(expectedChainage.ToString(LocationRegion.Chainage.Format, CultureInfo.InvariantCulture), chainageProperty.Value);
         }
         
@@ -78,13 +78,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             var content = categories.Where(c => c.Name == ObservationPointRegion.IniHeader).ToList().First();
 
-            var idProperty = content.Properties.First(p => p.Name == LocationRegion.ObsId.Key);
+            var idProperty = content.Properties.First(p => p.Key == LocationRegion.ObsId.Key);
             Assert.AreEqual(expectedId.ToString(), idProperty.Value);
 
-            var branchIdProperty = content.Properties.First(p => p.Name == LocationRegion.BranchId.Key);
+            var branchIdProperty = content.Properties.First(p => p.Key == LocationRegion.BranchId.Key);
             Assert.AreEqual(branch.Name, branchIdProperty.Value);
 
-            var chainageProperty = content.Properties.First(p => p.Name == LocationRegion.Chainage.Key);
+            var chainageProperty = content.Properties.First(p => p.Key == LocationRegion.Chainage.Key);
             Assert.AreEqual(expectedChainage.ToString(LocationRegion.Chainage.Format, CultureInfo.InvariantCulture), chainageProperty.Value);
 
             //var nameProperty = content.Properties.First(p => p.Name == LocationRegion.Name.Key);
@@ -124,16 +124,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             var content = categories.Where(c => c.Name == BoundaryRegion.LateralDischargeHeader).ToList().First();
 
-            var idProperty = content.Properties.First(p => p.Name == LocationRegion.Id.Key);
+            var idProperty = content.Properties.First(p => p.Key == LocationRegion.Id.Key);
             Assert.AreEqual(expectedId.ToString(), idProperty.Value);
 
-            var branchIdProperty = content.Properties.First(p => p.Name == LocationRegion.BranchId.Key);
+            var branchIdProperty = content.Properties.First(p => p.Key == LocationRegion.BranchId.Key);
             Assert.AreEqual(branch.Name, branchIdProperty.Value);
 
-            var chainageProperty = content.Properties.First(p => p.Name == LocationRegion.Chainage.Key);
+            var chainageProperty = content.Properties.First(p => p.Key == LocationRegion.Chainage.Key);
             Assert.AreEqual(expectedChainage.ToString(LocationRegion.Chainage.Format, CultureInfo.InvariantCulture), chainageProperty.Value);
 
-            var lengthProperty = content.Properties.First(p => p.Name == LateralSourceLocationRegion.Length.Key);
+            var lengthProperty = content.Properties.First(p => p.Key == LateralSourceLocationRegion.Length.Key);
             Assert.AreEqual(expectedDiffuseLength.ToString(LateralSourceLocationRegion.Length.Format,CultureInfo.InvariantCulture), lengthProperty.Value);
         }
     }

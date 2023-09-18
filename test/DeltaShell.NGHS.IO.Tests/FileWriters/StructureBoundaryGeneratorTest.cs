@@ -56,10 +56,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             
             //Assert
             var boundary = singleBoundary.First();
-            Assert.That(boundary.Name, Is.EqualTo(series.Name));
-            Assert.That(boundary.Properties[0].Value, Is.EqualTo(structureName));
-            Assert.That(boundary.Properties[1].Value, Is.EqualTo(BoundaryRegion.FunctionStrings.TimeSeries));
-            Assert.That(boundary.Properties[2].Value, Is.EqualTo(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate));
+            Assert.That(boundary.Section.Name, Is.EqualTo(series.Name));
+            Assert.That(boundary.Section.Properties.ElementAt(0).Value, Is.EqualTo(structureName));
+            Assert.That(boundary.Section.Properties.ElementAt(1).Value, Is.EqualTo(BoundaryRegion.FunctionStrings.TimeSeries));
+            Assert.That(boundary.Section.Properties.ElementAt(2).Value, Is.EqualTo(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate));
         }
 
         private static ITimeSeries InitializeSubstituteTimeSeries()
@@ -87,9 +87,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             
             //Assert
             var boundary = boundaries.First();
-            Assert.That(boundary.Properties[0].Value, Is.EqualTo(header));
-            Assert.That(boundary.Properties[1].Value, Is.EqualTo(BoundaryRegion.FunctionStrings.TimeSeries));
-            Assert.That(boundary.Properties[2].Value, Is.EqualTo(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate));
+            Assert.That(boundary.Section.Properties.ElementAt(0).Value, Is.EqualTo(header));
+            Assert.That(boundary.Section.Properties.ElementAt(1).Value, Is.EqualTo(BoundaryRegion.FunctionStrings.TimeSeries));
+            Assert.That(boundary.Section.Properties.ElementAt(2).Value, Is.EqualTo(BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate));
         }
 
         private static IEnumerable<IStructureTimeSeries> InitializeListOfData()

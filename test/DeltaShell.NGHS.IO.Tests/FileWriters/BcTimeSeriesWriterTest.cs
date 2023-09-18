@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         private IStructureBoundaryGenerator structureBoundaryFileWriter;
         private string filepath;
         private DateTime time;
-        private List<IDelftIniCategory> boundary;
+        private List<DelftBcCategory> boundary;
         private const string structureName =  "structureName";
         
         [SetUp]
@@ -36,10 +36,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             filepath =  TestHelper.GetTestFilePath(@"BcFiles\Structure.bc");
         }
 
-        private List<IDelftIniCategory> CreateBoundary()
+        private List<DelftBcCategory> CreateBoundary()
         {
-            boundary = new List<IDelftIniCategory>();
-            IDelftIniCategory category = Substitute.For<IDelftIniCategory>();
+            boundary = new List<DelftBcCategory>();
+            var category = new DelftBcCategory("boundary");
             boundary.Add(category);
             return boundary;
         }

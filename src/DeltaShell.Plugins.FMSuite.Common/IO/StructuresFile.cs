@@ -17,6 +17,7 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     /// </summary>
     public class StructuresFile : FMSuiteFileBase, IFeature2DFileBase<IStructure>
     {
-        private const string StructureCategoryName = "structure";
+        private const string StructureIniSectionName = "structure";
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));
 
         public StructureSchema<ModelPropertyDefinition> StructureSchema { private get; set; }
@@ -57,22 +58,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public IEnumerable<Structure2D> ReadStructures2D(string filePath)
         {
-            var categories = new DelftIniReader().ReadDelftIniFile(filePath);
-            if(!((IEnumerable<IDelftIniCategory>) categories).Any(c => c.ValidGeneralRegion(GeneralRegion.StructureDefinitionsMajorVersion,
+            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath);
+            if(!((IEnumerable<IniSection>) iniSections).Any(c => c.ValidGeneralRegion(GeneralRegion.StructureDefinitionsMajorVersion,
                 GeneralRegion.StructureDefinitionsMinorVersion, GeneralRegion.FileTypeName.StructureDefinition))) yield break;
 
-            foreach (var category in categories.Where(c => c.ReadProperty<string>(StructureRegion.BranchId.Key, true)  == null)) // only write 2d features
+            foreach (var iniSection in iniSections.Where(c => c.ReadProperty<string>(StructureRegion.BranchId.Key, true)  == null)) // only write 2d features
             {
-                // Filter out unexpected .ini categories:
-                if (category.Name.ToLower() != StructureCategoryName.ToLower())
+                // Filter out unexpected .ini sections:
+                if (iniSection.Name.ToLower() != StructureIniSectionName.ToLower())
                 {
-                    if(!string.Equals(category.Name, GeneralRegion.IniHeader, StringComparison.CurrentCultureIgnoreCase))
-                        Log.WarnFormat("Category [{0}] not supported for structures and is skipped.", category.Name);
+                    if(!string.Equals(iniSection.Name, GeneralRegion.IniHeader, StringComparison.CurrentCultureIgnoreCase))
+                        Log.WarnFormat("Category [{0}] not supported for structures and is skipped.", iniSection.Name);
                     continue;
                 }
                 
                 var structureTypeProperty =
-                    category.Properties.FirstOrDefault(p => p.Name == KnownStructureProperties.Type);
+                    iniSection.Properties.FirstOrDefault(p => p.Key == KnownStructureProperties.Type);
                 if (structureTypeProperty == null)
                 {
                     Log.WarnFormat("Obligated property '{0}' expected but is missing; Structure is skipped.",
@@ -80,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     continue;
                 }
 
-                var structure2D = CreateStructure2D(StructureSchema, structureTypeProperty.Value, category, filePath);
+                var structure2D = CreateStructure2D(StructureSchema, structureTypeProperty.Value, iniSection, filePath);
                 var errorMessage = StructureFactoryValidator.Validate(structure2D);
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
@@ -96,9 +97,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         public void Write(string path, IEnumerable<IStructure> features)
         {
             var supportedStructures = GetSupportedStructures(features);
-            var delftIniCategories = supportedStructures.Select(s => CreateDelftIniCategory(s, path, ReferenceDate));
+            var iniSections = supportedStructures.Select(s => CreateIniSection(s, path, ReferenceDate));
 
-            new DelftIniWriter().WriteDelftIniFile(delftIniCategories, path);
+            new DelftIniWriter().WriteDelftIniFile(iniSections, path);
         }
 
         private static IEnumerable<IStructure> GetSupportedStructures(IEnumerable<IStructure> structures)
@@ -118,21 +119,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return list;
         }
 
-        private DelftIniCategory CreateDelftIniCategory(IStructure structure, string filePath, DateTime refDate)
+        private IniSection CreateIniSection(IStructure structure, string filePath, DateTime refDate)
         {
-            var delftIniCategory = new DelftIniCategory(StructureCategoryName);
+            var iniSection = new IniSection(StructureIniSectionName);
 
             foreach (var property in CreateDelftIniProperties(structure, filePath, refDate))
             {
-                delftIniCategory.Properties.Add(property);
+                iniSection.AddProperty(property);
             }
 
-            return delftIniCategory;
+            return iniSection;
         }
 
-        private IEnumerable<DelftIniProperty> CreateDelftIniProperties(IStructure structure, string filePath, DateTime refDate)
+        private IEnumerable<IniProperty> CreateDelftIniProperties(IStructure structure, string filePath, DateTime refDate)
         {
-            var properties = new List<DelftIniProperty>();
+            var properties = new List<IniProperty>();
 
             var structureType = DetermineType(structure);
 
@@ -144,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructGeometryProperties(IStructure structure, string structureType, string filePath)
+        private IEnumerable<IniProperty> ConstructGeometryProperties(IStructure structure, string structureType, string filePath)
         {
             var point = structure.Geometry as IPoint;
             if (point != null)
@@ -177,19 +178,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        private DelftIniProperty ConstructProperty(string propertyName, object value, string structureType)
+        private IniProperty ConstructProperty(string propertyName, object value, string structureType)
         {
             var definition = StructureSchema.GetDefinition(structureType, propertyName);
-            var delftIniProperty = new DelftIniProperty
-            {
-                Name = definition.FilePropertyName,
-                Value = DataTypeValueParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
-                Comment = definition.Description
-            };
+            var delftIniProperty = new IniProperty
+            (
+                definition.FilePropertyKey,
+                DataTypeValueParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
+                definition.Description
+            );
             return delftIniProperty;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructStructureProperties(IStructure structure, string structureType, string path, DateTime refDate)
+        private IEnumerable<IniProperty> ConstructStructureProperties(IStructure structure, string structureType, string path, DateTime refDate)
         {
             var pump = structure as IPump;
             if (pump != null)
@@ -209,10 +210,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             throw new NotImplementedException();
         }
 
-        private IEnumerable<DelftIniProperty> ConstructPumpProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
+        private IEnumerable<IniProperty> ConstructPumpProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
             var pump = (IPump)structure;
-            var properties = new List<DelftIniProperty>();
+            var properties = new List<IniProperty>();
 
             if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
             {
@@ -228,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
+        private IEnumerable<IniProperty> ConstructWeirProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
             var weir = (IWeir)structure;
             var weirFormula = weir.WeirFormula;
@@ -237,10 +238,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             throw new NotImplementedException();
         }
 
-        private IEnumerable<DelftIniProperty> ConstructGateProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
+        private IEnumerable<IniProperty> ConstructGateProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
             var gate = (IGate)structure;
-            var properties = new List<DelftIniProperty>();
+            var properties = new List<IniProperty>();
 
             if (gate.UseSillLevelTimeSeries)
             {
@@ -299,10 +300,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructLeveeBreachProperties(IStructure structure, string structureType, string path, DateTime refDate)
+        private IEnumerable<IniProperty> ConstructLeveeBreachProperties(IStructure structure, string structureType, string path, DateTime refDate)
         {
             var leveeBreach = structure as ILeveeBreach;
-            var properties = new List<DelftIniProperty>();
+            var properties = new List<IniProperty>();
             if (leveeBreach == null) return properties;
 
             var settings = leveeBreach.GetActiveLeveeBreachSettings();
@@ -364,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static void WriteStructures2D(string path, IEnumerable<Structure2D> structures)
         {
-            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory), path);
+            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateIniSection), path);
         }
 
         private IStructure ConvertStructure(Structure2D structure, string filePath, string oldFilePath = null)
@@ -404,46 +405,46 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             File.Copy(polylineFilePath, Path.Combine(newDirectory, polylineFileName));
         }
 
-        private static DelftIniCategory CreateDelftIniCategory(Structure2D structure)
+        private static IniSection CreateIniSection(Structure2D structure)
         {
-            var delftIniCategory = new DelftIniCategory(StructureCategoryName);
+            var iniSection = new IniSection(StructureIniSectionName);
 
             foreach (var property in structure.Properties)
             {
-                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.GateSillWidth &&
+                if (property.PropertyDefinition.FilePropertyKey == KnownStructureProperties.GateSillWidth &&
                     DataTypeValueParser.FromString<double>(property.GetValueAsString()) <= 0.0)
                 {
                     continue;
                 }
-                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestLevel &&
+                if (property.PropertyDefinition.FilePropertyKey == KnownStructureProperties.CrestLevel &&
                     DataTypeValueParser.FromString<double>(property.GetValueAsString()) <= 0.0)
                 {
                     continue;
                 }
-                delftIniCategory.Properties.Add(new DelftIniProperty
-                {
-                    Name = property.PropertyDefinition.FilePropertyName,
-                    Value = property.GetValueAsString(),
-                    Comment = property.PropertyDefinition.Description
-                });
+                iniSection.AddProperty(new IniProperty
+                (
+                    property.PropertyDefinition.FilePropertyKey,
+                    property.GetValueAsString(),
+                    property.PropertyDefinition.Description
+                ));
             }
 
-            return delftIniCategory;
+            return iniSection;
         }
 
         #region Sobek Structure to DelftIni related methods:
 
-        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
+        private IEnumerable<IniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
         {
             var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new StructureBcFileNameGenerator());
-            var generalStructureCategory = structureGenerator.CreateStructureRegion(structure);
-            return generalStructureCategory.Properties;
+            var generalStructureIniSection = structureGenerator.CreateStructureRegion(structure);
+            return generalStructureIniSection.Properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(IStructure1D structure, string path, string structureType, DateTime refDate)
+        private IEnumerable<IniProperty> ConstructSimpleWeirProperties(IStructure1D structure, string path, string structureType, DateTime refDate)
         {
             var weir = (IWeir)structure;
-            var properties = new List<DelftIniProperty>();
+            var properties = new List<IniProperty>();
 
             if (weir.IsUsingTimeSeriesForCrestLevel())
             {
@@ -511,17 +512,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         #endregion
 
         private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, string structureType,
-                                                     DelftIniCategory category, string filePath)
+                                                     IniSection iniSection, string filePath)
         {
             var newStructure = new Structure2D(structureType);
 
-            foreach (var property in category.Properties)
+            foreach (var property in iniSection.Properties)
             {
-                var modelPropertyDefinition = schema.GetDefinition(structureType, property.Name);
+                var modelPropertyDefinition = schema.GetDefinition(structureType, property.Key);
                 if (modelPropertyDefinition == null)
                 {
                     Log.WarnFormat("Property '{0}' not supported for structures of type '{1}' and is skipped. (Line {2} of file {3})",
-                                   property.Name, structureType, property.LineNumber, filePath);
+                                   property.Key, structureType, property.LineNumber, filePath);
                     continue;
                 }
                 try
@@ -561,7 +562,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     throw new FormatException(String.Format("An invalid value{0} was encountered (expected {1}) for property '{2}' on line {3} of file {4}",
                                                             e.InnerException is OverflowException ? " (too large/small)" : "",
                                                             GetValueTypeDescription(modelPropertyDefinition.DataType, modelPropertyDefinition),
-                                                            property.Name, property.LineNumber, filePath), e);
+                                                            property.Key, property.LineNumber, filePath), e);
                 }
             }
 

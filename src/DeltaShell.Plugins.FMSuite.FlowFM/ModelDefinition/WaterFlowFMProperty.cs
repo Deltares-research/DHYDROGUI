@@ -16,8 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 Caption = mduPropertyName,
                 MduPropertyName = mduPropertyName,
-                FileCategoryName = mduGroupName,
-                FilePropertyName = mduPropertyName,
+                FileSectionName = mduGroupName,
+                FilePropertyKey = mduPropertyName,
                 Category = ModelSchemaCsvFile.DefaultGUIGroupCaption,
                 SubCategory = null,
                 DataType = typeof (string),

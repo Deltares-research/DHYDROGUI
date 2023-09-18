@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Network
@@ -19,33 +20,33 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         public static void Write(string filePath, IEnumerable<Route> routes)
         {
-            var categories = new List<DelftIniCategory>();
+            var iniSections = new List<IniSection>();
 
             foreach (var route in routes)
             {
                 var locations = route.Locations.AllValues;
 
-                var iniCategory = new DelftIniCategory(RouteIniHeader);
+                var iniSection = new IniSection(RouteIniHeader);
 
-                iniCategory.AddProperty(Name, route.Name);
-                iniCategory.AddProperty(Branches, string.Join(";", locations.Select(nl => nl.Branch.Name)));
-                iniCategory.AddProperty(Chainages, locations.Select(nl => nl.Chainage));
+                iniSection.AddPropertyFromConfiguration(Name, route.Name);
+                iniSection.AddPropertyFromConfiguration(Branches, string.Join(";", locations.Select(nl => nl.Branch.Name)));
+                iniSection.AddPropertyFromConfigurationWithMultipleValues(Chainages, locations.Select(nl => nl.Chainage));
 
-                categories.Add(iniCategory);
+                iniSections.Add(iniSection);
             }
 
-            new DelftIniWriter().WriteDelftIniFile(categories, filePath);
+            new DelftIniWriter().WriteDelftIniFile(iniSections, filePath);
         }
 
         public static void Read(string filePath, IHydroNetwork network)
         {
-            var categories = new DelftIniReader().ReadDelftIniFile(filePath).ToList();
+            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath).ToList();
 
-            foreach (var category in categories)
+            foreach (var iniSection in iniSections)
             {
-                var name = category.ReadProperty<string>(Name.Key);
-                var branchNames = category.ReadPropertiesToListOfType(Branches.Key, true, ';', default(IList<string>), false);
-                var chainages = category.ReadPropertiesToListOfType<double>(Chainages.Key, true);
+                var name = iniSection.ReadProperty<string>(Name.Key);
+                var branchNames = iniSection.ReadPropertiesToListOfType(Branches.Key, true, ';', default(IList<string>), false);
+                var chainages = iniSection.ReadPropertiesToListOfType<double>(Chainages.Key, true);
 
                 var route = new Route
                 {

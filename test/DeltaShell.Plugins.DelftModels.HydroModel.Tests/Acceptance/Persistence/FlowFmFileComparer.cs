@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence.CustomComparers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -118,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 return false;
             }
             
-            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            IList<IniSection> categories = new DelftIniReader().ReadDelftIniFile(filePath);
             return categories.Any(c => c.ValidGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion,
                                                             GeneralRegion.CrossSectionDefinitionsMinorVersion,
                                                             GeneralRegion.FileTypeName.CrossSectionDefinition));
@@ -179,11 +180,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         
         private static void SortFmBcFile(string expectedFlowFmFile, string actualFlowFmFile, string idKey)
         {
-            var readCategories = new DelftBcReader().ReadDelftBcFile(expectedFlowFmFile);
-            new DelftBcWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), expectedFlowFmFile);
+            IEnumerable<IniSection> readSections = new DelftBcReader().ReadDelftBcFile(expectedFlowFmFile).Select(c => c.Section);
+            File.Delete(expectedFlowFmFile);
+            new DelftBcWriter().WriteDelftIniFile(readSections.OrderBy(s => s.ReadProperty<string>(idKey)), expectedFlowFmFile);
 
-            readCategories = new DelftBcReader().ReadDelftBcFile(actualFlowFmFile);
-            new DelftBcWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
+            readSections = new DelftBcReader().ReadDelftBcFile(actualFlowFmFile).Select(c => c.Section);
+            File.Delete(actualFlowFmFile);
+            new DelftBcWriter().WriteDelftIniFile(readSections.OrderBy(s => s.ReadProperty<string>(idKey)), actualFlowFmFile);
         }
     }
 }

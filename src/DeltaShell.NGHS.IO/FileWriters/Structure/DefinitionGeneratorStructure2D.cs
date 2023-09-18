@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -8,14 +9,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         protected override void AddCommonRegionElements(IHydroObject hydroObject, string definitionType)
         {
-            AddIdPropertyToIniCategory(hydroObject);
-            AddDefinitionTypePropertyToIniCategory(definitionType);
+            AddIdPropertyToIniSection(hydroObject);
+            AddDefinitionTypePropertyToIniSection(definitionType);
 
             if (hydroObject.Geometry.Coordinates.Length >= 2)
             {
-                IniCategory.AddProperty(StructureRegion.NumberOfCoordinates.Key, hydroObject.Geometry.Coordinates.Length, StructureRegion.NumberOfCoordinates.Description);
-                IniCategory.AddProperty(StructureRegion.XCoordinates.Key, hydroObject.Geometry.Coordinates.Select(c => c.X), StructureRegion.XCoordinates.Description,"F4");
-                IniCategory.AddProperty(StructureRegion.YCoordinates.Key, hydroObject.Geometry.Coordinates.Select(c => c.Y), StructureRegion.YCoordinates.Description,"F4");
+                IniSection.AddPropertyWithOptionalComment(StructureRegion.NumberOfCoordinates.Key, hydroObject.Geometry.Coordinates.Length, StructureRegion.NumberOfCoordinates.Description);
+                IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.XCoordinates.Key, hydroObject.Geometry.Coordinates.Select(c => c.X), StructureRegion.XCoordinates.Description,"F4");
+                IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.YCoordinates.Key, hydroObject.Geometry.Coordinates.Select(c => c.Y), StructureRegion.YCoordinates.Description,"F4");
             }
         }
     }

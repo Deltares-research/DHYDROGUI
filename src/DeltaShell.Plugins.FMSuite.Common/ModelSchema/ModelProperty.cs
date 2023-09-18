@@ -130,13 +130,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
                 if (e is ArgumentNullException || e is FormatException)
                 {
                     throw new FormatException(String.Format("Unexpected value string \"{0}\" for property \"{1}\"",
-                                                            valueAsString, PropertyDefinition.FilePropertyName),
+                                                            valueAsString, PropertyDefinition.FilePropertyKey),
                                               e);
                 }
                 if (e is OverflowException)
                 {
                     throw new FormatException(String.Format("Value string \"{0}\" is too large/small for property \"{1}\"",
-                                                            valueAsString, PropertyDefinition.FilePropertyName),
+                                                            valueAsString, PropertyDefinition.FilePropertyKey),
                                               e);
                 }
                 // Unexpected exception type, let it continue
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 throw new ArgumentException(String.Format("Invalid object type {0} (expecting {1}) for {2}",
                                                   type, propertyDefinition.DataType,
-                                                  propertyDefinition.FilePropertyName));
+                                                  propertyDefinition.FilePropertyKey));
             }
         }
 
@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// <summary>
         /// Indicates if this property is enabled or not.
         /// </summary>
-        /// <param name="properties">All available properties indexed on <see cref="ModelPropertyDefinition.FilePropertyName"/>.</param>
+        /// <param name="properties">All available properties indexed on <see cref="ModelPropertyDefinition.FilePropertyKey"/>.</param>
         /// <returns>True if enabled; False otherwise.</returns>
         public bool IsEnabled(IEnumerable<ModelProperty> properties)
         {

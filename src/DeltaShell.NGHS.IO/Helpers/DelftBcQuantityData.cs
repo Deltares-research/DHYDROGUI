@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
     public class DelftBcQuantityData : IDelftBcQuantityData
     {
-        public DelftIniProperty Quantity { get; set; }
-        public DelftIniProperty Unit { get; set; }
+        public IniProperty Quantity { get; set; }
+        public IniProperty Unit { get; set; }
         
         /// <summary>
         /// The line where this property was read in the file.
@@ -16,13 +17,13 @@ namespace DeltaShell.NGHS.IO.Helpers
 
         public IList<string> Values { get; set; }
 
-        public DelftBcQuantityData(DelftIniProperty quantity)
+        public DelftBcQuantityData(IniProperty quantity)
         {
             Quantity = quantity;
             Values = new List<string>();
         }
 
-        public DelftBcQuantityData(DelftIniProperty quantity, DelftIniProperty unit, IEnumerable<double> values)
+        public DelftBcQuantityData(IniProperty quantity, IniProperty unit, IEnumerable<double> values)
         {
             Quantity = quantity;
             Unit = unit;

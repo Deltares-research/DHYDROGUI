@@ -2,29 +2,30 @@ using System;
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Location
 {
     public class DefinitionGeneratorLateralSourceLocation : DefinitionGeneratorLocation
     {
-        public DefinitionGeneratorLateralSourceLocation(string iniCategoryName)
-            : base(iniCategoryName)
+        public DefinitionGeneratorLateralSourceLocation(string iniSectionName)
+            : base(iniSectionName)
         {
         }
 
-        public override IEnumerable<DelftIniCategory> CreateIniRegion(IBranchFeature branchFeature)
+        public override IEnumerable<IniSection> CreateIniRegion(IBranchFeature branchFeature)
         {
             AddCommonRegionElements(branchFeature);
             var lateralSource = branchFeature as ILateralSource;
             if (lateralSource == null || Math.Abs(lateralSource.Length) < double.Epsilon)
             {
-                yield return IniCategory;
+                yield return IniSection;
                 yield break;
             }
-            IniCategory.AddProperty(LateralSourceLocationRegion.Length.Key, lateralSource.Length, LateralSourceLocationRegion.Length.Description, LateralSourceLocationRegion.Length.Format);
+            IniSection.AddPropertyWithOptionalCommentAndFormat(LateralSourceLocationRegion.Length.Key, lateralSource.Length, LateralSourceLocationRegion.Length.Description, LateralSourceLocationRegion.Length.Format);
 
-            yield return IniCategory;
+            yield return IniSection;
         }
     }
 }

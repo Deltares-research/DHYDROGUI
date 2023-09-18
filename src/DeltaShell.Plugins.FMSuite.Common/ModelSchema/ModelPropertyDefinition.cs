@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// <summary>
         /// The default implementation of <see cref="IsEnabled"/>.
         /// </summary>
-        /// <param name="modelProperties">A lookup with all available properties, indexed on their <see cref="FilePropertyName"/>.</param>
+        /// <param name="modelProperties">A lookup with all available properties, indexed on their <see cref="FilePropertyKey"/>.</param>
         /// <returns>True if this property is enabled; False when it's not.</returns>
         private static bool IsTrue(IEnumerable<ModelProperty> modelProperties)
         {
@@ -37,14 +37,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public Type DataType { get; set; }
 
         /// <summary>
-        /// The Delft .ini category name to which this property belongs to.
+        /// The INI section name to which this property belongs to.
         /// </summary>
-        public string FileCategoryName { get; set; }
+        public string FileSectionName { get; set; }
 
         /// <summary>
-        /// The name of the property as it occurs in the Delft .ini file.
+        /// The name of the property as it occurs in the INI file.
         /// </summary>
-        public string FilePropertyName { get; set; }
+        public string FilePropertyKey { get; set; }
 
         /// <summary>
         /// The schema category.

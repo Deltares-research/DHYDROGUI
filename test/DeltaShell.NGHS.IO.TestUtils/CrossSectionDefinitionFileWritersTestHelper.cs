@@ -6,7 +6,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -169,7 +169,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
         public static void WriteCrossSectionsToIni(IEnumerable<ICrossSection> crossSections)
         {
-            var categories = new List<DelftIniCategory>
+            var iniSection = new List<IniSection>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion, 
                     GeneralRegion.CrossSectionDefinitionsMinorVersion, 
@@ -188,14 +188,14 @@ namespace DeltaShell.NGHS.IO.TestUtils
                     {
                         var definitionRegion = definitionGeneratorCrossSectionDefinition
                             .CreateDefinitionRegion(crossSection.Definition, true, "");
-                        categories.Add(definitionRegion);
+                        iniSection.Add(definitionRegion);
                         processCsDefinitions.Add(csDefinitionId);
                     }
                 }
             }
             
             if (File.Exists(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions)) File.Delete(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
-            new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            new IniFileWriter().WriteIniFile(iniSection, FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
         }
     }
 }

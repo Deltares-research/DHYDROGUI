@@ -6,7 +6,7 @@ using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NSubstitute;
 using NUnit.Framework;
@@ -23,27 +23,27 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         private static IEnumerable<TestCaseData> ConstructorArgumentNullData()
         {
             var timFileReader = Substitute.For<ITimeSeriesFileReader>();
-            var category = Substitute.For<IDelftIniCategory>();
+            var iniSection = new IniSection("some_section");
             var branch = Substitute.For<IBranch>();
 
 
-            yield return new TestCaseData(null, category, branch, structuresFilename, "fileReader");
-            yield return new TestCaseData(timFileReader, null, branch, structuresFilename, "category");
-            yield return new TestCaseData(timFileReader, category, null, structuresFilename, "branch");
-            yield return new TestCaseData(timFileReader, category, branch, null, "structuresFilename");
+            yield return new TestCaseData(null, iniSection, branch, structuresFilename, "fileReader");
+            yield return new TestCaseData(timFileReader, null, branch, structuresFilename, "iniSection");
+            yield return new TestCaseData(timFileReader, iniSection, null, structuresFilename, "branch");
+            yield return new TestCaseData(timFileReader, iniSection, branch, null, "structuresFilename");
         }
 
         [Test]
         [TestCaseSource(nameof(ConstructorArgumentNullData))]
         public void Constructor_ArgumentNull_ThrowsArgumentNullException(ITimeSeriesFileReader timFileReader,
-                                                                         IDelftIniCategory category,
+                                                                         IniSection iniSection,
                                                                          IBranch branch, 
                                                                          string structuresFilePath,
                                                                          string expectedParameterName)
         {
             void Call() => new PumpDefinitionParser(timFileReader, 
                                                     structureType, 
-                                                    category, 
+                                                    iniSection, 
                                                     branch, 
                                                     structuresFilePath, 
                                                     referenceDateTime);
@@ -56,13 +56,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var category = StructureParserTestHelper.CreateStructureCategory();
+            var iniSection = StructureParserTestHelper.CreateStructureIniSection();
             var branch = new Channel();
 
             // Call
             var parser = new PumpDefinitionParser(Substitute.For<ITimeSeriesFileReader>(),
                                                   structureType, 
-                                                  category, 
+                                                  iniSection, 
                                                   branch, 
                                                   structuresFilename, 
                                                   referenceDateTime);
@@ -93,26 +93,26 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
 
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, name);
-            category.AddProperty(StructureRegion.Name.Key, longName);
-            category.AddProperty(StructureRegion.Orientation.Key, directionIsPositive ? "positive" : "negative");
-            category.AddProperty(StructureRegion.Direction.Key, controlDirection);
-            category.AddProperty(StructureRegion.Capacity.Key, capacity);
-            category.AddProperty(StructureRegion.StartLevelSuctionSide.Key, startSuction);
-            category.AddProperty(StructureRegion.StopLevelSuctionSide.Key, stopSuction);
-            category.AddProperty(StructureRegion.StartLevelDeliverySide.Key, startDelivery);
-            category.AddProperty(StructureRegion.StopLevelDeliverySide.Key, stopDelivery);
-            category.AddProperty(StructureRegion.Chainage.Key, chainage);
-            category.AddProperty(StructureRegion.ReductionFactorLevels.Key, numberReductionLevels);
-            category.AddProperty(StructureRegion.Head.Key, string.Join(", ", headValues));
-            category.AddProperty(StructureRegion.ReductionFactor.Key, string.Join(", ", reductionFactorValues));
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Orientation.Key, directionIsPositive ? "positive" : "negative");
+            iniSection.AddProperty(StructureRegion.Direction.Key, controlDirection);
+            iniSection.AddProperty(StructureRegion.Capacity.Key, capacity);
+            iniSection.AddProperty(StructureRegion.StartLevelSuctionSide.Key, startSuction);
+            iniSection.AddProperty(StructureRegion.StopLevelSuctionSide.Key, stopSuction);
+            iniSection.AddProperty(StructureRegion.StartLevelDeliverySide.Key, startDelivery);
+            iniSection.AddProperty(StructureRegion.StopLevelDeliverySide.Key, stopDelivery);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.ReductionFactorLevels.Key, numberReductionLevels);
+            iniSection.AddProperty(StructureRegion.Head.Key, string.Join(", ", headValues));
+            iniSection.AddProperty(StructureRegion.ReductionFactor.Key, string.Join(", ", reductionFactorValues));
             
             var fileReaderSubstitute = Substitute.For<ITimeSeriesFileReader>();
 
             var parser = new PumpDefinitionParser(fileReaderSubstitute,
                                                   structureType, 
-                                                  category, 
+                                                  iniSection, 
                                                   branch, 
                                                   structuresFilename, 
                                                   referenceDateTime);
@@ -153,27 +153,27 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 
             IBranch branch = new Channel() { Length = 999 };
 
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            category.AddProperty(StructureRegion.Id.Key, "Pump");
-            category.AddProperty(StructureRegion.Name.Key, name);
-            category.AddProperty(StructureRegion.Orientation.Key, "positive");
-            category.AddProperty(StructureRegion.Direction.Key, "both");
-            category.AddProperty(StructureRegion.Capacity.Key, capacityTimeSeriesName);
-            category.AddProperty(StructureRegion.StartLevelSuctionSide.Key, 3.3);
-            category.AddProperty(StructureRegion.StopLevelSuctionSide.Key, 4.4);
-            category.AddProperty(StructureRegion.StartLevelDeliverySide.Key, 5.5);
-            category.AddProperty(StructureRegion.StopLevelDeliverySide.Key, 6.6);
-            category.AddProperty(StructureRegion.Chainage.Key, 1.1);
-            category.AddProperty(StructureRegion.ReductionFactorLevels.Key, numberReductionLevels);
-            category.AddProperty(StructureRegion.Head.Key, string.Join(", ", headValues));
-            category.AddProperty(StructureRegion.ReductionFactor.Key, string.Join(", ", reductionFactorValues));
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, "Pump");
+            iniSection.AddProperty(StructureRegion.Name.Key, name);
+            iniSection.AddProperty(StructureRegion.Orientation.Key, "positive");
+            iniSection.AddProperty(StructureRegion.Direction.Key, "both");
+            iniSection.AddProperty(StructureRegion.Capacity.Key, capacityTimeSeriesName);
+            iniSection.AddProperty(StructureRegion.StartLevelSuctionSide.Key, 3.3);
+            iniSection.AddProperty(StructureRegion.StopLevelSuctionSide.Key, 4.4);
+            iniSection.AddProperty(StructureRegion.StartLevelDeliverySide.Key, 5.5);
+            iniSection.AddProperty(StructureRegion.StopLevelDeliverySide.Key, 6.6);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, 1.1);
+            iniSection.AddProperty(StructureRegion.ReductionFactorLevels.Key, numberReductionLevels);
+            iniSection.AddProperty(StructureRegion.Head.Key, string.Join(", ", headValues));
+            iniSection.AddProperty(StructureRegion.ReductionFactor.Key, string.Join(", ", reductionFactorValues));
 
             var reader = Substitute.For<ITimeSeriesFileReader>();
             reader.IsTimeSeriesProperty("").ReturnsForAnyArgs(true);
 
             var parser = new PumpDefinitionParser(reader,
                                                   structureType, 
-                                                  category, 
+                                                  iniSection, 
                                                   branch, 
                                                   structuresFilename,
                                                   referenceDateTime);

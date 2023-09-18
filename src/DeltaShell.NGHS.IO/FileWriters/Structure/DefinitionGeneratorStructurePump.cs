@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -20,7 +21,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         
         public DefinitionGeneratorStructurePump(IStructureFileNameGenerator structureFileNameGenerator) : base(structureFileNameGenerator) {}
         
-        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
             Ensure.NotNull(hydroObject, nameof(hydroObject));
 
@@ -29,7 +30,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var pump = hydroObject as Pump;
             if (pump == null)
             {
-                return IniCategory;
+                return IniSection;
             }
 
             AddOrientation(pump);
@@ -44,16 +45,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             AddReductionTable(pump);
 
-            return IniCategory;
+            return IniSection;
         }
 
         private void AddOrientation(IPump pump) => 
-            IniCategory.AddProperty(StructureRegion.Orientation.Key, 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.Orientation.Key, 
                                     pump.DirectionIsPositive ? "positive" : "negative", 
                                     StructureRegion.Orientation.Description);
 
         private void AddDirection(IPump pump) =>
-            IniCategory.AddProperty(StructureRegion.Direction.Key, 
+            IniSection.AddPropertyWithOptionalComment(StructureRegion.Direction.Key, 
                                     GetControlDirectionString(pump), 
                                     StructureRegion.Direction.Description);
 
@@ -73,7 +74,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         }
 
         private void AddNrStages() => 
-            IniCategory.AddProperty(StructureRegion.NrStages.Key, 
+            IniSection.AddProperty(StructureRegion.NrStages.Key, 
                                     DEFAULT_NRSTAGES, 
                                     StructureRegion.NrStages.Description);
 
@@ -89,11 +90,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddSuctionSideLevels(IPump pump)
         {
-            IniCategory.AddProperty(StructureRegion.StartLevelSuctionSide.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.StartLevelSuctionSide.Key, 
                                     pump.StartSuction, 
                                     StructureRegion.StartLevelSuctionSide.Description, 
                                     StructureRegion.StartLevelSuctionSide.Format);
-            IniCategory.AddProperty(StructureRegion.StopLevelSuctionSide.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.StopLevelSuctionSide.Key, 
                                     pump.StopSuction, 
                                     StructureRegion.StopLevelSuctionSide.Description, 
                                     StructureRegion.StopLevelSuctionSide.Format);
@@ -101,11 +102,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddDeliverySideLevels(IPump pump)
         {
-            IniCategory.AddProperty(StructureRegion.StartLevelDeliverySide.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.StartLevelDeliverySide.Key, 
                                     pump.StartDelivery, 
                                     StructureRegion.StartLevelDeliverySide.Description, 
                                     StructureRegion.StartLevelDeliverySide.Format);
-            IniCategory.AddProperty(StructureRegion.StopLevelDeliverySide.Key, 
+            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.StopLevelDeliverySide.Key, 
                                     pump.StopDelivery, 
                                     StructureRegion.StopLevelDeliverySide.Description, 
                                     StructureRegion.StopLevelDeliverySide.Format);
@@ -123,26 +124,26 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 IList<double> head = arguments[0].Values.Cast<double>().ToList();
                 IEnumerable<double> reductionFactor = components[0].Values.Cast<double>();
 
-                IniCategory.AddProperty(StructureRegion.ReductionFactorLevels.Key, 
+                IniSection.AddProperty(StructureRegion.ReductionFactorLevels.Key, 
                                         head.Count, 
                                         StructureRegion.ReductionFactorLevels.Description);
-                IniCategory.AddProperty(StructureRegion.Head.Key, 
+                IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.Head.Key, 
                                         head, 
                                         StructureRegion.Head.Description, StructureRegion.Head.Format);
-                IniCategory.AddProperty(StructureRegion.ReductionFactor.Key, 
+                IniSection.AddPropertyWithMultipleValuesWithOptionalCommentAndFormat(StructureRegion.ReductionFactor.Key, 
                                         reductionFactor, 
                                         StructureRegion.ReductionFactor.Description, 
                                         StructureRegion.ReductionFactor.Format);
             }
             else
             {
-                IniCategory.AddProperty(StructureRegion.ReductionFactorLevels.Key, 
+                IniSection.AddProperty(StructureRegion.ReductionFactorLevels.Key, 
                                         DEFAULT_REDUCTION_FACTOR_LEVELS, 
                                         StructureRegion.ReductionFactorLevels.Description);
-                IniCategory.AddProperty(StructureRegion.Head.Key, 
+                IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.Head.Key, 
                                         DEFAULT_HEAD, 
                                         StructureRegion.Head.Description);
-                IniCategory.AddProperty(StructureRegion.ReductionFactor.Key, 
+                IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.ReductionFactor.Key, 
                                         DEFAULT_REDUCTION_FACTOR, 
                                         StructureRegion.ReductionFactor.Description);
             }

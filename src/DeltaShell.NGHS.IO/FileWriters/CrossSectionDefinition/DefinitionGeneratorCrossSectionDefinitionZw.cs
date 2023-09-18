@@ -4,6 +4,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -19,7 +20,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(
+        public override IniSection CreateDefinitionRegion(
             ICrossSectionDefinition crossSectionDefinition,
             bool writeFrictionFromDefinition,
             string defaultFrictionId)
@@ -27,19 +28,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             AddCommonProperties(crossSectionDefinition);
             
             var crossSectionDefinitionZw = crossSectionDefinition as CrossSectionDefinitionZW;
-            if (crossSectionDefinitionZw == null) return IniCategory;
+            if (crossSectionDefinitionZw == null) return IniSection;
 
             GenerateTabulatedProfile(crossSectionDefinitionZw);
 
             var summerDike = crossSectionDefinitionZw.SummerDike;
-            IniCategory.AddProperty(DefinitionPropertySettings.CrestLevee, summerDike.CrestLevel);
-            IniCategory.AddProperty(DefinitionPropertySettings.FlowAreaLevee, summerDike.FloodSurface);
-            IniCategory.AddProperty(DefinitionPropertySettings.TotalAreaLevee, summerDike.TotalSurface);
-            IniCategory.AddProperty(DefinitionPropertySettings.BaseLevelLevee, summerDike.FloodPlainLevel);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.CrestLevee, summerDike.CrestLevel);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FlowAreaLevee, summerDike.FloodSurface);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.TotalAreaLevee, summerDike.TotalSurface);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.BaseLevelLevee, summerDike.FloodPlainLevel);
 
             AddFrictionData(crossSectionDefinitionZw, writeFrictionFromDefinition, defaultFrictionId);
             
-            return IniCategory;
+            return IniSection;
         }
 
         private void AddFrictionData(
@@ -52,38 +53,38 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 if (crossSectionDefinitionZw.Sections.Count == 1
                     && !crossSectionDefinitionZw.Sections.First().SectionType.Name.Equals(RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    IniCategory.AddProperty(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(crossSectionDefinitionZw.Sections.First().SectionType.Name));
-                    IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, 0);
-                    IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, 0);
+                    IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(crossSectionDefinitionZw.Sections.First().SectionType.Name));
+                    IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FloodPlain1, 0);
+                    IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FloodPlain2, 0);
                     var frictionId = crossSectionDefinitionZw.Sections.First().SectionType.Name;
-                    IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, $"{frictionId};{frictionId};{frictionId}");
+                    IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FrictionIds, $"{frictionId};{frictionId};{frictionId}");
                     return;
                 }
                 
                 if (!writeFrictionFromDefinition)
                 {
-                    IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, $"{defaultFrictionId};{defaultFrictionId};{defaultFrictionId}");
+                    IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FrictionIds, $"{defaultFrictionId};{defaultFrictionId};{defaultFrictionId}");
                     return;
                 }
                 
-                IniCategory.AddProperty(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.MainSectionTypeName));
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.MainSectionTypeName));
 
                 if (crossSectionDefinitionZw.Sections.Count > 1)
                 {
                     double fp1 = crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain1SectionTypeName);
-                    IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, fp1);
+                    IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FloodPlain1, fp1);
                 }
 
                 if (crossSectionDefinitionZw.Sections.Count > 2)
                 {
                     double fp2 = crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain2SectionTypeName);
-                    IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, fp2);
+                    IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.FloodPlain2, fp2);
                 }
             }
             else // crossSectionDefinition came from a Culvert or Bridge
             {
                 var largestTotalWidth = crossSectionDefinitionZw.ZWDataTable.OrderBy(hfsw => hfsw.Z).Select(r => r.Width).Max();
-                IniCategory.AddProperty(DefinitionPropertySettings.Main, largestTotalWidth);
+                IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.Main, largestTotalWidth);
             }
         }
 
@@ -92,8 +93,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var sortedData = crossSectionDefinitionZw.ZWDataTable.OrderBy(hfsw => hfsw.Z).ToArray();
 
             var levels = sortedData.Select(r => r.Z).ToList();
-            IniCategory.AddProperty(DefinitionPropertySettings.NumLevels, levels.Count);
-            IniCategory.AddProperty(DefinitionPropertySettings.Levels, levels);
+            IniSection.AddPropertyFromConfiguration(DefinitionPropertySettings.NumLevels, levels.Count);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.Levels, levels);
             if (BinFileForLevelTables != null)
             {
                 double[] levelsAsDoubles = sortedData.Select(r => r.Z).ToArray();
@@ -110,10 +111,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             }
 
             var flowWidth = sortedData.Select(r => r.Width - r.StorageWidth);
-            IniCategory.AddProperty(DefinitionPropertySettings.FlowWidths, flowWidth);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.FlowWidths, flowWidth);
 
             var totalWidths = sortedData.Select(r => r.Width).ToList();
-            IniCategory.AddProperty(DefinitionPropertySettings.TotalWidths, totalWidths);
+            IniSection.AddPropertyFromConfigurationWithMultipleValues(DefinitionPropertySettings.TotalWidths, totalWidths);
         }
 
         private static byte[] DoublesToBytes(double[] valuesAsDoubles)

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
@@ -18,13 +18,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// Parses a line into a DelftIniProperty.
         /// </summary>
         /// <param name="line">Line to be parsed.</param>
-        /// <param name="currentCategory">The current category.</param>
-        protected override void ReadFields(string line, DelftIniCategory currentCategory)
+        /// <param name="currentIniSection">The current INI section.</param>
+        protected override void ReadFields(string line, IniSection currentIniSection)
         {
             if (IsMultiLineValue(line, out var multiLineMatches))
             {
                 (string value, string comment) valueAndComment = GetValueComment(multiLineMatches);
-                var properties = currentCategory.Properties.LastOrDefault();
+                var properties = currentIniSection.Properties.LastOrDefault();
                 if (properties == null)
                     throw new FormatException(String.Format("Invalid value-comment line on line {0} in file {1}",
                         LineNumber, InputFilePath));
@@ -34,8 +34,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
             else
             {
                 var fields = GetKeyValueComment(line);
-                currentCategory.Properties.Add(new DelftIniProperty
-                    {Name = fields[0], Value = fields[1], Comment = fields[2], LineNumber = LineNumber});
+                currentIniSection.AddProperty(new IniProperty
+                    (fields[0], fields[1], fields[2]) { LineNumber = LineNumber});
             }
         }
 
