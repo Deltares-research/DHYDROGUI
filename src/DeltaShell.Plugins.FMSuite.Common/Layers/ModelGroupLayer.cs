@@ -21,5 +21,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 layer.DataSource.CoordinateSystem = targetCS;
             }
         }
+
+        public override void Dispose(bool disposeDataSource)
+        {
+            Model = null;
+            base.Dispose(disposeDataSource);
+        }
     }
 }
