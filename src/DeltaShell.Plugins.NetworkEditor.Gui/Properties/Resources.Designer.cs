@@ -1191,6 +1191,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Polygon drawn with 3 or less points, but a valid polygon needs at least 3 points.
+        /// </summary>
+        public static string Polygon_drawn_with_3_or_less_points_but_a_valid_polygon_needs_at_least_3_points {
+            get {
+                return ResourceManager.GetString("Polygon_drawn_with_3_or_less_points_but_a_valid_polygon_needs_at_least_3_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap PropertiesHS {

@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
@@ -12,6 +13,7 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
@@ -26,6 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
 {
     internal static class AreaLayerGeneratorExtensions
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(AreaLayerGeneratorExtensions));
         internal static ILayer GenerateArea2DLayer(this HydroArea area2DParent, object data)
         {
             const double maxVisibilityLayerValue = Double.MaxValue;
@@ -332,12 +335,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
             }
 
             var coordinates = geometry.Coordinates;
-            if (coordinates.Length < 3) 
-                return null;
-
             if (!coordinates[0].Equals2D(coordinates[coordinates.Length -1]))
             {
                 coordinates = coordinates.Plus(coordinates[0]).ToArray();
+            }
+            
+            if (coordinates.Length <= 3)
+            {
+                log.Warn(Resources.Polygon_drawn_with_3_or_less_points_but_a_valid_polygon_needs_at_least_3_points);
+                return null;
             }
 
             return new TFeature
