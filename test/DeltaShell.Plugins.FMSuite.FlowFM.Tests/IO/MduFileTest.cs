@@ -18,22 +18,18 @@ using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net.Core;
-using NetTopologySuite.Algorithm;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
-using static DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.ProvidersInput1D.Model1DProperty;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -125,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 modelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
                 modelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
                 modelDefinition.ModelName = "ModelWithMeteo";
-                mduFile.Write(testFile, modelDefinition, hydroArea, null, null,null, null, null, null,null, false, true, false);
+                mduFile.Write(testFile, modelDefinition, hydroArea, null, null,null, null, null, null,new List<ModelFeatureCoordinateData<FixedWeir>>(), false, true, false);
 
                 Assert.IsTrue(File.Exists(testFile));
             });
@@ -143,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = model.ModelDefinition;
             modelDefinition.UseMorphologySediment = true;
 
-            mduFile.Write(testFile, modelDefinition, hydroArea, null, null, null, null, null, null, null, false,false, true, false, sedimentData);
+            mduFile.Write(testFile, modelDefinition, hydroArea, null, null, null, null, null, null, new List<ModelFeatureCoordinateData<FixedWeir>>(), false,false, true, false, sedimentData);
 
             Assert.IsTrue(File.Exists(testFile));
             var lines = File.ReadLines(testFile);
@@ -202,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             try
             {
-                mduFile.Write(testFile, modelDefinition, hydroArea, null,null, null, null, null, null, null);
+                mduFile.Write(testFile, modelDefinition, hydroArea, null,null, null, null, null, null, new List<ModelFeatureCoordinateData<FixedWeir>>());
             }
             catch (Exception e )
             {
@@ -239,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             
             try
             {
-                mduFile.Write(testFile, modelDefinition, hydroArea, null, null, null, null,null, null, null);
+                mduFile.Write(testFile, modelDefinition, hydroArea, null, null, null, null,null, null, new List<ModelFeatureCoordinateData<FixedWeir>>());
             }
             catch (Exception e)
             {
@@ -680,12 +676,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Integration)]
         [Test]
         public void GivenAnMduToReadWithFixedWeirs_WhenTheSchemeNumbersRequiresLessColumnsThanGivenInPlizFile_ThenOnlyTheNeededPropertiesShouldBeCreatedAfterReadingThePlizFile()
-            {
-                mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM3.mdu");
-                mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
-                mduDir = Path.GetDirectoryName(mduFilePath);
-                Assert.NotNull(mduDir);
-                modelName = Path.GetFileName(mduFilePath);
+        {
+            mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM3.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            modelName = Path.GetFileName(mduFilePath);
 
             saveDirectory = Path.Combine(mduDir, "MduFileReadsAndWritesTest");
             Directory.CreateDirectory(saveDirectory);
@@ -694,66 +690,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.NotNull(newMduDir);
 
             try
+            {
+                var mduFile = new MduFile();
+
+                var originalArea = new HydroArea();
+                var network = new HydroNetwork();
+                var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+                var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
                 {
-                    var mduFile = new MduFile();
-
-                    var originalArea = new HydroArea();
-                    var network = new HydroNetwork();
-                    var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                    var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-                    var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-                    {
-                        ModelDefinition = originalMD,
-                        HydroArea = originalArea,
-                        HydroNetwork = network,
-                        AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-                    };
+                    ModelDefinition = originalMD,
+                    HydroArea = originalArea,
+                    HydroNetwork = network,
+                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
+                };
 
 
-                    mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
+                mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
 
-                    Assert.AreEqual(3, allFixedWeirsAndCorrespondingProperties[0].DataColumns.Count);
+                Assert.AreEqual(3, allFixedWeirsAndCorrespondingProperties[0].DataColumns.Count);
 
-                    //CrestLevel
-                    Assert.AreEqual(1.2, allFixedWeirsAndCorrespondingProperties[0].DataColumns[0].ValueList[0]);
-                    Assert.AreEqual(6.4, allFixedWeirsAndCorrespondingProperties[0].DataColumns[0].ValueList[1]);
+                //CrestLevel
+                Assert.AreEqual(1.2, allFixedWeirsAndCorrespondingProperties[0].DataColumns[0].ValueList[0]);
+                Assert.AreEqual(6.4, allFixedWeirsAndCorrespondingProperties[0].DataColumns[0].ValueList[1]);
 
-                    //Ground Height Left
-                    Assert.AreEqual(3.5, allFixedWeirsAndCorrespondingProperties[0].DataColumns[1].ValueList[0]);
-                    Assert.AreEqual(3.0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[1].ValueList[1]);
+                //Ground Height Left
+                Assert.AreEqual(3.5, allFixedWeirsAndCorrespondingProperties[0].DataColumns[1].ValueList[0]);
+                Assert.AreEqual(3.0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[1].ValueList[1]);
 
-                    //Ground Height Right
-                    Assert.AreEqual(3.2, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[0]);
-                    Assert.AreEqual(3.3, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[1]);
+                //Ground Height Right
+                Assert.AreEqual(3.2, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[0]);
+                Assert.AreEqual(3.3, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[1]);
 
-                    mduFile.Write(savePath, originalMD, originalArea, null, null,null, null, null, null, allFixedWeirsAndCorrespondingProperties, switchTo: false);
+                mduFile.Write(savePath, originalMD, originalArea, null, null, null, null, null, null, allFixedWeirsAndCorrespondingProperties, switchTo: false);
 
-                    var generatedResultsContent = File.ReadAllLines(@"TestOutput\FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw.pliz");
+                var generatedResultsContent = File.ReadAllLines(@"TestOutput\FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw.pliz");
 
-                    var expectedResultsContent =
-                        new string[]{
-                            "Weir01",
-                            "    2    5",
-                            "5.400000000000000E+000  4.600000000000000E+000  1.200000000000000E+000  3.500000000000000E+000  3.200000000000000E+000",
-                            "1.200000000000000E+000  1.000000000000000E+001  6.400000000000000E+000  3.000000000000000E+000  3.300000000000000E+000",
-                            "Weir02",
-                            "    2    5",
-                            "2.000000000000000E+000  7.000000000000000E-001  1.700000000000000E+000  4.500000000000000E+000  4.200000000000000E+000",
-                            "3.900000000000000E+000  3.900000000000000E+000  6.100000000000000E+000  4.000000000000000E+000  4.300000000000000E+000"
-                        };
+                var expectedResultsContent =
+                    new string[] { 
+                        "Weir01", 
+                        "    2    5", 
+                        "5.400000000000000E+000  4.600000000000000E+000  1.200000000000000E+000  3.500000000000000E+000  3.200000000000000E+000", 
+                        "1.200000000000000E+000  1.000000000000000E+001  6.400000000000000E+000  3.000000000000000E+000  3.300000000000000E+000", 
+                        "Weir02", "    2    5", 
+                        "2.000000000000000E+000  7.000000000000000E-001  1.700000000000000E+000  4.500000000000000E+000  4.200000000000000E+000", 
+                        "3.900000000000000E+000  3.900000000000000E+000  6.100000000000000E+000  4.000000000000000E+000  4.300000000000000E+000" };
 
-                    for (int i = 0; i < 8; i++)
-                    {
-                        Assert.AreEqual(expectedResultsContent[i], generatedResultsContent[i],
-                            "Line " + (i + 1) + " of generated file " + savePath +
-                            " differs from expected result");
-                    }
-            }
-                finally
+                for (int i = 0; i < 8; i++)
                 {
-                    FileUtils.DeleteIfExists(mduDir);
+                    Assert.AreEqual(expectedResultsContent[i], generatedResultsContent[i],
+                                    "Line " + (i + 1) + " of generated file " + savePath +
+                                    " differs from expected result");
                 }
             }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
+        }
 
         [Category(TestCategory.DataAccess)]
         [Test]

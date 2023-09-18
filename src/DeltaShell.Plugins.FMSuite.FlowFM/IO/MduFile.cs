@@ -1,10 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
@@ -12,6 +12,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -19,23 +20,18 @@ using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
-using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
 using SharpMap;
-using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using IOPath = System.IO.Path;
 
@@ -155,8 +151,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions, IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, IEnumerable<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null, bool writeStructureFile = true, string workNetFilePath = null)
+        /// <summary>
+        /// Write this <see cref="MduFile"/> to the specified target mdu file path given the specified parameters.
+        /// </summary>
+        /// <param name="targetMduFilePath"> The target mdu file path. </param>
+        /// <param name="modelDefinition"> The model definition. </param>
+        /// <param name="hydroArea"> The hydro area. </param>
+        /// <param name="network">The model network.</param>
+        /// <param name="roughnessSections">The roughness sections of the model.</param>
+        /// <param name="channelFrictionDefinitions">The channel friction definitions.</param>
+        /// <param name="channelInitialConditionDefinitions">The channel initial condition definitions.</param>
+        /// <param name="boundaryConditions1D">The 1D boundary conditions.</param>
+        /// <param name="lateralSourcesData">The lateral sources data.</param>
+        /// <param name="allFixedWeirsAndCorrespondingProperties"> All fixed weirs and corresponding properties. </param>
+        /// <param name="switchTo"> if set to <c> true </c> [switch to]. Defaults to <c>true</c>. </param>
+        /// <param name="writeExtForcings">Whether or not to write the external forcings. Defaults to <c>true</c>.</param>
+        /// <param name="writeFeatures">Whether or not to write features. Defaults to <c>true</c>.</param>
+        /// <param name="disableFlowNodeRenumbering">Whether or not to disable flow node renumbering. Defaults to <c>true</c>.</param>
+        /// <param name="sedimentModelData"> The sediment model data. Defaults to <c>null</c>.</param>
+        /// <param name="writeStructureFile">Whether or not to write the structures file. Defaults to <c>true</c>.</param>
+        /// <param name="workNetFilePath">Filepath the the net file.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="allFixedWeirsAndCorrespondingProperties"/> is <c>null</c>.
+        /// </exception>
+        public void Write(string targetMduFilePath, 
+                          WaterFlowFMModelDefinition modelDefinition, 
+                          HydroArea hydroArea, 
+                          IHydroNetwork network, 
+                          IEnumerable<RoughnessSection> roughnessSections, 
+                          IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions, 
+                          IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions, 
+                          IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, 
+                          IEnumerable<Model1DLateralSourceData> lateralSourcesData, 
+                          IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, 
+                          bool switchTo = true, 
+                          bool writeExtForcings = true, 
+                          bool writeFeatures = true, 
+                          bool disableFlowNodeRenumbering = false, 
+                          ISedimentModelData sedimentModelData = null, 
+                          bool writeStructureFile = true, 
+                          string workNetFilePath = null)
         {
+            Ensure.NotNull(allFixedWeirsAndCorrespondingProperties, nameof(allFixedWeirsAndCorrespondingProperties));
+            
             var targetDir = VerifyTargetDirectory(targetMduFilePath);
             var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
 
@@ -740,36 +777,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams.ToList(),
                 ref thinDamFile, ThinDamExtension, ThinDamAlternativeExtension);
 
-            //fix attributes for fixed weirs. Create attributes from modelfeaturecoordinatdata.
-            foreach (var fixedWeir in hydroArea.FixedWeirs)
-            {
-                fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
-
-                var correspondingModelFeatureCoordinateData =
-                    allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-
-                if (correspondingModelFeatureCoordinateData == null) break;
-
-                for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
-                {
-                    if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive) break;
-                    var dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
-
-                    GeometryPointsSyncedList<double> syncedList;
-                    syncedList = new GeometryPointsSyncedList<double>
-                    {
-                        CreationMethod = (f, i) => 0.0,
-                        Feature = fixedWeir
-                    };
-                    fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
-
-                    for (var i = 0; i < dataColumnWithData.Count; ++i)
-                    {
-                        syncedList[i] = (double)dataColumnWithData[i];
-                    }
-                }
-            }
-
+            UpdateFixedWeirs(hydroArea, allFixedWeirsAndCorrespondingProperties.ToDictionary(p => p.Feature));
+            
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs.ToList(),
                 ref fixedWeirFile, FixedWeirExtension, FixedWeirAlternativeExtension);
 
@@ -793,6 +802,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ref enclosureFile, EnclosureExtension);
 
             WriteGullies(targetMduFilePath, hydroArea.Gullies);
+        }
+
+        private static void UpdateFixedWeirs(HydroArea hydroArea, 
+                                             IReadOnlyDictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirPropertiesMapping)
+        {
+            //fix attributes for fixed weirs. Create attributes from modelfeaturecoordinatdata.
+            foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
+            {
+                fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
+
+                ModelFeatureCoordinateData<FixedWeir> correspondingModelFeatureCoordinateData = fixedWeirPropertiesMapping[fixedWeir];
+
+                if (correspondingModelFeatureCoordinateData == null)
+                {
+                    break;
+                }
+
+                for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
+                {
+                    if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive)
+                    {
+                        break;
+                    }
+
+                    IList dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
+
+                    var syncedList = new GeometryPointsSyncedList<double>
+                    {
+                        CreationMethod = (f, i) => 0.0,
+                        Feature = fixedWeir
+                    };
+                    fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
+
+                    for (var i = 0; i < dataColumnWithData.Count; ++i)
+                    {
+                        syncedList[i] = (double)dataColumnWithData[i];
+                    }
+                }
+            }
         }
 
         private void WriteGullies(string mduFilePath, IEventedList<Gully> gullies)
