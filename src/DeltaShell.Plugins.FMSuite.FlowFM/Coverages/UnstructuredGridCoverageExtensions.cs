@@ -304,7 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             List<double> values = GenerateCollectionWithReplacedValues(variable).ToList();
             variable.Values.Clear();
 
-            FunctionHelper.SetValuesRaw(variable, (IList)values);
+            FunctionHelper.SetValuesRaw(variable, values);
 
             coverage.EndEdit();
         }

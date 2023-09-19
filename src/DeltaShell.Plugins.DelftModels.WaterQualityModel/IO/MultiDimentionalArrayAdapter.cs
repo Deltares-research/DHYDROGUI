@@ -205,6 +205,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             throw new NotImplementedException();
         }
 
+        public void ReplaceValues(IList newValues)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Insert(int index, T item)
         {
             throw new NotImplementedException();
