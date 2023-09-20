@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {

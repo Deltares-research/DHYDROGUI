@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using DelftTools.Utils.Guards;
 using DHYDRO.Common.IO.Ini;
 using log4net;
 
@@ -90,14 +89,8 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <returns></returns>
         public static string GetPropertyValueWithOptionalDefaultValue(this IniSection iniSection, string name, string defaultValue = null)
         {
-            foreach (var property in iniSection.Properties)
-            {
-                if (property.Key.ToLower().Equals(name.ToLower()))
-                {
-                    return property.Value;
-                }
-            }
-            return defaultValue;
+            IniProperty property = iniSection.Properties.FirstOrDefault(p => p.Key.ToLower().Equals(name.ToLower()));
+            return property != null ? property.Value : defaultValue;
         }
 
         /// <summary>
@@ -108,12 +101,9 @@ namespace DeltaShell.NGHS.IO.Helpers
         public static IEnumerable<string> GetPropertyValuesByName(this IniSection iniSection, string name)
         {
             IList<string> foundProperties = new List<string>();
-            foreach (var property in iniSection.Properties)
+            foreach (var property in iniSection.Properties.Where(p => p.Key.ToLower().Equals(name.ToLower())))
             {
-                if (property.Key.ToLower().Equals(name.ToLower()))
-                {
-                    foundProperties.Add(property.Value);
-                }
+                foundProperties.Add(property.Value);
             }
             return foundProperties;
         }
