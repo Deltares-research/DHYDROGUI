@@ -507,27 +507,23 @@ namespace DeltaShell.NGHS.IO.Grid
                     return;
 
                 api.WriteMesh2D(grid.CreateDisposable2DMeshGeometry());
-            }
 
-            if (grid.IsEmpty)
-            {
-                return;
-            }
-
-            // needs to be done with new api instance because on close
-            // the grid is flushed to file, making it available to write 
-            // depended data
-            using (var api = CreateUGridApi())
-            {
+                // PLEASE READ TO UNDERSTAND WHY WE NOW CLOSE!!
+                api.Close(); // needs to be done because on close the grid
+                // is flushed to file, making it available to write depended data
+                // like mesh2d z values
+                // or depended mesh entities like 1D2D links!
+                // we want to have a flush method, see FM1D2D-2557
+                
                 api.Open(path, OpenMode.Appending);
+                
+                WriteZValuesWithApi(api, location, zValues, path);
 
                 var link1D2Ds = links?.ToList();
                 if (link1D2Ds?.Count > 0)
                 {
                     api.WriteLinks(link1D2Ds.CreateDisposableLinksGeometry());
                 }
-
-                WriteZValuesWithApi(api, location, zValues, path);
             }
         }
 
