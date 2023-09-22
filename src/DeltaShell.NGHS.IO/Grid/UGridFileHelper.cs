@@ -278,29 +278,35 @@ namespace DeltaShell.NGHS.IO.Grid
                 return;
             }
 
-            using (var api = CreateUGridApi())
+            if (mesh2d != null)
             {
-                api.Open(path);
-                if (mesh2d != null && api.IsUGridFile())
+                using (var api = CreateUGridApi())
                 {
-                    var unstructuredGrid = mesh2d.CreateUnstructuredGrid(recreateCells);
-                    if (unstructuredGrid == null)
+                    api.Open(path);
+
+                    if (!api.IsUGridFile())
                     {
+                        Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
+                    }
+                    else
+                    {
+                        var unstructuredGrid = mesh2d.CreateUnstructuredGrid(recreateCells);
+                        if (unstructuredGrid == null)
+                        {
+                            return;
+                        }
+
+                        if (grid == null)
+                        {
+                            grid = new UnstructuredGrid();
+                        }
+
+                        grid.ResetState(unstructuredGrid.Vertices, unstructuredGrid.Edges, unstructuredGrid.Cells, unstructuredGrid.FlowLinks);
+                        grid.CoordinateSystem = GetCoordinateSystemFromApi(api);
                         return;
                     }
-                    
-                    if (grid == null)
-                    {
-                        grid = new UnstructuredGrid();
-                    }
-
-                    grid.ResetState(unstructuredGrid.Vertices, unstructuredGrid.Edges, unstructuredGrid.Cells, unstructuredGrid.FlowLinks);
-                    grid.CoordinateSystem = GetCoordinateSystemFromApi(api);
-                    return;
                 }
             }
-
-            Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
             ApplyLegacyGrid(path, grid, loadFlowLinksAndCells);
         }
 
