@@ -6,14 +6,19 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
+using DeltaShell.NGHS.IO.Properties;
+using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
+using SharpMap.Converters.WellKnownText;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMapTestUtils;
 
@@ -394,6 +399,98 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // Assert
             Assert.NotNull(discretization.Locations);
             Assert.IsFalse(discretization.Locations.Values.Any(x => x.Chainage > x.Branch.Length));
+        }
+
+        [Test]
+        public void Given1D2DModelWithLinkOnCalculationPointLocationPastChannelLength_WhenSaveModel_ThenModelSavedButErrorMessageIsLogged()
+        {
+            //arrange
+            var network = new HydroNetwork();
+            var node1 = new HydroNode("n1") { Geometry = new Point(0, 0) };
+            network.Nodes.Add(node1);
+            var node2 = new HydroNode("n2") { Geometry = new Point(100, 0) };
+            network.Nodes.Add(node2);
+            var channel1 = new Channel("c1", node1, node2)
+            {
+                Geometry = GeometryFromWKT.Parse("LINESTRING(0 0, 100 0)"),
+            };
+            network.Branches.Add(channel1);
+
+            var discretization = new Discretization
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered
+            };
+            discretization.Locations.AddValues(Enumerable.Range(0, 13).Select(i => new NetworkLocation(channel1, i * 10)));
+            var otherDiscretizationPointNames = new[]
+                {
+                    discretization.Locations.Values[discretization.Locations.Values.Count - 3].Name
+                }
+                .Plus(discretization.Locations.Values[discretization.Locations.Values.Count - 2].Name);
+            
+            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 10, 10);
+            var zValues = Enumerable.Range(1, grid.Vertices.Count).Select(Convert.ToDouble).ToArray();
+            var correctLink = new Link1D2D(0, 1, "link1");
+            var faultyLink = new Link1D2D(discretization.Locations.Values.Count - 1, 5, "linkFaulty");
+            var testFilePath = TestHelper.GetTestWorkingDirectoryGeneratedTestFilePath(".nc");
+            
+            FileUtils.DeleteIfExists(testFilePath);
+            //act & assert
+            
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () =>
+                    UGridFileHelper.WriteGridToFile(testFilePath, grid, network, discretization, new ILink1D2D[]
+                {
+                    correctLink,
+                    faultyLink
+                }, "abc", "dummy", "1", UGridFileHelper.BedLevelLocation.NodesMaxLev, zValues),
+                Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader + Environment.NewLine +
+                string.Format(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1, faultyLink.Name, discretization.Locations.Values[discretization.Locations.Values.Count - 1].Name, faultyLink.FaceIndex) + 
+                Environment.NewLine +
+                string.Format(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2, string.Join(", ", otherDiscretizationPointNames))
+            );
+            Assert.That(File.Exists(testFilePath), Is.True);
+
+            FileUtils.DeleteIfExists(testFilePath);
+        }
+        
+        [Test]
+        public void Given1D2DModelWithValidLinksAndOnCalculationPointLocationPastChannelLength_WhenSaveModel_ThenModelSavedAndNoLinkErrorMessageIsLogged()
+        {
+            //arrange
+            var network = new HydroNetwork();
+            var node1 = new HydroNode("n1") { Geometry = new Point(0, 0) };
+            network.Nodes.Add(node1);
+            var node2 = new HydroNode("n2") { Geometry = new Point(100, 0) };
+            network.Nodes.Add(node2);
+            var channel1 = new Channel("c1", node1, node2)
+            {
+                Geometry = GeometryFromWKT.Parse("LINESTRING(0 0, 100 0)"),
+            };
+            network.Branches.Add(channel1);
+
+            var discretization = new Discretization { Network = network, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
+            discretization.Locations.AddValues(Enumerable.Range(0,13).Select(i => new NetworkLocation(channel1, i*10)));
+            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 10, 10);
+            var zValues = Enumerable.Range(1, grid.Vertices.Count).Select(Convert.ToDouble).ToArray();
+            var correctLink = new Link1D2D(0, 1, "link1");
+            var otherCorrectLink = new Link1D2D(5, 5, "linkAlsoCorrect");
+            var testFilePath = TestHelper.GetTestWorkingDirectoryGeneratedTestFilePath(".nc");
+            
+            FileUtils.DeleteIfExists(testFilePath);
+            
+            //act
+            var renderedMessages = string.Join(Environment.NewLine, TestHelper.GetAllRenderedMessages(() => UGridFileHelper.WriteGridToFile(testFilePath, grid, network, discretization, new ILink1D2D[]
+            {
+                correctLink,
+                otherCorrectLink
+            }, "abc", "dummy", "1", UGridFileHelper.BedLevelLocation.NodesMaxLev, zValues)));
+            
+            StringAssert.DoesNotContain(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader, renderedMessages);
+
+            Assert.That(File.Exists(testFilePath), Is.True);
+
+            FileUtils.DeleteIfExists(testFilePath);
         }
     }
 }

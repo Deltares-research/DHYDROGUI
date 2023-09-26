@@ -1066,6 +1066,44 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check during the creation of the 1d2d links, the mesh 1d geometry.
+        /// </summary>
+        public static string UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_Check_during_the_creation_of_the_1d2d_links__the_mesh_1d_geometry {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_Check_during_the_creat" +
+                        "ion_of_the_1d2d_links__the_mesh_1d_geometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 	For 1d2d link {0} (from location {1} to grid cell {2}).
+        /// </summary>
+        public static string UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1 {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 	has multiple locations at the same (source) location.
+        ///		 {0}.
+        /// </summary>
+        public static string UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2 {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While writing the 1d2d links we found during save problems on sources of links : .
+        /// </summary>
+        public static string UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to write z-values at this location, CellEdges are not currently supported.
         /// </summary>
         public static string UGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported {

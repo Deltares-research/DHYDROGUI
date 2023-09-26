@@ -534,4 +534,18 @@
   <data name="HydroUGridExtensions_GetNetworkLocations_While_reading_1d_discretization___calculation_point_from_the_netfile_we_encountered_the_following_errors___0__1_" xml:space="preserve">
     <value>While reading 1d discretization / calculation point from the netfile we encountered the following errors: {0}{1}</value>
   </data>
+  <data name="UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_Check_during_the_creation_of_the_1d2d_links__the_mesh_1d_geometry" xml:space="preserve">
+    <value>Check during the creation of the 1d2d links, the mesh 1d geometry</value>
+  </data>
+  <data name="UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader" xml:space="preserve">
+    <value>The following issues were found while writing the 1D2D links: </value>
+
+  </data>
+  <data name="UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1" xml:space="preserve">
+    <value>	For 1d2d link {0} (from location {1} to grid cell {2})</value>
+  </data>
+  <data name="UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2" xml:space="preserve">
+    <value>	has multiple locations at the same (source) location.
+		 {0}</value>
+  </data>
 </root>

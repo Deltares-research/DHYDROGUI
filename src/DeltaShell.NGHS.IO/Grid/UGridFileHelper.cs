@@ -13,8 +13,10 @@ using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Extensions.CoordinateSystems;
@@ -493,19 +495,23 @@ namespace DeltaShell.NGHS.IO.Grid
             IDiscretization networkDiscretization, IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion, BedLevelLocation location, double[] zValues)
         {
             FileUtils.DeleteIfExists(path);
+            DisposableNetworkGeometry networkGeometry = null;
+            Disposable1DMeshGeometry mesh1d = null;
 
             using (var api = CreateUGridApi())
             {
                 var metaData = new FileMetaData(name, pluginName ?? "custom", pluginVersion ?? "unknown");
                 api.CreateFile(path, metaData);
-                
+
                 if (network?.Nodes?.Count > 0)
                 {
-                    var networkId = api.WriteNetworkGeometry(network.CreateDisposableNetworkGeometry());
+                    networkGeometry = network.CreateDisposableNetworkGeometry();
+                    var networkId = api.WriteNetworkGeometry(networkGeometry);
 
                     if (networkDiscretization != null && networkDiscretization.Locations.Values.Count > 0)
                     {
-                        api.WriteMesh1D(networkDiscretization.CreateDisposable1DMeshGeometry(), networkId);
+                        mesh1d = networkDiscretization.CreateDisposable1DMeshGeometry();
+                        api.WriteMesh1D(mesh1d, networkId);
                     }
                 }
 
@@ -528,9 +534,52 @@ namespace DeltaShell.NGHS.IO.Grid
                 var link1D2Ds = links?.ToList();
                 if (link1D2Ds?.Count > 0)
                 {
+                    ValidateMesh1DSourceLocationsOnlyExistOnce(link1D2Ds, mesh1d);
                     api.WriteLinks(link1D2Ds.CreateDisposableLinksGeometry());
                 }
             }
+            mesh1d?.Dispose();
+            networkGeometry?.Dispose();
+        }
+
+        private static void ValidateMesh1DSourceLocationsOnlyExistOnce(List<ILink1D2D> link1D2Ds, Disposable1DMeshGeometry mesh1d)
+        {
+            var logHandler = new LogHandler(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_Check_during_the_creation_of_the_1d2d_links__the_mesh_1d_geometry, typeof(UGridFileHelper), 100);
+            
+            int index = 0;
+            var coordinatesDiscretizationPoints = mesh1d.NodesX
+                                                        .Select((x, i) => new Coordinate(x, mesh1d.NodesY[i]))
+                                                        .ToDictionary(c => index++);
+
+            var doubleLinkDiscretizationPointsCoordinatesInMesh1DMessages = new List<string>();
+            
+            foreach (ILink1D2D link in link1D2Ds)
+            {
+                var linkDiscretizationPointIndex = link.DiscretisationPointIndex;
+                var linkDiscretizationPointCoordinate = coordinatesDiscretizationPoints[linkDiscretizationPointIndex];
+                var otherDiscretizationPointCoordinatesAtSameLocationIndices = coordinatesDiscretizationPoints
+                                                                               .Where(kvp => kvp.Value.Equals2D(linkDiscretizationPointCoordinate) && 
+                                                                                             kvp.Key != linkDiscretizationPointIndex)
+
+                                                                               .Select(kvp => kvp.Key).ToArray();
+                if (otherDiscretizationPointCoordinatesAtSameLocationIndices.Length > 0)
+                {
+                    var otherDiscretizationPointNames = otherDiscretizationPointCoordinatesAtSameLocationIndices.Select(j => mesh1d.NodeIds[j]);
+                    string linksName = link.Name;
+                    var message = 
+                        string.Format(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1, linksName, mesh1d.NodeIds[linkDiscretizationPointIndex], link.FaceIndex) +
+                        Environment.NewLine +
+                        string.Format(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2, string.Join(", ", otherDiscretizationPointNames));
+                    doubleLinkDiscretizationPointsCoordinatesInMesh1DMessages.Add(message);
+                }
+            }
+
+            if (doubleLinkDiscretizationPointsCoordinatesInMesh1DMessages.Count > 0)
+            {
+                logHandler.ReportError(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader + Environment.NewLine + string.Join(Environment.NewLine,doubleLinkDiscretizationPointsCoordinatesInMesh1DMessages));
+            }
+
+            logHandler.LogReport();
         }
 
         /// <summary>
