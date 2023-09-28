@@ -398,16 +398,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             const string customCategoryName = "CustomCategory";
             List<WaterFlowFMProperty> propertiesUnknownCategory =
-                properties.Where(p => p.PropertyDefinition.FileCategoryName.Equals(customCategoryName)).ToList();
+                properties.Where(p => p.PropertyDefinition.FileSectionName.Equals(customCategoryName)).ToList();
             ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
         }
 
         private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties,
                                                        string categoryName,
-                                                       string fileCategoryName)
+                                                       string fileSectionName)
         {
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile)));
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileSectionName.Equals(fileSectionName)));
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
 
             ValidateProperty(properties, "CustomStringProp", "\"777\"");
@@ -418,7 +418,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void ValidateProperty(List<WaterFlowFMProperty> properties, string propertyName, string propertyValue)
         {
-            WaterFlowFMProperty customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
+            WaterFlowFMProperty customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.Equals(propertyName));
             Assert.NotNull(customStringProperty);
             Assert.AreEqual(propertyValue, customStringProperty.Value);
         }

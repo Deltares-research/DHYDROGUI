@@ -259,20 +259,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             foreach (ModelProperty property in structureDataAccessObject.Properties)
             {
-                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestWidth &&
+                if (property.PropertyDefinition.FilePropertyKey == KnownStructureProperties.CrestWidth &&
                     FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
                 {
                     continue;
                 }
 
-                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestLevel &&
+                if (property.PropertyDefinition.FilePropertyKey == KnownStructureProperties.CrestLevel &&
                     FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
                 {
                     continue;
                 }
 
                 var iniProperty = new IniProperty(
-                    property.PropertyDefinition.FilePropertyName, 
+                    property.PropertyDefinition.FilePropertyKey, 
                     property.GetValueAsString(),
                     property.PropertyDefinition.Description);
 
@@ -852,7 +852,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             var propertyValue = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType());
             
             var property = new IniProperty(
-                definition.FilePropertyName, 
+                definition.FilePropertyKey, 
                 propertyValue, 
                 definition.Description);
             

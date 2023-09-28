@@ -5,11 +5,11 @@
         public static void AddPropertyDefinition<TDef>(this ModelPropertySchema<TDef> schema, TDef propertyDefinition)
             where TDef : ModelPropertyDefinition, new()
         {
-            schema.PropertyDefinitions.Add(propertyDefinition.FilePropertyName.ToLower(), propertyDefinition);
+            schema.PropertyDefinitions.Add(propertyDefinition.FilePropertyKey.ToLower(), propertyDefinition);
 
-            string fileCategoryName = propertyDefinition.FileCategoryName;
-            schema.AddNewModelDefinitionCategoryIfNotExisting(fileCategoryName);
-            schema.ModelDefinitionCategory[fileCategoryName].Add(propertyDefinition);
+            string fileSectionName = propertyDefinition.FileSectionName;
+            schema.AddNewModelDefinitionCategoryIfNotExisting(fileSectionName);
+            schema.ModelDefinitionCategory[fileSectionName].Add(propertyDefinition);
         }
 
         private static void AddNewModelDefinitionCategoryIfNotExisting<TDef>(this ModelPropertySchema<TDef> schema, string categoryName)

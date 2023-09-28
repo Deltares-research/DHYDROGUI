@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             Assert.IsTrue(File.Exists(csvTestFile));
 
             //03. Set expectations
-            var testPropName = "PropertyWithCommasOnDescription";
+            var testPropKey = "PropertyWithCommasOnDescription";
             var expectedDescription = "Dummy description, with comma in it";
             var expectedUnit = "dummyUnit";
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             ModelPropertySchema<WaveModelPropertyDefinition> modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(csvTestFile, "MdwGroup");
 
             //05. Find property, and check description.
-            KeyValuePair<string, WaveModelPropertyDefinition> testProp = modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd => pd.Value.FilePropertyName == testPropName);
+            KeyValuePair<string, WaveModelPropertyDefinition> testProp = modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd => pd.Value.FilePropertyKey == testPropKey);
             Assert.IsNotNull(testProp);
             Assert.AreEqual(expectedDescription, testProp.Value.Description);
             Assert.AreEqual(expectedUnit, testProp.Value.Unit);
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
             KeyValuePair<string, WaveModelPropertyDefinition> propertyDefinitionBedFrictionCoef =
                 modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd =>
-                                                                           pd.Value.FilePropertyName == KnownWaveProperties.BedFrictionCoef);
+                                                                           pd.Value.FilePropertyKey == KnownWaveProperties.BedFrictionCoef);
 
             Assert.IsTrue(propertyDefinitionBedFrictionCoef.Value.MultipleDefaultValuesAvailable);
             Assert.AreEqual(KnownWaveProperties.BedFriction, propertyDefinitionBedFrictionCoef.Value.DefaultValueDependentOn);
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
             KeyValuePair<string, WaveModelPropertyDefinition> propertyDefinitionBedFriction =
                 modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd =>
-                                                                           pd.Value.FilePropertyName == KnownWaveProperties.BedFriction);
+                                                                           pd.Value.FilePropertyKey == KnownWaveProperties.BedFriction);
 
             Assert.IsFalse(propertyDefinitionBedFriction.Value.MultipleDefaultValuesAvailable);
             Assert.IsNull(propertyDefinitionBedFriction.Value.DefaultValueDependentOn);

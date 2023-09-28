@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public ModelProperty GetProperty(string name)
         {
-            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.ToLower() == name.ToLower());
+            return Properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.ToLower() == name.ToLower());
         }
 
         public ModelProperty GetProperty(KnownGeneralStructureProperties property)

@@ -24,8 +24,8 @@
             {
                 Caption = mduPropertyName,
                 MduPropertyName = mduPropertyName,
-                FileCategoryName = mduCategoryName,
-                FilePropertyName = mduPropertyName,
+                FileSectionName = mduCategoryName,
+                FilePropertyKey = mduPropertyName,
                 Category = "Miscellaneous",
                 SubCategory = null,
                 DataType = typeof(string),

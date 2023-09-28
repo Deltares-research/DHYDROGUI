@@ -44,23 +44,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             {
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "A",
+                    FilePropertyKey = "A",
                     EnabledDependencies = null,
                     DataType = typeof(string)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "B",
+                    FilePropertyKey = "B",
                     DataType = FMParser.GetClrType("B", "-1|0|1|2", ref enumBCaption, null, 0)
                 }, "-1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "C",
+                    FilePropertyKey = "C",
                     DataType = typeof(int)
                 }, "5"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "string",
+                    FilePropertyKey = "string",
                     DataType = typeof(string)
                 }, "1")
             };

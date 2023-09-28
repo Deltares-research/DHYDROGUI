@@ -53,8 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
                 foreach (WaveModelPropertyDefinition propDef in dto.WaveModelDefinition.ModelSchema.PropertyDefinitions.Values)
                 {
-                    object valueBefore = dto.WaveModelDefinition.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
-                    object valueAfter = modelDTOOut.WaveModelDefinition.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
+                    object valueBefore = dto.WaveModelDefinition.GetModelProperty(propDef.FileSectionName, propDef.FilePropertyKey).Value;
+                    object valueAfter = modelDTOOut.WaveModelDefinition.GetModelProperty(propDef.FileSectionName, propDef.FilePropertyKey).Value;
                     Assert.AreEqual(valueBefore, valueAfter);
                 }
             }
@@ -554,7 +554,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 // Assert
                 WaveModelDefinition result = resultDto.WaveModelDefinition;
                 WaveModelProperty timeFrameProperty =
-                    result.Properties.FirstOrDefault(x => x.PropertyDefinition.FilePropertyName == "TimeInterval");
+                    result.Properties.FirstOrDefault(x => x.PropertyDefinition.FilePropertyKey == "TimeInterval");
 
                 Assert.That(timeFrameProperty, Is.Not.Null, "Expected the TimeFrame property to be found.");
                 Assert.That(timeFrameProperty.PropertyDefinition.Category, Is.EqualTo("General"));
@@ -562,7 +562,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 var value = (double)timeFrameProperty.Value;
                 Assert.That(value, Is.EqualTo(255.0));
 
-                Assert.That(result.Properties.Any(x => x.PropertyDefinition.FilePropertyName == "TScale"),
+                Assert.That(result.Properties.Any(x => x.PropertyDefinition.FilePropertyKey == "TScale"),
                             Is.False,
                             "Expected no property with the file name TScale");
 
@@ -1202,7 +1202,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
             using (var tempDirectory = new TemporaryDirectory())
             {
-                modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyName == KnownWaveProperties.MeteoFile).Value = "wind.wnd";
+                modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyKey == KnownWaveProperties.MeteoFile).Value = "wind.wnd";
 
                 var timeFrameData = new TimeFrameData();
                 timeFrameData.WindInputDataType = WindInputDataType.FileBased;
@@ -1235,7 +1235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         {
             // Setup
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
-            modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyName == KnownWaveProperties.KeepINPUT).Value = keepInput;
+            modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyKey == KnownWaveProperties.KeepINPUT).Value = keepInput;
 
             var timeFrameData = new TimeFrameData();
 

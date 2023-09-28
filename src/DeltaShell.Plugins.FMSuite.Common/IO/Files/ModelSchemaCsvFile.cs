@@ -219,8 +219,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
             var propertyDefinition = new TDef
             {
-                FileCategoryName = mduGroupName,
-                FilePropertyName = mduPropertyName.Trim('"'),
+                FileSectionName = mduGroupName,
+                FilePropertyKey = mduPropertyName.Trim('"'),
                 SubCategory = subCategoryField,
                 Caption = captionField.Trim('"'),
                 DataType = dataType,

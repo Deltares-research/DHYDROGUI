@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                                       IEnumerable<ModelProperty> allProperties,
                                                       string dependencyExpression)
         {
-            ModelProperty dependencyProperty = allProperties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
-                                                                                                                              StringComparison.InvariantCultureIgnoreCase));
+            ModelProperty dependencyProperty = allProperties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.Equals(dependencyExpression,
+                                                                                                                             StringComparison.InvariantCultureIgnoreCase));
 
             if (dependencyProperty != null && dependencyProperty.PropertyDefinition.DataType != typeof(bool))
             {
@@ -34,8 +34,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         {
             return properties =>
             {
-                ModelProperty dependencyProperty = properties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
-                                                                                                                                StringComparison.InvariantCultureIgnoreCase));
+                ModelProperty dependencyProperty = properties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.Equals(dependencyExpression,
+                                                                                                                               StringComparison.InvariantCultureIgnoreCase));
 
                 return dependencyProperty != null && FMParser.FromString<bool>(dependencyProperty.GetValueAsString());
             };

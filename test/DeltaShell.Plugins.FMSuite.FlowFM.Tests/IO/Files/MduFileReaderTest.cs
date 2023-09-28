@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 WaterFlowFMProperty property = definition.GetModelProperty("Program");
                 AssertPropertyValues(property, "General", "MyProgram", "Program name");
 
-                Assert.IsEmpty(definition.Properties.Where(p => p.PropertyDefinition.FileCategoryName == "MyCustomCategory"));
+                Assert.IsEmpty(definition.Properties.Where(p => p.PropertyDefinition.FileSectionName == "MyCustomCategory"));
             });
         }
 
@@ -301,7 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 Assert.IsNull(definition.GetModelProperty("EnclosureFile"));
 
                 WaterFlowFMProperty property = definition.GetModelProperty("GridEnclosureFile");
-                Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("geometry"));
+                Assert.That(property.PropertyDefinition.FileSectionName, Is.EqualTo("geometry"));
                 Assert.That(property.Value, Is.EqualTo(new List<string> {"enclosures_enc.pol"}));
                 Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Enclosure polygon file *.pol (third column 1/-1: inside/outside)"));
             });
@@ -544,7 +544,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
         private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, object propertyValue, string propertyComment)
         {
-            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
+            Assert.That(property.PropertyDefinition.FileSectionName, Is.EqualTo(categoryName));
             Assert.That(property.Value, Is.EqualTo(propertyValue));
             Assert.That(property.PropertyDefinition.Description, Is.EqualTo(propertyComment));
         }

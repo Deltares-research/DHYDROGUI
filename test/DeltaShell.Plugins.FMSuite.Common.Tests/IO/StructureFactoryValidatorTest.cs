@@ -77,10 +77,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structureDataAccessObject.AddProperty("y", typeof(double), "5");
             Assert.AreEqual("", StructureFactoryValidator.Validate(structureDataAccessObject));
 
-            structureDataAccessObject.Properties.RemoveAllWhere(p => p.PropertyDefinition.FilePropertyName == "x");
+            structureDataAccessObject.Properties.RemoveAllWhere(p => p.PropertyDefinition.FilePropertyKey == "x");
             Assert.AreEqual("Structure 'Test' has property 'y' specified, but 'x' is missing.", StructureFactoryValidator.Validate(structureDataAccessObject));
 
-            structureDataAccessObject.Properties.RemoveAllWhere(p => p.PropertyDefinition.FilePropertyName == "y");
+            structureDataAccessObject.Properties.RemoveAllWhere(p => p.PropertyDefinition.FilePropertyKey == "y");
             structureDataAccessObject.AddProperty("polylinefile", typeof(string), "");
             Assert.AreEqual("Structure 'Test' does not have a filename specified for property 'polylinefile'.", StructureFactoryValidator.Validate(structureDataAccessObject));
         }

@@ -16,31 +16,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             {
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "A",
+                    FilePropertyKey = "A",
                     EnabledDependencies = "B",
                     DataType = typeof(bool)
                 }, "0"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "B",
+                    FilePropertyKey = "B",
                     EnabledDependencies = "A",
                     DataType = typeof(bool)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "C",
+                    FilePropertyKey = "C",
                     EnabledDependencies = "double < 1.0",
                     DataType = typeof(bool)
                 }, "0"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "double",
+                    FilePropertyKey = "double",
                     DataType = typeof(double),
                     EnabledDependencies = "int = 3"
                 }, "1.2"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "int",
+                    FilePropertyKey = "int",
                     DataType = typeof(int),
                     EnabledDependencies = ""
                 }, "2")
@@ -76,13 +76,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             {
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "A",
+                    FilePropertyKey = "A",
                     EnabledDependencies = "string > 1", // This should not compile
                     DataType = typeof(string)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "string",
+                    FilePropertyKey = "string",
                     DataType = typeof(string)
                 }, "1.2")
             };

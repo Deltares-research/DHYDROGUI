@@ -1266,7 +1266,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.DataType, propertiesB[i].PropertyDefinition.DataType);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.DefaultValueAsString, propertiesB[i].PropertyDefinition.DefaultValueAsString);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.Description, propertiesB[i].PropertyDefinition.Description);
-                Assert.AreEqual(propertiesA[i].PropertyDefinition.FilePropertyName, propertiesB[i].PropertyDefinition.FilePropertyName);
+                Assert.AreEqual(propertiesA[i].PropertyDefinition.FilePropertyKey, propertiesB[i].PropertyDefinition.FilePropertyKey);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.IsDefinedInSchema, propertiesB[i].PropertyDefinition.IsDefinedInSchema);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.ModelFileOnly, propertiesB[i].PropertyDefinition.ModelFileOnly);
                 Assert.AreEqual(propertiesA[i].PropertyDefinition.MaxValueAsString, propertiesB[i].PropertyDefinition.MaxValueAsString);

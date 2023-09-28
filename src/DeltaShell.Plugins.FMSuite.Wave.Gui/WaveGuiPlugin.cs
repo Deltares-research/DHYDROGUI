@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     //Set the properties.
                     v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o, Gui);
                     v.GetChangedPropertyName = (sender, propertyName) =>
-                        (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+                        (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyKey;
                 }
             };
 
@@ -517,7 +517,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             view.SettingsCategories = wpfGuiCategories;
             view.SetSynchronizedProperties(propertiesToSynchronize);
             view.GetChangedPropertyName = (sender, propertyName) =>
-                (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+                (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyKey;
         }
 
         private void SetSelectedDomain(WpfSettingsView view, IWaveDomainData domain)

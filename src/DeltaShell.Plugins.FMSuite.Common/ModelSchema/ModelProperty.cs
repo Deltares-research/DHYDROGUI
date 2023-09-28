@@ -112,13 +112,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 if (e is ArgumentNullException || e is FormatException)
                 {
-                    throw new FormatException($"Unexpected value string \"{valueAsString}\" for property \"{PropertyDefinition.FilePropertyName}\"",
+                    throw new FormatException($"Unexpected value string \"{valueAsString}\" for property \"{PropertyDefinition.FilePropertyKey}\"",
                                               e);
                 }
 
                 if (e is OverflowException)
                 {
-                    throw new FormatException($"Value string \"{valueAsString}\" is too large/small for property \"{PropertyDefinition.FilePropertyName}\"",
+                    throw new FormatException($"Value string \"{valueAsString}\" is too large/small for property \"{PropertyDefinition.FilePropertyKey}\"",
                                               e);
                 }
 
@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// <summary>
         /// Indicates if this property is enabled or not.
         /// </summary>
-        /// <param name="properties"> All available properties indexed on <see cref="ModelPropertyDefinition.FilePropertyName"/>. </param>
+        /// <param name="properties"> All available properties indexed on <see cref="ModelPropertyDefinition.FilePropertyKey"/>. </param>
         /// <returns> True if enabled; False otherwise. </returns>
         public bool IsEnabled(IEnumerable<ModelProperty> properties)
         {
@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         {
             if (type != propertyDefinition.DataType && !type.Implements(propertyDefinition.DataType))
             {
-                throw new ArgumentException($"Invalid object type {type} (expecting {propertyDefinition.DataType}) for {propertyDefinition.FilePropertyName}");
+                throw new ArgumentException($"Invalid object type {type} (expecting {propertyDefinition.DataType}) for {propertyDefinition.FilePropertyKey}");
             }
         }
     }

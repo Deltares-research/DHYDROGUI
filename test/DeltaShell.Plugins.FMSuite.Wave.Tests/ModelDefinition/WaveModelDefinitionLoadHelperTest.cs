@@ -219,19 +219,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             WaveModelProperty firstProperty = loadedDefinition.Properties.First();
             ModelPropertyDefinition existingPropertyDefinition = firstProperty.PropertyDefinition;
             var modifiedExistingProperty = new WaveModelProperty(existingPropertyDefinition, "NewValue");
-            loadedDefinition.SetModelProperty(existingPropertyDefinition.FileCategoryName,
-                                              existingPropertyDefinition.FilePropertyName,
+            loadedDefinition.SetModelProperty(existingPropertyDefinition.FileSectionName,
+                                              existingPropertyDefinition.FilePropertyKey,
                                               modifiedExistingProperty);
 
             var newPropertyDefinition = new WaveModelPropertyDefinition
             {
                 DataType = typeof(string),
-                FileCategoryName = "NewFileCategory",
-                FilePropertyName = "NewFileProperty"
+                FileSectionName = "NewFileSection",
+                FilePropertyKey = "NewFileProperty"
             };
             var newProperty = new WaveModelProperty(newPropertyDefinition, "JustAValue");
-            loadedDefinition.SetModelProperty(newPropertyDefinition.FileCategoryName,
-                                              newPropertyDefinition.FilePropertyName,
+            loadedDefinition.SetModelProperty(newPropertyDefinition.FileSectionName,
+                                              newPropertyDefinition.FilePropertyKey,
                                               newProperty);
 
             // When

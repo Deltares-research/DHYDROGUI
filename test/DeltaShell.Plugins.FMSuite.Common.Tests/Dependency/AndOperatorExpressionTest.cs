@@ -61,22 +61,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             {
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "A",
+                    FilePropertyKey = "A",
                     DataType = typeof(bool)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "B",
+                    FilePropertyKey = "B",
                     DataType = typeof(bool)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "C",
+                    FilePropertyKey = "C",
                     DataType = typeof(bool)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "string",
+                    FilePropertyKey = "string",
                     DataType = typeof(string)
                 }, "1.2")
             };
@@ -126,17 +126,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             {
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "A",
+                    FilePropertyKey = "A",
                     DataType = typeof(int)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "B",
+                    FilePropertyKey = "B",
                     DataType = typeof(int)
                 }, "6"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "string",
+                    FilePropertyKey = "string",
                     DataType = typeof(string)
                 }, "1.2")
             };
@@ -185,17 +185,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             {
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "A",
+                    FilePropertyKey = "A",
                     DataType = typeof(int)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "B",
+                    FilePropertyKey = "B",
                     DataType = typeof(int)
                 }, "1"),
                 new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    FilePropertyName = "string",
+                    FilePropertyKey = "string",
                     DataType = typeof(string)
                 }, "1.2")
             };

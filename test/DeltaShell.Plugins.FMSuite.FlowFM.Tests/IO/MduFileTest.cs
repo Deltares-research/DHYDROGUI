@@ -211,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // Assert
             WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
-            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(newCategoryName),
+            Assert.That(property.PropertyDefinition.FileSectionName, Is.EqualTo(newCategoryName),
                         $"Category [{oldCategoryName}] should be renamed to [{newCategoryName}].");
         }
 
@@ -1137,7 +1137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 MduPropertyName = name,
                 Description = comment,
                 DataType = typeof(string),
-                FileCategoryName = "custom_category"
+                FileSectionName = "custom_category"
             };
 
             return new WaterFlowFMProperty(propertyDefinition, "custom_value");

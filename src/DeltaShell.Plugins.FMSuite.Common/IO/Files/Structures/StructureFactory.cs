@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private static string GetNotSupportedTimeSeriesMessage(string structureName, ModelProperty modelProperty, Steerable steerableProperty)
         {
-           return string.Format(Resources.StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_supported_, structureName, modelProperty, modelProperty.PropertyDefinition.FilePropertyName, steerableProperty.Mode);
+           return string.Format(Resources.StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_supported_, structureName, modelProperty, modelProperty.PropertyDefinition.FilePropertyKey, steerableProperty.Mode);
         }
 
         #region Pump

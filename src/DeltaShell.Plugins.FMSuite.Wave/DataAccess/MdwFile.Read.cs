@@ -215,8 +215,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 }
 
                 string nameOfDependentOnProperty = propertyValue.DefaultValueDependentOn;
-                string nameOfPropertyWithMultipleDefaultValues = propertyValue.FilePropertyName;
-                string categoryNameWithPropertyWithMultipleDefaultValues = propertyValue.FileCategoryName;
+                string nameOfPropertyWithMultipleDefaultValues = propertyValue.FilePropertyKey;
+                string categoryNameWithPropertyWithMultipleDefaultValues = propertyValue.FileSectionName;
 
                 IEnumerable<IniSection> sectionOfDependentOnProperty = GetSectionsWithPropertyKey(iniData, nameOfDependentOnProperty);
                 IEnumerable<IniSection> sectionOfPropertyWithMultipleDefaultValues = GetSectionsWithPropertyKey(iniData, nameOfPropertyWithMultipleDefaultValues);
@@ -262,8 +262,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             {
                 Caption = mdwProperty.Key,
                 DataType = typeof(string),
-                FileCategoryName = section.Name,
-                FilePropertyName = mdwProperty.Key,
+                FileSectionName = section.Name,
+                FilePropertyKey = mdwProperty.Key,
                 Category = definedCategory.Name,
                 // default value as string should always be an empty string and not null.
                 DefaultValueAsString = string.Empty

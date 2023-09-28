@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                 {
                     string defaultValueDependentOn = propertyDefinition.DefaultValueDependentOn;
                     WaveModelProperty prop = Properties.FirstOrDefault(p =>
-                                                                           p.PropertyDefinition.FilePropertyName.Equals(
+                                                                           p.PropertyDefinition.FilePropertyKey.Equals(
                                                                                defaultValueDependentOn));
                     if (prop != null)
                     {
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
                 var waveProp = new WaveModelProperty(propertyDefinition, propertyDefinition.DefaultValueAsString);
 
-                SetModelProperty(propertyDefinition.FileCategoryName, propertyDefinition.FilePropertyName,
+                SetModelProperty(propertyDefinition.FileSectionName, propertyDefinition.FilePropertyKey,
                                  waveProp);
             }
 
@@ -76,12 +76,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public IBoundaryContainer BoundaryContainer { get; }
 
-        public void SetModelProperty(string fileCategoryName, string filePropertyName, WaveModelProperty property)
+        public void SetModelProperty(string fileSectionName, string filePropertyKey, WaveModelProperty property)
         {
             WaveModelProperty prop = Properties
-                                     .Where(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName))
+                                     .Where(p => p.PropertyDefinition.FileSectionName.Equals(fileSectionName))
                                      .FirstOrDefault(
-                                         p => p.PropertyDefinition.FilePropertyName.Equals(filePropertyName));
+                                         p => p.PropertyDefinition.FilePropertyKey.Equals(filePropertyKey));
             if (prop != null)
             {
                 Properties[Properties.IndexOf(prop)] = property;
@@ -92,10 +92,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             }
         }
 
-        public WaveModelProperty GetModelProperty(string fileCategoryName, string propertyName)
+        public WaveModelProperty GetModelProperty(string fileSectionName, string propertyKey)
         {
-            return Properties.Where(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName))
-                             .FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
+            return Properties.Where(p => p.PropertyDefinition.FileSectionName.Equals(fileSectionName))
+                             .FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.Equals(propertyKey));
         }
 
         private void LoadSchema()
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                 ModelPropertyDefinition referenceDatePropertyDefinition =
                     ModelSchema.ModelDefinitionCategory[KnownWaveSections.GeneralSection]?
                                .PropertyDefinitions
-                               .FirstOrDefault(p => p.FilePropertyName == KnownWaveProperties.ReferenceDate);
+                               .FirstOrDefault(p => p.FilePropertyKey == KnownWaveProperties.ReferenceDate);
 
                 if (referenceDatePropertyDefinition != null)
                 {

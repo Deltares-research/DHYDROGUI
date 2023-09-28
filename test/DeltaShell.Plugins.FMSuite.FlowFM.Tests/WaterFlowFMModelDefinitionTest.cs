@@ -268,8 +268,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
             var mduFileInA = new MduFile();
             mduFileInA.Read(mduFilePathA, modelDefinitionA, new HydroArea(), allFixedWeirsAndCorrespondingProperties);
-            IEnumerable<string> fileCategories = modelDefinitionA.Properties.Select(p => p.PropertyDefinition.FileCategoryName);
-            Assert.IsTrue(fileCategories.Contains("group_A"));
+            IEnumerable<string> fileSectionNames = modelDefinitionA.Properties.Select(p => p.PropertyDefinition.FileSectionName);
+            Assert.IsTrue(fileSectionNames.Contains("group_A"));
             Assert.AreEqual("A", modelDefinitionA.GetModelProperty("parametera").Value);
 
             // read model B, should not affect model A properties and custom groups...

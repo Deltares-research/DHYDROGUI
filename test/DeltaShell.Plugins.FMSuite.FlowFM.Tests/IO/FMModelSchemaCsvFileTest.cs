@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Assert
                 WaterFlowFMPropertyDefinition readPropertyDefinition = schema.PropertyDefinitions.Single().Value;
                 Assert.That(readPropertyDefinition.Caption, Is.EqualTo("This, that, here, there"));
-                Assert.That(readPropertyDefinition.FilePropertyName, Is.EqualTo("This, that, here, there"));
+                Assert.That(readPropertyDefinition.FilePropertyKey, Is.EqualTo("This, that, here, there"));
             }
         }
 

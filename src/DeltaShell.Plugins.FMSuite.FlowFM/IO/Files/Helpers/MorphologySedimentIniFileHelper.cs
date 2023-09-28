@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups)
         {
             IEnumerable<IGrouping<string, WaterFlowFMProperty>> categories =
-                customPropertiesOfCustomGroups.GroupBy(p => p.PropertyDefinition.FileCategoryName);
+                customPropertiesOfCustomGroups.GroupBy(p => p.PropertyDefinition.FileSectionName);
 
             foreach (IGrouping<string, WaterFlowFMProperty> category in categories)
             {
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
                 foreach (WaterFlowFMProperty property in category)
                 {
-                    section.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
+                    section.AddProperty(property.PropertyDefinition.FilePropertyKey, property.GetValueAsString());
                 }
 
                 yield return section;

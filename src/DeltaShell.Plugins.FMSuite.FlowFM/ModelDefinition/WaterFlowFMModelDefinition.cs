@@ -664,9 +664,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 WaterFlowFMProperty useSedFileFlowFmProperty =
                     fmModel.ModelDefinition.GetModelProperty(KnownProperties.SedFile);
                 string guiSedimentGroupId =
-                    string.IsNullOrEmpty(useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName)
+                    string.IsNullOrEmpty(useSedFileFlowFmProperty.PropertyDefinition.FileSectionName)
                         ? "sediment"
-                        : useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName;
+                        : useSedFileFlowFmProperty.PropertyDefinition.FileSectionName;
 
                 key = guiSedimentGroupId;
                 messageKey = "sediment file";

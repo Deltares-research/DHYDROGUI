@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
 
             Assert.That(definition.Caption, Is.EqualTo(mduPropertyName));
             Assert.That(definition.MduPropertyName, Is.EqualTo(mduPropertyName));
-            Assert.That(definition.FileCategoryName, Is.EqualTo(mduGroupName));
-            Assert.That(definition.FilePropertyName, Is.EqualTo(mduPropertyName));
+            Assert.That(definition.FileSectionName, Is.EqualTo(mduGroupName));
+            Assert.That(definition.FilePropertyKey, Is.EqualTo(mduPropertyName));
             Assert.That(definition.Category, Is.EqualTo("Miscellaneous"));
             Assert.IsNull(definition.SubCategory);
             Assert.That(definition.DataType, Is.EqualTo(typeof(string)));

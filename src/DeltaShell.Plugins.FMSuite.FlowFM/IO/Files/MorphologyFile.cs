@@ -137,9 +137,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             WaterFlowFMPropertyDefinition propertyDefinition = property.PropertyDefinition;
 
-            return propertyDefinition.FilePropertyName != KnownProperties.BcmFile
-                   && propertyDefinition.FileCategoryName != GuiProperties.GUIonly
-                   && (propertyDefinition.FileCategoryName.ToLower().Equals(KnownProperties.morphology)
+            return propertyDefinition.FilePropertyKey != KnownProperties.BcmFile
+                   && propertyDefinition.FileSectionName != GuiProperties.GUIonly
+                   && (propertyDefinition.FileSectionName.ToLower().Equals(KnownProperties.morphology)
                        || propertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile));
         }
 
@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                          string categoryName)
         {
             return modelDefinition.Properties.FirstOrDefault(
-                p => string.Equals(p.PropertyDefinition.FilePropertyName,
+                p => string.Equals(p.PropertyDefinition.FilePropertyKey,
                                    property.Key,
                                    StringComparison.InvariantCultureIgnoreCase)
                      && p.PropertyDefinition.Category == categoryName);
@@ -328,14 +328,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static WaterFlowFMProperty CreateModelPropertyForUnknownProperty(string categoryName, IniProperty property)
         {
-            string fileCategoryName = categoryName;
-            if (fileCategoryName.Equals(KnownProperties.morphology, StringComparison.InvariantCultureIgnoreCase))
+            string mduCategoryName = categoryName;
+            if (mduCategoryName.Equals(KnownProperties.morphology, StringComparison.InvariantCultureIgnoreCase))
             {
-                fileCategoryName = KnownProperties.morphology;
+                mduCategoryName = KnownProperties.morphology;
             }
 
             WaterFlowFMPropertyDefinition propertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(fileCategoryName,
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(mduCategoryName,
                                                                              property.Key,
                                                                              property.Comment,
                                                                              PropertySource.MorphologyFile);

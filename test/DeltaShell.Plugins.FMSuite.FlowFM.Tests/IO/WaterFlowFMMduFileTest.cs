@@ -100,13 +100,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462, only second test fails.
         [TestCase("geometry", "MultipleLinePropertiesTestFile", "Test1 Test2", "# Test comment 1", "= Test1 Test2 # Test comment 1")]
         [TestCase("geometry", "MultipleLinePropertiesTestFile", "Test1 Test2", "# Test comment 1 Test comment 2", "=Test1 \\ # Test comment 1\r\nTest2 # Test comment 2")] /* Slash separated */
-        public void MduFileReadsAndWritesMultipleLinePropertiesIncludingComments(string fileCategoryName, string propertyName, string expectedValues, string expectedOutputComments, string rawValuesAndComments)
+        public void MduFileReadsAndWritesMultipleLinePropertiesIncludingComments(string sectionName, string propertyName, string expectedValues, string expectedOutputComments, string rawValuesAndComments)
         {
             string nameWithoutExtension = Path.GetTempFileName();
             string mduFilePath = string.Concat(nameWithoutExtension, ".mdu");
 
             string mduFileText = string.Concat(propertyName, rawValuesAndComments);
-            mduFileText = string.Concat("[", fileCategoryName, "]", "\n", mduFileText);
+            mduFileText = string.Concat("[", sectionName, "]", "\n", mduFileText);
             File.WriteAllText(mduFilePath, mduFileText);
             try
             {
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462
         [TestCase("geometry", "CustomProperty1", "CustomProperty2", "Test1 Test2", "Test3", true, false)]
-        public void MduFileHandlesWrongDeclarationsOfMultipleLineProperties(string fileCategoryName, string property1Name, string property2Name, string property1Value, string property2Value, bool multipleLineProp1, bool multipleLineProp2)
+        public void MduFileHandlesWrongDeclarationsOfMultipleLineProperties(string sectionName, string property1Name, string property2Name, string property1Value, string property2Value, bool multipleLineProp1, bool multipleLineProp2)
         {
             string nameWithoutExtension = Path.GetTempFileName();
             string mduFilePath = string.Concat(nameWithoutExtension, ".mdu");
@@ -149,15 +149,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string property2Text = string.Concat(property2Name, "=", property2Value,
                                                  multipleLineProp2 ? @"\" : string.Empty);
             string mduFileText = string.Concat(property1Text, "\n", property2Text);
-            mduFileText = string.Concat("[", fileCategoryName, "]", "\n", mduFileText);
+            mduFileText = string.Concat("[", sectionName, "]", "\n", mduFileText);
             File.WriteAllText(mduFilePath, mduFileText);
             try
             {
                 var mduFile = new MduFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
 
-                WaterFlowFMProperty property1 = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, property1Name, fileCategoryName);
-                WaterFlowFMProperty property2 = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, property2Name, fileCategoryName);
+                WaterFlowFMProperty property1 = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, property1Name, sectionName);
+                WaterFlowFMProperty property2 = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, property2Name, sectionName);
                 //Read
                 mduFile.Read(mduFilePath, modelDefinition, new HydroArea(), new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>());
                 Assert.AreEqual(property1Value, property1.GetValueAsString());
@@ -363,7 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var propertyDefinition = new WaterFlowFMPropertyDefinition
             {
                 MduPropertyName = "CollectionPropertyTestFile",
-                FileCategoryName = "TestCategory",
+                FileSectionName = "TestSection",
                 DataType = typeof(IList<string>),
                 IsMultipleFile = true
             };
@@ -443,7 +443,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenMduFileWithDryPointsAndDryAreasFilesBothOnDryPointsFileCategory_WhenReadingMdu_ThenBothFilesAreCorrectlyRead()
+        public void GivenMduFileWithDryPointsAndDryAreasFilesBothOnDryPointsFileSection_WhenReadingMdu_ThenBothFilesAreCorrectlyRead()
         {
             string mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryPointsAndAreasInModel.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
@@ -1548,12 +1548,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         private static WaterFlowFMProperty AddCustomMultipleFilePropertyToModelDefinition(
-            WaterFlowFMModelDefinition modelDefinition, string propertyName, string fileCategoryName)
+            WaterFlowFMModelDefinition modelDefinition, string propertyName, string fileSectionName)
         {
             var propertyDefinition = new WaterFlowFMPropertyDefinition
             {
                 MduPropertyName = propertyName,
-                FileCategoryName = fileCategoryName,
+                FileSectionName = fileSectionName,
                 DataType = typeof(IList<string>),
                 IsMultipleFile = true
             };

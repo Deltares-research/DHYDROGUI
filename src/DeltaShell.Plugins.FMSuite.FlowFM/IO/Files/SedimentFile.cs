@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IEnumerable<WaterFlowFMProperty> customPropertiesOfCustomGroups =
                 modelDefinition.Properties.Where(p => p.PropertyDefinition.UnknownPropertySource
                                                        .Equals(PropertySource.SedimentFile)
-                                                      && !knownSections.Contains(p.PropertyDefinition.FileCategoryName));
+                                                      && !knownSections.Contains(p.PropertyDefinition.FileSectionName));
 
             return MorphologySedimentIniFileHelper.CreateSectionsFromModelProperties(
                 customPropertiesOfCustomGroups);
@@ -313,13 +313,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (WaterFlowFMProperty property in properties)
             {
-                section.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
+                section.AddProperty(property.PropertyDefinition.FilePropertyKey, property.GetValueAsString());
             }
         }
 
         private static bool IsUnknownSedimentPropertyForCategory(string category, WaterFlowFMProperty p)
         {
-            return p.PropertyDefinition.FileCategoryName != "GUIOnly"
+            return p.PropertyDefinition.FileSectionName != GuiProperties.GUIonly
                    && p.PropertyDefinition.Category.Equals(category)
                    && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile);
         }

@@ -322,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
         private static List<IniSection> GroupPropertiesByMdwSection(WaveModelDefinition modelDefinition)
         {
             var mdwSections = new List<IniSection>();
-            IEnumerable<IGrouping<string, WaveModelProperty>> groupedProperties = modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
+            IEnumerable<IGrouping<string, WaveModelProperty>> groupedProperties = modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.FileSectionName);
             foreach (IGrouping<string, WaveModelProperty> grouping in groupedProperties)
             {
                 string mdwSectionName = grouping.Key;
@@ -334,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 var mdwGroup = new IniSection(mdwSectionName);
                 foreach (WaveModelProperty property in grouping)
                 {
-                    string name = property.PropertyDefinition.FilePropertyName;
+                    string name = property.PropertyDefinition.FilePropertyKey;
                     string value = property.GetValueAsString();
                     mdwGroup.AddProperty(name, value);
                 }

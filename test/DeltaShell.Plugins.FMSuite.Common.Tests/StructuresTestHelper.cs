@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests
         {
             structureDataAccessObject.Properties.Add(new StructureProperty(new StructurePropertyDefinition
             {
-                FilePropertyName = attributeName,
+                FilePropertyKey = attributeName,
                 DataType = type
             }, value));
         }

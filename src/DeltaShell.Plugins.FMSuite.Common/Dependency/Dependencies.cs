@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                         {
                             modelProperty.PropertyDefinition.IsEnabled = null;
                             Log.ErrorFormat("Cannot read dependencies for property '{0}'; Reason: {1}",
-                                            modelProperty.PropertyDefinition.FilePropertyName, e.Message);
+                                            modelProperty.PropertyDefinition.FilePropertyKey, e.Message);
                         }
                     }
 
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                         {
                             modelProperty.PropertyDefinition.IsVisible = null;
                             Log.ErrorFormat("Cannot read dependencies for property '{0}'; Reason: {1}",
-                                            modelProperty.PropertyDefinition.FilePropertyName, e.Message);
+                                            modelProperty.PropertyDefinition.FilePropertyKey, e.Message);
                         }
                     }
 

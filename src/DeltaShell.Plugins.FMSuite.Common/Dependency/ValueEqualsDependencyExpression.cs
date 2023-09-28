@@ -31,8 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                                       string dependencyExpression)
         {
             string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
-            ModelProperty dependencyProperty = allProperties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
-                                                                                                                               StringComparison.InvariantCultureIgnoreCase));
+            ModelProperty dependencyProperty = allProperties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.Equals(dependencyPropertyName,
+                                                                                                                              StringComparison.InvariantCultureIgnoreCase));
             if (dependencyProperty != null &&
                 dependencyProperty.PropertyDefinition.DataType != typeof(bool) &&
                 dependencyProperty.PropertyDefinition.DataType != typeof(int) &&
@@ -50,8 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             return properties =>
             {
                 string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
-                ModelProperty dependencyProperty = properties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
-                                                                                                                                StringComparison.InvariantCultureIgnoreCase));
+                ModelProperty dependencyProperty = properties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.Equals(dependencyPropertyName,
+                                                                                                                               StringComparison.InvariantCultureIgnoreCase));
 
                 return dependencyProperty != null && GetComparisonValues(dependencyExpression).Contains(Convert.ToInt32(dependencyProperty.Value));
             };

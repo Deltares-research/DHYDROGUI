@@ -60,8 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         {
             foreach (WaveModelProperty loadedProperty in loadedProperties)
             {
-                targetDefinition.SetModelProperty(loadedProperty.PropertyDefinition.FileCategoryName,
-                                                  loadedProperty.PropertyDefinition.FilePropertyName,
+                targetDefinition.SetModelProperty(loadedProperty.PropertyDefinition.FileSectionName,
+                                                  loadedProperty.PropertyDefinition.FilePropertyKey,
                                                   loadedProperty);
             }
         }

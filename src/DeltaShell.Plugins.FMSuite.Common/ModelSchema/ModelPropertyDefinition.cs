@@ -29,12 +29,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// <summary>
         /// The INI section name to which this property belongs to.
         /// </summary>
-        public string FileCategoryName { get; set; }
+        public string FileSectionName { get; set; }
 
         /// <summary>
-        /// The name of the property as it occurs in the INI file.
+        /// The key of the property as it occurs in the INI file.
         /// </summary>
-        public string FilePropertyName { get; set; }
+        public string FilePropertyKey { get; set; }
 
         /// <summary>
         /// The schema category.
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// The default implementation of <see cref="IsEnabled"/>.
         /// </summary>
         /// <param name="modelProperties">
-        /// A lookup with all available properties, indexed on their <see cref="FilePropertyName"/>
+        /// A lookup with all available properties, indexed on their <see cref="FilePropertyKey"/>
         /// .
         /// </param>
         /// <returns> True if this property is enabled; False when it's not. </returns>

@@ -958,14 +958,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             ValidatePropertiesCategory(unknownPropertiesForSed2, SedimentFile.Header, sedimentFraction2Name);
 
             const string customCategoryName = "MyCustomCategory";
-            List<WaterFlowFMProperty> propertiesUnknownCategory = properties.Where(p => p.PropertyDefinition.FileCategoryName == customCategoryName).ToList();
+            List<WaterFlowFMProperty> propertiesUnknownCategory = properties.Where(p => p.PropertyDefinition.FileSectionName == customCategoryName).ToList();
             ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
         }
 
-        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string fileCategoryName, string categoryName)
+        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string fileSectionName, string categoryName)
         {
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileSectionName.Equals(fileSectionName)));
             Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
 
             ValidateProperty(properties, "MyCustomStringProp", "\"777\"");
@@ -976,7 +976,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void ValidateProperty(IEnumerable<WaterFlowFMProperty> properties, string propertyName, string propertyValue)
         {
-            WaterFlowFMProperty customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
+            WaterFlowFMProperty customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyKey.Equals(propertyName));
             Assert.NotNull(customStringProperty);
             Assert.AreEqual(propertyValue, customStringProperty.Value);
         }

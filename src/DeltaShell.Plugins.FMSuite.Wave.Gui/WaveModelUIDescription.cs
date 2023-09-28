@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             }
 
             string label = string.IsNullOrEmpty(prop.PropertyDefinition.Caption)
-                               ? prop.PropertyDefinition.FilePropertyName
+                               ? prop.PropertyDefinition.FilePropertyKey
                                : prop.PropertyDefinition.Caption;
 
             return new FieldUIDescription(getter, setter, isEnabled, isVisible)
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 SubCategory = prop.PropertyDefinition.SubCategory,
                 IsReadOnly = prop.PropertyDefinition.ModelFileOnly,
                 Label = label,
-                Name = prop.PropertyDefinition.FilePropertyName,
+                Name = prop.PropertyDefinition.FilePropertyKey,
                 ValueType = prop.PropertyDefinition.DataType,
                 ToolTip = prop.PropertyDefinition.Description,
                 UnitSymbol = prop.PropertyDefinition.Unit

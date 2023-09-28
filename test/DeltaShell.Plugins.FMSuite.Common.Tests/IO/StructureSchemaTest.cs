@@ -32,9 +32,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             schema.StructurePropertyGroups.Add("weir", new ModelPropertyGroup("weir"));
             schema.StructurePropertyGroups.Add("structure", new ModelPropertyGroup("structure"));
 
-            schema.StructurePropertyGroups["weir"].Add(new StructurePropertyDefinition {FilePropertyName = "crestlevel"});
+            schema.StructurePropertyGroups["weir"].Add(new StructurePropertyDefinition {FilePropertyKey = "crestlevel"});
 
-            schema.StructurePropertyGroups["structure"].Add(new StructurePropertyDefinition {FilePropertyName = "id"});
+            schema.StructurePropertyGroups["structure"].Add(new StructurePropertyDefinition {FilePropertyKey = "id"});
 
             return schema;
         }
