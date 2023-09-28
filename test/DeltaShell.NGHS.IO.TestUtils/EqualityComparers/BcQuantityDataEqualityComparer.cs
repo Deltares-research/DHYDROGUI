@@ -41,12 +41,12 @@ namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
                 return false;
             }
 
-            if (!propertyComparer.Equals(x.Quantity, y.Quantity))
+            if (!Equals(x.Quantity, y.Quantity))
             {
                 return false;
             }
 
-            if (!propertyComparer.Equals(x.Unit, y.Unit))
+            if (!Equals(x.Unit, y.Unit))
             {
                 return false;
             }

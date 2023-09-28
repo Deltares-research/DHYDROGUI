@@ -12,7 +12,6 @@ using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.NGHS.IO.TestUtils.EqualityComparers;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Networks;
@@ -498,21 +497,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 
         private static IEnumerable<IniSection> MatchingIniSections(IEnumerable<IniSection> expectedIniSections)
         {
-            return Arg.Is<IEnumerable<IniSection>>(actualIniSections => IniSectionsEqual(actualIniSections, expectedIniSections));
-        }
-
-        private static bool IniSectionsEqual(IEnumerable<IniSection> actualIniSections, IEnumerable<IniSection> expectedIniSections)
-        {
-            if (actualIniSections.Count() != expectedIniSections.Count())
-            {
-                return false;
-            }
-
-            var iniSectionComparer = new IniSectionEqualityComparer();
-
-            IEnumerable<bool> iniSectionEqualities = actualIniSections.Zip(expectedIniSections,
-                                                                        (x, y) => iniSectionComparer.Equals(x, y));
-            return iniSectionEqualities.All(equal => equal);
+            return Arg.Is<IEnumerable<IniSection>>(actualIniSections => expectedIniSections.SequenceEqual(actualIniSections));
         }
 
         private static IniSection CreateGeneralIniSection(string fileVersion = "2.00")

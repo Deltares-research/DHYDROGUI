@@ -9,7 +9,6 @@ namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
     /// </summary>
     public class BcIniSectionEqualityComparer : IEqualityComparer<BcIniSection>
     {
-        private static readonly IniSectionEqualityComparer iniSectionComparer = new IniSectionEqualityComparer();
         private static readonly BcQuantityDataEqualityComparer quantityDataEqualityComparer = new BcQuantityDataEqualityComparer();
 
         /// <summary>
@@ -27,7 +26,12 @@ namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
                 return true;
             }
 
-            if (!iniSectionComparer.Equals(x.Section, y.Section))
+            if (x == null || y == null)
+            {
+                return false;
+            }
+
+            if (!Equals(x.Section, y.Section))
             {
                 return false;
             }
