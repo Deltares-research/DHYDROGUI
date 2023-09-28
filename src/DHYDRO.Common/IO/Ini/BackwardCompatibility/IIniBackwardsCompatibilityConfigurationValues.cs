@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-namespace DHYDRO.Common.IO.BackwardCompatibility
+namespace DHYDRO.Common.IO.Ini.BackwardCompatibility
 {
     /// <summary>
-    /// <see cref="IDelftIniBackwardsCompatibilityConfigurationValues"/> defines the legacy
-    /// mappings and obsolete categories and properties.
+    /// <see cref="IIniBackwardsCompatibilityConfigurationValues"/> defines the legacy
+    /// mappings and obsolete sections and properties.
     /// </summary>
-    public interface IDelftIniBackwardsCompatibilityConfigurationValues
+    public interface IIniBackwardsCompatibilityConfigurationValues
     {
         /// <summary>
         /// Gets the obsolete properties.
@@ -33,21 +33,21 @@ namespace DHYDRO.Common.IO.BackwardCompatibility
         IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; }
 
         /// <summary>
-        /// Gets the mapping of legacy category names to their up to date
+        /// Gets the mapping of legacy section names to their up to date
         /// equivalents.
         /// </summary>
         /// <remarks>
-        /// Note that all categories are assumed to be case-insensitive, as
+        /// Note that all sections are assumed to be case-insensitive, as
         /// such it is required for all keys (and only the keys) in
-        /// <see cref="LegacyCategoryMapping"/> to be written in lowercase,
+        /// <see cref="LegacySectionMapping"/> to be written in lowercase,
         /// i.e. the following invariant should hold:
-        /// FORALL p IN LegacyCategoryMapping.Keys: p == p.ToLower()
+        /// FORALL p IN LegacySectionMapping.Keys: p == p.ToLower()
         /// </remarks>
-        IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; }
+        IReadOnlyDictionary<string, string> LegacySectionMapping { get; }
 
         /// <summary>
-        /// Gets the delft INI property infos for unsupported property values.
+        /// Gets the INI property infos for unsupported property values.
         /// </summary>
-        IEnumerable<DelftIniPropertyInfo> UnsupportedPropertyValues { get; }
+        IEnumerable<IniPropertyInfo> UnsupportedPropertyValues { get; }
     }
 }
