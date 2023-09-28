@@ -35,12 +35,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 iniSections.Add(iniSection);
             }
 
-            new DelftIniWriter().WriteDelftIniFile(iniSections, filePath);
+            new IniWriter().WriteIniFile(iniSections, filePath);
         }
 
         public static void Read(string filePath, IHydroNetwork network)
         {
-            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath).ToList();
+            var iniSections = new IniReader().ReadIniFile(filePath).ToList();
 
             foreach (var iniSection in iniSections)
             {

@@ -16,17 +16,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
     [TestFixture]
     public class BcTimeSeriesWriterTest
     {
-        private IBcFileWriter writer;
+        private IBcWriter writer;
         private IStructureBoundaryGenerator structureBoundaryFileWriter;
         private string filepath;
         private DateTime time;
-        private List<DelftBcCategory> boundary;
+        private List<BcIniSection> boundary;
         private const string structureName =  "structureName";
         
         [SetUp]
         public void Setup()
         {
-            writer = Substitute.For<IBcFileWriter>();
+            writer = Substitute.For<IBcWriter>();
             structureBoundaryFileWriter = Substitute.For<IStructureBoundaryGenerator>();
             
             boundary = CreateBoundary();
@@ -36,11 +36,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             filepath =  TestHelper.GetTestFilePath(@"BcFiles\Structure.bc");
         }
 
-        private List<DelftBcCategory> CreateBoundary()
+        private List<BcIniSection> CreateBoundary()
         {
-            boundary = new List<DelftBcCategory>();
-            var category = new DelftBcCategory("boundary");
-            boundary.Add(category);
+            boundary = new List<BcIniSection>();
+            var iniSection = new BcIniSection("boundary");
+            boundary.Add(iniSection);
             return boundary;
         }
 
@@ -64,7 +64,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         public void WhenSingleBoundaryWritten_WhenArgumentsAreNull_ThenThrowArgumentNullException(string givenFilePath, string givenStructureName, ITimeSeries givenStructureData)
         {
             //Arrange
-            BcTimeSeriesWriter bcTimeSeriesWriter = new BcTimeSeriesWriter(Substitute.For<IBcFileWriter>(),
+            BcTimeSeriesWriter bcTimeSeriesWriter = new BcTimeSeriesWriter(Substitute.For<IBcWriter>(),
                                                                            Substitute.For<IStructureBoundaryGenerator>());
             
             //Act & Assert
@@ -97,7 +97,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         public void WhenMultipleBoundariesWritten_WhenArgumentsAreNull_ThenThrowArgumentNullException(string givenFilePath, IEnumerable<IStructureTimeSeries> givenStructureData)
         {
             //Arrange
-            BcTimeSeriesWriter bcTimeSeriesWriter = new BcTimeSeriesWriter(Substitute.For<IBcFileWriter>(),
+            BcTimeSeriesWriter bcTimeSeriesWriter = new BcTimeSeriesWriter(Substitute.For<IBcWriter>(),
                                                                            Substitute.For<IStructureBoundaryGenerator>());
             
             //Act & Assert

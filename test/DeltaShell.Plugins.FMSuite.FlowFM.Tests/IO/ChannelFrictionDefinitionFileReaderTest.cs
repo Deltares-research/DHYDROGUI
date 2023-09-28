@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFileWithNoIniSections_WhenCallingReadFile_ThenThrowsException()
         {
             // Given
-            var noIniSectionsFile = TestHelper.GetTestFilePath(@"IO\noCategories.ini");
+            var noIniSectionsFile = TestHelper.GetTestFilePath(@"IO\noSections.ini");
 
             using (var fmModel = new WaterFlowFMModel())
             {
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFileWithMissingGlobalIniSection_WhenCallingReadFile_ThenThrowsException()
         {
             // Given
-            var missingGlobalIniSectionFile = TestHelper.GetTestFilePath(@"IO\missingGlobalCategory.ini");
+            var missingGlobalIniSectionFile = TestHelper.GetTestFilePath(@"IO\missingGlobalSection.ini");
 
             using (var fmModel = new WaterFlowFMModel())
             {
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFileWithOnlyInvalidIniSections_WhenCallingReadFile_ThenThrowsException()
         {
             // Given
-            var invalidIniSectionsOnlyFile = TestHelper.GetTestFilePath(@"IO\invalidCategoriesOnly.ini");
+            var invalidIniSectionsOnlyFile = TestHelper.GetTestFilePath(@"IO\invalidSectionsOnly.ini");
 
             using (var fmModel = new WaterFlowFMModel())
             {

@@ -17,7 +17,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
         /// <param name="startTime">Start time.</param>
         /// <returns>Generated boundaries</returns>
         /// <exception cref="ArgumentNullException">Throws when <paramref name="structureData"/> is Null.</exception>
-        IEnumerable<DelftBcCategory> GenerateBoundaries(IEnumerable<IStructureTimeSeries> structureData, DateTime startTime);
+        IEnumerable<BcIniSection> GenerateBoundaries(IEnumerable<IStructureTimeSeries> structureData, DateTime startTime);
 
         /// <summary>
         /// Generate single boundary from <paramref name="structureData"/>.
@@ -27,6 +27,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
         /// <param name="startTime">Start time.</param>
         /// <returns>Generated boundary</returns>
         /// <exception cref="ArgumentNullException">Throws when <paramref name="structureName"/> or <paramref name="structureData"/> is Null.</exception>
-        IEnumerable<DelftBcCategory> GenerateBoundary(string structureName, ITimeSeries structureData, DateTime startTime);
+        IEnumerable<BcIniSection> GenerateBoundary(string structureName, ITimeSeries structureData, DateTime startTime);
     }
 }

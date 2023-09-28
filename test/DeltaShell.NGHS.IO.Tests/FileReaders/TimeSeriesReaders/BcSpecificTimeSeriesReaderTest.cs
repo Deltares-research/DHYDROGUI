@@ -18,8 +18,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
     [TestFixture]
     public class BcSpecificTimeSeriesReaderTest
     {
-        private IDelftBcReader reader;
-        private IBcCategoryParser parser;
+        private IBcReader reader;
+        private IBcSectionParser parser;
         private ILogHandler logHandler;
         private IStructureTimeSeries structureTimeSeries;
         private const string filePath = "path";
@@ -37,25 +37,25 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
         [SetUp]
         public void SetUp()
         {
-            reader = Substitute.For<IDelftBcReader>();
-            parser = Substitute.For<IBcCategoryParser>();
+            reader = Substitute.For<IBcReader>();
+            parser = Substitute.For<IBcSectionParser>();
             logHandler = Substitute.For<ILogHandler>();
             structureTimeSeries = Substitute.For<IStructureTimeSeries>();
             structureTimeSeries.Structure.Name.Returns(structureName);
             structureTimeSeries.Structure.Returns(new Weir());
             structureTimeSeries.TimeSeries.Returns(new TimeSeries {Name = quantity});
             time = new DateTime(10, 10, 10, 10, 10, 10);
-            IList<DelftBcCategory> structuresFromFile = new List<DelftBcCategory>();
-            structuresFromFile.Add(GetCategory());
-            reader.ReadDelftBcFile(filePath).Returns(structuresFromFile);
+            IList<BcIniSection> structuresFromFile = new List<BcIniSection>();
+            structuresFromFile.Add(GetSection());
+            reader.ReadBcFile(filePath).Returns(structuresFromFile);
         }
 
-        private DelftBcCategory GetCategory()
+        private BcIniSection GetSection()
         {
-            DelftBcCategory category = new DelftBcCategory("boundary");
-            category.Section.AddMultipleProperties(GetProperties());
-            category.Table = GetTable();
-            return category;
+            BcIniSection iniSection = new BcIniSection("boundary");
+            iniSection.Section.AddMultipleProperties(GetProperties());
+            iniSection.Table = GetTable();
+            return iniSection;
         }
 
         private List<IniProperty> GetProperties()
@@ -64,22 +64,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.TimeSeriesReaders
             return list;
         }
         
-        private List<IDelftBcQuantityData> GetTable()
+        private List<IBcQuantityData> GetTable()
         {
-            List<IDelftBcQuantityData> list = new List<IDelftBcQuantityData>
+            List<IBcQuantityData> list = new List<IBcQuantityData>
             {
-                GetDelftBcQuantityData(timeString, timeSince, timeSinceValue),
-                GetDelftBcQuantityData(quantity, unit, "100")
+                GetBcQuantityData(timeString, timeSince, timeSinceValue),
+                GetBcQuantityData(quantity, unit, "100")
             };
             return list;
         }
 
-        private static DelftBcQuantityData GetDelftBcQuantityData(string quantityString, string unitString, string valueString)
+        private static BcQuantityData GetBcQuantityData(string quantityString, string unitString, string valueString)
         {
-            var delftBcQuantityDataTime = new DelftBcQuantityData(new IniProperty(tableQuantity, quantityString, ""));
-            delftBcQuantityDataTime.Unit = new IniProperty(tableUnit, unitString, "");
-            delftBcQuantityDataTime.Values = new List<string>() {valueString};
-            return delftBcQuantityDataTime;
+            var bcQuantityDataTime = new BcQuantityData(new IniProperty(tableQuantity, quantityString, ""));
+            bcQuantityDataTime.Unit = new IniProperty(tableUnit, unitString, "");
+            bcQuantityDataTime.Values = new List<string>() {valueString};
+            return bcQuantityDataTime;
         }
 
         private static IEnumerable<TestCaseData> ArgumentNullCases()

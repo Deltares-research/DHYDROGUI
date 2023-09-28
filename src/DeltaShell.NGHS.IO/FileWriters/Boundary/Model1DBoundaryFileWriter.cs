@@ -11,54 +11,54 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 {
     public class Model1DBoundaryFileWriter: BoundaryFileWriter
     {
-        public IEnumerable<DelftBcCategory> GenerateModel1DLateralSourceDataDelftBcCategories(DateTime startTime,
+        public IEnumerable<BcIniSection> GenerateModel1DLateralSourceDataBcSections(DateTime startTime,
             IEnumerable<Model1DLateralSourceData> lateralSourcesData, bool useSalt, bool useTemperature,
             string bcForcingHeader)
         {
-            var categories = new List<DelftBcCategory>();
+            var iniSections = new List<BcIniSection>();
             if (lateralSourcesData != null)
             {
                 var model1DLateralSourceDatas = lateralSourcesData as Model1DLateralSourceData[] ?? lateralSourcesData.ToArray();
-                categories.AddRange( model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinition(startTime, lsd, bcForcingHeader)));
+                iniSections.AddRange( model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinition(startTime, lsd, bcForcingHeader)));
                 if (useSalt)
                 {
-                    categories.AddRange(model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinitionForSalt(startTime, lsd, bcForcingHeader)));
+                    iniSections.AddRange(model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinitionForSalt(startTime, lsd, bcForcingHeader)));
                 }
 
                 if (useTemperature)
                 {
-                    categories.AddRange(Enumerable.Select(model1DLateralSourceDatas, lsd => GenerateLateralDischargeDefinitionForTemperature(startTime, lsd, bcForcingHeader)));
+                    iniSections.AddRange(Enumerable.Select(model1DLateralSourceDatas, lsd => GenerateLateralDischargeDefinitionForTemperature(startTime, lsd, bcForcingHeader)));
                 }
             }
 
-            return categories;
+            return iniSections;
         }
 
-        public IEnumerable<DelftBcCategory> GenerateModel1DNodeBoundaryDelftBcCategories(DateTime startTime, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, bool useSalt, bool useTemperature, string bcBoundaryHeader)
+        public IEnumerable<BcIniSection> GenerateModel1DNodeBoundaryBcSections(DateTime startTime, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, bool useSalt, bool useTemperature, string bcBoundaryHeader)
         {
-            var categories = new List<DelftBcCategory>();
+            var iniSections = new List<BcIniSection>();
             if (boundaryConditions1D != null)
             {
                 var boundaryNodeData = boundaryConditions1D.Where(bc => bc.DataType != Model1DBoundaryNodeDataType.None).ToList();
-                categories.AddRange(boundaryNodeData.Select(data => GenerateBoundaryConditionDefinition(startTime, data, bcBoundaryHeader)));
+                iniSections.AddRange(boundaryNodeData.Select(data => GenerateBoundaryConditionDefinition(startTime, data, bcBoundaryHeader)));
             
                 if (useSalt)
                 {
                     var salinityBoundaryNodeDatas = boundaryNodeData.Where(bnd => bnd.SaltConditionType != SaltBoundaryConditionType.None);
-                    categories.AddRange(salinityBoundaryNodeDatas.Select(data => GenerateBoundaryConditionDefinitionForSalt(startTime, data, bcBoundaryHeader)));
+                    iniSections.AddRange(salinityBoundaryNodeDatas.Select(data => GenerateBoundaryConditionDefinitionForSalt(startTime, data, bcBoundaryHeader)));
                 }
 
                 if (useTemperature)
                 {
                     var temperatureBoundaryNodeDatas = boundaryNodeData.Where(bnd => bnd.TemperatureConditionType != TemperatureBoundaryConditionType.None);
-                    categories.AddRange(temperatureBoundaryNodeDatas.Select(data => GenerateBoundaryConditionDefinitionForTemperature(startTime, data, bcBoundaryHeader)));
+                    iniSections.AddRange(temperatureBoundaryNodeDatas.Select(data => GenerateBoundaryConditionDefinitionForTemperature(startTime, data, bcBoundaryHeader)));
                 }
             }
 
-            return categories;
+            return iniSections;
         }
 
-        private DelftBcCategory GenerateBoundaryConditionDefinition(DateTime startTime, Model1DBoundaryNodeData boundaryNodeData, string bcBoundaryHeader)
+        private BcIniSection GenerateBoundaryConditionDefinition(DateTime startTime, Model1DBoundaryNodeData boundaryNodeData, string bcBoundaryHeader)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(boundaryNodeData.DataType);
             var interpolationType = (boundaryNodeData.InterpolationType == InterpolationType.Constant ?
@@ -113,7 +113,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return boundaryDefinition;
         }
         
-        private static DelftBcCategory GenerateBoundaryConditionDefinitionForSalt(DateTime startTime,
+        private static BcIniSection GenerateBoundaryConditionDefinitionForSalt(DateTime startTime,
             Model1DBoundaryNodeData boundaryNodeData, string bcBoundaryHeader)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(boundaryNodeData.SaltConditionType);
@@ -141,7 +141,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return boundaryDefinition;
         }
 
-        private static DelftBcCategory GenerateBoundaryConditionDefinitionForTemperature(DateTime startTime,
+        private static BcIniSection GenerateBoundaryConditionDefinitionForTemperature(DateTime startTime,
             Model1DBoundaryNodeData boundaryNodeData, string bcBoundaryHeader)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(boundaryNodeData.TemperatureConditionType);
@@ -169,7 +169,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return boundaryDefinition;
         }
 
-        private static DelftBcCategory GenerateLateralDischargeDefinition(DateTime startTime,
+        private static BcIniSection GenerateLateralDischargeDefinition(DateTime startTime,
             Model1DLateralSourceData lateralSourceData, string bcForcingHeader)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(lateralSourceData.DataType);
@@ -198,7 +198,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return lateralDefinition;
         }
 
-        private static DelftBcCategory GenerateLateralDischargeDefinitionForSalt(DateTime startTime,
+        private static BcIniSection GenerateLateralDischargeDefinitionForSalt(DateTime startTime,
             Model1DLateralSourceData lateralSourceData, string bcForcingHeader)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(lateralSourceData.SaltLateralDischargeType);
@@ -239,7 +239,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return lateralDefinition;
         }
 
-        private static DelftBcCategory GenerateLateralDischargeDefinitionForTemperature(DateTime startTime,
+        private static BcIniSection GenerateLateralDischargeDefinitionForTemperature(DateTime startTime,
             Model1DLateralSourceData lateralSourceData, string bcForcingHeader)
         {
             var functionType = BoundaryFileWriterHelper.GetFunctionString(lateralSourceData.TemperatureLateralDischargeType);

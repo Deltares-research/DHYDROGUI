@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly bool useSalt;
         private readonly bool useTemperature;
 
-        private readonly IDictionary<string, IDictionary<string, ILateralSourceBcCategory>> bcDataByFile = new Dictionary<string, IDictionary<string, ILateralSourceBcCategory>>();
+        private readonly IDictionary<string, IDictionary<string, ILateralSourceBcSection>> bcDataByFile = new Dictionary<string, IDictionary<string, ILateralSourceBcSection>>();
         private readonly IDictionary<string, IPipe> pipesBySource = new Dictionary<string, IPipe>();
         private readonly IDictionary<string, IPipe> pipesByTarget = new Dictionary<string, IPipe>();
         private readonly IDictionary<string, IBranch> branchesBySource = new Dictionary<string, IBranch>();
@@ -82,21 +82,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         /// <summary>
-        /// Parses the <paramref name="category"/> from the external forcings file to a <see cref="Model1DLateralSourceData"/>.
+        /// Parses the <paramref name="section"/> from the external forcings file to a <see cref="Model1DLateralSourceData"/>.
         /// </summary>
-        /// <param name="category"> The lateral source category. </param>
+        /// <param name="section"> The lateral source category. </param>
         /// <returns> The parsed <see cref="Model1DLateralSourceData"/>. </returns>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="category"/> is <c>null</c>.
+        /// Thrown when <paramref name="section"/> is <c>null</c>.
         /// </exception>
-        public Model1DLateralSourceData Parse(ILateralSourceExtCategory category)
+        public Model1DLateralSourceData Parse(ILateralSourceExtSection section)
         {
-            Ensure.NotNull(category, nameof(category));
+            Ensure.NotNull(section, nameof(section));
 
             var lateralSource = new LateralSource
             {
-                Name = category.Id,
-                LongName = category.Name
+                Name = section.Id,
+                LongName = section.Name
             };
             var lateralSourceData = new Model1DLateralSourceData
             {
@@ -105,37 +105,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 UseTemperature = useTemperature
             };
 
-            SetLocation(category, lateralSourceData);
-            SetDischarge(category, lateralSourceData);
+            SetLocation(section, lateralSourceData);
+            SetDischarge(section, lateralSourceData);
 
             return lateralSourceData;
         }
 
-        private void SetDischarge(ILateralSourceExtCategory extCategory, Model1DLateralSourceData lateralSourceData)
+        private void SetDischarge(ILateralSourceExtSection extSection, Model1DLateralSourceData lateralSourceData)
         {
-            if (!double.IsNaN(extCategory.Discharge))
+            if (!double.IsNaN(extSection.Discharge))
             {
-                lateralSourceData.Flow = extCategory.Discharge;
+                lateralSourceData.Flow = extSection.Discharge;
                 lateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
                 return;
             }
 
-            if (extCategory.DischargeFile == null)
+            if (extSection.DischargeFile == null)
             {
                 lateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                 return;
             }
 
-            SetDischargeFromBcFile(extCategory, lateralSourceData);
+            SetDischargeFromBcFile(extSection, lateralSourceData);
         }
 
-        private void SetDischargeFromBcFile(ILateralSourceExtCategory extCategory, Model1DLateralSourceData lateralSourceData)
+        private void SetDischargeFromBcFile(ILateralSourceExtSection extSection, Model1DLateralSourceData lateralSourceData)
         {
-            string bcFilePath = GetFullPath(extCategory.DischargeFile);
+            string bcFilePath = GetFullPath(extSection.DischargeFile);
 
-            if (bcDataByFile.TryGetValue(bcFilePath, out IDictionary<string, ILateralSourceBcCategory> dataFromFile))
+            if (bcDataByFile.TryGetValue(bcFilePath, out IDictionary<string, ILateralSourceBcSection> dataFromFile))
             {
-                SetDischargeData(extCategory, lateralSourceData, dataFromFile);
+                SetDischargeData(extSection, lateralSourceData, dataFromFile);
             }
             else
             {
@@ -146,15 +146,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
 
                 bcDataByFile[bcFilePath] = boundaryFileReader.ReadLateralSourcesFromBcFile(bcFilePath, logHandler).ToDictionary(s => s.Name);
-                SetDischargeData(extCategory, lateralSourceData, bcDataByFile[bcFilePath]);
+                SetDischargeData(extSection, lateralSourceData, bcDataByFile[bcFilePath]);
             }
         }
 
-        private void SetDischargeData(ILateralSourceExtCategory category, Model1DLateralSourceData lateralSourceData, IDictionary<string, ILateralSourceBcCategory> dataFromFile)
+        private void SetDischargeData(ILateralSourceExtSection section, Model1DLateralSourceData lateralSourceData, IDictionary<string, ILateralSourceBcSection> dataFromFile)
         {
-            if (!dataFromFile.TryGetValue(category.Id, out ILateralSourceBcCategory bcCategory))
+            if (!dataFromFile.TryGetValue(section.Id, out ILateralSourceBcSection bcCategory))
             {
-                logHandler?.ReportError($"Cannot find lateral source '{category.Id}' in file {category.DischargeFile}");
+                logHandler?.ReportError($"Cannot find lateral source '{section.Id}' in file {section.DischargeFile}");
                 return;
             }
 
@@ -166,40 +166,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private void SetLocation(ILateralSourceExtCategory category, Model1DLateralSourceData lateralSourceData)
+        private void SetLocation(ILateralSourceExtSection section, Model1DLateralSourceData lateralSourceData)
         {
-            if (!string.IsNullOrEmpty(category.NodeName))
+            if (!string.IsNullOrEmpty(section.NodeName))
             {
-                if (pipesBySource.TryGetValue(category.NodeName, out IPipe pipeForSource))
+                if (pipesBySource.TryGetValue(section.NodeName, out IPipe pipeForSource))
                 {
                     SetLocationData(lateralSourceData, pipeForSource, 0d, pipeForSource.SourceCompartment);
                 }
-                else if (pipesByTarget.TryGetValue(category.NodeName, out IPipe pipeForTarget))
+                else if (pipesByTarget.TryGetValue(section.NodeName, out IPipe pipeForTarget))
                 {
                     SetLocationData(lateralSourceData, pipeForTarget, pipeForTarget.Length, pipeForTarget.TargetCompartment);
                 }
-                else if (branchesBySource.TryGetValue(category.NodeName, out IBranch branchForSource))
+                else if (branchesBySource.TryGetValue(section.NodeName, out IBranch branchForSource))
                 {
                     SetLocationData(lateralSourceData, branchForSource, 0d);
                 }
-                else if (branchesByTarget.TryGetValue(category.NodeName, out IBranch branchForTarget))
+                else if (branchesByTarget.TryGetValue(section.NodeName, out IBranch branchForTarget))
                 {
                     SetLocationData(lateralSourceData, branchForTarget, branchForTarget.Length);
                 }
                 else
                 {
-                    logHandler?.ReportError($"Cannot find node '{category.NodeName}' for lateral source '{category.Id}'");
+                    logHandler?.ReportError($"Cannot find node '{section.NodeName}' for lateral source '{section.Id}'");
                 }
             }
             else
             {
-                if (branchesByName.TryGetValue(category.BranchName, out IBranch branchForName))
+                if (branchesByName.TryGetValue(section.BranchName, out IBranch branchForName))
                 {
-                    SetLocationData(lateralSourceData, branchForName, category.Chainage);
+                    SetLocationData(lateralSourceData, branchForName, section.Chainage);
                 }
                 else
                 {
-                    logHandler?.ReportError($"Cannot find branch '{category.BranchName}' for lateral source '{category.Id}'");
+                    logHandler?.ReportError($"Cannot find branch '{section.BranchName}' for lateral source '{section.Id}'");
                 }
             }
         }

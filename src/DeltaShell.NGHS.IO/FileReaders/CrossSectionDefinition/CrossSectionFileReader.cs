@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 {
     public static class CrossSectionFileReader
     {
-        private static readonly CrossSectionLocationFileReader locationFileReader = new CrossSectionLocationFileReader(new DelftIniReader());
+        private static readonly CrossSectionLocationFileReader locationFileReader = new CrossSectionLocationFileReader(new IniReader());
         private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionFileReader));
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
             if (!File.Exists(csdFilename))
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, csdFilename));
 
-            var csDefinitionIniSections = new DelftIniReader().ReadDelftIniFile(csdFilename);
+            var csDefinitionIniSections = new IniReader().ReadIniFile(csdFilename);
             if (csDefinitionIniSections.Count == 0)
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, csdFilename));
 

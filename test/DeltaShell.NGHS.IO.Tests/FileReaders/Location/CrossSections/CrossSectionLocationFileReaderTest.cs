@@ -13,22 +13,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
     public class CrossSectionLocationFileReaderTest
     {
         [Test]
-        public void Constructor_DelftIniReaderNull_ThrowsArgumentNullException()
+        public void Constructor_IniReaderNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => new CrossSectionLocationFileReader(null);
             
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("delftIniReader"));
+            Assert.That(e.ParamName, Is.EqualTo("iniReader"));
         }
         
         [Test]
         public void Read_FileDoesNotExist_ReturnsEmptyCollection()
         {
             // Setup
-            var delftIniReader = new DelftIniReader();
-            var reader = new CrossSectionLocationFileReader(delftIniReader);
+            var iniReader = new IniReader();
+            var reader = new CrossSectionLocationFileReader(iniReader);
 
             // Call
             IEnumerable<CrossSectionLocation> locations = reader.Read(@"does\not\exist.def");
@@ -42,8 +42,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
         public void Read_ReadFileCorrectly()
         {
             // Setup
-            var delftIniReader = new DelftIniReader();
-            var reader = new CrossSectionLocationFileReader(delftIniReader);
+            var iniReader = new IniReader();
+            var reader = new CrossSectionLocationFileReader(iniReader);
 
             string fileContent = string.Join(
                 Environment.NewLine,
@@ -105,8 +105,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
         public void Read_PropertyNotFound_LogsErrorAndDoesNotCreateCrossSectionLocation(string fileContent, string property)
         {
             // Setup
-            var delftIniReader = new DelftIniReader();
-            var reader = new CrossSectionLocationFileReader(delftIniReader);
+            var iniReader = new IniReader();
+            var reader = new CrossSectionLocationFileReader(iniReader);
 
             using (var temp = new TemporaryDirectory())
             {
@@ -122,7 +122,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
 
                 // Assert
                 string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
-                Assert.That(error, Is.EqualTo($"Property '{property}' is not found in the file for category 'CrossSection' on line 1"));
+                Assert.That(error, Is.EqualTo($"Property '{property}' is not found in the file for section 'CrossSection' on line 1"));
                 Assert.That(locations, Is.Empty);
             }
         }
@@ -132,8 +132,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
         public void Read_PropertyEmptyValue_LogsErrorAndDoesNotCreateCrossSectionLocation(string fileContent, string property, int lineNumber)
         {
             // Setup
-            var delftIniReader = new DelftIniReader();
-            var reader = new CrossSectionLocationFileReader(delftIniReader);
+            var iniReader = new IniReader();
+            var reader = new CrossSectionLocationFileReader(iniReader);
 
             using (var temp = new TemporaryDirectory())
             {
@@ -149,7 +149,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
 
                 // Assert
                 string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
-                Assert.That(error, Is.EqualTo($"Property '{property}' does not contain a value in the file for category 'CrossSection' on line {lineNumber}"));
+                Assert.That(error, Is.EqualTo($"Property '{property}' does not contain a value in the file for section 'CrossSection' on line {lineNumber}"));
                 Assert.That(locations, Is.Empty);
             }
         }
@@ -159,8 +159,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
         public void Read_PropertyInvalidDouble_LogsErrorAndDoesNotCreateCrossSectionLocation(string fileContent, string property, int lineNumber)
         {
             // Setup
-            var delftIniReader = new DelftIniReader();
-            var reader = new CrossSectionLocationFileReader(delftIniReader);
+            var iniReader = new IniReader();
+            var reader = new CrossSectionLocationFileReader(iniReader);
 
             using (var temp = new TemporaryDirectory())
             {
@@ -176,7 +176,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
 
                 // Assert
                 string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
-                Assert.That(error, Is.EqualTo($"Property '{property}' contains an invalid floating-point number in the file for category 'CrossSection' on line {lineNumber}: a.bc"));
+                Assert.That(error, Is.EqualTo($"Property '{property}' contains an invalid floating-point number in the file for section 'CrossSection' on line {lineNumber}: a.bc"));
                 Assert.That(locations, Is.Empty);
             }
         }

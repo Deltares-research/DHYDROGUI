@@ -22,7 +22,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
         private static IEnumerable<TestCaseData> WriteFileData()
         {
-            IniSection GenerateCategory(int index)
+            IniSection GenerateSection(int index)
             {
                 var result = new IniSection("Structure");
                 result.AddPropertyWithOptionalComment("a", random.NextDouble(), $"comment {index * 3 + 0}");
@@ -32,17 +32,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 return result;
             }
 
-            IniSection[] noCategories = {};
-            yield return new TestCaseData((IList<IniSection>)noCategories).SetName("No Categories");
+            IniSection[] noIniSections = {};
+            yield return new TestCaseData((IList<IniSection>)noIniSections).SetName("No Sections");
 
-            IniSection[] someCategories = 
-                Enumerable.Range(0, 5).Select(GenerateCategory).ToArray();
-            yield return new TestCaseData((IList<IniSection>)someCategories).SetName("Multiple Categories");
+            IniSection[] someIniSections = 
+                Enumerable.Range(0, 5).Select(GenerateSection).ToArray();
+            yield return new TestCaseData((IList<IniSection>)someIniSections).SetName("Multiple Sections");
         }
 
         [Test]
         [TestCaseSource(nameof(WriteFileData))]
-        public void WriteFile_ExpectedResult(IList<IniSection> categories)
+        public void WriteFile_ExpectedResult(IList<IniSection> iniSections)
         {
             // Setup
             DateTime referenceTime = DateTime.Today;
@@ -51,40 +51,40 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             bool isCalled = false;
             IHydroRegion[] hydroRegions = {};
 
-            IEnumerable<IniSection> CreateStructureCategories(IEnumerable<IHydroRegion> regions,
+            IEnumerable<IniSection> CreateStructureSections(IEnumerable<IHydroRegion> regions,
                                                                     DateTime refTime)
             {
                 Assert.That(regions, Is.EqualTo(hydroRegions));
                 Assert.That(refTime, Is.EqualTo(referenceTime));
 
                 isCalled = true;
-                return categories;
+                return iniSections;
             }
 
             // Call
             StructureFileWriter.WriteFile(filePath, 
                                           hydroRegions, 
                                           referenceTime, 
-                                          CreateStructureCategories);
+                                          CreateStructureSections);
 
             // Assert
             Assert.That(isCalled, Is.True);
             Assert.That(File.Exists(filePath), Is.True);
 
             IList<IniSection> result = 
-                new DelftIniReader().ReadDelftIniFile(filePath);
+                new IniReader().ReadIniFile(filePath);
 
-            IList<IniSection> expectedCategories = 
-                GetExpectedCategories(categories);
+            IList<IniSection> expectedSections = 
+                GetExpectedSections(iniSections);
 
-            Assert.That(result.Count, Is.EqualTo(expectedCategories.Count));
+            Assert.That(result.Count, Is.EqualTo(expectedSections.Count));
 
-            IEnumerable<(IniSection, IniSection)> resultCategories = result.Zip(expectedCategories, (c1, c2) => (c1, c2));
-            foreach ((IniSection resultCat, IniSection expectedCat) in resultCategories)
-                AssertSameCategory(resultCat, expectedCat);
+            IEnumerable<(IniSection, IniSection)> resultSections = result.Zip(expectedSections, (c1, c2) => (c1, c2));
+            foreach ((IniSection resultCat, IniSection expectedCat) in resultSections)
+                AssertSameSection(resultCat, expectedCat);
         }
 
-        private static void AssertSameCategory(IniSection resultCat, IniSection expectedCat)
+        private static void AssertSameSection(IniSection resultCat, IniSection expectedCat)
         {
             Assert.That(resultCat.Name, Is.EqualTo(expectedCat.Name));
             Assert.That(resultCat.Properties.Count, Is.EqualTo(expectedCat.Properties.Count()));
@@ -101,8 +101,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.That(resProp.Value, Is.EqualTo(expectedProp.Value));
         }
 
-        private static IList<IniSection> GetExpectedCategories(
-            IEnumerable<IniSection> providedCategories)
+        private static IList<IniSection> GetExpectedSections(
+            IEnumerable<IniSection> providedSections)
         {
             List<IniSection> result = new List<IniSection>()
             {
@@ -112,7 +112,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                     GeneralRegion.FileTypeName.StructureDefinition)
             };
 
-            result.AddRange(providedCategories);
+            result.AddRange(providedSections);
             return result;
         }
     }

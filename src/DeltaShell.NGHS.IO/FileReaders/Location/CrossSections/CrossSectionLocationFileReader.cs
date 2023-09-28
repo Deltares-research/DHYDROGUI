@@ -18,17 +18,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
     public class CrossSectionLocationFileReader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionLocationFileReader));
-        private readonly DelftIniReader delftIniReader;
+        private readonly IniReader iniReader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CrossSectionLocationFileReader"/> class.
         /// </summary>
-        /// <param name="delftIniReader"> The delft ini reader. </param>
-        public CrossSectionLocationFileReader(DelftIniReader delftIniReader)
+        /// <param name="iniReader"> The delft ini reader. </param>
+        public CrossSectionLocationFileReader(IniReader iniReader)
         {
-            Ensure.NotNull(delftIniReader, nameof(delftIniReader));
+            Ensure.NotNull(iniReader, nameof(iniReader));
 
-            this.delftIniReader = delftIniReader;
+            this.iniReader = iniReader;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
                 yield break;
             }
 
-            IEnumerable<IniSection> iniSections = delftIniReader.ReadDelftIniFile(filePath)
+            IEnumerable<IniSection> iniSections = iniReader.ReadIniFile(filePath)
                                                                      .Where(IsCrossSectionIniSection);
 
             foreach (IniSection crossSectionIniSection in iniSections)

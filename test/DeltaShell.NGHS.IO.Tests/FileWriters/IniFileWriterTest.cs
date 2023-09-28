@@ -32,41 +32,41 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         [Test]
         public void GivenIniSections_WhenAppendingToIniFile_ThenFileWriterShouldAppend()
         {
-            var iniSection = new IniSection("myCategory");
+            var iniSection = new IniSection("mySection");
             iniSection.AddProperty("haha", "lala");
-            var categories = new List<IniSection> { iniSection };
+            var iniSections = new List<IniSection> { iniSection };
 
             var fileWriter = new IniFileWriter();
-            fileWriter.WriteIniFile(categories, testFilePath);
+            fileWriter.WriteIniFile(iniSections, testFilePath);
 
-            categories.Clear();
-            var newIniSection = new IniSection("myNewCategory");
+            iniSections.Clear();
+            var newIniSection = new IniSection("myNewSection");
             iniSection.AddProperty("newKey", "newValue");
-            categories.Add(newIniSection);
-            fileWriter.WriteIniFile(categories, testFilePath, false, true);
+            iniSections.Add(newIniSection);
+            fileWriter.WriteIniFile(iniSections, testFilePath, false, true);
 
-            var readCategories = new DelftIniReader().ReadDelftIniFile(testFilePath);
-            Assert.That(readCategories.Count, Is.EqualTo(2));
+            var readIniSections = new IniReader().ReadIniFile(testFilePath);
+            Assert.That(readIniSections.Count, Is.EqualTo(2));
         }
 
         [Test]
         public void GivenIniSections_WhenNotAppendingToIniFile_ThenFileWriterShouldNotAppend()
         {
-            var iniSection = new IniSection("myCategory");
+            var iniSection = new IniSection("mySection");
             iniSection.AddProperty("haha", "lala");
-            var categories = new List<IniSection> { iniSection };
+            var iniSections = new List<IniSection> { iniSection };
 
             var fileWriter = new IniFileWriter();
-            fileWriter.WriteIniFile(categories, testFilePath);
+            fileWriter.WriteIniFile(iniSections, testFilePath);
 
-            categories.Clear();
-            var newIniSection = new IniSection("myNewCategory");
+            iniSections.Clear();
+            var newIniSection = new IniSection("myNewSection");
             iniSection.AddProperty("newKey", "newValue");
-            categories.Add(newIniSection);
-            fileWriter.WriteIniFile(categories, testFilePath, false, false);
+            iniSections.Add(newIniSection);
+            fileWriter.WriteIniFile(iniSections, testFilePath, false, false);
 
-            var readCategories = new DelftIniReader().ReadDelftIniFile(testFilePath);
-            Assert.That(readCategories.Count, Is.EqualTo(1));
+            var readSections = new IniReader().ReadIniFile(testFilePath);
+            Assert.That(readSections.Count, Is.EqualTo(1));
         }
     }
 }

@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 modelDefinition.SetModelProperty(KnownProperties.BranchFile, string.Empty);
             }
-            BranchFile.Write(branchesFilePath, branches, new DelftIniWriter());
+            BranchFile.Write(branchesFilePath, branches, new IniWriter());
             modelDefinition.SetModelProperty(KnownProperties.BranchFile, NetworkPropertiesHelper.BranchGuiFileName);
         }
 

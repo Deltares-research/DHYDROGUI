@@ -60,18 +60,18 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         /// </summary>
         /// <param name="filePath"> The file path to the branches.gui file. </param>
         /// <param name="branches"> The branches to write. </param>
-        /// <param name="delftIniWriter"> The Delft INI writer. </param>
+        /// <param name="iniWriter"> The Delft INI writer. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="branches"/> or <paramref name="delftIniWriter"/> is <c>null</c>.
+        /// Thrown when <paramref name="branches"/> or <paramref name="iniWriter"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="filePath"/> is <c>null</c> or white space.
         /// </exception>
-        public static void Write(string filePath, IEnumerable<IBranch> branches, IDelftIniWriter delftIniWriter)
+        public static void Write(string filePath, IEnumerable<IBranch> branches, IIniWriter iniWriter)
         {
             Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
             Ensure.NotNull(branches, nameof(branches));
-            Ensure.NotNull(delftIniWriter, nameof(delftIniWriter));
+            Ensure.NotNull(iniWriter, nameof(iniWriter));
             
             var iniSections = new List<IniSection>
             {
@@ -113,7 +113,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             }
 
             // write branch file
-            delftIniWriter.WriteDelftIniFile(iniSections, filePath);
+            iniWriter.WriteIniFile(iniSections, filePath);
         }
 
         private static IniSection CreateGeneralIniSection()
@@ -129,7 +129,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         /// </summary>
         /// <param name="filePath"> The file path to the branches.gui file. </param>
         /// <param name="netFilePath"> The file path to the network file. </param>
-        /// <param name="delftIniReader"> The Delft INI reader. </param>
+        /// <param name="iniReader"> The Delft INI reader. </param>
         /// <param name="logHandler"> The log handler to log messages with. </param>
         /// <returns>
         /// A collection of the branch properties that were collected from file.
@@ -141,19 +141,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         /// </list>
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="delftIniReader"/> or <paramref name="logHandler"/> is <c>null</c>
+        /// Thrown when <paramref name="iniReader"/> or <paramref name="logHandler"/> is <c>null</c>
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="filePath"/> or <paramref name="netFilePath"/> is <c>null</c> or white space.
         /// </exception>
-        public static IList<BranchProperties> Read(string filePath, string netFilePath, IDelftIniReader delftIniReader, ILogHandler logHandler)
+        public static IList<BranchProperties> Read(string filePath, string netFilePath, IIniReader iniReader, ILogHandler logHandler)
         {
             Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
             Ensure.NotNullOrWhiteSpace(netFilePath, nameof(netFilePath));
-            Ensure.NotNull(delftIniReader, nameof(delftIniReader));
+            Ensure.NotNull(iniReader, nameof(iniReader));
             Ensure.NotNull(logHandler, nameof(logHandler));
             
-            IList<IniSection> iniSections = delftIniReader.ReadDelftIniFile(filePath);
+            IList<IniSection> iniSections = iniReader.ReadIniFile(filePath);
             
             Dictionary<string, IEnumerable<IniSection>> groupedIniSections = iniSections.ToGroupedDictionary(iniSection => iniSection.Name);
             if (groupedIniSections.TryGetValue(GeneralRegion.IniHeader, out IEnumerable<IniSection> generalIniSections))
@@ -235,19 +235,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
             if (string.IsNullOrWhiteSpace(fileVersionStr))
             {
-                logHandler.ReportError(Resources.File_version_in_general_category_is_empty);
+                logHandler.ReportError(Resources.File_version_in_general_section_is_empty);
                 return false;
             }
 
             if (!Version.TryParse(fileVersionStr, out Version fileVersion))
             {
-                logHandler.ReportError(string.Format(Resources.File_version_in_general_category_is_invalid_0_, fileVersionStr));
+                logHandler.ReportError(string.Format(Resources.File_version_in_general_section_is_invalid_0_, fileVersionStr));
                 return false;
             }
 
             if (fileVersion != version)
             {
-                logHandler.ReportError(string.Format(Resources.File_version_in_general_category_is_not_supported_0_, fileVersionStr));
+                logHandler.ReportError(string.Format(Resources.File_version_in_general_section_is_not_supported_0_, fileVersionStr));
                 return false;
             }
 

@@ -23,15 +23,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string BoundaryName = "Name";
         public const string BoundaryBedCondition = "IBedCond";
         public const string BcFile = "BcFil";
-        private static SedMorDelftIniWriter writer;
+        private static SedMorIniWriter writer;
 
-        public static SedMorDelftIniWriter Writer
+        public static SedMorIniWriter Writer
         {
             get
             {
                 if (writer == null)
                 {
-                    writer = new SedMorDelftIniWriter();
+                    writer = new SedMorIniWriter();
                 }
 
                 return writer;
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             try
             {
-                WriteDelftIniFile(morphologyPath, morphologyIniSections);
+                WriteIniFile(morphologyPath, morphologyIniSections);
             }
             catch (Exception exception)
             {
@@ -76,9 +76,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
 
-        private static void WriteDelftIniFile(string morPath, List<IniSection> morphologyIniSections)
+        private static void WriteIniFile(string morPath, List<IniSection> morphologyIniSections)
         {
-            Writer.WriteDelftIniFile(morphologyIniSections.ToList(), morPath);
+            Writer.WriteIniFile(morphologyIniSections.ToList(), morPath);
         }
 
         private static void AddMorphologyBoundaries(WaterFlowFMModelDefinition modelDefinition, IniSection morGroup,
@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var filePath = MduFileHelper.GetSubfilePath(mduFilePath, definition.GetModelProperty(propertyKey));
             if (!File.Exists(filePath)) return;
 
-            var iniSections = new SedMorDelftIniReader().ReadDelftIniFile(filePath);
+            var iniSections = new SedMorIniReader().ReadIniFile(filePath);
 
             foreach (var iniSection in iniSections)
             {

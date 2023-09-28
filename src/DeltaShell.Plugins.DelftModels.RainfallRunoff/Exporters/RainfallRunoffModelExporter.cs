@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
         private static void ExportBcFile(string path, RainfallRunoffModel model)
         {
-            var bcWriter = new RainfallRunoffBoundaryDataFileWriter(new DelftBcWriter());
+            var bcWriter = new RainfallRunoffBoundaryDataFileWriter(new BcWriter());
             bcWriter.WriteFile(Path.Combine(Path.GetFullPath(path), "BoundaryConditions.bc"), model);
         }
 

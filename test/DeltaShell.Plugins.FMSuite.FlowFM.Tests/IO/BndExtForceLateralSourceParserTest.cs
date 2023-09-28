@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void Parse_CategoryNull_ThrowsArgumentNullException()
+        public void Parse_SectionNull_ThrowsArgumentNullException()
         {
             // Setup
             var parser = new BndExtForceLateralSourceParser("path/to/some.file", Substitute.For<INetwork>(), false, false, Substitute.For<IBoundaryFileReader>());
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("category"));
+            Assert.That(e.ParamName, Is.EqualTo("section"));
         }
 
         [TestCaseSource(nameof(Parse_OnPipeCompartmentCases))]
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                                                             IPipe expPipe, double expChainage, ICompartment expCompartment)
         {
             // Setup
-            var category = Substitute.For<ILateralSourceExtCategory>();
+            var category = Substitute.For<ILateralSourceExtSection>();
             category.Id.Returns("lateral_source_id");
             category.Name.Returns("lateral_source_name");
             category.NodeName.Returns(nodeId);
@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                                                        IBranch expBranch, double expChainage)
         {
             // Setup
-            var category = Substitute.For<ILateralSourceExtCategory>();
+            var category = Substitute.For<ILateralSourceExtSection>();
             category.Id.Returns("lateral_source_id");
             category.Name.Returns("lateral_source_name");
             category.NodeName.Returns(nodeId);
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                                                            IBranch expBranch)
         {
             // Setup
-            var category = Substitute.For<ILateralSourceExtCategory>();
+            var category = Substitute.For<ILateralSourceExtSection>();
             category.Id.Returns("lateral_source_id");
             category.Name.Returns("lateral_source_name");
             category.BranchName.Returns(branchId);
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var temp = new TemporaryDirectory())
             {
                 // Setup
-                var category = Substitute.For<ILateralSourceExtCategory>();
+                var category = Substitute.For<ILateralSourceExtSection>();
                 category.Id.Returns("lateral_source_id");
                 category.Name.Returns("lateral_source_name");
                 category.Discharge.Returns(double.NaN);
@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var temp = new TemporaryDirectory())
             {
                 // Setup
-                var category = Substitute.For<ILateralSourceExtCategory>();
+                var category = Substitute.For<ILateralSourceExtSection>();
                 category.Id.Returns("lateral_source_id");
                 category.Name.Returns("lateral_source_name");
                 category.NodeName.Returns("node_id_2");
@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var logHandler = Substitute.For<ILogHandler>();
                 var parser = new BndExtForceLateralSourceParser(sourceFilePath, network, false, false, boundaryFileReader, logHandler);
 
-                var bcCategory = Substitute.For<ILateralSourceBcCategory>();
+                var bcCategory = Substitute.For<ILateralSourceBcSection>();
                 bcCategory.Name.Returns("lateral_source_id");
                 bcCategory.DischargeFunction.Returns(HydroTimeSeriesFactory.CreateFlowTimeSeries());
                 bcCategory.DataType.Returns(Model1DLateralDataType.FlowTimeSeries);

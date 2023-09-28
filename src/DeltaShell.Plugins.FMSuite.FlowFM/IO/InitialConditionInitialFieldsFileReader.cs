@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
             }
 
-            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath);
+            var iniSections = new IniReader().ReadIniFile(filePath);
             if (iniSections.Count == 0)
             {
                 throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));

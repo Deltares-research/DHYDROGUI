@@ -99,7 +99,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
             if (!File.Exists(structureFilename))
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, structureFilename));
 
-            var structuresIniSections = new DelftIniReader().ReadDelftIniFile(structureFilename);
+            var structuresIniSections = new IniReader().ReadIniFile(structureFilename);
             if (structuresIniSections.Count == 0)
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, structureFilename));
 
@@ -148,8 +148,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
             LogHandler timeSeriesFileReaderLogHandler = new LogHandler(Resources.BcSpecificTimeSeriesReader_logHandler_reading_structures_from__bc_file);
             
             ITimeSeriesFileReader timeSeriesFileReader = new TimeSeriesFileReader(new TimSpecificTimeSeriesReader(new TimFile()),
-                                                                                  new BcSpecificTimeSeriesReader(new DelftBcReader(), 
-                                                                                                                 new BcCategoryParser(new LogHandler(nameof(StructureFileReader))),
+                                                                                  new BcSpecificTimeSeriesReader(new BcReader(), 
+                                                                                                                 new BcSectionParser(new LogHandler(nameof(StructureFileReader))),
                                                                                                                  timeSeriesFileReaderLogHandler));
 
             foreach (var structureDefinitionIniSection in structuresIniSections.Where(iniSection => string.Equals(iniSection.Name, StructureRegion.Header, StringComparison.InvariantCultureIgnoreCase)))

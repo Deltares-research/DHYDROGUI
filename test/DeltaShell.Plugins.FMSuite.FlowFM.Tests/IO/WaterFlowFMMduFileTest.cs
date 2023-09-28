@@ -347,7 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var propertyDefinition = new WaterFlowFMPropertyDefinition
             {
                 MduPropertyName = "CollectionPropertyTestFile",
-                FileSectionName = "TestCategory",
+                FileSectionName = "TestSection",
                 DataType = typeof(IList<string>),
                 IsMultipleFile = true
             };

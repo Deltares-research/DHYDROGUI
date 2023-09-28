@@ -95,17 +95,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 var reader = new BoundaryFileReader();
 
                 // Call
-                ILateralSourceBcCategory[] categories = reader.ReadLateralSourcesFromBcFile(file, logHandler).ToArray();
+                ILateralSourceBcSection[] sections = reader.ReadLateralSourcesFromBcFile(file, logHandler).ToArray();
 
                 // Assert
-                Assert.That(categories.Length, Is.EqualTo(3));
+                Assert.That(sections.Length, Is.EqualTo(3));
 
                 // - Lateral source 1
-                Assert.That(categories[0].Name, Is.EqualTo("some_lateral_source_1"));
-                Assert.That(categories[0].DataType, Is.EqualTo(Model1DLateralDataType.FlowTimeSeries));
-                Assert.That(categories[0].Discharge, Is.EqualTo(0));
+                Assert.That(sections[0].Name, Is.EqualTo("some_lateral_source_1"));
+                Assert.That(sections[0].DataType, Is.EqualTo(Model1DLateralDataType.FlowTimeSeries));
+                Assert.That(sections[0].Discharge, Is.EqualTo(0));
 
-                var timeSeries = categories[0].DischargeFunction as TimeSeries;
+                var timeSeries = sections[0].DischargeFunction as TimeSeries;
                 Assert.That(timeSeries, Is.Not.Null);
                 Assert.That(timeSeries.Name, Is.EqualTo("flow time series"));
                 Assert.That(timeSeries.Arguments, Has.Count.EqualTo(1));
@@ -124,11 +124,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 Assert.That(values[2], Is.EqualTo(7.89));
 
                 // - Lateral source 2
-                Assert.That(categories[1].Name, Is.EqualTo("some_lateral_source_2"));
-                Assert.That(categories[1].DataType, Is.EqualTo(Model1DLateralDataType.FlowWaterLevelTable));
-                Assert.That(categories[1].Discharge, Is.EqualTo(0));
+                Assert.That(sections[1].Name, Is.EqualTo("some_lateral_source_2"));
+                Assert.That(sections[1].DataType, Is.EqualTo(Model1DLateralDataType.FlowWaterLevelTable));
+                Assert.That(sections[1].Discharge, Is.EqualTo(0));
 
-                IFunction function = categories[1].DischargeFunction;
+                IFunction function = sections[1].DischargeFunction;
                 Assert.That(function, Is.Not.Null);
                 Assert.That(function.Name, Is.EqualTo("Discharge Water Level Series"));
                 Assert.That(function.Arguments, Has.Count.EqualTo(1));
@@ -148,10 +148,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 Assert.That(values[2], Is.EqualTo(5.67));
 
                 // - Lateral source 3
-                Assert.That(categories[2].Name, Is.EqualTo("some_lateral_source_3"));
-                Assert.That(categories[2].DataType, Is.EqualTo(Model1DLateralDataType.FlowConstant));
-                Assert.That(categories[2].Discharge, Is.EqualTo(99.9));
-                Assert.That(categories[2].DischargeFunction, Is.Null);
+                Assert.That(sections[2].Name, Is.EqualTo("some_lateral_source_3"));
+                Assert.That(sections[2].DataType, Is.EqualTo(Model1DLateralDataType.FlowConstant));
+                Assert.That(sections[2].Discharge, Is.EqualTo(99.9));
+                Assert.That(sections[2].DischargeFunction, Is.Null);
             }
         }
     }

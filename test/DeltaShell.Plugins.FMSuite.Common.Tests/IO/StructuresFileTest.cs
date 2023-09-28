@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadStructuresWithUnsupportedCategories()
+        public void ReadStructuresWithUnsupportedSections()
         {
             var path = TestHelper.GetTestFilePath(@"structures\mixedFile.imp");
             var schema =
@@ -120,12 +120,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structuresFile = new StructuresFile { StructureSchema = schema };
             TestHelper.AssertLogMessageIsGenerated(
                 () => structures = structuresFile.ReadStructures2D(path).ToList(),
-                "Category [test] not supported for structures and is skipped.");
-            Assert.AreEqual(1, structures.Count, "Only one structure category in file.");
+                "Section [test] not supported for structures and is skipped.");
+            Assert.AreEqual(1, structures.Count, "Only one structure section in file.");
 
             var w = structures[0];
             Assert.AreEqual("w", w.GetProperty(KnownStructureProperties.Name).GetValueAsString());
-            Assert.IsNull(w.GetProperty("dummy"), "Should not accidentally take key from [test] category.");
+            Assert.IsNull(w.GetProperty("dummy"), "Should not accidentally take key from [test] section.");
         }
 
         [Test]
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 String.Format(
                     "Property 'Im_a_nonexistent_property' not supported for structures of type 'weir' and is skipped. (Line 12 of file {0})",
                     path));
-            Assert.AreEqual(1, structures.Count, "Only one structure category in file.");
+            Assert.AreEqual(1, structures.Count, "Only one structure section in file.");
 
             var w = structures[0];
             Assert.AreEqual("w", w.GetProperty(KnownStructureProperties.Name).GetValueAsString());
@@ -283,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General section which is required for properly Reading back the structures.
         public void CanRepeatedlyReadAndWrite()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General section which is required for properly Reading back the structures.
         public void GivenGeneralStructureWhenWritingToFileAndReadingFromThatFileThenResultingStructuresAreTheSame()
         {
             var iniFilePath = TestHelper.GetTestFilePath(@"structures\temp_file.ini");
@@ -710,7 +710,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General section which is required for properly Reading back the structures.
         public void WriteReadLeveeBreachVerheij_StructureBeforeWritingAndAfterLoading_ShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
@@ -771,7 +771,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General section which is required for properly Reading back the structures.
         public void WriteReadLeveeBreachUserDefined_StructureBeforeWritingAndAfterLoading_ShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
@@ -834,7 +834,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General section which is required for properly Reading back the structures.
         public void WriteReadLeveeBreachWithInactiveBreachGrowth_ExportedAndImportedStructuresShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
@@ -928,13 +928,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         private static void CompareStructureIniFiles(string iniFilePathA, string iniFilePathB)
         {
-            var iniSectionsA = new DelftIniReader().ReadDelftIniFile(iniFilePathA);
-            var iniSectionsB = new DelftIniReader().ReadDelftIniFile(iniFilePathB);
+            var iniSectionsA = new IniReader().ReadIniFile(iniFilePathA);
+            var iniSectionsB = new IniReader().ReadIniFile(iniFilePathB);
 
-            CompareCategories(iniSectionsA, iniSectionsB);
+            CompareSections(iniSectionsA, iniSectionsB);
         }
 
-        private static void CompareCategories(IList<IniSection> iniSectionsA, IList<IniSection> iniSectionsB)
+        private static void CompareSections(IList<IniSection> iniSectionsA, IList<IniSection> iniSectionsB)
         {
             Assert.AreEqual(iniSectionsA.Count, iniSectionsB.Count, "Expected the same number of INI sections.");
             for (var i = 0; i < iniSectionsA.Count; i++)

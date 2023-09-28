@@ -20,16 +20,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             return periodic;
         }
  
-        protected static IList<IDelftBcQuantityData> GenerateTableForConstantData(string quantityType, string unitType, double value)
+        protected static IList<IBcQuantityData> GenerateTableForConstantData(string quantityType, string unitType, double value)
         {
             var quantity = new IniProperty(BoundaryRegion.Quantity.Key, quantityType, BoundaryRegion.Quantity.Description);
             var unit = new IniProperty(BoundaryRegion.Unit.Key, unitType, BoundaryRegion.Unit.Description);
-            return new List<IDelftBcQuantityData>() { new DelftBcQuantityData(quantity, unit, new List<double>() { value }) };
+            return new List<IBcQuantityData>() { new BcQuantityData(quantity, unit, new List<double>() { value }) };
         }
  
-        protected static IList<IDelftBcQuantityData> GenerateTableForTimeSeriesData(QuantityUnitPair quantityUnitPair, IFunction functionData, DateTime startTime)
+        protected static IList<IBcQuantityData> GenerateTableForTimeSeriesData(QuantityUnitPair quantityUnitPair, IFunction functionData, DateTime startTime)
         {
-            var table = new List<IDelftBcQuantityData>();
+            var table = new List<IBcQuantityData>();
             if (!functionData.Arguments.Any()) return table;
             
             var timeQuantity = new IniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.Time, BoundaryRegion.Quantity.Description);
@@ -40,7 +40,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             var formattedDateTimes = ConvertDateTimeDataToMinutesSinceReferenceDateTime(timeData, startTime).ToList();
             if (!formattedDateTimes.Any()) formattedDateTimes = new List<double> { 0.0 };
 
-            table.Add(new DelftBcQuantityData(timeQuantity, timeUnit, formattedDateTimes));
+            table.Add(new BcQuantityData(timeQuantity, timeUnit, formattedDateTimes));
 
 
             var quantity = new IniProperty(BoundaryRegion.Quantity.Key, quantityUnitPair.Quantity, BoundaryRegion.Quantity.Description);
@@ -53,13 +53,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             }
             if(!data.Any()) data = Enumerable.Repeat(0.0, formattedDateTimes.Count).ToList();
 
-            table.Add(new DelftBcQuantityData(quantity, unit, data));
+            table.Add(new BcQuantityData(quantity, unit, data));
             
 
             return table;
         }
 
-        protected static IList<IDelftBcQuantityData> GenerateTableForDischargeWaterLevelData(IFunction data,
+        protected static IList<IBcQuantityData> GenerateTableForDischargeWaterLevelData(IFunction data,
             string lateralDischarge = null)
         {
             var levelQuantity = new IniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency + " " + BoundaryRegion.QuantityStrings.QHWaterLevelDependencyKey, BoundaryRegion.Quantity.Description);
@@ -75,9 +75,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                 dischargeData.Add(0.0);
             }
 
-            return new List<IDelftBcQuantityData>()
+            return new List<IBcQuantityData>()
             {
-                new DelftBcQuantityData(levelQuantity, levelUnit, levelData), new DelftBcQuantityData(dischargeQuantity, dischargeUnit, dischargeData) 
+                new BcQuantityData(levelQuantity, levelUnit, levelData), new BcQuantityData(dischargeQuantity, dischargeUnit, dischargeData) 
             };
         }
  

@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.IO.Grid
             string branchTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
             var logHandler = new LogHandler(Resources.Reading_the_branches_gui_file, typeof(BranchFile));
             IEnumerable<BranchProperties> propertiesPerBranch = File.Exists(branchTypeFilePath)
-                                                                    ? BranchFile.Read(branchTypeFilePath, netFilePath, new DelftIniReader(), logHandler)
+                                                                    ? BranchFile.Read(branchTypeFilePath, netFilePath, new IniReader(), logHandler)
                                                                     : Enumerable.Empty<BranchProperties>();
 
             logHandler.LogReport();

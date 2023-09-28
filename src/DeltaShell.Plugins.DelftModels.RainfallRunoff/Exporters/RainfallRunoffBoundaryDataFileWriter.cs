@@ -27,19 +27,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         
         private readonly HashSet<string> handledBoundaries = new HashSet<string>(StringComparer.CurrentCultureIgnoreCase);
 
-        private readonly IBcFileWriter bcFileWriter;
+        private readonly IBcWriter bcWriter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RainfallRunoffBoundaryDataFileWriter"/> class.
         /// </summary>
-        /// <param name="bcFileWriter"> The BC file writer. </param>
+        /// <param name="bcWriter"> The BC file writer. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="bcFileWriter"/> is <c>null</c>.
+        /// Thrown when <paramref name="bcWriter"/> is <c>null</c>.
         /// </exception>
-        public RainfallRunoffBoundaryDataFileWriter(IBcFileWriter bcFileWriter)
+        public RainfallRunoffBoundaryDataFileWriter(IBcWriter bcWriter)
         {
-            Ensure.NotNull(bcFileWriter, nameof(bcFileWriter));
-            this.bcFileWriter = bcFileWriter;
+            Ensure.NotNull(bcWriter, nameof(bcWriter));
+            this.bcWriter = bcWriter;
         }
 
         /// <summary>
@@ -64,23 +64,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
             Ensure.NotNull(rainfallRunoffModel, nameof(rainfallRunoffModel));
 
-            IList<DelftBcCategory> categories = CreateDelftBcCategories(rainfallRunoffModel);
+            IList<BcIniSection> sections = CreateBcSections(rainfallRunoffModel);
 
             FileUtils.DeleteIfExists(filePath);
-            bcFileWriter.WriteBcFile(categories, filePath);
+            bcWriter.WriteBcFile(sections, filePath);
         }
 
-        private IList<DelftBcCategory> CreateDelftBcCategories(IRainfallRunoffModel rainfallRunoffModel)
+        private IList<BcIniSection> CreateBcSections(IRainfallRunoffModel rainfallRunoffModel)
         {
-            var categories = new List<DelftBcCategory>
+            var sections = new List<BcIniSection>
             {
-                new DelftBcCategory(CreateGeneralRegion())
+                new BcIniSection(CreateGeneralRegion())
             };
 
-            categories.AddRange(CreateRunoffBoundaryCategories(rainfallRunoffModel));
-            categories.AddRange(CreateCatchmentBoundaryCategories(rainfallRunoffModel));
+            sections.AddRange(CreateRunoffBoundarySections(rainfallRunoffModel));
+            sections.AddRange(CreateCatchmentBoundarySections(rainfallRunoffModel));
 
-            return categories;
+            return sections;
         }
 
         private static IniSection CreateGeneralRegion()
@@ -91,17 +91,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 GeneralRegion.FileTypeName.BoundaryConditions);
         }
 
-        private IEnumerable<DelftBcCategory> CreateRunoffBoundaryCategories(IRainfallRunoffModel rainfallRunoffModel)
+        private IEnumerable<BcIniSection> CreateRunoffBoundarySections(IRainfallRunoffModel rainfallRunoffModel)
         {
             foreach (RunoffBoundaryData boundaryData in rainfallRunoffModel.BoundaryData)
             {
-                yield return CreateDelftBcCategory(rainfallRunoffModel.StartTime,
-                                                   boundaryData.Series,
-                                                   boundaryData.Boundary.Name);
+                yield return CreateBcSection(rainfallRunoffModel.StartTime,
+                                             boundaryData.Series,
+                                             boundaryData.Boundary.Name);
             }
         }
 
-        private IEnumerable<DelftBcCategory> CreateCatchmentBoundaryCategories(IRainfallRunoffModel rainfallRunoffModel)
+        private IEnumerable<BcIniSection> CreateCatchmentBoundarySections(IRainfallRunoffModel rainfallRunoffModel)
         {
             foreach (CatchmentModelData catchmentModelData in rainfallRunoffModel.ModelData)
             {
@@ -115,8 +115,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 string boundaryName = GetBoundaryName(modelLink);
 
                 yield return catchmentModelData is UnpavedData unpavedData
-                                 ? CreateDelftBcCategory(rainfallRunoffModel.StartTime, unpavedData.BoundarySettings.BoundaryData, boundaryName)
-                                 : CreateDefaultDelftBcCategory(boundaryName);
+                                 ? CreateBcSection(rainfallRunoffModel.StartTime, unpavedData.BoundarySettings.BoundaryData, boundaryName)
+                                 : CreateDefaultBcSection(boundaryName);
             }
         }
 
@@ -125,35 +125,35 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             return modelLink.ToId ?? modelLink.FromId;
         }
 
-        private static DelftBcCategory CreateDefaultDelftBcCategory(string boundaryName)
+        private static BcIniSection CreateDefaultBcSection(string boundaryName)
         {
-            DelftBcCategory category = CreateDelftBcDefinitionCategory(boundaryName, BoundaryRegion.FunctionStrings.Constant, null, null);
-            category.Table = GenerateTableForConstantData(waterLevelQuantityUnitPair.Quantity, waterLevelQuantityUnitPair.Unit, 0);
+            BcIniSection iniSection = CreateBcDefinitionSection(boundaryName, BoundaryRegion.FunctionStrings.Constant, null, null);
+            iniSection.Table = GenerateTableForConstantData(waterLevelQuantityUnitPair.Quantity, waterLevelQuantityUnitPair.Unit, 0);
 
-            return category;
+            return iniSection;
         }
 
-        private DelftBcCategory CreateDelftBcCategory(DateTime startTime, RainfallRunoffBoundaryData rainfallRunoffBoundaryData, string boundaryName)
+        private BcIniSection CreateBcSection(DateTime startTime, RainfallRunoffBoundaryData rainfallRunoffBoundaryData, string boundaryName)
         {
             string function = GetFunction(rainfallRunoffBoundaryData);
             string interpolation = GetInterpolation(rainfallRunoffBoundaryData);
             string periodic = GetPeriodic(rainfallRunoffBoundaryData);
 
-            DelftBcCategory category = CreateDelftBcDefinitionCategory(boundaryName, function, interpolation, periodic);
-            category.Table = CreateTable(startTime, rainfallRunoffBoundaryData);
+            BcIniSection iniSection = CreateBcDefinitionSection(boundaryName, function, interpolation, periodic);
+            iniSection.Table = CreateTable(startTime, rainfallRunoffBoundaryData);
             
             handledBoundaries.Add(boundaryName);
 
-            return category;
+            return iniSection;
         }
 
-        private static DelftBcCategory CreateDelftBcDefinitionCategory(string boundaryName, string function, string interpolation, string periodic)
+        private static BcIniSection CreateBcDefinitionSection(string boundaryName, string function, string interpolation, string periodic)
         {
             IDefinitionGeneratorBoundary boundaryDefinitionGenerator = new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
             return boundaryDefinitionGenerator.CreateRegion(boundaryName, function, interpolation, periodic);
         }
 
-        private static IList<IDelftBcQuantityData> CreateTable(DateTime startTime, RainfallRunoffBoundaryData rainfallRunoffBoundaryData)
+        private static IList<IBcQuantityData> CreateTable(DateTime startTime, RainfallRunoffBoundaryData rainfallRunoffBoundaryData)
         {
             return rainfallRunoffBoundaryData.IsTimeSeries
                        ? GenerateTableForTimeSeriesData(waterLevelQuantityUnitPair, rainfallRunoffBoundaryData.Data, startTime)

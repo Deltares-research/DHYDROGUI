@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             new Dictionary<Type, WriteTimeSeriesAction>();
 
         private static readonly IStructureFileNameGenerator structureBcFileNameGenerator = new StructureBcFileNameGenerator();
-        private static readonly ITimeSeriesFileWriter bcTimeSeriesFileWriter = new BcTimeSeriesWriter(new DelftBcWriter(), new StructureBoundaryGenerator());
+        private static readonly ITimeSeriesFileWriter bcTimeSeriesFileWriter = new BcTimeSeriesWriter(new BcWriter(), new StructureBoundaryGenerator());
         private static readonly TimFile timTimeSeriesFileWriter = new TimFile();
         static StructureFile()
         {

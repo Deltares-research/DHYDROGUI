@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         public static void ReadFileObservationPointLocations(string filename, IHydroNetwork network)
         {
             if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
-            var iniSections = new DelftIniReader().ReadDelftIniFile(filename);
+            var iniSections = new IniReader().ReadIniFile(filename);
             if (iniSections.Count == 0) return;
             
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();  
@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         public static void ReadFileLateralDischargeLocations(string filename, IHydroNetwork network)
         {
             if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
-            var iniSections = new DelftIniReader().ReadDelftIniFile(filename);
+            var iniSections = new IniReader().ReadIniFile(filename);
             if (iniSections.Count == 0) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();

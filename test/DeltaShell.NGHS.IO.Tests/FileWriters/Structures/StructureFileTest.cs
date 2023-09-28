@@ -58,7 +58,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.That(structureIniSection, Is.Not.Null);
             Assert.That(structureIniSection.Properties.Count, Is.EqualTo(6));
 
-            CheckCommon2DDelftIniProperties(structureIniSection, pump2D.Name, expectedType);
+            CheckCommon2DIniProperties(structureIniSection, pump2D.Name, expectedType);
             CheckKeyValuePair(structureIniSection, StructureRegion.Capacity.Key, expectedCapacity);
         }
 
@@ -84,7 +84,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.IsNotNull(structureIniSection);
             Assert.That(structureIniSection.Properties.Count, Is.EqualTo(6));
 
-            CheckCommon2DDelftIniProperties(structureIniSection, pump2D.Name, expectedType);
+            CheckCommon2DIniProperties(structureIniSection, pump2D.Name, expectedType);
             CheckKeyValuePair(structureIniSection, StructureRegion.Capacity.Key, expected2DStructureFileName);
         }
 
@@ -112,7 +112,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.IsNotNull(structureIniSection);
             Assert.That(structureIniSection.Properties.Count, Is.EqualTo(9));
 
-            CheckCommon2DDelftIniProperties(structureIniSection, weir2D.Name, expectedType);
+            CheckCommon2DIniProperties(structureIniSection, weir2D.Name, expectedType);
             CheckKeyValuePair(structureIniSection, StructureRegion.CrestLevel.Key, expected2DStructureFileName);
             CheckKeyValuePair(structureIniSection, StructureRegion.CrestWidth.Key, expectedCrestWidth);
             CheckKeyValuePair(structureIniSection, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoeff);
@@ -141,7 +141,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.IsNotNull(structureIniSection);
             Assert.That(structureIniSection.Properties.Count, Is.EqualTo(9));
 
-            CheckCommon2DDelftIniProperties(structureIniSection, weir2D.Name, expectedType);
+            CheckCommon2DIniProperties(structureIniSection, weir2D.Name, expectedType);
             CheckKeyValuePair(structureIniSection, StructureRegion.CrestLevel.Key, expectedCrestLevel);
             CheckKeyValuePair(structureIniSection, StructureRegion.CrestWidth.Key, expectedCrestWidth);
             CheckKeyValuePair(structureIniSection, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoef);
@@ -170,7 +170,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.IsNotNull(structureIniSection);
             Assert.That(structureIniSection.Properties.Count, Is.EqualTo(32));
 
-            CheckCommon2DDelftIniProperties(structureIniSection, weir2D.Name, expectedType);
+            CheckCommon2DIniProperties(structureIniSection, weir2D.Name, expectedType);
         }
 
         [Test]
@@ -201,7 +201,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.IsNotNull(structureIniSection);
             Assert.That(structureIniSection.Properties.Count, Is.EqualTo(11));
 
-            CheckCommon2DDelftIniProperties(structureIniSection, gate2D.Name, expectedType);
+            CheckCommon2DIniProperties(structureIniSection, gate2D.Name, expectedType);
             CheckKeyValuePair(structureIniSection, StructureRegion.GateCrestLevel.Key, expectedSillLevel);
             CheckKeyValuePair(structureIniSection, StructureRegion.GateCrestWidth.Key, expectedSillWidth);
             CheckKeyValuePair(structureIniSection, StructureRegion.GateLowerEdgeLevel.Key, expectedLowerEdgeLevel);
@@ -517,7 +517,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             AssertCorrectProperty(compositeIniSection, StructureRegion.StructureIds.Key, weir.Name);
         }
 
-        private static void CheckCommon2DDelftIniProperties(IniSection structureIniSection, string structureName, string expectedType)
+        private static void CheckCommon2DIniProperties(IniSection structureIniSection, string structureName, string expectedType)
         {
             CheckKeyValuePair(structureIniSection, StructureRegion.Id.Key, structureName);
             CheckKeyValuePair(structureIniSection, StructureRegion.DefinitionType.Key, expectedType);

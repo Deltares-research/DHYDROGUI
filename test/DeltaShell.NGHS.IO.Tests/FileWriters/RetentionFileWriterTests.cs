@@ -44,10 +44,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 new Retention(){Name = "5", LongName = aRetentionArea, Branch = network.Branches.ElementAt(4), Chainage = network.Branches.ElementAt(4).Length/6, UseTable = true, Data = data2},
             };
             RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Retention);
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(5, categories.Count(c => c.Name == RetentionRegion.Header));
-            var retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(0);
+            var iniSections = new IniReader().ReadIniFile(FileWriterTestHelper.ModelFileNames.Retention);
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(5, iniSections.Count(c => c.Name == RetentionRegion.Header));
+            var retention = iniSections.Where(c => c.Name == RetentionRegion.Header).ElementAt(0);
 
             var name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
             Assert.AreEqual("1", name);
@@ -70,7 +70,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var storageArea = retention.ReadProperty<double>(RetentionRegion.StorageArea.Key);
             Assert.AreEqual(10, storageArea, 0.1); // hmm double compare!!
 
-            retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(1);
+            retention = iniSections.Where(c => c.Name == RetentionRegion.Header).ElementAt(1);
             name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
             Assert.AreEqual("2", name);
 
@@ -92,7 +92,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             storageArea = retention.ReadProperty<double>(RetentionRegion.StorageArea.Key);
             Assert.AreEqual(10, storageArea, 0.1); // hmm double compare!!
             
-            retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(2);
+            retention = iniSections.Where(c => c.Name == RetentionRegion.Header).ElementAt(2);
             name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
             Assert.AreEqual("3", name);
 
@@ -114,7 +114,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             storageArea = retention.ReadProperty<double>(RetentionRegion.StorageArea.Key);
             Assert.AreEqual(10, storageArea, 0.1); // hmm double compare!!
             
-            retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(3);
+            retention = iniSections.Where(c => c.Name == RetentionRegion.Header).ElementAt(3);
             name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
             Assert.AreEqual("4", name);
 
@@ -148,7 +148,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var interpolate = retention.ReadProperty<string>(RetentionRegion.Interpolate.Key);
             Assert.AreEqual("linear", interpolate);
             
-            retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(4);
+            retention = iniSections.Where(c => c.Name == RetentionRegion.Header).ElementAt(4);
             name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
             Assert.AreEqual("5", name);
 

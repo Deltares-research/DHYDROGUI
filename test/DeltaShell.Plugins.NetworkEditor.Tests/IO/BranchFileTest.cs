@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_FilePathNullOrWhiteSpace_ThrowsArgumentException(string filePath)
         {
             // Call
-            void Call() => BranchFile.Read(filePath, "FlowFM_net.nc", Substitute.For<IDelftIniReader>(), Substitute.For<ILogHandler>());
+            void Call() => BranchFile.Read(filePath, "FlowFM_net.nc", Substitute.For<IIniReader>(), Substitute.For<ILogHandler>());
 
             // Assert
             Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("filePath"));
@@ -229,27 +229,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_NetFilePathNullOrWhiteSpace_ThrowsArgumentException(string netFilePath)
         {
             // Call
-            void Call() => BranchFile.Read("branches.gui", netFilePath, Substitute.For<IDelftIniReader>(), Substitute.For<ILogHandler>());
+            void Call() => BranchFile.Read("branches.gui", netFilePath, Substitute.For<IIniReader>(), Substitute.For<ILogHandler>());
 
             // Assert
             Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("netFilePath"));
         }
 
         [Test]
-        public void Read_DelftIniReaderNull_ThrowsArgumentNullException()
+        public void Read_IniReaderNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => BranchFile.Read("branches.gui", "FlowFM_net.nc", null, Substitute.For<ILogHandler>());
 
             // Assert
-            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("delftIniReader"));
+            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("iniReader"));
         }
 
         [Test]
         public void Read_LogHandlerNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => BranchFile.Read("branches.gui", "FlowFM_net.nc", Substitute.For<IDelftIniReader>(), null);
+            void Call() => BranchFile.Read("branches.gui", "FlowFM_net.nc", Substitute.For<IIniReader>(), null);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("logHandler"));
@@ -263,7 +263,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         {
             // Setup
             var filePath = "branches.gui";
-            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var iniReader = Substitute.For<IIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
             var readIniSections = new List<IniSection>
@@ -272,13 +272,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
                 CreateBranchIniSection("1"),
                 CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
+            iniReader.ReadIniFile(filePath).Returns(readIniSections);
 
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
 
             // Assert
-            logHandler.Received(1).ReportError($"File version in general category is empty. branches.gui file will not be read.");
+            logHandler.Received(1).ReportError($"File version in general section is empty. branches.gui file will not be read.");
             Assert.That(branchProperties, Is.Empty);
         }
 
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         {
             // Setup
             var filePath = "branches.gui";
-            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var iniReader = Substitute.For<IIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
             var readIniSections = new List<IniSection>
@@ -296,13 +296,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
                 CreateBranchIniSection("1"),
                 CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
+            iniReader.ReadIniFile(filePath).Returns(readIniSections);
 
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
 
             // Assert
-            logHandler.Received(1).ReportError("File version in general category is invalid: abc. branches.gui file will not be read.");
+            logHandler.Received(1).ReportError("File version in general section is invalid: abc. branches.gui file will not be read.");
             Assert.That(branchProperties, Is.Empty);
         }
 
@@ -311,7 +311,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         {
             // Setup
             var filePath = "branches.gui";
-            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var iniReader = Substitute.For<IIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
             const string fileVersion = "1.01";
@@ -322,13 +322,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
                 CreateBranchIniSection("1"),
                 CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
+            iniReader.ReadIniFile(filePath).Returns(readIniSections);
 
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
 
             // Assert
-            logHandler.Received(1).ReportError($"File version in general category is not supported: {fileVersion}. branches.gui file will not be read.");
+            logHandler.Received(1).ReportError($"File version in general section is not supported: {fileVersion}. branches.gui file will not be read.");
             Assert.That(branchProperties, Is.Empty);
         }
 
@@ -337,7 +337,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         {
             // Setup
             var filePath = "branches.gui";
-            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var iniReader = Substitute.For<IIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
             var readIniSections = new List<IniSection>
@@ -345,10 +345,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
                 CreateBranchIniSection("1"),
                 CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
+            iniReader.ReadIniFile(filePath).Returns(readIniSections);
 
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
 
             // Assert
             logHandler.Received(1).ReportWarning("branches.gui file does not contain a general section. Model has probably been made with an older version of this software.");
@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         {
             // Setup
             var filePath = "branches.gui";
-            var delftIniReader = Substitute.For<IDelftIniReader>();
+            var iniReader = Substitute.For<IIniReader>();
             var logHandler = Substitute.For<ILogHandler>();
 
             var readIniSections = new List<IniSection>
@@ -384,10 +384,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
                 CreateBranchIniSection("1"),
                 CreateBranchIniSection("2")
             };
-            delftIniReader.ReadDelftIniFile(filePath).Returns(readIniSections);
+            iniReader.ReadIniFile(filePath).Returns(readIniSections);
 
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", delftIniReader, logHandler);
+            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
 
             // Assert
             Assert.That(branchProperties, Has.Count.EqualTo(2));
@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Write_FilePathNullOrWhiteSpace_ThrowsArgumentException(string filePath)
         {
             // Call
-            void Call() => BranchFile.Write(filePath, Enumerable.Empty<IBranch>(), Substitute.For<IDelftIniWriter>());
+            void Call() => BranchFile.Write(filePath, Enumerable.Empty<IBranch>(), Substitute.For<IIniWriter>());
 
             // Assert
             Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("filePath"));
@@ -424,27 +424,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Write_BranchesNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => BranchFile.Write("branches.gui", null, Substitute.For<IDelftIniWriter>());
+            void Call() => BranchFile.Write("branches.gui", null, Substitute.For<IIniWriter>());
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("branches"));
         }
 
         [Test]
-        public void Write_DelftIniWriterNull_ThrowsArgumentNullException()
+        public void Write_IniWriterNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => BranchFile.Write("branches.gui", Enumerable.Empty<IBranch>(), null);
 
             // Assert
-            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("delftIniWriter"));
+            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("iniWriter"));
         }
 
         [Test]
         public void Write_AddsGeneralIniSection()
         {
             // Setup
-            var delftIniWriter = Substitute.For<IDelftIniWriter>();
+            var iniWriter = Substitute.For<IIniWriter>();
 
             IniSection generalIniSection = CreateGeneralIniSection();
 
@@ -454,10 +454,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             };
 
             // Call
-            BranchFile.Write("branches.gui", Enumerable.Empty<IBranch>(), delftIniWriter);
+            BranchFile.Write("branches.gui", Enumerable.Empty<IBranch>(), iniWriter);
 
             // Assert
-            delftIniWriter.Received(1).WriteDelftIniFile(
+            iniWriter.Received(1).WriteIniFile(
                 MatchingIniSections(expectedIniSections),
                 "branches.gui",
                 true);
@@ -465,8 +465,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 
         private void WriteAndCheckBranchTypeFileContent(List<IBranch> branches)
         {
-            BranchFile.Write(filePath, branches, new DelftIniWriter());
-            IList<BranchProperties> propertiesPerBranch = BranchFile.Read(filePath, "FlowFM_net.nc", new DelftIniReader(), Substitute.For<ILogHandler>());
+            BranchFile.Write(filePath, branches, new IniWriter());
+            IList<BranchProperties> propertiesPerBranch = BranchFile.Read(filePath, "FlowFM_net.nc", new IniReader(), Substitute.For<ILogHandler>());
             for (var n = 0; n < propertiesPerBranch.Count; n++)
             {
                 Assert.That(propertiesPerBranch[n].Name, Is.EqualTo(branches[n].Name));
@@ -508,7 +508,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
                 return false;
             }
 
-            var iniSectionComparer = new DelftIniCategoryEqualityComparer();
+            var iniSectionComparer = new IniSectionEqualityComparer();
 
             IEnumerable<bool> iniSectionEqualities = actualIniSections.Zip(expectedIniSections,
                                                                         (x, y) => iniSectionComparer.Equals(x, y));

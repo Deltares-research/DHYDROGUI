@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int)InitialConditionQuantity.WaterLevel).ToString());
                     // call
                     InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, true);
-                    var iniSections = new DelftIniReader().ReadDelftIniFile(actualFile);
+                    var iniSections = new IniReader().ReadIniFile(actualFile);
                     var parameterFriction = iniSections.FirstOrDefault(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader));
 
                     // assert
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int) InitialConditionQuantity.WaterLevel).ToString());
                     // call
                     InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, true);
-                    var iniSections = new DelftIniReader().ReadDelftIniFile(actualFile);
+                    var iniSections = new IniReader().ReadIniFile(actualFile);
                     var parameterFriction = iniSections.FirstOrDefault(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader));
 
                     // assert

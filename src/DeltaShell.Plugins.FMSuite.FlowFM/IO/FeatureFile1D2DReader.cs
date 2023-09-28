@@ -100,14 +100,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return Enumerable.Empty<IRetention>();
             }
 
-            var iniSections = new DelftIniReader().ReadDelftIniFile(storageNodeFilePath);
+            var iniSections = new IniReader().ReadIniFile(storageNodeFilePath);
             if (iniSections.Count == 0)
             {
                 log.Warn(string.Format(Resources.FeatureFile1D2DReader_ReadRetentionsFile_Could_not_read_file__0__properly__it_seems_empty, storageNodeFilePath));
                 return Enumerable.Empty<IRetention>();
             }
 
-            return RetentionCategoryParser.ParseIniSections(iniSections, network);
+            return RetentionSectionParser.ParseIniSections(iniSections, network);
         }
 
         private static ICrossSectionDefinition[] ReadCrossSectionFiles(

@@ -643,16 +643,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             RestoreCulture();
         }
 
-        public void AddIniOption(string category, string property, string value)
+        public void AddIniOption(string section, string property, string value)
         {
-            if (String.IsNullOrEmpty(category) || String.IsNullOrEmpty(property))
+            if (String.IsNullOrEmpty(section) || String.IsNullOrEmpty(property))
             {
                 return;
             }
 
-            if (iniOptions.Keys.Contains(category))
+            if (iniOptions.Keys.Contains(section))
             {
-                var val = iniOptions[category];
+                var val = iniOptions[section];
                 var kvp = val.FirstOrDefault(v => v.First.Equals(property, StringComparison.InvariantCultureIgnoreCase));
                 if (kvp != null)
                     kvp.Second = value;
@@ -660,7 +660,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                     val.Add(new DelftTools.Utils.Tuple<string, string>(property, value));
                 return;
             }
-            iniOptions.Add(category, new List<DelftTools.Utils.Tuple<string, string>>
+            iniOptions.Add(section, new List<DelftTools.Utils.Tuple<string, string>>
             {
                 new DelftTools.Utils.Tuple<string, string>(property, value)
             });

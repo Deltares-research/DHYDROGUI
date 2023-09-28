@@ -119,10 +119,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 return false;
             }
             
-            IList<IniSection> categories = new DelftIniReader().ReadDelftIniFile(filePath);
-            return categories.Any(c => c.ValidGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion,
-                                                            GeneralRegion.CrossSectionDefinitionsMinorVersion,
-                                                            GeneralRegion.FileTypeName.CrossSectionDefinition));
+            IList<IniSection> iniSections = new IniReader().ReadIniFile(filePath);
+            return iniSections.Any(c => c.ValidGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion,
+                                                             GeneralRegion.CrossSectionDefinitionsMinorVersion,
+                                                             GeneralRegion.FileTypeName.CrossSectionDefinition));
         }
 
         private static void SortScrambledFiles(string expectedFlowFmFile, string actualFlowFmFile)
@@ -141,8 +141,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 case ".ext":
                     if (fileNameWithoutExtension.EndsWith("_bnd", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        SortBoundaryAndLateralCategories(expectedFlowFmFile);
-                        SortBoundaryAndLateralCategories(actualFlowFmFile);
+                        SortBoundaryAndLateralSections(expectedFlowFmFile);
+                        SortBoundaryAndLateralSections(actualFlowFmFile);
                     }
                     break;
                 case ".gui":
@@ -154,39 +154,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             }
         }
 
-        private static void SortBoundaryAndLateralCategories(string fileName)
+        private static void SortBoundaryAndLateralSections(string fileName)
         {
-            var expectedReadCategories = new DelftIniReader().ReadDelftIniFile(fileName);
+            var expectedReadSections = new IniReader().ReadIniFile(fileName);
 
-            var expectedBoundaryCategories = expectedReadCategories.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase))
-                                                                   .OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
+            var expectedBoundarySections = expectedReadSections.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase))
+                                                               .OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
 
-            var expectedLateralCategories = expectedReadCategories.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase))
-                                                                  .OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key))
-                                                                  .ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key))
-                                                                  .ToArray();
+            var expectedLateralSections = expectedReadSections.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase))
+                                                              .OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key))
+                                                              .ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key))
+                                                              .ToArray();
 
-            new DelftIniWriter().WriteDelftIniFile(expectedBoundaryCategories.Concat(expectedLateralCategories), fileName);
+            new IniWriter().WriteIniFile(expectedBoundarySections.Concat(expectedLateralSections), fileName);
         }
 
         private static void SortFmIniFile(string expectedFlowFmFile, string actualFlowFmFile, string idKey)
         {
-            var readCategories = new DelftIniReader().ReadDelftIniFile(expectedFlowFmFile);
-            new DelftIniWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), expectedFlowFmFile);
+            var readSections = new IniReader().ReadIniFile(expectedFlowFmFile);
+            new IniWriter().WriteIniFile(readSections.OrderBy(c => c.ReadProperty<string>(idKey)), expectedFlowFmFile);
 
-            readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
-            new DelftIniWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
+            readSections = new IniReader().ReadIniFile(actualFlowFmFile);
+            new IniWriter().WriteIniFile(readSections.OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
         }
         
         private static void SortFmBcFile(string expectedFlowFmFile, string actualFlowFmFile, string idKey)
         {
-            IEnumerable<IniSection> readSections = new DelftBcReader().ReadDelftBcFile(expectedFlowFmFile).Select(c => c.Section);
+            IEnumerable<IniSection> readSections = new BcReader().ReadBcFile(expectedFlowFmFile).Select(c => c.Section);
             File.Delete(expectedFlowFmFile);
-            new DelftBcWriter().WriteDelftIniFile(readSections.OrderBy(s => s.ReadProperty<string>(idKey)), expectedFlowFmFile);
+            new BcWriter().WriteIniFile(readSections.OrderBy(s => s.ReadProperty<string>(idKey)), expectedFlowFmFile);
 
-            readSections = new DelftBcReader().ReadDelftBcFile(actualFlowFmFile).Select(c => c.Section);
+            readSections = new BcReader().ReadBcFile(actualFlowFmFile).Select(c => c.Section);
             File.Delete(actualFlowFmFile);
-            new DelftBcWriter().WriteDelftIniFile(readSections.OrderBy(s => s.ReadProperty<string>(idKey)), actualFlowFmFile);
+            new BcWriter().WriteIniFile(readSections.OrderBy(s => s.ReadProperty<string>(idKey)), actualFlowFmFile);
         }
     }
 }

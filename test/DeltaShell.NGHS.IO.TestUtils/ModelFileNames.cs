@@ -97,7 +97,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             if (!File.Exists(filename))
                 throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.",
                     filename));
-            var iniSections = new DelftIniReader().ReadDelftIniFile(filename);
+            var iniSections = new IniReader().ReadIniFile(filename);
             if (iniSections.Count == 0)
                 throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty",
                     filename));

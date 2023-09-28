@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
 
         [Test]
         [TestCaseSource(nameof(ConstructorArgumentNullCases))]
-        public void Constructor_ArgumentNull_ThrowsArgumentNullException(ILogHandler logHandler, IBcCategoryParser parser)
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(ILogHandler logHandler, IBcSectionParser parser)
         {
             // Arrange & Act
             void Call() => new RRBoundaryConditionsTimeSeriesParser(logHandler, parser);
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         public void Parse_ArgumentNull_ThrowsArgumentNullException()
         {
             // Arrange
-            var parser = new RRBoundaryConditionsTimeSeriesParser(Substitute.For<ILogHandler>(), Substitute.For<IBcCategoryParser>());
+            var parser = new RRBoundaryConditionsTimeSeriesParser(Substitute.For<ILogHandler>(), Substitute.For<IBcSectionParser>());
 
             // Act
             void Call() => parser.Parse(null);
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         public void Parse_ArgumentNotTimeseries_ThrowsArgumentException()
         {
             // Arrange
-            var parser = new RRBoundaryConditionsTimeSeriesParser(Substitute.For<ILogHandler>(), Substitute.For<IBcCategoryParser>());
+            var parser = new RRBoundaryConditionsTimeSeriesParser(Substitute.For<ILogHandler>(), Substitute.For<IBcSectionParser>());
             const string expectedArgumentExceptionMessage = "The provided 'BcBlockData' is not timeseries.";
             var bcBlockData = new BcBlockData { FunctionType = "NotTimeseries" };
 
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         public void GivenValidBcDataBlock_WhenParsing_ThenExpectCorrectlyParsed()
         {
             // Arrange
-            var parser = new RRBoundaryConditionsTimeSeriesParser(Substitute.For<ILogHandler>(), new BcCategoryParser(Substitute.For<ILogHandler>()));
+            var parser = new RRBoundaryConditionsTimeSeriesParser(Substitute.For<ILogHandler>(), new BcSectionParser(Substitute.For<ILogHandler>()));
 
             // Act
             RainfallRunoffBoundaryData rainfallRunoffBoundaryData = parser.Parse(GetTimeSeriesToBcBlockData());
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         {
             // Arrange
             var logHandler = Substitute.For<ILogHandler>();
-            var bcCategoryParser = Substitute.For<IBcCategoryParser>();
+            var bcCategoryParser = Substitute.For<IBcSectionParser>();
             var parser = new RRBoundaryConditionsTimeSeriesParser(logHandler, bcCategoryParser);
 
             var bcBlockData = new BcBlockData()
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         {
             // Arrange
             var logHandler = Substitute.For<ILogHandler>();
-            var bcCategoryParser = Substitute.For<IBcCategoryParser>();
+            var bcCategoryParser = Substitute.For<IBcSectionParser>();
             var parser = new RRBoundaryConditionsTimeSeriesParser(logHandler, bcCategoryParser);
 
             var quantityData = new BcQuantityData();
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
 
         private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
         {
-            yield return new TestCaseData(null, Substitute.For<IBcCategoryParser>());
+            yield return new TestCaseData(null, Substitute.For<IBcSectionParser>());
             yield return new TestCaseData(Substitute.For<ILogHandler>(), null);
         }
 

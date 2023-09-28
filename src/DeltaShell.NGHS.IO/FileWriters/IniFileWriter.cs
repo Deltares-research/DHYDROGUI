@@ -3,7 +3,7 @@ using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
-    public class IniFileWriter : DelftIniWriter
+    public class IniFileWriter : IniWriter
     {
         public void WriteIniFile(IEnumerable<IniSection> iniSections, string iniFile, bool writeComments = false, bool append = false)
         {
@@ -17,7 +17,7 @@ namespace DeltaShell.NGHS.IO.FileWriters
                     {
                         WriteProperty(property, writeComments);
                     }
-                    WriteLine(string.Empty); // (DelftIniWriter does not do this)
+                    WriteLine(string.Empty); // (IniWriter does not do this)
                 }
             }
             finally

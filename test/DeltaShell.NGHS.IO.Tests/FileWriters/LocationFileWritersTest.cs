@@ -36,13 +36,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             LocationFileWriter.WriteFileCrossSectionLocations(FileWriterTestHelper.ModelFileNames.CrossSectionLocations, network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionLocations);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionLocations);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(3, categories.Count(op => op.Name == CrossSectionRegion.IniHeader));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(3, iniSections.Count(op => op.Name == CrossSectionRegion.IniHeader));
 
-            var content = categories.Where(c => c.Name == CrossSectionRegion.IniHeader).ToList().First();
+            var content = iniSections.Where(c => c.Name == CrossSectionRegion.IniHeader).ToList().First();
 
             var idProperty = content.Properties.First(p => p.Key == LocationRegion.Id.Key);
             Assert.AreEqual(expectedId, idProperty.Value);
@@ -70,13 +70,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             LocationFileWriter.WriteFileObservationPointLocations(FileWriterTestHelper.ModelFileNames.ObservationPoints, network.ObservationPoints);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.ObservationPoints);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.ObservationPoints);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(3, categories.Count(op => op.Name == ObservationPointRegion.IniHeader));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(3, iniSections.Count(op => op.Name == ObservationPointRegion.IniHeader));
 
-            var content = categories.Where(c => c.Name == ObservationPointRegion.IniHeader).ToList().First();
+            var content = iniSections.Where(c => c.Name == ObservationPointRegion.IniHeader).ToList().First();
 
             var idProperty = content.Properties.First(p => p.Key == LocationRegion.ObsId.Key);
             Assert.AreEqual(expectedId.ToString(), idProperty.Value);
@@ -116,13 +116,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             LocationFileWriter.WriteFileLateralDischargeLocations(FileWriterTestHelper.ModelFileNames.LateralDischarge, network.LateralSources);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.LateralDischarge);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.LateralDischarge);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(3, categories.Count(l => l.Name == BoundaryRegion.LateralDischargeHeader));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(3, iniSections.Count(l => l.Name == BoundaryRegion.LateralDischargeHeader));
 
-            var content = categories.Where(c => c.Name == BoundaryRegion.LateralDischargeHeader).ToList().First();
+            var content = iniSections.Where(c => c.Name == BoundaryRegion.LateralDischargeHeader).ToList().First();
 
             var idProperty = content.Properties.First(p => p.Key == LocationRegion.Id.Key);
             Assert.AreEqual(expectedId.ToString(), idProperty.Value);

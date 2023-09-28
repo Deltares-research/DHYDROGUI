@@ -76,7 +76,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     definitionGeneratorCrossSectionDefinition = new DefinitionGeneratorCrossSectionDefinitionZw();
                     break;
                 case CrossSectionType.Standard:
-                    definitionGeneratorCrossSectionDefinition = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniSectionGenerator(crossSectionDefinition);
+                    definitionGeneratorCrossSectionDefinition = DefinitionIniSectionGeneratorFactory.GetCrossSectionDefinitionIniSectionGenerator(crossSectionDefinition);
                     break;
             }
             return definitionGeneratorCrossSectionDefinition;

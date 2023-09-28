@@ -17,22 +17,22 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryC
         private const string timeSeries = BoundaryRegion.FunctionStrings.TimeSeries;
         private const string constant = BoundaryRegion.FunctionStrings.Constant;
         private readonly ILogHandler logHandler;
-        private readonly IBcCategoryParser bcCategoryParser;
+        private readonly IBcSectionParser bcSectionParser;
 
         /// <summary>
         /// Constructor of provider of data parsers for parsing <see cref="BcBlockData"/>.
         /// </summary>
         /// <param name="logHandler">Log handler to log information.</param>
-        /// <param name="bcCategoryParser">Category parser for bc data.</param>
+        /// <param name="bcSectionParser">Category parser for bc data.</param>
         /// <exception cref="ArgumentNullException">
-        /// When <paramref name="logHandler"/> or <paramref name="bcCategoryParser"/> is <c>null</c>.
+        /// When <paramref name="logHandler"/> or <paramref name="bcSectionParser"/> is <c>null</c>.
         /// </exception>
-        public RRBoundaryConditionsDataParserProvider(ILogHandler logHandler, IBcCategoryParser bcCategoryParser)
+        public RRBoundaryConditionsDataParserProvider(ILogHandler logHandler, IBcSectionParser bcSectionParser)
         {
             Ensure.NotNull(logHandler, nameof(logHandler));
-            Ensure.NotNull(bcCategoryParser, nameof(bcCategoryParser));
+            Ensure.NotNull(bcSectionParser, nameof(bcSectionParser));
             this.logHandler = logHandler;
-            this.bcCategoryParser = bcCategoryParser;
+            this.bcSectionParser = bcSectionParser;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryC
 
             if (DataIsTimeSeries(bcBlockData))
             {
-                return new RRBoundaryConditionsTimeSeriesParser(logHandler, bcCategoryParser);
+                return new RRBoundaryConditionsTimeSeriesParser(logHandler, bcSectionParser);
             }
 
             logHandler.ReportError(string.Format(Resources.RRBoundaryConditionsDataParserProvider_GetParser_Invalid_function_type_for_boundary_condition___0__, bcBlockData.SupportPoint));

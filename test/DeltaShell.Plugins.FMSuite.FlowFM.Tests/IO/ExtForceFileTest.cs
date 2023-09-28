@@ -799,7 +799,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             
             var path = model.BndExtFilePath;
-            var blocks = new DelftIniReader().ReadDelftIniFile(path);
+            var blocks = new IniReader().ReadIniFile(path);
             Assert.AreEqual(2+1, blocks.Count()); // 2 boundaries plus a general block
         }
 

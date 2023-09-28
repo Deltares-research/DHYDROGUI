@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         #region Model
 
         void WriteFiles();
-        void AddIniOption(string category, string property, string value);
+        void AddIniOption(string section, string property, string value);
 
         bool SetSimulationTimesAndGenerateIniFile(int startDate, int startTime, int endDate, int endTime, int timeStep, int outputTimeStep);
         #endregion

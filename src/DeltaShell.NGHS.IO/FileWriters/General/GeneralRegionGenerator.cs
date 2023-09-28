@@ -5,7 +5,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
 {
     public abstract class GeneralRegionGenerator
     {
-        // Used by DelftIniWriter and by DelftBcWriter
+        // Used by IniWriter and by BcWriter
         public static IniSection GenerateGeneralRegion(int majorVersionNr, int minorVersionNr, string fileType)
         {
             var general = new IniSection(GeneralRegion.IniHeader);

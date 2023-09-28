@@ -21,7 +21,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
         public static void ReadFile(string filename, INetwork network, IList<RoughnessSection> RoughnessSections, bool isCalibratedRoughness = false)
         {
             if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
-            var iniSections = new DelftIniMultiLineReader().ReadDelftIniFile(filename);
+            var iniSections = new IniMultiLineReader().ReadIniFile(filename);
             if (iniSections.Count == 0) throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty, filename));
             var contentSections = iniSections.Where(iniSection => iniSection.Name == RoughnessDataRegion.GlobalIniHeader).ToList();
             if (contentSections.Count() > 1 && contentSections.Any()) throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly, filename));

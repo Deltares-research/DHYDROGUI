@@ -20,22 +20,22 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryC
     {
         private const string periodic = "true";
         private readonly ILogHandler logHandler;
-        private readonly IBcCategoryParser bcCategoryParser;
+        private readonly IBcSectionParser bcSectionParser;
 
         /// <summary>
         /// Rainfall runoff boundary conditions parser for time series.
         /// </summary>
         /// <param name="logHandler">Log handler to log information.</param>
-        /// <param name="bcCategoryParser">Category parser for bc data.</param>
+        /// <param name="bcSectionParser">Category parser for bc data.</param>
         /// <exception cref="ArgumentNullException">
-        /// When <paramref name="logHandler"/> or <paramref name="bcCategoryParser"/> is <c>null</c>.
+        /// When <paramref name="logHandler"/> or <paramref name="bcSectionParser"/> is <c>null</c>.
         /// </exception>
-        public RRBoundaryConditionsTimeSeriesParser(ILogHandler logHandler, IBcCategoryParser bcCategoryParser)
+        public RRBoundaryConditionsTimeSeriesParser(ILogHandler logHandler, IBcSectionParser bcSectionParser)
         {
             Ensure.NotNull(logHandler, nameof(logHandler));
-            Ensure.NotNull(bcCategoryParser, nameof(bcCategoryParser));
+            Ensure.NotNull(bcSectionParser, nameof(bcSectionParser));
             this.logHandler = logHandler;
-            this.bcCategoryParser = bcCategoryParser;
+            this.bcSectionParser = bcSectionParser;
         }
 
         /// <inheritdoc/>
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryC
         {
             if (TimeSeriesAreParsed(table, lineNumber, out IEnumerable<DateTime> argumentValues, out IEnumerable<double> functionValues))
             {
-                bcCategoryParser.CompleteFunction(givenTimeSeries, argumentValues, functionValues, periodic);
+                bcSectionParser.CompleteFunction(givenTimeSeries, argumentValues, functionValues, periodic);
             }
             else
             {
@@ -90,12 +90,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryC
 
         private bool ValuesAreParsed(IList<BcQuantityData> table, int lineNumber, out IEnumerable<double> functionValues)
         {
-            return bcCategoryParser.TryParseDoubles(table[1].Values, lineNumber, out functionValues);
+            return bcSectionParser.TryParseDoubles(table[1].Values, lineNumber, out functionValues);
         }
 
         private bool DateTimesAreParsed(IList<BcQuantityData> table, int lineNumber, out IEnumerable<DateTime> argumentValues)
         {
-            return bcCategoryParser.TryParseDateTimes(table[0].Values, table[0].Unit, lineNumber, out argumentValues);
+            return bcSectionParser.TryParseDateTimes(table[0].Values, table[0].Unit, lineNumber, out argumentValues);
         }
     }
 }

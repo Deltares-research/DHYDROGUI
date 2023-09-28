@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     MduPropertyName = KnownProperties.BndExtForceFile,
                     DataType = typeof(IList<string>),
                     IsMultipleFile = true,
-                    FileSectionName = "TestCategory"
+                    FileSectionName = "TestSection"
                 };
                 modelDefinition.AddProperty(new WaterFlowFMProperty(propertyDefinition, string.Empty));
                 modelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);

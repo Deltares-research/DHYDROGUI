@@ -295,8 +295,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             gridFileName = null;
             try
             {
-                var reader = new DelftIniReader();
-                IList<IniSection> iniSections = reader.ReadDelftIniFile(mduFilePath);
+                var reader = new IniReader();
+                IList<IniSection> iniSections = reader.ReadIniFile(mduFilePath);
                 IniSection iniSection = iniSections.FirstOrDefault(c => string.Equals(c.Name, "geometry", StringComparison.OrdinalIgnoreCase));
                 gridFileName = iniSection?.ReadProperty<string>(KnownProperties.NetFile);
                 return gridFileName != null;

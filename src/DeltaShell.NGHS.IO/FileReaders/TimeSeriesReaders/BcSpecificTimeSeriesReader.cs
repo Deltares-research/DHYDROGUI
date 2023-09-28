@@ -17,10 +17,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
     /// </summary>
     public class BcSpecificTimeSeriesReader : ISpecificTimeSeriesFileReader
     {
-        private readonly IDelftBcReader reader;
-        private readonly IBcCategoryParser parser;
+        private readonly IBcReader reader;
+        private readonly IBcSectionParser parser;
         private readonly ILogHandler logHandler;
-        private Dictionary<string, DelftBcCategory[]> structureDictionary;
+        private Dictionary<string, BcIniSection[]> structureDictionary;
         
         public bool CanReadProperty(string propertyValue)
         {
@@ -35,7 +35,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
         /// <param name="parser">Parser used to parse Bcfile data.</param>
         /// <param name="logHandler">Log handler used for logging warnings</param>
         /// <exception cref="ArgumentNullException"> Throws when any of the arguments are Null.</exception>
-        public BcSpecificTimeSeriesReader(IDelftBcReader reader, IBcCategoryParser parser, ILogHandler logHandler)
+        public BcSpecificTimeSeriesReader(IBcReader reader, IBcSectionParser parser, ILogHandler logHandler)
         {
             Ensure.NotNull(reader, nameof(reader));
             Ensure.NotNull(parser, nameof(parser));
@@ -64,9 +64,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
 
             string retrievedQuantity = QuantityHelper.GetQuantity(structureTimeSeries.Structure, structureTimeSeries.TimeSeries.Name);
 
-            DelftBcCategory retrievedStructureCategory = RetrieveStructuresCategory(structureTimeSeries.Structure.Name, retrievedQuantity);
+            BcIniSection retrievedStructureIniSection = RetrieveStructuresSection(structureTimeSeries.Structure.Name, retrievedQuantity);
 
-            if (retrievedStructureCategory == null)
+            if (retrievedStructureIniSection == null)
             {
                 logHandler.ReportWarning(string.Format(Resources.BcSpecificTimeSeriesReader_Read_No_structure_found_with_name__0__quantity__1__in_file__2_, 
                                                        structureTimeSeries.Structure.Name, 
@@ -75,46 +75,46 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
                 return;
             }
 
-            ReadTimeSeriesIntoFunction(structureTimeSeries.TimeSeries, retrievedStructureCategory);
+            ReadTimeSeriesIntoFunction(structureTimeSeries.TimeSeries, retrievedStructureIniSection);
         }
 
         private void CacheDataFromBcFile(string filePath)
         {
             if (structureDictionary == null)
             {
-                IList<DelftBcCategory> structuresFromFile = reader.ReadDelftBcFile(filePath);
+                IList<BcIniSection> structuresFromFile = reader.ReadBcFile(filePath);
                 structureDictionary = ConvertStructureListToDictionary(structuresFromFile);
             }
         }
 
-        private static Dictionary<string, DelftBcCategory[]> ConvertStructureListToDictionary(IList<DelftBcCategory> structuresFromFile)
+        private static Dictionary<string, BcIniSection[]> ConvertStructureListToDictionary(IList<BcIniSection> structuresFromFile)
         {
             return GroupStructuresByNameAndNotNull(structuresFromFile).ToDictionary(group => @group.Key, grouping => grouping.ToArray());
         }
 
-        private static IEnumerable<IGrouping<string, DelftBcCategory>> GroupStructuresByNameAndNotNull(IList<DelftBcCategory> structuresFromFile)
+        private static IEnumerable<IGrouping<string, BcIniSection>> GroupStructuresByNameAndNotNull(IList<BcIniSection> structuresFromFile)
         {
-            IEnumerable<IGrouping<string, DelftBcCategory>> structuresGroupedByName = structuresFromFile.GroupBy(category => category.Section.GetPropertyValueWithOptionalDefaultValue("name"));
+            IEnumerable<IGrouping<string, BcIniSection>> structuresGroupedByName = structuresFromFile.GroupBy(section => section.Section.GetPropertyValueWithOptionalDefaultValue("name"));
             return structuresGroupedByName.Where(group => @group.Key != null);
         }
 
-        private DelftBcCategory RetrieveStructuresCategory(string structureName, string relevantQuantity)
+        private BcIniSection RetrieveStructuresSection(string structureName, string relevantQuantity)
         {
-            if (structureDictionary.TryGetValue(structureName, out DelftBcCategory[] categories))
+            if (structureDictionary.TryGetValue(structureName, out BcIniSection[] bcIniSections))
             {
-                return categories.FirstOrDefault(category => category.Table.Any(data => data.Quantity.Value.Equals(relevantQuantity)));
+                return bcIniSections.FirstOrDefault(section => section.Table.Any(data => data.Quantity.Value.Equals(relevantQuantity)));
             }
 
             return null;
         }
 
-        private void ReadTimeSeriesIntoFunction(ITimeSeries givenTimeSeries, DelftBcCategory bcCategory)
+        private void ReadTimeSeriesIntoFunction(ITimeSeries givenTimeSeries, BcIniSection bcIniSection)
         {
-            IList<IDelftBcQuantityData> table = bcCategory.Table;
-            CreateTimeSeries(table, table.First().Unit.Value, givenTimeSeries, bcCategory.Section.LineNumber);
+            IList<IBcQuantityData> table = bcIniSection.Table;
+            CreateTimeSeries(table, table.First().Unit.Value, givenTimeSeries, bcIniSection.Section.LineNumber);
         }
 
-        private void CreateTimeSeries(IList<IDelftBcQuantityData> table, string periodic, ITimeSeries givenTimeSeries, int lineNumber)
+        private void CreateTimeSeries(IList<IBcQuantityData> table, string periodic, ITimeSeries givenTimeSeries, int lineNumber)
         {
             if (parser.TryParseDateTimes(table[0].Values, table[0].Unit.Value, lineNumber, out IEnumerable<DateTime> argumentValues) 
                 && parser.TryParseDoubles(table[1].Values, lineNumber, out IEnumerable<double> functionValues))

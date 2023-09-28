@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public string FileSectionName { get; set; }
 
         /// <summary>
-        /// The name of the property as it occurs in the INI file.
+        /// The key of the property as it occurs in the INI file.
         /// </summary>
         public string FilePropertyKey { get; set; }
 

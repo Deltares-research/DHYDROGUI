@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenFileWithNoIniSections_WhenCallingReadFile_ThenThrowsException()
         {
-            var noIniSectionsFile = TestHelper.GetTestFilePath(@"IO\noCategories.ini");
+            var noIniSectionsFile = TestHelper.GetTestFilePath(@"IO\noSections.ini");
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;
@@ -74,9 +74,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenFileWithMultipleValidIniSections_WhenCallingReadFile_ThenReturnsDataFromFirstCategoryAndLogsWarning()
+        public void GivenFileWithMultipleValidIniSections_WhenCallingReadFile_ThenReturnsDataFromFirstSectionAndLogsWarning()
         {
-            var multipleValidIniSectionsFile = TestHelper.GetTestFilePath(@"IO\multipleValidCategories.ini");
+            var multipleValidIniSectionsFile = TestHelper.GetTestFilePath(@"IO\multipleValidSections.ini");
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;

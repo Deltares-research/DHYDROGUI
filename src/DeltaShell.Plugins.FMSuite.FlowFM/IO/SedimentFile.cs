@@ -39,15 +39,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static readonly string FileVersion = "FileVersion";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SedimentFile));
-        private static SedMorDelftIniWriter writer;
+        private static SedMorIniWriter writer;
 
-        public static SedMorDelftIniWriter Writer
+        public static SedMorIniWriter Writer
         {
             get
             {
                 if (writer == null)
                 {
-                    writer = new SedMorDelftIniWriter();
+                    writer = new SedMorIniWriter();
                 }
 
                 return writer;
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     AddSedimentIniSectionToIniFile(modelDefinition, sedimentFraction, sedIniSections);
                 }
 
-                Writer.WriteDelftIniFile(sedIniSections.ToList(), sedPath);
+                Writer.WriteIniFile(sedIniSections.ToList(), sedPath);
             }
             catch (Exception exception)
             {
@@ -389,7 +389,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             try
             {
                 var definition = model.ModelDefinition;
-                var sedIniSections = new SedMorDelftIniReader().ReadDelftIniFile(path);
+                var sedIniSections = new SedMorIniReader().ReadIniFile(path);
                 foreach (var iniSection in sedIniSections)
                 {
                     Action<IniSection, string, WaterFlowFMModel> Loader;

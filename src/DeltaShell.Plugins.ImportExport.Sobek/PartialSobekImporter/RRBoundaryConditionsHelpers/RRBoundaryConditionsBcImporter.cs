@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryC
             Ensure.NotNull(rainfallRunoffModel, nameof(rainfallRunoffModel));
 
             var logHandler = new LogHandler($"importing boundary conditions from the {Path.GetFileName(filePath)}");
-            var parserProvider = new RRBoundaryConditionsDataParserProvider(logHandler, new BcCategoryParser(logHandler));
+            var parserProvider = new RRBoundaryConditionsDataParserProvider(logHandler, new BcSectionParser(logHandler));
             var converter = new RRBoundaryConditionsConverter(parserProvider);
             var setter = new RRBoundaryConditionsSetter(logHandler);
 

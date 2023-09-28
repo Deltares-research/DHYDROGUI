@@ -25,20 +25,20 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
         public static void ReadFile(string filename, IEnumerable<Model1DBoundaryNodeData> boundaryConditions)
         {
             if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
-            var categories = new DelftBcReader().ReadDelftBcFile(filename);
-            if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
+            var iniSections = new BcReader().ReadBcFile(filename);
+            if (iniSections.Count == 0) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
-            foreach (var boundaryCategory in categories.Where(category => category.Section.Name.Equals( BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase) 
-                                                                          || category.Section.Name.Equals(BoundaryRegion.BcForcingHeader, StringComparison.InvariantCultureIgnoreCase)))
+            foreach (var boundarySection in iniSections.Where(section => section.Section.Name.Equals( BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase) || 
+                                                                          section.Section.Name.Equals(BoundaryRegion.BcForcingHeader, StringComparison.InvariantCultureIgnoreCase)))
             {
                 try
                 {
-                    var name = boundaryCategory.Section.ReadProperty<string>(BoundaryRegion.Name.Key);
+                    var name = boundarySection.Section.ReadProperty<string>(BoundaryRegion.Name.Key);
                     if (name == FunctionAttributes.StandardFeatureNames.ModelWide)
                     {
-                        ReadModelWideBoundaryCondition(boundaryCategory);
+                        ReadModelWideBoundaryCondition(boundarySection);
                         continue;
                     }
 
@@ -46,7 +46,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
                     var waterFlowModel1DBoundaryNodeData = model1DBoundaryNodeDatas.FirstOrDefault(bc => bc.Feature.Name == name);
                     if (waterFlowModel1DBoundaryNodeData == null)
                     {
-                        var manHoleName = boundaryCategory.Section.ReadProperty<string>("manHoleName", true);
+                        var manHoleName = boundarySection.Section.ReadProperty<string>("manHoleName", true);
                         if (manHoleName == null) continue;
                         waterFlowModel1DBoundaryNodeData = model1DBoundaryNodeDatas.FirstOrDefault(bc => bc.Feature.Name == manHoleName);
                         if (waterFlowModel1DBoundaryNodeData == null)
@@ -85,7 +85,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
 
                         if (outlet != null) waterFlowModel1DBoundaryNodeData.OutletCompartment = outlet;
                     }
-                    ReadBoundaryCondition(waterFlowModel1DBoundaryNodeData, boundaryCategory);
+                    ReadBoundaryCondition(waterFlowModel1DBoundaryNodeData, boundarySection);
                 }
                 catch (FileReadingException fileReadingException)
                 {
@@ -100,38 +100,38 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
         }
         
         /// <summary>
-        /// Parses each lateral sources category from the specified file to a <see cref="ILateralSourceBcCategory"/>.
+        /// Parses each lateral sources section from the specified file to a <see cref="ILateralSourceBcSection"/>.
         /// </summary>
         /// <param name="filePath">The full file path to the boundary conditions file.</param>
         /// <param name="logHandler"> Optional parameter; the log handler to report errors. </param>
-        /// <returns> A collection of parsed <see cref="ILateralSourceBcCategory"/>.</returns>
+        /// <returns> A collection of parsed <see cref="ILateralSourceBcSection"/>.</returns>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="filePath"/> is <c>null</c> or empty.
         /// </exception>
         /// <exception cref="FileNotFoundException">
         /// Thrown when the file at <paramref name="filePath"/> does not exist.
         /// </exception>
-        public IEnumerable<ILateralSourceBcCategory> ReadLateralSourcesFromBcFile(string filePath, ILogHandler logHandler = null)
+        public IEnumerable<ILateralSourceBcSection> ReadLateralSourcesFromBcFile(string filePath, ILogHandler logHandler = null)
         {
             Ensure.NotNullOrEmpty(filePath, nameof(filePath));
             EnsureFileExists(filePath);
 
-            IList<DelftBcCategory> categories = new DelftBcReader().ReadDelftBcFile(filePath);
-            foreach (DelftBcCategory category in categories)
+            IList<BcIniSection> iniSections = new BcReader().ReadBcFile(filePath);
+            foreach (BcIniSection section in iniSections)
             {
-                if (!category.Section.Name.EqualsCaseInsensitive(BoundaryRegion.BcLateralHeader) &&
-                    !category.Section.Name.EqualsCaseInsensitive(BoundaryRegion.BcForcingHeader))
+                if (!section.Section.Name.EqualsCaseInsensitive(BoundaryRegion.BcLateralHeader) &&
+                    !section.Section.Name.EqualsCaseInsensitive(BoundaryRegion.BcForcingHeader))
                 {
                     continue;
                 }
 
-                IEnumerable<IDelftBcQuantityData> salinity = category.Table.Where(bcq => bcq.Quantity.Value.EqualsCaseInsensitive(BoundaryRegion.QuantityStrings.WaterSalinity));
+                IEnumerable<IBcQuantityData> salinity = section.Table.Where(bcq => bcq.Quantity.Value.EqualsCaseInsensitive(BoundaryRegion.QuantityStrings.WaterSalinity));
                 if (salinity.Any())
                 {
                     continue;
                 }
 
-                yield return new LateralSourceBcCategory(category, new BcCategoryParser(logHandler));
+                yield return new LateralSourceBcSection(section, new BcSectionParser(logHandler));
             }
         }
 
@@ -143,9 +143,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
             }
         }
 
-        private static void ReadModelWideBoundaryCondition(DelftBcCategory boundaryCategory)
+        private static void ReadModelWideBoundaryCondition(BcIniSection boundaryIniSection)
         {
-            var functionType = boundaryCategory.Section.ReadProperty<string>(BoundaryRegion.Function.Key);
+            var functionType = boundaryIniSection.Section.ReadProperty<string>(BoundaryRegion.Function.Key);
             switch (functionType)
             {
                 case BoundaryRegion.FunctionStrings.Constant:
@@ -155,7 +155,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
                 case BoundaryRegion.FunctionStrings.TimeSeries:
                     
                     
-                    var modelWideWindBoundaryConditionQuantities = boundaryCategory.Table.Select(t => t.Quantity).Select(q=>q.Value);
+                    var modelWideWindBoundaryConditionQuantities = boundaryIniSection.Table.Select(t => t.Quantity).Select(q=>q.Value);
                     foreach (var modelWideWindBoundaryConditionQuantity in modelWideWindBoundaryConditionQuantities)
                     {
                         switch (modelWideWindBoundaryConditionQuantity)
@@ -174,30 +174,30 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
 
                     break;
                 default:
-                    var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", boundaryCategory.Section.Name,
+                    var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", boundaryIniSection.Section.Name,
                         BoundaryRegion.Function.Key, Environment.NewLine);
                     throw new BoundaryConditionReadingException(errorMessage);
             }
         }
 
-        private static void ReadBoundaryCondition(Model1DBoundaryNodeData boundaryCondition, DelftBcCategory boundaryCategory)
+        private static void ReadBoundaryCondition(Model1DBoundaryNodeData boundaryCondition, BcIniSection boundaryIniSection)
         {
-            var saltBoundaryQuantity = boundaryCategory.Table.Where(bcq => bcq.Quantity.Value == BoundaryRegion.QuantityStrings.WaterSalinity);
+            var saltBoundaryQuantity = boundaryIniSection.Table.Where(bcq => bcq.Quantity.Value == BoundaryRegion.QuantityStrings.WaterSalinity);
             if (saltBoundaryQuantity.Any()) return;
 
-            var function = boundaryCategory.Section.ReadProperty<string>(BoundaryRegion.Function.Key);
+            var function = boundaryIniSection.Section.ReadProperty<string>(BoundaryRegion.Function.Key);
             if (function.ToLower().Equals(BoundaryRegion.FunctionStrings.Constant.ToLower()))
             {
-                switch (boundaryCategory.Table[0].Quantity.Value)
+                switch (boundaryIniSection.Table[0].Quantity.Value)
                 {
                     case BoundaryRegion.QuantityStrings.WaterDischarge:
                         boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
-                        boundaryCondition.Flow = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Section.Name);
+                        boundaryCondition.Flow = ReadConstantValue(boundaryIniSection.Table[0], boundaryIniSection.Section.Name);
                         break;
                     case BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR:
                     case BoundaryRegion.QuantityStrings.WaterLevel:
                         boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
-                        boundaryCondition.WaterLevel = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Section.Name);
+                        boundaryCondition.WaterLevel = ReadConstantValue(boundaryIniSection.Table[0], boundaryIniSection.Section.Name);
                         var manhole = boundaryCondition.Node as Manhole;
                         if (manhole != null)
                         {
@@ -222,11 +222,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
             else if (function.ToLower().Equals(BoundaryRegion.FunctionStrings.QhTable.ToLower()))
             {
                 boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
-                SetCategoryValuesToFeatureData(boundaryCondition, boundaryCategory, ConvertStringsToDoubles, ConvertStringsToDoubles);
+                SetSectionValuesToFeatureData(boundaryCondition, boundaryIniSection, ConvertStringsToDoubles, ConvertStringsToDoubles);
             }
             else if (function.ToLower().Equals(BoundaryRegion.FunctionStrings.TimeSeries.ToLower()))
             {
-                switch (boundaryCategory.Table[1].Quantity.Value)
+                switch (boundaryIniSection.Table[1].Quantity.Value)
                 {
                     case BoundaryRegion.QuantityStrings.WaterDischarge:
                         boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
@@ -236,29 +236,29 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
                         boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
                         break;
                 }
-                SetCategoryValuesToFeatureData(boundaryCondition, boundaryCategory, GetDateTimesValues, ConvertStringsToDoubles);
+                SetSectionValuesToFeatureData(boundaryCondition, boundaryIniSection, GetDateTimesValues, ConvertStringsToDoubles);
             }
             else
             {
-                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", boundaryCategory.Section.Name, BoundaryRegion.Function.Key, Environment.NewLine);
+                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", boundaryIniSection.Section.Name, BoundaryRegion.Function.Key, Environment.NewLine);
                 throw new BoundaryConditionReadingException(errorMessage);
             }
         }
 
-        private static void SetCategoryValuesToFeatureData<Targ>(IFeatureData featureData, DelftBcCategory category, Func<IDelftBcQuantityData, IEnumerable<Targ>> parseArgumentValues, Func<IDelftBcQuantityData, IEnumerable<double>> parseFunctionValues)
+        private static void SetSectionValuesToFeatureData<Targ>(IFeatureData featureData, BcIniSection iniSection, Func<IBcQuantityData, IEnumerable<Targ>> parseArgumentValues, Func<IBcQuantityData, IEnumerable<double>> parseFunctionValues)
         {
-            var argumentValues = parseArgumentValues(category.Table[0]);
+            var argumentValues = parseArgumentValues(iniSection.Table[0]);
             if (argumentValues == null)
             {
-                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", category.Section.Name,
-                    category.Table[0].Quantity, Environment.NewLine);
+                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", iniSection.Section.Name,
+                    iniSection.Table[0].Quantity, Environment.NewLine);
                 throw new BoundaryConditionReadingException(errorMessage);
             }
-            var functionValues = parseFunctionValues(category.Table[1]);
+            var functionValues = parseFunctionValues(iniSection.Table[1]);
             if (functionValues == null)
             {
-                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", category.Section.Name,
-                    category.Table[1].Quantity, Environment.NewLine);
+                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", iniSection.Section.Name,
+                    iniSection.Table[1].Quantity, Environment.NewLine);
                 throw new BoundaryConditionReadingException(errorMessage);
             }
             
@@ -270,26 +270,26 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
             function.SetValues(functionValues);
             function.Arguments[0].IsAutoSorted = orgSortValue;
             function.Arguments[0].ExtrapolationType = ExtrapolationType.Linear;
-            var periodic = category.Section.ReadProperty<string>(BoundaryRegion.Periodic.Key, true);
+            var periodic = iniSection.Section.ReadProperty<string>(BoundaryRegion.Periodic.Key, true);
             if (!string.IsNullOrEmpty(periodic) && periodic == "true")
                 function.Arguments[0].ExtrapolationType = ExtrapolationType.Periodic;
 
 
         }
 
-        private static double ReadConstantValue(IDelftBcQuantityData quantityData, string categoryName)
+        private static double ReadConstantValue(IBcQuantityData quantityData, string sectionName)
         {
             double constantValue;
             if (!double.TryParse(quantityData.Values[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out constantValue))
             {
-                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", categoryName, quantityData.Quantity, Environment.NewLine);
+                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", sectionName, quantityData.Quantity, Environment.NewLine);
                 throw new LateralDischargeReadingException(errorMessage);
             }
 
             return constantValue;
         }
 
-        private static IEnumerable<DateTime> GetDateTimesValues(IDelftBcQuantityData quantityData)
+        private static IEnumerable<DateTime> GetDateTimesValues(IBcQuantityData quantityData)
         {
             var dateTimeData = ConvertStringsToDoubles(quantityData);
             if (dateTimeData == null) return null;
@@ -322,10 +322,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
             return null;
         }
        
-        private static IEnumerable<double> ConvertStringsToDoubles(IDelftBcQuantityData delftBcQuantityData)
+        private static IEnumerable<double> ConvertStringsToDoubles(IBcQuantityData bcQuantityData)
         {
             var doubleCollection = new List<double>();
-            foreach (var stringValue in delftBcQuantityData.Values)
+            foreach (var stringValue in bcQuantityData.Values)
             {
                 double doubleValue;
                 if (!double.TryParse(stringValue, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out doubleValue)) return null;

@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         public void Convert_ArgumentNull_ThrowsArgumentNullException()
         {
             // Arrange
-            var dataParserProvider = new RRBoundaryConditionsDataParserProvider(Substitute.For<ILogHandler>(), Substitute.For<IBcCategoryParser>());
+            var dataParserProvider = new RRBoundaryConditionsDataParserProvider(Substitute.For<ILogHandler>(), Substitute.For<IBcSectionParser>());
             var converter = new RRBoundaryConditionsConverter(dataParserProvider);
 
             // Act
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         {
             // Arrange
             var logHandler = Substitute.For<ILogHandler>();
-            var bcCategoryParser = Substitute.For<IBcCategoryParser>();
+            var bcCategoryParser = Substitute.For<IBcSectionParser>();
             var parserProvider = new RRBoundaryConditionsDataParserProvider(logHandler, bcCategoryParser);
             var converter = new RRBoundaryConditionsConverter(parserProvider);
 
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         {
             // Arrange
             var logHandler = Substitute.For<ILogHandler>();
-            var bcCategoryParser = new BcCategoryParser(logHandler);
+            var bcCategoryParser = new BcSectionParser(logHandler);
             var parserProvider = new RRBoundaryConditionsDataParserProvider(logHandler, bcCategoryParser);
             var converter = new RRBoundaryConditionsConverter(parserProvider);
 

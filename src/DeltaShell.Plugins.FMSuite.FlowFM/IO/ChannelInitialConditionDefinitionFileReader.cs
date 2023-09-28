@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath);
+            var iniSections = new IniReader().ReadIniFile(filePath);
             if (iniSections.Count == 0) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
 
             // [Global]

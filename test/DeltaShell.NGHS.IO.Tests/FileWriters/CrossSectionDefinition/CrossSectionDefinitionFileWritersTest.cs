@@ -79,13 +79,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
             
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(10, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -111,7 +111,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FrictionIds.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FrictionPositions.Key));
 
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(10, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -156,13 +156,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(11, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -191,7 +191,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FrictionIds.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FrictionPositions.Key));
 
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -244,13 +244,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(new []{culvertCrossSection});
             
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(1, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(12, content.Properties.Count());
             var nameValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("Culvert1", nameValue);
@@ -281,13 +281,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(new[] { bridgeCrossSection });
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(1, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(12, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("Bridge1", idValue);
@@ -310,13 +310,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(14, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -360,7 +360,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var floodPlain2Value = content.GetPropertyValueOrDefault(DefinitionPropertySettings.FloodPlain2.Key);
             Assert.AreEqual("62.500", floodPlain2Value);
 
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(14, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -417,13 +417,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
             
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(7, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -446,7 +446,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var isClosed = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Closed.Key);
             Assert.AreEqual("no", isClosed);
 
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(7, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -478,13 +478,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(11, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -512,7 +512,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.TotalWidths.Key));
 
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -553,13 +553,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(5, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -576,7 +576,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var diameterValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Diameter.Key);
             Assert.AreEqual("100.000", diameterValue);
             
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(5, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -606,13 +606,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
             
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(11, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -640,7 +640,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.TotalWidths.Key));
             
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -681,13 +681,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(12, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -718,7 +718,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.TotalWidths.Key));
 
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(12, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -762,13 +762,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(11, content.Properties.Count());
 
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
@@ -797,7 +797,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.TotalWidths.Key));
 
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -838,13 +838,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(16, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -887,7 +887,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.TotalWidths.Key));
             
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(16, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
@@ -942,13 +942,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
-            var delftIniReader = new DelftIniReader();
-            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
+            var iniReader = new IniReader();
+            var iniSections = iniReader.ReadIniFile(FileWriterTestHelper.ModelFileNames.CrossSectionDefinitions);
 
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
+            Assert.AreEqual(1, iniSections.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(2, iniSections.Count(op => op.Name == DefinitionPropertySettings.Header));
 
-            var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
+            var content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(12, content.Properties.Count());
             var idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
@@ -979,7 +979,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Key == DefinitionPropertySettings.TotalWidths.Key));
 
-            content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
+            content = iniSections.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(12, content.Properties.Count());
             idValue = content.GetPropertyValueOrDefault(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);

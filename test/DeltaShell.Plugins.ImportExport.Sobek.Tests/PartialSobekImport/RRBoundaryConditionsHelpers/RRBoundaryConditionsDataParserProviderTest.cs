@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
     {
         [Test]
         [TestCaseSource(nameof(ConstructorArgumentNullCases))]
-        public void Constructor_ArgumentNull_ThrowsArgumentNullException(ILogHandler logHandler, IBcCategoryParser parser)
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(ILogHandler logHandler, IBcSectionParser parser)
         {
             // Arrange & Act
             void Call() => _ = new RRBoundaryConditionsDataParserProvider(logHandler, parser);
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         public void GetParser_ArgumentNull_ThrowsArgumentNullException()
         {
             // Arrange & Act
-            var parser = new RRBoundaryConditionsDataParserProvider(Substitute.For<ILogHandler>(), Substitute.For<IBcCategoryParser>());
+            var parser = new RRBoundaryConditionsDataParserProvider(Substitute.For<ILogHandler>(), Substitute.For<IBcSectionParser>());
             void Call() => parser.GetParser(null);
 
             // Assert
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
         public void GivenBcDataBlockOfType_WhenGetParser_ThenReturnExpectedParserType(BcBlockData givenData, Type expectedParserType)
         {
             // Arrange
-            var parser = new RRBoundaryConditionsDataParserProvider(Substitute.For<ILogHandler>(), Substitute.For<IBcCategoryParser>());
+            var parser = new RRBoundaryConditionsDataParserProvider(Substitute.For<ILogHandler>(), Substitute.For<IBcSectionParser>());
 
             // Act
             IRRBoundaryConditionsDataParser retrievedParser = parser.GetParser(givenData);
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
             // Arrange
             const string boundaryConditionName = "SupportPoint";
             var logHandler = Substitute.For<ILogHandler>();
-            var parser = new RRBoundaryConditionsDataParserProvider(logHandler, Substitute.For<IBcCategoryParser>());
+            var parser = new RRBoundaryConditionsDataParserProvider(logHandler, Substitute.For<IBcSectionParser>());
             var givenData = new BcBlockData
             {
                 FunctionType = "unknown",
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
 
         private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
         {
-            yield return new TestCaseData(null, Substitute.For<IBcCategoryParser>());
+            yield return new TestCaseData(null, Substitute.For<IBcSectionParser>());
             yield return new TestCaseData(Substitute.For<ILogHandler>(), null);
         }
     }

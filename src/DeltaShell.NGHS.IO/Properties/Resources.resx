@@ -378,20 +378,20 @@
   <data name="degreeCelcius" xml:space="preserve">
     <value>°C</value>
   </data>
-  <data name="NodeFile_The_category_does_not_contain_property" xml:space="preserve">
-    <value>The category {0} on line {1} does not contain the {2} property.</value>
+  <data name="NodeFile_The_section_does_not_contain_property" xml:space="preserve">
+    <value>The section {0} on line {1} does not contain the {2} property.</value>
   </data>
-  <data name="DelftIniPropertyExtensionMethods_Cannot_parse_value_for_property" xml:space="preserve">
+  <data name="IniPropertyExtensionMethods_Cannot_parse_value_for_property" xml:space="preserve">
     <value>Cannot parse {0} to a {1} for property {2} on line {3}.</value>
   </data>
   <data name="IniProperty_NotFound" xml:space="preserve">
-    <value>Property '{0}' is not found in the file for category '{1}' on line {2}</value>
+    <value>Property '{0}' is not found in the file for section '{1}' on line {2}</value>
   </data>
   <data name="IniProperty_EmptyValue" xml:space="preserve">
-    <value>Property '{0}' does not contain a value in the file for category '{1}' on line {2}</value>
+    <value>Property '{0}' does not contain a value in the file for section '{1}' on line {2}</value>
   </data>
   <data name="IniProperty_InvalidDouble" xml:space="preserve">
-    <value>Property '{0}' contains an invalid floating-point number in the file for category '{1}' on line {2}: {3}</value>
+    <value>Property '{0}' contains an invalid floating-point number in the file for section '{1}' on line {2}: {3}</value>
   </data>
   <data name="RemoteUGridApi_RequiredNetCDFVersion" xml:space="preserve">
     <value>The minimum required NetCDF convention for this file is {0} but the provided convention is {1}. See global attribute "Conventions" in file {2}</value>
@@ -432,13 +432,13 @@
   <data name="NGHSFileBase_File_could_not_be_found" xml:space="preserve">
     <value>File {0} could not be found.</value>
   </data>
-  <data name="RetentionCategoryParser_TrySetBranchChainage_Could_not_find_node_with_nodeId__0__for_retention__1_" xml:space="preserve">
+  <data name="RetentionSectionParser_TrySetBranchChainage_Could_not_find_node_with_nodeId__0__for_retention__1_" xml:space="preserve">
 	  <value>Could not find node with nodeId {0} (retention {1}, line number {2})</value>
   </data>
-  <data name="RetentionCategoryParser_TrySetBranchChainage_Could_not_find_a_branch_for_node_with_nodeId__0___retention__1__" xml:space="preserve">
+  <data name="RetentionSectionParser_TrySetBranchChainage_Could_not_find_a_branch_for_node_with_nodeId__0___retention__1__" xml:space="preserve">
 	  <value>Could not find a branch for node with nodeId {0} (retention {1}, line number {2})</value>
   </data>
-  <data name="RetentionCategoryParser_TrySetBranchChainage_Could_not_find_branch_for_branch_id___0____retention__1__" xml:space="preserve">
+  <data name="RetentionSectionParser_TrySetBranchChainage_Could_not_find_branch_for_branch_id___0____retention__1__" xml:space="preserve">
 	  <value>Could not find branch for branch id "{0}" (retention {1}, line number {2})</value>
   </data>
   <data name="RetentionFileWriter_GenerateSpatialDataDefinition_Retention_does_not_have_a_valid_Branch_property" xml:space="preserve">
@@ -480,19 +480,19 @@
   <data name="HydroUGridExtensions_ManholeNamesContext" xml:space="preserve">
     <value>manhole names</value>
   </data>
-  <data name="BcCategoryParser_TryParseDateTimes_Cannot_interpret___0____see_category_on_line__1__" xml:space="preserve">
-    <value>Cannot interpret '{0}', see category on line {1}.</value>
+  <data name="BcSectionParser_TryParseDateTimes_Cannot_interpret___0____see_section_on_line__1__" xml:space="preserve">
+    <value>Cannot interpret '{0}', see section on line {1}.</value>
   </data>
-  <data name="BcCategoryParser_TryGetReferenceTime_Cannot_parse___0___to_a_date_time__see_category_on_line__1__" xml:space="preserve">
-    <value>Cannot parse '{0}' to a date time, see category on line {1}.</value>
+  <data name="BcSectionParser_TryGetReferenceTime_Cannot_parse___0___to_a_date_time__see_section_on_line__1__" xml:space="preserve">
+    <value>Cannot parse '{0}' to a date time, see section on line {1}.</value>
   </data>
-  <data name="BcCategoryParser_TryParseDouble_Cannot_parse___0___to_a_double__see_category_on_line__1__" xml:space="preserve">
-    <value>Cannot parse '{0}' to a double, see category on line {1}.</value>
+  <data name="BcSectionParser_TryParseDouble_Cannot_parse___0___to_a_double__see_section_on_line__1__" xml:space="preserve">
+    <value>Cannot parse '{0}' to a double, see section on line {1}.</value>
   </data>
   <data name="TimeSeriesFileReader_TimeSeriesFileReader_No_readers_in__0_" xml:space="preserve">
     <value>No readers in {0}</value>
   </data>
-  <data name="BcCategoryParser_Table_on_line__0___does_not_contain_any_values" xml:space="preserve">
+  <data name="BcSectionParser_Table_on_line__0___does_not_contain_any_values" xml:space="preserve">
     <value>The provided table on line {0} does not contain any values.</value>
   </data>
   <data name="BcSpecificTimeSeriesReader_logHandler_reading_structures_from__bc_file" xml:space="preserve">
@@ -504,17 +504,17 @@
   <data name="Reading_the_branches_gui_file" xml:space="preserve">
     <value>reading the branches.gui file</value>
   </data>
-  <data name="File_version_in_general_category_is_not_supported_0_" xml:space="preserve">
-    <value>File version in general category is not supported: {0}. branches.gui file will not be read.</value>
+  <data name="File_version_in_general_section_is_not_supported_0_" xml:space="preserve">
+    <value>File version in general section is not supported: {0}. branches.gui file will not be read.</value>
   </data>
-  <data name="File_version_in_general_category_is_invalid_0_" xml:space="preserve">
-    <value>File version in general category is invalid: {0}. branches.gui file will not be read.</value>
+  <data name="File_version_in_general_section_is_invalid_0_" xml:space="preserve">
+    <value>File version in general section is invalid: {0}. branches.gui file will not be read.</value>
   </data>
   <data name="BranchesGui_file_does_not_contain_a_general_section" xml:space="preserve">
     <value>branches.gui file does not contain a general section. Model has probably been made with an older version of this software.</value>
   </data>
-  <data name="File_version_in_general_category_is_empty" xml:space="preserve">
-	  <value>File version in general category is empty. branches.gui file will not be read.</value>
+  <data name="File_version_in_general_section_is_empty" xml:space="preserve">
+    <value>File version in general section is empty. branches.gui file will not be read.</value>
   </data>
   <data name="UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_4_of_4" xml:space="preserve">
     <value>Reading grid step 4 of 4</value>

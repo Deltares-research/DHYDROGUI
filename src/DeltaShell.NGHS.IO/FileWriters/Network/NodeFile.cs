@@ -39,7 +39,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                     GeneralRegion.FileTypeName.StorageNodes);
                 generalRegion.AddPropertyWithOptionalComment("useStreetStorage", "1");
                 iniSections.Insert(0,generalRegion);
-                new DelftIniWriter().WriteDelftIniFile(iniSections, filePath, false);
+                new IniWriter().WriteIniFile(iniSections, filePath, false);
             }
         }
 
@@ -78,7 +78,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         public static IList<CompartmentProperties> Read(string filePath)
         {
-            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath);
+            var iniSections = new IniReader().ReadIniFile(filePath);
 
             return iniSections
                 .Skip(1) // skip version info

@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public IEnumerable<Structure2D> ReadStructures2D(string filePath)
         {
-            var iniSections = new DelftIniReader().ReadDelftIniFile(filePath);
+            var iniSections = new IniReader().ReadIniFile(filePath);
             if(!((IEnumerable<IniSection>) iniSections).Any(c => c.ValidGeneralRegion(GeneralRegion.StructureDefinitionsMajorVersion,
                 GeneralRegion.StructureDefinitionsMinorVersion, GeneralRegion.FileTypeName.StructureDefinition))) yield break;
 
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 if (iniSection.Name.ToLower() != StructureIniSectionName.ToLower())
                 {
                     if(!string.Equals(iniSection.Name, GeneralRegion.IniHeader, StringComparison.CurrentCultureIgnoreCase))
-                        Log.WarnFormat("Category [{0}] not supported for structures and is skipped.", iniSection.Name);
+                        Log.WarnFormat("Section [{0}] not supported for structures and is skipped.", iniSection.Name);
                     continue;
                 }
                 
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var supportedStructures = GetSupportedStructures(features);
             var iniSections = supportedStructures.Select(s => CreateIniSection(s, path, ReferenceDate));
 
-            new DelftIniWriter().WriteDelftIniFile(iniSections, path);
+            new IniWriter().WriteIniFile(iniSections, path);
         }
 
         private static IEnumerable<IStructure> GetSupportedStructures(IEnumerable<IStructure> structures)
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var iniSection = new IniSection(StructureIniSectionName);
 
-            foreach (var property in CreateDelftIniProperties(structure, filePath, refDate))
+            foreach (var property in CreateIniProperties(structure, filePath, refDate))
             {
                 iniSection.AddProperty(property);
             }
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return iniSection;
         }
 
-        private IEnumerable<IniProperty> CreateDelftIniProperties(IStructure structure, string filePath, DateTime refDate)
+        private IEnumerable<IniProperty> CreateIniProperties(IStructure structure, string filePath, DateTime refDate)
         {
             var properties = new List<IniProperty>();
 
@@ -181,13 +181,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private IniProperty ConstructProperty(string propertyName, object value, string structureType)
         {
             var definition = StructureSchema.GetDefinition(structureType, propertyName);
-            var delftIniProperty = new IniProperty
+            var iniProperty = new IniProperty
             (
                 definition.FilePropertyKey,
                 DataTypeValueParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
                 definition.Description
             );
-            return delftIniProperty;
+            return iniProperty;
         }
 
         private IEnumerable<IniProperty> ConstructStructureProperties(IStructure structure, string structureType, string path, DateTime refDate)
@@ -365,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static void WriteStructures2D(string path, IEnumerable<Structure2D> structures)
         {
-            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateIniSection), path);
+            new IniWriter().WriteIniFile(structures.Select(CreateIniSection), path);
         }
 
         private IStructure ConvertStructure(Structure2D structure, string filePath, string oldFilePath = null)
@@ -432,7 +432,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return iniSection;
         }
 
-        #region Sobek Structure to DelftIni related methods:
+        #region Sobek Structure to Ini related methods:
 
         private IEnumerable<IniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
         {

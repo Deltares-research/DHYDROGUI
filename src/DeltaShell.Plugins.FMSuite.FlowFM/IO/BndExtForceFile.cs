@@ -223,14 +223,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var lateralSourceDataLookup = model1DLateralSourceDatas
                                       .Where(d => d?.Feature != null)
                                       .ToDictionary(d => d.Feature.Name, StringComparer.InvariantCultureIgnoreCase);
-            var generateModel1DLateralSourceDataDelftBcCategories = new Model1DBoundaryFileWriter().GenerateModel1DLateralSourceDataDelftBcCategories(refDate, model1DLateralSourceDatas, false, false, BoundaryRegion.BcForcingHeader);
+            var generateModel1DLateralSourceDataBcSections = new Model1DBoundaryFileWriter().GenerateModel1DLateralSourceDataBcSections(refDate, model1DLateralSourceDatas, false, false, BoundaryRegion.BcForcingHeader);
             var filename = AddExtension(modelDefinitionModelName + "_lateral_sources", BcFile.Extension);
 
             // now generate bc files with the data
-            var model1DLateralSourceDataDelftBcCategories = generateModel1DLateralSourceDataDelftBcCategories as DelftBcCategory[] ?? generateModel1DLateralSourceDataDelftBcCategories.ToArray();
-            foreach (var model1DNodeBoundaryDelftBcCategory in model1DLateralSourceDataDelftBcCategories.OfType<DelftBcCategory>())
+            var model1DLateralSourceDataBcSections = generateModel1DLateralSourceDataBcSections as BcIniSection[] ?? generateModel1DLateralSourceDataBcSections.ToArray();
+            foreach (var model1DNodeBoundaryBcSection in model1DLateralSourceDataBcSections.OfType<BcIniSection>())
             {
-                var lateralName = model1DNodeBoundaryDelftBcCategory.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Name.Key);
+                var lateralName = model1DNodeBoundaryBcSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Name.Key);
                 if (!lateralSourceDataLookup.TryGetValue(lateralName, out var lateralData))
                 {
                     continue;
@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 yield return CreateBoundaryBlock(null, null, null, null, TimeSpan.Zero, lateralSourceForcingDefinition:lateralDef);
             }
             var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile }; //single file want ff niet anders
-            bcFile.Write(model1DLateralSourceDataDelftBcCategories, filename, Path.GetDirectoryName(FilePath));
+            bcFile.Write(model1DLateralSourceDataBcSections, filename, Path.GetDirectoryName(FilePath));
         }
 
         private void WriteMeteoExtForceFile(IEnumerable<IniSection> meteoExtForceFileItems)
@@ -273,7 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 GeneralRegion.BoundaryConditionsExternalForcingMajorVersion, GeneralRegion.BoundaryConditionsExternalForcingMinorVersion,
                 GeneralRegion.FileTypeName.BoundaryConditionExternalForcing);
 
-            if (!File.Exists(FilePath) || new DelftIniReader().ReadDelftIniFile(FilePath).All(c => !c.Name.EqualsCaseInsensitive(GeneralRegion.IniHeader)))
+            if (!File.Exists(FilePath) || new IniReader().ReadIniFile(FilePath).All(c => !c.Name.EqualsCaseInsensitive(GeneralRegion.IniHeader)))
             {
                 new IniFileWriter().WriteIniFile(new[] { generalRegion }, FilePath);
             }
@@ -400,11 +400,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
         public IEnumerable<IniSection> Write1DBndExtForceFileSubFiles(string modelDefinitionModelName, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, DateTime refDate)
         {
-            var generateModel1DNodeBoundaryDelftBcCategories = new Model1DBoundaryFileWriter().GenerateModel1DNodeBoundaryDelftBcCategories(refDate, boundaryConditions1D, false, false, BoundaryRegion.BcForcingHeader);
+            var generateModel1DNodeBoundaryBcSections = new Model1DBoundaryFileWriter().GenerateModel1DNodeBoundaryBcSections(refDate, boundaryConditions1D, false, false, BoundaryRegion.BcForcingHeader);
             var filename = AddExtension(modelDefinitionModelName+"_boundaryconditions1d", BcFile.Extension);
             // now generate bc files with the data
-            var model1DNodeBoundaryDelftBcCategories = generateModel1DNodeBoundaryDelftBcCategories as DelftBcCategory[] ?? generateModel1DNodeBoundaryDelftBcCategories.ToArray();
-            foreach (var generateModel1DNodeBoundaryIniSection in model1DNodeBoundaryDelftBcCategories.OfType<DelftBcCategory>())
+            var model1DNodeBoundaryBcSections = generateModel1DNodeBoundaryBcSections as BcIniSection[] ?? generateModel1DNodeBoundaryBcSections.ToArray();
+            foreach (var generateModel1DNodeBoundaryIniSection in model1DNodeBoundaryBcSections.OfType<BcIniSection>())
             {
                 var quantityName = string.Empty;
                 var function = generateModel1DNodeBoundaryIniSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Function.Key);
@@ -412,8 +412,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     quantityName = BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency;
                 else
                 {
-                    var delftBcQuantityData = generateModel1DNodeBoundaryIniSection.Table.LastOrDefault();
-                    quantityName = delftBcQuantityData?.Quantity?.Value;
+                    var bcQuantityData = generateModel1DNodeBoundaryIniSection.Table.LastOrDefault();
+                    quantityName = bcQuantityData?.Quantity?.Value;
                 }
                 var nodeId = generateModel1DNodeBoundaryIniSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Name.Key);
                 var manHoleName = generateModel1DNodeBoundaryIniSection.Section.ReadProperty<string>("manHoleName", true);
@@ -429,7 +429,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                                  boundaryWidth: m1dbnd?.BoundaryWidth, boundaryDepth: m1dbnd?.BoundaryDepth);
             }
             var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile };//single file want ff niet anders
-            bcFile.Write(model1DNodeBoundaryDelftBcCategories, filename, Path.GetDirectoryName(FilePath));
+            bcFile.Write(model1DNodeBoundaryBcSections, filename, Path.GetDirectoryName(FilePath));
         }
 
         private IList<IniSection> WriteEmbankmentFiles(IList<Embankment> embankments)
@@ -693,7 +693,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             FilePath = bndExtForceFilePath;
 
-            var bndBlocks = new DelftIniReader().ReadDelftIniFile(bndExtForceFilePath);
+            var bndBlocks = new IniReader().ReadIniFile(bndExtForceFilePath);
 
             ReadPolyLines(bndBlocks, modelDefinition, area);
 
@@ -821,7 +821,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     if (iniSection.Name.EqualsCaseInsensitive(LateralHeaderKey))
                     {
-                        lateralSourcesData.Add(lateralSourceParser.Parse(new LateralSourceExtCategory(iniSection)));
+                        lateralSourcesData.Add(lateralSourceParser.Parse(new LateralSourceExtSection(iniSection)));
                     }
                     
                     continue;
@@ -830,7 +830,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (quantityKey == ExtForceQuantNames.Precipitation)
                 {
                     List<BcBlockData> meteoDataBlocks = dataBlocks.Where(b => IsCorrespondingMeteoBlock(b, iniSection)).ToList();
-                    ParseMeteoRainFallBoundaryExtForceCategory(modelDefinition, quantityKey, meteoDataBlocks);
+                    ParseMeteoRainFallBoundaryExtForceSection(modelDefinition, quantityKey, meteoDataBlocks);
                     continue;
                 }
 
@@ -980,8 +980,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     continue;
                 }
 
-                var isValidBcFile = IoHelper.IsValidTextFile(fullPath) && new DelftBcReader()
-                                        .ReadDelftBcFile(fullPath)
+                var isValidBcFile = IoHelper.IsValidTextFile(fullPath) && new BcReader()
+                                        .ReadBcFile(fullPath)
                                         .Any(c =>
                                             c.Section.ValidGeneralRegion(
                                                 GeneralRegion.BoundaryConditionsMajorVersion,
@@ -1017,7 +1017,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return bndByNodeName;
         }
 
-        private void ParseMeteoRainFallBoundaryExtForceCategory(WaterFlowFMModelDefinition modelDefinition, string quantityKey, List<BcBlockData> dataBlocks)
+        private void ParseMeteoRainFallBoundaryExtForceSection(WaterFlowFMModelDefinition modelDefinition, string quantityKey, List<BcBlockData> dataBlocks)
         {
             FmMeteoQuantity meteoQuantity = ExtForceQuantNames.MeteoQuantityNames.FirstOrDefault(pair => pair.Value == quantityKey).Key;
 
