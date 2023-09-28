@@ -97,5 +97,43 @@ namespace DHYDRO.Common.Extensions
 
             return source.Any(char.IsWhiteSpace);
         }
+
+        /// <summary>
+        /// Returns a value indicating whether a specified character occurs within this string.
+        /// </summary>
+        /// <param name="source">The source string.</param>
+        /// <param name="value">The character to seek.</param>
+        /// <returns>
+        /// <see langword="true"/> if the <paramref name="value"/> character occurs within this string;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// When <paramref name="source"/> is <see langword="null"/>.
+        /// </exception>
+        public static bool Contains(this string source, char value)
+        {
+            Ensure.NotNull(source, nameof(source));
+
+            return source.Any(c => c == value);
+        }
+
+        /// <summary>
+        /// Determines whether the beginning of this string instance matches the specified character.
+        /// </summary>
+        /// <param name="source">The source string.</param>
+        /// <param name="value">The character to compare.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="value"/> matches the beginning of this string;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// When <paramref name="source"/> is <see langword="null"/>.
+        /// </exception>
+        public static bool StartsWith(this string source, char value)
+        {
+            Ensure.NotNull(source, nameof(source));
+
+            return source.Length > 0 && source[0] == value;
+        }
     }
 }

@@ -324,9 +324,21 @@ namespace DHYDRO.Common.IO.Ini
         /// <exception cref="ArgumentException">When <paramref name="comment"/> is <c>null</c> or empty.</exception>
         public void AddComment(string comment)
         {
-            Ensure.NotNullOrEmpty(comment, nameof(comment));
+            Ensure.NotNull(comment, nameof(comment));
 
             comments.Add(comment);
+        }
+        
+        /// <summary>
+        /// Adds a collection of comment lines to the section's comments.
+        /// </summary>
+        /// <param name="commentsToAdd">The comment lines to add.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="commentsToAdd"/> is <c>null</c>.</exception>
+        public void AddMultipleComments(IEnumerable<string> commentsToAdd)
+        {
+            Ensure.NotNull(commentsToAdd, nameof(commentsToAdd));
+
+            comments.AddRange(commentsToAdd);
         }
 
         /// <summary>

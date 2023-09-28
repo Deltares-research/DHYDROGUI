@@ -43,7 +43,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalIsNull_ThrowsArgumentNullException()
         {
-            IniData modified = CreateIniData();
+            IniData modified = IniDataFixture.CreateIniData();
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -53,7 +53,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_ModifiedIsNull_ThrowsArgumentNullException()
         {
-            IniData original = CreateIniData();
+            IniData original = IniDataFixture.CreateIniData();
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -63,8 +63,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedIniDataAreEmpty_ReturnsEmpty()
         {
-            IniData original = CreateEmptyIniData();
-            IniData modified = CreateEmptyIniData();
+            IniData original = IniDataFixture.CreateEmptyIniData();
+            IniData modified = IniDataFixture.CreateEmptyIniData();
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -76,8 +76,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedIniDataAreEqual_ReturnsEqual()
         {
-            IniData original = CreateIniData();
-            IniData modified = CreateIniData();
+            IniData original = IniDataFixture.CreateIniData();
+            IniData modified = IniDataFixture.CreateIniData();
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -90,8 +90,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedIniDataAreEqual_ReturnsNewInstances()
         {
-            IniData original = CreateIniData();
-            IniData modified = CreateIniData();
+            IniData original = IniDataFixture.CreateIniData();
+            IniData modified = IniDataFixture.CreateIniData();
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -104,11 +104,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedHaveMixedCasedSectionNames_ReturnsOriginal()
         {
-            IniSection[] originalSections = CreateSections("Section");
-            IniSection[] modifiedSections = CreateSections("SECTION");
+            IniSection[] originalSections = IniDataFixture.CreateSections("Section");
+            IniSection[] modifiedSections = IniDataFixture.CreateSections("SECTION");
 
-            IniData original = CreateIniData(originalSections);
-            IniData modified = CreateIniData(modifiedSections);
+            IniData original = IniDataFixture.CreateIniData(originalSections);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSections);
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -121,11 +121,22 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedHaveDuplicateSectionNames_ReturnsEqual()
         {
-            IniSection[] originalSections = new[] { CreateSection("s"), CreateSection("x"), CreateSection("s") };
-            IniSection[] modifiedSections = new[] { CreateSection("s"), CreateSection("x"), CreateSection("s") };
+            IniSection[] originalSections =
+            {
+                IniDataFixture.CreateSection("s"), 
+                IniDataFixture.CreateSection("x"), 
+                IniDataFixture.CreateSection("s")
+            };
+            
+            IniSection[] modifiedSections =
+            {
+                IniDataFixture.CreateSection("s"), 
+                IniDataFixture.CreateSection("x"), 
+                IniDataFixture.CreateSection("s")
+            };
 
-            IniData original = CreateIniData(originalSections);
-            IniData modified = CreateIniData(modifiedSections);
+            IniData original = IniDataFixture.CreateIniData(originalSections);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSections);
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -138,8 +149,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalIsEmptyAndModifiedHasSectionsAndAddAddedSectionsIsTrue_ReturnsModified()
         {
-            IniData original = CreateEmptyIniData();
-            IniData modified = CreateIniData();
+            IniData original = IniDataFixture.CreateEmptyIniData();
+            IniData modified = IniDataFixture.CreateIniData();
 
             IniMerger iniMerger = CreateIniMerger();
             iniMerger.Configuration.AddAddedSections = true;
@@ -152,8 +163,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalIsEmptyAndModifiedHasSectionsAndAddAddedSectionsIsFalse_ReturnsEmpty()
         {
-            IniData original = CreateEmptyIniData();
-            IniData modified = CreateIniData();
+            IniData original = IniDataFixture.CreateEmptyIniData();
+            IniData modified = IniDataFixture.CreateIniData();
 
             IniMerger iniMerger = CreateIniMerger();
             iniMerger.Configuration.AddAddedSections = false;
@@ -166,8 +177,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalHasSectionsAndModifiedIsEmptyAndRemoveRemovedSectionsIsTrue_ReturnsEmpty()
         {
-            IniData original = CreateIniData();
-            IniData modified = CreateEmptyIniData();
+            IniData original = IniDataFixture.CreateIniData();
+            IniData modified = IniDataFixture.CreateEmptyIniData();
 
             IniMerger iniMerger = CreateIniMerger();
             iniMerger.Configuration.RemoveRemovedSections = true;
@@ -180,8 +191,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalHasSectionsAndModifiedIsEmptyAndRemoveRemovedSectionsIsFalse_ReturnsOriginal()
         {
-            IniData original = CreateIniData();
-            IniData modified = CreateEmptyIniData();
+            IniData original = IniDataFixture.CreateIniData();
+            IniData modified = IniDataFixture.CreateEmptyIniData();
 
             IniMerger iniMerger = CreateIniMerger();
             iniMerger.Configuration.RemoveRemovedSections = false;
@@ -194,11 +205,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedPropertiesAreEmpty_ReturnsEmpty()
         {
-            IniSection originalSection = CreateEmptySection();
-            IniSection modifiedSection = CreateEmptySection();
+            IniSection originalSection = IniDataFixture.CreateEmptySection();
+            IniSection modifiedSection = IniDataFixture.CreateEmptySection();
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -211,11 +222,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedPropertiesAreEqual_ReturnsEqual()
         {
-            IniSection originalSection = CreateSection();
-            IniSection modifiedSection = CreateSection();
+            IniSection originalSection = IniDataFixture.CreateSection();
+            IniSection modifiedSection = IniDataFixture.CreateSection();
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -229,11 +240,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedPropertiesAreEqual_ReturnsNewInstances()
         {
-            IniSection originalSection = CreateSection();
-            IniSection modifiedSection = CreateSection();
+            IniSection originalSection = IniDataFixture.CreateSection();
+            IniSection modifiedSection = IniDataFixture.CreateSection();
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -247,14 +258,14 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedHaveMixedCasedPropertyKeys_ReturnsOriginal()
         {
-            IniProperty[] originalProperties = CreateProperties("Property");
-            IniProperty[] modifiedProperties = CreateProperties("PROPERTY");
+            IniProperty[] originalProperties = IniDataFixture.CreateProperties("Property");
+            IniProperty[] modifiedProperties = IniDataFixture.CreateProperties("PROPERTY");
 
-            IniSection originalSection = CreateSection(originalProperties);
-            IniSection modifiedSection = CreateSection(modifiedProperties);
+            IniSection originalSection = IniDataFixture.CreateSection(originalProperties);
+            IniSection modifiedSection = IniDataFixture.CreateSection(modifiedProperties);
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -268,14 +279,25 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedHaveDuplicatePropertyKeys_ReturnsEqual()
         {
-            IniProperty[] originalProperties = new[] { CreateProperty("p"), CreateProperty("x"), CreateProperty("p") };
-            IniProperty[] modifiedProperties = new[] { CreateProperty("p"), CreateProperty("x"), CreateProperty("p") };
+            IniProperty[] originalProperties =
+            {
+                IniDataFixture.CreateProperty("p"), 
+                IniDataFixture.CreateProperty("x"), 
+                IniDataFixture.CreateProperty("p")
+            };
+            
+            IniProperty[] modifiedProperties =
+            {
+                IniDataFixture.CreateProperty("p"), 
+                IniDataFixture.CreateProperty("x"), 
+                IniDataFixture.CreateProperty("p")
+            };
 
-            IniSection originalSection = CreateSection(originalProperties);
-            IniSection modifiedSection = CreateSection(modifiedProperties);
+            IniSection originalSection = IniDataFixture.CreateSection(originalProperties);
+            IniSection modifiedSection = IniDataFixture.CreateSection(modifiedProperties);
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -289,15 +311,15 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalAndModifiedPropertyValuesAreNotEqual_ReturnsModified()
         {
-            IniProperty[] originalProperties = CreateProperties();
+            IniProperty[] originalProperties = IniDataFixture.CreateProperties();
             IniProperty[] modifiedProperties = originalProperties.Select(
-                (p, i) => CreateProperty(p.Key.ToUpper(), $"new value {i}", $"new comment {i}", i)).ToArray();
+                (p, i) => IniDataFixture.CreateProperty(p.Key.ToUpper(), $"new value {i}", $"new comment {i}", i)).ToArray();
 
-            IniSection originalSection = CreateSection(originalProperties);
-            IniSection modifiedSection = CreateSection(modifiedProperties);
+            IniSection originalSection = IniDataFixture.CreateSection(originalProperties);
+            IniSection modifiedSection = IniDataFixture.CreateSection(modifiedProperties);
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
 
@@ -314,11 +336,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalIsEmptyAndModifiedHasPropertiesAndAddAddedPropertiesIsTrue_ReturnsModified()
         {
-            IniSection originalSection = CreateEmptySection();
-            IniSection modifiedSection = CreateSection();
+            IniSection originalSection = IniDataFixture.CreateEmptySection();
+            IniSection modifiedSection = IniDataFixture.CreateSection();
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
             iniMerger.Configuration.AddAddedProperties = true;
@@ -332,11 +354,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalIsEmptyAndModifiedHasPropertiesAndAndAddAddedPropertiesIsFalse_ReturnsEmpty()
         {
-            IniSection originalSection = CreateEmptySection();
-            IniSection modifiedSection = CreateSection();
+            IniSection originalSection = IniDataFixture.CreateEmptySection();
+            IniSection modifiedSection = IniDataFixture.CreateSection();
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
             iniMerger.Configuration.AddAddedProperties = false;
@@ -350,11 +372,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalHasPropertiesAndModifiedIsEmptyAndRemoveRemoveRemovedPropertiesIsTrue_ReturnsEmpty()
         {
-            IniSection originalSection = CreateSection();
-            IniSection modifiedSection = CreateEmptySection();
+            IniSection originalSection = IniDataFixture.CreateSection();
+            IniSection modifiedSection = IniDataFixture.CreateEmptySection();
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
             iniMerger.Configuration.RemoveRemovedProperties = true;
@@ -368,11 +390,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         public void Merge_OriginalHasPropertiesAndModifiedIsEmptyAndRemoveRemovedPropertiesIsFalse_ReturnsOriginal()
         {
-            IniSection originalSection = CreateSection();
-            IniSection modifiedSection = CreateEmptySection();
+            IniSection originalSection = IniDataFixture.CreateSection();
+            IniSection modifiedSection = IniDataFixture.CreateEmptySection();
 
-            IniData original = CreateIniData(originalSection);
-            IniData modified = CreateIniData(modifiedSection);
+            IniData original = IniDataFixture.CreateIniData(originalSection);
+            IniData modified = IniDataFixture.CreateIniData(modifiedSection);
 
             IniMerger iniMerger = CreateIniMerger();
             iniMerger.Configuration.RemoveRemovedProperties = false;
@@ -391,59 +413,6 @@ namespace DHYDRO.Common.Tests.IO.Ini
         private static IniMergeConfiguration CreateConfiguration()
         {
             return new IniMergeConfiguration();
-        }
-
-        private static IniData CreateIniData()
-        {
-            var iniData = new IniData();
-            iniData.AddMultipleSections(CreateSections());
-            return iniData;
-        }
-
-        private static IniData CreateIniData(params IniSection[] sections)
-        {
-            var iniData = new IniData();
-            iniData.AddMultipleSections(sections);
-            return iniData;
-        }
-
-        private static IniData CreateEmptyIniData()
-        {
-            return new IniData();
-        }
-
-        private static IniSection[] CreateSections(string namePrefix = "section")
-        {
-            return Enumerable.Range(1, 3).Select(i => CreateSection($"{namePrefix} {i}", i)).ToArray();
-        }
-
-        private static IniSection CreateSection(string name = "section", int lineNumber = 0)
-        {
-            var section = new IniSection(name) { LineNumber = lineNumber };
-            section.AddMultipleProperties(CreateProperties());
-            return section;
-        }
-
-        private static IniSection CreateSection(params IniProperty[] properties)
-        {
-            var section = new IniSection("section");
-            section.AddMultipleProperties(properties);
-            return section;
-        }
-
-        private static IniSection CreateEmptySection()
-        {
-            return new IniSection("section");
-        }
-
-        private static IniProperty[] CreateProperties(string keyPrefix = "property")
-        {
-            return Enumerable.Range(1, 3).Select(i => CreateProperty($"{keyPrefix} {i}", $"value {i}")).ToArray();
-        }
-
-        private static IniProperty CreateProperty(string key = "property", string value = "", string comment = "comment", int lineNumber = 0)
-        {
-            return new IniProperty(key, value, comment) { LineNumber = lineNumber };
         }
     }
 }

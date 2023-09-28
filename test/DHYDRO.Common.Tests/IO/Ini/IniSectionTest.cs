@@ -678,34 +678,53 @@ namespace DHYDRO.Common.Tests.IO.Ini
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase(null)]
-        public void AddComment_CommentIsNullOrEmpty_ThrowsArgumentException(string comment)
+        public void AddComment_CommentIsNull_ThrowsArgumentNullException()
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.AddComment(comment));
+            Assert.Throws<ArgumentNullException>(() => section.AddComment(null));
         }
 
         [Test]
-        public void AddComment_ValidComment_AddsComment()
+        [TestCase("")]
+        [TestCase("  ")]
+        [TestCase("TestComment")]
+        public void AddComment_ValidComment_AddsComment(string comment)
         {
             var section = new IniSection("TestSection");
 
-            section.AddComment("TestComment");
+            section.AddComment(comment);
 
             Assert.AreEqual(1, section.CommentCount);
-            Assert.AreEqual("TestComment", section.Comments.First());
+            Assert.AreEqual(comment, section.Comments.First());
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase(null)]
-        public void RemoveComment_CommentIsNullOrEmpty_ThrowsArgumentException(string comment)
+        public void AddMultipleComments_CommentsIsNull_ThrowsArgumentNullException()
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.RemoveComment(comment));
+            Assert.Throws<ArgumentNullException>(() => section.AddMultipleComments(null));
+        }
+
+        [Test]
+        public void AddMultipleComments_ValidComments_AddsComments()
+        {
+            var section = new IniSection("TestSection");
+
+            string[] comments = { "TestComment1", "TestComment2" };
+
+            section.AddMultipleComments(comments);
+
+            Assert.That(section.Comments, Is.EqualTo(comments));
+        }
+
+        [Test]
+        public void RemoveComment_CommentIsNull_ThrowsArgumentException()
+        {
+            var section = new IniSection("TestSection");
+
+            Assert.Throws<ArgumentException>(() => section.RemoveComment(null));
         }
 
         [Test]

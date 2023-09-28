@@ -175,6 +175,88 @@ namespace DHYDRO.Common.Tests.Extensions
             Assert.That(result, Is.EqualTo(expectedResult));
         }
 
+        [Test]
+        public void Contains_ArgumentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            string source = null;
+
+            // Call
+            void Call() => source.Contains(' ');
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        [TestCase("abc", 'c')]
+        [TestCase("abc def", ' ')]
+        [TestCase("abc\tdef", '\t')]
+        [TestCase("abc\r\ndef", '\r')]
+        [TestCase("abc\r\ndef", '\n')]
+        public void Contains_CharacterInSourceString_ReturnsTrue(string source, char c)
+        {
+            // Call
+            bool result = source.Contains(c);
+
+            // Assert
+            Assert.That(result, Is.True);
+        }
+        
+        [Test]
+        [TestCase("abc", 'C')]
+        [TestCase("abc def", '\0')]
+        [TestCase("", '\r')]
+        [TestCase("", '\n')]
+        public void Contains_CharacterNotInSourceString_ReturnsFalse(string source, char c)
+        {
+            // Call
+            bool result = source.Contains(c);
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+        
+        [Test]
+        public void StartsWith_ArgumentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            string source = null;
+
+            // Call
+            void Call() => source.StartsWith(' ');
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        [TestCase("abc", 'a')]
+        [TestCase("def", 'd')]
+        [TestCase("\r\ndef", '\r')]
+        public void StartsWith_CharacterInSourceString_ReturnsTrue(string source, char c)
+        {
+            // Call
+            bool result = source.StartsWith(c);
+
+            // Assert
+            Assert.That(result, Is.True);
+        }
+        
+        [Test]
+        [TestCase("abc", 'b')]
+        [TestCase("def", 'f')]
+        [TestCase("\r\ndef", '\n')]
+        [TestCase("", '\0')]
+        public void StartsWith_DifferentCharacterInSourceString_ReturnsFalse(string source, char c)
+        {
+            // Call
+            bool result = source.StartsWith(c);
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
         private static IEnumerable<TestCaseData> GetContainsWhitespaceCases()
         {
             yield return new TestCaseData(string.Empty, false).SetName("Empty string");
