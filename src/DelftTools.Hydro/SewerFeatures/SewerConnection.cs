@@ -34,7 +34,7 @@ namespace DelftTools.Hydro.SewerFeatures
         private string targetCompartmentName;
         private ICrossSection crossSection;
         private SewerConnectionSpecialConnectionType specialConnectionType = SewerConnectionSpecialConnectionType.None;
-
+        
         public SewerConnection() : this("SewerConnection")
         {
         }
@@ -507,6 +507,8 @@ namespace DelftTools.Hydro.SewerFeatures
         
         public void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
+            network = hydroNetwork;
+
             AddOrUpdateGeometry(hydroNetwork, helper);
             AddCrossSectionDefinition(hydroNetwork, helper);
             if (helper != null && helper.SewerConnectionsByName.ContainsKey(Name))
@@ -586,7 +588,7 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             if (CrossSectionDefinitionName == null)
             {
-                CrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2, true, hydroNetwork);
+                this.GenerateDefaultProfileForSewerConnections();
             }
             else
             {
@@ -596,7 +598,9 @@ namespace DelftTools.Hydro.SewerFeatures
                     if (crossSectionDefinition != null)
                     {
                         var pipeCrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
-                        pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections.Concat(hydroNetwork.Pipes.Select(p => p.CrossSection)), typeof(ICrossSection), true);
+                        IEnumerable<ICrossSection> crossSectionsInNetwork = hydroNetwork.CrossSections
+                                                                               .Concat(hydroNetwork.SewerConnections.Select(sewerConnection => sewerConnection.CrossSection));
+                        pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", crossSectionsInNetwork, typeof(ICrossSection), true);
                         pipeCrossSection.UseSharedDefinition(crossSectionDefinition);
                         helper?.PipeCrossSections?.Enqueue(pipeCrossSection);
                         CrossSection = pipeCrossSection;
@@ -726,6 +730,15 @@ namespace DelftTools.Hydro.SewerFeatures
                 }
             }
         }
+
+        public virtual ICrossSectionDefinition GetDefaultProfile()
+        {
+            return SpecialConnectionType == SewerConnectionSpecialConnectionType.Weir
+                       ? SewerFactory.GetDefaultWeirSewerStructureProfile(HydroNetwork)
+                       : SewerFactory.GetDefaultPumpSewerStructureProfile(HydroNetwork);
+        }
+
+        public virtual double GetDefaultLevelValue() => SpecialConnectionType == SewerConnectionSpecialConnectionType.Weir ? -10.0d : 0.0d;
 
         public CrossSectionDefinitionStandard Profile
         {

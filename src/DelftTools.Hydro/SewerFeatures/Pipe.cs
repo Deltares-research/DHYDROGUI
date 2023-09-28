@@ -51,6 +51,16 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
+        public override ICrossSectionDefinition GetDefaultProfile()
+        {
+            return SewerFactory.GetDefaultPipeProfile(HydroNetwork);
+        }
+
+        public override double GetDefaultLevelValue()
+        {
+            return -10.0d;
+        }
+
         private void OnPipePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is IPipe && e.PropertyName == nameof(Network))

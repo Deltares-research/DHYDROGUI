@@ -1,16 +1,27 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
+using DeltaShell.Plugins.ImportExport.Sobek.Properties;
+using DeltaShell.Sobek.Readers;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 {
     [TestFixture]
     public class SobekCrossSectionsImporterTest
     {
+        private readonly SobekFileNames sobekFileNames = new SobekFileNames();
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -221,6 +232,142 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(26.23, pipeToCheck.LevelSource, 0.001);
             Assert.AreEqual(26.25, pipeToCheck.LevelTarget, 0.001);
             Assert.AreEqual(pipeToCheck.Material,SewerProfileMapping.SewerProfileMaterial.Unknown);
+        }
+        [Test]
+        public void GivenSOBEK2CrossSectionLocationMappingAndDefinition_WhenSobekCrossSectionsImporterImport_ThanCrossSectionSetOnSewerConnection()
+        {
+            SobekCrossSectionsImporter sobekCrossSectionsImporter = new SobekCrossSectionsImporter();
+            
+            ISewerConnection sewerConnection = new SewerConnection();
+            sewerConnection.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 10) });
+            sewerConnection.Name = "1";
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                GenerateCustomCrossSectionDefinitionLocationFile(tempDirectory);
+                GenerateCustomCrossSectionDefinitionMappingFile(tempDirectory);
+
+                const string crossSectionDefinitionIdName = "MyCrossSectionIdName";
+                GenerateCustomCrossSectionDefinitionsFile(tempDirectory, crossSectionDefinitionIdName);
+
+                using (WaterFlowFMModel model = new WaterFlowFMModel())
+                {
+                    model.Network.Branches.Add(sewerConnection);
+                    sobekCrossSectionsImporter.TargetObject = model;
+                    TypeUtils.SetField(sobekCrossSectionsImporter, "baseDir", tempDirectory.Path);
+
+                    sobekCrossSectionsImporter.Import();
+                    Assert.That(sewerConnection.CrossSectionDefinitionName, Is.EqualTo(crossSectionDefinitionIdName));
+                    Assert.That(sewerConnection.CrossSection.Name, Is.EqualTo("cross section"));
+                }
+            }
+        }
+        
+
+        [Test]
+        public void GivenSOBEK2CrossSectionLocationMappingAndDefinition_WhenSobekCrossSectionsImporterImport_ThanCrossSectionSetOnPipe()
+        {
+            SobekCrossSectionsImporter sobekCrossSectionsImporter = new SobekCrossSectionsImporter();
+
+            IPipe pipe = new Pipe();
+            pipe.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 10) });
+            pipe.Name = "1";
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                GenerateCustomCrossSectionDefinitionLocationFile(tempDirectory);
+                GenerateCustomCrossSectionDefinitionMappingFile(tempDirectory);
+
+                const string crossSectionDefinitionIdName = "MyCrossSectionIdName";
+                GenerateCustomCrossSectionDefinitionsFile(tempDirectory, crossSectionDefinitionIdName);
+
+                using (WaterFlowFMModel model = new WaterFlowFMModel())
+                {
+                    model.Network.Branches.Add(pipe);
+                    sobekCrossSectionsImporter.TargetObject = model;
+                    TypeUtils.SetField(sobekCrossSectionsImporter, "baseDir", tempDirectory.Path);
+                    sobekCrossSectionsImporter.Import();
+                    Assert.That(pipe.CrossSectionDefinitionName, Is.EqualTo(crossSectionDefinitionIdName));
+                    Assert.That(pipe.CrossSection.Name, Is.EqualTo("cross section"));
+                }
+            }
+        }
+
+        [Test]
+        public void GivenSOBEK2CrossSectionLocationMappingWithoutDefinition_WhenSobekCrossSectionsImporterImport_ThanDefaultCrossSectionSetOnPumpSewerConnection()
+        {
+            SobekCrossSectionsImporter sobekCrossSectionsImporter = new SobekCrossSectionsImporter();
+            ISewerConnection sewerConnection = new SewerConnection();
+            sewerConnection.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 10) });
+            sewerConnection.Name = "1";
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                GenerateCustomCrossSectionDefinitionLocationFile(tempDirectory);
+                GenerateCustomCrossSectionDefinitionMappingFile(tempDirectory);
+
+                using (WaterFlowFMModel model = new WaterFlowFMModel())
+                {
+                    model.Network.Branches.Add(sewerConnection);
+                    sobekCrossSectionsImporter.TargetObject = model;
+                    TypeUtils.SetField(sobekCrossSectionsImporter, "baseDir", tempDirectory.Path);
+                    TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+                    {
+                        sobekCrossSectionsImporter.Import();
+                        Assert.That(sewerConnection.CrossSectionDefinitionName, Is.EqualTo(SewerCrossSectionDefinitionFactory.DefaultPumpSewerStructureProfileName));
+                        Assert.That(sewerConnection.CrossSection.Definition.Name, Is.EqualTo(SewerCrossSectionDefinitionFactory.DefaultPumpSewerStructureProfileName));
+                        Assert.That(sewerConnection.CrossSection.Name, Is.EqualTo("SewerProfile_1"));
+                    }, Resources.SobekCrossSectionsImporter_AddCrossSections_Definition_with_the_following_ids_were_not_found__ignored__Using_default);
+                }
+            }
+        }
+
+        [Test]
+        public void GivenSOBEK2CrossSectionLocationMappingWithoutKnownDefinitionType_WhenSobekCrossSectionsImporterImport_ThanDefaultCrossSectionSetOnWeirSewerConnection()
+        {
+            SobekCrossSectionsImporter sobekCrossSectionsImporter = new SobekCrossSectionsImporter();
+            SewerConnection sewerConnection = new SewerConnection();
+            sewerConnection.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 10) });
+            sewerConnection.Name = "1";
+            TypeUtils.SetField(sewerConnection, "specialConnectionType", SewerConnectionSpecialConnectionType.Weir);
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                GenerateCustomCrossSectionDefinitionLocationFile(tempDirectory);
+                GenerateCustomCrossSectionDefinitionMappingFile(tempDirectory);
+
+                const string crossSectionDefinitionIdName = "MyCrossSectionIdName";
+                GenerateCustomCrossSectionDefinitionsFile(tempDirectory, crossSectionDefinitionIdName, 801);
+
+                using (WaterFlowFMModel model = new WaterFlowFMModel())
+                {
+                    model.Network.Branches.Add(sewerConnection);
+                    sobekCrossSectionsImporter.TargetObject = model;
+                    TypeUtils.SetField(sobekCrossSectionsImporter, "baseDir", tempDirectory.Path);
+                    sobekCrossSectionsImporter.Import();
+                    Assert.That(sewerConnection.CrossSection.Definition.Name, Is.EqualTo(SewerCrossSectionDefinitionFactory.DefaultWeirSewerStructureProfileName));
+                    Assert.That(sewerConnection.CrossSectionDefinitionName, Is.EqualTo(SewerCrossSectionDefinitionFactory.DefaultWeirSewerStructureProfileName));
+                    Assert.That(sewerConnection.CrossSection.Name, Is.Not.EqualTo(crossSectionDefinitionIdName));
+                    Assert.That(sewerConnection.CrossSection.Name, Is.EqualTo("SewerProfile_1"));
+                }
+            }
+        }
+
+        private void GenerateCustomCrossSectionDefinitionsFile(TemporaryDirectory tempDirectory, string crossSectionDefinitionIdName, int crossSectionDefinitionType = 1)
+        {
+            string profile = $"CRDS id 'DefinitionId' nm '{crossSectionDefinitionIdName}' ty {crossSectionDefinitionType} wm 45 w1 30 w2 0 sw 9.9999e+009 bl -3 lt lw dk 0 dc 9.9999e+009 db 9.9999e+009 df 9.9999e+009 dt 9.9999e+009 bw 45 bs 3 aw 75 rd 9.9999e+009 ll 9.9999e+009 rl 9.9999e+009 lw 9.9999e+009 rw 9.9999e+009 crds\r\n";
+            var customCrsDefFile = Path.Combine(tempDirectory.Path, sobekFileNames.SobekProfileDefinitionsFileName);
+            File.WriteAllText(customCrsDefFile, profile);
+        }
+
+        private void GenerateCustomCrossSectionDefinitionMappingFile(TemporaryDirectory tempDirectory)
+        {
+            var customCrsDefMappingFile = Path.Combine(tempDirectory.Path, sobekFileNames.SobekProfileDataFileName);
+            File.WriteAllText(customCrsDefMappingFile, "CRSN id 'LocationId' di 'DefinitionId' rl 0 us 9.9999e+009 ds 9.9999e+009 crsn\r\n");
+        }
+
+        private void GenerateCustomCrossSectionDefinitionLocationFile(TemporaryDirectory tempDirectory)
+        {
+            var customCrsDefLocFile = Path.Combine(tempDirectory.Path, sobekFileNames.SobekNetworkLocationsFileName);
+            File.WriteAllText(customCrsDefLocFile, "CRSN id 'LocationId' nm 'LocationName' ci '1' lc 671 crsn\r\n");
         }
     }
 }

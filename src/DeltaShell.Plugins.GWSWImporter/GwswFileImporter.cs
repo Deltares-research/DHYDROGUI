@@ -714,36 +714,42 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             ParallelHelper.RunActionInParallel(this, helper.SewerConnectionsByName.Values.Where(sc => sc.BranchFeatures.Count > 0).ToArray(), sewerConnection => sewerConnection.UpdateBranchFeatureGeometries(), "");
             ParallelHelper.RunActionInParallel(this, network.SewerConnections.Where(sc => sc.Geometry == null).ToArray(), sc => network.FindAndConnectManholesInNetwork(sc), "Update empty geometries");
             ParallelHelper.RunActionInParallel(this, helper.SewerConnectionsByName.Values.Where(sc => Math.Abs(sc.Length) < 1.0e-6).ToArray(), sewerConnection => sewerConnection.SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake(), "Update length of sewer connections");
-            ParallelHelper.RunActionInParallel(this, network.Pipes.ToArray(), pipe =>
+            ParallelHelper.RunActionInParallel(this, network.SewerConnections.ToArray(), sewerConnection =>
             {
-                if (helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out CrossSectionDefinitionProxy crossSectionDefinition))
-                {
-                    ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2, false);
-                    crossSection.Name = $"SewerProfile_";
-                    crossSection.UseSharedDefinition(crossSectionDefinition);
-                    pipe.CrossSection = crossSection;
-                    helper.PipeCrossSections?.Enqueue(crossSection);
-                }
-                else if (string.IsNullOrWhiteSpace(pipe.CrossSectionDefinitionName))
+                if (string.IsNullOrWhiteSpace(sewerConnection.CrossSectionDefinitionName))
                 {
                     // use default!
-                    Log.Warn(string.Format(Resources.GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbinding_csv_for_pipe__0___Using_default_pipe_profile, pipe.PipeId));
-                    ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2, false);
-                    crossSection.Name = $"SewerProfile_";
-                    ICrossSectionDefinition defaultProfile = pipe.SpecialConnectionType == SewerConnectionSpecialConnectionType.Weir
-                                                                 ? SewerFactory.GetDefaultWeirSewerStructureProfile(pipe.HydroNetwork)
-                                                                 : SewerFactory.GetDefaultPumpSewerStructureProfile(pipe.HydroNetwork);
+                    if (sewerConnection is IPipe pipe)
+                    {
+                        logHandler.ReportWarningFormat(Resources.GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbinding_csv_for_pipe__0___Using_default_pipe_profile, pipe.PipeId);
+                    }
+                    else
+                    {
+                        logHandler.ReportWarningFormat(Resources.GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbinding_csv_for_sewer_connection__0___Using_default_sewer_profile, sewerConnection.Name);
+                    }
 
-                    crossSection.UseSharedDefinition(defaultProfile);
-                    pipe.CrossSection = crossSection;
+                    sewerConnection.GenerateDefaultProfileForSewerConnections();
+
+                    helper.PipeCrossSections?.Enqueue(sewerConnection.CrossSection);
+                }
+                else if (helper.CrossSectionDefinitionsByPipe.TryGetValue(sewerConnection.CrossSectionDefinitionName, out CrossSectionDefinitionProxy crossSectionDefinition))
+                {
+                    ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, sewerConnection, sewerConnection.Length / 2, false);
+                    crossSection.Name = $"SewerProfile_";
+                    crossSection.UseSharedDefinition(crossSectionDefinition);
+                    sewerConnection.CrossSection = crossSection;
                     helper.PipeCrossSections?.Enqueue(crossSection);
                 }
+                
+            }, "Update sewer connections profiles in network");
 
+            ParallelHelper.RunActionInParallel(this, network.Pipes.ToArray(), pipe =>
+            {
                 if (helper.SewerProfileMaterialsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out SewerProfileMapping.SewerProfileMaterial material))
                 {
                     pipe.Material = material;
                 }
-            }, "Update cross sections in network");
+            }, "Update pipe material in network");
 
             ParallelHelper.RunActionInParallel(this, network.Orifices.OfType<GwswConnectionOrifice>().Cast<GwswConnectionOrifice>().ToArray(), (orifice) =>
             {

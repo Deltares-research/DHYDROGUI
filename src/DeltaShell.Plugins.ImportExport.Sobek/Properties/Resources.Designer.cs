@@ -147,6 +147,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Definition with the following ids were not found; ignored. Using default.
+        /// </summary>
+        public static string SobekCrossSectionsImporter_AddCrossSections_Definition_with_the_following_ids_were_not_found__ignored__Using_default {
+            get {
+                return ResourceManager.GetString("SobekCrossSectionsImporter_AddCrossSections_Definition_with_the_following_ids_wer" +
+                        "e_not_found__ignored__Using_default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} import failed: {1}.
         /// </summary>
         public static string SobekRRMeteoDataImporter_AddMeteoData__0__import_failed___1_ {

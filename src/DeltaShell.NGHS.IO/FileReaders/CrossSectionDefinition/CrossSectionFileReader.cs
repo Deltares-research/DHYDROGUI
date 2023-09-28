@@ -115,7 +115,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 
                 throw new FileReadingException($"While reading cross sections an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
             }
-
+            
             return unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).ToArray();
         }
 

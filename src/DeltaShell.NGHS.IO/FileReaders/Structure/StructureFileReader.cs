@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
@@ -50,6 +51,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
 
             // do not add crossSectionDefinitions => already added
             AddStructuresToNetwork(structures);
+            
+            // Set defaults profiles for sewer connections without profile from file.
+            network.SewerConnections.Where(sc => sc.CrossSection == null).ForEach(sewerConnection =>
+            {
+                sewerConnection.GenerateDefaultProfileForSewerConnections();
+            });
 
             if (fileReadingExceptions.Count <= 0) return;
 

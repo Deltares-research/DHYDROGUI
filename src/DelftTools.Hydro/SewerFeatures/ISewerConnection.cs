@@ -82,5 +82,17 @@ namespace DelftTools.Hydro.SewerFeatures
         /// This is not applicable for sewer connections of type <see cref="Pipe"/>.
         /// </remarks>
         SewerConnectionSpecialConnectionType SpecialConnectionType { get; }
+
+        /// <summary>
+        /// For this type of sewer connection generate the default profile
+        /// </summary>
+        /// <returns>default profile for sewer connection <seealso cref="ICrossSectionDefinition"/></returns>
+        ICrossSectionDefinition GetDefaultProfile();
+
+        /// <summary>
+        /// Default source/target level which belongs to the profile of this sewer connection.
+        /// </summary>
+        /// <returns>Level values for the sewer connection</returns>
+        double GetDefaultLevelValue();
     }
 }

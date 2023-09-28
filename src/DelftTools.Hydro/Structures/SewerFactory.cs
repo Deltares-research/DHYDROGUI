@@ -70,8 +70,8 @@ namespace DelftTools.Hydro.Structures
 
         private static void SetSewerConnectionDefaultProperties(ISewerConnection sewerConnection)
         {
-            sewerConnection.LevelSource = -2.0;
-            sewerConnection.LevelTarget = -2.0;
+            sewerConnection.LevelSource = sewerConnection.GetDefaultLevelValue();
+            sewerConnection.LevelTarget = sewerConnection.GetDefaultLevelValue();
             sewerConnection.WaterType = SewerConnectionWaterType.Combined;
 
             var sewerConnectionCrossSection = CrossSection.CreateDefault(CrossSectionType.Standard, sewerConnection, sewerConnection.Length / 2);
@@ -199,7 +199,7 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         /// <param name="network"> The hydro network. </param>
         /// <returns> The existing or created <see cref="ICrossSectionDefinition"/>.</returns>
-        private static ICrossSectionDefinition GetDefaultPipeProfile(IHydroNetwork network)
+        public static ICrossSectionDefinition GetDefaultPipeProfile(IHydroNetwork network)
         {
             return GetOrCreateCrossSectionDefinition(network,
                                                      SewerCrossSectionDefinitionFactory.DefaultPipeProfileName,
@@ -234,14 +234,14 @@ namespace DelftTools.Hydro.Structures
 
         private static ICrossSectionDefinition GetOrCreateCrossSectionDefinition(IHydroNetwork network, string name, Func<ICrossSectionDefinition> createDefinitionFunc)
         {
-            ICrossSectionDefinition crossSectionDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault(d => d.Name == name);
+            ICrossSectionDefinition crossSectionDefinition = network?.SharedCrossSectionDefinitions.FirstOrDefault(d => d.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (crossSectionDefinition != null)
             {
                 return crossSectionDefinition;
             }
 
             crossSectionDefinition = createDefinitionFunc();
-            network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
+            network?.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
 
             return crossSectionDefinition;
         }

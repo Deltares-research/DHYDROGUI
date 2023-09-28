@@ -9,10 +9,12 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
@@ -147,7 +149,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (!crossSectionDefinitionsLookup.ContainsKey(sobekCrossSectionMapping.DefinitionId))
                     {
                         // definition not found or not supported type; ignore and do not use default type which is misleading.
-                        LogWarning("Definition with the following ids were not found; ignored", sobekCrossSectionMapping.DefinitionId);
+                        // For pipe & sewer connections set defaults
+                        LogWarning(Resources.SobekCrossSectionsImporter_AddCrossSections_Definition_with_the_following_ids_were_not_found__ignored__Using_default, sobekCrossSectionMapping.DefinitionId);
+                        branch.GenerateDefaultProfileForSewerConnections();
                         continue;
                     }
 
@@ -169,16 +173,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         offset = branch.Length;
                     }
 
-
-                    var pipe = branch as Pipe;
-                    var sewerConnection = branch as SewerConnection;
-                    if (pipe != null)
+                    if (branch is ISewerConnection sewerConnection)
                     {
-                        SetPipeProperties(pipe, definition, sobekCrossSectionMapping);
-                    }
-                    else if (sewerConnection != null)
-                    {
-                        LogWarning("Cross-sections can not be set on a sewer connection.", $"id \"{location.ID}\", \"{sewerConnection.Name}\"");
+                        SetSewerConnectionProperties(sewerConnection, definition, sobekCrossSectionMapping);
                     }
                     else
                     {
@@ -239,9 +236,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private void SetPipeProperties(IPipe pipe, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping)
+        private void SetSewerConnectionProperties(ISewerConnection sewerConnection, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping)
         {
-            if (!definition.Sections.Any())
+            if (definition.Sections != null && !definition.Sections.Any())
             {
                 var sewerCrossSectionType = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(RoughnessDataSet.SewerSectionTypeName));
                 if (sewerCrossSectionType == null) return;
@@ -253,12 +250,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     definition.AddSection(sewerCrossSectionType, definition.FlowWidth());
                 }
-                
             }
 
-            pipe.CrossSection = new CrossSection(definition);
-            pipe.LevelSource = sobekCrossSectionMapping.RefLevel2;
-            pipe.LevelTarget = sobekCrossSectionMapping.RefLevel1;
+            sewerConnection.CrossSection = new CrossSection(definition);
+            sewerConnection.LevelSource = sobekCrossSectionMapping.RefLevel2;
+            sewerConnection.LevelTarget = sobekCrossSectionMapping.RefLevel1;
+
         }
 
         private static Dictionary<string, ICrossSectionDefinition> GetDefinitionIDToDefinitionDictionary(IEnumerable<SobekCrossSectionMapping> mappings, Dictionary<string, SobekCrossSectionDefinition> sobekCrossSectionDefinitionsLookup, IHydroNetwork hydroNetwork)

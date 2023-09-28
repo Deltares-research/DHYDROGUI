@@ -5,6 +5,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests
@@ -74,6 +75,23 @@ namespace DelftTools.Hydro.Tests
             });
 
             Assert.That(pipe.CrossSectionDefinitionName, Is.EqualTo(csDefinitionName));
+        }
+        [Test]
+        public void GivenPipe_WhenNoCrossSectionNull_ThenAlwaysCreateDefaultPipeCrossSectionDefinitionWithDefaultLevels()
+        {
+            // arrange
+            IHydroNetwork hydroNetwork = new HydroNetwork();
+            var pipe = new Pipe() { Network = hydroNetwork };
+
+            // act 
+            pipe.GenerateDefaultProfileForSewerConnections();
+
+            //asserts
+            Assert.That(pipe.CrossSection.Definition.Name, Is.EqualTo(SewerCrossSectionDefinitionFactory.DefaultPipeProfileName));
+            Assert.That(pipe.HydroNetwork.SharedCrossSectionDefinitions.Select(def => def.Name).Any(name => name.Equals(SewerCrossSectionDefinitionFactory.DefaultPipeProfileName)), Is.True);
+            Assert.That(pipe.LevelSource, Is.EqualTo(-10.0d));
+            Assert.That(pipe.LevelTarget, Is.EqualTo(-10.0d));
+
         }
     }
 }

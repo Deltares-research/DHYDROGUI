@@ -181,4 +181,7 @@
   <data name="RRBoundaryConditionsTimeSeriesParser_Parse_The_provided__BcBlockData__is_not_timeseries_" xml:space="preserve">
     <value>The provided 'BcBlockData' is not timeseries.</value>
   </data>
+  <data name="SobekCrossSectionsImporter_AddCrossSections_Definition_with_the_following_ids_were_not_found__ignored__Using_default" xml:space="preserve">
+    <value>Definition with the following ids were not found; ignored. Using default</value>
+  </data>
 </root>

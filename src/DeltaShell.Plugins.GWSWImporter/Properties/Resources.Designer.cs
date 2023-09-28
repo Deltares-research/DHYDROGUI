@@ -151,6 +151,16 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No cross-section id defined in Verbinding.csv for sewer connection {0}. Using default sewer profile.
+        /// </summary>
+        public static string GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbinding_csv_for_sewer_connection__0___Using_default_sewer_profile {
+            get {
+                return ResourceManager.GetString("GwswFileImporter_AddSewerFeaturesToNetwork_No_cross_section_id_defined_in_Verbind" +
+                        "ing_csv_for_sewer_connection__0___Using_default_sewer_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No mapping was found to import Gwsw Files..
         /// </summary>
         public static string GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_ {

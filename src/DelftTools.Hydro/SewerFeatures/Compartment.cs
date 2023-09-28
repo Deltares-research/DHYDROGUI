@@ -111,7 +111,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 7)]
         [DynamicReadOnly]
         [DisplayName("Bottom level")]
-        public double BottomLevel { get; set; } = -2.0;
+        public double BottomLevel { get; set; } = -10.0;
 
         /// <summary>
         /// The surface level of the manhole compared to Dutch NAP (m).

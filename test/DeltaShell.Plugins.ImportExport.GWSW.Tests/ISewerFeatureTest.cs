@@ -376,7 +376,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var pipe = new Pipe {Name = pipeName};
             AddSewerFeatureToNetwork(pipe, network);
             Assert.That(Enumerable.Count<IPipe>(network.Pipes), Is.EqualTo(1));
-            Assert.That((object) network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
+            Assert.That((object) network.SharedCrossSectionDefinitions.Count, Is.EqualTo(2)); // 1 added in test nw + default pipe csd
 
             var pipeInNetwork = Enumerable.FirstOrDefault<IPipe>(network.Pipes);
             Assert.IsNotNull(pipeInNetwork);
@@ -384,8 +384,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var pipeCrossSectionDefinition = pipeInNetwork.CrossSection?.Definition;
             var expectedCrossSectionDefinition = (CrossSectionDefinitionStandard) CrossSectionDefinitionStandard.CreateDefault();
             Assert.That(pipeCrossSectionDefinition.CrossSectionType, Is.EqualTo(expectedCrossSectionDefinition.CrossSectionType));
-            Assert.That(pipeCrossSectionDefinition, Is.TypeOf<CrossSectionDefinitionStandard>());
-            Assert.That(((CrossSectionDefinitionStandard)pipeCrossSectionDefinition).ShapeType, Is.EqualTo(expectedCrossSectionDefinition.ShapeType));
+            Assert.That(pipeCrossSectionDefinition, Is.TypeOf<CrossSectionDefinitionProxy>());
+            ICrossSectionDefinition crossSectionDefinition = ((CrossSectionDefinitionProxy)pipeCrossSectionDefinition).InnerDefinition;
+            Assert.That(crossSectionDefinition, Is.TypeOf<CrossSectionDefinitionStandard>());
+            var crossSectionDefinitionStandard = ((CrossSectionDefinitionStandard)crossSectionDefinition);
+            Assert.That(crossSectionDefinitionStandard.ShapeType, Is.EqualTo(CrossSectionStandardShapeType.Circle));
+            Assert.That(((CrossSectionStandardShapeCircle)crossSectionDefinitionStandard.Shape).Diameter, Is.EqualTo(0.4));
+            Assert.That(pipe.LevelSource, Is.EqualTo(-10.0));
+            Assert.That(pipe.LevelTarget, Is.EqualTo(-10.0));
         }
 
         #endregion
@@ -652,7 +658,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var createdSewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(createdSewerConnection);
-            Assert.That(createdSewerConnection.LevelSource, Is.EqualTo(0.0).Within(0.01));
+            // weir / orifice level source is default -10
+            Assert.That(createdSewerConnection.LevelSource, Is.EqualTo(-10.0).Within(0.01));
 
             var gwswOrifice = new GwswConnectionOrifice(orificeName)
             {
@@ -711,7 +718,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var createdSewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(createdSewerConnection);
-            Assert.That(createdSewerConnection.LevelSource, Is.EqualTo(0.0).Within(0.01));
+            // weir / orifice level source is default -10
+            Assert.That(createdSewerConnection.LevelSource, Is.EqualTo(-10.0).Within(0.01));
+
 
 
             var gwswOrifice = new GwswConnectionOrifice(orificeName){ LevelSource = 80.1 };
