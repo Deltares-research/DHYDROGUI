@@ -23,7 +23,7 @@ using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis;
-using DHYDRO.Common.IO.BackwardCompatibility;
+using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests

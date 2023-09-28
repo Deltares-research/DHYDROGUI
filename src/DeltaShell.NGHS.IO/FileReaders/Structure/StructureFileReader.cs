@@ -13,7 +13,7 @@ using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
-using DHYDRO.Common.IO.BackwardCompatibility;
+using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using log4net;
@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
     public static class StructureFileReader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(StructureFileReader));
-        private static readonly DelftIniBackwardsCompatibilityHelper backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new StructureFileBackwardsCompatibilityConfigurationValues());
+        private static readonly IniBackwardsCompatibilityHelper backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new StructureFileBackwardsCompatibilityConfigurationValues());
 
         public static void ReadFile(string structureFilename, 
                                     ICrossSectionDefinition[] crossSectionDefinitions, 

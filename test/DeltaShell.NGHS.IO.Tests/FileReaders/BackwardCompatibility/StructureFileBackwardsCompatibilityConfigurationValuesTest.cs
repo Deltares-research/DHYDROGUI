@@ -1,6 +1,6 @@
 using System;
 using DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility;
-using DHYDRO.Common.IO.BackwardCompatibility;
+using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.BackwardCompatibility
@@ -17,15 +17,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.BackwardCompatibility
             // Assert
             Assert.That(configurationValues.ObsoleteProperties, Is.Empty);
             Assert.That(configurationValues.LegacyPropertyMapping, Is.Empty);
-            Assert.That(configurationValues.LegacyCategoryMapping, Is.Empty);
+            Assert.That(configurationValues.LegacySectionMapping, Is.Empty);
             Assert.That(configurationValues.UnsupportedPropertyValues, Has.Count.EqualTo(1));
             Assert.That(configurationValues.UnsupportedPropertyValues, Has.Exactly(1)
                                                                           .Matches(IsPropertyInfo("structure", "type", "extraresistance")));
         }
 
-        private static Predicate<DelftIniPropertyInfo> IsPropertyInfo(string iniSection, string property, string value)
+        private static Predicate<IniPropertyInfo> IsPropertyInfo(string iniSection, string property, string value)
         {
-            return info => info.Category.Equals(iniSection) &&
+            return info => info.Section.Equals(iniSection) &&
                            info.Property.Equals(property) &&
                            info.Value.Equals(value);
         }

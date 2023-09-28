@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using DHYDRO.Common.IO.BackwardCompatibility;
+using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 
 namespace DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility
 {
@@ -8,12 +8,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility
     /// <see cref="StructureFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy INI sections
     /// and properties for the structure file.
     /// </summary>
-    /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>
-    public class StructureFileBackwardsCompatibilityConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
+    /// <seealso cref="IIniBackwardsCompatibilityConfigurationValues"/>
+    public class StructureFileBackwardsCompatibilityConfigurationValues : IIniBackwardsCompatibilityConfigurationValues
     {
-        private static readonly IList<DelftIniPropertyInfo> unsupportedPropertyValues = new List<DelftIniPropertyInfo>
+        private static readonly IList<IniPropertyInfo> unsupportedPropertyValues = new List<IniPropertyInfo>
         {
-            new DelftIniPropertyInfo("structure", "type", "extraresistance")
+            new IniPropertyInfo("structure", "type", "extraresistance")
         };
 
         /// <inheritdoc/>
@@ -24,11 +24,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility
             new ReadOnlyDictionary<string, string>(new Dictionary<string, string>());
 
         /// <inheritdoc/>
-        public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } = 
+        public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } = 
             new Dictionary<string, string>(new Dictionary<string, string>());
 
         /// <inheritdoc/>
-        public IEnumerable<DelftIniPropertyInfo> UnsupportedPropertyValues { get; } =
-            new ReadOnlyCollection<DelftIniPropertyInfo>(unsupportedPropertyValues);
+        public IEnumerable<IniPropertyInfo> UnsupportedPropertyValues { get; } =
+            new ReadOnlyCollection<IniPropertyInfo>(unsupportedPropertyValues);
     }
 }
