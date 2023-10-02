@@ -386,9 +386,17 @@ namespace DelftTools.Hydro.SewerFeatures
             {
                 case NotifyCollectionChangedAction.Add when feature is IPump:
                     SpecialConnectionType = SewerConnectionSpecialConnectionType.Pump;
+                    if (crossSection == null)
+                    {
+                        this.GenerateDefaultProfileForSewerConnections();
+                    }
                     break;
                 case NotifyCollectionChangedAction.Add when feature is IWeir:
                     SpecialConnectionType = SewerConnectionSpecialConnectionType.Weir;
+                    if (crossSection == null)
+                    {
+                        this.GenerateDefaultProfileForSewerConnections();
+                    }
                     break;
                 case NotifyCollectionChangedAction.Remove when feature is IPump || feature is IWeir:
                     SpecialConnectionType = SewerConnectionSpecialConnectionType.None;
@@ -677,7 +685,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 32, ExportName = "DefName")]
         public virtual string DefinitionName
         {
-            get { return CrossSection.Definition.Name; }
+            get { return CrossSection?.Definition?.Name; }
             set
             {
                 if (value == null || DefinitionName == value) return;
