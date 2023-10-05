@@ -8,7 +8,7 @@
     <GitHash>DEV</GitHash>
     <BuildNumber>0</BuildNumber>
 
-    <DhydroFileVersion>4.13.0</DhydroFileVersion>
+    <DhydroFileVersion>4.14.0</DhydroFileVersion>
     <Version>$(DhydroFileVersion).$(BuildNumber)</Version>
     <FileVersion>$(Version)</FileVersion>
     <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
