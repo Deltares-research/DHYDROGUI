@@ -1073,12 +1073,6 @@
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputShortcutCheck" Properties="File=RTCManualShortcuts_wxi;ShortCutName=$(_CheckDeltaresStartMenuFolderRTCUserManualNameShortcutName);ShortCut=$(_CheckDeltaresStartMenuFolderRTCUserManualNameShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
-      <_CheckDeltaresStartMenuFolderRTCReferenceManualNameShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\RTC-Tools Technical Reference Manual.lnk</_CheckDeltaresStartMenuFolderRTCReferenceManualNameShortcut>
-      <_CheckDeltaresStartMenuFolderRTCReferenceManualNameShortcutName>$(ProductName) Start Menu Folder RTC-Tools Technical Reference Manual ShortCut</_CheckDeltaresStartMenuFolderRTCReferenceManualNameShortcutName>
-    </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputShortcutCheck" Properties="File=RTCManualShortcuts_wxi;ShortCutName=$(_CheckDeltaresStartMenuFolderRTCReferenceManualNameShortcutName);ShortCut=$(_CheckDeltaresStartMenuFolderRTCReferenceManualNameShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
-
-    <PropertyGroup>
       <_CheckDeltaresStartMenuFolderRRUserManualNameShortcut>$(_CheckDeltaShellStartMenuFolderShortCut)\D-Rainfall Runoff User Manual.lnk</_CheckDeltaresStartMenuFolderRRUserManualNameShortcut>
       <_CheckDeltaresStartMenuFolderRRUserManualNameShortcutName>$(ProductName) Start Menu Folder D-Rainfall Runoff User Manual ShortCut</_CheckDeltaresStartMenuFolderRRUserManualNameShortcutName>
     </PropertyGroup>
