@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
   <Shortcut Id="DRTC_User_Manual_Shortcut" Name="!(loc.RTCUserManualName)" Target="[BINDIR]D-Real_Time_Control_User_Manual.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DRTCFMTechnicalReferenceShortcut" Name="!(loc.RTCReferenceManualName)" Target="[BINDIR]RTC-Tools_Technical_Reference_Manual.pdf" WorkingDirectory="BINDIR"/>  
 </Include>
