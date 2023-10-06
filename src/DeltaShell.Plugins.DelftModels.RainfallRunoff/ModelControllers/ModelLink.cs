@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
             FromFeature = fromFeature;
             FromId = ((INameable) fromFeature).Name;
-            ToId = toId ?? FromId + "_boundary";
+            ToId = toId ?? FromId + RainfallRunoffModel.BoundarySuffix;
         }
 
         public ModelLink(string linkName, IFeature fromFeature, HydroLink realLink, IFeature toFeature)

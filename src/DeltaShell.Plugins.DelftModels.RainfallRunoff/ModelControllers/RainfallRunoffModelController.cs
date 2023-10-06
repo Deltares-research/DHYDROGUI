@@ -531,7 +531,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                 };
             }
 
-            string targetName = hydroObject.Name + "_boundary";
+            string targetName = hydroObject.Name + RainfallRunoffModel.BoundarySuffix;
             return new ModelLink(link.Name, hydroObject, link, targetName);
         }
 

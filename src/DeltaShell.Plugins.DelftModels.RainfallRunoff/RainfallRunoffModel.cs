@@ -51,6 +51,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public static readonly short MinGreenhouseYear = 1951;
         public static readonly short MaxGreenhouseYear = 1994;
 
+        public const string BoundarySuffix = "_boundary";
+
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModel));
         private readonly DimrRunner runner;
         private readonly IMeteoDataSourceSelector meteoDataSourceSelector;
@@ -1165,20 +1167,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             store.LocationsFromStringToObject = s =>
             {
-                if (GetElementSetForCoverage(featureCoverage) == ElementSet.BoundaryElmSet)
+                if (GetElementSetForCoverage(featureCoverage) == ElementSet.BoundaryElmSet 
+                    && s.EndsWith(BoundarySuffix))
                 {
-                    var boundarySufix = "_boundary";
-                    if (s.EndsWith(boundarySufix))
-                    {
-                        s = s.Replace(boundarySufix, "");
-                    }
+                    s = s.Replace(BoundarySuffix, "");
                 }
                 return featureCoverage.Features.OfType<INameable>().FirstOrDefault(n => n.Name == s);
             };
             store.LocationFromObjectToString = f =>
             {
                 var sufix = GetElementSetForCoverage(featureCoverage) == ElementSet.BoundaryElmSet
-                    ? "_boundary"
+                    ? BoundarySuffix
                     : "";
 
                 var fullName = ( (INameable) f ).Name + sufix;

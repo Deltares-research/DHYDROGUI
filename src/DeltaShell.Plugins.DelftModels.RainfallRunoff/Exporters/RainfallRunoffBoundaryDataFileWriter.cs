@@ -78,6 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             };
 
             sections.AddRange(CreateRunoffBoundarySections(rainfallRunoffModel));
+            sections.AddRange(CreateWasteWaterTreatmentPlantsBoundarySections(rainfallRunoffModel.Basin.WasteWaterTreatmentPlants));
             sections.AddRange(CreateCatchmentBoundarySections(rainfallRunoffModel));
 
             return sections;
@@ -98,6 +99,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 yield return CreateBcSection(rainfallRunoffModel.StartTime,
                                              boundaryData.Series,
                                              boundaryData.Boundary.Name);
+            }
+        }
+
+        private static IEnumerable<BcIniSection> CreateWasteWaterTreatmentPlantsBoundarySections(IEnumerable<WasteWaterTreatmentPlant> wasteWaterTreatmentPlants)
+        {
+            foreach (WasteWaterTreatmentPlant wasteWaterTreatmentPlant in wasteWaterTreatmentPlants)
+            {
+                yield return CreateDefaultBcSection($"{wasteWaterTreatmentPlant.Name}{RainfallRunoffModel.BoundarySuffix}");
             }
         }
 

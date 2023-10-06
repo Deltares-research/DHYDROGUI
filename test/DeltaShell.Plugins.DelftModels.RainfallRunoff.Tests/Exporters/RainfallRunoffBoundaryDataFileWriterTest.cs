@@ -345,6 +345,41 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             bcWriter.Received(1).WriteBcFile(MatchingSections(expectedSections), filePath);
         }
 
+        [Test]
+        public void WriteFile_RRModelWithWasteWaterTreatmentPlant_ReturnsExpectedIniSection()
+        {
+            // Setup
+            var bcFileWriter = Substitute.For<IBcWriter>();
+            var rainfallRunoffBoundaryDataFileWriter = new RainfallRunoffBoundaryDataFileWriter(bcFileWriter);
+            var rainfallRunoffModel = Substitute.For<IRainfallRunoffModel>();
+
+            var modelBoundaryData = new EventedList<RunoffBoundaryData>();
+            var modelCatchmentData = new EventedList<CatchmentModelData>();
+            rainfallRunoffModel.BoundaryData.Returns(modelBoundaryData);
+            rainfallRunoffModel.ModelData.Returns(modelCatchmentData);
+
+            const string wwtpName = "wwtp";
+            var wwtp = new WasteWaterTreatmentPlant() { Name = wwtpName };
+            var wwtps = new EventedList<WasteWaterTreatmentPlant>() { wwtp };
+            rainfallRunoffModel.Basin.WasteWaterTreatmentPlants.Returns(wwtps);
+
+            // Call
+            const string filePath = "boundaryConditions.bc";
+            rainfallRunoffBoundaryDataFileWriter.WriteFile(filePath, rainfallRunoffModel);
+
+            // Assert
+            var expectedSections = new List<BcIniSection>
+            {
+                CreateExpectedGeneralSection(),
+                CreateExpectedConstantBcSection("wwtp_boundary", 0),
+            };
+
+            // Assert
+            bcFileWriter.Received(1).WriteBcFile(
+                MatchingSections(expectedSections),
+                filePath);
+        }
+
         private static BcIniSection CreateExpectedGeneralSection()
         {
             var generalIniSection = new IniSection("General");
