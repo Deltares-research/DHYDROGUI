@@ -18,6 +18,7 @@
   <String Id="LicenseRtf" Overridable="yes">Delft3D FM HMWQ_Resources\License.rtf</String>
 
   <String Id="SupportEmail" Overridable="yes">software.support@deltares.nl</String>
+  <String Id="SupportPhone" Overridable="yes">+31 (0)88 335 8100</String>
   <String Id="SplashScreenLogoImageFilePath" Overridable="yes">splash_screen.jpg</String>
   <String Id="ManualFileName" Overridable="yes">Delta_Shell_User_Manual.pdf</String>
   <String Id="PluginFeatureDescription">The hydrodynamic module D-Flow Flexible Mesh (D-Flow FM) which is part of the Delft3D Flexible Mesh Suite.</String>

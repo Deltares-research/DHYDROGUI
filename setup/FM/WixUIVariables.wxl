@@ -87,7 +87,6 @@
   <String Id="PublicReleaseVersion">2024.01</String>
   <String Id="ReleaseVersion">4.13.0</String> <!--Need to discuss with the team-->
   <String Id="ProductName">!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName)</String>
-  <String Id="SupportPhone">+31 (0)88 335 8100</String>
   <String Id="DeltaShellFeatureName">DeltaShell</String>
   <String Id="DeltaShellFeatureDescription">The framework enables to develop a range of modeling suites, each distinguished by the components and — most significantly — the (numerical) modules, which are plugged in.</String>
   <String Id="PluginFeatureName">!(loc.DistributionName) components</String>
