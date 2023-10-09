@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
         public static string GetDelwaqDataDefaultFolderPath()
         {
-            return Path.Combine(GetDelwaqKernelMainFolderPath(), "Default");
+            return Path.Combine(GetDelwaqKernelMainFolderPath(), "resources");
         }
 
         private static string DWaqDllPath => Path.Combine(DimrApiDataSet.KernelsDirectory, "x64", delwaq_kernel);
