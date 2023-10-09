@@ -444,7 +444,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 AssertCorrectProperty(result, StructureRegion.AllowedFlowDir.Key, "both");
                 AssertCorrectProperty(result, StructureRegion.CrestLevel.Key, "1.000");
                 AssertCorrectProperty(result, StructureRegion.CrestWidth.Key, "5.000");
-                AssertCorrectProperty(result, StructureRegion.GateLowerEdgeLevel.Key, "2.000");
+                AssertCorrectProperty(result, StructureRegion.GateLowerEdgeLevel.Key, "11.000");
                 AssertCorrectProperty(result, StructureRegion.CorrectionCoeff.Key, "0.630");
                 AssertCorrectProperty(result, StructureRegion.UseVelocityHeight.Key, "true");
             }

@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             AddAllowedFlowDir(orifice);
             AddCrestLevel(orifice);
             AddCrestWidth(orifice);
-            AddGateLowerEdgeLevel(orifice, formula);
+            AddGateLowerEdgeLevel(formula);
             AddCorrectionCoeff(formula);
             AddUseVelocityHeight(orifice);
             AddLimitFlowPos(orifice, formula);
@@ -56,14 +56,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                                     StructureRegion.CrestWidth.Description, 
                                     StructureRegion.CrestWidth.Format);
 
-        private void AddGateLowerEdgeLevel(IOrifice orifice, GatedWeirFormula formula)
-        {
-            AddProperty(formula.CanBeTimedependent && formula.UseLowerEdgeLevelTimeSeries,
+        private void AddGateLowerEdgeLevel(GatedWeirFormula formula) =>
+            AddProperty(formula.IsUsingTimeSeriesForLowerEdgeLevel(),
                         StructureRegion.GateLowerEdgeLevel.Key,
-                        (orifice.CrestLevel + formula.GateOpening),
+                        formula.LowerEdgeLevel,
                         StructureRegion.GateLowerEdgeLevel.Description,
                         StructureRegion.GateLowerEdgeLevel.Format);
-        }
 
         private void AddCorrectionCoeff(GatedWeirFormula formula) => 
             IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.CorrectionCoeff.Key, 

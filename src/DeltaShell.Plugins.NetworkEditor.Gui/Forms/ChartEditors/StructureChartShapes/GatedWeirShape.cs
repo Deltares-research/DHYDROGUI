@@ -80,6 +80,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
             ShapeFeatures.Add(WeirShape);
             ShapeFeatures.Add(GateShape);
+            ShapeFeatures.Add(WaterShape);
         }
 
         public override IShapeFeatureEditor CreateShapeFeatureEditor(ShapeEditMode shapeEditMode)

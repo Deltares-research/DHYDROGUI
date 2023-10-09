@@ -91,7 +91,7 @@
     allowedFlowDir        = both                
     crestLevel            = 3.000               
     crestWidth            = 5.000               
-    gateLowerEdgeLevel    = 5.500               
+    gateLowerEdgeLevel    = 11.000              
     corrCoeff             = 0.500               
     useVelocityHeight     = true                
     useLimitFlowNeg       = True                

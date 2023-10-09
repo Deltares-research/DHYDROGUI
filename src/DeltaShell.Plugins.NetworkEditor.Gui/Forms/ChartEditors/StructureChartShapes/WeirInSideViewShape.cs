@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private static readonly Bitmap gateIcon = Properties.Resources.Gate;
         private readonly double iconLocationY;
 
-        private static readonly StructureShapeStyleProvider StructureShapeStyleProvider =
+        private static readonly StructureShapeStyleProvider structureShapeStyleProvider =
             new StructureShapeStyleProvider();
 
         public WeirInSideViewShape(IChart chart, 
@@ -29,9 +29,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         protected override void CreateStyles()
         {
-            NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(Structure);
-            SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(Structure);
-            DisabledStyle = StructureShapeStyleProvider.GetDisabledStyleForStructure(Structure);
+            NormalStyle = structureShapeStyleProvider.GetNormalStyleForStructure(Structure);
+            SelectedStyle = structureShapeStyleProvider.GetSelectedStyleForStructure(Structure);
+            DisabledStyle = structureShapeStyleProvider.GetDisabledStyleForStructure(Structure);
         }
 
         protected override IEnumerable<IShapeFeature> GetShapeFeatures()
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             if (Structure.WeirFormula is IGatedWeirFormula formula)
             {
                 var gatedWeirShape = new GatedWeirShape(Chart, OffsetInSideView, Structure.CrestLevel,
-                                                        16, Structure.CrestLevel + formula.GateOpening,
+                                                        16, formula.LowerEdgeLevel,
                                                         zMinValue,
                                                         zMaxValue, true, false);
                 

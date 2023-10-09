@@ -1040,9 +1040,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else
             {
-                foreach (EngineParameter exchangableParameter in EngineParameters.GetExchangableParameters(EngineParameters.EngineMapping(), location))
+                foreach (EngineParameter exchangeableParameter in EngineParameters.GetExchangeableParameters(EngineParameters.EngineMapping(), location))
                 {
-                    yield return exchangableParameter;
+                    yield return exchangeableParameter;
                 }
             }
         }

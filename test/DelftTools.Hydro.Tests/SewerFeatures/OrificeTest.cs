@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             Assert.That(orifice.Name, Is.EqualTo("Orifice"));
             Assert.That(orifice.WeirFormula, Is.InstanceOf<GatedWeirFormula>());
             var gatedWeirFormula = (GatedWeirFormula)orifice.WeirFormula;
-            Assert.That(gatedWeirFormula.CanBeTimedependent, Is.False);
+            Assert.That(gatedWeirFormula.CanBeTimeDependent, Is.False);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             Assert.That(orifice.Name, Is.EqualTo(name));
             Assert.That(orifice.WeirFormula, Is.InstanceOf<GatedWeirFormula>());
             var gatedWeirFormula = (GatedWeirFormula)orifice.WeirFormula;
-            Assert.That(gatedWeirFormula.CanBeTimedependent, Is.False);
+            Assert.That(gatedWeirFormula.CanBeTimeDependent, Is.False);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             Assert.That(orifice.Name, Is.EqualTo(name));
             Assert.That(orifice.WeirFormula, Is.InstanceOf<GatedWeirFormula>());
             var gatedWeirFormula = (GatedWeirFormula)orifice.WeirFormula;
-            Assert.That(gatedWeirFormula.CanBeTimedependent, Is.True);
+            Assert.That(gatedWeirFormula.CanBeTimeDependent, Is.True);
         }
  
         [Test]

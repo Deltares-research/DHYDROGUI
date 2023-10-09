@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             GateHeight = 0.0;
             ContractionCoefficient = 0.63;
             LateralContraction = 1.0;
-            CanBeTimedependent = canBeTimeDependent;
+            CanBeTimeDependent = canBeTimeDependent;
             UseVelocityHeight = true;
 
             LowerEdgeLevelProperty = ConstructLowerEdgeLevelSteerableProperty();
@@ -28,7 +28,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         private SteerableProperty ConstructLowerEdgeLevelSteerableProperty()
         {
             const double defaultValue = 11.0;
-            return CanBeTimedependent 
+            return CanBeTimeDependent 
                        ? new SteerableProperty(defaultValue, 
                                                "Gate opening", 
                                                "Gate opening", 
@@ -39,7 +39,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// <summary>
         /// Indicates if time dependent parameters can be used.
         /// </summary>
-        public virtual bool CanBeTimedependent { get; protected set; }
+        public virtual bool CanBeTimeDependent { get; protected set; }
 
         /// <summary>
         /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
@@ -52,9 +52,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                              : SteerablePropertyDriver.Constant;
         }
 
-        /// <summary>
-        /// LowerEdgeLevel
-        /// </summary>
+        /// <inheritdoc />
         public virtual double LowerEdgeLevel
         {
             get => LowerEdgeLevelProperty.Constant; 
@@ -75,10 +73,13 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual SteerableProperty LowerEdgeLevelProperty { get; set; }
 
+        /// <inheritdoc />
         public virtual string Name => "Gated weir (Orifice)";
 
+        /// <inheritdoc />
         public virtual bool IsRectangle => true;
 
+        /// <inheritdoc />
         public virtual bool HasFlowDirection => true;
 
         /// <summary>
@@ -91,14 +92,10 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual double LateralContraction { get; set; }
 
-        /// <summary>
-        /// Gate opening (openlevel)
-        /// </summary>
+        /// <inheritdoc />
         public virtual double GateOpening { get; set; }
 
-        /// <summary>
-        /// GateHeight
-        /// </summary>
+        /// <inheritdoc />
         public virtual double GateHeight { get; set; }
 
         /// <summary>
@@ -122,10 +119,19 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         public virtual bool UseMaxFlowNeg { get; set; }
 
         public virtual bool UseVelocityHeight { get; set; }
+        
+        /// <summary>
+        /// Determine whether a time series is being used for the lower edge level.
+        /// </summary>
+        /// <returns><c>true</c> when using a time series for the lower edge level; otherwise <c>false</c>.</returns>
+        public virtual bool IsUsingTimeSeriesForLowerEdgeLevel() 
+            => CanBeTimeDependent && UseLowerEdgeLevelTimeSeries;
 
+        /// <inheritdoc />
         public virtual object Clone()
         {
-            var gatedWeirFormula = new GatedWeirFormula(CanBeTimedependent) 
+            var lowerEdgeLevelProperty = new SteerableProperty(LowerEdgeLevelProperty);
+            var gatedWeirFormula = new GatedWeirFormula(CanBeTimeDependent) 
             {
                 ContractionCoefficient = ContractionCoefficient, 
                 GateOpening = GateOpening, 
@@ -136,9 +142,9 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                 UseMaxFlowPos = UseMaxFlowPos,
                 UseVelocityHeight = UseVelocityHeight,
                 GateHeight = GateHeight,
+                LowerEdgeLevelProperty = lowerEdgeLevelProperty
             };
 
-            gatedWeirFormula.LowerEdgeLevelProperty = new SteerableProperty(LowerEdgeLevelProperty);
             return gatedWeirFormula;
         }
     }

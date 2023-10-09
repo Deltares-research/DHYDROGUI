@@ -15,31 +15,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 {
     public class WeirPropertiesRow : IDisposable, INotifyPropertyChange, IFeatureRowObject
     {
-        private FormulaEnum? formula;
-        private static readonly GatedWeirFormula StGatedWeirFormula = new GatedWeirFormula(true);
-        private static readonly PierWeirFormula StPierWeirFormula = new PierWeirFormula();
-        private static readonly RiverWeirFormula StRiverWeirFormula = new RiverWeirFormula();
-        private static readonly SimpleWeirFormula StSimpleWeirFormula = new SimpleWeirFormula();
-        private static readonly FreeFormWeirFormula StFreeFormWeirFormula = new FreeFormWeirFormula();
-        private static readonly GeneralStructureWeirFormula StGeneralStructureWeirFormula = new GeneralStructureWeirFormula();
+        private const string timeSeriesString = "Time series";
+
+        private static readonly GatedWeirFormula defaultGatedWeirFormula = new GatedWeirFormula(true);
+        private static readonly SimpleWeirFormula defaultSimpleWeirFormula = new SimpleWeirFormula();
+        private static readonly FreeFormWeirFormula defaultFreeFormWeirFormula = new FreeFormWeirFormula();
+        private static readonly GeneralStructureWeirFormula defaultGeneralStructureWeirFormula = new GeneralStructureWeirFormula();
+        
         private IWeir weir;
+        private FormulaEnum? formula;
 
         public WeirPropertiesRow(IWeir weir)
         {
             Weir = weir;
+            
             SetFormula(ConvertFormula(Weir.WeirFormula), false);
         }
+        
+        private GatedWeirFormula GatedWeirFormula { get; set; }
+        private SimpleWeirFormula SimpleWeirFormula { get; set; }
+        private FreeFormWeirFormula FreeFormWeirFormula { get; set; }
+        private GeneralStructureWeirFormula GeneralStructureWeirFormula { get; set; }
 
         private IWeir Weir
         {
-            get { return weir; }
+            get
+            {
+                return weir;
+            }
             set
             {
                 if (weir != null)
                 {
                     ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertiesRowPropertyChanged;
                 }
+                
                 weir = value;
+                
                 if (weir != null)
                 {
                     ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertiesRowPropertyChanged;
@@ -47,7 +59,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
         }
 
-        // weir properties
         public string Name
         {
             get { return Weir.Name; }
@@ -74,8 +85,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             get { return Weir.Chainage; }
         }
-        
-        
+
         public FormulaEnum Formula
         {
             get { return formula ?? FormulaEnum.SimpleWeir; }
@@ -93,7 +103,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             get { return Weir.WeirFormula; }
         }
-        
+
         [DynamicReadOnly]
         [DisplayName("Discharge coefficient")]
         public string DischargeCoefficient
@@ -108,7 +118,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
         }
         
-        protected string CrestWidthTimeSeriesString = "Time series";
         [DynamicReadOnly]
         [DisplayName("Crest width")]
         public string CrestWidth
@@ -123,7 +132,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
         }
 
-        protected string CrestLevelTimeSeriesString = "Time series";
         [DynamicReadOnly]
         [DisplayName("Crest level")]
         public string CrestLevel
@@ -132,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 if (weir.IsUsingTimeSeriesForCrestLevel())
                 {
-                    return CrestLevelTimeSeriesString;
+                    return timeSeriesString;
                 }
                 return weir.CrestLevel.ToString("0.00", CultureInfo.CurrentCulture);
             }
@@ -202,7 +210,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             set { GatedWeirFormula.LateralContraction = value; }
         }
 
-        protected string OpeningLevelTimeSeriesString = "Time series";
         [DynamicReadOnly]
         [DisplayName("Lower edge level")]
         public string GLowerEdge
@@ -211,15 +218,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 if (Weir is IOrifice)
                 {
-                    if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+                    if (GatedWeirFormula.IsUsingTimeSeriesForLowerEdgeLevel())
                     {
-                        return OpeningLevelTimeSeriesString;
+                        return timeSeriesString;
                     }
-                    return (GatedWeirFormula.GateOpening + Weir.CrestLevel).ToString(CultureInfo.CurrentCulture);
+                    return GatedWeirFormula.LowerEdgeLevel.ToString("0.00", CultureInfo.CurrentCulture);
                 }
                 if (Formula == FormulaEnum.GeneralStructure)
                 {
-                    return (GeneralStructureWeirFormula.LowerEdgeLevel).ToString(CultureInfo.CurrentCulture);
+                    return GeneralStructureWeirFormula.LowerEdgeLevel.ToString("0.00", CultureInfo.CurrentCulture);
                 }
                 return "0";
             }
@@ -230,7 +237,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 {
                     if (Weir is IOrifice)
                     {
-                        if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+                        if (GatedWeirFormula.IsUsingTimeSeriesForLowerEdgeLevel())
                         {
                             throw new InvalidOperationException("Cannot set value from row when using time dependent lower edge level.");
                         }
@@ -246,7 +253,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
         }
 
-        [DynamicReadOnly]
+        [ReadOnly(true)]
         [DisplayName("Gate opening")]
         public string GGateOpening
         {
@@ -254,32 +261,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 if (Weir is IOrifice)
                 {
-                    if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+                    if (GatedWeirFormula.IsUsingTimeSeriesForLowerEdgeLevel())
                     {
-                        return OpeningLevelTimeSeriesString;
+                        return timeSeriesString;
                     }
-                    return GatedWeirFormula.GateOpening.ToString("0.00", CultureInfo.CurrentCulture);
+                    return (GatedWeirFormula.LowerEdgeLevel - weir.CrestLevel).ToString("0.00", CultureInfo.CurrentCulture);
                 }
                 if (Formula == FormulaEnum.GeneralStructure)
                 {
                     return (GeneralStructureWeirFormula.LowerEdgeLevel - weir.CrestLevel).ToString("0.00", CultureInfo.CurrentCulture);
                 }
                 return "0";
-            }
-            set
-            {
-                if (Weir is IOrifice)
-                {
-                    if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
-                    {
-                        throw new InvalidOperationException("Cannot set value from row when using time dependent gate opening.");
-                    }
-                    GatedWeirFormula.GateOpening = double.Parse(value, CultureInfo.CurrentCulture);
-                }
-                if (Formula == FormulaEnum.GeneralStructure)
-                {
-                    GeneralStructureWeirFormula.GateOpening = double.Parse(value, CultureInfo.CurrentCulture);
-                }
             }
         }
 
@@ -346,14 +338,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             set { Weir.UseVelocityHeight = value; }
         }
 
+        /// <inheritdoc />
         [Browsable(false)]
         public bool HasParent { get; set; }
+        
+        /// <inheritdoc />
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <inheritdoc />
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        /// <inheritdoc />
         public IFeature GetFeature()
         {
             return weir;
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Weir = null;
@@ -361,14 +362,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             PropertyChanging = null;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event PropertyChangingEventHandler PropertyChanging;
-
-
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (weir == null) return false;
+            if (weir == null)
+            {
+                return false;
+            }
+            
             if (propertyName == nameof(CrestLevel))
             {
                 return weir.IsUsingTimeSeriesForCrestLevel();
@@ -377,7 +378,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 return weir.IsUsingTimeSeriesForCrestLevel() || weir.GetStructureType() == StructureType.UniversalWeir;
             }
-            if (propertyName == nameof(FlowDirection) || propertyName == nameof(SDischargeCoefficient) /*|| propertyName == nameof(SLateralContraction)*/)
+            if (propertyName == nameof(FlowDirection) || propertyName == nameof(SDischargeCoefficient))
             {
                 return Formula != FormulaEnum.SimpleWeir;
             }
@@ -394,7 +395,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 if (Weir is IOrifice)
                 {
-                    return GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries;
+                    return GatedWeirFormula.IsUsingTimeSeriesForLowerEdgeLevel();
                 }
                 return Formula != FormulaEnum.GeneralStructure;
             }
@@ -404,8 +405,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 return !(Weir is IOrifice) && Formula == FormulaEnum.FreeFormWeir;
             }
 
-            if (propertyName == nameof(GContractionCoefficient) || propertyName == nameof(GLateralContraction) || propertyName == nameof(GMaxFlowPos) || 
-                propertyName == nameof(GMaxFlowNeg) || propertyName == nameof(GUseMaxFlowPos) || propertyName == nameof(GUseMaxFlowNeg))
+            if (propertyName == nameof(GContractionCoefficient) || 
+                propertyName == nameof(GLateralContraction) || 
+                propertyName == nameof(GMaxFlowPos) || 
+                propertyName == nameof(GMaxFlowNeg) || 
+                propertyName == nameof(GUseMaxFlowPos) || 
+                propertyName == nameof(GUseMaxFlowNeg))
             {
                 return true;
             }
@@ -413,21 +418,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             return false;
         }
 
-        private GatedWeirFormula GatedWeirFormula { get; set; }
-        private PierWeirFormula PierWeirFormula { get; set; }
-        private RiverWeirFormula RiverWeirFormula { get; set; }
-        private SimpleWeirFormula SimpleWeirFormula { get; set; }
-        private FreeFormWeirFormula FreeFormWeirFormula { get; set; }
-        private GeneralStructureWeirFormula GeneralStructureWeirFormula { get; set; }
-
         private void SetFormula(FormulaEnum? newFormula, bool setToWeir)
         {
-            GatedWeirFormula = StGatedWeirFormula;
-            PierWeirFormula = StPierWeirFormula;
-            RiverWeirFormula = StRiverWeirFormula;
-            SimpleWeirFormula = StSimpleWeirFormula;
-            FreeFormWeirFormula = StFreeFormWeirFormula;
-            GeneralStructureWeirFormula = StGeneralStructureWeirFormula;
+            GatedWeirFormula = defaultGatedWeirFormula;
+            SimpleWeirFormula = defaultSimpleWeirFormula;
+            FreeFormWeirFormula = defaultFreeFormWeirFormula;
+            GeneralStructureWeirFormula = defaultGeneralStructureWeirFormula;
+            
             switch (newFormula)
             {
                 case FormulaEnum.SimpleWeir:
@@ -462,6 +459,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 }
                 GatedWeirFormula = (GatedWeirFormula)Weir.WeirFormula;
             }
+            
             formula = newFormula;
         }
 
@@ -498,6 +496,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 return null; //because we don't care for orifices
             }
+            
             throw new NotImplementedException("Should not get here");
         }
 

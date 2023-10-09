@@ -370,7 +370,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         }
 
         // used for RTC and for OpenMI
-        public static IEnumerable<EngineParameter> GetExchangableParameters(IList<EngineParameter> mapping,
+        public static IEnumerable<EngineParameter> GetExchangeableParameters(IEnumerable<EngineParameter> mapping,
             IFeature feature)
         {
             var elementSet = GetElementSet(feature);
@@ -503,7 +503,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                     switch (parameter)
                     {
                         case Model1DParameterNames.StructureGateLevel:
-                            return weir.CrestLevel + formula.GateOpening;
+                            return formula.LowerEdgeLevel;
                         case Model1DParameterNames.StructureOpeningHeight:
                             return formula.GateOpening;
                     }

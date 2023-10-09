@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 var bindingList = new ThreadsafeBindingList<string>(SynchronizationContext.Current, new[] {data.WeirFormula.Name});
                 comboBoxWeirFormula.DataSource = bindingList;
                 comboBoxWeirFormula.Enabled = false;
-                LowerEdgeLevelTimeDependentCheckBox.Visible = gatedWeirFormula.CanBeTimedependent;
+                LowerEdgeLevelTimeDependentCheckBox.Visible = gatedWeirFormula.CanBeTimeDependent;
                 LowerEdgeLevelTimeDependentCheckBox.Checked = gatedWeirFormula.UseLowerEdgeLevelTimeSeries;
 
                 ConfigureUseLowerEdgeLevelTimeSeries(gatedWeirFormula);

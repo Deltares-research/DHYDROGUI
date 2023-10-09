@@ -123,6 +123,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             };
             WindowsFormsTestHelper.ShowModal(weirView, action);
         }
+        
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowWeirViewWithDetailedCrestDefinition()

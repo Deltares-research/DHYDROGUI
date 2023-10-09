@@ -45,26 +45,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { GatedWeirFormula.UseLowerEdgeLevelTimeSeries = value == TimeDependency.TimeDependent; }
         }
 
-        [DynamicReadOnly]
+        [ReadOnly(true)]
         [DisplayName("Gate Opening")]
         [Description("Gate opening (open level)")]
         public string GateOpening
         {
             get
             {
-                if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+                if (GatedWeirFormula.IsUsingTimeSeriesForLowerEdgeLevel())
                 {
                     return "Time series";
                 }
-                return GatedWeirFormula.GateOpening.ToString(CultureInfo.CurrentCulture);
-            }
-            set
-            {
-                if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
-                {
-                    throw new InvalidOperationException("Cannot set value using time dependent gate opening.");
-                }
-                GatedWeirFormula.GateOpening = double.Parse(value, CultureInfo.CurrentCulture);
+                return (GatedWeirFormula.LowerEdgeLevel - weir.CrestLevel).ToString("0.00", CultureInfo.CurrentCulture);
             }
         }
 
@@ -107,10 +99,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (propertyName == "GateOpening")
-            {
-                return GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries;
-            }
             if(propertyName == nameof(MaxFlowNeg) || propertyName == nameof(UseMaxFlowNeg))
             {
                 return !weir.AllowNegativeFlow;
@@ -127,7 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             if (propertyName == "UseCapacityTimeSeries")
             {
-                return GatedWeirFormula.CanBeTimedependent;
+                return GatedWeirFormula.CanBeTimeDependent;
             }
             return true;
         }

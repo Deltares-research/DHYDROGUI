@@ -52,10 +52,12 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         /// <exception cref="InvalidOperationException">When setting to true while <see cref="CanBeTimedependent"/> is false.</exception>
         bool UseCrestLevelTimeSeries { get; set; }
+        
         /// <summary>
         /// Crest level
         /// </summary>
         double CrestLevel { get; set; }
+        
         /// <summary>
         /// Time varying crest level. Will be null when <see cref="CanBeTimedependent"/> is false.
         /// </summary>

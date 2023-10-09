@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             if (weir.WeirFormula is IGatedWeirFormula)
             {
                 var formula = (IGatedWeirFormula)weir.WeirFormula;
-                var newVal = weir.CrestLevel + formula.GateOpening;
+                var newVal = formula.LowerEdgeLevel;
                 if (!double.IsNaN(newVal)) max = Math.Max(max, newVal);    
             }
             //we want to see a weir when it is below the bottom

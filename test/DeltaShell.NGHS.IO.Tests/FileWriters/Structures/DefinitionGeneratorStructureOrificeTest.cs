@@ -41,15 +41,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             return structure;
         }
 
-        protected static TestCaseData CreateCreateStructureRegionTestData(Orifice structure, 
-                                                                          string expectedCrestLevel,
-                                                                          string expectedLowerEdgeLevel) =>
-            new TestCaseData(structure, expectedCrestLevel, expectedLowerEdgeLevel);
+        private static TestCaseData CreateCreateStructureRegionTestData(Orifice structure, 
+                                                                        string expectedCrestLevel,
+                                                                        string expectedLowerEdgeLevel)
+        {
+            return new TestCaseData(structure, expectedCrestLevel, expectedLowerEdgeLevel);
+        }
 
         private static IEnumerable<TestCaseData> CreateStructureRegionData()
         {
             const string constantCrestLevel = "1.000";
-            const string constantLowerEdgeLevel = "2.000";
+            const string constantLowerEdgeLevel = "11.000";
             const string timeSeriesCrestLevel = ExpectedStructureFileName;
             const string timeSeriesLowerEdgeLevel = ExpectedStructureFileName;
 

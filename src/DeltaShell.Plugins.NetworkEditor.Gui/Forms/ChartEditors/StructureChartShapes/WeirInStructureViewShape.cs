@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 {
     internal class WeirInStructureViewShape : CompositeShapeFeature
     {
-        private static readonly StructureShapeStyleProvider StructureShapeStyleProvider =
+        private static readonly StructureShapeStyleProvider structureShapeStyleProvider =
             new StructureShapeStyleProvider();
         
         private readonly IChart chart;
@@ -52,25 +52,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 var gatedWeirFormula = (IGatedWeirFormula) weir.WeirFormula;
                 var gatedWeirShape = new GatedWeirShape(chart, weir.OffsetY, weir.CrestLevel,
-                                               weir.CrestWidth, weir.CrestLevel + gatedWeirFormula.GateOpening,
+                                               weir.CrestWidth, gatedWeirFormula.LowerEdgeLevel,
                                                minZValue, maxZValue, false,true)
                                 {
-                                    NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir),
-                                    SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir)
+                                    NormalStyle = structureShapeStyleProvider.GetNormalStyleForStructure(weir),
+                                    SelectedStyle = structureShapeStyleProvider.GetSelectedStyleForStructure(weir)
                                 };
                 gatedWeirShape.WaterStyle = new VectorStyle
                                                               {
                                                                   Line = Pens.Transparent,
                                                                   Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
                                                               };
-                gatedWeirShape.AddHover(new HoverText("Crest level", string.Format("{0:f2}m.", weir.CrestLevel),
+                gatedWeirShape.AddHover(new HoverText("Crest level", $"{weir.CrestLevel:f2}m.",
                                                       gatedWeirShape.WeirShape, Color.Black, HoverPosition.Left,
                                                       ArrowHeadPosition.Top));
-                gatedWeirShape.AddHover(new HoverText("Crest width", string.Format("{0:f2}m.", weir.CrestWidth),
+                gatedWeirShape.AddHover(new HoverText("Crest width", $"{weir.CrestWidth:f2}m.",
                                                       gatedWeirShape.WeirShape, Color.Black, HoverPosition.Bottom,
                                                       ArrowHeadPosition.LeftRight));
                 gatedWeirShape.AddHover(new HoverText("Gate opening",
-                                                      string.Format("{0:f2}m.", gatedWeirFormula.GateOpening),
+                                                      $"{gatedWeirFormula.GateOpening:f2}m.",
                                                       gatedWeirShape.WaterShape, Color.Black, HoverPosition.Left,
                                                       ArrowHeadPosition.TopDown));
                 weirShape = gatedWeirShape;
@@ -87,8 +87,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                {
                                                    WeirShape =
                                                        {
-                                                           NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir),
-                                                           SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir)
+                                                           NormalStyle = structureShapeStyleProvider.GetNormalStyleForStructure(weir),
+                                                           SelectedStyle = structureShapeStyleProvider.GetSelectedStyleForStructure(weir)
                                                        },
                                                    WaterStyle = new VectorStyle
                                                                     {
@@ -97,10 +97,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                                     }
                                                };
 
-                    weirShapeFeature.AddHover(new HoverText("Crest width", string.Format("{0:f2}m.", weir.CrestWidth),
+                    weirShapeFeature.AddHover(new HoverText("Crest width", $"{weir.CrestWidth:f2}m.",
                                                             weirShapeFeature.WaterShape, Color.Black, HoverPosition.Top,
                                                             ArrowHeadPosition.LeftRight));
-                    weirShapeFeature.AddHover(new HoverText("Crest level", string.Format("{0:f2}m.", weir.CrestLevel),
+                    weirShapeFeature.AddHover(new HoverText("Crest level", $"{weir.CrestLevel:f2}m.",
                                                             weirShapeFeature.WeirShape, Color.Black, HoverPosition.Left,
                                                             ArrowHeadPosition.Top));
                     weirShape = weirShapeFeature;
@@ -109,14 +109,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 {
                     var freeFormWeirFormula = (FreeFormWeirFormula)weir.WeirFormula;
                     var freeFormatWeirShapeFeature = new FreeFormatWeirShapeFeature(chart, weir, freeFormWeirFormula.Shape, minZValue, maxZValue);
-                    freeFormatWeirShapeFeature.PolygonShapeFeature.NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir);
-                    freeFormatWeirShapeFeature.PolygonShapeFeature.SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir);
+                    freeFormatWeirShapeFeature.PolygonShapeFeature.NormalStyle = structureShapeStyleProvider.GetNormalStyleForStructure(weir);
+                    freeFormatWeirShapeFeature.PolygonShapeFeature.SelectedStyle = structureShapeStyleProvider.GetSelectedStyleForStructure(weir);
                     freeFormatWeirShapeFeature.WaterStyle = new VectorStyle
                     {
                         Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
                     };
                     freeFormatWeirShapeFeature.AddHover(new HoverText("Crest width",
-                                                                      string.Format("{0:f2}m.", weir.CrestWidth),
+                                                                      $"{weir.CrestWidth:f2}m.",
                                                                       freeFormatWeirShapeFeature.WaterShape,
                                                                       Color.Black, HoverPosition.Top,
                                                                       ArrowHeadPosition.LeftRight));
@@ -148,8 +148,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         public override void Hover(List<Rectangle> usedSpace, VectorStyle style, Graphics graphics)
         {
             IShapeFeature shapeFeature = GetWeirShape();
-            IHover hover = shapeFeature as IHover;
-            if (hover != null)
+            
+            if (shapeFeature is IHover hover)
             {
                 hover.Hover(usedSpace, style, graphics);
             }

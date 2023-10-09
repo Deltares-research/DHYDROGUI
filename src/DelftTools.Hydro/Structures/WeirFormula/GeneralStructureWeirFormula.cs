@@ -111,16 +111,19 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             return clone;
         }
 
+        /// <inheritdoc />
         public virtual string Name
         {
             get { return "General structure"; }
         }
 
+        /// <inheritdoc />
         public virtual bool IsRectangle
         {
             get { return false; }
         }
 
+        /// <inheritdoc />
         public virtual bool HasFlowDirection
         {
             get { return true; }
@@ -236,19 +239,13 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual double ExtraResistance { get; set; }
 
-        /// <summary>
-        /// Gateopening = Gate lower edge level - crest level. This should be a readonly property, or even be removed FM1D2D-1694.
-        /// </summary>
+        /// <inheritdoc />
         public virtual double GateOpening { get; set; }
 
-        /// <summary>
-        /// Gate height
-        /// </summary>
+        /// <inheritdoc />
         public virtual double GateHeight { get; set; }
 
-        /// <summary>
-        /// LowerEdgeLevel
-        /// </summary>
+        /// <inheritdoc />
         public virtual double LowerEdgeLevel { get; set; }
 
         public virtual double GateOpeningWidth { get; set; }
@@ -257,20 +254,18 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         public virtual bool UseVelocityHeight { get; set; }
 
-
         public virtual GateOpeningDirection GateOpeningHorizontalDirection { get; set; }
-
 
         public virtual void SetPropertyValue(KnownGeneralStructureProperties propertyName, double value)
         {
-            if (SetKnownGeneralStructureProperty.ContainsKey(propertyName))
+            if (SetKnownGeneralStructureProperty.TryGetValue(propertyName, out var setProperty))
             {
-                SetKnownGeneralStructureProperty[propertyName](this, value);
+                setProperty(this, value);
             }
             else
             {
                 throw new Exception("property name : {0} cannot be set for general structure weir formula");
             }
-       }
+        }
     }
 }
