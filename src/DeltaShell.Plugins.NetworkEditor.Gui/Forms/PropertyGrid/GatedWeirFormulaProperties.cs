@@ -4,13 +4,15 @@ using System.Globalization;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.ComponentModel;
-using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     internal class GatedWeirFormulaProperties : WeirFormulaProperties
     {
-        public GatedWeirFormulaProperties(GatedWeirFormula gatedWeirFormula, IWeir weir) : base(gatedWeirFormula, weir)
+        private const string timeSeriesString = "Time series";
+        
+        public GatedWeirFormulaProperties(GatedWeirFormula gatedWeirFormula, IWeir weir) 
+            : base(gatedWeirFormula, weir)
         {
         }
 
@@ -35,19 +37,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { GatedWeirFormula.LateralContraction = value; }
         }
 
-        [DynamicVisible]
-        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
-        [Description("Use a time series for the lower edge level or use a time constant gate opening")]
-        [DisplayName("Gate opening type")]
-        public TimeDependency UseCapacityTimeSeries
-        {
-            get { return GatedWeirFormula.UseLowerEdgeLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant; }
-            set { GatedWeirFormula.UseLowerEdgeLevelTimeSeries = value == TimeDependency.TimeDependent; }
-        }
-
-        [ReadOnly(true)]
         [DisplayName("Gate Opening")]
         [Description("Gate opening (open level)")]
+        [ReadOnly(true)]
         public string GateOpening
         {
             get
@@ -57,6 +49,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                     return "Time series";
                 }
                 return (GatedWeirFormula.LowerEdgeLevel - weir.CrestLevel).ToString("0.00", CultureInfo.CurrentCulture);
+            }
+        }
+        
+        [DisplayName("Lower edge level")]
+        [Description("Gate lower edge level")]
+        [DynamicReadOnly]
+        public string LowerEdgeLevel
+        {
+            get
+            {
+                if (GatedWeirFormula.IsUsingTimeSeriesForLowerEdgeLevel())
+                {
+                    return timeSeriesString;
+                }
+                return GatedWeirFormula.LowerEdgeLevel.ToString("0.00", CultureInfo.CurrentCulture);
+            }
+            set
+            {
+                if (GatedWeirFormula.IsUsingTimeSeriesForLowerEdgeLevel())
+                {
+                    throw new InvalidOperationException("Cannot set value using time dependent gate opening.");
+                }
+                GatedWeirFormula.LowerEdgeLevel = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
 
@@ -99,25 +114,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if(propertyName == nameof(MaxFlowNeg) || propertyName == nameof(UseMaxFlowNeg))
+            if (propertyName == nameof(LowerEdgeLevel))
+            {
+                return GatedWeirFormula.IsUsingTimeSeriesForLowerEdgeLevel();
+            }
+
+            if (propertyName == nameof(MaxFlowNeg) || propertyName == nameof(UseMaxFlowNeg))
             {
                 return !weir.AllowNegativeFlow;
             }
+
             if (propertyName == nameof(MaxFlowPos) || propertyName == nameof(UseMaxFlowPos))
             {
                 return !weir.AllowPositiveFlow;
             }
-            return false;
-        }
 
-        [DynamicVisibleValidationMethod]
-        public bool IsVisible(string propertyName)
-        {
-            if (propertyName == "UseCapacityTimeSeries")
-            {
-                return GatedWeirFormula.CanBeTimeDependent;
-            }
-            return true;
+            return false;
         }
     }
 }
