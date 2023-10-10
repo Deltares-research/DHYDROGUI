@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <OutputPath>$(SolutionDir)bin\$(Configuration)\tests</OutputPath>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
