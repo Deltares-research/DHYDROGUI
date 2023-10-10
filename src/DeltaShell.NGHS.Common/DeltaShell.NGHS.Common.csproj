@@ -21,6 +21,7 @@
     <PackageReference Include="DHYDRO.Common">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="DHYDRO.SharedConfigurations" />
     <PackageReference Include="log4net">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
