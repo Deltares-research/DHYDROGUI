@@ -13,9 +13,7 @@
 
   <?ifndef noDeltaShellFrameworkManual?>
     <ComponentRef Id="Delta_Shell_User_Manual"/>
-    <ComponentRef Id="Delta_Shell_Technical_Reference_Manual"/>
     <ComponentRef Id="ManualsMenuDSUMShortcut"/>
-    <ComponentRef Id="ManualsMenuDSTRMShortcut"/>
   <?endif?>
 
   <?ifdef additionalfiles?>

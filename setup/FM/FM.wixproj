@@ -16,7 +16,6 @@
     <MyAdditionalFilesComponents>{$([System.Guid]::NewGuid())}</MyAdditionalFilesComponents>
     <UtilitiesMenuShortcutsGUID>{$([System.Guid]::NewGuid())}</UtilitiesMenuShortcutsGUID>
     <WaqUtilitiesMenuShortcutsGUID>{$([System.Guid]::NewGuid())}</WaqUtilitiesMenuShortcutsGUID>
-    <ManualsMenuDSTRMShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuDSTRMShortcutGUID>
     <ManualsMenuDSUMShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuDSUMShortcutGUID>
     <ManualsMenuShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuShortcutGUID>
     <WaqManualsMenuShortcutGUID>{$([System.Guid]::NewGuid())}</WaqManualsMenuShortcutGUID>
@@ -55,7 +54,7 @@
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);MyProductCode=$(MyProductCode);MyExtras=$(MyExtras);MyPluginComponents=$(MyPluginComponents);MyWaqPluginComponents=$(MyWaqPluginComponents);MyAdditionalFilesComponents=$(MyAdditionalFilesComponents);WaqUtilitiesMenuShortcutsGUID=$(WaqUtilitiesMenuShortcutsGUID);UtilitiesMenuShortcutsGUID=$(UtilitiesMenuShortcutsGUID);ManualsMenuDSTRMShortcutGUID=$(ManualsMenuDSTRMShortcutGUID);ManualsMenuDSUMShortcutGUID=$(ManualsMenuDSUMShortcutGUID);ManualsMenuShortcutGUID=$(ManualsMenuShortcutGUID);WaqManualsMenuShortcutGUID=$(WaqManualsMenuShortcutGUID);ProgramGroupMenuDir_ComponentGUID=$(ProgramGroupMenuDir_ComponentGUID);UninstallShortcutComponentGUID=$(UninstallShortcutComponentGUID);DeltaShellGuiExeConfigGUID=$(DeltaShellGuiExeConfigGUID);</DefineConstants>
+    <DefineConstants>$(DefineConstants);MyProductCode=$(MyProductCode);MyExtras=$(MyExtras);MyPluginComponents=$(MyPluginComponents);MyWaqPluginComponents=$(MyWaqPluginComponents);MyAdditionalFilesComponents=$(MyAdditionalFilesComponents);WaqUtilitiesMenuShortcutsGUID=$(WaqUtilitiesMenuShortcutsGUID);UtilitiesMenuShortcutsGUID=$(UtilitiesMenuShortcutsGUID);ManualsMenuDSUMShortcutGUID=$(ManualsMenuDSUMShortcutGUID);ManualsMenuShortcutGUID=$(ManualsMenuShortcutGUID);WaqManualsMenuShortcutGUID=$(WaqManualsMenuShortcutGUID);ProgramGroupMenuDir_ComponentGUID=$(ProgramGroupMenuDir_ComponentGUID);UninstallShortcutComponentGUID=$(UninstallShortcutComponentGUID);DeltaShellGuiExeConfigGUID=$(DeltaShellGuiExeConfigGUID);</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Dimr\Manuals\DIMRManuals.wxi">

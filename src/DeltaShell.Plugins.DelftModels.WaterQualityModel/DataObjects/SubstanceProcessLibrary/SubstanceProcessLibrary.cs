@@ -17,10 +17,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     public class SubstanceProcessLibrary : Unique<long>, INameable, ICloneable
     {
         public static readonly string DefaultSobekProcessDefinitionFilesPath =
-            Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelMainFolderPath(), "default", "proc_def");
+            Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(), "proc_def");
 
         public static readonly string DefaultDuflowProcessDefinitionFilesPath =
-            Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataFolderPath(), "default", "proc_def_duflow");
+            Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(), "proc_def_duflow");
 
         public static readonly string DefaultDuflowProcessDllFilePath =
             Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelPluginFolderPath(), "x64", "duflow.dll");
