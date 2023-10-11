@@ -89,19 +89,12 @@
         <Component Id="Delta_Shell_User_Manual" Guid="*">
           <File Source="$(var.ProjectDir)..\DeltaShell\!(loc.Delft3DPackageName)_Manuals\Delta_Shell_User_Manual.pdf" Id="Delta_Shell_User_Manual"/>
         </Component>
-        <Component Id="Delta_Shell_Technical_Reference_Manual" Guid="*">
-          <File Source="$(var.ProjectDir)..\DeltaShell\!(loc.Delft3DPackageName)_Manuals\Delta_Shell_Technical_Reference_Manual.pdf" Id="Delta_Shell_Technical_Reference_Manual"/>
-        </Component>
       </DirectoryRef>
 
       <DirectoryRef Id="ProgramGroupMenuDir">
         <Component Id="ManualsMenuDSUMShortcut" Guid="$(var.ManualsMenuDSUMShortcutGUID)">
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDSUMManualShortcutFolder" Type="integer" Value="1"/>
           <Shortcut Id="DeltaShell_User_Manual_Shortcut" Name="DeltaShell User Manual" Target="[BINDIR]Delta_Shell_User_Manual.pdf" WorkingDirectory="BINDIR"/>
-        </Component>
-        <Component Id="ManualsMenuDSTRMShortcut" Guid="$(var.ManualsMenuDSTRMShortcutGUID)">
-          <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDSTRMManualShortcutFolder" Type="integer" Value="1"/>
-          <Shortcut Id="DeltaShell_Technical_Reference_Manual_Shortcut" Name="DeltaShell Technical Reference Manual" Target="[BINDIR]Delta_Shell_Technical_Reference_Manual.pdf" WorkingDirectory="BINDIR"/>
         </Component>
       </DirectoryRef>
     <?endif?>
