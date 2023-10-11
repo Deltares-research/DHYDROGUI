@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using log4net;
 using Nini.Config;
 
@@ -12,24 +14,47 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         private string path; 
         private SobekRRIniSettings settings;
         private IniConfigSource iniReader;
+        private CultureInfo currentCulture;
 
         public SobekRRIniSettings GetSobekRRIniSettings(string argPath)
         {
-            path = argPath; 
-            settings = new SobekRRIniSettings();
-            settings.PeriodFromEvent = true;
+            path = argPath;
 
-            iniReader = new IniConfigSource(path);
-            iniReader.Alias.AddAlias("-1", true);
-            iniReader.Alias.AddAlias("0", false);
-            iniReader.Alias.AddAlias("1", true);
+            SwitchToInvariantCulture();
+            
+            try
+            {
+                settings = new SobekRRIniSettings();
+                settings.PeriodFromEvent = true;
 
-            getGeneralSettings();
-            getOutputSettings(); 
-            return settings;
+                iniReader = new IniConfigSource(path);
+                iniReader.Alias.AddAlias("-1", true);
+                iniReader.Alias.AddAlias("0", false);
+                iniReader.Alias.AddAlias("1", true);
+
+                GetGeneralSettings();
+                GetOutputSettings();
+
+                return settings;
+            }
+            finally
+            {
+                RestoreCulture();
+            }
         }
 
-        private void getGeneralSettings ()
+        private void SwitchToInvariantCulture()
+        {
+            currentCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+        }
+
+        private void RestoreCulture()
+        {
+            Thread.CurrentThread.CurrentCulture = currentCulture;
+        }
+
+        private void GetGeneralSettings()
         {
             settings.OutputTimestepMultiplier = 1;
 
@@ -128,32 +153,34 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         {
             dateTime = new DateTime();
             var error = false;
+
             try
             {
-                var parts = dateTimeStr.Split(new[] { ';' });
-                var dateStr = parts[0];
-                var timeStr = parts[1];
+                string[] parts = dateTimeStr.Split(';');
+                string dateStr = parts[0];
+                string timeStr = parts[1];
 
-                DateTime date, time;
-
-                if (!DateTime.TryParse(dateStr, out date))
+                if (!DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
                 {
                     error = true;
                 }
-                if (!DateTime.TryParse(timeStr, out time))
+
+                if (!DateTime.TryParse(timeStr, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime time))
                 {
                     error = true;
                 }
-                dateTime = new DateTime(date.Year,date.Month,date.Day, time.Hour,time.Minute, time.Second);
+
+                dateTime = new DateTime(date.Year, date.Month, date.Day, time.Hour, time.Minute, time.Second);
             }
             catch (Exception)
             {
                 error = true;
             }
+
             return !error;
         }
 
-        private void getOutputSettings()
+        private void GetOutputSettings()
         {
             IConfig outputOptions = iniReader.Configs["OutputOptions"];
             if (outputOptions == null)

@@ -196,14 +196,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                 throw new ArgumentException("waterUsePerCapitaPerHourInDay should be length 24");
             }
 
-            SwitchToInvariantCulture();
-
             pavedIds.Add(id);
 
             var storageId = id + "_storage";
             var dryWaterId = id + "_dwf";
 
             AddNodeInternal(id, NodeType.Paved, x, y);
+
+            SwitchToInvariantCulture();
 
             var capacityString = sewerCapacityIsFixed
                 ? $"qc 0 {rainfallSewerCapacity} {dwfSewerCapacity}"
@@ -229,13 +229,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             string meteoId, double areaAdjustmentFactor,
             double x, double y)
         {
-
-            SwitchToInvariantCulture();
-
             AddNodeInternal(id, NodeType.Greenhouse, x, y);
 
             var greenhouseAreaConnectedToSilo = (greenhouseUseSiloArea ? greenhouseSiloArea : 0.0);
             
+            SwitchToInvariantCulture();
+
             greenhouseData.Add(
                 $"GRHS id '{id}' na 10  ar {areasPerGreenhouseClass[0]} {areasPerGreenhouseClass[1]} {areasPerGreenhouseClass[2]} {areasPerGreenhouseClass[3]} {areasPerGreenhouseClass[4]} {areasPerGreenhouseClass[5]} {areasPerGreenhouseClass[6]} {areasPerGreenhouseClass[7]} {areasPerGreenhouseClass[8]} {areasPerGreenhouseClass[9]} sl {surfaceLevel} as {greenhouseAreaConnectedToSilo} si '{id}' sd '{id}' ms '{meteoId}' {GetAreaAdjustmentFactorString(areaAdjustmentFactor)}is 0.0 grhs"
             );
@@ -252,10 +251,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         public int AddOpenWater(string id, double area, string meteoId, double areaAdjustmentFactor,
             double x, double y)
         {
-            SwitchToInvariantCulture();
-
             AddNodeInternal(id, NodeType.Openwater, x, y);
             
+            SwitchToInvariantCulture();
+
             openWaterData.Add($"OWRR id '{id}' ar {area} ms '{meteoId}'{GetAreaAdjustmentFactorString(areaAdjustmentFactor)} owrr");
 
             RestoreCulture();
@@ -267,13 +266,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             double[] hydroGraphValues, string meteoId,
             double x, double y)
         {
-            SwitchToInvariantCulture();
-
             AddNodeInternal(id, NodeType.Sacramento, x, y);
 
             var ca_id = id + "_ca";
             var uh_id = id + "_uh";
             var op_id = id + "_op";
+
+            SwitchToInvariantCulture();
 
             sacramentoData.Add($"SACR id '{id}' ar {area} ms '{meteoId}' ca '{ca_id}' uh '{uh_id}' op '{op_id}' sacr");
 
@@ -295,14 +294,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             double[] flowParameters, double[] hiniParameters, string meteoId, double areaAdjustmentFactor,
             string tempId, double x, double y)
         {
-            SwitchToInvariantCulture();
-
             AddNodeInternal(id, NodeType.Hbv, x, y);
-
+            
             var snow_id = id + "_sn";
             var soil_id = id + "_sl";
             var flow_id = id + "_fl";
             var hini_id = id + "_hini";
+
+            SwitchToInvariantCulture();
 
             sacramentoData.Add(
                 $"HBV id '{id}' ar {area} sl {surfaceLevel} snow '{snow_id}' soil '{soil_id}' flow '{flow_id}' hini '{hini_id}' ts '{tempId}' ms '{meteoId}' {GetAreaAdjustmentFactorString(areaAdjustmentFactor)} hbv");
@@ -490,9 +489,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                 throw new ArgumentException("Length for areasForKnownCropTypes should be 16");
             }
 
-            SwitchToInvariantCulture();
-
             AddNodeInternal(id, NodeType.Unpaved, x, y);
+
+            SwitchToInvariantCulture();
 
             string drainage = GetDrainageId(drainageComputationOption, id);
 
@@ -638,7 +637,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         public void WriteFiles()
         {
             SwitchToInvariantCulture();
-            SwitchToInvariantCulture(); //See issue FM1D2D-2189
             GenerateRRModelFiles();
             RestoreCulture();
         }
