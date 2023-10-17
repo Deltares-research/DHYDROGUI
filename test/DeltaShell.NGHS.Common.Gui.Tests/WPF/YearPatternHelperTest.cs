@@ -19,10 +19,6 @@ namespace DeltaShell.NGHS.Common.Gui.Tests.WPF
         private DateTimeFormatInfo dateTimeFormatInfo;
         private ITableViewColumn tableViewColumn;
         
-        private const string expectedTitel = "expectedTitel";
-        private const string expectedDateTimeFormatWithoutYear = "MM-dd HH:mm:ss";
-        private const string expectedYearMonthPatternWithoutYear = " MMMM";
-
         [SetUp]
         public void SetUp()
         {
@@ -31,7 +27,6 @@ namespace DeltaShell.NGHS.Common.Gui.Tests.WPF
             tableViewColumn = Substitute.For<ITableViewColumn>();
             multipleFunctionView.TableView.Columns.Add(tableViewColumn);
             ((ChartView) multipleFunctionView.ChartView).DateTimeLabelFormatProvider.CustomDateTimeFormatInfo = new DateTimeFormatInfo();
-            multipleFunctionView.ChartView.Chart.BottomAxis.Title = expectedTitel;
         }
 
         [TearDown]
@@ -73,7 +68,15 @@ namespace DeltaShell.NGHS.Common.Gui.Tests.WPF
         [Test]
         public void WhenHideYears_ThenRetrievedDataIsNotShowingYears()
         {
-            //Arrange & Act
+            //Arrange
+            DateTimeFormatInfo dateTimeFormat = RegionalSettingsManager.CurrentCulture.DateTimeFormat;
+            
+            string expectedDateTimeFormatWithoutYear = string.Format("MM{0}dd HH{1}mm{1}ss",
+                                                                     dateTimeFormat.DateSeparator,
+                                                                     dateTimeFormat.TimeSeparator);
+            string expectedYearMonthPatternWithoutYear = " MMMM";
+            
+            //Act
             YearPatternHelper.HideYears(multipleFunctionView.TableView, multipleFunctionView.ChartView as ChartView);
 
             //Assert
