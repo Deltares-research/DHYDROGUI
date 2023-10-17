@@ -1022,16 +1022,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             string mduFilePath = Path.Combine(testDir, "input", "FlowFM.mdu");
             FileUtils.CopyDirectory(originalDir, testDir);
 
+            string initializingText = "Initializing";
+            string progressText = 0.ToString("P");
+            
             var messageList = new List<string>
             {
-                "0,00%",
-                "Initializing",
-                "0,00%",
-                "0,00%",
-                "0,00%",
-                "Initializing",
-                "0,00%",
-                "0,00%"
+                progressText,
+                initializingText,
+                progressText,
+                progressText,
+                progressText,
+                initializingText,
+                progressText,
+                progressText
             };
 
             try
