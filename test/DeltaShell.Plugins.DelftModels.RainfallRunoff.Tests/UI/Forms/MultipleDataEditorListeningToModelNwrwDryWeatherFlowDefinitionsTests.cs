@@ -68,8 +68,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
                 var definitions = TypeUtils.GetField(mde, "nwrwDryWeatherFlowDefinitions") as IEventedList<NwrwDryWeatherFlowDefinition>;
                 Assert.That(definitions, Is.Not.Null);
                 Assert.That(definitions.Count, Is.EqualTo(2));
-                var nwrwDryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition(logHandler) { Name = "test" };
-                var nwrwDryWeatherFlowDefinition2 = new NwrwDryWeatherFlowDefinition(logHandler) { Name = "test2" };
+                var nwrwDryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition() { Name = "test" };
+                var nwrwDryWeatherFlowDefinition2 = new NwrwDryWeatherFlowDefinition() { Name = "test2" };
                 rrmodel.NwrwDryWeatherFlowDefinitions.Add(nwrwDryWeatherFlowDefinition);
                 rrmodel.NwrwDryWeatherFlowDefinitions.Add(nwrwDryWeatherFlowDefinition2);
                 definitions = TypeUtils.GetField(mde, "nwrwDryWeatherFlowDefinitions") as IEventedList<NwrwDryWeatherFlowDefinition>;
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
             if (string.IsNullOrWhiteSpace(NwrwDryWeatherFlowDefinition.DefaultDwaId))
             {
                 //NwrwDryWeatherFlowDefinition.DefaultDwaId = NwrwDryWeatherFlowDefinitionTest.ORIGINAL_DEFAULT_DWF_ID;
-                TypeUtils.SetPrivatePropertyValue(new NwrwDryWeatherFlowDefinition(null), "DefaultDwaId", "Default_DWA");
+                TypeUtils.SetPrivatePropertyValue(new NwrwDryWeatherFlowDefinition(), "DefaultDwaId", "Default_DWA");
             }
 
             var nwrwData = new NwrwData(catchment);
