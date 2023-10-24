@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
+using DelftTools.Utils;
 using log4net;
 using Nini.Config;
 
@@ -14,15 +14,12 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         private string path; 
         private SobekRRIniSettings settings;
         private IniConfigSource iniReader;
-        private CultureInfo currentCulture;
 
         public SobekRRIniSettings GetSobekRRIniSettings(string argPath)
         {
             path = argPath;
 
-            SwitchToInvariantCulture();
-            
-            try
+            using (CultureUtils.SwitchToInvariantCulture())
             {
                 settings = new SobekRRIniSettings();
                 settings.PeriodFromEvent = true;
@@ -37,21 +34,6 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
                 return settings;
             }
-            finally
-            {
-                RestoreCulture();
-            }
-        }
-
-        private void SwitchToInvariantCulture()
-        {
-            currentCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-        }
-
-        private void RestoreCulture()
-        {
-            Thread.CurrentThread.CurrentCulture = currentCulture;
         }
 
         private void GetGeneralSettings()

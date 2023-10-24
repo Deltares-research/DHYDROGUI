@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
@@ -99,10 +98,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             Assert.AreEqual(0, HydroNetwork.CrossSections.Count());
 
             // import using invariant culture
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            var importer = new CrossSectionXYZFromCsvFileImporter { FilePath = path };
-            importer.ImportItem(null, HydroNetwork);
-
+            using (CultureUtils.SwitchToInvariantCulture())
+            {
+                var importer = new CrossSectionXYZFromCsvFileImporter { FilePath = path };
+                importer.ImportItem(null, HydroNetwork);
+            }
             Assert.AreEqual(nCrossSections, HydroNetwork.CrossSections.Count());
         }
 
@@ -146,11 +146,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
         [Category(TestCategory.Slow)]
         public void ExportChangeCultureImportXYZCrossSections()
         {
-            var oldCulture = Thread.CurrentThread.CurrentCulture;
-            try
+            using (CultureUtils.SwitchToCulture("nl-NL"))
             {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("nl-NL");
-
                 var path = TestHelper.GetCurrentMethodName() + ".csv";
                 var exporter = new CrossSectionXYZToCsvFileExporter();
                 var crossSection = HydroNetwork.CrossSections.FirstOrDefault();
@@ -171,17 +168,15 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
                 Assert.AreEqual(0, HydroNetwork.CrossSections.Count());
 
                 // import using invariant culture
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-                var importer = new CrossSectionXYZFromCsvFileImporter { FilePath = path };
-                importer.ImportItem(null, HydroNetwork);
+                using (CultureUtils.SwitchToInvariantCulture())
+                {
+                    var importer = new CrossSectionXYZFromCsvFileImporter { FilePath = path };
+                    importer.ImportItem(null, HydroNetwork);
+                }
 
                 Assert.AreEqual(nCrossSections, HydroNetwork.CrossSections.Count());
                 crossSection = HydroNetwork.CrossSections.FirstOrDefault();
                 Assert.AreEqual(chainage, crossSection.Chainage, 0.001);
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = oldCulture;
             }
         }
     }

@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Shell.Core;
+using DelftTools.Utils;
 using DelftTools.Utils.Csv;
 using log4net;
 
@@ -92,12 +91,9 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
                 path = Settings.FileName;
             }
 
-            // set thread to invariant culture and reset when done.
-            var oldCulture = Thread.CurrentThread.CurrentCulture;
-
             try
             {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                using (CultureUtils.SwitchToInvariantCulture())
                 using (var streamWriter = new StreamWriter(path))
                 {
                     var csvString = CommonCsvWriter.WriteToString(dataTable, Settings.FirstRowIsHeaderRow, false);
@@ -111,10 +107,6 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
                     "A formatting error occurred while writing {0} to a csv file {1}: {2}", ((DataTable) item).TableName,
                     path, e.Message);
                 throw;
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = oldCulture;
             }
         }
 

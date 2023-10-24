@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security;
-using System.Threading;
+using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Properties;
 
@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO
         protected List<string> currentCommentBlock;
         protected string storedNextInputLine;
         protected string storedNextOutputLine;
-        private CultureInfo storedCurrentCulture;
+        private IDisposable cultureSwitch;
 
         private readonly List<List<string>> headingCommentBlocks;
         protected readonly Dictionary<string, List<string>> commentBlocks;
@@ -104,8 +104,7 @@ namespace DeltaShell.NGHS.IO
         /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
         protected void OpenOutputFile(string filePath, bool append = false)
         {
-            storedCurrentCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            cultureSwitch = CultureUtils.SwitchToInvariantCulture();
             OutputFilePath = filePath;
             var directory = Path.GetDirectoryName(OutputFilePath);
             if (!String.IsNullOrEmpty(directory) && !Directory.Exists(directory))
@@ -133,7 +132,7 @@ namespace DeltaShell.NGHS.IO
 
         protected void CloseOutputFile()
         {
-            Thread.CurrentThread.CurrentCulture = storedCurrentCulture;
+            cultureSwitch.Dispose();
             writer.Close();
         }
 
