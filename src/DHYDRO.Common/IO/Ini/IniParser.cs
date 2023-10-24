@@ -77,7 +77,7 @@ namespace DHYDRO.Common.IO.Ini
         /// <param name="ini">The INI-formatted text to parse.</param>
         /// <returns>An <see cref="IniData"/> object containing the parsed INI data.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="ini"/> is <c>null</c>.</exception>
-        /// <exception cref="IniFormatException">When the INI text has an invalid format.</exception>
+        /// <exception cref="FormatException">When the INI text has an invalid format.</exception>
         public IniData Parse(string ini)
         {
             Ensure.NotNull(ini, nameof(ini));
@@ -94,7 +94,7 @@ namespace DHYDRO.Common.IO.Ini
         /// <param name="stream">The <see cref="Stream"/> from which to read the INI-formatted text.</param>
         /// <returns>An <see cref="IniData"/> object containing the parsed INI data.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="stream"/> is <c>null</c>.</exception>
-        /// <exception cref="IniFormatException">When the INI text has an invalid format.</exception>
+        /// <exception cref="FormatException">When the INI text has an invalid format.</exception>
         public IniData Parse(Stream stream)
         {
             Ensure.NotNull(stream, nameof(stream));
@@ -111,7 +111,7 @@ namespace DHYDRO.Common.IO.Ini
         /// <param name="reader">The <see cref="TextReader"/> from which to read the INI-formatted text.</param>
         /// <returns>An <see cref="IniData"/> object containing the parsed INI data.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="reader"/> is <c>null</c>.</exception>
-        /// <exception cref="IniFormatException">When the INI text has an invalid format.</exception>
+        /// <exception cref="FormatException">When the INI text has an invalid format.</exception>
         public IniData Parse(TextReader reader)
         {
             Ensure.NotNull(reader, nameof(reader));
@@ -172,7 +172,7 @@ namespace DHYDRO.Common.IO.Ini
             }
             else
             {
-                throw new IniFormatException("Invalid INI-formatted text.", currentLine, lineNumber);
+                throw new FormatException($"Error on line {lineNumber}: invalid INI-formatted text.");
             }
         }
 
@@ -219,14 +219,14 @@ namespace DHYDRO.Common.IO.Ini
         {
             if (string.IsNullOrEmpty(sectionName))
             {
-                throw new IniFormatException("Section name cannot be empty.", currentLine, lineNumber);
+                throw new FormatException($"Error on line {lineNumber}: section name cannot be empty.");
             }
             
             if (!Configuration.AllowDuplicateSections)
             {
                 if (foundSections.Contains(sectionName))
                 {
-                    throw new IniFormatException($"Duplicate section with name '{sectionName}'.", currentLine, lineNumber);
+                    throw new FormatException($"Error on line {lineNumber}: duplicate section with name '{sectionName}'.");
                 }
 
                 foundSections.Add(sectionName);
@@ -255,7 +255,7 @@ namespace DHYDRO.Common.IO.Ini
         {
             if (currentSection == null)
             {
-                throw new IniFormatException("Global properties are not allowed.", currentLine, lineNumber);
+                throw new FormatException($"Error on line {lineNumber}: global properties are not allowed.");
             }
 
             int assignmentIndex = currentLine.IndexOf(Scheme.PropertyAssignmentDelimiter);
@@ -282,19 +282,19 @@ namespace DHYDRO.Common.IO.Ini
         {
             if (string.IsNullOrEmpty(key))
             {
-                throw new IniFormatException("Property key cannot be empty.", currentLine, lineNumber);
+                throw new FormatException($"Error on line {lineNumber}: property key cannot be empty.");
             }
 
             if (key.Contains(" "))
             {
-                throw new IniFormatException("Property key cannot contain spaces.", currentLine, lineNumber);
+                throw new FormatException($"Error on line {lineNumber}: property key cannot contain spaces.");
             }
             
             if (!Configuration.AllowDuplicateProperties)
             {
                 if (foundProperties.Contains(key))
                 {
-                    throw new IniFormatException($"Duplicate property with key '{key}'.", currentLine, lineNumber);
+                    throw new FormatException($"Error on line {lineNumber}: duplicate property with key '{key}'.");
                 }
                 
                 foundProperties.Add(key);
@@ -331,7 +331,7 @@ namespace DHYDRO.Common.IO.Ini
         {
             if (currentProperty == null)
             {
-                throw new IniFormatException("Global property values are not allowed.", currentLine, lineNumber);
+                throw new FormatException($"Error on line {lineNumber}: global property values are not allowed.");
             }
 
             int commentIndex = currentLine.LastIndexOf(Scheme.CommentDelimiter);

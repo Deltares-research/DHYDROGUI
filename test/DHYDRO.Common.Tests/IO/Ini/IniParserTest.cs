@@ -146,26 +146,26 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase("[section[")]
         [TestCase("]section[")]
         [TestCase("a[section]")]
-        public void Parse_InvalidSectionFormat_ThrowsIniFormatException(string ini)
+        public void Parse_InvalidSectionFormat_ThrowsFormatException(string ini)
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<IniFormatException>(() => iniParser.Parse(ini));
+            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
         }
 
         [Test]
         [TestCase("[]")]
         [TestCase("[ ]")]
         [TestCase("[\t\t]")]
-        public void Parse_EmptySectionName_ThrowsIniFormatException(string ini)
+        public void Parse_EmptySectionName_ThrowsFormatException(string ini)
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<IniFormatException>(() => iniParser.Parse(ini));
+            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
         }
 
         [Test]
-        public void Parse_DuplicateSectionNamesAndAllowDuplicateSectionsIsFalse_ThrowsIniFormatException()
+        public void Parse_DuplicateSectionNamesAndAllowDuplicateSectionsIsFalse_ThrowsFormatException()
         {
             IniParser iniParser = CreateParser();
 
@@ -175,7 +175,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 [section]
 [section]";
 
-            Assert.Throws<IniFormatException>(() => iniParser.Parse(ini));
+            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
         }
 
         [Test]
@@ -286,13 +286,13 @@ namespace DHYDRO.Common.Tests.IO.Ini
         }
 
         [Test]
-        public void Parse_PropertyWithoutSection_ThrowsIniFormatException()
+        public void Parse_PropertyWithoutSection_ThrowsFormatException()
         {
             IniParser iniParser = CreateParser();
 
             const string ini = "property = value";
 
-            Assert.Throws<IniFormatException>(() => iniParser.Parse(ini));
+            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
         }
 
         [Test]
@@ -346,7 +346,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase("\t=value")]
         [TestCase("property with spaces = value")]
         [TestCase("property\twith\ttabs=value")]
-        public void Parse_InvalidPropertyFormat_ThrowsIniFormatException(string propertyLine)
+        public void Parse_InvalidPropertyFormat_ThrowsFormatException(string propertyLine)
         {
             IniParser iniParser = CreateParser();
 
@@ -354,11 +354,11 @@ namespace DHYDRO.Common.Tests.IO.Ini
 [section]
 {propertyLine}";
 
-            Assert.Throws<IniFormatException>(() => iniParser.Parse(ini));
+            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
         }
 
         [Test]
-        public void Parse_DuplicatePropertyKeysAndAllowDuplicatePropertiesIsFalse_ThrowsIniFormatException()
+        public void Parse_DuplicatePropertyKeysAndAllowDuplicatePropertiesIsFalse_ThrowsFormatException()
         {
             IniParser iniParser = CreateParser();
 
@@ -369,7 +369,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 property=value1
 property=value2";
 
-            Assert.Throws<IniFormatException>(() => iniParser.Parse(ini));
+            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
         }
 
         [Test]
@@ -576,7 +576,7 @@ value3"));
         }
 
         [Test]
-        public void Parse_MultiLineValueWithoutProperty_ThrowsIniFormatException()
+        public void Parse_MultiLineValueWithoutProperty_ThrowsFormatException()
         {
             IniParser iniParser = CreateParser();
 
@@ -588,11 +588,11 @@ value1 \
 value2 \
 value3";
 
-            Assert.Throws<IniFormatException>(() => iniParser.Parse(ini));
+            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
         }
 
         [Test]
-        public void Parse_PropertyWithMultiLineValueAndAllowMultiLineValuesIsFalse_ThrowsIniFormatException()
+        public void Parse_PropertyWithMultiLineValueAndAllowMultiLineValuesIsFalse_ThrowsFormatException()
         {
             IniParser iniParser = CreateParser();
 
@@ -604,7 +604,7 @@ property=value1 \
 value2 \
 value3";
 
-            Assert.Throws<IniFormatException>(() => iniParser.Parse(ini));
+            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
         }
 
         [Test]
