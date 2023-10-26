@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     {
        public static NwrwSurfaceData CreateNewNwrwSurfaceData(GwswElement gwswElement, ILogHandler logHandler)
         {
-            var nwrwSurface = new NwrwSurfaceData(logHandler);
+            var nwrwSurface = new NwrwSurfaceData();
             try
             {
 
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
        public static NwrwDischargeData CreateNewNwrwDischargeData(GwswElement gwswElement, ILogHandler logHandler)
        {
-           var nwrwDischargeData = new NwrwDischargeData(logHandler);
+           var nwrwDischargeData = new NwrwDischargeData();
            try
            {
                nwrwDischargeData.Name = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId, logHandler).ValueAsString;
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
        public static NwrwDefinition CreateNewNwrwRunoffDefinition(GwswElement gwswElement, ILogHandler logHandler)
        {
-           var nwrwDefinition = new NwrwDefinition(logHandler);
+           var nwrwDefinition = new NwrwDefinition();
 
            try
            {
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
        public static NwrwDryWeatherFlowDefinition CreateNewNwrwDryWeatherFlowDefinition(GwswElement gwswElement, ILogHandler logHandler)
        {
-           var nwrwDryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition(logHandler);
+           var nwrwDryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition();
 
            try
            {

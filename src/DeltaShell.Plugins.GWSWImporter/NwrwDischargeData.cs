@@ -5,26 +5,26 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using DHYDRO.Common.Logging;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// File Object Model for Gwsw debiet.csv.
     /// </summary>
-    public class NwrwDischargeData : ANwrwFeature
+    public class NwrwDischargeData : INwrwFeature
     {
-        public NwrwDischargeData(ILogHandler logHandler) : base(logHandler)
-        {
-        }
-
         private const NwrwSurfaceType SpecialCaseSurfaceType = NwrwSurfaceType.ClosedPavedWithSlope;
+        public string Name { get; set; } // UNI_IDE
         public DischargeType DischargeType { get; set; } // DEB_TYPE
         public string DryWeatherFlowId { get; set; } // VER_IDE
         public int NumberOfPeople { get; set; } // AVV_ENH
         public double LateralSurface { get; set; } // AFV_OPP
         public string Remark { get; set; } // ALG_TOE
-        
-        public override void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
+
+        public IGeometry Geometry { get; set; }
+
+        public void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper, ILogHandler logHandler)
         {
             if (rrModel == null)
             {
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
         }
 
-        public override void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
+        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
         {
             if (IsSpecialCase())
             {
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// <returns>Lateral flow in m³/s.</returns>
         /// <exception cref="ArgumentException">Thrown when the lateral surface could not be set.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the required dryweather flow definition cannot be found.</exception>
-        public double CalculateLateralFlow(ILookup<string, NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitionByName)
+        public double CalculateLateralFlow(ILookup<string, NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitionByName, ILogHandler logHandler)
         {
             if (nwrwDryWeatherFlowDefinitionByName == null)
             {

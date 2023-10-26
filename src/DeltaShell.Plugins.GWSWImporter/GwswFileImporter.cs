@@ -428,7 +428,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
                             lock (rrModel.Basin.Catchments)
                             {
-                                featureElement.AddNwrwCatchmentModelDataToModel(rrModel, helper);
+                                featureElement.AddNwrwCatchmentModelDataToModel(rrModel, helper, logHandler);
                             }
                         }
                     }
@@ -476,7 +476,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                             };
 
                             AddLateralSourceToBranch(branch, lateralSource);
-                            double calculateLateralFlow = nwrwDischargeData.CalculateLateralFlow(nwrwDryWeatherFlowDefinitionByName);
+                            double calculateLateralFlow = nwrwDischargeData.CalculateLateralFlow(nwrwDryWeatherFlowDefinitionByName, logHandler);
                             if (!double.IsNaN(calculateLateralFlow))
                             {
                                 flowByLateralSources.AddOrUpdate(lateralSource, calculateLateralFlow, (ls, oldSurfaceValue) => oldSurfaceValue);

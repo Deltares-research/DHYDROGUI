@@ -5,6 +5,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.FixedFiles;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using DHYDRO.Common.Logging;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -13,11 +14,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// </summary>
     /// <seealso cref="INwrwFeature" />
     [Entity]
-    public class NwrwDefinition : ANwrwFeature
+    public class NwrwDefinition : INwrwFeature
     {
-        public NwrwDefinition(ILogHandler logHandler): base(logHandler)
-        {
-        }
+        public string Name { get; set; } // AFV_IDE
         public NwrwSurfaceType SurfaceType { get; set; } // AFV_IDE
         public double SurfaceStorage { get; set; } // AFV_BRG
         public double InfiltrationCapacityMax { get; set; } // AFV_IFX
@@ -29,9 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public double RunoffSlope { get; set; } // AFV_HEL
         public double TerrainRoughness { get; set; } // AFV_RUW
         public string Remark { get; set; } // ALG_TOE
-        
+        public IGeometry Geometry { get; set; }
 
-        public override void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
+        public void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper, ILogHandler logHandler)
         {
             if (rrModel == null)
             {
@@ -54,23 +53,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
                 
         }
-        
+
+        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
+        {
+            //nothing to initialize
+        }
+
         public static IEventedList<NwrwDefinition> CreateDefaultNwrwDefinitions()
         {
             var nwrwDefinitions = new EventedList<NwrwDefinition>();
-            ILogHandler logHandler = new LogHandler("Creating default definitions");
-
             foreach (var surfaceType in NwrwSurfaceTypeHelper.SurfaceTypesInCorrectOrder)
             {
                 nwrwDefinitions.Add(
-                    new NwrwDefinition(logHandler)
+                    new NwrwDefinition
                     {
                         SurfaceType = surfaceType,
                         Name = NwrwSurfaceTypeHelper.SurfaceTypeDictionary[surfaceType],
                     });
             }
             LoadNwrwDefaults(nwrwDefinitions);
-            logHandler.LogReport();
             return nwrwDefinitions;
         }
         

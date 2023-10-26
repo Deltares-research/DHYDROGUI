@@ -27,8 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts.Nwrw
         [Test]
         public void OnDistributionTypeChanged_DistributionTypeIsSetToConstant_UpdatesDailyVolumeVariable()
         {
-            ILogHandler logHandler = Substitute.For<ILogHandler>();
-            var flowDefinition = new NwrwDryWeatherFlowDefinition(logHandler)
+            var flowDefinition = new NwrwDryWeatherFlowDefinition()
             {
                 DistributionType = DryweatherFlowDistributionType.Daily,
                 DailyVolumeConstant = 10,
@@ -45,8 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts.Nwrw
         [Test]
         public void OnDailyVolumeConstantChanged_DistributionTypeIsConstant_UpdatesDailyVolumeVariable()
         {
-            ILogHandler logHandler = Substitute.For<ILogHandler>(); 
-            var flowDefinition = new NwrwDryWeatherFlowDefinition(logHandler)
+            var flowDefinition = new NwrwDryWeatherFlowDefinition()
             {
                 DistributionType = DryweatherFlowDistributionType.Constant,
                 DailyVolumeConstant = 5,
@@ -63,8 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts.Nwrw
         [Test]
         public void OnDailyVolumeConstantChanged_DistributionTypeIsDaily_DoesNotUpdateDailyVolumeVariable()
         {
-            ILogHandler logHandler = Substitute.For<ILogHandler>(); 
-            var flowDefinition = new NwrwDryWeatherFlowDefinition(logHandler)
+            var flowDefinition = new NwrwDryWeatherFlowDefinition()
             {
                 DistributionType = DryweatherFlowDistributionType.Daily,
                 DailyVolumeConstant = 10,

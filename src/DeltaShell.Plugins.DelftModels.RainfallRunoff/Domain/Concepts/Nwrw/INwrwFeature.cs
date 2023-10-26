@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using DelftTools.Utils;
+using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
@@ -20,7 +21,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         /// </summary>
         /// <param name="rrModel"> The rainfall runoff model. </param>
         /// <param name="helper"> The NWRW importer helper that contains the NWRW data. </param>
-        void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper);
+        /// <param name="logHandler">Log handler for logs made in this method.</param>
+        void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper, ILogHandler logHandler);
         void InitializeNwrwCatchmentModelData(NwrwData nwrwData);
     }
 }

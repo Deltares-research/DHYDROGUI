@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using DelftTools.Shell.Core.Properties;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 {
@@ -26,14 +24,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
                 var name = "Test_dwf_def";
 
-                var dwf = new NwrwDryWeatherFlowDefinition(logHandler)
+                var dwf = new NwrwDryWeatherFlowDefinition()
                 {
                     Name = name,
                     DailyVolumeConstant = random.NextDouble() // dm³/day
                 };
                 rrModel.NwrwDryWeatherFlowDefinitions.Add(dwf);
                 
-                var nwrwDischargeData = new NwrwDischargeData(logHandler)
+                var nwrwDischargeData = new NwrwDischargeData()
                 {
                     DryWeatherFlowId = name
                 };
@@ -41,7 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 // setup when
                 var dwfdByName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
                 // when
-                var actualLateralFlow = nwrwDischargeData.CalculateLateralFlow(dwfdByName);
+                var actualLateralFlow = nwrwDischargeData.CalculateLateralFlow(dwfdByName, logHandler);
 
                 // then
                 var expectedValue = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
@@ -56,7 +54,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             ILogHandler logHandler = Substitute.For<ILogHandler>();
 
             // Call
-            TestDelegate call = () => new NwrwDischargeData(logHandler).CalculateLateralFlow(null);
+            TestDelegate call = () => new NwrwDischargeData().CalculateLateralFlow(null, logHandler);
 
             // Assert
             Assert.That(call, Throws.Nothing);
@@ -72,7 +70,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             const string dryWeatherFlowId = "myId";
             
             // Call
-            TestDelegate call = () => new NwrwDischargeData(logHandler) { DryWeatherFlowId = dryWeatherFlowId }.CalculateLateralFlow(nwrwDryWeatherFlowDefinitionByName);
+            TestDelegate call = () => new NwrwDischargeData() { DryWeatherFlowId = dryWeatherFlowId }.CalculateLateralFlow(nwrwDryWeatherFlowDefinitionByName, logHandler);
 
             // Assert
             Assert.That(call, Throws.Nothing);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
@@ -23,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             {
                 // Setup
                 ILogHandler logHandler = Substitute.For<ILogHandler>();
-                var dryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition(logHandler)
+                var dryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition()
                 {
                     Name = NwrwDryWeatherFlowDefinition.DefaultDwaId,
                     DayNumber = 123,
@@ -39,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
                 Assert.That(defaultDefinition.Name, Is.EqualTo(NwrwDryWeatherFlowDefinition.DefaultDwaId));
                 
                 // Call
-                dryWeatherFlowDefinition.AddNwrwCatchmentModelDataToModel(model, new NwrwImporterHelper());
+                dryWeatherFlowDefinition.AddNwrwCatchmentModelDataToModel(model, new NwrwImporterHelper(), logHandler);
                 
                 // Assert
                 IEventedList<NwrwDryWeatherFlowDefinition> definitions = model.NwrwDryWeatherFlowDefinitions;
@@ -55,8 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         [Test]
         public void Constructor_NameIsNotEmptyUponInitialization()
         {
-            ILogHandler logHandler = Substitute.For<ILogHandler>();
-            var definition = new NwrwDryWeatherFlowDefinition(logHandler);
+            var definition = new NwrwDryWeatherFlowDefinition();
 
             Assert.That(string.IsNullOrWhiteSpace(definition.Name), Is.False);
         }
@@ -73,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             var rrModel = new RainfallRunoffModel();
 
             // Call
-            var definition = new NwrwDryWeatherFlowDefinition(logHandler);
+            var definition = new NwrwDryWeatherFlowDefinition();
 
             // Assert
             Assert.That(definition.HourlyPercentageDailyVolume, Is.EqualTo(hourlyPercentageDailyVolume));
@@ -84,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         {
             if (!string.IsNullOrWhiteSpace(NwrwDryWeatherFlowDefinition.DefaultDwaId))
             {
-                TypeUtils.SetPrivatePropertyValue(new NwrwDryWeatherFlowDefinition(null), "DefaultDwaId",string.Empty);
+                TypeUtils.SetPrivatePropertyValue(new NwrwDryWeatherFlowDefinition(), "DefaultDwaId",string.Empty);
             }
         }
 

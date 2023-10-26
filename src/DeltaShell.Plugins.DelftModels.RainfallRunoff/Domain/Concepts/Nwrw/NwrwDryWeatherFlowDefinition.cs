@@ -10,6 +10,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.FixedFiles;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using DHYDRO.Common.Logging;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -18,21 +19,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// </summary>
     /// <seealso cref="INwrwFeature" />
     [Entity]
-    public class NwrwDryWeatherFlowDefinition : ANwrwFeature
+    public class NwrwDryWeatherFlowDefinition : INwrwFeature
     {
         private static double[] defaultHourlyPercentageDailyVolume = new double[24];
-        public NwrwDryWeatherFlowDefinition(ILogHandler logHandler):base(logHandler)
+
+        public NwrwDryWeatherFlowDefinition()
         {
-            Name = "DefinitionName";
             Array.Copy(defaultHourlyPercentageDailyVolume, HourlyPercentageDailyVolume, HourlyPercentageDailyVolume.Length);
         }
-        
         
         /// <summary>
         /// Name of the default dry weather flow definition to be used
         /// </summary>
         public static string DefaultDwaId { get; private set; }
         
+        /// <summary>
+        /// Name of the dry weather flow definition.
+        /// </summary>
+        public string Name { get; set; } = "DefinitionName";
+
         /// <summary>
         /// The dry weather flow distribution type.
         /// </summary>
@@ -56,8 +61,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public double[] HourlyPercentageDailyVolume { get; set; } = new double[24];
 
         public string Remark { get; set; } // ALG_TOE
-        
-        public override void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
+
+        public IGeometry Geometry { get; set; }
+
+        public void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper, ILogHandler logHandler)
         {
             if (rrModel == null)
             {
@@ -65,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 return;
             }
 
-            if (NotSupportedByKernel()) return;
+            if (NotSupportedByKernel(logHandler)) return;
             
             IEventedList<NwrwDryWeatherFlowDefinition> definitions = rrModel.NwrwDryWeatherFlowDefinitions;
             
@@ -81,7 +88,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             ConvertGwswUnitsToKernelUnits();
             definitions.Add(this);
         }
-        
+
+        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
+        {
+            //Nothing to initialize
+        }
+
         private void ConvertGwswUnitsToKernelUnits()
         {
             // In Gwsw the unit for DailyVolumeVariable is given in m³/day.
@@ -93,7 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             DailyVolumeConstant = DailyVolumeConstant * 1000 / 24;
         }
 
-        private bool NotSupportedByKernel()
+        private bool NotSupportedByKernel(ILogHandler logHandler)
         {
             // The kernel only supports DWF definitions of type 'DAG' or
             // of type 'CST' where VER_DAG is empty.
