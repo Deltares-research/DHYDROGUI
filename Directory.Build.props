@@ -22,10 +22,8 @@
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
-        <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
-        <WarningsAsErrors>CS1700</WarningsAsErrors>
+        <NoWarn>$(NoWarn);1591;NU1507;NU1803</NoWarn>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <WarningsNotAsErrors>NU1803</WarningsNotAsErrors>
 
         <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
