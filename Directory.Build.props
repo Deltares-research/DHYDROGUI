@@ -23,7 +23,7 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
     <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
-    <WarningsAsErrors>CS0649,CS1700</WarningsAsErrors>
+    <WarningsAsErrors>CS0649,CS1700,NU1603</WarningsAsErrors>
 
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
