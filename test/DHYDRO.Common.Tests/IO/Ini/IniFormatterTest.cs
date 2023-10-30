@@ -180,9 +180,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             string ini = iniFormatter.Format(iniData);
 
             const string expected = @"[section]
-property1              = value1              # comment
-property2              = value2              # comment
-property3              = value3              # comment
+property1             = value1              # comment
+property2             = value2              # comment
+property3             = value3              # comment
 
 ";
 
@@ -200,9 +200,9 @@ property3              = value3              # comment
             string ini = iniFormatter.Format(iniData);
 
             const string expected = @"[section]
-property1              = value1              
-property2              = value2              
-property3              = value3              
+property1             = value1              
+property2             = value2              
+property3             = value3              
 
 ";
 
@@ -243,7 +243,7 @@ property3              = value3
             string ini = iniFormatter.Format(iniData);
 
             const string expected = @"[section]
-property               =                     
+property              =                     
 
 ";
 
@@ -286,9 +286,9 @@ property               =
             string ini = iniFormatter.Format(iniData);
 
             const string expected = @"<section>
-property1              : value1              ; comment
-property2              : value2              ; comment
-property3              : value3              ; comment
+property1             : value1              ; comment
+property2             : value2              ; comment
+property3             : value3              ; comment
 
 ";
 
@@ -326,9 +326,9 @@ property3              : value3              ; comment
             }
 
             const string expected = @"[section]
-property1              = value1              # comment
-property2              = value2              # comment
-property3              = value3              # comment
+property1             = value1              # comment
+property2             = value2              # comment
+property3             = value3              # comment
 
 ";
 
@@ -350,9 +350,9 @@ property3              = value3              # comment
             }
 
             const string expected = @"[section]
-property1              = value1              # comment
-property2              = value2              # comment
-property3              = value3              # comment
+property1             = value1              # comment
+property2             = value2              # comment
+property3             = value3              # comment
 
 ";
 

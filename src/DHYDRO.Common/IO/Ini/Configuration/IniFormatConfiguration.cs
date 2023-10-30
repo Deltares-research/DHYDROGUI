@@ -27,15 +27,15 @@ namespace DHYDRO.Common.IO.Ini.Configuration
         /// Gets or sets the width reserved for property keys in the formatted INI data.
         /// </summary>
         /// <remarks>
-        /// The default value is <c>22</c>.
+        /// This value excludes the single whitespace before the property assignment character. The default value is <c>21</c>.
         /// </remarks>
-        public uint PropertyKeyWidth { get; set; } = 22;
+        public uint PropertyKeyWidth { get; set; } = 21;
 
         /// <summary>
         /// Gets or sets the width reserved for property values in the formatted INI data.
         /// </summary>
         /// <remarks>
-        /// The default value is <c>20</c>.
+        /// This value excludes the single whitespace after the property assignment character. The default value is <c>20</c>.
         /// </remarks>
         public uint PropertyValueWidth { get; set; } = 20;
 
