@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 {
     public static class CrossSectionFileReader
     {
-        private static readonly CrossSectionLocationFileReader locationFileReader = new CrossSectionLocationFileReader(new IniReader());
+        private static readonly CrossSectionLocationFileReader locationFileReader = new CrossSectionLocationFileReader();
         private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionFileReader));
 
         /// <summary>

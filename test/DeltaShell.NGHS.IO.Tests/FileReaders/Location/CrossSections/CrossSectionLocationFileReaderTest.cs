@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location.CrossSections;
 using log4net.Core;
 using NUnit.Framework;
@@ -13,22 +12,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
     public class CrossSectionLocationFileReaderTest
     {
         [Test]
-        public void Constructor_IniReaderNull_ThrowsArgumentNullException()
-        {
-            // Call
-            void Call() => new CrossSectionLocationFileReader(null);
-            
-            // Assert
-            var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("iniReader"));
-        }
-        
-        [Test]
         public void Read_FileDoesNotExist_ReturnsEmptyCollection()
         {
             // Setup
-            var iniReader = new IniReader();
-            var reader = new CrossSectionLocationFileReader(iniReader);
+            var reader = new CrossSectionLocationFileReader();
 
             // Call
             IEnumerable<CrossSectionLocation> locations = reader.Read(@"does\not\exist.def");
@@ -42,8 +29,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
         public void Read_ReadFileCorrectly()
         {
             // Setup
-            var iniReader = new IniReader();
-            var reader = new CrossSectionLocationFileReader(iniReader);
+            var reader = new CrossSectionLocationFileReader();
 
             string fileContent = string.Join(
                 Environment.NewLine,
@@ -105,8 +91,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
         public void Read_PropertyNotFound_LogsErrorAndDoesNotCreateCrossSectionLocation(string fileContent, string property)
         {
             // Setup
-            var iniReader = new IniReader();
-            var reader = new CrossSectionLocationFileReader(iniReader);
+            var reader = new CrossSectionLocationFileReader();
 
             using (var temp = new TemporaryDirectory())
             {
@@ -132,8 +117,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
         public void Read_PropertyEmptyValue_LogsErrorAndDoesNotCreateCrossSectionLocation(string fileContent, string property, int lineNumber)
         {
             // Setup
-            var iniReader = new IniReader();
-            var reader = new CrossSectionLocationFileReader(iniReader);
+            var reader = new CrossSectionLocationFileReader();
 
             using (var temp = new TemporaryDirectory())
             {
@@ -159,8 +143,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
         public void Read_PropertyInvalidDouble_LogsErrorAndDoesNotCreateCrossSectionLocation(string fileContent, string property, int lineNumber)
         {
             // Setup
-            var iniReader = new IniReader();
-            var reader = new CrossSectionLocationFileReader(iniReader);
+            var reader = new CrossSectionLocationFileReader();
 
             using (var temp = new TemporaryDirectory())
             {
@@ -178,6 +161,26 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Location.CrossSections
                 string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
                 Assert.That(error, Is.EqualTo($"Property '{property}' contains an invalid floating-point number in the file for section 'CrossSection' on line {lineNumber}: a.bc"));
                 Assert.That(locations, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void Read_AddsInfoMessageToLogIndicatingWhichFileIsBeingRead()
+        {
+            // Setup
+            var reader = new CrossSectionLocationFileReader();
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string filePath = temp.CreateFile("crsloc.ini", string.Empty);
+
+                // Call
+                void Call() => _ = reader.Read(filePath).ToArray();
+                IEnumerable<string> infoMessages = TestHelper.GetAllRenderedMessages(Call, Level.Info);
+
+                // Assert
+                var expectedMessage = $"Reading cross section locations from {filePath}.";
+                Assert.That(infoMessages.Any(m => m.Equals(expectedMessage)));
             }
         }
 

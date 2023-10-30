@@ -548,4 +548,10 @@
     <value>	has multiple locations at the same (source) location.
 		 {0}</value>
   </data>
+  <data name="CrossSectionLocationFileReader_ReadIniFile_Reading_cross_section_locations_from__0__" xml:space="preserve">
+    <value>Reading cross section locations from {0}.</value>
+  </data>
+  <data name="LocationFileWriter_WriteIniFile_Writing_locations_to__0__" xml:space="preserve">
+    <value>Writing locations to {0}.</value>
+  </data>
 </root>

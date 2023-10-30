@@ -218,6 +218,16 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading cross section locations from {0}..
+        /// </summary>
+        public static string CrossSectionLocationFileReader_ReadIniFile_Reading_cross_section_locations_from__0__ {
+            get {
+                return ResourceManager.GetString("CrossSectionLocationFileReader_ReadIniFile_Reading_cross_section_locations_from__" +
+                        "0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The provided geometry type &apos;{0}&apos; is not supported..
         /// </summary>
         public static string CulvertDefinitionParser_Unsupported_culvert_geometry_type {
@@ -414,6 +424,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string IniPropertyExtensionMethods_Cannot_parse_value_for_property {
             get {
                 return ResourceManager.GetString("IniPropertyExtensionMethods_Cannot_parse_value_for_property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing locations to {0}..
+        /// </summary>
+        public static string LocationFileWriter_WriteIniFile_Writing_locations_to__0__ {
+            get {
+                return ResourceManager.GetString("LocationFileWriter_WriteIniFile_Writing_locations_to__0__", resourceCulture);
             }
         }
         
@@ -1094,7 +1113,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to While writing the 1d2d links we found during save problems on sources of links : .
+        ///   Looks up a localized string similar to The following issues were found while writing the 1D2D links: .
         /// </summary>
         public static string UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader {
             get {

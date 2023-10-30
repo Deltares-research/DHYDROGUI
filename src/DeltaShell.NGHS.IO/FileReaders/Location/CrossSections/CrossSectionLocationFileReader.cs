@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
@@ -18,18 +17,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
     public class CrossSectionLocationFileReader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionLocationFileReader));
-        private readonly IniReader iniReader;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CrossSectionLocationFileReader"/> class.
-        /// </summary>
-        /// <param name="iniReader"> The delft ini reader. </param>
-        public CrossSectionLocationFileReader(IniReader iniReader)
-        {
-            Ensure.NotNull(iniReader, nameof(iniReader));
-
-            this.iniReader = iniReader;
-        }
 
         /// <summary>
         /// Reads the collection of <see cref="CrossSectionLocation"/> from the file at the specified <paramref name="filePath"/>.
@@ -53,9 +40,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
                 yield break;
             }
 
-            IEnumerable<IniSection> iniSections = iniReader.ReadIniFile(filePath)
-                                                                     .Where(IsCrossSectionIniSection);
+            IniData iniData = ReadIniFile(filePath);
 
+            IEnumerable<IniSection> iniSections = iniData.Sections.Where(IsCrossSectionIniSection);
             foreach (IniSection crossSectionIniSection in iniSections)
             {
                 if (!TryReadString(crossSectionIniSection, LocationRegion.Id, out string id) ||
@@ -70,6 +57,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
                 var longName = crossSectionIniSection.ReadProperty<string>(LocationRegion.Name, true);
 
                 yield return new CrossSectionLocation(id, longName, branchId, chainage, shift, definitionId);
+            }
+        }
+        
+        private static IniData ReadIniFile(string crossSectionLocationFileName)
+        {
+            var iniParser = new IniParser();
+
+            log.InfoFormat(Resources.CrossSectionLocationFileReader_ReadIniFile_Reading_cross_section_locations_from__0__,
+                           crossSectionLocationFileName);
+
+            using (FileStream iniStream = File.OpenRead(crossSectionLocationFileName))
+            {
+                return iniParser.Parse(iniStream);
             }
         }
 
