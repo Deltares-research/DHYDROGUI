@@ -192,7 +192,9 @@
           <CreateFolder/>
           <RemoveFolder Id="RemoveDeltaShellBinDir_Component" Directory="INSTALLDIR" On="uninstall"/>
           <?define GUICONFIGFILE = "DeltaShell.Gui.exe.config"?>
+          <?define CONSOLECONFIGFILE = "DeltaShell.Console.exe.config"?>
           <?include GuiConfigXml.wxi?>
+          <?include ConsoleConfigXml.wxi?>
         </Component>
         <Directory Id="HarvestedDeltaShellFilesDir"/>
       </Directory>
