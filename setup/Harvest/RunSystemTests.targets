@@ -999,7 +999,7 @@
 
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigSetting>copyright</_CheckDeltaShellGuiExeConfigSetting>
-      <_CheckDeltaShellGuiExeConfigExpectedValue>© Deltares 2023</_CheckDeltaShellGuiExeConfigExpectedValue>
+      <_CheckDeltaShellGuiExeConfigExpectedValue>© Deltares 2024</_CheckDeltaShellGuiExeConfigExpectedValue>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"

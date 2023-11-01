@@ -10,10 +10,10 @@
   <String Id="Delft3DPackageName">Delft3D FM HM</String>
 
   <String Id="RegistrationFeature">Delft3D_FM_Hyd-Mor</String>
-  <String Id="RegistrationVersion">2023</String>
+  <String Id="RegistrationVersion">2024</String>
 
   <String Id="SplashScreenCompany">Deltares</String>
-  <String Id="SplashScreenLicense">Valid until 14 nov 2023</String>
+  <String Id="SplashScreenLicense">Valid until 14 nov 2024</String>
 
   <String Id="LicenseRtf" Overridable="yes">Delft3D FM HM_Resources\License.rtf</String>
 

@@ -20,7 +20,7 @@
   <?ifdef $(var.RWS)?>
     <?define splashScreenLicense="NGHS project"?>
   <?else?>
-    <?define splashScreenLicense="Valid until 3 nov 2022"?>
+    <?define splashScreenLicense="Valid until 3 nov 2024"?>
   <?endif?>
 
   <?define checkForRegistration="true"?>
