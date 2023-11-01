@@ -218,6 +218,25 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Writing cross section definitions to {0}..
+        /// </summary>
+        public static string CrossSectionDefinitionFileWriter_WriteIniFile_Writing_cross_section_definitions_to__0__ {
+            get {
+                return ResourceManager.GetString("CrossSectionDefinitionFileWriter_WriteIniFile_Writing_cross_section_definitions_t" +
+                        "o__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading cross section definitions from {0}..
+        /// </summary>
+        public static string CrossSectionFileReader_ReadIniFile_Reading_cross_section_definitions_from__0__ {
+            get {
+                return ResourceManager.GetString("CrossSectionFileReader_ReadIniFile_Reading_cross_section_definitions_from__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reading cross section locations from {0}..
         /// </summary>
         public static string CrossSectionLocationFileReader_ReadIniFile_Reading_cross_section_locations_from__0__ {

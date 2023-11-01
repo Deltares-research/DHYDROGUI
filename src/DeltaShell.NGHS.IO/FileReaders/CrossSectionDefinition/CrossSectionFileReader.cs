@@ -216,16 +216,30 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
             if (!File.Exists(csdFilename))
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, csdFilename));
 
-            var csDefinitionIniSections = new IniReader().ReadIniFile(csdFilename);
-            if (csDefinitionIniSections.Count == 0)
+            IniData iniData = ReadIniFile(csdFilename);
+
+            if (!iniData.Sections.Any())
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, csdFilename));
 
-            return csDefinitionIniSections.Where(iniSection =>
-                                                    string.Equals(iniSection.Name, DefinitionPropertySettings.Header,
-                                                                  StringComparison.InvariantCultureIgnoreCase))
-                                         .ToArray();
+            return iniData.Sections.Where(iniSection =>
+                                              string.Equals(iniSection.Name, DefinitionPropertySettings.Header,
+                                                            StringComparison.InvariantCultureIgnoreCase))
+                          .ToArray();
         }
-        
+
+        private static IniData ReadIniFile(string csdFilename)
+        {
+            var iniParser = new IniParser();
+
+            log.InfoFormat(Resources.CrossSectionFileReader_ReadIniFile_Reading_cross_section_definitions_from__0__,
+                           csdFilename);
+
+            using (FileStream iniStream = File.OpenRead(csdFilename))
+            {
+                return iniParser.Parse(iniStream);
+            }
+        }
+
         private static void SetFrictionOnCrossSectionDefinition(IniSection csdDefinitionIniSection, ICrossSectionDefinition readCrossSectionDefinition, IHydroNetwork network)
         {
             switch (readCrossSectionDefinition.CrossSectionType)

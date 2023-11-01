@@ -554,4 +554,10 @@
   <data name="LocationFileWriter_WriteIniFile_Writing_locations_to__0__" xml:space="preserve">
     <value>Writing locations to {0}.</value>
   </data>
+  <data name="CrossSectionFileReader_ReadIniFile_Reading_cross_section_definitions_from__0__" xml:space="preserve">
+    <value>Reading cross section definitions from {0}.</value>
+  </data>
+  <data name="CrossSectionDefinitionFileWriter_WriteIniFile_Writing_cross_section_definitions_to__0__" xml:space="preserve">
+    <value>Writing cross section definitions to {0}.</value>
+  </data>
 </root>

@@ -5,12 +5,16 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.General;
+using DeltaShell.NGHS.IO.Properties;
 using DHYDRO.Common.IO.Ini;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public static class CrossSectionDefinitionFileWriter
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionDefinitionFileWriter));
+        
         public static void WriteFile(
             string targetFile,
             IHydroNetwork network,
@@ -90,7 +94,33 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 iniSections.Add(definitionRegion);
             }
 
-            new IniFileWriter().WriteIniFile(iniSections, targetFile);
+            WriteIniFile(targetFile, iniSections);
+        }
+
+        private static void WriteIniFile(string targetFile, IEnumerable<IniSection> iniSections)
+        {
+            var iniFormatter = new IniFormatter
+            {
+                Configuration =
+                {
+                    WriteComments = false,
+                    PropertyIndentationLevel = 4,
+                }
+            };
+            IniData crossSectionDefinitionIniData = GetIniDataFromSections(iniSections);
+
+            log.InfoFormat(Resources.CrossSectionDefinitionFileWriter_WriteIniFile_Writing_cross_section_definitions_to__0__, targetFile);
+            using (Stream iniStream = File.Open(targetFile, FileMode.Create))
+            {
+                iniFormatter.Format(crossSectionDefinitionIniData, iniStream);
+            }
+        }
+
+        private static IniData GetIniDataFromSections(IEnumerable<IniSection> iniSections)
+        {
+            var iniData = new IniData();
+            iniData.AddMultipleSections(iniSections);
+            return iniData;
         }
 
         private static bool WriteFrictionFromCrossSectionDefinition(
