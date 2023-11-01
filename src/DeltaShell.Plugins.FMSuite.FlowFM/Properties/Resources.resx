@@ -487,10 +487,10 @@ File import of structures file '{1}' has failed.</value>
   <data name="WaterFlowFMModel__0__has_changed__clearing_results_" xml:space="preserve">
     <value>{0} has changed, clearing results.</value>
   </data>
-  <data name="LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator">
+  <data name="LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator" xml:space="preserve">
     <value>SeriesCsvFileImporter does not support importer mode SeveralFunctionsBasedOnDiscriminator</value>
   </data>
-  <data name="LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import">
+  <data name="LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import" xml:space="preserve">
     <value>Import either cancelled or an error occured when reading the CSV file</value>
   </data>
   <data name="LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_" xml:space="preserve">
@@ -500,7 +500,7 @@ File import of structures file '{1}' has failed.</value>
     <value>Could not find suitable target for: {0}</value>
   </data>
   <data name="FeatureFile1D2DReader_ReadRetentionsFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
-	  <value>Could not read file {0} properly, it seems empty</value>
+    <value>Could not read file {0} properly, it seems empty</value>
   </data>
   <data name="MduFile_MduFile_Error_retrieving_FM_Dll_version___0_" xml:space="preserve">
     <value>Error retrieving FM Dll version: {0}</value>
@@ -512,7 +512,7 @@ File import of structures file '{1}' has failed.</value>
     <value>No Initial Quantity ini file found.</value>
   </data>
   <data name="Key_0_in_1_is_deprecated_and_automatically_removed_from_model" xml:space="preserve">
-	  <value>Key {0} in {1} is deprecated and automatically removed from model.</value>
+    <value>Key {0} in {1} is deprecated and automatically removed from model.</value>
   </data>
   <data name="WaterFlowFMHydroLinksValidator_Realtime_lateral_must_have_link_between_catchment_and_lateral" xml:space="preserve">
     <value>A lateral of type realtime must have a hydrolink between a catchment and the lateral.</value>
@@ -528,7 +528,7 @@ File import of structures file '{1}' has failed.</value>
   </data>
   <data name="WaterFlowFMDataAccessListener_OnPostLoad_Model_output_is_removed_because_project_has_been_migrated_from_older_project_version" xml:space="preserve">
     <value>Model output is removed because project has been migrated from older project version</value>
- </data>
+  </data>
   <data name="FeatureFile1D2DReader_Read1D2DFeatures_Reading_routes" xml:space="preserve">
     <value>Reading routes</value>
   </data>
@@ -564,9 +564,6 @@ File import of structures file '{1}' has failed.</value>
   </data>
   <data name="MduFile_Read_Reading_boundary_external_forcings_file" xml:space="preserve">
     <value>Reading boundary external forcings file</value>
-  </data>
-  <data name="MduFile_Read_Reading_fm_meteo_external_forcings_file" xml:space="preserve">
-    <value>Reading fm meteo external forcings file</value>
   </data>
   <data name="MduFile_Read_Reading_FouFile_if_used" xml:space="preserve">
     <value>Reading FouFile if used</value>
@@ -672,5 +669,14 @@ File import of structures file '{1}' has failed.</value>
   </data>
   <data name="MduFile_ReadProperties_An_unrecognized_keyword___0___has_been_detected" xml:space="preserve">
     <value>An unrecognized keyword *{0}* has been detected. The setting will be preserved and written back to the MDU file on export.</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values" xml:space="preserve">
+    <value>Based on the Fixed Weir Scheme {0}, there are not enough column(s) defined for {1} in the imported fixed weir file. The last {2} column(s) have been generated using default values</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored" xml:space="preserve">
+    <value>Based on the Fixed Weir Scheme {0}, there are too many column(s) defined for {1} in the imported fixed weir file. The last {2} column(s) have been ignored</value>
+  </data>
+  <data name="MduFile_Read_Reading_grid" xml:space="preserve">
+    <value>Reading grid</value>
   </data>
 </root>
