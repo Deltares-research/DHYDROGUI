@@ -50,14 +50,20 @@
   <xsl:template match="wix:Component[key('pssym-file-search', @Id)]" />
   <xsl:template match="wix:ComponentRef[key('pssym-file-search', @Id)]" />
 
-  <!-- Replace file attribute id -->
+  <!-- Replace file attribute id's -->
   <xsl:template match="wix:File[@Source='$(var.deltashell_gui_bin)\DeltaShell.Gui.exe.config']/@Id">
     <xsl:attribute name="{name()}">DeltaShell.Gui.exe.config</xsl:attribute>
   </xsl:template>
-  
   <xsl:template match="wix:File[@Source='$(var.deltashell_gui_bin)\DeltaShell.Gui.exe']/@Id">
     <xsl:attribute name="{name()}">DeltaShell.Gui.exe</xsl:attribute>
   </xsl:template>
+  <xsl:template match="wix:File[@Source='$(var.deltashell_gui_bin)\DeltaShell.Console.exe.config']/@Id">
+    <xsl:attribute name="{name()}">DeltaShell.Console.exe.config</xsl:attribute>
+  </xsl:template>
+  <xsl:template match="wix:File[@Source='$(var.deltashell_gui_bin)\DeltaShell.Console.exe']/@Id">
+    <xsl:attribute name="{name()}">DeltaShell.Console.exe</xsl:attribute>
+  </xsl:template>
+    
   <!-- identity template -->
   <xsl:key name="gui-file-search" match="wix:Component[contains(wix:File/@Source, 'DeltaShell.Gui.exe') and not(substring-after(wix:File/@Source, 'DeltaShell.Gui.exe'))]" use="@Id" />
   

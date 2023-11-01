@@ -582,8 +582,35 @@
     <CallTarget Targets="CheckDeltaShellExeStartAndRunAndClose"
 				Condition="Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeFile)))) AND Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile))))"
 				ContinueOnError="WarnAndContinue"/>
-	<CallTarget Targets="CheckDeltaShelGuiExeConfigXML"
+	  <CallTarget Targets="CheckDeltaShelGuiExeConfigXML"
 				Condition="Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellGuiExeConfigFile))))"
+				ContinueOnError="WarnAndContinue"/>
+
+    <!--We know Deltashell Gui exist, check for DeltaShell Console executable and config file the DeltaShell folder-->
+    <!--Needed for license checking for the DeltaShell console application-->
+    <PropertyGroup>
+      <_CheckDeltaShellConsoleExeFile>DeltaShell.Console.exe</_CheckDeltaShellConsoleExeFile>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=DeltaShell Exe Console file;
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellConsoleExeFile)"
+             ContinueOnError="WarnAndContinue"/>
+  
+    <PropertyGroup>
+      <_CheckDeltaShellConsoleExeConfigFile>DeltaShell.Console.exe.config</_CheckDeltaShellConsoleExeConfigFile>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=DeltaShell Exe Console config file;
+                          KeyValue=$(_CheckDeltaShellFolder)\$(_CheckDeltaShellConsoleExeConfigFile)"
+             ContinueOnError="WarnAndContinue"/>
+    <CallTarget Targets="CheckDeltaShellConsoleExeConfigXML"
+				Condition="Exists($([System.IO.Path]::Combine($(_CheckDeltaShellFolder), $(_CheckDeltaShellConsoleExeConfigFile))))"
 				ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -1000,6 +1027,21 @@
              ContinueOnError="WarnAndContinue"/>
   </Target>
 
+  <Target Name="CheckDeltaShellConsoleExeConfigXML">
+    <PropertyGroup>
+      <_CheckDeltaShellConsoleExeConfigFile>$(_CheckDeltaShellFolder)\DeltaShell.Console.exe.config</_CheckDeltaShellConsoleExeConfigFile>
+    </PropertyGroup>
+    <PropertyGroup>
+      <_CheckConfigSetting>checkForRegistration</_CheckConfigSetting>
+      <_CheckConfigExpectedValue>true</_CheckConfigExpectedValue>
+    </PropertyGroup>
+    <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputDeltaShellConsoleExeConfigContentCheck"
+             Properties=" xmlKey=$(_CheckConfigSetting);
+                          xmlKeyExpectedValue=$(_CheckConfigExpectedValue);
+                          CheckDeltaShellConsoleExeConfigFile=$(_CheckDeltaShellConsoleExeConfigFile)"
+             ContinueOnError="WarnAndContinue"/>
+  </Target>
   <Target Name="TargetShortCutsSystemTests">
     <Message Text="Checking shortcuts" Importance="high"/>
     <PropertyGroup>
@@ -1337,6 +1379,27 @@
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="TeamcityTemplateOutputRegistryCheck" Properties="RegistryKey=$(_CheckRegKeyInstalledUninstallerShortcutKey);Package=$(_Package);File=$(_File);RegistryKeyValue=$(_CheckRegKeyInstalledUninstallerShortcut);CheckingFor=$(CheckingFor);ConditionState=$(ConditionState)" ContinueOnError="WarnAndContinue"/>
 
+  </Target>
+
+  <Target Name="TeamcityTemplateOutputDeltaShellConsoleExeConfigContentCheck">
+    <PropertyGroup>
+      <_Query Condition="'$(Query)' == ''">/configuration/appSettings/add[@key='$(xmlKey)']/@value</_Query>
+      <_Query Condition="'$(Query)' != ''">$(Query)</_Query>
+    </PropertyGroup>
+    <XmlPeek XmlInputPath="$(CheckDeltaShellConsoleExeConfigFile)" Query="$(_Query)" Condition="Exists('$(CheckDeltaShellConsoleExeConfigFile)')" ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="Result" ItemName="xmlKeyValue" />
+    </XmlPeek>
+
+    <Message Text="Using check for setting $(xmlKey) in $(CheckDeltaShellConsoleExeConfigFile)." Importance="high" />
+    <Message Text="##teamcity[testStarted name='XMLFileContent.GuiConfigXml_wxi.DeltaShellConsoleExe config file $(xmlKey) value']" Importance="high" />
+    <Message Text="Detecting DeltaShell.Console.exe.config file $(xmlKey) value at $(CheckDeltaShellGuiConsoleConfigFile) with value = @(xmlKeyValue)." Importance="high" />
+    <Error Text="Detected DeltaShell.Console.exe.config file $(xmlKey) value at $(CheckDeltaShellGuiConsoleConfigFile) with value @(xmlKeyValue) but expected was $(xmlKeyExpectedValue)." Condition="'@(xmlKeyValue)' != '$(xmlKeyExpectedValue)'" ContinueOnError="ErrorAndContinue"/>
+    <Message Text="##teamcity[testFailed
+             name='XMLFileContent.GuiConfigXml_wxi.DeltaShellConsoleExe config file $(xmlKey) value'
+             message='The key check for $(xmlKey) should be $(xmlKeyExpectedValue) but is @(xmlKeyValue)']"
+             Importance="high"
+             Condition="'@(xmlKeyValue)' != '$(xmlKeyExpectedValue)'"/>
+    <Message Text="##teamcity[testFinished name='XMLFileContent.GuiConfigXml_wxi.DeltaShellConsoleExe config file $(xmlKey) value']" Importance="high" />
   </Target>
 
   <Target Name="TeamcityTemplateOutputDeltaShellExeConfigContentCheck">

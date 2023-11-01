@@ -75,6 +75,7 @@
     <Content Include="..\Sobek\Manuals\RainfallRunoffManualShortcuts.wxi">
       <Link>Manuals\RainfallRunoffManualShortcuts.wxi</Link>
     </Content>
+    <Content Include="ConsoleConfigXml.wxi" />
     <Content Include="D-Hydro_Manuals\D-Flow_FM_Technical_Reference_Manual.pdf" />
     <Content Include="D-Hydro_Manuals\D-Flow_FM_User_Manual.pdf" />
     <Content Include="D-Hydro_Manuals\D-Flow_FM_User_Manual_1D2D.pdf" />
