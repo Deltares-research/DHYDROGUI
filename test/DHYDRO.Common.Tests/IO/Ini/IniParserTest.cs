@@ -124,6 +124,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         [TestCase("section#1")]
         [TestCase("section-1")]
+        [TestCase("section²")]
         [TestCase("section\\subsection")]
         [TestCase("section~subsection")]
         [TestCase("section*subsection")]
@@ -323,6 +324,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase("property.1")]
         [TestCase("property#1")]
         [TestCase("property\\1")]
+        [TestCase("property²")]
         [TestCase("p][r[o]p][e[]rt[y")]
         public void Parse_SpecialCharactersInPropertyKey_SectionHasProperty(string propertyKey)
         {
@@ -431,6 +433,7 @@ property=";
 
         [Test]
         [TestCase("value-1")]
+        [TestCase("value ¹²³")]
         [TestCase("value\\1")]
         [TestCase("value \" xyz")]
         [TestCase("v][a[l]u][e[")]
@@ -725,30 +728,15 @@ value2 ; comment2";
         }
 
         [Test]
-        public void Parse_SectionWithProperties_ReadsFromStream()
+        [TestCaseSource(nameof(CreateSectionWithProperties))]
+        public IniData Parse_SectionWithProperties_ReadsFromStream(string ini)
         {
             IniParser iniParser = CreateParser();
 
-            const string ini = @"
-[section]
-property1=value1
-property2=value2";
-
-            IniData iniData;
-            using (var stream = new MemoryStream(Encoding.Default.GetBytes(ini)))
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(ini)))
             {
-                iniData = iniParser.Parse(stream);
+                return iniParser.Parse(stream);
             }
-
-            var expected = new IniData();
-            var section = new IniSection("section") { LineNumber = 2 };
-            var property1 = new IniProperty("property1", "value1") { LineNumber = 3 };
-            var property2 = new IniProperty("property2", "value2") { LineNumber = 4 };
-            section.AddProperty(property1);
-            section.AddProperty(property2);
-            expected.AddSection(section);
-
-            Assert.That(iniData, Is.EqualTo(expected));
         }
 
         [Test]
@@ -767,31 +755,41 @@ property2=value2";
         }
 
         [Test]
-        public void Parse_SectionWithProperties_ReadsFromStreamReader()
+        [TestCaseSource(nameof(CreateSectionWithProperties))]
+        public IniData Parse_SectionWithProperties_ReadsFromStreamReader(string ini)
         {
             IniParser iniParser = CreateParser();
 
-            const string ini = @"
-[section]
-property1=value1
-property2=value2";
-
-            IniData iniData;
-            using (var stream = new MemoryStream(Encoding.Default.GetBytes(ini)))
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(ini)))
             using (var streamReader = new StreamReader(stream))
             {
-                iniData = iniParser.Parse(streamReader);
+                return iniParser.Parse(streamReader);
             }
+        }
 
-            var expected = new IniData();
-            var section = new IniSection("section") { LineNumber = 2 };
-            var property1 = new IniProperty("property1", "value1") { LineNumber = 3 };
-            var property2 = new IniProperty("property2", "value2") { LineNumber = 4 };
-            section.AddProperty(property1);
-            section.AddProperty(property2);
-            expected.AddSection(section);
+        private static IEnumerable<TestCaseData> CreateSectionWithProperties()
+        {
+            yield return GenerateTestCaseData("TestProperty", "TestValue").SetName("PropertyWithValue");
+            yield return GenerateTestCaseData("property¹²³", "value¹²³").SetName("PropertyWithUnicodeCharacters");
+            yield return GenerateTestCaseData("p][r[o]p][e[]rt[y", "v][a[l]u][e[]").SetName("PropertyWithSpecialCharacters");
+            yield break;
 
-            Assert.That(iniData, Is.EqualTo(expected));
+            TestCaseData GenerateTestCaseData(string propertyKey, string propertyValue)
+            {
+                var ini = $@"[section]
+{propertyKey}1={propertyValue}1
+{propertyKey}2={propertyValue}2";
+
+                var expected = new IniData();
+                var section = new IniSection("section") { LineNumber = 1 };
+                var property1 = new IniProperty($"{propertyKey}1", $"{propertyValue}1") { LineNumber = 2 };
+                var property2 = new IniProperty($"{propertyKey}2", $"{propertyValue}2") { LineNumber = 3 };
+                section.AddProperty(property1);
+                section.AddProperty(property2);
+                expected.AddSection(section);
+
+                return new TestCaseData(ini).Returns(expected);
+            }
         }
 
         private static IniParser CreateParser()

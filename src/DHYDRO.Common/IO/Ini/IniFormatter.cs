@@ -93,7 +93,7 @@ namespace DHYDRO.Common.IO.Ini
             Ensure.NotNull(iniData, nameof(iniData));
             Ensure.NotNull(stream, nameof(stream));
 
-            using (var streamWriter = new StreamWriter(stream, Encoding.Default, 1024, true))
+            using (var streamWriter = new StreamWriter(stream, Encoding.UTF8, 1024, true))
             {
                 Format(iniData, streamWriter);
             }

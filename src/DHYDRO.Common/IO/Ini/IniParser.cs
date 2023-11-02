@@ -99,7 +99,7 @@ namespace DHYDRO.Common.IO.Ini
         {
             Ensure.NotNull(stream, nameof(stream));
 
-            using (var streamReader = new StreamReader(stream, Encoding.Default, true, 1024, true))
+            using (var streamReader = new StreamReader(stream, Encoding.UTF8, true, 1024, true))
             {
                 return Parse(streamReader);
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using DHYDRO.Common.IO.Ini;
@@ -149,7 +150,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             Assert.That(ini, Is.EqualTo(expected));
         }
-        
+
         [Test]
         public void Format_SectionWithCommentsAndWriteCommentsIsFalse_ReturnsFormattedString()
         {
@@ -188,7 +189,36 @@ property3             = value3              # comment
 
             Assert.That(ini, Is.EqualTo(expected));
         }
-        
+
+        [Test]
+        [TestCaseSource(nameof(CreatePropertiesWithSpecialCharacters))]
+        public string Format_PropertyWithSpecialCharacters_ReturnsFormattedString(string key, string value)
+        {
+            IniData iniData = IniDataFixture.CreateIniDataFromProperty(key, value, string.Empty);
+
+            IniFormatter iniFormatter = CreateFormatter();
+
+            return iniFormatter.Format(iniData);
+        }
+
+        private static IEnumerable<TestCaseData> CreatePropertiesWithSpecialCharacters()
+        {
+            yield return GenerateTestCaseDate("property-1", "value-1");
+            yield return GenerateTestCaseDate("property\\1", "value\\1");
+            yield return GenerateTestCaseDate("property¹²³", "value¹²³");
+            yield return GenerateTestCaseDate("p][r[o]p][e[]rt[y", "v][a[l]u][e[]");
+            yield break;
+
+            TestCaseData GenerateTestCaseDate(string propertyKey, string propertyValue)
+            {
+                var expected = $@"[section]
+{propertyKey,-21} = {propertyValue,-20}
+
+";
+                return new TestCaseData(propertyKey, propertyValue).Returns(expected);
+            }
+        }
+
         [Test]
         public void Format_SectionWithPropertiesAndCommentsAndWriteCommentsIsFalse_ReturnsFormattedString()
         {
@@ -212,9 +242,7 @@ property3             = value3
         [Test]
         public void Format_WritePropertyWithoutValueIsFalse_ReturnsFormattedString()
         {
-            IniProperty property = IniDataFixture.CreateProperty(value: string.Empty);
-            IniSection section = IniDataFixture.CreateSection(property);
-            IniData iniData = IniDataFixture.CreateIniData(section);
+            IniData iniData = IniDataFixture.CreateIniDataFromProperty(value: string.Empty);
 
             IniFormatter iniFormatter = CreateFormatter();
             iniFormatter.Configuration.WritePropertyWithoutValue = false;
@@ -233,9 +261,7 @@ property3             = value3
         [TestCase(null)]
         public void Format_WritePropertyWithoutValueIsTrue_ReturnsFormattedString(string value)
         {
-            IniProperty property = IniDataFixture.CreateProperty(value: value, comment: string.Empty);
-            IniSection section = IniDataFixture.CreateSection(property);
-            IniData iniData = IniDataFixture.CreateIniData(section);
+            IniData iniData = IniDataFixture.CreateIniDataFromProperty(value: value, comment: string.Empty);
 
             IniFormatter iniFormatter = CreateFormatter();
             iniFormatter.Configuration.WritePropertyWithoutValue = true;
@@ -320,9 +346,11 @@ property3             : value3              ; comment
 
             string ini;
             using (var stream = new MemoryStream())
+            using (var streamReader = new StreamReader(stream, Encoding.UTF8))
             {
                 iniFormatter.Format(iniData, stream);
-                ini = Encoding.Default.GetString(stream.ToArray());
+                stream.Seek(0, SeekOrigin.Begin);
+                ini = streamReader.ReadToEnd();
             }
 
             const string expected = @"[section]
@@ -333,6 +361,23 @@ property3             = value3              # comment
 ";
 
             Assert.That(ini, Is.EqualTo(expected));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(CreatePropertiesWithSpecialCharacters))]
+        public string Format_PropertyWithSpecialCharacters_WritesToStream(string key, string value)
+        {
+            IniData iniData = IniDataFixture.CreateIniDataFromProperty(key, value, string.Empty);
+
+            IniFormatter iniFormatter = CreateFormatter();
+
+            using (var stream = new MemoryStream())
+            using (var streamReader = new StreamReader(stream, Encoding.UTF8))
+            {
+                iniFormatter.Format(iniData, stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                return streamReader.ReadToEnd();
+            }
         }
 
         [Test]

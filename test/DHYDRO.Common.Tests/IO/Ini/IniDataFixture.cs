@@ -16,7 +16,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData.AddMultipleSections(CreateSections());
             return iniData;
         }
-        
+
         public static IniData CreateIniDataWithSingleSection()
         {
             var iniData = new IniData();
@@ -29,6 +29,13 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var iniData = new IniData();
             iniData.AddMultipleSections(sections);
             return iniData;
+        }
+
+        public static IniData CreateIniDataFromProperty(string key = "property", string value = "value", string comment = "comment")
+        {
+            IniProperty property = CreateProperty(key, value, comment);
+            IniSection section = CreateSection(property);
+            return CreateIniData(section);
         }
 
         public static IniSection[] CreateSections(string namePrefix = "section")
