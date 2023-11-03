@@ -178,6 +178,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         }
 
         /// <inheritdoc/>
+        public string GetReadableError(int errorCode)
+        {
+            return api.GetReadableError(errorCode);
+        }
+
+        /// <inheritdoc/>
         public int[] GetNetworkIds()
         {
             return api.GetNetworkIds();
