@@ -1,4 +1,5 @@
 ﻿using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro
@@ -23,5 +24,10 @@ namespace DelftTools.Hydro
         /// Use storage as function of level
         /// </summary>
         bool UseTable { get; set; }
+        
+        /// <summary>
+        /// Gets the interpolation type of the storage table data.
+        /// </summary>
+        InterpolationType InterpolationType { get; set; }
     }
 }

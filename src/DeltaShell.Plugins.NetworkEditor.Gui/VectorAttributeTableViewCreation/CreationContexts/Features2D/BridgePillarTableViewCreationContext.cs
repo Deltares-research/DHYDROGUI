@@ -1,0 +1,35 @@
+using System.Collections.Generic;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
+
+namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.CreationContexts.Features2D
+{
+    /// <summary>
+    /// Provides the creation context for a <see cref="TableViewInfoCreator"/> that should create the table view info for
+    /// <see cref="BridgePillar"/> data.
+    /// </summary>
+    /// <seealso cref="GroupableFeatureTableViewCreationContext{BridgePillar, BridgePillarRow}"/>
+    public class BridgePillarTableViewCreationContext : GroupableFeatureTableViewCreationContext<BridgePillar, BridgePillarRow>
+    {
+        /// <inheritdoc/>
+        public override string GetDescription() => "Bridge pillar table view";
+
+        /// <inheritdoc/>
+        public override bool IsRegionData(HydroArea region, IEnumerable<BridgePillar> data)
+        {
+            Ensure.NotNull(region, nameof(region));
+            Ensure.NotNull(data, nameof(data));
+
+            return ReferenceEquals(region.BridgePillars, data);
+        }
+
+        /// <inheritdoc/>
+        public override BridgePillarRow CreateFeatureRowObject(BridgePillar feature)
+        {
+            Ensure.NotNull(feature, nameof(feature));
+            return new BridgePillarRow(feature);
+        }
+    }
+}

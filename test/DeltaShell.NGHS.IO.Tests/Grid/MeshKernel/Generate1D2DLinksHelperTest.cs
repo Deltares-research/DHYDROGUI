@@ -196,7 +196,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.MeshKernel
                 Name = "Channel1",
                 Geometry =
                     new LineString(new[]
-                    {new Coordinate(node1.XCoordinate, node1.YCoordinate), new Coordinate(node2.XCoordinate, node2.YCoordinate)})
+                    {new Coordinate(node1.Geometry.Coordinate.X, node1.Geometry.Coordinate.Y), new Coordinate(node2.Geometry.Coordinate.X, node2.Geometry.Coordinate.Y)})
             };
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);

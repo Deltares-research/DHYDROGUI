@@ -114,7 +114,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public InterpolationType InterpolationType
         {
             get { return data.Data.Arguments[0].InterpolationType; }
-            set { data.Data.Arguments[0].InterpolationType = value; }
+            set
+            {
+                if (InterpolationType != value)
+                {
+                    data.Data.Arguments[0].InterpolationType = value;
+                }
+            }
         }
 
         [Category(PropertyWindowCategoryHelper.TableCategory)]

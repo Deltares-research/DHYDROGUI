@@ -13,6 +13,11 @@ namespace DelftTools.Hydro.SewerFeatures
         double Length { get; set; }
 
         /// <summary>
+        /// The name of the cross-section definition.
+        /// </summary>
+        string DefinitionName { get; set; }
+
+        /// <summary>
         /// Level at the source (compartment)
         /// </summary>
         double LevelSource { get; set; }
