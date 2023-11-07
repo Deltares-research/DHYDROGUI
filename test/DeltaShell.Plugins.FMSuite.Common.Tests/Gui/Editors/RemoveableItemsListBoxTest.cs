@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui.Editors
         public void WhenConstructorRemoveableItemsListBox_ThenExpectedValues()
         {
             //Arrange
-            const int expectedItemHeigth = 18;
+            const int expectedItemHeigth = 13;
 
             //Act
             var removableItemsListBox = new RemoveableItemsListBox();

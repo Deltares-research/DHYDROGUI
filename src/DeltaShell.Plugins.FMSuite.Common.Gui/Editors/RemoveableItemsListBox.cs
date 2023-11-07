@@ -8,36 +8,44 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 {
-    public partial class RemoveableItemsListBox : ListBox
+    public sealed partial class RemoveableItemsListBox : ListBox
     {
-        private const int itemMargin = 5;
-
         private const int deleteButtonLeftStartCoordinate = 0;
-        
+
+        private readonly int itemMargin;
         private readonly Bitmap deleteIcon;
+        private readonly MaxNameableWidthCalculator maxNameableWidthCalculator;
 
         private bool deleteIconClicked;
 
         public event EventHandler<ListBoxItemRemovedEventArgs> OnItemRemoved;
         public event EventHandler<ListBoxItemRemovingEventArgs> OnItemRemoving;
 
-        private readonly MaxNameableWidthCalculator maxNameableWidthCalculator;
-
         public RemoveableItemsListBox()
         {
             InitializeComponent();
+            
             DrawMode = DrawMode.OwnerDrawFixed;
             IntegralHeight = false;
             ResizeRedraw = true;
-            ItemHeight = FontHeight+itemMargin;
-            int iconSize = ItemHeight;
-            deleteIcon = new Bitmap(Resources.Delete, iconSize, iconSize);
+            
             maxNameableWidthCalculator = new MaxNameableWidthCalculator();
+
+            itemMargin = LogicalToDeviceUnits(5);
+            
+            deleteIcon = new Bitmap(Resources.Delete);
+            ScaleBitmapLogicalToDevice(ref deleteIcon);
 
             AllowItemDelete = true;
         }
 
         public bool AllowItemDelete { private get; set; }
+        
+        public override int ItemHeight
+        {
+            get => base.ItemHeight;
+            set => base.ItemHeight = LogicalToDeviceUnits(value);
+        }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -107,6 +115,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             SetScrollBarWidth();
         }
 
+        /// <inheritdoc />
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+                deleteIcon.Dispose();
+            }
+            
+            base.Dispose(disposing);
+        }
+
         /// <remark>
         /// The HorizontalExtent is the maxItemWidth plus an itemMargin.
         /// <br></br><br></br>
@@ -148,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         private int GetTextLeftStartCoordinate()
         {
-            return deleteButtonLeftStartCoordinate+deleteIcon.Width+itemMargin;
+            return deleteButtonLeftStartCoordinate + deleteIcon.Width + itemMargin;
         }
     }
 }
