@@ -739,6 +739,24 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading routes from {0}..
+        /// </summary>
+        public static string RoutesFile_ReadIniFile_Reading_routes_from__0__ {
+            get {
+                return ResourceManager.GetString("RoutesFile_ReadIniFile_Reading_routes_from__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing routes to {0}..
+        /// </summary>
+        public static string RoutesFile_WriteIniFile_Writing_routes_to__0__ {
+            get {
+                return ResourceManager.GetString("RoutesFile_WriteIniFile_Writing_routes_to__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No snapped geometry was generated for type {0}..
         /// </summary>
         public static string SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__ {
