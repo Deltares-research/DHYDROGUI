@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 {
-    public partial class RemoveableItemsListBox : ListBox
+    public sealed partial class RemoveableItemsListBox : ListBox
     {
         private readonly Bitmap deleteIcon;
 
@@ -16,16 +16,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         public RemoveableItemsListBox()
         {
             InitializeComponent();
+            
             DrawMode = DrawMode.OwnerDrawFixed;
             IntegralHeight = false;
             ResizeRedraw = true;
-            var iconSize = ItemHeight;
-            deleteIcon = new Bitmap(Properties.Resources.Delete, iconSize, iconSize);
+            
+            deleteIcon = new Bitmap(Properties.Resources.Delete);
+            ScaleBitmapLogicalToDevice(ref deleteIcon);
 
             AllowItemDelete = true;
         }
 
         public bool AllowItemDelete { private get; set; }
+
+        public override int ItemHeight
+        {
+            get => base.ItemHeight;
+            set => base.ItemHeight = LogicalToDeviceUnits(value);
+        }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -105,6 +113,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             {
                 e.Graphics.DrawImageUnscaled(deleteIcon, GetDeleteButtonLeft(), e.Bounds.Y);
             }
+        }
+
+        /// <inheritdoc />
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+                deleteIcon.Dispose();
+            }
+            
+            base.Dispose(disposing);
         }
     }
 }
