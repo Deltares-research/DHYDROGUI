@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using NetTopologySuite.Extensions.Coverages;
 using NSubstitute;
@@ -65,16 +63,24 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
 
             routeWithMultipleLocationsOnMultipleBranches.Locations.AddValues(new[] { networkLocation1, networkLocation2, networkLocation3, networkLocation4 });
 
-            Route[] routes = new[] { emptyRoute, routeWithOneLocation, routeWithMultipleLocationsOnSingleBranch, routeWithMultipleLocationsOnMultipleBranches };
+            Route[] routes = { emptyRoute, routeWithOneLocation, routeWithMultipleLocationsOnSingleBranch, routeWithMultipleLocationsOnMultipleBranches };
 
-            // When
-            string tempFolder = FileUtils.CreateTempDirectory();
-            string actualFilePath = Path.Combine(tempFolder, RoutesFile.RoutesFileName);
-            RoutesFile.Write(actualFilePath, routes);
+            using (var tempFolder = new TemporaryDirectory())
+            {
+                string expectedFilePath = TestHelper.GetTestFilePath(@"FileWriters\Routes_expected.txt");
+                string actualFilePath = Path.Combine(tempFolder.Path, RoutesFile.RoutesFileName);
 
-            // Then
-            Assert.That(File.Exists(actualFilePath), Is.True);
-            FileAssert.AreEqual(TestHelper.GetTestFilePath(@"FileWriters\Routes_expected.txt"), actualFilePath);
+                // When
+                RoutesFile.Write(actualFilePath, routes);
+
+                // Then
+                Assert.That(File.Exists(actualFilePath), Is.True);
+                
+                string expected = File.ReadAllText(expectedFilePath);
+                string actual = File.ReadAllText(actualFilePath);
+
+                Assert.That(expected, Is.EqualTo(actual));
+            }
         }
 
         [Test]
