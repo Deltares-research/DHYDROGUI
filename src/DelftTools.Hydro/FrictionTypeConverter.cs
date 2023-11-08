@@ -46,6 +46,8 @@ namespace DelftTools.Hydro
                     return RoughnessType.WhiteColebrook;
                 case Friction.DeBosBijkerk:
                     return RoughnessType.DeBosBijkerk;
+                case Friction.WallLawNikuradse:
+                    return RoughnessType.WallLawNikuradse;
                 default:
                     return RoughnessType.Chezy;
             }

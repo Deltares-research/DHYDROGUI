@@ -34,6 +34,8 @@
     <PackageVersion Include="RGFGRID" Version="7.3.0.77422" />
     <PackageVersion Include="RhinoMocks" Version="3.6.1" />
     <PackageVersion Include="SharpTestsEx" Version="1.2.1" />
+    <PackageVersion Include="System.IO.Abstractions" Version="19.2.69" />
+    <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="19.2.69" />
     <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
     <PackageVersion Include="ValidationAspects.dll" Version="2.2.0" />
   </ItemGroup>

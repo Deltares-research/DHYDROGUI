@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -190,7 +191,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     return;
                 }
-                RoughnessDataFileReader.ReadFile(fileName, network, roughnessSections);
+
+                var roughnessReader = new RoughnessDataFileReader(new FileSystem());
+                
+                roughnessReader.ReadFile(fileName, network, roughnessSections);
             }
 
             // read channels roughness

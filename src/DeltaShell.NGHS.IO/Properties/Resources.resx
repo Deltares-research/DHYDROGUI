@@ -560,6 +560,12 @@
   <data name="CrossSectionDefinitionFileWriter_WriteIniFile_Writing_cross_section_definitions_to__0__" xml:space="preserve">
     <value>Writing cross section definitions to {0}.</value>
   </data>
+  <data name="RoughnessDataFileWriter_WriteFile_Writing_roughness_data_to__0__" xml:space="preserve">
+    <value>Writing roughness data to {0}.</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadFile_Reading_roughness_data_from__0__" xml:space="preserve">
+    <value>Reading roughness data from {0}.</value>
+  </data>
   <data name="RoutesFile_WriteIniFile_Writing_routes_to__0__" xml:space="preserve">
     <value>Writing routes to {0}.</value>
   </data>

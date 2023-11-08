@@ -645,6 +645,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading roughness data from {0}..
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadFile_Reading_roughness_data_from__0__ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_Reading_roughness_data_from__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to While reading roughness section an error occured :{0} {1}.
         /// </summary>
         public static string RoughnessDataFileReader_ReadFile_While_reading_roughness_section_an_error_occured___0___1_ {
@@ -739,6 +748,14 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Writing roughness data to {0}..
+        /// </summary>
+        public static string RoughnessDataFileWriter_WriteFile_Writing_roughness_data_to__0__ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileWriter_WriteFile_Writing_roughness_data_to__0__", resourceCulture);
+            }
+        }
+
         ///   Looks up a localized string similar to Reading routes from {0}..
         /// </summary>
         public static string RoutesFile_ReadIniFile_Reading_routes_from__0__ {

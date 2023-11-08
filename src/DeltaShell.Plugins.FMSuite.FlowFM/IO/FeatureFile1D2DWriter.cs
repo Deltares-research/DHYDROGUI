@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
@@ -226,9 +227,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var roughnessSection in sections)
             {
                 var roughnessFileName = GetRoughnessFilename(roughnessSection);
-                var roughnessFilePath = System.IO.Path.Combine(directoryName, roughnessFileName);
+                var roughnessFilePath = Path.Combine(directoryName, roughnessFileName);
 
-                FileWritingUtils.ThrowIfFileNotExists(roughnessFilePath, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));
+                var roughnessWriter = new RoughnessDataFileWriter(new FileSystem());
+                
+                FileWritingUtils.ThrowIfFileNotExists(roughnessFilePath, directoryName, p => roughnessWriter.WriteFile(p, roughnessSection));
             }
 
             // write channels roughness
