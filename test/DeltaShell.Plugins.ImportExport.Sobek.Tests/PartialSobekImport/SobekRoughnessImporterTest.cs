@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                 flowModel.RoughnessSections.First(rs => rs.Name.Equals(RoughnessDataSet.SewerSectionTypeName));
             Assert.IsNotNull(sewerRoughness);
             Assert.AreEqual(sewerRoughness.GetDefaultRoughnessType(), RoughnessType.WhiteColebrook);
-            Assert.AreEqual(sewerRoughness.GetDefaultRoughnessValue(), 0.003);
+            Assert.AreEqual(sewerRoughness.GetDefaultRoughnessValue(), 0.2);
             Assert.Greater(sewerRoughness.RoughnessNetworkCoverage.GetValues<double>().Count, 0);
 
 

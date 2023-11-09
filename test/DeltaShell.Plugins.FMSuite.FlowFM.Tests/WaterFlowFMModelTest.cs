@@ -744,7 +744,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(roughnessSections.ElementAt(1).Name, Is.EqualTo(RoughnessDataSet.SewerSectionTypeName));
 
             var sewerRoughnessSection = roughnessSections.ElementAt(1);
-            Assert.That(sewerRoughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(0.003));
+            Assert.That(sewerRoughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(0.2));
             Assert.That(sewerRoughnessSection.GetDefaultRoughnessType(), Is.EqualTo(RoughnessType.WhiteColebrook));
         }
 

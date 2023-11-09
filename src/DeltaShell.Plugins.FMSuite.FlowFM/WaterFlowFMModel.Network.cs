@@ -21,6 +21,7 @@ using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -36,6 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IDiscretization networkDiscretization;
         private IFeatureCoverage inflows;
         private ICompartment previousCompartment;
+        private bool settingSewerRoughness;
 
         public const string DiscretizationObjectName = "Computational 1D Grid";
 
@@ -638,44 +640,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 RoughnessSections.Add(roughnessSection);
             }
         }
-        private bool settingSewerRoughness;
 
         private void AddSewerRoughnessIfNecessary()
         {
-            var roughnessSection = RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
-            if (roughnessSection != null)
+            if (settingSewerRoughness && !Network.Manholes.Any() && !Network.Pipes.Any())
             {
-                if (roughnessSection.GetDefaultRoughnessType() != RoughnessType.WhiteColebrook)
-                {
-                    roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
-                    roughnessSection.SetDefaultRoughnessValue(0.003);
-                }
                 return;
             }
-
-            if (settingSewerRoughness && !Network.Manholes.Any() && !Network.Pipes.Any()) return;
+            
             settingSewerRoughness = true;
 
-            var csSectionType = Network.CrossSectionSectionTypes.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+            CrossSectionSectionType csSectionType = Network.CrossSectionSectionTypes.FirstOrDefault(c => c.Name.EqualsCaseInsensitive(RoughnessDataSet.SewerSectionTypeName));
             if (csSectionType == null)
             {
                 csSectionType = new CrossSectionSectionType { Name = RoughnessDataSet.SewerSectionTypeName };
-                Network.CrossSectionSectionTypes.Add(csSectionType);
             }
-            roughnessSection = RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase) && ReferenceEquals(rs.Network, Network));
+            
+            RoughnessSection roughnessSection = RoughnessSections.FirstOrDefault(rs => rs.Name.EqualsCaseInsensitive(RoughnessDataSet.SewerSectionTypeName) && ReferenceEquals(rs.Network, Network));
             if (roughnessSection == null)
             {
                 roughnessSection = new RoughnessSection(csSectionType, Network);
                 roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
-                roughnessSection.SetDefaultRoughnessValue(0.003);
+                roughnessSection.SetDefaultRoughnessValue(RoughnessHelper.GetDefault(RoughnessType.WhiteColebrook));
 
-                RoughnessSections.Insert(0, roughnessSection);
+                RoughnessSections.Insert(1, roughnessSection); // Insert after the Main section; Main and Sewer are fixed sections
             }
-            else if (roughnessSection.GetDefaultRoughnessType() != RoughnessType.WhiteColebrook)
+
+            if (!Network.CrossSectionSectionTypes.Contains(csSectionType))
             {
-                roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
-                roughnessSection.SetDefaultRoughnessValue(0.003);
+                Network.CrossSectionSectionTypes.Add(csSectionType);
             }
+            
             settingSewerRoughness = false;
         }
 

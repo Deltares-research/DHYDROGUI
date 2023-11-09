@@ -274,13 +274,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             var sectionId = contentSection.ReadProperty<string>(RoughnessDataRegion.SectionId.Key);
             var isReversed = false;
             
-            RoughnessType globalType = RoughnessType.Chezy;
-            RoughnessSection roughnessSection;
+            RoughnessType? globalType = null;
             double? globalValue = null;
-            roughnessSection = !isReversed
-                ? roughnessSections.FirstOrDefault(rs => rs.Name == sectionId)
-                : roughnessSections.OfType<ReverseRoughnessSection>()
-                    .FirstOrDefault(rs => rs.NormalSection.Name == sectionId);
+            RoughnessSection roughnessSection = !isReversed
+                                                   ? roughnessSections.FirstOrDefault(rs => rs.Name == sectionId)
+                                                   : roughnessSections.OfType<ReverseRoughnessSection>()
+                                                                      .FirstOrDefault(rs => rs.NormalSection.Name == sectionId);
 
 
             if (isCalibratedRoughness)
@@ -330,8 +329,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
 
                 if (!isReversed || hasGlobalType)
                 {
-                    globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.FrictionType.Key, true, Friction.Chezy));
-                    globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.FrictionValue.Key, true, 45.0d);
+                    if (contentSection.ContainsProperty(RoughnessDataRegion.FrictionType.Key))
+                    {
+                        globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.FrictionType.Key));
+                    }
+                    if (contentSection.ContainsProperty(RoughnessDataRegion.FrictionValue.Key))
+                    {
+                        globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.FrictionValue.Key);
+                    }
                 }
                 
                 roughnessSection.Name = sectionId;
@@ -346,8 +351,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             if (firstNWCArgument == null)
                 throw new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type);
             
+            if (globalType.HasValue)
+                roughnessSection.SetDefaultRoughnessType(globalType.Value);
             if (globalValue.HasValue)
-                roughnessSection.SetDefaults(globalType, globalValue.Value);
+                roughnessSection.SetDefaultRoughnessValue(globalValue.Value);
 
             return roughnessSection;
         }

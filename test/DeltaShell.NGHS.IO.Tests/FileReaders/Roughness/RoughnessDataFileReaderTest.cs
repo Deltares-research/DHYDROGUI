@@ -170,6 +170,28 @@ frictionValue = {frictionValue}";
             Assert.That(frictionValue, Is.EqualTo(roughnessSection.GetDefaultRoughnessValue()));
         }
 
+        [Test]
+        public void WriteFile_MissingFrictionTypeAndValue_PreservesRoughnessTypeAndValue()
+        {
+            const string ini = @"
+[General]
+fileVersion   = 3.00    
+fileType      = roughness
+
+[Global]
+frictionId    = TestCrossSection";
+
+            RoughnessSection roughnessSection = CreateEmptyRoughnessSection();
+            roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
+            roughnessSection.SetDefaultRoughnessValue(0.2);
+            sections.Add(roughnessSection);
+
+            ReadRoughnessFile(ini);
+
+            Assert.That(roughnessSection.GetDefaultRoughnessType(), Is.EqualTo(RoughnessType.WhiteColebrook));
+            Assert.That(roughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(0.2));
+        }
+
         private void ReadRoughnessFile(string ini)
         {
             const string fileName = "roughness-main.ini";
