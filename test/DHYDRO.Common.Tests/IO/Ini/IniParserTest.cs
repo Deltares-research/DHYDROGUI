@@ -732,8 +732,9 @@ value2 ; comment2";
         public IniData Parse_SectionWithProperties_ReadsFromStream(string ini)
         {
             IniParser iniParser = CreateParser();
+            Encoding encoding = iniParser.Configuration.Encoding;
 
-            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(ini)))
+            using (var stream = new MemoryStream(encoding.GetBytes(ini)))
             {
                 return iniParser.Parse(stream);
             }
@@ -759,8 +760,9 @@ value2 ; comment2";
         public IniData Parse_SectionWithProperties_ReadsFromStreamReader(string ini)
         {
             IniParser iniParser = CreateParser();
+            Encoding encoding = iniParser.Configuration.Encoding;
 
-            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(ini)))
+            using (var stream = new MemoryStream(encoding.GetBytes(ini)))
             using (var streamReader = new StreamReader(stream))
             {
                 return iniParser.Parse(streamReader);

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace DHYDRO.Common.IO.Ini.Configuration
 {
@@ -7,6 +8,14 @@ namespace DHYDRO.Common.IO.Ini.Configuration
     /// </summary>
     public sealed class IniFormatConfiguration
     {
+        /// <summary>
+        /// Gets or sets the encoding used for formatting INI data to a stream.
+        /// </summary>
+        /// <remarks>
+        /// The default value is UTF-8 without byte order mark.
+        /// </remarks>
+        public Encoding Encoding { get; set; } = new UTF8Encoding(false, true);
+        
         /// <summary>
         /// Gets or sets the string used for new lines in the formatted INI data.
         /// </summary>

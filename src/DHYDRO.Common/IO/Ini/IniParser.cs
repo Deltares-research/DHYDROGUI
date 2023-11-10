@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using DHYDRO.Common.Extensions;
 using DHYDRO.Common.Guards;
 using DHYDRO.Common.IO.Ini.Configuration;
@@ -99,7 +98,7 @@ namespace DHYDRO.Common.IO.Ini
         {
             Ensure.NotNull(stream, nameof(stream));
 
-            using (var streamReader = new StreamReader(stream, Encoding.UTF8, true, 1024, true))
+            using (var streamReader = new StreamReader(stream, Configuration.Encoding, true, 1024, true))
             {
                 return Parse(streamReader);
             }

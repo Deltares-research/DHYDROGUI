@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using DHYDRO.Common.Guards;
 using DHYDRO.Common.IO.Ini.Configuration;
 
@@ -93,7 +92,7 @@ namespace DHYDRO.Common.IO.Ini
             Ensure.NotNull(iniData, nameof(iniData));
             Ensure.NotNull(stream, nameof(stream));
 
-            using (var streamWriter = new StreamWriter(stream, Encoding.UTF8, 1024, true))
+            using (var streamWriter = new StreamWriter(stream, Configuration.Encoding, 1024, true))
             {
                 Format(iniData, streamWriter);
             }

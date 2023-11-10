@@ -1,10 +1,20 @@
-﻿namespace DHYDRO.Common.IO.Ini.Configuration
+﻿using System.Text;
+
+namespace DHYDRO.Common.IO.Ini.Configuration
 {
     /// <summary>
     /// Represents the configuration for parsing INI data.
     /// </summary>
     public sealed class IniParseConfiguration
     {
+        /// <summary>
+        /// Gets or sets the encoding used for parsing INI data from a stream.
+        /// </summary>
+        /// <remarks>
+        /// The default value is UTF-8 without byte order mark.
+        /// </remarks>
+        public Encoding Encoding { get; set; } = new UTF8Encoding(false, true);
+        
         /// <summary>
         /// Gets or sets a value indicating whether duplicate sections are allowed during parsing.
         /// </summary>
