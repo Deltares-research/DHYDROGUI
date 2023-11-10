@@ -9,6 +9,7 @@ using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.IO.Grid.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -22,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 ValidateSpatiallyVaryingSedimentCoverage(model),
                 ValidateCoordinateSystem(model),
+                new Ugrid1D2DLinksDiscretizationValidator(model).Validate(model.Links, model.NetworkDiscretization),
                 ComputationalGridValidator.Validate(model.NetworkDiscretization, model.Grid, model.MinimumSegmentLength),
                 HydroNetworkValidator.Validate(model.Network),
                 ValidateLinks(model),
@@ -44,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                  : validationReports;
 
             var validationReport = new ValidationReport(model.Name + " (Water Flow FM Model)",
-                subReports);
+                                                        subReports);
             
             return validationReport;
         }
@@ -92,10 +94,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         private static IEnumerable<UnstructuredGridCoverage> GetSpatiallyVaryingSedimentCoveragesWithTag(WaterFlowFMModel model, string tag)
         {
             var spatiallyVaryingSedimentPropertyNames = model.SedimentFractions
-                .SelectMany(f => f.CurrentSedimentType.Properties)
-                .OfType<ISpatiallyVaryingSedimentProperty>()
-                .Where(p => p.IsSpatiallyVarying)
-                .Select(p => p.SpatiallyVaryingName);
+                                                             .SelectMany(f => f.CurrentSedimentType.Properties)
+                                                             .OfType<ISpatiallyVaryingSedimentProperty>()
+                                                             .Where(p => p.IsSpatiallyVarying)
+                                                             .Select(p => p.SpatiallyVaryingName);
 
             var sedimentThicknessDataItems = spatiallyVaryingSedimentPropertyNames
                 .Select(n => model.DataItems.FirstOrDefault(di => di.Name == n && di.Name.Contains(tag)))
@@ -134,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (values.Contains(model.Bathymetry.Components[0].NoDataValue))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                    string.Format("Bathymetry contains unspecified points, the calculation kernel will replace these with default values")));
+                                               string.Format("Bathymetry contains unspecified points, the calculation kernel will replace these with default values")));
             }
             return new ValidationReport("Bathymetry", issues);
         }
@@ -157,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             else if (model.CoordinateSystem.IsGeographic && model.CoordinateSystem.AuthorityCode != 4326 /*WGS84*/)
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                    "The geographic coordinate system specified may lead to incorrect results in the calculation. The calculation kernel only supports the WGS84 spherical system.", coordinateSettingsShortcut));
+                                               "The geographic coordinate system specified may lead to incorrect results in the calculation. The calculation kernel only supports the WGS84 spherical system.", coordinateSettingsShortcut));
             }
             return new ValidationReport("Model Coordinate System", issues);
         }
@@ -209,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (!nameOK)
             {
                 issues.Add(new ValidationIssue(initCondCategory, ValidationSeverity.Error,
-                    $"Invalid restart file name \"{restartFileName}\": your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc", validationShortcut));
+                                               $"Invalid restart file name \"{restartFileName}\": your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc", validationShortcut));
             }
 
             if (string.IsNullOrWhiteSpace(model.ModelDefinition.ModelDirectory)) 
@@ -220,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (!File.Exists(restartFilePath))
             {
                 issues.Add(new ValidationIssue(initCondCategory, ValidationSeverity.Error,
-                    $"Restart file {restartFileName} does not exist (full path: {restartFilePath}).", validationShortcut));
+                                               $"Restart file {restartFileName} does not exist (full path: {restartFilePath}).", validationShortcut));
             }
 
             return new ValidationReport("Initial Conditions", issues);
