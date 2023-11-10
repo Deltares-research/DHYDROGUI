@@ -29,15 +29,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
     {
         private readonly CoverageTableView coverageTableView;
 
-        private const int ColumnRoughnessValueIndex = 2;
-        private const int ColumnRoughnessTypeIndex = 3;
-        private const int ColumnRoughnessFunctionIndex = 4;
-        private const int ColumnRoughnessUnitIndex = 5;
-        private const int ColumnRoughnessButtonIndex = 6;
+        private const int columnBranchIndex = 0;
+        private const int columnRoughnessValueIndex = 2;
+        private const int columnRoughnessTypeIndex = 3;
+        private const int columnRoughnessFunctionIndex = 4;
+        private const int columnRoughnessUnitIndex = 5;
+        private const int columnRoughnessButtonIndex = 6;
 
         private RoughnessSection data;
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RoughnessSectionCoverageTableView));
+        private static readonly ILog log = LogManager.GetLogger(typeof(RoughnessSectionCoverageTableView));
 
         public RoughnessSectionCoverageTableView()
         {
@@ -97,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
         {
             get
             {
-                return (Data != null && Data.Reversed)
+                return Data != null && Data.Reversed
                            ? NetworkEditor.Properties.Resources.ReverseRoughnessSection
                            : NetworkEditor.Properties.Resources.RoughnessSection;
             }
@@ -117,8 +118,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
 
             tableview.ReadOnlyCellFilter = RoughnessReadOnlyCellFilter;
             tableview.DisplayCellFilter = RoughnessDisplayCellFilter;
-            tableview.UnboundColumnData = RougnessSectionCoverageViewUnboundColumnData;
-            tableview.CellChanged += RougnessSectionCoverageViewCellChanged;
+            tableview.UnboundColumnData = RoughnessSectionCoverageViewUnboundColumnData;
+            tableview.CellChanged += RoughnessSectionCoverageViewCellChanged;
         }
 
         private void SetTableViewColumns()
@@ -136,13 +137,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
             var buttonEditor = new ButtonTypeEditor {ButtonClickAction = DoEditFunction, HideOnReadOnly = true};
 
             // Update coverageView columns
-            var roughnessTypeColumn = tableview.Columns[ColumnRoughnessTypeIndex];
+            var roughnessTypeColumn = tableview.Columns[columnRoughnessTypeIndex];
             roughnessTypeColumn.Caption = "Roughness type";
             roughnessTypeColumn.CustomFormatter = new EnumFormatter<RoughnessType>();
             roughnessTypeColumn.Editor = roughnessTypeEditor;
             roughnessTypeColumn.DisplayIndex = 2;
 
-            tableview.Columns[ColumnRoughnessValueIndex].Caption = "value";
+            tableview.Columns[columnRoughnessValueIndex].Caption = "value";
 
             // Add unbound columns
             var columnFunctionType = tableview.AddUnboundColumn("Function type", typeof(RoughnessFunction), 2, functionTypeEditor);
@@ -154,14 +155,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
             tableview.AutoGenerateColumns = false;
         }
 
-        private object RougnessSectionCoverageViewUnboundColumnData(int column, int dataSourceIndex, bool isGetData, bool isSetData, object value)
+        private object RoughnessSectionCoverageViewUnboundColumnData(int column, int dataSourceIndex, bool isGetData, bool isSetData, object value)
         {
             var location = GetLocation(dataSourceIndex);
             if (location == null) return null;
             
             var branch = location.Branch;
 
-            if (column == ColumnRoughnessFunctionIndex)
+            if (column == columnRoughnessFunctionIndex)
             {
                 if (isGetData)
                 {
@@ -172,11 +173,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
                     ChangeToFunction((RoughnessFunction) value);
                 }
             }
-            else if (column == ColumnRoughnessTypeIndex)
+            else if (column == columnRoughnessTypeIndex)
             {
                 return "";
             }
-            else if (column == ColumnRoughnessUnitIndex)
+            else if (column == columnRoughnessUnitIndex)
             {
                 return RoughnessHelper.GetUnit(GetRoughnessType(branch));
             }
@@ -184,41 +185,55 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
             return null;
         }
 
-        private void RougnessSectionCoverageViewCellChanged(object sender, EventArgs<TableViewCell> e)
+        private void RoughnessSectionCoverageViewCellChanged(object sender, EventArgs<TableViewCell> e)
         {
-            if (data == null || e.Value.Column.AbsoluteIndex != ColumnRoughnessTypeIndex) return;
-
-            var rowIndex = e.Value.RowIndex;
-            var location = GetLocation(rowIndex);
-            var oldRoughnessType = data.EvaluateRoughnessType(location);
-            var tableView = (TableView) coverageTableView.TableView;
-            var newRoughnessType = (RoughnessType)tableView.GetCellValue(e.Value);
-
-            if (oldRoughnessType == newRoughnessType)
+            if (data == null)
             {
                 return;
             }
 
-            var defaultValue = RoughnessHelper.GetDefault(newRoughnessType);
-            data.BeginEdit(String.Format("Changing roughness type {0} -> {1}", oldRoughnessType, newRoughnessType));
-            tableView.SetCellValue(rowIndex, e.Value.Column.AbsoluteIndex + 1, defaultValue.ToString("N3"));
+            int columnIndex = e.Value.Column.AbsoluteIndex;
+            var rowIndex = e.Value.RowIndex;
 
-            while (true)
+            if (columnIndex == columnBranchIndex)
             {
-                // set all locations to the same roughnesstype 
-                var nextLocation = GetLocation(rowIndex);
-                if ((nextLocation != null) && (nextLocation.Branch == location.Branch))
-                {
-                    data.RoughnessNetworkCoverage[nextLocation] = new object[] { defaultValue, newRoughnessType };
-                }
-                else
-                {
-                    break;
-                }
-                rowIndex++;
+                // commit the current row to the roughness section data
+                // required for other columns to retrieve the selected branch
+                coverageTableView.TableView.ValidateAndCommitRow(rowIndex);
             }
-            data.EndEdit();
-            UpdateTableView();
+            else if (columnIndex == columnRoughnessTypeIndex)
+            {
+                var location = GetLocation(rowIndex);
+                var oldRoughnessType = data.EvaluateRoughnessType(location);
+                var tableView = (TableView) coverageTableView.TableView;
+                var newRoughnessType = (RoughnessType)tableView.GetCellValue(e.Value);
+
+                if (oldRoughnessType == newRoughnessType)
+                {
+                    return;
+                }
+
+                var defaultValue = RoughnessHelper.GetDefault(newRoughnessType);
+                data.BeginEdit($"Changing roughness type {oldRoughnessType} -> {newRoughnessType}");
+                tableView.SetCellValue(rowIndex, e.Value.Column.AbsoluteIndex + 1, defaultValue.ToString("N3"));
+
+                while (true)
+                {
+                    // set all locations to the same roughness type 
+                    var nextLocation = GetLocation(rowIndex);
+                    if (nextLocation != null && nextLocation.Branch == location.Branch)
+                    {
+                        data.RoughnessNetworkCoverage[nextLocation] = new object[] { defaultValue, newRoughnessType };
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    rowIndex++;
+                }
+                data.EndEdit();
+                UpdateTableView();
+            }
         }
 
         private void UpdateTableView()
@@ -248,7 +263,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
             var location = GetLocation(selectedCells[0].RowIndex);
             if (location == null)
             {
-                Log.Warn("No location (branch + chainage) to edit.");
+                log.Warn("No location (branch + chainage) to edit.");
                 return;
             }
 
@@ -284,8 +299,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
 
         private bool RoughnessDisplayCellFilter(TableViewCellStyle tableViewCellStyle)
         {
-            bool visible;
-            GetCellProperties(tableViewCellStyle.RowIndex, tableViewCellStyle.Column.AbsoluteIndex, out visible, out bool _);
+            GetCellProperties(tableViewCellStyle.RowIndex, tableViewCellStyle.Column.AbsoluteIndex, out bool visible, out bool _);
             if (!visible)
             {
                 var color = ((TableView) coverageTableView.TableView).ReadOnlyCellBackColor;
@@ -298,7 +312,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
         /// <summary>
         /// Cells should be readonly when
         /// column is roughness value and branch is RoughnessFunctionOfH or RoughnessFunctionOfQ.
-        /// column is roughness type and not the first row (networklocation) of the branch when
+        /// column is roughness type and not the first row (network location) of the branch when
         ///    branch is RoughnessFunctionOfH or RoughnessFunctionOfQ.
         /// </summary>
         /// <param name="arg">
@@ -307,8 +321,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
         /// <returns></returns>
         private bool RoughnessReadOnlyCellFilter(TableViewCell arg)
         {
-            bool editable;
-            GetCellProperties(arg.RowIndex, arg.Column.AbsoluteIndex, out bool _, out editable);
+            GetCellProperties(arg.RowIndex, arg.Column.AbsoluteIndex, out bool _, out bool editable);
             return !editable;
         }
 
@@ -334,23 +347,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
             
             switch (columnIndex)
             {
-                case ColumnRoughnessFunctionIndex:
+                case columnRoughnessFunctionIndex:
                     visible = firstRowOfBranch;
                     editable = firstRowOfBranch;
                     return;
-                case ColumnRoughnessTypeIndex:
+                case columnRoughnessTypeIndex:
                     visible = firstRowOfBranch;
                     editable = firstRowOfBranch && !data.Reversed;
                     return;
-                case ColumnRoughnessValueIndex:
+                case columnRoughnessValueIndex:
                     visible = constantFunctionType;
                     editable = constantFunctionType;
                     return;
-                case ColumnRoughnessUnitIndex:
+                case columnRoughnessUnitIndex:
                     visible = firstRowOfBranch;
                     editable = false;
                     return;
-                case ColumnRoughnessButtonIndex:
+                case columnRoughnessButtonIndex:
                     visible = firstRowOfBranch && !constantFunctionType;
                     editable = firstRowOfBranch && !constantFunctionType;
                     return;
@@ -386,9 +399,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
             {
                 return null; 
             }
-            var functionBindingListRow = functionBindingList[sortedIndex] as NetworkCoverageBindingListRow;
-            
-            if (functionBindingListRow != null)
+
+            if (functionBindingList[sortedIndex] is NetworkCoverageBindingListRow functionBindingListRow)
             {
                 return functionBindingListRow.GetNetworkLocation();
             }
@@ -412,7 +424,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
                     value = (T) arg;
                 }
 
-                return (value.GetType().IsEnum)
+                return value.GetType().IsEnum
                            ? ((Enum)value).GetDescription()
                            : value.ToString();
             }
