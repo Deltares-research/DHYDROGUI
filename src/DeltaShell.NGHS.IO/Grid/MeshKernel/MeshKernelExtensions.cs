@@ -2,7 +2,6 @@
 using System.Linq;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.Utils;
-using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using MeshKernelNETCore.Api;
@@ -71,7 +70,6 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
         /// <returns><see cref="DisposableMesh1D"/> containing the <paramref name="discretization"/> data</returns>
         public static DisposableMesh1D CreateDisposableMesh1D(this IDiscretization discretization)
         {
-            var logHandler = new LogHandler("the creation of the mesh 1d geometry", typeof(MeshKernelExtensions), 100);
             var locations = discretization.Locations.Values.ToArray();
             var segments = discretization.Segments.Values.ToList();
 
@@ -84,6 +82,7 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
                 mesh1D.NodeX[i] = location.Geometry?.Coordinate.X ?? 0;
                 mesh1D.NodeY[i] = location.Geometry?.Coordinate.Y ?? 0;
             }
+            // validate above ^ ?
 
             var locationIdLookup = locations.ToIndexDictionary();
             var locationIdxBySegment = new Dictionary<INetworkSegment, int[]>();
@@ -92,8 +91,9 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
             {
                 var segment = segments[i];
 
-                locationIdxBySegment[segment] = HydroUGridExtensions.GetLocationIndices(discretization, segment, locationIdLookup,logHandler, out IList<INetworkSegment> _);
+                locationIdxBySegment[segment] = HydroUGridExtensions.GetLocationIndices(discretization, segment, locationIdLookup, out IList<INetworkSegment> _);
             }
+            // validate above ^ ?
 
             var edgeNodeIndex = 0;
             for (int i = 0; i < mesh1D.NumEdges; i++)
@@ -103,8 +103,6 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
                 mesh1D.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][0];
                 mesh1D.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][1];
             }
-
-            logHandler.LogReport();
             return mesh1D;
         }
 

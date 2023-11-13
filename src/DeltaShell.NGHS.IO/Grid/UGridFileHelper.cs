@@ -16,7 +16,6 @@ using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Extensions.CoordinateSystems;
@@ -507,11 +506,16 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     networkGeometry = network.CreateDisposableNetworkGeometry();
                     var networkId = api.WriteNetworkGeometry(networkGeometry);
-
-                    if (networkDiscretization != null && networkDiscretization.Locations.Values.Count > 0)
+                    if (networkDiscretization != null)
                     {
-                        mesh1d = networkDiscretization.CreateDisposable1DMeshGeometry();
-                        api.WriteMesh1D(mesh1d, networkId);
+                        var locations = networkDiscretization.Locations.Values;
+                        int locationCount = locations.Count;
+                        if (locationCount > 0)
+                        {
+                            mesh1d = networkDiscretization.CreateDisposable1DMeshGeometry();
+                            LogProblemsMesh1DAndNetworkDiscretization(networkDiscretization, mesh1d);
+                            api.WriteMesh1D(mesh1d, networkId);
+                        }
                     }
                 }
 
@@ -528,9 +532,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 var link1D2Ds = links?.ToList();
                 if (link1D2Ds?.Count > 0 && mesh1d != null)
                 {
-                    var logHandler = new LogHandler(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_Check_during_the_creation_of_the_1d2d_links__the_mesh_1d_geometry, typeof(UGridFileHelper), 100);
-                    mesh1d.ValidateMesh1DSourceLocationsOnlyExistOnce(link1D2Ds).ForEach(logHandler.ReportError);
-                    logHandler.LogReport();
+                    LogProblemsMesh1DAnd1D2DLinks(mesh1d, link1D2Ds);
                     using (DisposableLinksGeometry disposableLinksGeometry = link1D2Ds.CreateDisposableLinksGeometry())
                     {
                         api.WriteLinks(disposableLinksGeometry);
@@ -539,6 +541,21 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             mesh1d?.Dispose();
             networkGeometry?.Dispose();
+        }
+
+        private static void LogProblemsMesh1DAnd1D2DLinks(Disposable1DMeshGeometry mesh1d, List<ILink1D2D> link1D2Ds)
+        {
+            var logHandler = new LogHandler(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_Check_during_the_creation_of_the_1d2d_links__the_mesh_1d_geometry, typeof(UGridFileHelper), 100);
+            mesh1d.ValidateAgainstLinks(link1D2Ds).ForEach(logHandler.ReportError);
+            logHandler.LogReport();
+        }
+
+        private static void LogProblemsMesh1DAndNetworkDiscretization(IDiscretization networkDiscretization, Disposable1DMeshGeometry mesh1d)
+        {
+            // log problems
+            var logHandler = new LogHandler(Resources.HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName, 100);
+            mesh1d.ValidateAgainstDiscretization(networkDiscretization).ForEach(logHandler.ReportWarning);
+            logHandler.LogReport();
         }
 
         /// <summary>
@@ -815,22 +832,22 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="recreateCells">Recreates the cell information by calling FindCells instead of reading it from file</param>
         /// <param name="forceCustomLengths">Force all branches in the network to have custom lengths and use the lengths that are read from file</param>
         public static void ReadNetFileDataIntoModel(string netFilePath, IConvertedUgridFileObjects convertedUgridFileObjects,
-                                                    Action<string> reportProgress = null, 
-                                                    bool loadFlowLinksAndCells = false, 
-                                                    bool recreateCells = true, 
+                                                    Action<string> reportProgress = null,
+                                                    bool loadFlowLinksAndCells = false,
+                                                    bool recreateCells = true,
                                                     bool forceCustomLengths = false)
         {
             convertedUgridFileObjects.CompartmentProperties = convertedUgridFileObjects.CompartmentProperties ?? Enumerable.Empty<CompartmentProperties>();
             convertedUgridFileObjects.BranchProperties = convertedUgridFileObjects.BranchProperties ?? Enumerable.Empty<BranchProperties>();
             DisposableNetworkGeometry networkGeometry = convertedUgridFileObjects.HydroNetwork.ApplyNetworkGeometry(netFilePath, reportProgress, convertedUgridFileObjects.CompartmentProperties, convertedUgridFileObjects.BranchProperties, forceCustomLengths);
             Disposable1DMeshGeometry mesh1d = convertedUgridFileObjects.Discretization.ApplyMesh1D(netFilePath, convertedUgridFileObjects.HydroNetwork, reportProgress);
-            
+
             if (convertedUgridFileObjects.Grid != null)
             {
                 reportProgress?.Invoke(Resources.UGridFileHelper_ReadNetFileDataIntoModel_Reading_grid_step_3_of_4);
                 Disposable2DMeshGeometry mesh2d = Read2DMesh(netFilePath);
                 convertedUgridFileObjects.Grid.ApplyMesh2D(netFilePath, mesh2d, loadFlowLinksAndCells, recreateCells);
-                
+
                 if (mesh2d != null
                     && convertedUgridFileObjects.Discretization != null
                     && mesh1d != null
@@ -859,32 +876,6 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
             }
 
-        }
-
-        public static IEnumerable<string> ValidateMesh1DSourceLocationsOnlyExistOnce(this Disposable1DMeshGeometry mesh1d, IEnumerable<ILink1D2D> link1D2Ds)
-        {
-            int index = 0;
-            var coordinatesDiscretizationPoints = mesh1d.NodesX
-                                                        .Select((x, i) => new Coordinate(x, mesh1d.NodesY[i]))
-                                                        .ToDictionary<Coordinate, int>(c => index++);
-
-            foreach (ILink1D2D link in link1D2Ds)
-            {
-                var linkDiscretizationPointIndex = link.DiscretisationPointIndex;
-                var linkDiscretizationPointCoordinate = coordinatesDiscretizationPoints[linkDiscretizationPointIndex];
-                var otherDiscretizationPointCoordinatesAtSameLocationIndices = coordinatesDiscretizationPoints
-                                                                               .Where(kvp => kvp.Value.Equals2D(linkDiscretizationPointCoordinate)
-                                                                                             && kvp.Key != linkDiscretizationPointIndex)
-                                                                               .Select(kvp => kvp.Key).ToArray();
-                if (otherDiscretizationPointCoordinatesAtSameLocationIndices.Length > 0)
-                {
-                    var otherDiscretizationPointNames = otherDiscretizationPointCoordinatesAtSameLocationIndices.Select(j => mesh1d.NodeIds[j]);
-                    string linksName = link.Name;
-                    yield return string.Format(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1, linksName, mesh1d.NodeIds[linkDiscretizationPointIndex], link.FaceIndex) +
-                                 Environment.NewLine +
-                                 string.Format(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2, string.Join(", ", otherDiscretizationPointNames));
-                }
-            }
         }
     }
 }

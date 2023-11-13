@@ -19,7 +19,6 @@ using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils;
-using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -107,12 +106,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         private static IList<Coordinate> CreateVertices(this Disposable2DMeshGeometry mesh)
         {
-            bool canNodeArraysBeUsedForCoordinateList = mesh?.NodesX == null 
-                                                        || mesh.NodesX.Length == 0 
-                                                        || mesh.NodesY == null 
-                                                        || mesh.NodesY.Length == 0 
+            bool canNodeArraysBeUsedForCoordinateList = mesh?.NodesX == null
+                                                        || mesh.NodesX.Length == 0
+                                                        || mesh.NodesY == null
+                                                        || mesh.NodesY.Length == 0
                                                         || mesh.NodesX.Length != mesh.NodesY.Length;
-            
+
             return canNodeArraysBeUsedForCoordinateList
                        ? new List<Coordinate>()
                        : mesh.NodesX.Select((t, i) => new Coordinate(t, mesh.NodesY[i])).ToList();
@@ -132,8 +131,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 return edgeList.Values.ToList();
             }
 
-            var numberOfEdges = (int) (mesh.EdgeNodes.Length / 2.0);
-            Parallel.For(0, numberOfEdges, blockIndex => 
+            var numberOfEdges = (int)(mesh.EdgeNodes.Length / 2.0);
+            Parallel.For(0, numberOfEdges, blockIndex =>
             {
                 int[] blockFromArray = GetBlockFromArray(mesh.EdgeNodes, 2, blockIndex);
                 edgeList.AddOrUpdate(blockIndex, new Edge(blockFromArray[0], blockFromArray[1]), (i, edge) => edge);
@@ -143,15 +142,15 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         private static void SetEdgeArrays(this Disposable2DMeshGeometry mesh, IList<Edge> gridEdges)
         {
-            mesh.EdgeNodes = gridEdges.SelectMany(e => new[] { e.VertexFromIndex, e.VertexToIndex}).ToArray();
+            mesh.EdgeNodes = gridEdges.SelectMany(e => new[] { e.VertexFromIndex, e.VertexToIndex }).ToArray();
         }
 
         private static IList<Cell> CreateCells(this Disposable2DMeshGeometry mesh, int fillValueMesh2DFaceNodes = (int)UGridFileHelper.DefaultNoDataValue)
         {
-            var cellList = new ConcurrentDictionary<int,Cell>();
-            if (mesh?.FaceNodes == null || 
-                mesh.FaceX == null || 
-                mesh.FaceY== null || 
+            var cellList = new ConcurrentDictionary<int, Cell>();
+            if (mesh?.FaceNodes == null ||
+                mesh.FaceX == null ||
+                mesh.FaceY == null ||
                 mesh.MaxNumberOfFaceNodes == 0)
             {
                 return cellList.Values.ToList();
@@ -174,7 +173,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         {
             mesh.MaxNumberOfFaceNodes = gridCells.Count > 0 ? gridCells.Max(c => c.VertexIndices.Length) : 0;
 
-            mesh.FaceNodes = Enumerable.Repeat((int)UGridFileHelper.DefaultNoDataValue, mesh.MaxNumberOfFaceNodes * gridCells.Count).ToArray();//USE Default (set in file)!
+            mesh.FaceNodes = Enumerable.Repeat((int)UGridFileHelper.DefaultNoDataValue, mesh.MaxNumberOfFaceNodes * gridCells.Count).ToArray(); //USE Default (set in file)!
             mesh.FaceX = gridCells.Select(c => c.CenterX).ToArray();
             mesh.FaceY = gridCells.Select(c => c.CenterY).ToArray();
 
@@ -188,7 +187,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     mesh.FaceNodes[offset + j] = cell.VertexIndices[j];
                 }
             }
-
         }
 
         #endregion
@@ -207,14 +205,13 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return grid;
         }
 
-
         private static IEnumerable<INetworkLocation> GetNetworkLocations(Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates)
         {
             var numberOfNodes = meshGeometry.NodeIds.Length;
             var networkLocations = new ConcurrentQueue<INetworkLocation>();
             var networkLocationImportErrors = new ConcurrentQueue<string>();
             const string indexOfVerticeInTheFile = "fileIndex";
-            
+
             Parallel.For(0, numberOfNodes, i =>
             {
                 var networkBranch = network.Branches[meshGeometry.BranchIDs[i]];
@@ -234,7 +231,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
                     chainage = networkBranch.Length;
                 }
-                
+
                 var networkLocation = new NetworkLocation()
                 {
                     Branch = networkBranch,
@@ -253,6 +250,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 Log.Error(string.Format(Resources.HydroUGridExtensions_GetNetworkLocations_While_reading_1d_discretization___calculation_point_from_the_netfile_we_encountered_the_following_errors___0__1_, Environment.NewLine, string.Join(Environment.NewLine, networkLocationImportErrors)));
             }
+
             return networkLocations.Distinct().OrderBy(nl => nl.Attributes[indexOfVerticeInTheFile]);
         }
 
@@ -264,9 +262,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="network">Network that the <paramref name="meshGeometry"/> is based on</param>
         public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates = true)
         {
-            var logHandler = new LogHandler(Resources.HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName, typeof(HydroUGridExtensions), 100);
             discretization.Network = network;
-            
+
             IEnumerable<INetworkLocation> networkLocations = GetNetworkLocations(meshGeometry, network, canUseXYForMesh1DNodeCoordinates);
 
             discretization.UpdateNetworkLocations(networkLocations);
@@ -276,7 +273,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             foreach (var segment in discretization.Segments.Values)
             {
-                GetLocationIndices(discretization, segment, locationIdLookup, logHandler, out segmentToRemove);
+                GetLocationIndices(discretization, segment, locationIdLookup, out segmentToRemove);
             }
 
             if (segmentToRemove != null)
@@ -285,19 +282,16 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 {
                     discretization.Segments.Values.Remove(segment);
                 }
-
             }
-            
-            logHandler.LogReport();
         }
 
         /// <summary>
         /// Creates a <see cref="Disposable1DMeshGeometry"/> based on the <paramref name="discretization"/>
         /// </summary>
         /// <param name="discretization">Discretization to base the mesh on</param>
+        /// <param name="logHandler"></param>
         public static Disposable1DMeshGeometry CreateDisposable1DMeshGeometry(this IDiscretization discretization)
         {
-            var logHandler = new LogHandler(Resources.HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName, typeof(HydroUGridExtensions), 100);
             var locations = discretization.Locations.Values.ToArray();
 
             var segments = discretization.Segments.Values.ToList();
@@ -310,8 +304,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 var segment = segments[i];
 
-                var indices = GetLocationIndices(discretization, segment, locationIdLookup, logHandler, out doNotWriteTheseSegments);
-                locationIdxBySegment[segment] = indices;
+                var segmentIndices = GetLocationIndices(discretization, segment, locationIdLookup, out doNotWriteTheseSegments);
+                locationIdxBySegment[segment] = segmentIndices;
             }
 
             //update because of missing and thus new points
@@ -337,27 +331,20 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 NodeLongNames = new string[locationCount],
                 BranchIDs = new int[locationCount],
                 BranchOffsets = new double[locationCount],
-
                 EdgeBranchIds = new int[edgeCount],
-                EdgeNodes = new int[edgeCount *2],
+                EdgeNodes = new int[edgeCount * 2],
                 EdgeCenterPointX = new double[edgeCount],
                 EdgeCenterPointY = new double[edgeCount],
                 EdgeCenterPointOffset = new double[edgeCount],
             };
 
             var branchIdLookup = discretization.Network.Branches.ToIndexDictionary();
-
-            for (int i = 0; i < locationCount; i++)
-            {
-                var location = locations[i];
-
-                mesh.NodesX[i] = location.Geometry?.Coordinate.X ?? 0;
-                mesh.NodesY[i] = location.Geometry?.Coordinate.Y ?? 0;
-                mesh.BranchIDs[i] = branchIdLookup[location.Branch];
-                mesh.BranchOffsets[i] = location.Branch.GetBranchSnappedChainage(location.Chainage);
-                mesh.NodeIds[i] = location.Name;
-                mesh.NodeLongNames[i] = location.LongName ?? "";
-            }
+            mesh.NodesX = locations.Select(l => l.Geometry?.Coordinate?.X ?? 0.0d).ToArray();
+            mesh.NodesY = locations.Select(l => l.Geometry?.Coordinate?.Y ?? 0.0d).ToArray();
+            mesh.BranchIDs = locations.Select(l => branchIdLookup[l.Branch]).ToArray();
+            mesh.NodeIds = locations.Select(l => l.Name).ToArray();
+            mesh.NodeLongNames = locations.Select(l => l.LongName ?? "").ToArray();
+            mesh.BranchOffsets = locations.Select(l => l.Branch.GetBranchSnappedChainage(l.Chainage)).ToArray();
 
             var edgeNodeIndex = 0;
             for (int i = 0; i < edgeCount; i++)
@@ -368,21 +355,34 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.EdgeCenterPointOffset[i] = segment.Chainage + segment.Length / 2.0;
                 mesh.EdgeCenterPointX[i] = segment.Geometry.Centroid.X;
                 mesh.EdgeCenterPointY[i] = segment.Geometry.Centroid.Y;
-                
+
                 mesh.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][0];
                 mesh.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][1];
             }
 
-            logHandler.LogReport();
             return mesh;
         }
 
-        internal static int[] GetLocationIndices(IDiscretization discretization, INetworkSegment segment, IDictionary<INetworkLocation, int> locationIdLookup, ILogHandler logHandler, out IList<INetworkSegment> doNotWriteTheseSegments)
+        /// <summary>
+        /// Retrieves the indices of the network locations connected to this segment.
+        /// </summary>
+        /// <param name="discretization">The modeled discretization (<seealso cref="IDiscretization"/>) of the network (<seealso cref="IHydroNetwork"/>).</param>
+        /// <param name="segment">The segment (<seealso cref="INetworkSegment"/>)) in the modeled discretization (<seealso cref="IDiscretization"/>) of the network (<seealso cref="IHydroNetwork"/>).</param>
+        /// <param name="locationIdLookup">A dictionary of all network locations (<seealso cref="INetworkLocation"/>) and index of the location in the modeled discretization (<seealso cref="IDiscretization"/>) of the network (<seealso cref="IHydroNetwork"/>).</param>
+        /// <param name="doNotWriteTheseSegments">If the <seealso cref="INetworkSegment">segment</seealso> has not connection
+        /// to a <seealso cref="INetworkLocation">network location</seealso>
+        /// in the modeled discretization (<seealso cref="IDiscretization"/>)
+        /// of the network (<seealso cref="IHydroNetwork"/>)
+        /// add to this list so we don't write them to the <seealso cref="Disposable1DMeshGeometry">1d mesh geometry for the kernel</seealso>.
+        /// The kernel can't handle this.
+        /// </param>
+        /// <returns>The indices the segment is connected on.</returns>
+        public static int[] GetLocationIndices(IDiscretization discretization, INetworkSegment segment, IDictionary<INetworkLocation, int> locationIdLookup, out IList<INetworkSegment> doNotWriteTheseSegments)
         {
             const double epsilonLocation = 1e-5;
             var branchLocations = discretization.GetLocationsForBranch(segment.Branch);
             doNotWriteTheseSegments = new List<INetworkSegment>();
-            int[] indices = new int[]{-1,-1};
+            int[] indices = new int[] { -1, -1 };
 
             for (int j = 0; j < branchLocations.Count; j++)
             {
@@ -408,9 +408,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[0] = locationIdLookup[firstLocation];
                 else
                 {
-                    logHandler.ReportWarning(
-                        string.Format(Resources.HydroUGridExtensions_Cannot_find_start_edge_node_of_section, 
-                                      segment.SegmentNumber, segment.Branch.Name, segment.Chainage, segment.Branch.Name));
                     indices[0] = -1;
                     doNotWriteTheseSegments.Add(segment);
                 }
@@ -424,13 +421,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[1] = locationIdLookup[firstLocation];
                 else
                 {
-                    logHandler.ReportWarning(
-                        string.Format(Resources.HydroUGridExtensions_Cannot_find_end_edge_node_of_section, 
-                                      segment.SegmentNumber, segment.Branch.Name, segment.EndChainage, segment.Branch.Name));
                     indices[1] = -1;
                     doNotWriteTheseSegments.Add(segment);
                 }
             }
+
             return indices;
         }
 
@@ -498,10 +493,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <returns>A <see cref="DisposableNetworkGeometry"/> containing the network data</returns>
         public static DisposableNetworkGeometry CreateDisposableNetworkGeometry(this IHydroNetwork network)
         {
-            var mesh = new DisposableNetworkGeometry
-            {
-                NetworkName = network.Name
-            };
+            var mesh = new DisposableNetworkGeometry { NetworkName = network.Name };
 
             var nodeIndexLookup = SetNodeDataArrays(mesh, network);
             SetBranchDataArrays(mesh, network, nodeIndexLookup);
@@ -535,18 +527,18 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.BranchGeometryNodesCount[i] = branch.Geometry.Coordinates.Length;
                 mesh.BranchLengths[i] = branch.Length;
                 mesh.BranchOrder[i] = branch.OrderNumber;
-                mesh.BranchTypes[i] = (int) branch.GetBranchType();
+                mesh.BranchTypes[i] = (int)branch.GetBranchType();
 
                 // lookup node index in nodes array
                 if (branch is ISewerConnection connection)
                 {
                     mesh.NodesTo[i] = nodeIndexLookup[connection.TargetCompartment ?? (object)connection.Target];
-                    mesh.NodesFrom[i] = nodeIndexLookup[connection.SourceCompartment ?? (object)connection.Source]; 
+                    mesh.NodesFrom[i] = nodeIndexLookup[connection.SourceCompartment ?? (object)connection.Source];
                 }
                 else
                 {
-                    mesh.NodesTo[i] = nodeIndexLookup.ContainsKey(branch.Target) ? nodeIndexLookup[branch.Target] : nodeIndexLookup.SingleOrDefault(nlu=>nlu.Key is INameable keyName && keyName.Name.Equals(branch.Target.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
-                    mesh.NodesFrom[i] = nodeIndexLookup.ContainsKey(branch.Source) ? nodeIndexLookup[branch.Source] : nodeIndexLookup.SingleOrDefault(nlu => nlu.Key is INameable keyName && keyName.Name.Equals(branch.Source.Name, StringComparison.InvariantCultureIgnoreCase)).Value;  
+                    mesh.NodesTo[i] = nodeIndexLookup.ContainsKey(branch.Target) ? nodeIndexLookup[branch.Target] : nodeIndexLookup.SingleOrDefault(nlu => nlu.Key is INameable keyName && keyName.Name.Equals(branch.Target.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
+                    mesh.NodesFrom[i] = nodeIndexLookup.ContainsKey(branch.Source) ? nodeIndexLookup[branch.Source] : nodeIndexLookup.SingleOrDefault(nlu => nlu.Key is INameable keyName && keyName.Name.Equals(branch.Source.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
                 }
 
                 var coordinates = branch.Geometry?.Coordinates;
@@ -601,6 +593,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                         nodeIndexLookup.Add(compartment, addedNodeIndex);
                         addedNodeIndex += 1;
                     }
+
                     continue;
                 }
 
@@ -643,13 +636,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 default:
                     return BranchType.SurfaceWater;
             }
-
         }
 
-        private static IEnumerable<IBranch> CreateBranches(DisposableNetworkGeometry networkGeometry, 
-                                                           IEnumerable<BranchProperties> branchProperties, 
-                                                           bool forceCustomLengths, 
-                                                           IReadOnlyDictionary<string, INode> nodeLookup, 
+        private static IEnumerable<IBranch> CreateBranches(DisposableNetworkGeometry networkGeometry,
+                                                           IEnumerable<BranchProperties> branchProperties,
+                                                           bool forceCustomLengths,
+                                                           IReadOnlyDictionary<string, INode> nodeLookup,
                                                            IReadOnlyDictionary<string, ICompartment> compartmentLookup)
         {
             var propertiesLookup = branchProperties?.ToDictionary(p => p.Name) ?? new Dictionary<string, BranchProperties>();
@@ -663,7 +655,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 propertiesLookup.TryGetValue(networkGeometry.BranchIds[i], out var properties);
                 branches.Add(CreateBranchByIndex(networkGeometry, i, properties, nodeLookup, compartmentLookup, ref geometryOffset, forceCustomLengths));
             }
-            
+
             return branches.ToArray();
         }
 
@@ -732,8 +724,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 case BranchType.MixedFlow:
                     return SewerConnectionWaterType.Combined;
             }
-            return SewerConnectionWaterType.None;
 
+            return SewerConnectionWaterType.None;
         }
 
         private static IEnumerable<string> GetNodeLookupNames(INode node)
@@ -744,6 +736,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 {
                     yield return compartment.Name;
                 }
+
                 yield break;
             }
 
@@ -756,7 +749,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 if (source is Manhole || target is Manhole)
                 {
-                    return new Pipe{Source = source, Target = target};
+                    return new Pipe
+                    {
+                        Source = source,
+                        Target = target
+                    };
                 }
 
                 return new Channel(source, target);
@@ -768,10 +765,21 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             switch (branchType)
             {
                 case BranchFile.BranchType.SewerConnection:
-                    branch = new SewerConnection { Source = source, Target = target, WaterType = branchProperties.WaterType };
+                    branch = new SewerConnection
+                    {
+                        Source = source,
+                        Target = target,
+                        WaterType = branchProperties.WaterType
+                    };
                     break;
                 case BranchFile.BranchType.Pipe:
-                    branch = new Pipe { Source = source, Target = target, WaterType = branchProperties.WaterType, Material = branchProperties.Material };
+                    branch = new Pipe
+                    {
+                        Source = source,
+                        Target = target,
+                        WaterType = branchProperties.WaterType,
+                        Material = branchProperties.Material
+                    };
                     break;
                 default:
                     branch = new Channel(source, target);
@@ -781,13 +789,13 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return branch;
         }
 
-        private static INode[] CreateNetworkNodes(IHydroNetwork network, 
-                                                  DisposableNetworkGeometry networkGeometry, 
+        private static INode[] CreateNetworkNodes(IHydroNetwork network,
+                                                  DisposableNetworkGeometry networkGeometry,
                                                   IEnumerable<CompartmentProperties> compartmentProperties = null)
         {
             Dictionary<string, CompartmentProperties> compartmentPropertiesLookup = CreateCompartmentPropertiesLookup(compartmentProperties);
             Dictionary<string, IManhole> manHoleLookup = CreateManholeLookup(network);
-            
+
             var nodes = new List<INode>();
             var manholesToFix = new List<IManhole>();
 
@@ -828,7 +836,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
                 nodes.Add(node);
             }
-            
+
             foreach (IManhole manhole in manholesToFix)
             {
                 FixManholeGeometry(manhole);
@@ -844,16 +852,16 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             return lookup ?? new Dictionary<string, CompartmentProperties>();
         }
-        
+
         private static Dictionary<string, IManhole> CreateManholeLookup(IHydroNetwork network)
         {
             return network.Manholes.ToDictionaryWithErrorDetails(Resources.HydroUGridExtensions_ManholeNamesContext, m => m.Name);
         }
-        
+
         private static Compartment CreateCompartment(string nodeName, CompartmentProperties properties)
         {
             double manholeWidth = Math.Sqrt(properties.Area);
-            
+
             var compartment = new Compartment(nodeName)
             {
                 BottomLevel = properties.BedLevel,
@@ -864,7 +872,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 Shape = properties.CompartmentShape,
                 CompartmentStorageType = properties.CompartmentStorageType
             };
-            
+
             if (properties.UseTable)
             {
                 AddTablePropertiesToCompartment(compartment, properties);
@@ -872,7 +880,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             return compartment;
         }
-        
+
         private static void AddTablePropertiesToCompartment(ICompartment compartment, CompartmentProperties properties)
         {
             compartment.UseTable = true;
@@ -882,15 +890,15 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         }
 
         private static bool CompartmentIsInExistingManhole(
-            IReadOnlyDictionary<string, IManhole> manHoleLookup, 
+            IReadOnlyDictionary<string, IManhole> manHoleLookup,
             string manholeId)
         {
             return manHoleLookup.ContainsKey(manholeId);
         }
-        
-        private static Manhole CreateManhole(DisposableNetworkGeometry networkGeometry, 
-                                             int nodeIndex, 
-                                             CompartmentProperties properties, 
+
+        private static Manhole CreateManhole(DisposableNetworkGeometry networkGeometry,
+                                             int nodeIndex,
+                                             CompartmentProperties properties,
                                              ICompartment compartment)
         {
             return new Manhole(properties.ManholeId)
@@ -936,9 +944,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         public static void SetLinks(this IList<ILink1D2D> link1D2Ds, GeneratedObjectsForLinks generatedObjectsForLinks)
         {
             link1D2Ds.Clear();
-            
+
             var links = new ConcurrentQueue<ILink1D2D>();
-            
+
             QuadTree treeDiscretizationPoints = GenerateQuadTreeOfDiscretizationPoints(generatedObjectsForLinks.Discretization);
 
             double[] mesh1dNodesX = generatedObjectsForLinks.Mesh1d?.NodesX;
@@ -946,7 +954,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             bool valid1DMeshNodeXyCoordinatesInFile = mesh1dNodesX != null
                                                       && mesh1dNodesY != null
                                                       && Array.TrueForAll(mesh1dNodesX, nodeX => !nodeX.Equals(0.0))
-                                                      && Array.TrueForAll(mesh1dNodesY, nodeY => !nodeY.Equals(0.0)); 
+                                                      && Array.TrueForAll(mesh1dNodesY, nodeY => !nodeY.Equals(0.0));
 
             Dictionary<string, IBranch> branchesLookup = generatedObjectsForLinks.Discretization?.Network?.Branches?.ToDictionary(b => b.Name);
 
@@ -957,15 +965,15 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 ObjectInModel = generatedObjectsForLinks.Discretization,
                 ValidXyInFile = valid1DMeshNodeXyCoordinatesInFile,
                 MeshFromFile = generatedObjectsForLinks.Mesh1d
-            }; 
-            
+            };
+
             QuadTree treeCells = GenerateQuadTreeOfUnstructuredGridCells(generatedObjectsForLinks.Grid);
 
             double[] mesh2dFaceX = generatedObjectsForLinks.Mesh2d?.FaceX;
             double[] mesh2dFaceY = generatedObjectsForLinks.Mesh2d?.FaceY;
-            bool valid2DMeshFaceXyCoordinatesInFile = mesh2dFaceX != null 
-                                                      && mesh2dFaceY != null 
-                                                      && Array.TrueForAll(mesh2dFaceX, faceX => !faceX.Equals(0.0)) 
+            bool valid2DMeshFaceXyCoordinatesInFile = mesh2dFaceX != null
+                                                      && mesh2dFaceY != null
+                                                      && Array.TrueForAll(mesh2dFaceX, faceX => !faceX.Equals(0.0))
                                                       && Array.TrueForAll(mesh2dFaceY, faceY => !faceY.Equals(0.0));
 
             var cellUGrid1D2DSearchIndexObject = new UGrid1D2DSearchIndexObject()
@@ -975,7 +983,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 ValidXyInFile = valid2DMeshFaceXyCoordinatesInFile,
                 MeshFromFile = generatedObjectsForLinks.Mesh2d
             };
-            
 
             Parallel.For(0, generatedObjectsForLinks.LinksGeometry.LinkId.Length, indexOfLinkInFile =>
             {
@@ -987,7 +994,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
                 links.Enqueue(new Link1D2D(calcPointIdx, cellIdx, generatedObjectsForLinks.LinksGeometry.LinkId[indexOfLinkInFile])
                 {
-                    Geometry = new LineString(new[] { nodeCoordinateFromFile, faceCoordinateFromFile }), 
+                    Geometry = new LineString(new[] { nodeCoordinateFromFile, faceCoordinateFromFile }),
                     LongName = generatedObjectsForLinks.LinksGeometry.LinkLongName[indexOfLinkInFile],
                     TypeOfLink = (LinkStorageType)generatedObjectsForLinks.LinksGeometry.LinkType[indexOfLinkInFile],
                     Link1D2DIndex = indexOfLinkInFile
@@ -1004,6 +1011,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             public bool ValidXyInFile { get; set; }
             public DisposableMeshObject MeshFromFile { get; set; }
         }
+
         /// <summary>
         /// This will create a QuadTree of the indices of the discretization points
         /// with the depth of the tree determined my the max levels
@@ -1056,11 +1064,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 return calcPointIdx;
             }
+
             double x = double.NaN;
             double y = double.NaN;
             bool validXyInFile = discretizationUGrid1D2DSearchIndexObject.ValidXyInFile
-                                     && calcPointIdx < mesh1d.NodesX.Length
-                                     && calcPointIdx < mesh1d.NodesY.Length;
+                                 && calcPointIdx < mesh1d.NodesX.Length
+                                 && calcPointIdx < mesh1d.NodesY.Length;
             if (validXyInFile)
             {
                 x = mesh1d.NodesX[calcPointIdx];
@@ -1142,7 +1151,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         private static int GetCellIdx(int cellIdx, UGrid1D2DSearchIndexObject cellUGrid1D2DSearchIndexObject, int fillValueMesh2DFaceNodes, out Coordinate faceCoordinateFromFile)
         {
-            faceCoordinateFromFile = new Coordinate(Coordinate.NullOrdinate, Coordinate.NullOrdinate); 
+            faceCoordinateFromFile = new Coordinate(Coordinate.NullOrdinate, Coordinate.NullOrdinate);
             if (!(cellUGrid1D2DSearchIndexObject.MeshFromFile is Disposable2DMeshGeometry mesh2d))
             {
                 return cellIdx;
@@ -1158,8 +1167,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             double x = double.NaN;
             double y = double.NaN;
             bool validXyInFile = cellUGrid1D2DSearchIndexObject.ValidXyInFile
-                                     && cellIdx < mesh2d.FaceX.Length
-                                     && cellIdx < mesh2d.FaceY.Length;
+                                 && cellIdx < mesh2d.FaceX.Length
+                                 && cellIdx < mesh2d.FaceY.Length;
             if (validXyInFile)
             {
                 x = mesh2d.FaceX[cellIdx];
@@ -1171,21 +1180,20 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
                 var coordinatesOfVerticesOfCellInFile = verticesOfCellInFile
                                                         .Where(verticesIndex => !verticesIndex.Equals((int)UGridFileHelper.DefaultNoDataValue)
-                                                                                && !verticesIndex.Equals(int.MinValue) 
+                                                                                && !verticesIndex.Equals(int.MinValue)
                                                                                 && !verticesIndex.Equals(fillValueMesh2DFaceNodes)) // use fill value only! -999 is default of deltares / int.MinValue is default to other partner
                                                         .Select(verticesIndex => new Coordinate(mesh2d.NodesX[verticesIndex], mesh2d.NodesY[verticesIndex])).ToArray();
 
-                var centroid = GetCentroid(coordinatesOfVerticesOfCellInFile);// converting to GeoApi object is very costly
-                x = centroid.X; 
+                var centroid = GetCentroid(coordinatesOfVerticesOfCellInFile); // converting to GeoApi object is very costly
+                x = centroid.X;
                 y = centroid.Y;
-                
             }
 
             if (double.IsNaN(x) || double.IsNaN(y) || !(cellUGrid1D2DSearchIndexObject.ObjectInModel is UnstructuredGrid grid))
             {
                 return cellIdx; // use cellIdx from 1d2d link administration of file
             }
-            
+
             // Find calcPointIdx from provided grid with the coordinates of the face in the file
             faceCoordinateFromFile = new Coordinate(x, y);
             var rectangleD = new RectangleD(x, y, 50, 50);
@@ -1240,6 +1248,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 xSum += coordinate.X;
                 ySum += coordinate.Y;
             }
+
             return new Coordinate(xSum / numberOfVertices, ySum / numberOfVertices);
         }
 
@@ -1266,7 +1275,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 var link1D2D = links1D2D[i];
                 linksGeometry.LinkId[i] = link1D2D.Name;
                 linksGeometry.LinkLongName[i] = link1D2D.LongName ?? "";
-                linksGeometry.LinkType[i] = (int) link1D2D.TypeOfLink;
+                linksGeometry.LinkType[i] = (int)link1D2D.TypeOfLink;
                 linksGeometry.Mesh1DFrom[i] = link1D2D.DiscretisationPointIndex;
                 linksGeometry.Mesh2DTo[i] = link1D2D.FaceIndex;
             }
@@ -1283,7 +1292,5 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             Array.Copy(fullArray, sourceIndex, objArray, 0, blockSize);
             return objArray;
         }
-
-        
     }
 }
