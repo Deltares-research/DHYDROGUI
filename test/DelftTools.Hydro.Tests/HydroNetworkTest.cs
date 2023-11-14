@@ -277,7 +277,7 @@ namespace DelftTools.Hydro.Tests
                     CrossSectionSectionTypes = {new CrossSectionSectionType {Name = "newType"}}
                 };
 
-            var clonedNetwork = TypeUtils.DeepClone(network);
+            var clonedNetwork = (HydroNetwork)network.Clone();
 
             clonedNetwork.GetType().Should().Be.EqualTo(typeof(HydroNetwork));
 
@@ -372,11 +372,11 @@ namespace DelftTools.Hydro.Tests
 
             var crossSectionXYZ = new CrossSectionDefinitionXYZ
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) })
+                Geometry = new LineString(new[] { new Coordinate(0, 0, 1), new Coordinate(10, 0, 1) })
             };
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
 
-            var clonedHydroNetwork = TypeUtils.DeepClone(network);
+            var clonedHydroNetwork = (HydroNetwork)network.Clone();
 
             var hits = TestReferenceHelper.SearchObjectInObjectGraph(clonedHydroNetwork, network);
             hits.ForEach(Console.WriteLine);

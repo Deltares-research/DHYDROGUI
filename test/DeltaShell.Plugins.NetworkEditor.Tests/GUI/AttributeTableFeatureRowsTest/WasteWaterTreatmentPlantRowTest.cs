@@ -1,6 +1,8 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Utils.Validation.Common;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTest
@@ -12,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         public void Constructor_WithNullWasteWaterTreatmentPlant_ThrowsArgumentNullException()
         {
             // Act
-            void Call() => new WasteWaterTreatmentPlantRow(null);
+            void Call()
+            {
+                new WasteWaterTreatmentPlantRow(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -47,7 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Assert
             Assert.That(eventRaised);
         }
-        
+
         [Test]
         public void SetName_SetsWasteWaterTreatmentPlantName()
         {
@@ -61,7 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Assert
             Assert.That(wasteWaterTreatmentPlant.Name, Is.EqualTo("some_name"));
         }
-        
+
         [Test]
         public void GetName_GetsWasteWaterTreatmentPlantName()
         {
@@ -75,7 +80,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Assert
             Assert.AreEqual(result, "some_name");
         }
-        
+
+        [Test]
+        public void SetName_InvalidName_OriginalNameIsPreserved()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+
+            var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant { Name = "some_name" };
+            wasteWaterTreatmentPlant.AttachNameValidator(validator);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+
+            // Act
+            row.Name = "some_invalid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_name"));
+        }
+
+        [Test]
+        public void SetName_ValidName_NameIsUpdated()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+
+            var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant { Name = "some_name" };
+            wasteWaterTreatmentPlant.AttachNameValidator(validator);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+
+            // Act
+            row.Name = "some_valid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_valid_name"));
+        }
+
         [Test]
         public void SetDescription_SetsWasteWaterTreatmentPlantDescription()
         {
@@ -103,7 +144,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Assert
             Assert.AreEqual(result, "some_name");
         }
-        
+
         [Test]
         public void SetLongName_SetsWasteWaterTreatmentPlantLongName()
         {

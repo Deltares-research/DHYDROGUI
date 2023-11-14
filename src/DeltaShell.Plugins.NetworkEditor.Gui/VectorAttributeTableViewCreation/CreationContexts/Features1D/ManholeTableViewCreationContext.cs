@@ -15,7 +15,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public sealed class ManholeTableViewCreationContext : ITableViewCreationContext<IManhole, ManholeRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Manhole node table view";
+        public string GetDescription()
+        {
+            return "Manhole node table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<IManhole> data)

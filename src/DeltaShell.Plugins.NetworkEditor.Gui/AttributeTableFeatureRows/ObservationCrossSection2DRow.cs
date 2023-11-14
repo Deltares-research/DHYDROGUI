@@ -41,12 +41,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => observationCrossSection2D.Name;
-            set => observationCrossSection2D.Name = value;
+            set => observationCrossSection2D.SetNameIfValid(value);
         }
 
         /// <summary>
         /// Gets the underlying <see cref="ObservationCrossSection2D"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => observationCrossSection2D;
+        public IFeature GetFeature()
+        {
+            return observationCrossSection2D;
+        }
     }
 }

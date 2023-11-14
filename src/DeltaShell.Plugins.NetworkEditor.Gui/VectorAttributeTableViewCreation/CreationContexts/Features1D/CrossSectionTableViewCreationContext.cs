@@ -15,7 +15,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class CrossSectionTableViewCreationContext : ITableViewCreationContext<ICrossSection, CrossSectionRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Cross section table view";
+        public string GetDescription()
+        {
+            return "Cross section table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<ICrossSection> data)

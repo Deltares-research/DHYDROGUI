@@ -13,7 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class LandBoundary2DTableViewCreationContext : GroupableFeatureTableViewCreationContext<LandBoundary2D, LandBoundary2DRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Land boundary 2D table view";
+        public override string GetDescription()
+        {
+            return "Land boundary 2D table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<LandBoundary2D> data)

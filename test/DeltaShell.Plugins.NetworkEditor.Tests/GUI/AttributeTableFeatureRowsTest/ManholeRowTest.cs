@@ -2,6 +2,7 @@ using System.ComponentModel;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation.Common;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -82,6 +83,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
 
             // Assert
             Assert.AreEqual(result, "some_name");
+        }
+
+        [Test]
+        public void SetName_InvalidName_OriginalNameIsPreserved()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+
+            var manhole = new Manhole { Name = "some_name" };
+            manhole.AttachNameValidator(validator);
+            var row = new ManholeRow(manhole);
+
+            // Act
+            row.Name = "some_invalid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_name"));
+        }
+
+        [Test]
+        public void SetName_ValidName_NameIsUpdated()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+
+            var manhole = new Manhole { Name = "some_name" };
+            manhole.AttachNameValidator(validator);
+            var row = new ManholeRow(manhole);
+
+            // Act
+            row.Name = "some_valid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_valid_name"));
         }
 
         [Test]

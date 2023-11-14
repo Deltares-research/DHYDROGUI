@@ -34,12 +34,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => feature2D.Name;
-            set => feature2D.Name = value;
+            set => feature2D.SetNameIfValid(value);
         }
 
         /// <summary>
         /// Gets the underlying <see cref="Feature2D"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => feature2D;
+        public IFeature GetFeature()
+        {
+            return feature2D;
+        }
     }
 }

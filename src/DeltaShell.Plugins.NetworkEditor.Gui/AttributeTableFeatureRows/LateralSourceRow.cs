@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => lateralSource.Name;
-            set => lateralSource.Name = value;
+            set => lateralSource.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -63,6 +63,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="ILateralSource"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => lateralSource;
+        public IFeature GetFeature()
+        {
+            return lateralSource;
+        }
     }
 }

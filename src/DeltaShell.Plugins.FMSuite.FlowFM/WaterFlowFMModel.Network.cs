@@ -23,6 +23,7 @@ using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -38,6 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IFeatureCoverage inflows;
         private ICompartment previousCompartment;
         private bool settingSewerRoughness;
+        private NetworkLocationsUniqueNameValidationService networkLocationsUniqueNameValidationService;
 
         public const string DiscretizationObjectName = "Computational 1D Grid";
 
@@ -304,10 +306,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ((INotifyPropertyChanged) networkDiscretization).PropertyChanged -= OnNetworkDiscretisationChanged;
                 }
                 networkDiscretization = value;
+                networkLocationsUniqueNameValidationService?.Dispose();
                 networkDiscretization.Name = DiscretizationObjectName;
                 if (networkDiscretization != null)
                 {
                     ((INotifyPropertyChanged)networkDiscretization).PropertyChanged += OnNetworkDiscretisationChanged;
+                    networkLocationsUniqueNameValidationService = new NetworkLocationsUniqueNameValidationService(NetworkDiscretization);
                 }
             }
         }

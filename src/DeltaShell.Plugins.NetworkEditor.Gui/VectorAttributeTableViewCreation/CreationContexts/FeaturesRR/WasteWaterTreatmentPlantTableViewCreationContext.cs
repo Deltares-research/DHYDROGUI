@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class WasteWaterTreatmentPlantTableViewCreationContext : ITableViewCreationContext<WasteWaterTreatmentPlant, WasteWaterTreatmentPlantRow, IDrainageBasin>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Waste water treatment plant table view";
+        public string GetDescription()
+        {
+            return "Waste water treatment plant table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IDrainageBasin region, IEnumerable<WasteWaterTreatmentPlant> data)

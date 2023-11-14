@@ -13,7 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class EnclosureTableViewCreationContext : GroupableFeatureTableViewCreationContext<GroupableFeature2DPolygon, GroupableFeature2DPolygonRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Enclosure table view";
+        public override string GetDescription()
+        {
+            return "Enclosure table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<GroupableFeature2DPolygon> data)

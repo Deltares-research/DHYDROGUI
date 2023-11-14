@@ -34,12 +34,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => embankment.Name;
-            set => embankment.Name = value;
+            set => embankment.SetNameIfValid(value);
         }
 
         /// <summary>
         /// Gets the underlying <see cref="Embankment"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => embankment;
+        public IFeature GetFeature()
+        {
+            return embankment;
+        }
     }
 }

@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => compartment.Name;
-            set => compartment.Name = value;
+            set => compartment.SetNameIfValid(value);
         }
 
         [DisplayName("Shape")]
@@ -122,6 +122,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
             set => compartment.InterpolationType = value;
         }
 
+        /// <summary>
+        /// Gets the underlying <see cref="Compartment"/> feature that is represented by this instance.
+        /// </summary>
+        public IFeature GetFeature()
+        {
+            return compartment;
+        }
+
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
@@ -151,10 +159,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
                    propertyName == nameof(Width) ||
                    propertyName == nameof(BottomLevel);
         }
-
-        /// <summary>
-        /// Gets the underlying <see cref="Compartment"/> feature that is represented by this instance.
-        /// </summary>
-        public IFeature GetFeature() => compartment;
     }
 }

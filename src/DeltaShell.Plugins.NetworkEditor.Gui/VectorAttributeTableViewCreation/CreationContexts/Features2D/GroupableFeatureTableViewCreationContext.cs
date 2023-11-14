@@ -66,20 +66,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
 
         private static ToolStripMenuItem GetRemoveUngroupedItemsContextMenuItem(IEventedList<TGroupableFeature> data)
         {
-            var contextMenuItem = new ToolStripMenuItem
-            {
-                Text = Resources.NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped,
-            };
+            var contextMenuItem = new ToolStripMenuItem { Text = Resources.NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped };
             contextMenuItem.Click += (s, e) => data.RemoveUngroupedItems();
             return contextMenuItem;
         }
 
         private static ToolStripMenuItem GetRemoveGroupContextMenuItem(IEventedList<TGroupableFeature> data)
         {
-            var contextMenuItem = new ToolStripMenuItem
-            {
-                Text = Resources.NetworkEditorGuiPlugin_CreateAreaStructureCollectionViewInfo_Remove_group,
-            };
+            var contextMenuItem = new ToolStripMenuItem { Text = Resources.NetworkEditorGuiPlugin_CreateAreaStructureCollectionViewInfo_Remove_group };
 
             contextMenuItem.DropDownOpening += (sender, args) =>
             {
@@ -88,10 +82,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
                 IEnumerable<string> groupNames = data.Select(g => g.GroupName).Distinct().Where(name => !string.IsNullOrWhiteSpace(name));
                 foreach (string groupName in groupNames)
                 {
-                    var groupMenuItem = new ToolStripMenuItem
-                    {
-                        Text = groupName,
-                    };
+                    var groupMenuItem = new ToolStripMenuItem { Text = groupName };
 
                     groupMenuItem.Click += (s, e) => data.RemoveGroup(groupName);
                     contextMenuItem.DropDownItems.Add(groupMenuItem);
@@ -102,10 +93,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
 
         private static ToolStripMenuItem GetAddGroupContextMenuItem(GuiContainer guiContainer, IEventedList<TGroupableFeature> data)
         {
-            var contextMenuItem = new ToolStripMenuItem
-            {
-                Text = Resources.NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group,
-            };
+            var contextMenuItem = new ToolStripMenuItem { Text = Resources.NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group };
             contextMenuItem.Click += (s, e) => guiContainer.Gui.CommandHandler.ImportOn(data);
             return contextMenuItem;
         }

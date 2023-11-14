@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string Name
         {
             get { return data.Name; }
-            set { data.Name = value; }
+            set { data.SetNameIfValid(value); }
         }
         
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]

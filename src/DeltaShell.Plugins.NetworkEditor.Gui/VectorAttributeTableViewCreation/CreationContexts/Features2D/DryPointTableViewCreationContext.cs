@@ -13,7 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class DryPointTableViewCreationContext : GroupableFeatureTableViewCreationContext<GroupablePointFeature, GroupablePointFeatureRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Dry point table view";
+        public override string GetDescription()
+        {
+            return "Dry point table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<GroupablePointFeature> data)

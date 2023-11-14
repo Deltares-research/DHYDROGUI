@@ -21,7 +21,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class SewerConnectionTableViewCreationContext : ITableViewCreationContext<ISewerConnection, SewerConnectionRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Sewer connection table view";
+        public string GetDescription()
+        {
+            return "Sewer connection table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<ISewerConnection> data)

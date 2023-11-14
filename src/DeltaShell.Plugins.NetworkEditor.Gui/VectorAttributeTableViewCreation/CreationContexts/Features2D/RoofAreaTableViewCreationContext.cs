@@ -13,7 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class RoofAreaTableViewCreationContext : GroupableFeatureTableViewCreationContext<GroupableFeature2DPolygon, GroupableFeature2DPolygonRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Roof area table view";
+        public override string GetDescription()
+        {
+            return "Roof area table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<GroupableFeature2DPolygon> data)

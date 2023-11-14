@@ -11,7 +11,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class CompositeBranchStructureTableViewCreationContext : ITableViewCreationContext<ICompositeBranchStructure, CompositeBranchStructureRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Composite branch structure table view";
+        public string GetDescription()
+        {
+            return "Composite branch structure table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<ICompositeBranchStructure> data)

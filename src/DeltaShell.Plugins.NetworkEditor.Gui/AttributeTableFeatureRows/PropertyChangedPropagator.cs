@@ -27,7 +27,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
             this.notifyPropertyChanged.PropertyChanged += InvokePropertyChanged;
         }
 
-        private void InvokePropertyChanged(object sender, PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,15 +43,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         [Browsable(false)] // makes sure this property is not shown in the table view
         public bool HasParent { get; set; }
 
+        private void InvokePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
+
         ~PropertyChangedPropagator()
         {
             Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)

@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => hydroNode.Name;
-            set => hydroNode.Name = value;
+            set => hydroNode.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -62,6 +62,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="IHydroNode"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => hydroNode;
+        public IFeature GetFeature()
+        {
+            return hydroNode;
+        }
     }
 }

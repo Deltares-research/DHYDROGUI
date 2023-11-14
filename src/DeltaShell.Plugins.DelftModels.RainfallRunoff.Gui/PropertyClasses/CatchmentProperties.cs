@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         public string Name
         {
             get { return data.Name; }
-            set { data.Name = value; }
+            set { data.SetNameIfValid(value); }
         }
 
         [Category("General")]

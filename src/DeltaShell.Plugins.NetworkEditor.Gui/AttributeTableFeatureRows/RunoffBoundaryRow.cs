@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => runoffBoundary.Name;
-            set => runoffBoundary.Name = value;
+            set => runoffBoundary.SetNameIfValid(value);
         }
 
         [DisplayName("Description")]
@@ -54,6 +54,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="RunoffBoundary"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => runoffBoundary;
+        public IFeature GetFeature()
+        {
+            return runoffBoundary;
+        }
     }
 }

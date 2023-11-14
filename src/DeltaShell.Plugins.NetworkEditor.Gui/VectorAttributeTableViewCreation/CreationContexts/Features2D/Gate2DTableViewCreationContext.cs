@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class Gate2DTableViewCreationContext : GroupableFeatureTableViewCreationContext<Gate2D, Gate2DRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Gate 2D table view";
+        public override string GetDescription()
+        {
+            return "Gate 2D table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<Gate2D> data)

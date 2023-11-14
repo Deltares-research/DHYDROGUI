@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public sealed class LateralSourceTableViewCreationContext : ITableViewCreationContext<ILateralSource, LateralSourceRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Lateral source table view";
+        public string GetDescription()
+        {
+            return "Lateral source table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<ILateralSource> data)

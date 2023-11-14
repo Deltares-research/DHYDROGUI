@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class BridgePillarTableViewCreationContext : GroupableFeatureTableViewCreationContext<BridgePillar, BridgePillarRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Bridge pillar table view";
+        public override string GetDescription()
+        {
+            return "Bridge pillar table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<BridgePillar> data)

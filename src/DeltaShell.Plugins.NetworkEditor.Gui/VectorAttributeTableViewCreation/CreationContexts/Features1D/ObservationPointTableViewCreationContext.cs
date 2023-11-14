@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class ObservationPointTableViewCreationContext : ITableViewCreationContext<IObservationPoint, ObservationPointRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Observation point table view";
+        public string GetDescription()
+        {
+            return "Observation point table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<IObservationPoint> data)

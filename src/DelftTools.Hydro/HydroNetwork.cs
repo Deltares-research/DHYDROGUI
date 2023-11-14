@@ -7,9 +7,11 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -32,6 +34,8 @@ namespace DelftTools.Hydro
         public const string ImportBranchesActionName = "Import branches";
 
         private Dictionary<Type, IDictionary<string, IBranchFeature>> branchFeatureNameCache;
+        private IEventedList<HydroLink> hydroLinks;
+        private UniqueNameValidationService<HydroLink> hydroLinkUniqueNameValidationService;
 
         [Aggregation]
         public virtual ICrossSectionDefinition DefaultCrossSectionDefinition { get; set; }
@@ -279,6 +283,7 @@ namespace DelftTools.Hydro
                 OutletCompartments = Manholes.SelectMany(m => m.OutletCompartments());
                 Compartments = Manholes.SelectMany(m => m.Compartments.OfType<Compartment>());
                 HydroNodes = Nodes.OfType<IHydroNode>();
+                _ = new CompartmentUniqueNameValidationService(Nodes);
             }
         }
 
@@ -419,7 +424,20 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual IEventedList<HydroLink> Links { get; set; }
+        public virtual IEventedList<HydroLink> Links
+        {
+            get => hydroLinks;
+            set
+            {
+                hydroLinks = value;
+                hydroLinkUniqueNameValidationService?.Dispose();
+
+                if (hydroLinks != null)
+                {
+                    hydroLinkUniqueNameValidationService = new UniqueNameValidationService<HydroLink>(hydroLinks);
+                }
+            }
+        }
 
         public virtual HydroLink AddNewLink(IHydroObject source, IHydroObject target)
         {

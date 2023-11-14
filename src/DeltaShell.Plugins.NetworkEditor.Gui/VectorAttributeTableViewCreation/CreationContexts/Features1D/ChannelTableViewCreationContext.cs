@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class ChannelTableViewCreationContext : ITableViewCreationContext<IChannel, ChannelRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Channel table view";
+        public string GetDescription()
+        {
+            return "Channel table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<IChannel> data)

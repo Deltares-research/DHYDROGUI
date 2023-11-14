@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string Name
         {
             get { return leveeBreach.Name; }
-            set { leveeBreach.Name = value; }
+            set { leveeBreach.SetNameIfValid(value); }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]

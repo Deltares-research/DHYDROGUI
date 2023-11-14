@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => weir2D.Name;
-            set => weir2D.Name = value;
+            set => weir2D.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -81,6 +81,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="Weir2D"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => weir2D;
+        public IFeature GetFeature()
+        {
+            return weir2D;
+        }
     }
 }

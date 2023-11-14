@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string Name
         {
             get { return data.Name; }
-            set { data.Name = value; }
+            set { data.SetNameIfValid(value); }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string CompartmentOneName
         {
             get { return GetStringPropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.Name); }
-            set { data.Compartments[manholeOneIndex].Name = value; }
+            set { data.Compartments[manholeOneIndex].SetNameIfValid(value); }
         }
 
         [Category("Compartment 1")]
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string CompartmentTwoName
         {
             get { return GetStringPropertyFromCompartmentAtIndex(manholeTwoIndex, comp => comp.Name); }
-            set { data.Compartments[manholeTwoIndex].Name = value; }
+            set { data.Compartments[manholeTwoIndex].SetNameIfValid(value); }
         }
 
         [Category("Compartment 2")]
@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string CompartmentThreeName
         {
             get { return GetStringPropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.Name); }
-            set { data.Compartments[manholeThreeIndex].Name = value; }
+            set { data.Compartments[manholeThreeIndex].SetNameIfValid(value); }
         }
 
         [Category("Compartment 3")]

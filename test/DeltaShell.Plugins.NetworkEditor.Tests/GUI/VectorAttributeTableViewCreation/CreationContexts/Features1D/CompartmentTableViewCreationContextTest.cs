@@ -32,7 +32,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new CompartmentTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(null, Substitute.For<IEnumerable<Compartment>>());
+            void Call()
+            {
+                creationContext.IsRegionData(null, Substitute.For<IEnumerable<Compartment>>());
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -45,7 +48,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new CompartmentTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(Substitute.For<IHydroNetwork>(), null);
+            void Call()
+            {
+                creationContext.IsRegionData(Substitute.For<IHydroNetwork>(), null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -88,7 +94,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new CompartmentTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.CreateFeatureRowObject(null);
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);

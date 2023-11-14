@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => bridge.Name;
-            set => bridge.Name = value;
+            set => bridge.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -128,6 +128,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
             set => bridge.Height = value;
         }
 
+        /// <summary>
+        /// Gets the underlying <see cref="IBridge"/> feature that is represented by this instance.
+        /// </summary>
+        public IFeature GetFeature()
+        {
+            return bridge;
+        }
+
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
@@ -158,10 +166,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
                    propertyName == nameof(InletLossCoefficient) ||
                    propertyName == nameof(OutletLossCoefficient);
         }
-
-        /// <summary>
-        /// Gets the underlying <see cref="IBridge"/> feature that is represented by this instance.
-        /// </summary>
-        public IFeature GetFeature() => bridge;
     }
 }

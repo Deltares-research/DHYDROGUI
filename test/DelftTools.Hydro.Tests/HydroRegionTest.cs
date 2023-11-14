@@ -320,7 +320,7 @@ namespace DelftTools.Hydro.Tests
             {
                 // Setup
                 var hydroRegion = Substitute.For<IHydroRegion>();
-                hydroRegion.Links = new EventedList<HydroLink>();
+                hydroRegion.Links.Returns(new EventedList<HydroLink>());
                 IHydroObject source = CreateHydroObject("source_name", hydroRegion);
                 IHydroObject target = CreateHydroObject("target_name", hydroRegion);
 

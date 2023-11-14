@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation
             {
                 Description = creationContext.GetDescription(),
                 CompositeViewType = typeof(ProjectItemMapView),
-                AdditionalDataCheck = (data) => GetHydroNetworkDataItem(creationContext, data) != null,
+                AdditionalDataCheck = data => GetHydroNetworkDataItem(creationContext, data) != null,
                 GetCompositeViewData = data => GetHydroNetworkDataItem(creationContext, data),
                 GetViewData = GetDataLayer,
                 AfterCreate = (view, data) => ConfigureView(view, data, creationContext)
@@ -74,7 +74,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation
                                                       creationContext.IsRegionData(hydroRegion, data));
         }
 
-        private IEnumerable<IDataItem> GetDataItems() => guiContainer.Gui.Application.Project.GetAllItemsRecursive().OfType<IDataItem>();
+        private IEnumerable<IDataItem> GetDataItems()
+        {
+            return guiContainer.Gui.Application.Project.GetAllItemsRecursive().OfType<IDataItem>();
+        }
 
         private ILayer GetDataLayer(object data)
         {

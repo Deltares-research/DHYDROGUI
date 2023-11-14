@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         public string Name
         {
             get { return data.Name; }
-            set { data.Name = value; }
+            set { data.SetNameIfValid(value); }
         }
 
         [Category("General")]

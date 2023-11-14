@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public sealed class Pump2DTableViewCreationContext : GroupableFeatureTableViewCreationContext<Pump2D, Pump2DRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Pump 2D table view";
+        public override string GetDescription()
+        {
+            return "Pump 2D table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<Pump2D> data)

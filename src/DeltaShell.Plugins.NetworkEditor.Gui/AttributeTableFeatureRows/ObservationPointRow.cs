@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => observationPoint.Name;
-            set => observationPoint.Name = value;
+            set => observationPoint.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -53,6 +53,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="IObservationPoint"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => observationPoint;
+        public IFeature GetFeature()
+        {
+            return observationPoint;
+        }
     }
 }

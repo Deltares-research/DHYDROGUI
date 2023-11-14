@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => sewerConnection.Name;
-            set => sewerConnection.Name = value;
+            set => sewerConnection.SetNameIfValid(value);
         }
 
         [DisplayName("From manhole")]
@@ -101,6 +101,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="ISewerConnection"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => sewerConnection;
+        public IFeature GetFeature()
+        {
+            return sewerConnection;
+        }
     }
 }

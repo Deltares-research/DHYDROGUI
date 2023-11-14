@@ -17,7 +17,7 @@ namespace DelftTools.Hydro
         /// <summary>
         /// All links between hydro objects in this region, or its sub-regions.
         /// </summary>
-        IEventedList<HydroLink> Links { get; set; }
+        IEventedList<HydroLink> Links { get; }
 
         /// <summary>
         /// Add a new link between between <paramref name="source"/> and <paramref name="target"/>.

@@ -3,10 +3,12 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Validation.Common;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
@@ -14,6 +16,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
     [TestFixture]
     public class ChannelPropertiesTest
     {
+        [Test]
+        public void SetName_InvalidName_OriginalNameIsPreserved()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+
+            var data = new Channel { Name = "some_name" };
+            data.AttachNameValidator(validator);
+            var properties = new ChannelProperties { Data = data };
+
+            // Act
+            properties.Name = "some_invalid_name";
+
+            // Assert
+            Assert.That(properties.Name, Is.EqualTo("some_name"));
+        }
+
+        [Test]
+        public void SetName_ValidName_NameIsUpdated()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+
+            var data = new Channel { Name = "some_name" };
+            data.AttachNameValidator(validator);
+            var properties = new ChannelProperties { Data = data };
+
+            // Act
+            properties.Name = "some_valid_name";
+
+            // Assert
+            Assert.That(properties.Name, Is.EqualTo("some_valid_name"));
+        }
+
         [Test]
         public void GivenChannelWithDifferentGeodeticLength_ThenPropertyVisibilityIsEitherShownOrNot()
         {

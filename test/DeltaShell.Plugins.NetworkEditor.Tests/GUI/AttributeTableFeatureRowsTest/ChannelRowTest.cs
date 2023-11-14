@@ -2,6 +2,7 @@ using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Validation.Common;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -83,6 +84,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
 
             // Assert
             Assert.AreEqual(result, "some_name");
+        }
+
+        [Test]
+        public void SetName_InvalidName_OriginalNameIsPreserved()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+
+            var channel = new Channel { Name = "some_name" };
+            channel.AttachNameValidator(validator);
+            var row = new ChannelRow(channel);
+
+            // Act
+            row.Name = "some_invalid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_name"));
+        }
+
+        [Test]
+        public void SetName_ValidName_NameIsUpdated()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+
+            var channel = new Channel { Name = "some_name" };
+            channel.AttachNameValidator(validator);
+            var row = new ChannelRow(channel);
+
+            // Act
+            row.Name = "some_valid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_valid_name"));
         }
 
         [Test]
@@ -215,7 +252,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Assert
             Assert.That(result, Is.EqualTo(1.23));
         }
-        
+
         [Test]
         public void SetOrderNumber_SetsChannelOrderNumber()
         {

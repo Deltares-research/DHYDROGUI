@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class HydroLinkTableViewCreationContext : ITableViewCreationContext<HydroLink, HydroLinkRow, IHydroRegion>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Hydro link table view";
+        public string GetDescription()
+        {
+            return "Hydro link table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroRegion region, IEnumerable<HydroLink> data)

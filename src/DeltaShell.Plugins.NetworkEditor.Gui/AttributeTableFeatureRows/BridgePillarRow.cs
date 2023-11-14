@@ -41,12 +41,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => bridgePillar.Name;
-            set => bridgePillar.Name = value;
+            set => bridgePillar.SetNameIfValid(value);
         }
 
         /// <summary>
         /// Gets the underlying <see cref="BridgePillar"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => bridgePillar;
+        public IFeature GetFeature()
+        {
+            return bridgePillar;
+        }
     }
 }

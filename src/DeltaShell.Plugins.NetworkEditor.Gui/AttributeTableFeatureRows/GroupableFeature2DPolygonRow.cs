@@ -41,12 +41,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => feature.Name;
-            set => feature.Name = value;
+            set => feature.SetNameIfValid(value);
         }
 
         /// <summary>
         /// Gets the underlying <see cref="GroupableFeature2DPolygon"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => feature;
+        public IFeature GetFeature()
+        {
+            return feature;
+        }
     }
 }

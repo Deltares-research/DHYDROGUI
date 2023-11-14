@@ -21,7 +21,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class CompartmentTableViewCreationContext : ITableViewCreationContext<Compartment, CompartmentRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Compartment table view";
+        public string GetDescription()
+        {
+            return "Compartment table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<Compartment> data)

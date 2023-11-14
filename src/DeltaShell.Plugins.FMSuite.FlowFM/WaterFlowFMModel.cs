@@ -3324,6 +3324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 allFixedWeirsAndCorrespondingProperties.ForEach(d => d.Dispose());
                 BridgePillarsDataModel.ForEach(d => d.Dispose());
+                networkLocationsUniqueNameValidationService?.Dispose();
             }
         }
 

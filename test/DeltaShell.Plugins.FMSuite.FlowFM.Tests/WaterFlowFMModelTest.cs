@@ -2190,85 +2190,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenFMModelWithNetworkWithBranchWithBoundaryCondition1DAtNode_WhenAddingMockedBranchConnectionWithTargetNodeToNode2AndOneMockedBranchWithSourceFromNode2_ThenBoundaryCondition1DAtNode2WillBeRemoved()
+        public void GivenFMModelWithNetworkWithBranchWithBoundaryCondition1DAtNode_WhenAddingBranchConnectionWithTargetNodeToNode2AndOneBranchWithSourceFromNode2_ThenBoundaryCondition1DAtNode2WillBeRemoved()
         {
-
             // Setup
-            var channelToNode2 = mocks.StrictMultiMock<IBranch>(typeof(IHydroObject), typeof(INotifyPropertyChanged), typeof(DelftTools.Utils.INotifyPropertyChange));
-            var sourceNode = mocks.StrictMultiMock<INode>(typeof(DelftTools.Utils.INotifyPropertyChange), typeof(IHydroObject));
-            var channelFromNode2 = mocks.StrictMultiMock<IBranch>(typeof(IHydroObject), typeof(INotifyPropertyChanged), typeof(DelftTools.Utils.INotifyPropertyChange));
-            var targetNode = mocks.StrictMultiMock<INode>(typeof(DelftTools.Utils.INotifyPropertyChange), typeof(IHydroObject));
-            var branchFeature = mocks.StrictMock<IBranchFeature>();
+            var channelToNode2 = new Channel();
+            var sourceNode = new HydroNode();
+            var channelFromNode2 = new Channel();
+            var targetNode = new HydroNode();
 
-            var eventedListOfSourceNodeIncomingBranches = mocks.StrictMultiMock<IEventedList<IBranch>>(typeof(INotifyCollectionChanged));
-            //eventedListOfSourceNodeIncomingBranches.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Empty<IBranch>().GetEnumerator());
-            ((INotifyCollectionChanged)eventedListOfSourceNodeIncomingBranches).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Once();
-
-            var eventedListOfSourceNodeOutgoingBranches = mocks.StrictMultiMock<IEventedList<IBranch>>(typeof(INotifyCollectionChanged));
-            //eventedListOfSourceNodeOutgoingBranches.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Repeat(channelToNode2, 1).GetEnumerator());
-            ((INotifyCollectionChanged)eventedListOfSourceNodeOutgoingBranches).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Once();
-
-            var eventedListOfTargetNodeIncomingBranches = mocks.StrictMultiMock<IEventedList<IBranch>>(typeof(INotifyCollectionChanged));
-            //eventedListOfTargetNodeIncomingBranches.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Repeat(channelFromNode2, 1).GetEnumerator());
-            ((INotifyCollectionChanged)eventedListOfTargetNodeIncomingBranches).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Once();
-
-            var eventedListOfTargetNodeOutgoingBranches = mocks.StrictMultiMock<IEventedList<IBranch>>(typeof(INotifyCollectionChanged));
-            //eventedListOfTargetNodeOutgoingBranches.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Empty<IBranch>().GetEnumerator());
-            ((INotifyCollectionChanged)eventedListOfTargetNodeOutgoingBranches).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Once();
-
-            var eventedListOfEmptyLinks = mocks.StrictMultiMock<IEventedList<HydroLink>>(typeof(INotifyCollectionChanged));
-            //eventedListOfEmptyLinks.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Empty<HydroLink>().GetEnumerator());
-            ((INotifyCollectionChanged)eventedListOfEmptyLinks).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Twice();
+            var eventedListOfSourceNodeIncomingBranches = new EventedList<IBranch>();
+            var eventedListOfSourceNodeOutgoingBranches = new EventedList<IBranch>();
+            var eventedListOfTargetNodeIncomingBranches = new EventedList<IBranch>();
+            var eventedListOfTargetNodeOutgoingBranches = new EventedList<IBranch>();
+            var eventedListOfEmptyLinks = new EventedList<HydroLink>();
 
             var model = new WaterFlowFMModel();
             HydroNetworkHelper.AddSnakeHydroNetwork(model.Network, new[] { new Point(0, 0), new Point(100, 0) });
-            channelToNode2.Expect(b => b.Network).Return(model.Network).Repeat.Once();
-            //channelToNode2.Expect(b => b.BranchFeatures).Return(Enumerable.Repeat(branchFeature,1) as IEventedList<IBranchFeature>).Repeat.Once();
-            channelToNode2.Expect(b => b.Length).Return(100).Repeat.Times(4);
-            channelToNode2.Expect(b => b.Source).PropertyBehavior().Repeat.Once();
-            channelToNode2.Expect(b => b.Target).Return(model.Network.Nodes[1]).Repeat.Once();
-            ((DelftTools.Utils.INotifyPropertyChange)channelToNode2).Expect(npc => npc.PropertyChanging += Arg<PropertyChangingEventHandler>.Is.Anything).Repeat.Once();
-            ((DelftTools.Utils.INotifyPropertyChange)channelToNode2).Expect(npc => npc.PropertyChanged += Arg<PropertyChangedEventHandler>.Is.Anything).Repeat.Once();
-            channelToNode2.Expect(b => b.Target = Arg<INode>.Is.Anything)
-                .WhenCalled(call =>
-                    channelToNode2.Raise(b => ((INotifyPropertyChanged)b).PropertyChanged += null, channelToNode2, new PropertyChangedEventArgs(nameof(IBranch.Target)))).Repeat.Once();
+            channelToNode2.Network = model.Network;
+            channelToNode2.Length = 100;
 
-            channelFromNode2.Expect(b => b.Network).Return(model.Network).Repeat.Once();
-            //channelFromNode2.Expect(b => b.BranchFeatures).Return(Enumerable.Repeat(branchFeature, 1) as IEventedList<IBranchFeature>).Repeat.Once();
-            channelFromNode2.Expect(b => b.Length).Return(100).Repeat.Times(4);
-            channelFromNode2.Expect(b => b.Source = Arg<INode>.Is.Anything)
-                .WhenCalled(call =>
-                {
-                    model.Network.Nodes[1].OutgoingBranches.Add(channelFromNode2);
-                    channelFromNode2.Raise(b => ((INotifyPropertyChanged) b).PropertyChanged += null,
-                            channelFromNode2, new PropertyChangedEventArgs(nameof(IBranch.Source)));
-                }).Repeat.Once();
-            ((DelftTools.Utils.INotifyPropertyChange)channelFromNode2).Expect(npc => npc.PropertyChanging += Arg<PropertyChangingEventHandler>.Is.Anything).Repeat.Once();
-            ((DelftTools.Utils.INotifyPropertyChange)channelFromNode2).Expect(npc => npc.PropertyChanged += Arg<PropertyChangedEventHandler>.Is.Anything).Repeat.Once();
+            channelFromNode2.Network = model.Network;
+            channelFromNode2.Length = 100;
 
+            sourceNode.Network = model.Network;
+            sourceNode.Name = "Node3";
+            sourceNode.IncomingBranches = eventedListOfSourceNodeIncomingBranches;
+            sourceNode.OutgoingBranches = eventedListOfSourceNodeOutgoingBranches;
+            sourceNode.Links = eventedListOfEmptyLinks;
 
-            channelFromNode2.Expect(b => b.Source).Return(model.Network.Nodes[1]).Repeat.Once();
-            channelFromNode2.Expect(b => b.Target).PropertyBehavior().Repeat.Once();
-            
-            sourceNode.Expect(n => n.Network).Return(model.Network).Repeat.Once();
-            sourceNode.Expect(n => n.Name).Return("Node3").Repeat.Once();
-            sourceNode.Expect(n => n.IsConnectedToMultipleBranches).Return(false).Repeat.Once();
-            sourceNode.Expect(n => n.IncomingBranches).Return(eventedListOfSourceNodeIncomingBranches).Repeat.Once();
-            sourceNode.Expect(n => n.OutgoingBranches).Return(eventedListOfSourceNodeOutgoingBranches).Repeat.Once();
-            ((IHydroObject)sourceNode).Expect(n => n.Links).Return(eventedListOfEmptyLinks).Repeat.Once();
-            ((DelftTools.Utils.INotifyPropertyChange)sourceNode).Expect(npc => npc.PropertyChanging += Arg<PropertyChangingEventHandler>.Is.Anything).Repeat.Once();
-            ((DelftTools.Utils.INotifyPropertyChange)sourceNode).Expect(npc => npc.PropertyChanged += Arg<PropertyChangedEventHandler>.Is.Anything).Repeat.Twice();
-            
-            targetNode.Expect(n => n.Network).Return(model.Network).Repeat.Once();
-            targetNode.Expect(n => n.Name).Return("Node4").Repeat.Once();
-            targetNode.Expect(n => n.IsConnectedToMultipleBranches).Return(false).Repeat.Once();
-            targetNode.Expect(n => n.IncomingBranches).Return(eventedListOfTargetNodeIncomingBranches).Repeat.Once();
-            targetNode.Expect(n => n.OutgoingBranches).Return(eventedListOfTargetNodeOutgoingBranches).Repeat.Once();
-            ((IHydroObject)targetNode).Expect(n => n.Links).Return(eventedListOfEmptyLinks).Repeat.Once();
-            ((DelftTools.Utils.INotifyPropertyChange)targetNode).Expect(npc => npc.PropertyChanging += Arg<PropertyChangingEventHandler>.Is.Anything).Repeat.Once();
-            ((DelftTools.Utils.INotifyPropertyChange)targetNode).Expect(npc => npc.PropertyChanged += Arg<PropertyChangedEventHandler>.Is.Anything).Repeat.Twice();
+            targetNode.Network = model.Network;
+            targetNode.Name = "Node4";
+            targetNode.IncomingBranches = eventedListOfTargetNodeIncomingBranches;
+            targetNode.OutgoingBranches = eventedListOfTargetNodeOutgoingBranches;
+            targetNode.Links = eventedListOfEmptyLinks;
 
-            mocks.ReplayAll();
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
             model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
             

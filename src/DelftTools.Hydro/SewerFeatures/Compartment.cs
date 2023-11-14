@@ -10,21 +10,27 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 
 namespace DelftTools.Hydro.SewerFeatures
 {
     [Entity]
     public class Compartment : ACompartment, IPointFeature, ICompartment, ICopyFrom, IItemContainer
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Compartment));
         /// <summary>
         /// The default floodable area for a reservoir compartment (m²).
         /// </summary>
         public const double DefaultReservoirFloodableArea = 500.0;
 
         private IManhole parentManhole;
+        private readonly NameValidator nameValidator;
 
         public Compartment(ILogHandler logHandler, string name):this(name)
         {
@@ -40,6 +46,7 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             Name = name;
             InterpolationType = InterpolationType.Linear;
+            nameValidator = NameValidator.CreateDefault();
         }
 
         [FeatureAttribute(Order = 1)]
@@ -336,5 +343,40 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         #endregion
+
+        /// <inheritdoc/>
+        public void SetNameIfValid(string name)
+        {
+            if (ValidateName(name))
+            {
+                Name = name;
+            }
+        }
+
+        private bool ValidateName(string name)
+        {
+            ValidationResult result = nameValidator.Validate(name);
+            if (result.Valid)
+            {
+                return true;
+            }
+
+            log.Warn(result.Message);
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public virtual void AttachNameValidator(IValidator<string> subValidator)
+        {
+            Ensure.NotNull(subValidator, nameof(subValidator));
+            nameValidator.AddValidator(subValidator);
+        }
+
+        /// <inheritdoc/>
+        public virtual void DetachNameValidator(IValidator<string> subValidator)
+        {
+            Ensure.NotNull(subValidator, nameof(subValidator));
+            nameValidator.RemoveValidator(subValidator);
+        }
     }
 }

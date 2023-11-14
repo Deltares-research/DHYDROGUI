@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => compositeBranchStructure.Name;
-            set => compositeBranchStructure.Name = value;
+            set => compositeBranchStructure.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -53,6 +53,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="ICompositeBranchStructure"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => compositeBranchStructure;
+        public IFeature GetFeature()
+        {
+            return compositeBranchStructure;
+        }
     }
 }

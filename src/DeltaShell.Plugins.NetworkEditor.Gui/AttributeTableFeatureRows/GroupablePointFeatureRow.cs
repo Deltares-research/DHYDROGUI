@@ -46,6 +46,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="GroupablePointFeature"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => feature;
+        public IFeature GetFeature()
+        {
+            return feature;
+        }
     }
 }

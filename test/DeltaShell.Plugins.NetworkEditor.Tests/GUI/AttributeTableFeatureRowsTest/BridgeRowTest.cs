@@ -1,5 +1,6 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Validation.Common;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -15,7 +16,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         public void Constructor_WithNullBridge_ThrowsArgumentNullException()
         {
             // Act
-            void Call() => new BridgeRow(null);
+            void Call()
+            {
+                new BridgeRow(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -77,6 +81,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
 
             // Assert
             Assert.AreEqual(result, "some_name");
+        }
+
+        [Test]
+        public void SetName_InvalidName_OriginalNameIsPreserved()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+
+            var bridge = new Bridge { Name = "some_name" };
+            bridge.AttachNameValidator(validator);
+            var row = new BridgeRow(bridge);
+
+            // Act
+            row.Name = "some_invalid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_name"));
+        }
+
+        [Test]
+        public void SetName_ValidName_NameIsUpdated()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+
+            var bridgePillar = new Bridge { Name = "some_name" };
+            bridgePillar.AttachNameValidator(validator);
+            var row = new BridgeRow(bridgePillar);
+
+            // Act
+            row.Name = "some_valid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_valid_name"));
         }
 
         [Test]

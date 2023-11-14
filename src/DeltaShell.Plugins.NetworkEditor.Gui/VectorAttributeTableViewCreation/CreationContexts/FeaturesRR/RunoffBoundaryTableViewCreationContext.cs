@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class RunoffBoundaryTableViewCreationContext : ITableViewCreationContext<RunoffBoundary, RunoffBoundaryRow, IDrainageBasin>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Runoff boundary table view";
+        public string GetDescription()
+        {
+            return "Runoff boundary table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IDrainageBasin region, IEnumerable<RunoffBoundary> data)

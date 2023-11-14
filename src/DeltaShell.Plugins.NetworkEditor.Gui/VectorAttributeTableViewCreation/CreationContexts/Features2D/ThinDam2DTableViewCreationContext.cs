@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class ThinDam2DTableViewCreationContext : GroupableFeatureTableViewCreationContext<ThinDam2D, ThinDam2DRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Thin dam 2D table view";
+        public override string GetDescription()
+        {
+            return "Thin dam 2D table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<ThinDam2D> data)

@@ -30,7 +30,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new ObservationPointTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(null, new List<GroupableFeature2DPoint>());
+            void Call()
+            {
+                creationContext.IsRegionData(null, new List<GroupableFeature2DPoint>());
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
@@ -43,7 +46,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new ObservationPointTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(new HydroArea(), null);
+            void Call()
+            {
+                creationContext.IsRegionData(new HydroArea(), null);
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
@@ -86,7 +92,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new ObservationPointTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.CreateFeatureRowObject(null);
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());

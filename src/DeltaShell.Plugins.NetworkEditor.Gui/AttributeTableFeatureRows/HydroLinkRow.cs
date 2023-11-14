@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => hydroLink.Name;
-            set => hydroLink.Name = value;
+            set => hydroLink.SetNameIfValid(value);
         }
 
         [DisplayName("Source")]
@@ -46,6 +46,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="HydroLink"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => hydroLink;
+        public IFeature GetFeature()
+        {
+            return hydroLink;
+        }
     }
 }

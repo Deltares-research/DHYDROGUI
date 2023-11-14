@@ -15,7 +15,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class CulvertTableViewCreationContext : ITableViewCreationContext<ICulvert, CulvertRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Culvert table view";
+        public string GetDescription()
+        {
+            return "Culvert table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<ICulvert> data)

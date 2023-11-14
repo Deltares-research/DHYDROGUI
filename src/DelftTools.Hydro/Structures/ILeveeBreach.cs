@@ -1,10 +1,11 @@
 ﻿using System;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
+using DelftTools.Utils.Validation.NameValidation;
 using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface ILeveeBreach : IStructure2D
+    public interface ILeveeBreach : IStructure2D, IHasNameValidation
     {
         double BreachLocationX { get; set; }
         double BreachLocationY { get; set; }

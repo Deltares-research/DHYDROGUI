@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => crossSection.Name;
-            set => crossSection.Name = value;
+            set => crossSection.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public double Width => crossSection.Definition.Width;
 
         [DisplayName("Thalweg")]
-        public double Thalweg => Math.Round(crossSection.Definition.Thalweg, digits: 2);
+        public double Thalweg => Math.Round(crossSection.Definition.Thalweg, 2);
 
         [DisplayName("Definition")]
         public string DefinitionName => crossSection.Definition.Name;
@@ -76,6 +76,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="ICrossSection"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => crossSection;
+        public IFeature GetFeature()
+        {
+            return crossSection;
+        }
     }
 }

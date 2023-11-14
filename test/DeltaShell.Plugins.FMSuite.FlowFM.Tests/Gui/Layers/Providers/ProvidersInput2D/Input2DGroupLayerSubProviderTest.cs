@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers.Providers.Providers
             {
                 var model = Substitute.For<IWaterFlowFMModel>();
 
-                model.Area.Returns(Area);
+                model.Area = Area;
                 model.Grid.Returns(Grid);
 
                 // Set default due to problems with Returns.

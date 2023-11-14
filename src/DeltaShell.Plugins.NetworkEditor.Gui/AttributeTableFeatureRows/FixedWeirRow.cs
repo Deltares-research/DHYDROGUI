@@ -41,12 +41,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => fixedWeir.Name;
-            set => fixedWeir.Name = value;
+            set => fixedWeir.SetNameIfValid(value);
         }
 
         /// <summary>
         /// Gets the underlying <see cref="FixedWeir"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => fixedWeir;
+        public IFeature GetFeature()
+        {
+            return fixedWeir;
+        }
     }
 }

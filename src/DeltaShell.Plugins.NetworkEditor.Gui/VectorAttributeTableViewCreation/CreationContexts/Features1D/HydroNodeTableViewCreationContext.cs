@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public sealed class HydroNodeTableViewCreationContext : ITableViewCreationContext<IHydroNode, HydroNodeRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Hydro node table view";
+        public string GetDescription()
+        {
+            return "Hydro node table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<IHydroNode> data)

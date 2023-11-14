@@ -21,7 +21,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class PipeTableViewCreationContext : ITableViewCreationContext<IPipe, PipeRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Pipe table view";
+        public string GetDescription()
+        {
+            return "Pipe table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<IPipe> data)

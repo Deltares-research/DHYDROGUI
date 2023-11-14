@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class EmbankmentTableViewCreationContext : ITableViewCreationContext<Embankment, EmbankmentRow, HydroArea>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Embankment table view";
+        public string GetDescription()
+        {
+            return "Embankment table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(HydroArea region, IEnumerable<Embankment> data)

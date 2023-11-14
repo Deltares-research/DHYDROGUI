@@ -41,12 +41,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => thinDam2D.Name;
-            set => thinDam2D.Name = value;
+            set => thinDam2D.SetNameIfValid(value);
         }
 
         /// <summary>
         /// Gets the underlying <see cref="ThinDam2D"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => thinDam2D;
+        public IFeature GetFeature()
+        {
+            return thinDam2D;
+        }
     }
 }

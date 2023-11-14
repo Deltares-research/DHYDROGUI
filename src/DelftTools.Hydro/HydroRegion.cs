@@ -7,6 +7,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation.NameValidation;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
@@ -19,6 +20,7 @@ namespace DelftTools.Hydro
     [Entity]
     public class HydroRegion : RegionBase, IHydroRegion
     {
+        private UniqueNameValidationService<HydroLink> hydroLinkUniqueNameValidationService;
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroRegion));
         private IEventedList<HydroLink> links;
 
@@ -70,9 +72,11 @@ namespace DelftTools.Hydro
                 }
 
                 links = value;
+                hydroLinkUniqueNameValidationService?.Dispose();
 
                 if (links != null)
                 {
+                    hydroLinkUniqueNameValidationService = new UniqueNameValidationService<HydroLink>(links);
                     links.CollectionChanged += OnLinksCollectionChanged;
                 }
             }

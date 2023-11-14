@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => gate2D.Name;
-            set => gate2D.Name = value;
+            set => gate2D.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -99,6 +99,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="Gate2D"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => gate2D;
+        public IFeature GetFeature()
+        {
+            return gate2D;
+        }
     }
 }

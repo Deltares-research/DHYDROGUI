@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => wasteWaterTreatmentPlant.Name;
-            set => wasteWaterTreatmentPlant.Name = value;
+            set => wasteWaterTreatmentPlant.SetNameIfValid(value);
         }
 
         [DisplayName("Description")]
@@ -54,6 +54,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="WasteWaterTreatmentPlant"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => wasteWaterTreatmentPlant;
+        public IFeature GetFeature()
+        {
+            return wasteWaterTreatmentPlant;
+        }
     }
 }

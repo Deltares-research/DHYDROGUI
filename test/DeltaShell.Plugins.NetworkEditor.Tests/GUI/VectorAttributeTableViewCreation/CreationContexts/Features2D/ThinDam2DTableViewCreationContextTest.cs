@@ -31,7 +31,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new ThinDam2DTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(null, new List<ThinDam2D>());
+            void Call()
+            {
+                creationContext.IsRegionData(null, new List<ThinDam2D>());
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
@@ -44,7 +47,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new ThinDam2DTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(new HydroArea(), null);
+            void Call()
+            {
+                creationContext.IsRegionData(new HydroArea(), null);
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
@@ -87,7 +93,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new ThinDam2DTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.CreateFeatureRowObject(null);
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());

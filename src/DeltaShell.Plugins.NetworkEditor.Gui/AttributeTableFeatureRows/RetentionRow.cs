@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => retention.Name;
-            set => retention.Name = value;
+            set => retention.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -106,7 +106,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="IRetention"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => retention;
+        public IFeature GetFeature()
+        {
+            return retention;
+        }
 
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)

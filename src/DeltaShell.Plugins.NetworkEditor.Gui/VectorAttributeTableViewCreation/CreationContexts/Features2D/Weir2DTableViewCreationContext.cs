@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class Weir2DTableViewCreationContext : GroupableFeatureTableViewCreationContext<Weir2D, Weir2DRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Weir 2D table view";
+        public override string GetDescription()
+        {
+            return "Weir 2D table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<Weir2D> data)

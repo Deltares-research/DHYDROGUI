@@ -32,7 +32,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new HydroLinkTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(null, Substitute.For<IEnumerable<HydroLink>>());
+            void Call()
+            {
+                creationContext.IsRegionData(null, Substitute.For<IEnumerable<HydroLink>>());
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -45,7 +48,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new HydroLinkTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(Substitute.For<IHydroRegion>(), null);
+            void Call()
+            {
+                creationContext.IsRegionData(Substitute.For<IHydroRegion>(), null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -88,7 +94,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new HydroLinkTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.CreateFeatureRowObject(null);
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -115,7 +124,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new HydroLinkTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.CustomizeTableView(null, null, null);
+            void Call()
+            {
+                creationContext.CustomizeTableView(null, null, null);
+            }
 
             // Assert
             Assert.That(Call, Throws.Nothing);

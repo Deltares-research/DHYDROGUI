@@ -30,7 +30,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new GullyTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(null, new List<Gully>());
+            void Call()
+            {
+                creationContext.IsRegionData(null, new List<Gully>());
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
@@ -43,7 +46,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new GullyTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(new HydroArea(), null);
+            void Call()
+            {
+                creationContext.IsRegionData(new HydroArea(), null);
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
@@ -86,7 +92,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new GullyTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.CreateFeatureRowObject(null);
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());

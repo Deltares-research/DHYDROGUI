@@ -520,7 +520,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             {
                 var model = Substitute.For<IWaterFlowFMModel>();
                 var area = new HydroArea();
-                model.Area.Returns(area);
+                model.Area = area;
                 model.Boundaries.Returns(new EventedList<Feature2D>());
                 model.SourcesAndSinks.Returns(new EventedList<SourceAndSink>());
 

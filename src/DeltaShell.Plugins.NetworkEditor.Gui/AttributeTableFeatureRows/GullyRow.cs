@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => gully.Name;
-            set => gully.Name = value;
+            set => gully.SetNameIfValid(value);
         }
 
         [DisplayName("X")]
@@ -53,6 +53,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="Gully"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => gully;
+        public IFeature GetFeature()
+        {
+            return gully;
+        }
     }
 }

@@ -19,7 +19,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
         public void Constructor_WithNull_ThrowsArgumentNullException()
         {
             // Act
-            void Call() => new TableViewInfoCreator(null);
+            void Call()
+            {
+                new TableViewInfoCreator(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -32,7 +35,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var tableViewInfoCreator = new TableViewInfoCreator(new GuiContainer());
 
             // Act
-            void Call() => tableViewInfoCreator.Create((ITableViewCreationContext<IFeature, IFeatureRowObject, IHydroRegion>)null);
+            void Call()
+            {
+                tableViewInfoCreator.Create((ITableViewCreationContext<IFeature, IFeatureRowObject, IHydroRegion>)null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);

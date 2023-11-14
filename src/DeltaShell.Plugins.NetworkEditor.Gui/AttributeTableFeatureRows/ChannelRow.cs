@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => channel.Name;
-            set => channel.Name = value;
+            set => channel.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -102,6 +102,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         [DisplayName("Lateral sources")]
         public int LateralSourcesCount => channel.BranchSources.Count();
 
+        /// <summary>
+        /// Gets the underlying <see cref="IChannel"/> feature that is represented by this instance.
+        /// </summary>
+        public IFeature GetFeature()
+        {
+            return channel;
+        }
+
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
@@ -112,10 +120,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
 
             return false;
         }
-
-        /// <summary>
-        /// Gets the underlying <see cref="IChannel"/> feature that is represented by this instance.
-        /// </summary>
-        public IFeature GetFeature() => channel;
     }
 }

@@ -13,7 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class GullyTableViewCreationContext : GroupableFeatureTableViewCreationContext<Gully, GullyRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Gully table view";
+        public override string GetDescription()
+        {
+            return "Gully table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<Gully> data)

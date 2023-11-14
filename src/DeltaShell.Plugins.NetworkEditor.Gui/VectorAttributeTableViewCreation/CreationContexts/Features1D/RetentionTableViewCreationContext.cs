@@ -20,7 +20,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class RetentionTableViewCreationContext : ITableViewCreationContext<IRetention, RetentionRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Retention table view";
+        public string GetDescription()
+        {
+            return "Retention table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<IRetention> data)

@@ -13,7 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class ObservationCrossSection2DTableViewCreationContext : GroupableFeatureTableViewCreationContext<ObservationCrossSection2D, ObservationCrossSection2DRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Observation cross section 2D table view";
+        public override string GetDescription()
+        {
+            return "Observation cross section 2D table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<ObservationCrossSection2D> data)

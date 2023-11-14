@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => culvert.Name;
-            set => culvert.Name = value;
+            set => culvert.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -226,6 +226,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
             set => culvert.Angle1 = value;
         }
 
+        /// <summary>
+        /// Gets the underlying <see cref="ICulvert"/> feature that is represented by this instance.
+        /// </summary>
+        public IFeature GetFeature()
+        {
+            return culvert;
+        }
+
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
@@ -269,10 +277,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
 
             return false;
         }
-
-        /// <summary>
-        /// Gets the underlying <see cref="ICulvert"/> feature that is represented by this instance.
-        /// </summary>
-        public IFeature GetFeature() => culvert;
     }
 }

@@ -15,7 +15,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class BridgeTableViewCreationContext : ITableViewCreationContext<IBridge, BridgeRow, IHydroNetwork>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Bridge table view";
+        public string GetDescription()
+        {
+            return "Bridge table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(IHydroNetwork region, IEnumerable<IBridge> data)

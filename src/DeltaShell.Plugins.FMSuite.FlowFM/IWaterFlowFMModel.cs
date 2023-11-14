@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <summary>
         /// Gets the area of this <see cref="IWaterFlowFMModel"/>.
         /// </summary>
-        HydroArea Area { get; }
+        HydroArea Area { get; set; }
 
         /// <summary>
         /// Gets the <see cref="SourceAndSink"/> of this <see cref="IWaterFlowFMModel"/>.

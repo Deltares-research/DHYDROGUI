@@ -33,7 +33,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new BridgePillarTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(null, Enumerable.Empty<BridgePillar>());
+            void Call()
+            {
+                creationContext.IsRegionData(null, Enumerable.Empty<BridgePillar>());
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -46,7 +49,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new BridgePillarTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.IsRegionData(new HydroArea(), null);
+            void Call()
+            {
+                creationContext.IsRegionData(new HydroArea(), null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -89,7 +95,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var creationContext = new BridgePillarTableViewCreationContext();
 
             // Act
-            void Call() => creationContext.CreateFeatureRowObject(null);
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -118,7 +127,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var guiContainer = new GuiContainer();
 
             // Act
-            void Call() => creationContext.CustomizeTableView(null, data, guiContainer);
+            void Call()
+            {
+                creationContext.CustomizeTableView(null, data, guiContainer);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -133,7 +145,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var guiContainer = new GuiContainer();
 
             // Act
-            void Call() => creationContext.CustomizeTableView(view, null, guiContainer);
+            void Call()
+            {
+                creationContext.CustomizeTableView(view, null, guiContainer);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -148,7 +163,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var data = new EventedList<BridgePillar>();
 
             // Act
-            void Call() => creationContext.CustomizeTableView(view, data, null);
+            void Call()
+            {
+                creationContext.CustomizeTableView(view, data, null);
+            }
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);

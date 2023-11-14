@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => pump.Name;
-            set => pump.Name = value;
+            set => pump.SetNameIfValid(value);
         }
 
         [DisplayName("Long name")]
@@ -99,6 +99,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="IPump"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => pump;
+        public IFeature GetFeature()
+        {
+            return pump;
+        }
     }
 }

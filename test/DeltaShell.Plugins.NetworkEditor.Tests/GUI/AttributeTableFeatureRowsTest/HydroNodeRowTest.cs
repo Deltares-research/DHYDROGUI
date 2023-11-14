@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation.Common;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -82,6 +83,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
 
             // Assert
             Assert.AreEqual(result, "some_name");
+        }
+
+        [Test]
+        public void SetName_InvalidName_OriginalNameIsPreserved()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+
+            var hydroNode = new HydroNode { Name = "some_name" };
+            hydroNode.AttachNameValidator(validator);
+            var row = new HydroNodeRow(hydroNode);
+
+            // Act
+            row.Name = "some_invalid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_name"));
+        }
+
+        [Test]
+        public void SetName_ValidName_NameIsUpdated()
+        {
+            // Arrange
+            var validator = Substitute.For<IValidator<string>>();
+            validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+
+            var hydroNode = new HydroNode { Name = "some_name" };
+            hydroNode.AttachNameValidator(validator);
+            var row = new HydroNodeRow(hydroNode);
+
+            // Act
+            row.Name = "some_valid_name";
+
+            // Assert
+            Assert.That(row.Name, Is.EqualTo("some_valid_name"));
         }
 
         [Test]

@@ -14,7 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class FixedWeirTableViewCreationContext : GroupableFeatureTableViewCreationContext<FixedWeir, FixedWeirRow>
     {
         /// <inheritdoc/>
-        public override string GetDescription() => "Fixed weir table view";
+        public override string GetDescription()
+        {
+            return "Fixed weir table view";
+        }
 
         /// <inheritdoc/>
         public override bool IsRegionData(HydroArea region, IEnumerable<FixedWeir> data)

@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => manhole.Name;
-            set => manhole.Name = value;
+            set => manhole.SetNameIfValid(value);
         }
 
         [DisplayName("Compartments")]
@@ -52,6 +52,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="IManhole"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => manhole;
+        public IFeature GetFeature()
+        {
+            return manhole;
+        }
     }
 }

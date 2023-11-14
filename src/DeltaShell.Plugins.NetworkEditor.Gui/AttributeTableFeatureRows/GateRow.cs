@@ -14,6 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     {
         protected IGate gate;
 
+        protected string OpeningWidthTimeSeriesString = "Time series";
+
+        protected string TimeSeriesString = "Time series";
+
         public GateRow(IGate gate)
         {
             Gate = gate;
@@ -21,13 +25,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
 
         private IGate Gate
         {
-            get { return gate; }
+            get => gate;
             set
             {
                 if (gate != null)
                 {
                     ((INotifyPropertyChanged)gate).PropertyChanged -= GatePropertiesRowPropertyChanged;
                 }
+
                 gate = value;
                 if (gate != null)
                 {
@@ -39,8 +44,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         // gate properties
         public virtual string Name
         {
-            get { return Gate.Name; }
-            set { Gate.Name = value; }
+            get => Gate.Name;
+            set => Gate.SetNameIfValid(value);
         }
 
         [DynamicReadOnly]
@@ -54,6 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
                 {
                     return TimeSeriesString;
                 }
+
                 return gate.SillLevel.ToString("0.00", CultureInfo.CurrentCulture);
             }
             set
@@ -62,6 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest width.");
                 }
+
                 gate.SillLevel = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
@@ -70,16 +77,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         [PropertyOrder(3)]
         public double DoorHeight
         {
-            get { return Gate.DoorHeight; }
-            set { Gate.DoorHeight = value; }
+            get => Gate.DoorHeight;
+            set => Gate.DoorHeight = value;
         }
 
         [DisplayName("Horizontal opening direction")]
         [PropertyOrder(4)]
         public GateOpeningDirection HorizontalOpeningDirection
         {
-            get { return Gate.HorizontalOpeningDirection; }
-            set { Gate.HorizontalOpeningDirection = value; }
+            get => Gate.HorizontalOpeningDirection;
+            set => Gate.HorizontalOpeningDirection = value;
         }
 
         [DynamicReadOnly]
@@ -93,6 +100,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
                 {
                     return TimeSeriesString;
                 }
+
                 return gate.LowerEdgeLevel.ToString("0.00", CultureInfo.CurrentCulture);
             }
             set
@@ -101,11 +109,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest width.");
                 }
+
                 gate.LowerEdgeLevel = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
-
-        protected string OpeningWidthTimeSeriesString = "Time series";
 
         [DynamicReadOnly]
         [DisplayName("Opening width [m]")]
@@ -118,6 +125,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
                 {
                     return OpeningWidthTimeSeriesString;
                 }
+
                 return gate.OpeningWidth.ToString("0.00", CultureInfo.CurrentCulture);
             }
             set
@@ -126,6 +134,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest level.");
                 }
+
                 gate.OpeningWidth = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
@@ -135,48 +144,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         [PropertyOrder(7)]
         public string SillWidth
         {
-            get { return gate.SillWidth.ToString("0.00", CultureInfo.CurrentCulture); }
-            set { gate.SillWidth = double.Parse(value, CultureInfo.CurrentCulture); }
+            get => gate.SillWidth.ToString("0.00", CultureInfo.CurrentCulture);
+            set => gate.SillWidth = double.Parse(value, CultureInfo.CurrentCulture);
         }
 
         [DisplayName("Use sill width")]
         [PropertyOrder(8)]
         public bool UseSillWidth
         {
-            get { return gate.SillWidth > 0; }
-            set { gate.SillWidth = (value ? gate.Geometry.Length : 0.0); }
+            get => gate.SillWidth > 0;
+            set => gate.SillWidth = value ? gate.Geometry.Length : 0.0;
         }
 
         [DisplayName("Long name")]
         public virtual string LongName
         {
-            get { return Gate.LongName; }
-            set { Gate.LongName = value; }
+            get => Gate.LongName;
+            set => Gate.LongName = value;
         }
 
         [ReadOnly(true)]
-        public virtual IBranch Branch
-        {
-            get { return Gate.Branch; }
-        }
+        public virtual IBranch Branch => Gate.Branch;
 
         [ReadOnly(true)]
         [DisplayName("Chainage [m]")]
         [DisplayFormat("0.00")]
-        public virtual double Chainage
-        {
-            get { return Gate.Chainage; }
-        }
-
-        protected string TimeSeriesString = "Time series";
-
-        [Browsable(false)]
-        public bool HasParent { get; set; }
-
-        public IFeature GetFeature()
-        {
-            return gate;
-        }
+        public virtual double Chainage => Gate.Chainage;
 
         public virtual void Dispose()
         {
@@ -185,9 +178,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
             PropertyChanging = null;
         }
 
+        public IFeature GetFeature()
+        {
+            return gate;
+        }
+
+        [Browsable(false)]
+        public bool HasParent { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangingEventHandler PropertyChanging;
-
 
         private void GatePropertiesRowPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -200,7 +200,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (gate == null) return false;
+            if (gate == null)
+            {
+                return false;
+            }
+
             switch (propertyName)
             {
                 case nameof(SillLevel):

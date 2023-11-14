@@ -15,7 +15,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
     public class LeveeBreachTableViewCreationContext : ITableViewCreationContext<Feature2D, Feature2DRow, HydroArea>
     {
         /// <inheritdoc/>
-        public string GetDescription() => "Levee breach table view";
+        public string GetDescription()
+        {
+            return "Levee breach table view";
+        }
 
         /// <inheritdoc/>
         public bool IsRegionData(HydroArea region, IEnumerable<Feature2D> data)

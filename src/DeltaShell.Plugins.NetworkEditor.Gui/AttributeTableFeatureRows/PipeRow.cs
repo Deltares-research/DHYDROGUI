@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => pipe.Name;
-            set => pipe.Name = value;
+            set => pipe.SetNameIfValid(value);
         }
 
         [DisplayName("From manhole")]
@@ -108,6 +108,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         /// <summary>
         /// Gets the underlying <see cref="IPipe"/> feature that is represented by this instance.
         /// </summary>
-        public IFeature GetFeature() => pipe;
+        public IFeature GetFeature()
+        {
+            return pipe;
+        }
     }
 }
