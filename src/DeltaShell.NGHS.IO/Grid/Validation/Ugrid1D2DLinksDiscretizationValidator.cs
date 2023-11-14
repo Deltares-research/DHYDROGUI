@@ -29,7 +29,7 @@ namespace DeltaShell.NGHS.IO.Grid.Validation
         /// <returns><seealso cref="ValidationReport"/> with the results of vadility of the 1d2d links with the provided discretization.</returns>
         public ValidationReport Validate(IEnumerable<ILink1D2D> link1D2Ds, IDiscretization discretization = null)
         {
-            IList<ValidationIssue> issues;
+            IEnumerable<ValidationIssue> issues;
 
             if (discretization == null)
             {
@@ -37,14 +37,9 @@ namespace DeltaShell.NGHS.IO.Grid.Validation
             }
             else
             {
-                using (var mesh1d = discretization.CreateDisposable1DMeshGeometry())
-                {
-                    var linkIssues = mesh1d.ValidateAgainstLinks(link1D2Ds)
-                                           .Select(errorMessage => new ValidationIssue(link1D2Ds, ValidationSeverity.Error, errorMessage));
-                    var discretizationIssues = mesh1d.ValidateAgainstDiscretization(discretization)
-                                                     .Select(warningMessage => new ValidationIssue(discretization, ValidationSeverity.Warning, warningMessage.Replace("\r\n", " ").Replace("\t\t", " ")));
-                    issues = linkIssues.Concat(discretizationIssues).ToList();
-                }
+                var mesh1d = discretization.CreateDisposable1DMeshGeometry();
+                issues = mesh1d.ValidateMesh1DSourceLocationsOnlyExistOnce(link1D2Ds)
+                               .Select(errorMessage => new ValidationIssue(link1D2Ds, ValidationSeverity.Error, errorMessage));
             }
 
             return new ValidationReport(Resources.Ugrid1D2DLinksDiscretizationValidator_Validate__1D2D_link_mesh1D_source_discretization_locations_validation, issues);

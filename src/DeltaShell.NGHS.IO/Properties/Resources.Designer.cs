@@ -348,23 +348,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 		Channel id {0}
-        ///		Channel name {1}
-        ///		Channel length {2}
-        ///		Current location chainage {3}
-        ///		Current location chainage {4} in model
-        ///		Current location name {5}
-        ///		already added location name at same location {6}
-        ///    .
-        /// </summary>
-        public static string HydroUGridExtensions_CheckForDoubleCalculationPoint_In_Mesh1D_With_Existing_NetworkLocations_Of_Model {
-            get {
-                return ResourceManager.GetString("HydroUGridExtensions_CheckForDoubleCalculationPoint_In_Mesh1D_With_Existing_Netwo" +
-                        "rkLocations_Of_Model", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to compartment ids.
         /// </summary>
         public static string HydroUGridExtensions_CompartmentIdContext {
@@ -773,8 +756,7 @@ namespace DeltaShell.NGHS.IO.Properties {
                 return ResourceManager.GetString("RoughnessDataFileWriter_WriteFile_Writing_roughness_data_to__0__", resourceCulture);
             }
         }
-        
-        /// <summary>
+
         ///   Looks up a localized string similar to Reading routes from {0}..
         /// </summary>
         public static string RoutesFile_ReadIniFile_Reading_routes_from__0__ {
@@ -1187,7 +1169,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to For 1d2d link {0} (from location {1} to grid cell {2}).
+        ///   Looks up a localized string similar to 	For 1d2d link {0} (from location {1} to grid cell {2}).
         /// </summary>
         public static string UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1 {
             get {

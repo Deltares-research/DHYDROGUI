@@ -448,7 +448,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 string.Format(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1, faultyLink.Name, discretization.Locations.Values[discretization.Locations.Values.Count - 1].Name, faultyLink.FaceIndex) + 
                 Environment.NewLine +
                 string.Format(Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2, string.Join(", ", otherDiscretizationPointNames))
-                
             );
             Assert.That(File.Exists(testFilePath), Is.True);
 

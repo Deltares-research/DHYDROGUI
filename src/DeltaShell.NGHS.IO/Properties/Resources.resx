@@ -540,8 +540,11 @@
   <data name="UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader" xml:space="preserve">
     <value>The following issues were found while writing the 1D2D links: </value>
   </data>
+  <data name="UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessageHeader" xml:space="preserve">
+    <value>The following issues were found while writing the 1D2D links: </value>
+  </data>
   <data name="UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part1" xml:space="preserve">
-    <value>For 1d2d link {0} (from location {1} to grid cell {2})</value>
+    <value>	For 1d2d link {0} (from location {1} to grid cell {2})</value>
   </data>
   <data name="UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2" xml:space="preserve">
     <value>	has multiple locations at the same (source) location.
@@ -564,16 +567,6 @@
   </data>
   <data name="Ugrid1D2DLinksDiscretizationValidator_Validate_Discretization_for_1D_network_is_not_set" xml:space="preserve">
     <value>Discretization for 1D network is not set</value>
-  </data>
-  <data name="HydroUGridExtensions_CheckForDoubleCalculationPoint_In_Mesh1D_With_Existing_NetworkLocations_Of_Model" xml:space="preserve">
-    <value>		Channel id {0}
-		Channel name {1}
-		Channel length {2}
-		Current location chainage {3}
-		Current location chainage {4} in model
-		Current location name {5}
-		already added location name at same location {6}
-    </value>
   </data>
   <data name="RoughnessDataFileWriter_WriteFile_Writing_roughness_data_to__0__" xml:space="preserve">
     <value>Writing roughness data to {0}.</value>
