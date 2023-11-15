@@ -98,7 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private WaterFlowFMModelDefinition modelDefinition;
         private bool disposing;
         private bool updatingGroupName;
-        private IDimrCoupling dimrCoupling;
+        private IHydroCoupling dimrCoupling;
+        private IHydroCoupling hydroCoupling;
 
         private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
         private IEventedList<SourceAndSink> sourcesAndSinks;
@@ -3265,23 +3266,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         /// <summary>
-        /// The dimr coupling for this <see cref="RainfallRunoffModel"/>.
+        /// The dimr coupling for this <see cref="WaterFlowFMModel"/>.
         /// </summary>
         /// <remarks>
-        /// Always returns an up-to-date <see cref="IDimrCoupling"/>.
+        /// Always returns an up-to-date <see cref="IHydroCoupling"/>.
         /// Does not return <c>null</c>.
         /// </remarks>
-        public IDimrCoupling DimrCoupling
+        public IHydroCoupling DimrCoupling
         {
             get
             {
                 if (dimrCoupling == null || dimrCoupling.HasEnded)
                 {
                     dimrCoupling = new WaterFlowFmDimrCoupling(Network);
-                    return dimrCoupling;
                 }
 
                 return dimrCoupling;
+            }
+        }
+        
+        /// <summary>
+        /// The hydro model coupling for this <see cref="WaterFlowFMModel"/>.
+        /// </summary>
+        /// <remarks>
+        /// Always returns an up-to-date <see cref="IHydroCoupling"/>.
+        /// Does not return <c>null</c>.
+        /// </remarks>
+        public IHydroCoupling HydroCoupling
+        {
+            get
+            {
+                if (hydroCoupling == null || hydroCoupling.HasEnded)
+                {
+                    hydroCoupling = new HydroCoupling();
+                }
+
+                return hydroCoupling;
             }
         }
 

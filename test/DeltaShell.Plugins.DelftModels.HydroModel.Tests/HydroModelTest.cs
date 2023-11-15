@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -15,16 +16,26 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Core;
+using DeltaShell.Dimr;
+using DeltaShell.Dimr.Export;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -36,6 +47,8 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 using SharpTestsEx;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -483,6 +496,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
 
             public IHydroRegion Region { get { return (IHydroRegion) DataItems.First(di => di.ValueType == SupportedRegionType).Value; } }
+            public IHydroCoupling HydroCoupling => null;
 
             public Type SupportedRegionType { get { return typeof (HydroNetwork); } }
         }
@@ -697,30 +711,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             return integratedModel;
         }
 
-        private DeltaShellApplication GetConfiguredApplication()
-        {
-            var app = new DeltaShellApplication(){ IsProjectCreatedInTemporaryDirectory = true };
-            AddPluginsToApplication(app);
-            return app;
-        }
-        
-        private static void AddPluginsToApplication(DeltaShellApplication app)
-        {
-            // DeltaShell plugins
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-            // D-HYDRO plugins
-            app.Plugins.Add(new HydroModelApplicationPlugin());
-            app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new SobekImportApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-            app.Run();
-        }
-
         private static HydroModel CreateIntegratedModelWithFmAndRr_WithOneUnpavedCatchmentLinkedToALateralSource()
         {
             var hydroModel = new HydroModel();
@@ -767,6 +757,312 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             rrModel.ModelData.Add(unpavedData);
 
             return unpavedData;
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
+        public void IntegratedModelWithLinksFromCatchmentsToFmLateralsAndRRBoundaries_WhenRRBoundaryAndLateralSourceHaveDifferentNames_ShouldImportLinksCorrectly()
+        {
+            // Setup
+            string originalDimrPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"HydroModel\RRBoundaryAndLateralSourceHaveDifferentNames\RRBoundaryAndLateralSourceHaveDifferentNames.xml");
+            SetRequiredSettingsForDimrImport();
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string dimrPath = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(originalDimrPath);
+
+                DHydroConfigXmlImporter dimrImporter = GetDimrImporter(dimrPath);
+
+                // Call
+                object importedModel = dimrImporter.ImportItem(dimrPath);
+
+                // Assert
+                Assert.That(importedModel, Is.TypeOf<HydroModel>());
+
+                var hydroModel = (HydroModel)importedModel;
+                RainfallRunoffModel rrModel = hydroModel.Models.OfType<RainfallRunoffModel>().First();
+
+                Assert.That(hydroModel.Region.Links.Count, Is.EqualTo(2));
+                HydroLink hydroLink = hydroModel.Region.Links.First();
+                Assert.That(hydroLink.Source, Is.TypeOf<Catchment>());
+                Assert.That(hydroLink.Target, Is.TypeOf<LateralSource>());
+                
+                HydroLink lastHydroLink = hydroModel.Region.Links.Last();
+                Assert.That(lastHydroLink.Source, Is.TypeOf<Catchment>());
+                Assert.That(lastHydroLink.Target, Is.TypeOf<LateralSource>());
+                
+                Assert.That(rrModel.Basin.Links.Count, Is.EqualTo(0));
+                Assert.That(rrModel.Basin.Boundaries.Count, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void IntegratedModelWithLinksFromCatchmentsToFmLateralsAndRRBoundaries_ShouldImportLinksCorrectly()
+        {
+            // Setup
+            SetRequiredSettingsForDimrImport();
+
+            using (var tempDir = new TemporaryDirectory())
+            using (HydroModel integratedModel = CreateIntegratedModel())
+            {
+                string dimrPath = ExportToDimrXml(tempDir, integratedModel);
+                DHydroConfigXmlImporter dimrImporter = GetDimrImporter(dimrPath);
+
+                // Call
+                object importedModel = dimrImporter.ImportItem(dimrPath);
+                
+                // Assert
+                Assert.That(importedModel, Is.TypeOf<HydroModel>());
+
+                var hydroModel = (HydroModel)importedModel;
+                RainfallRunoffModel rrModel = hydroModel.Models.OfType<RainfallRunoffModel>().First();
+
+                Assert.That(hydroModel.Region.Links.Count, Is.EqualTo(1));
+                HydroLink hydroLink = hydroModel.Region.Links.First();
+                Assert.That(hydroLink.Source, Is.TypeOf<Catchment>());
+                Assert.That(hydroLink.Target, Is.TypeOf<LateralSource>());
+                
+                Assert.That(rrModel.Basin.Links.Count, Is.EqualTo(1));
+                HydroLink rrLink = rrModel.Basin.Links.First();
+                Assert.That(rrLink.Source, Is.TypeOf<Catchment>());
+                Assert.That(rrLink.Target, Is.TypeOf<RunoffBoundary>());
+                Assert.That(rrModel.Basin.Boundaries.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenIntegratedModelWithLinksFromCatchmentsToFmLateralsAndRRBoundaries_WhenImportOnlyRR_ShouldImportLinksOnlyRRWithRainfallRunOffBoundaryInsteadOfLateral()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            using (HydroModel integratedModel = CreateIntegratedModel())
+            {
+                string _ = ExportToDimrXml(tempDir, integratedModel);
+                string rainfallRunoffPath = Path.Combine(tempDir.Path, @"rr\Sobek_3b.fnm");
+                
+                var rainfallRunoffImporter = new SobekHydroModelImporter(true, false, false);
+                
+                // Call
+                object importedModel = rainfallRunoffImporter.ImportItem(rainfallRunoffPath);
+                
+                // Assert
+                Assert.That(importedModel, Is.TypeOf<HydroModel>());
+
+                var hydroModel = (HydroModel)importedModel;
+                RainfallRunoffModel rrModel = hydroModel.Models.OfType<RainfallRunoffModel>().First();
+
+                Assert.That(hydroModel.Region.Links.Count, Is.EqualTo(0));
+                
+                Assert.That(rrModel.Basin.Links.Count, Is.EqualTo(2));
+                Assert.That(rrModel.Basin.Boundaries.Count, Is.EqualTo(2));
+                
+                HydroLink rrLinkFirst = rrModel.Basin.Links.First();
+                Assert.That(rrLinkFirst.Source, Is.TypeOf<Catchment>());
+                Assert.That(rrLinkFirst.Target, Is.TypeOf<RunoffBoundary>());
+                
+                HydroLink rrLinkLast = rrModel.Basin.Links.Last();
+                Assert.That(rrLinkLast.Source, Is.TypeOf<Catchment>());
+                Assert.That(rrLinkLast.Target, Is.TypeOf<RunoffBoundary>());
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenIntegratedModelWithLinksFromCatchmentsToFmLateralsAndRRBoundariesProject_WhenLoadingProject_ShouldImportLinksCorrectly()
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (HydroModel integratedModel = CreateIntegratedModel())
+            {
+                app.Project.RootFolder.Add(integratedModel);
+
+                string dsprojPath = Path.Combine(temp.Path, "randomName.dsproj");
+                app.SaveProjectAs(dsprojPath);
+                app.CloseProject();
+
+                // Call
+                app.OpenProject(dsprojPath);
+                HydroModel loadedIntegratedModel = app.Project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
+                
+                // Assert
+                Assert.That(loadedIntegratedModel, Is.Not.Null);
+                RainfallRunoffModel rrModel = loadedIntegratedModel.Models.OfType<RainfallRunoffModel>().First();
+
+                Assert.That(loadedIntegratedModel.Region.Links.Count, Is.EqualTo(1));
+                HydroLink hydroLink = loadedIntegratedModel.Region.Links.First();
+                Assert.That(hydroLink.Source, Is.TypeOf<Catchment>());
+                Assert.That(hydroLink.Target, Is.TypeOf<LateralSource>());
+                
+                Assert.That(rrModel.Basin.Links.Count, Is.EqualTo(1));
+                HydroLink rrLink = rrModel.Basin.Links.First();
+                Assert.That(rrLink.Source, Is.TypeOf<Catchment>());
+                Assert.That(rrLink.Target, Is.TypeOf<RunoffBoundary>());
+                Assert.That(rrModel.Basin.Boundaries.Count, Is.EqualTo(1));
+            }
+        }
+
+        /// <summary>
+        /// This creates a valid integrated model with FM and RR with:
+        /// <list type="bullet">
+        /// <item><description>1 branch with a cross section, grid points and a lateral source.</description></item>
+        /// <item><description>1 paved catchment linked to a lateral source on the branch.</description></item>
+        /// <item><description>1 unpaved catchment linked to a rainfall runoff boundary.</description></item>
+        /// </list>
+        /// </summary>
+        /// <returns>Created integrated model.</returns>
+        private static HydroModel CreateIntegratedModel()
+        {
+            // Integrated model with FM + RR
+            var integratedModel = new HydroModel();
+            var fmModel = new WaterFlowFMModel();
+            var rrModel = new RainfallRunoffModel();
+
+            integratedModel.Activities.Add(fmModel);
+            integratedModel.Activities.Add(rrModel);
+
+            // Add two nodes, a branch and a lateral source
+            IHydroNetwork network = fmModel.Network;
+            var node1 = new HydroNode
+            {
+                Name = "Node1",
+                Network = network,
+                Geometry = new Point(0.0, 0.0)
+            };
+            var node2 = new HydroNode
+            {
+                Name = "Node2",
+                Network = network,
+                Geometry = new Point(100.0, 0.0)
+            };
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var channel = new Channel("branch1", node1, node2)
+            {
+                Geometry = new LineString(new[] { node1.Geometry.Coordinate, node2.Geometry.Coordinate }),
+            };
+            network.Branches.Add(channel);
+
+            var crossSection = CrossSection.CreateDefault();
+            crossSection.Name = "Marlon";
+            channel.BranchFeatures.Add(crossSection);
+
+            var lateralSource = LateralSource.CreateDefault(channel);
+            lateralSource.Chainage = 10;
+            channel.BranchFeatures.Add(lateralSource);
+
+            // Generate grid points
+            var offsets = new double[] { 0, 30, 60, 100 };
+            HydroNetworkHelper.GenerateDiscretization(fmModel.NetworkDiscretization, channel, offsets);
+
+            // Create two catchments and a runoff boundary. 
+            IDrainageBasin basin = rrModel.Basin;
+
+            var pavedCatchment = new Catchment
+            {
+                Name = "PavedCatchment",
+                CatchmentType = CatchmentType.Paved
+            };
+            var unpavedCatchment = new Catchment
+            {
+                Name = "UnpavedCatchment",
+                CatchmentType = CatchmentType.Unpaved
+            };
+
+            var pavedData = new PavedData(pavedCatchment)
+            {
+                DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode,
+                MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode,
+            };
+            var unpavedData = new UnpavedData(unpavedCatchment);
+
+            rrModel.Basin.Catchments.Add(pavedCatchment);
+            rrModel.Basin.Catchments.Add(unpavedCatchment);
+
+            rrModel.ModelData[0] = pavedData;
+            rrModel.ModelData[1] = unpavedData;
+
+            var boundary = new RunoffBoundary()
+            {
+                Geometry = new Point(1, 2)
+            };
+            basin.Boundaries.Add(boundary);
+
+            // Link 1 catchment two runoff boundary and link 1 to lateral source
+            pavedCatchment.LinkTo(lateralSource);
+            unpavedCatchment.LinkTo(boundary);
+
+            // Set PrecipitationMeteoData
+            MeteoData precipitation = rrModel.Precipitation;
+            var timeseriesGenerator = new TimeSeriesGenerator();
+            var hourTimestep = new TimeSpan(1, 0, 0);
+            timeseriesGenerator.GenerateTimeSeries(precipitation.Data, integratedModel.StartTime, integratedModel.StopTime, hourTimestep);
+
+            // Set Evaporation
+            MeteoData evap = rrModel.Evaporation;
+            var dayTimestep = new TimeSpan(1, 0, 0, 0);
+            timeseriesGenerator.GenerateTimeSeries(evap.Data, integratedModel.StartTime, integratedModel.StopTime, dayTimestep);
+            return integratedModel;
+        }
+        
+        private static string ExportToDimrXml(TemporaryDirectory tempDir, HydroModel integratedModel)
+        {
+            string exportFilePath = Path.Combine(tempDir.Path, "dimr.xml");
+            var exporter = new DHydroConfigXmlExporter { ExportFilePath = exportFilePath };
+
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
+            exporter.Export(integratedModel, null);
+            return exportFilePath;
+        }
+
+        private DeltaShellApplication GetConfiguredApplication()
+        {
+            var app = new DeltaShellApplication(){ IsProjectCreatedInTemporaryDirectory = true };
+            AddPluginsToApplication(app);
+            return app;
+        }
+
+        private static void AddPluginsToApplication(DeltaShellApplication app)
+        {
+            // DeltaShell plugins
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+
+            // D-HYDRO plugins
+            app.Plugins.Add(new HydroModelApplicationPlugin());
+            app.Plugins.Add(new RainfallRunoffApplicationPlugin());
+            app.Plugins.Add(new FlowFMApplicationPlugin());
+            app.Plugins.Add(new SobekImportApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+
+            app.Run();
+        }
+
+        private static void SetRequiredSettingsForDimrImport()
+        {
+            Sobek2ModelImporters.RegisterSobek2Importer(() => new SobekModelToRainfallRunoffModelImporter());
+            Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
+        private static DHydroConfigXmlImporter GetDimrImporter(string dimrPath)
+        {
+            var dimrImporter = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>()
+            {
+                new WaterFlowFMFileImporter(null),
+                new RainfallRunoffModelImporter()
+            }, GetWorkDir);
+
+            return dimrImporter;
+
+            string GetWorkDir()
+            {
+                return dimrPath;
+            }
         }
     }
 }

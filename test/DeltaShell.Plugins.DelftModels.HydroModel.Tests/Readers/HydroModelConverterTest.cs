@@ -427,13 +427,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var model1 = Substitute.For<IDimrModel>();
             var model2 = Substitute.For<IDimrModel>();
             
-            var coupling1 = Substitute.For<IDimrCoupling>();
-            var coupling2 = Substitute.For<IDimrCoupling>();
+            var coupling1 = Substitute.For<IHydroCoupling>();
+            var coupling2 = Substitute.For<IHydroCoupling>();
 
             var hydroObject1 = Substitute.For<IHydroObject>();
             var hydroObject2 = Substitute.For<IHydroObject>();
-
-            hydroObject1.CanLinkTo(hydroObject2).Returns(true);
 
             model1.DimrCoupling.Returns(coupling1);
             model2.DimrCoupling.Returns(coupling2);
@@ -498,7 +496,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
 
             // Assert
-            hydroObject1.Received(1).LinkTo(hydroObject2);
+            model1.DimrCoupling.Received(1).CreateLink(hydroObject1, hydroObject2);
             var susp = model1.Received(1).SuspendClearOutputOnInputChange;
             model1.SuspendClearOutputOnInputChange = true;
             model1.SuspendClearOutputOnInputChange = false;

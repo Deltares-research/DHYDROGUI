@@ -2,18 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
-using DeltaShell.Dimr;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
     /// <summary>
     /// Defines the dimr coupling behaviour for a <see cref="RainfallRunoffModel"/>.
     /// </summary>
-    public class RainfallRunoffDimrCoupling : IDimrCoupling
+    public class RainfallRunoffDimrCoupling : HydroCoupling
     {
         private readonly Dictionary<string, SobekRRLink[]> lateralToCatchmentLookup;
+        private readonly Dictionary<string, string> catchmentToRunoffBoundaryLookup = new Dictionary<string, string>();
         private readonly IDrainageBasin basin;
 
         private IDictionary<string, Catchment> catchmentsByName;
@@ -34,9 +36,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             this.basin = basin;
             this.lateralToCatchmentLookup = lateralToCatchmentLookup;
         }
-
+        
         /// <inheritdoc/>
-        public bool HasEnded { get; private set; } = false;
+        public override void Prepare()
+        {
+            catchmentsByName = basin.AllCatchments.ToDictionary(c => c.Name, StringComparer.InvariantCultureIgnoreCase);
+        }
 
         /// <summary>
         /// Gets the hydro object item string.
@@ -52,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// - category in <paramref name="itemString"/> is unknown
         /// - feature in <paramref name="itemString"/> is unknown
         /// </exception>
-        public IList<IHydroObject> GetLinkHydroObjectsByItemString(string itemString)
+        public override IEnumerable<IHydroObject> GetLinkHydroObjectsByItemString(string itemString)
         {
             string[] stringParts = itemString.Split('/');
 
@@ -62,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
 
             string category = stringParts[0];
-            string featureName = stringParts[1].Replace(RainfallRunoffModel.BoundarySuffix, string.Empty);
+            string featureName = stringParts[1];
 
             IList<IHydroObject> hydroObject = GetBasinHydroObjects(category, featureName);
 
@@ -74,16 +79,65 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return hydroObject;
         }
 
-        /// <inheritdoc/>
-        public void Prepare()
+        /// <inheritdoc />
+        /// <remarks>
+        /// In some cases during the creating of links an existing link needs to be removed before the correct link can be made, this will be done within the CreateLink.<br/>
+        /// During importing the RR will import a model-link to a lateral as a link to a RR boundary.<br/>
+        /// The Runoff boundary will have the same name as the lateral.<br/>
+        /// This Runoff boundary should not exist after all models are imported and linked.<br/>
+        /// </remarks>
+        public override IHydroLink CreateLink(IHydroObject source, IHydroObject target)
         {
-            catchmentsByName = basin.AllCatchments.ToDictionary(c => c.Name, StringComparer.InvariantCultureIgnoreCase);
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(target, nameof(target));
+            
+            RemoveReplaceableCatchmentLinks(source, target);
+
+            if (source.CanLinkTo(target))
+            {
+                return source.LinkTo(target);
+            }
+            return null;
+        }
+        
+        /// <inheritdoc />
+        public override bool CanLink(IHydroObject source)
+        {
+            return source is Catchment;
         }
 
-        /// <inheritdoc/>
-        public void End()
+        /// <summary>
+        /// Method to remove replaceable catchment links, e.g. links between a catchment and a RR boundary which should be a model link to a lateral.
+        /// </summary>
+        /// <param name="source">Source to link from.</param>
+        /// <param name="target">Target to link to.</param>
+        /// <remarks>
+        /// During importing the RR will import a model-link to a lateral as a link to a RR boundary.<br/>
+        /// The Runoff boundary will have the same name as the lateral.<br/>
+        /// This Runoff boundary should not exist after all models are imported and linked.<br/>
+        /// Thus the Runoff boundary is removed before the link between the catchment and the lateral is created.<br/>
+        /// </remarks>
+        private void RemoveReplaceableCatchmentLinks(IHydroObject source, IHydroObject target)
         {
-            HasEnded = true;
+            if (lateralToCatchmentLookup.Count == 0 && catchmentToRunoffBoundaryLookup.Count == 0)
+            {
+                return;
+            }
+
+            Catchment catchment = GetCatchmentByName(source.Name);
+            if (catchment == null)
+            {
+                return;
+            }
+
+            if (lateralToCatchmentLookup.ContainsKey(target.Name))
+            {
+                catchment.Basin.Boundaries.RemoveAllWhere(boundary => boundary.Name.EqualsCaseInsensitive(target.Name));
+            }
+            else if (catchmentToRunoffBoundaryLookup.TryGetValue(catchment.Name, out string runoffBoundaryName))
+            {
+                catchment.Basin.Boundaries.RemoveAllWhere(boundary => boundary.Name.EqualsCaseInsensitive(runoffBoundaryName));
+            }
         }
 
         private IList<IHydroObject> GetBasinHydroObjects(string category, string featureName)
@@ -99,22 +153,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     }
                     else
                     {
-                        if (lateralToCatchmentLookup.TryGetValue(featureName, out var catchmentLinks))
-                        {
-                            foreach (SobekRRLink catchmentLink in catchmentLinks)
-                            {
-                                catchment = GetCatchmentByName(catchmentLink.NodeFromId);
-                                if (catchment != null)
-                                {
-                                    basinHydroObjects.Add(catchment);
-                                }
-                            }
-                        }
+                        basinHydroObjects.AddRange(GetCatchmentsWhichAreLinkedToRunOffBoundaries(featureName));
                     }
                     break;
             }
 
             return basinHydroObjects;
+        }
+
+        private IEnumerable<IHydroObject> GetCatchmentsWhichAreLinkedToRunOffBoundaries(string featureName)
+        {
+            if (lateralToCatchmentLookup.TryGetValue(featureName, out var catchmentLinks))
+            {
+                foreach (SobekRRLink catchmentLink in catchmentLinks)
+                {
+                    Catchment catchment = GetCatchmentByName(catchmentLink.NodeFromId);
+
+                    if (catchment != null)
+                    {
+                        catchmentToRunoffBoundaryLookup.Add(catchment.Name, featureName);
+                        yield return catchment;
+                    }
+                }
+            }
         }
 
         private Catchment GetCatchmentByName(string name)

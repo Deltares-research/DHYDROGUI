@@ -3,7 +3,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
-using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DHYDRO.Common.Logging;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
@@ -310,31 +310,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     }
 
                     // HydroObject linking
-                    IList<IHydroObject> sourceItems = sourceModel.DimrCoupling?.GetLinkHydroObjectsByItemString(couplerXml.sourceName);
+                    IList<IHydroObject> sourceItems = sourceModel.DimrCoupling?.GetLinkHydroObjectsByItemString(couplerXml.sourceName).ToList();
                     if (sourceItems == null || !sourceItems.Any())
                     {
                         logHandler.ReportErrorFormat($"Model {sourceModel.ShortName} does not contain source item {couplerXml.sourceName} (to be linked to {couplerXml.targetName})");
                         continue;
                     }
 
-                    IList<IHydroObject> targetItems = targetModel.DimrCoupling?.GetLinkHydroObjectsByItemString(couplerXml.targetName);
+                    IList<IHydroObject> targetItems = targetModel.DimrCoupling?.GetLinkHydroObjectsByItemString(couplerXml.targetName).ToList();
                     if (targetItems == null || !targetItems.Any())
                     {
                         logHandler.ReportErrorFormat($"Model {targetModel.ShortName} does not contain target item {couplerXml.targetName} (to be linked from {couplerXml.sourceName})");
                         continue;
                     }
 
-
                     foreach (IHydroObject sourceItem in sourceItems)
                     {
                         foreach (IHydroObject targetItem in targetItems)
                         {
                             var linkAlreadyPresent = linkBySourceIemLookup.TryGetValue(sourceItem, out var links) &&
-                                              links.Any(l => l.Target == targetItem);
+                                                     links.Any(l => l.Target == targetItem);
 
-                            if (!linkAlreadyPresent && sourceItem.CanLinkTo(targetItem))
+                            if (!linkAlreadyPresent)
                             {
-                                sourceItem.LinkTo(targetItem);
+                                sourceModel.DimrCoupling.CreateLink(sourceItem, targetItem);
                             }
                         }
                     }

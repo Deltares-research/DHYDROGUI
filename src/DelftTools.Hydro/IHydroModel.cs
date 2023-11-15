@@ -11,5 +11,10 @@ namespace DelftTools.Hydro
         /// Hydrographic region being simulated by this hydro model.
         /// </summary>
         IHydroRegion Region { get; }
+
+        /// <summary>
+        /// Interface for Coupling <see cref="IHydroModel"/>.
+        /// </summary>
+        IHydroCoupling HydroCoupling { get; }
     }
 }

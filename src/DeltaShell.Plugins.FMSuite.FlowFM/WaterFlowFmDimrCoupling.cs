@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
-using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     /// <summary>
     /// Defines the dimr coupling behaviour for a <see cref="WaterFlowFMModel"/>.
     /// </summary>
-    public class WaterFlowFmDimrCoupling : IDimrCoupling
+    public class WaterFlowFmDimrCoupling : HydroCoupling
     {
         private readonly IHydroNetwork network;
         private Dictionary<string, ILateralSource> lateralSourcesByName;
@@ -28,9 +27,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             this.network = network;
         }
-
+        
         /// <inheritdoc/>
-        public bool HasEnded { get; private set; } = false;
+        public override void Prepare()
+        {
+            lateralSourcesByName = network.LateralSources.ToDictionary(l => l.Name, StringComparer.InvariantCultureIgnoreCase);
+        }
 
         /// <summary>
         /// Gets the hydro object item string.
@@ -46,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// - category in <paramref name="itemString"/> is unknown
         /// - feature in <paramref name="itemString"/> is unknown
         /// </exception>
-        public IList<IHydroObject> GetLinkHydroObjectsByItemString(string itemString)
+        public override IEnumerable<IHydroObject> GetLinkHydroObjectsByItemString(string itemString)
         {
             string[] stringParts = itemString.Split('/');
 
@@ -68,18 +70,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             return new List<IHydroObject> {hydroObject};
-        }
-
-        /// <inheritdoc/>
-        public void Prepare()
-        {
-            lateralSourcesByName = network.LateralSources.ToDictionary(l => l.Name, StringComparer.InvariantCultureIgnoreCase);
-        }
-
-        /// <inheritdoc/>
-        public void End()
-        {
-            HasEnded = true;
         }
 
         private IHydroObject GetNetworkHydroObject(string category, string featureName)

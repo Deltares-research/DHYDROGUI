@@ -928,8 +928,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return dataItem;
         }
 
-        /// <inheritdoc />
-        public virtual IDimrCoupling DimrCoupling { get; } = null;
+        /// <summary>
+        /// The hydro model coupling for this <see cref="RealTimeControlModel"/>.
+        /// </summary>
+        /// <remarks>Virtual is needed in regard to NHibernate.</remarks>
+        public virtual IHydroCoupling DimrCoupling => new HydroCoupling();
 
         /// <summary>
         /// Cleans up model after model coupling at the end of a

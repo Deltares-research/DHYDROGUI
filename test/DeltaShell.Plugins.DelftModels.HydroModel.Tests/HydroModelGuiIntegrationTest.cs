@@ -110,12 +110,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var hydroModelBuilder = new HydroModelBuilder();
             var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.SobekModels);
 
-            var paved = new Catchment { CatchmentType = CatchmentType.Paved };
-            var unpaved = new Catchment {CatchmentType = CatchmentType.Unpaved};
-            var green = new Catchment { CatchmentType = CatchmentType.GreenHouse };
-            var water = new Catchment { CatchmentType = CatchmentType.OpenWater };
-            var sacr = new Catchment { CatchmentType = CatchmentType.Sacramento };
-            var hbv = new Catchment { CatchmentType = CatchmentType.Hbv };
+            var paved = new Catchment { CatchmentType = CatchmentType.Paved , Name = "Paved_Catchment"};
+            var unpaved = new Catchment {CatchmentType = CatchmentType.Unpaved, Name = "Unpaved_Catchment"};
+            var green = new Catchment { CatchmentType = CatchmentType.GreenHouse, Name = "GreenHouse_Catchment" };
+            var water = new Catchment { CatchmentType = CatchmentType.OpenWater, Name = "OpenWater_Catchment" };
+            var sacr = new Catchment { CatchmentType = CatchmentType.Sacramento, Name = "Sacramento_Catchment" };
+            var hbv = new Catchment { CatchmentType = CatchmentType.Hbv, Name = "Hbv_Catchment" };
 
             hydroModel.Region.SubRegions.OfType<IDrainageBasin>()
                       .First()

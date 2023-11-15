@@ -1,0 +1,18 @@
+[General]
+    fileVersion           = 2.00                
+    fileType              = extForce            
+
+
+[Lateral]
+id=LateralSource_1D_1
+name=LateralSource_1D_1
+branchId=Channel_1D_1
+chainage=2.6359718e+001
+discharge=realtime
+
+[Lateral]
+id=LateralSource_1D_2
+name=LateralSource_1D_2
+branchId=Channel_1D_1
+chainage=1.1281242e+002
+discharge=realtime

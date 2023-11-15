@@ -31,6 +31,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private readonly IList<RegionExchangeInfo> regionExchangeInfos = new List<RegionExchangeInfo>();
 
         #region Logic for (un)linking/saving RTC-FlowFM filebased coupling
+        
+        public virtual IHydroCoupling HydroCoupling => new HydroCoupling();
 
         /// <summary>
         /// Unlink data items and remember them in linkInfos.
@@ -88,6 +90,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual void RelinkHydroRegionLinks()
         {
+            PrepareHydroModelCoupling();
+            
             if (!regionExchangeInfos.Any()) return;
 
             HashSet<(IHydroObject, IHydroObject)> linkConnections = CreateLinkConnectionsHashSet();
@@ -152,13 +156,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                 $"Could not restore link between {regionExchange.SourceName} ({regionExchangeInfo.SourceRegionName}) and {regionExchange.TargetName} ({regionExchangeInfo.TargetRegionName})");
                             continue;
                         }
-
-                        if (!source.CanLinkTo(target) || linkConnections.Contains((source, target)))
+                        
+                        if (linkConnections.Contains((source, target)))
                         {
                             continue;
                         }
+                        
+                        IHydroCoupling hydroModelCoupling = GetHydroModelCouplings().FirstOrDefault(coupling => coupling.CanLink(source));
+                        if (hydroModelCoupling == null)
+                        {
+                            continue;
+                        }
+                        
+                        IHydroLink hydroLink = hydroModelCoupling.CreateLink(source,target);
 
-                        var hydroLink = new HydroLink(source, target) { Name = regionExchange.LinkName };
+                        if (hydroLink == null)
+                        {
+                            continue; 
+                        }
+
+                        hydroLink.Name = regionExchange.LinkName;
 
                         var sourceAsCatchment = source as Catchment;
                         if (sourceAsCatchment != null && Equals(sourceAsCatchment.CatchmentType, CatchmentType.NWRW))
@@ -174,8 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         {
                             hydroLink.Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt);
                         }
-                                
-                        Region.Links.Add(hydroLink);
+                        
                         linkConnections.Add((hydroLink.Source, hydroLink.Target));
 
                         if (sourceAsCatchment != null && sourceAsCatchment.ModelData != null)
@@ -187,27 +203,42 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
             finally
             {
+                EndHydroModelCoupling();
                 Region.EndEdit();
             }
         }
+
+        private void EndHydroModelCoupling()
+        {
+            foreach (IHydroCoupling hydroModelCoupling in GetHydroModelCouplings())
+            {
+                hydroModelCoupling.End();
+            }
+        }
+
+        private void PrepareHydroModelCoupling()
+        {
+            foreach (IHydroCoupling hydroModelCoupling in GetHydroModelCouplings())
+            {
+                hydroModelCoupling.Prepare();
+            }
+        }
         
+        private IEnumerable<IHydroCoupling> GetHydroModelCouplings()
+        {
+            return Models.OfType<IHydroModel>()
+                         .Select(hydroModel => hydroModel.HydroCoupling);
+        }
+
+        private IModel GetModelByTypeName(string typeName)
+        {
+            return Models.FirstOrDefault(model => model.GetEntityType().Name.Equals(typeName));
+        }
+
         private bool TryGetFmAndRtcModel(out IModel flowModel, out IModel rtcModel)
         {
-            flowModel = null;
-            rtcModel = null;
-            
-            foreach (var model in Models)
-            {
-                if (model.GetEntityType().Name.Equals("WaterFlowFMModel"))
-                {
-                    flowModel = model;
-                }
-                else if (model.GetEntityType().Name.Equals("RealTimeControlModel"))
-                {
-                    rtcModel = model;
-                }
-            }
-
+            flowModel = GetModelByTypeName("WaterFlowFMModel");
+            rtcModel = GetModelByTypeName("RealTimeControlModel");
             return flowModel != null && rtcModel != null;
         }
 

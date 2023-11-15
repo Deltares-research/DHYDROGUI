@@ -64,7 +64,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private IEventedList<CatchmentModelData> modelData;
         private IEventedList<NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitions;
         private IEventedList<NwrwDefinition> nwrwDefinitions;
-        private IDimrCoupling dimrCoupling;
+        private IHydroCoupling dimrCoupling;
+        private IHydroCoupling hydroCoupling;
         
         public RainfallRunoffModel() : base("Rainfall Runoff")
         {
@@ -1342,20 +1343,40 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// The dimr coupling for this <see cref="RainfallRunoffModel"/>.
         /// </summary>
         /// <remarks>
-        /// Always returns an up-to-date <see cref="IDimrCoupling"/>.
+        /// Always returns an up-to-date <see cref="IHydroCoupling"/>.
         /// Does not return <c>null</c>.
         /// </remarks>
-        public IDimrCoupling DimrCoupling
+        public IHydroCoupling DimrCoupling
         {
             get
             {
                 if (dimrCoupling == null || dimrCoupling.HasEnded)
                 {
                     dimrCoupling = new RainfallRunoffDimrCoupling(Basin, LateralToCatchmentLookup);
-                    return dimrCoupling;
                 }
 
                 return dimrCoupling;
+            }
+        }
+
+
+        /// <summary>
+        /// The hydro model coupling for this <see cref="RainfallRunoffModel"/>.
+        /// </summary>
+        /// <remarks>
+        /// Always returns an up-to-date <see cref="IHydroCoupling"/>.
+        /// Does not return <c>null</c>.
+        /// </remarks>
+        public IHydroCoupling HydroCoupling
+        {
+            get
+            {
+                if (hydroCoupling == null || hydroCoupling.HasEnded)
+                {
+                    hydroCoupling = new RainfallRunoffHydroCoupling(Basin, LateralToCatchmentLookup);
+                }
+
+                return hydroCoupling;
             }
         }
 

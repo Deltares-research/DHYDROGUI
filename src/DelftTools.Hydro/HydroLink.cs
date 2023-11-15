@@ -1,4 +1,3 @@
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Guards;
@@ -14,7 +13,7 @@ namespace DelftTools.Hydro
     /// Represent a hydro link between two instances of an <see cref="IHydroObject"/>.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class HydroLink : Unique<long>, IFeature, IHasNameValidation
+    public class HydroLink : Unique<long>, IHydroLink
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroLink));
         private readonly NameValidator nameValidator;
@@ -59,12 +58,7 @@ namespace DelftTools.Hydro
         [FeatureAttribute]
         public virtual string Name { get; set; }
         
-        /// <summary>
-        /// Gets or sets the source hydro object of this hydro link.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when this property is set with <c>null</c>.
-        /// </exception>
+        /// <inheritdoc/>
         [FeatureAttribute]
         [Aggregation]
         public virtual IHydroObject Source
@@ -77,12 +71,7 @@ namespace DelftTools.Hydro
             }
         }
 
-        /// <summary>
-        /// Gets or sets the target hydro object of this hydro link.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when this property is set with <c>null</c>.
-        /// </exception>
+        /// <inheritdoc/>
         [FeatureAttribute]
         [Aggregation]
         public virtual IHydroObject Target

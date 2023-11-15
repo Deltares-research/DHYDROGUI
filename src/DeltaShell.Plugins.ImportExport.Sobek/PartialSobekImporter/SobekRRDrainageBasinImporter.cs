@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -111,21 +110,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void AddOrUpdateRunoffBoundaries()
         {
-            // If a standalone RR model is imported, also convert the 'Flow-RR Connections on Flow Channel' (type 35) to Runoff boundaries (TOOLS-20516). 
-            IEnumerable<SobekRRNode> sobekBoundaries;
-            var integratedModel = TargetObject as ICompositeActivity;
-            if (integratedModel != null && integratedModel.Activities.Count == 1)
-            {
-                sobekBoundaries = dictionaryNodes.Values.Where(
-                    sobekNode => sobekNode.ObjectTypeName == "3B_BOUNDARY" || sobekNode.ObjectTypeName == "SBK_SBK-3B-NODE");
-            }
-            else
-            {
-                sobekBoundaries = dictionaryNodes.Values.Where(sobekNode => sobekNode.ObjectTypeName == "3B_BOUNDARY");
-            }
-
+            // If a standalone RR model is imported, also convert the 'Flow-RR Connections on Flow Channel' (type 35) to Runoff boundaries (TOOLS-20516).
+            IEnumerable<SobekRRNode> sobekBoundaries = dictionaryNodes.Values.Where(IsSobekBoundary);
             foreach (var sobekBoundary in sobekBoundaries)
             {
+                if (IsSobek2Import() && IsRRBoundaryThatShouldBeReplacedByLateralSource(sobekBoundary))
+                {
+                    continue;
+                }
+                
                 var existingBoundary = DrainageBasin.Boundaries.FirstOrDefault(bd => bd.Name == sobekBoundary.Id);
                 if (existingBoundary != null)
                 {
@@ -151,6 +144,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     DrainageBasin.Boundaries.Add(newRunoffBoundary);
                 }
             }
+        }
+
+        private bool IsSobek2Import()
+        {
+            return hasFmData;
+        }
+
+        private bool IsRRBoundaryThatShouldBeReplacedByLateralSource(SobekRRNode sobekBoundary)
+        {
+            return sobekBoundary.ObjectTypeName == "SBK_SBK-3B-NODE"
+                   && dictionaryLateralSources != null
+                   && dictionaryLateralSources.ContainsKey(sobekBoundary.Id);
+        }
+
+        private static bool IsSobekBoundary(SobekRRNode sobekNode)
+        {
+            return sobekNode.ObjectTypeName == "3B_BOUNDARY" || sobekNode.ObjectTypeName == "SBK_SBK-3B-NODE";
         }
 
         private void ReadNodesAndLinks(string nodeFilePath, string linkFilePath)

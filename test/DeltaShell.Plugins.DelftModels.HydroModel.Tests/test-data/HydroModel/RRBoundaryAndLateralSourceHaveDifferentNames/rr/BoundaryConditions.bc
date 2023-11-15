@@ -1,0 +1,18 @@
+[General]
+    fileVersion           = 1.01                
+    fileType              = boundConds          
+
+[Boundary]
+    name                  = RunoffBoundary1     
+    function              = constant            
+    quantity              = water_level         
+    unit                  = m                   
+    0 
+
+[Boundary]
+    name                  = RunoffBoundary2     
+    function              = constant            
+    quantity              = water_level         
+    unit                  = m                   
+    0 
+

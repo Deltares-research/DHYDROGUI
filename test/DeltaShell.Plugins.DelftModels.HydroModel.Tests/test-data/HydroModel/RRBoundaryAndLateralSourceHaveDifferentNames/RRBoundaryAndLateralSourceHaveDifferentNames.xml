@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr https://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
+  <documentation>
+    <fileVersion>1.2</fileVersion>
+    <createdBy>Deltares, Coupling Team</createdBy>
+    <creationDate>2023-10-10T09:19:55.6688593Z</creationDate>
+  </documentation>
+  <!--<control>
+          The <control> specifies the workflow of the deltaresHydro executable.
+          It indicates which components are started in which order. If the data
+          transfer is to be arranged by the main program "d_hydro", then a coupler
+          should be included.
+          The main <control> block is a sequential block; this means that each
+          component is initialized, time stepped, and finalized before the next
+          component starts.
+      <parallel>
+          Within a <parallel> tag the components are started
+          concurrently (if the mpi process ids listed per component don't overlap)
+          or executed synchronously in sequence (first all initialize, then time
+          stepping, and to conclude all finalization calls).
+      <start>
+          A <parallel> block contains exactly one <start/> component, defining the
+          start and end time of the simulation. This is the component inside
+          the <parallel> block with the smallest time step. All other
+          components must be defined with a <startGroup>.
+      <startGroup>
+          A <startGroup> should be used if a component (possibly including couplers)
+          should only be executed at a subset of simulation time steps.
+
+      For each component/coupler there will be a corresponding component/coupler
+      specification block defined below.-->
+  <control>
+    <parallel>
+      <startGroup>
+        <time>0 300 86400</time>
+        <coupler name="flow_to_rr" />
+        <start name="Rainfall Runoff" />
+        <coupler name="rr_to_flow" />
+      </startGroup>
+      <start name="FlowFM" />
+    </parallel>
+  </control>
+  <component name="Rainfall Runoff">
+    <library>rr_dll</library>
+    <workingDir>rr</workingDir>
+    <inputFile>Sobek_3b.fnm</inputFile>
+  </component>
+  <component name="FlowFM">
+    <library>dflowfm</library>
+    <workingDir>dflowfm</workingDir>
+    <setting key="threads" value="1" />
+    <inputFile>FlowFM.mdu</inputFile>
+  </component>
+  <coupler name="rr_to_flow">
+    <sourceComponent>Rainfall Runoff</sourceComponent>
+    <targetComponent>FlowFM</targetComponent>
+    <item>
+      <sourceName>catchments/RunoffBoundary1/water_discharge</sourceName>
+      <targetName>laterals/LateralSource_1D_1/water_discharge</targetName>
+    </item>
+    <item>
+      <sourceName>catchments/RunoffBoundary2/water_discharge</sourceName>
+      <targetName>laterals/LateralSource_1D_2/water_discharge</targetName>
+    </item>
+    <logger>
+      <workingDir>.</workingDir>
+      <outputFile>rr_to_flow.nc</outputFile>
+    </logger>
+  </coupler>
+  <coupler name="flow_to_rr">
+    <sourceComponent>FlowFM</sourceComponent>
+    <targetComponent>Rainfall Runoff</targetComponent>
+    <item>
+      <sourceName>laterals/LateralSource_1D_1/water_level</sourceName>
+      <targetName>catchments/RunoffBoundary1/water_level</targetName>
+    </item>
+    <item>
+      <sourceName>laterals/LateralSource_1D_2/water_level</sourceName>
+      <targetName>catchments/RunoffBoundary2/water_level</targetName>
+    </item>
+    <logger>
+      <workingDir>.</workingDir>
+      <outputFile>flow_to_rr.nc</outputFile>
+    </logger>
+  </coupler>
+</dimrConfig>
