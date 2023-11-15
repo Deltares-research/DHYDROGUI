@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             new Dictionary<Type, WriteTimeSeriesAction>();
 
         private static readonly IStructureFileNameGenerator structureBcFileNameGenerator = new StructureBcFileNameGenerator();
-        private static readonly ITimeSeriesFileWriter bcTimeSeriesFileWriter = new BcTimeSeriesWriter(new BcWriter(), new StructureBoundaryGenerator());
+        private static readonly ITimeSeriesFileWriter bcTimeSeriesFileWriter = new BcTimeSeriesWriter(new BcWriter(new FileSystem()), new StructureBoundaryGenerator());
         private static readonly TimFile timTimeSeriesFileWriter = new TimFile();
         static StructureFile()
         {

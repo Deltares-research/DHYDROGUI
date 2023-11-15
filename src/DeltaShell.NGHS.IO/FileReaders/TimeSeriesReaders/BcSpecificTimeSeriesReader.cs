@@ -82,17 +82,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders
         {
             if (structureDictionary == null)
             {
-                IList<BcIniSection> structuresFromFile = reader.ReadBcFile(filePath);
+                IEnumerable<BcIniSection> structuresFromFile = reader.ReadBcFile(filePath);
                 structureDictionary = ConvertStructureListToDictionary(structuresFromFile);
             }
         }
 
-        private static Dictionary<string, BcIniSection[]> ConvertStructureListToDictionary(IList<BcIniSection> structuresFromFile)
+        private static Dictionary<string, BcIniSection[]> ConvertStructureListToDictionary(IEnumerable<BcIniSection> structuresFromFile)
         {
             return GroupStructuresByNameAndNotNull(structuresFromFile).ToDictionary(group => @group.Key, grouping => grouping.ToArray());
         }
 
-        private static IEnumerable<IGrouping<string, BcIniSection>> GroupStructuresByNameAndNotNull(IList<BcIniSection> structuresFromFile)
+        private static IEnumerable<IGrouping<string, BcIniSection>> GroupStructuresByNameAndNotNull(IEnumerable<BcIniSection> structuresFromFile)
         {
             IEnumerable<IGrouping<string, BcIniSection>> structuresGroupedByName = structuresFromFile.GroupBy(section => section.Section.GetPropertyValueWithOptionalDefaultValue("name"));
             return structuresGroupedByName.Where(group => @group.Key != null);

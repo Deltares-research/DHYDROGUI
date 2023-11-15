@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, "id");
                     break;
                 case ".bc":
-                    SortFmBcFile(expectedFlowFmFile, actualFlowFmFile, "name");
+                    FileComparerHelper.SortBcFilesByKey(expectedFlowFmFile, actualFlowFmFile, "name");
                     break;
                 case ".ext":
                     if (fileNameWithoutExtension.EndsWith("_bnd", StringComparison.InvariantCultureIgnoreCase))
@@ -176,17 +176,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             readSections = new IniReader().ReadIniFile(actualFlowFmFile);
             new IniWriter().WriteIniFile(readSections.OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
-        }
-        
-        private static void SortFmBcFile(string expectedFlowFmFile, string actualFlowFmFile, string idKey)
-        {
-            IEnumerable<IniSection> readSections = new BcReader().ReadBcFile(expectedFlowFmFile).Select(c => c.Section);
-            File.Delete(expectedFlowFmFile);
-            new BcWriter().WriteIniFile(readSections.OrderBy(s => s.ReadProperty<string>(idKey)), expectedFlowFmFile);
-
-            readSections = new BcReader().ReadBcFile(actualFlowFmFile).Select(c => c.Section);
-            File.Delete(actualFlowFmFile);
-            new BcWriter().WriteIniFile(readSections.OrderBy(s => s.ReadProperty<string>(idKey)), actualFlowFmFile);
         }
     }
 }

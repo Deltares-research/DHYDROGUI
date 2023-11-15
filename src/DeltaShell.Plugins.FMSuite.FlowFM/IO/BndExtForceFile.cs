@@ -9,9 +9,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Boundary;
-using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
@@ -20,6 +18,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using log4net;
@@ -273,9 +272,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 GeneralRegion.BoundaryConditionsExternalForcingMajorVersion, GeneralRegion.BoundaryConditionsExternalForcingMinorVersion,
                 GeneralRegion.FileTypeName.BoundaryConditionExternalForcing);
 
-            if (!File.Exists(FilePath) || new IniReader().ReadIniFile(FilePath).All(c => !c.Name.EqualsCaseInsensitive(GeneralRegion.IniHeader)))
+            if (!File.Exists(FilePath) || ReadIniFile(FilePath).Sections.All(s => !s.IsNameEqualTo(GeneralRegion.IniHeader)))
             {
-                new IniFileWriter().WriteIniFile(new[] { generalRegion }, FilePath);
+                WriteIniFile(FilePath, new[] { generalRegion });
             }
             OpenOutputFile(FilePath, true);
             try
@@ -297,13 +296,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-
         private void WriteBndExtForceFile(IEnumerable<IniSection> bndExtForceFileItems)
         {
             var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
                 GeneralRegion.BoundaryConditionsExternalForcingMajorVersion, GeneralRegion.BoundaryConditionsExternalForcingMinorVersion,
                 GeneralRegion.FileTypeName.BoundaryConditionExternalForcing);
-            new IniFileWriter().WriteIniFile(new [] { generalRegion } , FilePath);
+            WriteIniFile(FilePath, new[] { generalRegion });
             OpenOutputFile(FilePath,true);
             try
             {
@@ -685,6 +683,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return resultingItems;
         }
+
+        private static void WriteIniFile(string targetFile, IEnumerable<IniSection> iniSections)
+        {
+            var iniFormatter = new IniFormatter() { Configuration = { WriteComments = false } };
+
+            var iniData = new IniData();
+            iniData.AddMultipleSections(iniSections);
+
+            Log.InfoFormat(Resources.BndExtForceFile_WriteIniFile_Writing_external_forcings_to__0__, targetFile);
+            using (Stream iniStream = File.Open(targetFile, FileMode.Create))
+            {
+                iniFormatter.Format(iniData, iniStream);
+            }
+        }
         #endregion
 
         #region read logic
@@ -693,7 +705,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             FilePath = bndExtForceFilePath;
 
-            var bndBlocks = new IniReader().ReadIniFile(bndExtForceFilePath);
+            IEnumerable<IniSection> bndBlocks = ReadIniFile(bndExtForceFilePath).Sections;
 
             ReadPolyLines(bndBlocks, modelDefinition, area);
 
@@ -773,7 +785,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             {FmMeteoQuantity.Precipitation, FmMeteoField.CreateMeteoPrecipitationSeries }
         };
-        private void ReadBoundaryConditions(IList<IniSection> bndBlocks, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData)
+        private void ReadBoundaryConditions(IEnumerable<IniSection> bndBlocks, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData)
         {
             var correctionFunctionTypes = BcFileFlowBoundaryDataBuilder.CorrectionFunctionTypes.ToList();
 
@@ -980,10 +992,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     continue;
                 }
 
-                var isValidBcFile = IoHelper.IsValidTextFile(fullPath) && new BcReader()
-                                        .ReadBcFile(fullPath)
+                var isValidBcFile = IoHelper.IsValidTextFile(fullPath) &&
+                                        ReadIniFile(fullPath).Sections
                                         .Any(c =>
-                                            c.Section.ValidGeneralRegion(
+                                            c.ValidGeneralRegion(
                                                 GeneralRegion.BoundaryConditionsMajorVersion,
                                                 GeneralRegion.BoundaryConditionsMinorVersion,
                                                 GeneralRegion.FileTypeName.BoundaryConditions));
@@ -1052,6 +1064,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                    || quantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport
                    || quantity == FlowBoundaryQuantityType.MorphologyBedLevelFixed
                    || quantity == FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint;
+        }
+
+        private static IniData ReadIniFile(string filepath)
+        {
+            var iniParser = new IniParser()
+            {
+                Configuration =
+                {
+                    AllowMultiLineValues = true
+                }
+            };
+
+            Log.InfoFormat(Resources.BndExtForceFile_ReadIniFile_Reading_external_forcings_from__0__, filepath);
+            using (FileStream iniStream = File.OpenRead(filepath))
+            {
+                return iniParser.Parse(iniStream);
+            }
         }
 
         #endregion

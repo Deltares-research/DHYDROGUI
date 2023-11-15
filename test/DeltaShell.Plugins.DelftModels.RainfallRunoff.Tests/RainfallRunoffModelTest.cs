@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
@@ -332,7 +333,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         private static void AssertThatBoundaryFileContainsWWTPBoundary(string boundaryFilepath, string wwtpName)
         {
-            IList<BcIniSection> iniSections = new BcReader().ReadBcFile(boundaryFilepath);
+            IEnumerable<BcIniSection> iniSections = new BcReader(new FileSystem()).ReadBcFile(boundaryFilepath);
 
             var expectedBoundaryName = $"{wwtpName}_boundary";
             bool containsWWTPBoundary = iniSections

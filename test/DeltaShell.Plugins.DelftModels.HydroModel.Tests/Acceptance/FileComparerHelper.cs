@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.Helpers;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
@@ -250,6 +255,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             {
                 mismatchingLinesInActual.Remove(equivalentLineInActual);
             }
+        }
+
+        /// <summary>
+        /// Sorts the given .bc files based on the provided key.
+        /// </summary>
+        /// <param name="expectedFile">The expected .bc file to sort.</param>
+        /// <param name="actualFile">The actual .bc file to sort.</param>
+        /// <param name="key">The name of the key to sort on.</param>
+        public static void SortBcFilesByKey(string expectedFile, string actualFile, string key)
+        {
+            IEnumerable<IniSection> readSections = new BcReader(new FileSystem()).ReadBcFile(expectedFile).Select(c => c.Section);
+            File.Delete(expectedFile);
+            new IniWriter().WriteIniFile(readSections.OrderBy(s => s.ReadProperty<string>(key)), expectedFile);
+
+            readSections = new BcReader(new FileSystem()).ReadBcFile(actualFile).Select(c => c.Section);
+            File.Delete(actualFile);
+            new IniWriter().WriteIniFile(readSections.OrderBy(s => s.ReadProperty<string>(key)), actualFile);
         }
         
         private class LineEqualityComparer : IEqualityComparer<Tuple<int, string>>

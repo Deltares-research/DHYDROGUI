@@ -8,6 +8,7 @@
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="RhinoMocks" />
+    <PackageReference Include="System.IO.Abstractions" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

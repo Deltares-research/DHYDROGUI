@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -155,7 +156,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
             LogHandler timeSeriesFileReaderLogHandler = new LogHandler(Resources.BcSpecificTimeSeriesReader_logHandler_reading_structures_from__bc_file);
             
             ITimeSeriesFileReader timeSeriesFileReader = new TimeSeriesFileReader(new TimSpecificTimeSeriesReader(new TimFile()),
-                                                                                  new BcSpecificTimeSeriesReader(new BcReader(), 
+                                                                                  new BcSpecificTimeSeriesReader(new BcReader(new FileSystem()), 
                                                                                                                  new BcSectionParser(new LogHandler(nameof(StructureFileReader))),
                                                                                                                  timeSeriesFileReaderLogHandler));
 

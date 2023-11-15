@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
+using System.IO.Abstractions;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
@@ -135,7 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
         private static void ExportBcFile(string path, RainfallRunoffModel model)
         {
-            var bcWriter = new RainfallRunoffBoundaryDataFileWriter(new BcWriter());
+            var bcWriter = new RainfallRunoffBoundaryDataFileWriter(new BcWriter(new FileSystem()));
             bcWriter.WriteFile(Path.Combine(Path.GetFullPath(path), "BoundaryConditions.bc"), model);
         }
 

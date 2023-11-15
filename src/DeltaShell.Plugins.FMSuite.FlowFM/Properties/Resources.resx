@@ -679,4 +679,10 @@ File import of structures file '{1}' has failed.</value>
   <data name="MduFile_Read_Reading_grid" xml:space="preserve">
     <value>Reading grid</value>
   </data>
+  <data name="BndExtForceFile_WriteIniFile_Writing_external_forcings_to__0__" xml:space="preserve">
+    <value>Writing external forcings to {0}.</value>
+  </data>
+  <data name="BndExtForceFile_ReadIniFile_Reading_external_forcings_from__0__" xml:space="preserve">
+    <value>Reading external forcings from {0}.</value>
+  </data>
 </root>

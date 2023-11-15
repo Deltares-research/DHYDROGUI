@@ -41,6 +41,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 Assert.IsNotNull(expectedRainfallRunoffFile, $"The expected file collection contains a file with name '{fileName}'; this file is not part of the actual collection of files.{Environment.NewLine}");
                 Assert.IsNotNull(actualRainfallRunoffFile, $"The actual file collection contains a file with name '{fileName}'; this file is not part of the expected collection of files.{Environment.NewLine}");
 
+                if (fileName.EndsWith(".bc"))
+                {
+                    FileComparerHelper.SortBcFilesByKey(expectedRainfallRunoffFile, actualRainfallRunoffFile, "name");
+                }
+
                 if (string.Equals(fileName, "3brunoff.tp", StringComparison.InvariantCultureIgnoreCase) || 
                     string.Equals(fileName, "3b_nod.tp", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -51,6 +56,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     FileComparerHelper.CompareFiles(expectedRainfallRunoffFile, actualRainfallRunoffFile, linesToIgnore);                    
                 }
             }
-        }
+        } 
     }
 }

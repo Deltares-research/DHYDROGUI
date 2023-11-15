@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -13,10 +15,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// </summary>
         /// <param name="bcFile">Location to read the file from</param>
         /// <returns>
-        /// The list of <see cref="BcIniSection"/> read from <paramref name="bcFile"/>.
+        /// A collection of <see cref="BcIniSection"/> read from <paramref name="bcFile"/>.
         /// </returns>
-        /// <exception cref="IOException"><paramref name="iniFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
+        /// <exception cref="ArgumentException"> When <paramref name="bcFile"/> is <c>null</c> or white space.</exception>
+        /// <exception cref="IOException"><paramref name="bcFile"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
         /// <exception cref="FormatException">When an invalid line was encountered.</exception>
-        IList<BcIniSection> ReadBcFile(string bcFile);
+        IEnumerable<BcIniSection> ReadBcFile(string bcFile);
     }
 }

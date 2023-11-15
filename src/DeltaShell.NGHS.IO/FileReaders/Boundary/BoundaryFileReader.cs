@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -25,8 +26,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
         public static void ReadFile(string filename, IEnumerable<Model1DBoundaryNodeData> boundaryConditions)
         {
             if (!File.Exists(filename)) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, filename));
-            var iniSections = new BcReader().ReadBcFile(filename);
-            if (iniSections.Count == 0) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
+            var iniSections = new BcReader(new FileSystem()).ReadBcFile(filename);
+            if (!iniSections.Any()) throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, filename));
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
@@ -116,7 +117,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Boundary
             Ensure.NotNullOrEmpty(filePath, nameof(filePath));
             EnsureFileExists(filePath);
 
-            IList<BcIniSection> iniSections = new BcReader().ReadBcFile(filePath);
+            IEnumerable<BcIniSection> iniSections = new BcReader(new FileSystem()).ReadBcFile(filePath);
             foreach (BcIniSection section in iniSections)
             {
                 if (!section.Section.Name.EqualsCaseInsensitive(BoundaryRegion.BcLateralHeader) &&

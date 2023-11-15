@@ -580,4 +580,10 @@
   <data name="RoutesFile_ReadIniFile_Reading_routes_from__0__" xml:space="preserve">
     <value>Reading routes from {0}.</value>
   </data>
+  <data name="BcReader_ReadIniFile_Reading_boundary_conditions_from__0__" xml:space="preserve">
+    <value>Reading boundary conditions from {0}.</value>
+  </data>
+  <data name="BcWriter_WriteIniFile_Writing_boundary_conditions_to__0__" xml:space="preserve">
+    <value>Writing boundary conditions to {0}.</value>
+  </data>
 </root>

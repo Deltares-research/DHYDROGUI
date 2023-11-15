@@ -134,6 +134,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading boundary conditions from {0}..
+        /// </summary>
+        public static string BcReader_ReadIniFile_Reading_boundary_conditions_from__0__ {
+            get {
+                return ResourceManager.GetString("BcReader_ReadIniFile_Reading_boundary_conditions_from__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The provided table on line {0} does not contain any values..
         /// </summary>
         public static string BcSectionParser_Table_on_line__0___does_not_contain_any_values {
@@ -188,6 +197,15 @@ namespace DeltaShell.NGHS.IO.Properties {
             get {
                 return ResourceManager.GetString("BcSpecificTimeSeriesReader_Read_No_structure_found_with_name__0__quantity__1__in_" +
                         "file__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing boundary conditions to {0}..
+        /// </summary>
+        public static string BcWriter_WriteIniFile_Writing_boundary_conditions_to__0__ {
+            get {
+                return ResourceManager.GetString("BcWriter_WriteIniFile_Writing_boundary_conditions_to__0__", resourceCulture);
             }
         }
         

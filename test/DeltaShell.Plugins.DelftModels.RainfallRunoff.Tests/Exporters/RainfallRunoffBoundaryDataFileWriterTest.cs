@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -47,9 +48,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 
             boundaryNodeData.Add(new RunoffBoundaryData(new RunoffBoundary() {Name = "RBC2"}) {Series = new RainfallRunoffBoundaryData() {IsConstant = false, IsTimeSeries = true, Data = timeSeries } });
             var bcFile = Path.GetTempFileName();
-            new RainfallRunoffBoundaryDataFileWriter(new BcWriter()).WriteFile(bcFile, model);
+            new RainfallRunoffBoundaryDataFileWriter(new BcWriter(new FileSystem())).WriteFile(bcFile, model);
 
-            var bcReader = new BcReader();
+            var bcReader = new BcReader(new FileSystem());
             var iniSections = bcReader.ReadBcFile(bcFile);
 
             // Test BoundaryNode Data

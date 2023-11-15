@@ -1,104 +1,149 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Abstractions;
+using System.Linq;
 using System.Text;
-using DeltaShell.NGHS.IO.FileWriters.General;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using DHYDRO.Common.IO.Ini;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
-    public sealed class BcWriter : IniWriter, IBcWriter
+    /// <summary>
+    /// Class for writing .bc files.
+    /// </summary>
+    public sealed class BcWriter : IBcWriter
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(BcWriter));
+        
+        private readonly IFileSystem fileSystem;
+        private const int indentationLevel = 4;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BcWriter"/> class.
+        /// </summary>
+        /// <param name="fileSystem">Provides access to the file system.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="fileSystem"/> is <c>null</c>.</exception>
+        public BcWriter(IFileSystem fileSystem)
+        {
+            Ensure.NotNull(fileSystem, nameof(fileSystem));
+
+            this.fileSystem = fileSystem;
+        }
+        
+        /// <inheritdoc/>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="iniSections"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="iniFile"/> is <c>null</c> or white space.</exception>
         public void WriteBcFile(IEnumerable<BcIniSection> iniSections, string iniFile)
         {
-            OpenOutputFile(iniFile,true);
+            Ensure.NotNull(iniSections, nameof(iniSections));
+            Ensure.NotNullOrWhiteSpace(iniFile, nameof(iniFile));
 
-            try
-            {
-                WriteBcSectionsToFile(iniSections);
-            }
-            finally
-            {
-                CloseOutputFile();
-            }
+            IEnumerable<IniSection> iniSectionsToWrite = CreateIniSections(iniSections);
+            WriteIniFile(iniFile, iniSectionsToWrite);
         }
 
-        private void WriteBcSectionsToFile(IEnumerable<BcIniSection> iniSections)
+        private static IEnumerable<IniSection> CreateIniSections(IEnumerable<BcIniSection> bcIniSections)
         {
-            foreach (BcIniSection bcIniSection in iniSections)
+            var iniSections = new List<IniSection>();
+
+            foreach (BcIniSection bcIniSection in bcIniSections)
             {
-                if (IsBcSectionWithoutTableData(bcIniSection))
-                {
-                    return;
-                }
-
-                WriteBcSectionToFile(bcIniSection);
-            }
-        }
-
-        private static bool IsBcSectionWithoutTableData(BcIniSection bcIniSection)
-        {
-            if (IsGeneralSection(bcIniSection))
-            {
-                return false;
-            }
-            return bcIniSection.Table.Count == 0;
-        }
-
-        private void WriteBcSectionToFile(BcIniSection iniSection)
-        {
-            WriteLine("[" + iniSection.Section.Name + "]");
-
-            foreach (IniProperty property in iniSection.Section.Properties)
-            {
-                WriteProperty(property);
+                IniSection iniSection = ConvertToIniSection(bcIniSection);
+                iniSections.Add(iniSection);
             }
 
-            if (!IsGeneralSection(iniSection))
+            return iniSections;
+        }
+
+        private static IniSection ConvertToIniSection(BcIniSection bcIniSection)
+        {
+            IniSection iniSection = bcIniSection.Section;
+
+            if (!bcIniSection.Table.Any())
             {
-                WriteTable(iniSection.Table);
+                return iniSection;
             }
 
-            WriteLine(string.Empty);
+            foreach (IBcQuantityData bcQuantityData in bcIniSection.Table)
+            {
+                iniSection.AddProperty(bcQuantityData.Quantity);
+                iniSection.AddProperty(bcQuantityData.Unit);
+            }
+
+            IniProperty lastProperty = iniSection.Properties
+                                                 .OrderBy(p => p.LineNumber)
+                                                 .Last();
+
+            string tableAsString = GetTableDataAsString(bcIniSection.Table);
+            string newLastValue = string.Join(Environment.NewLine, lastProperty.Value, tableAsString);
+            lastProperty.Value = newLastValue;
+
+            return iniSection;
         }
 
-        private static bool IsGeneralSection(BcIniSection iniSection)
+        private static string GetTableDataAsString(IList<IBcQuantityData> table)
         {
-            return iniSection.Section.IsNameEqualTo(GeneralRegion.IniHeader);
-        }
-
-        private void WriteTable(IList<IBcQuantityData> table)
-        {
-            StringBuilder[] tableRows = new StringBuilder[table[0].Values.Count]; // there will be as many rows as there are quantity values
+            var tableRows = new StringBuilder[table[0].Values.Count]; // there will be as many rows as there are quantity values
             InitializeStringBuilderArray(tableRows);
 
             foreach (IBcQuantityData bcQuantityData in table)
             {
-                WriteProperty(bcQuantityData.Quantity);
-                WriteProperty(bcQuantityData.Unit);
-
                 InsertValuesInTableRows(bcQuantityData, tableRows); // each row will have as many elements as there are quantities
             }
 
-            foreach (StringBuilder row in tableRows)
-            {
-                WriteLine($"    {row}");
-            }
+            return string.Join(Environment.NewLine, tableRows.Select(sb => sb.ToString()));
         }
 
         private static void InitializeStringBuilderArray(StringBuilder[] tableRows)
         {
-            for (int i = 0; i < tableRows.Length; i++)
+            for (var i = 0; i < tableRows.Length; i++)
             {
-                tableRows[i] = new StringBuilder();
+                tableRows[i] = new StringBuilder(new string(' ', indentationLevel));
             }
         }
 
         private static void InsertValuesInTableRows(IBcQuantityData bcQuantityData, StringBuilder[] tableRows)
         {
-            for (int i = 0; i < bcQuantityData.Values.Count; i++)
+            for (var i = 0; i < bcQuantityData.Values.Count; i++)
             {
                 tableRows[i].Append(bcQuantityData.Values[i]);
                 tableRows[i].Append(" ");
+            }
+        }
+
+        private void WriteIniFile(string targetFile, IEnumerable<IniSection> iniSections)
+        {
+            var iniFormatter = new IniFormatter()
+            {
+                Configuration =
+                {
+                    WriteComments = false,
+                    PropertyIndentationLevel = indentationLevel,
+                }
+            };
+
+            var iniData = new IniData();
+            iniData.AddMultipleSections(iniSections);
+
+            CreateDirectoryIfItDoesNotExist(targetFile);
+            
+            log.InfoFormat(Resources.BcWriter_WriteIniFile_Writing_boundary_conditions_to__0__, targetFile);
+            using (Stream iniStream = fileSystem.File.Open(targetFile, FileMode.Create))
+            {
+                iniFormatter.Format(iniData, iniStream);
+            }
+        }
+
+        private void CreateDirectoryIfItDoesNotExist(string targetFile)
+        {
+            string directory = fileSystem.Path.GetDirectoryName(targetFile);
+            if (!string.IsNullOrEmpty(directory) && !fileSystem.Directory.Exists(directory))
+            {
+                fileSystem.Directory.CreateDirectory(directory);
             }
         }
     }

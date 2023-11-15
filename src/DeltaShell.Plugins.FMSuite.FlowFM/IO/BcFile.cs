@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
-using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
@@ -12,6 +12,7 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -467,7 +468,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public void Write(IEnumerable<BcIniSection> generateModel1DNodeBoundaryBcSections, string file, string path)
         {
-            var bcWriter = new BcWriter();
+            var bcWriter = new BcWriter(new FileSystem());
             switch (MultiFileMode)
             {
                 case WriteMode.SingleFile:
@@ -501,18 +502,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteBc1DFile(IEnumerable<BcIniSection> generateModel1DNodeBoundaryBcSections, string filename, BcWriter bcWriter)
         {
-            var model1DNodeBoundaryBcSections = generateModel1DNodeBoundaryBcSections.ToList();
-            model1DNodeBoundaryBcSections = model1DNodeBoundaryBcSections.Except(model1DNodeBoundaryBcSections.OfType<BcIniSection>().Where(bc => bc.Table.Count == 0)).ToList();
-            FileUtils.DeleteIfExists(filename);
-            if (!File.Exists(filename))
-            {
-                var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
-                    GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
-                    GeneralRegion.FileTypeName.BoundaryConditions);
-                new IniFileWriter().WriteIniFile(new[] {generalRegion}, filename);
-            }
+            BcIniSection generalRegionBcSection = CreateGeneralBcIniSection();
+            
+            IEnumerable<BcIniSection> model1DNodeBoundaryBcSections = 
+                CreateModel1DNodeBoundaryBcSections(generateModel1DNodeBoundaryBcSections, generalRegionBcSection);
 
             bcWriter.WriteBcFile(model1DNodeBoundaryBcSections, filename);
+        }
+
+        private static IEnumerable<BcIniSection> CreateModel1DNodeBoundaryBcSections(IEnumerable<BcIniSection> generateModel1DNodeBoundaryBcSections, BcIniSection generalRegionBcSection)
+        {
+            List<BcIniSection> model1DNodeBoundaryBcSections = generateModel1DNodeBoundaryBcSections.ToList();
+            model1DNodeBoundaryBcSections = model1DNodeBoundaryBcSections.Except(model1DNodeBoundaryBcSections.OfType<BcIniSection>().Where(bc => bc.Table.Count == 0)).ToList();
+            model1DNodeBoundaryBcSections.Insert(0, generalRegionBcSection);
+
+            return model1DNodeBoundaryBcSections;
+        }
+
+        private static BcIniSection CreateGeneralBcIniSection()
+        {
+            IniSection generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+                GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
+                GeneralRegion.FileTypeName.BoundaryConditions);
+            
+            return new BcIniSection(generalRegion);
         }
 
         private IEnumerable<BcIniSection> GetSubListOfItemsOfThisQuantity(BcIniSection dic, IEnumerable<BcIniSection> generateModel1DNodeBoundaryBcSections)

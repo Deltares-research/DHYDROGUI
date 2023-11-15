@@ -10,6 +10,7 @@
     <PackageReference Include="Portable.System.DateTimeOnly"/>
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="SharpTestsEx" />
+    <PackageReference Include="System.IO.Abstractions" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
