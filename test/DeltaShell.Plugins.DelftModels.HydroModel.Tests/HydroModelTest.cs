@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
@@ -11,7 +12,9 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -19,8 +22,10 @@ using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
@@ -543,6 +548,177 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.That(newUnpavedData.BoundarySettings, Is.Not.SameAs(existingUnpavedData.BoundarySettings));
             Assert.That(newUnpavedData.BoundarySettings.BoundaryData.Value, Is.EqualTo(existingUnpavedData.BoundarySettings.BoundaryData.Value));
             Assert.That(newUnpavedData.BoundarySettings.BoundaryData.IsConstant, Is.EqualTo(existingUnpavedData.BoundarySettings.BoundaryData.IsConstant));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [TestCase(CatchmentTypes.Greenhouse)]
+        [TestCase(CatchmentTypes.OpenWater)]
+        [TestCase(CatchmentTypes.Paved)]
+        [TestCase(CatchmentTypes.Unpaved)]
+        [TestCase(CatchmentTypes.Sacramento)]
+        [TestCase(CatchmentTypes.Hbv)]
+        [TestCase(CatchmentTypes.NWRW)]
+        public void IntegratedModelWithTwoCatchmentsLinkedToSameLateral_ShouldLoadProjectCorrectly(CatchmentTypes catchmentType)
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (HydroModel integratedModel = CreateIntegratedModelWithTwoCatchmentsLinkedToSameLateral(catchmentType))
+            {
+                app.Project.RootFolder.Add(integratedModel);
+
+                string dsprojPath = Path.Combine(temp.Path, "randomName.dsproj");
+                app.SaveProjectAs(dsprojPath);
+                app.CloseProject();
+
+                // Call
+                app.OpenProject(dsprojPath);
+                HydroModel loadedIntegratedModel = app.Project.GetAllItemsRecursive().OfType<HydroModel>().FirstOrDefault();
+
+                // Assert
+                Assert.That(loadedIntegratedModel, Is.Not.Null);
+                RainfallRunoffModel rrModel = loadedIntegratedModel.Models.OfType<RainfallRunoffModel>().First();
+
+                IEventedList<Catchment> catchments = rrModel.Basin.Catchments;
+                Assert.That(catchments.Count, Is.EqualTo(2));
+                Catchment firstCatchment = rrModel.Basin.Catchments.First();
+                Catchment secondCatchment = rrModel.Basin.Catchments.Last();
+
+                IHydroObject linkTargetOfFirstCatchment = firstCatchment.Links.First().Target;
+                IHydroObject linkTargetOfSecondCatchment = secondCatchment.Links.First().Target;
+                Assert.That(linkTargetOfFirstCatchment, Is.TypeOf<LateralSource>());
+                Assert.That(linkTargetOfFirstCatchment, Is.SameAs(linkTargetOfSecondCatchment));
+            }
+        }
+
+        private static HydroModel CreateIntegratedModelWithTwoCatchmentsLinkedToSameLateral(CatchmentTypes catchmentType)
+        {
+            var integratedModel = new HydroModel();
+            var fmModel = new WaterFlowFMModel();
+            var rrModel = new RainfallRunoffModel();
+
+            integratedModel.Activities.Add(fmModel);
+            integratedModel.Activities.Add(rrModel);
+
+            // Add two nodes, a branch and a lateral source
+            IHydroNetwork network = fmModel.Network;
+            var node1 = new HydroNode
+            {
+                Name = "Node1",
+                Network = network,
+                Geometry = new Point(0.0, 0.0)
+            };
+            var node2 = new HydroNode
+            {
+                Name = "Node2",
+                Network = network,
+                Geometry = new Point(100.0, 0.0)
+            };
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var channel = new Channel("branch1", node1, node2)
+            {
+                Geometry = new LineString(new[] { node1.Geometry.Coordinate, node2.Geometry.Coordinate }),
+            };
+            network.Branches.Add(channel);
+
+            var lateralSource = LateralSource.CreateDefault(channel);
+            lateralSource.Chainage = 10;
+            channel.BranchFeatures.Add(lateralSource);
+
+            // Create two catchments and link them to same lateral
+            IDrainageBasin basin = rrModel.Basin;
+
+            var catchmentOne = new Catchment() { Name = "Catchment1", CatchmentTypes = catchmentType};
+            var catchmentTwo = new Catchment() { Name = "Catchment2", CatchmentTypes = catchmentType};
+
+            CatchmentModelData dataOne;
+            CatchmentModelData dataTwo;
+            
+            switch (catchmentType)
+            {
+                case CatchmentTypes.Greenhouse:
+                    catchmentOne.CatchmentTypes = CatchmentTypes.Greenhouse;
+                    catchmentTwo.CatchmentTypes = CatchmentTypes.Greenhouse;
+                    dataOne = new GreenhouseData(catchmentOne);
+                    dataTwo = new GreenhouseData(catchmentTwo);
+                    break;
+                case CatchmentTypes.OpenWater:
+                    catchmentOne.CatchmentTypes = CatchmentTypes.OpenWater;
+                    catchmentTwo.CatchmentTypes = CatchmentTypes.OpenWater;
+                    dataOne = new OpenWaterData(catchmentOne);
+                    dataTwo = new OpenWaterData(catchmentTwo);
+                    break;
+                case CatchmentTypes.Paved:
+                    catchmentOne.CatchmentTypes = CatchmentTypes.Paved;
+                    catchmentTwo.CatchmentTypes = CatchmentTypes.Paved;
+                    dataOne = new PavedData(catchmentOne);
+                    dataTwo = new PavedData(catchmentTwo);
+                    break;
+                case CatchmentTypes.Unpaved:
+                    catchmentOne.CatchmentTypes = CatchmentTypes.Unpaved;
+                    catchmentTwo.CatchmentTypes = CatchmentTypes.Unpaved;
+                    dataOne = new UnpavedData(catchmentOne);
+                    dataTwo = new UnpavedData(catchmentTwo);
+                    break;
+                case CatchmentTypes.Sacramento:
+                    catchmentOne.CatchmentTypes = CatchmentTypes.Sacramento;
+                    catchmentTwo.CatchmentTypes = CatchmentTypes.Sacramento;
+                    dataOne = new SacramentoData(catchmentOne);
+                    dataTwo = new SacramentoData(catchmentTwo);
+                    break;
+                case CatchmentTypes.Hbv:
+                    catchmentOne.CatchmentTypes = CatchmentTypes.Hbv;
+                    catchmentTwo.CatchmentTypes = CatchmentTypes.Hbv;
+                    dataOne = new HbvData(catchmentOne);
+                    dataTwo = new HbvData(catchmentTwo);
+                    break;
+                case CatchmentTypes.NWRW:
+                    catchmentOne.CatchmentTypes = CatchmentTypes.NWRW;
+                    catchmentTwo.CatchmentTypes = CatchmentTypes.NWRW;
+                    dataOne = new NwrwData(catchmentOne);
+                    dataTwo = new NwrwData(catchmentTwo);
+                    break;
+                case CatchmentTypes.None:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(catchmentType), catchmentType, $"Unknown catchment type: {catchmentType}.");
+            }
+
+            basin.Catchments.Add(catchmentOne);
+            basin.Catchments.Add(catchmentTwo);
+            rrModel.ModelData[0] = dataOne;
+            rrModel.ModelData[1] = dataTwo;
+            
+            catchmentOne.LinkTo(lateralSource);
+            catchmentTwo.LinkTo(lateralSource);
+
+            return integratedModel;
+        }
+
+        private DeltaShellApplication GetConfiguredApplication()
+        {
+            var app = new DeltaShellApplication(){ IsProjectCreatedInTemporaryDirectory = true };
+            AddPluginsToApplication(app);
+            return app;
+        }
+        
+        private static void AddPluginsToApplication(DeltaShellApplication app)
+        {
+            // DeltaShell plugins
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+
+            // D-HYDRO plugins
+            app.Plugins.Add(new HydroModelApplicationPlugin());
+            app.Plugins.Add(new RainfallRunoffApplicationPlugin());
+            app.Plugins.Add(new FlowFMApplicationPlugin());
+            app.Plugins.Add(new SobekImportApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+
+            app.Run();
         }
 
         private static HydroModel CreateIntegratedModelWithFmAndRr_WithOneUnpavedCatchmentLinkedToALateralSource()

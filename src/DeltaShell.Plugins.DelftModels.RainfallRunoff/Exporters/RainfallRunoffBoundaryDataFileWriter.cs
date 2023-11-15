@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             }
         }
 
-        private static IEnumerable<BcIniSection> CreateWasteWaterTreatmentPlantsBoundarySections(IEnumerable<WasteWaterTreatmentPlant> wasteWaterTreatmentPlants)
+        private IEnumerable<BcIniSection> CreateWasteWaterTreatmentPlantsBoundarySections(IEnumerable<WasteWaterTreatmentPlant> wasteWaterTreatmentPlants)
         {
             foreach (WasteWaterTreatmentPlant wasteWaterTreatmentPlant in wasteWaterTreatmentPlants)
             {
@@ -134,10 +134,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             return modelLink.ToId ?? modelLink.FromId;
         }
 
-        private static BcIniSection CreateDefaultBcSection(string boundaryName)
+        private BcIniSection CreateDefaultBcSection(string boundaryName)
         {
             BcIniSection iniSection = CreateBcDefinitionSection(boundaryName, BoundaryRegion.FunctionStrings.Constant, null, null);
             iniSection.Table = GenerateTableForConstantData(waterLevelQuantityUnitPair.Quantity, waterLevelQuantityUnitPair.Unit, 0);
+
+            handledBoundaries.Add(boundaryName);
 
             return iniSection;
         }
