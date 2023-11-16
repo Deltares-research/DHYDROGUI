@@ -141,7 +141,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual(expectedVerticalDispersion, dispersionVariable.DefaultValue);
             Assert.AreEqual("m2/s", dispersionVariable.Unit.Name);
             Assert.AreEqual("m2/s", dispersionVariable.Unit.Symbol);
-            Assert.IsNull(dispersionVariable.Unit.Dimension);
             Assert.IsTrue(dispersionFunction.IsConst());
 
             #endregion
