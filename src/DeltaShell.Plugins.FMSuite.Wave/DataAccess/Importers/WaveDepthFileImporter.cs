@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -78,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
             IWaveDomainData domain = WaveDomainHelper.GetAllDomains(model.OuterDomain)
                                                      .First(d => Equals(d.Bathymetry, bathymetry));
 
-            model.BeginEdit(new DefaultEditAction("Importing bed level"));
+            model.BeginEdit("Importing bed level");
             try
             {
                 string uniqueFileName = model.ImportIntoModelDirectory(path);

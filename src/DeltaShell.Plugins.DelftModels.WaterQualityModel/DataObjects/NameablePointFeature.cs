@@ -57,7 +57,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
 
         private IPoint PointGeometry => Geometry as IPoint;
 
-        [EditAction]
         private void UpdatePointGeometry(double newX, double newY, double newZ)
         {
             Geometry = new Point(newX, newY, newZ);

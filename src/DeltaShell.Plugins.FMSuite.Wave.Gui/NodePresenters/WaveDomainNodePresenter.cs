@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.TreeViewControls;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
@@ -81,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             var oldParent = sourceParentNodeData as WaveDomainData;
             WaveModel model = getModelForDomain(domain);
 
-            model.BeginEdit(new DefaultEditAction("Move domain..."));
+            model.BeginEdit("Move domain...");
             model.DeleteSubDomain(oldParent, domain);
             model.AddSubDomain(target, domain);
             model.EndEdit();

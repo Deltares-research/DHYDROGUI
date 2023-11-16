@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
@@ -73,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             if (HasOpenFunctionStores)
             {
-                BeginEdit(new DefaultEditAction("Disconnecting from output files"));
+                BeginEdit("Disconnecting from output files");
 
                 if (OutputMapFileStore != null)
                 {
@@ -201,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
 
             FireImportProgressChanged("Reading output files - Reading Map file", 1, 2);
-            BeginEdit(new DefaultEditAction("Reconnect output files"));
+            BeginEdit("Reconnect output files");
 
             ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
             ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);

@@ -199,10 +199,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             creator.Expect(c => c.FunctionTypeName).Return("<functionTypeName>");
 
             var dataOwner = mocks.StrictMock<IEditableObject>();
-            dataOwner.Expect(d => d.BeginEdit(null)).IgnoreArguments().WhenCalled(mi =>
+            dataOwner.Expect(d => d.BeginEdit("")).IgnoreArguments().WhenCalled(mi =>
             {
-                var editAction = (DefaultEditAction) mi.Arguments[0];
-                Assert.AreEqual("Changing function type of D const to <functionTypeName>", editAction.Name);
+                var editActionName = (string) mi.Arguments[0];
+                Assert.AreEqual("Changing function type of D const to <functionTypeName>", editActionName);
             });
             dataOwner.Expect(d => d.EndEdit());
             mocks.ReplayAll();

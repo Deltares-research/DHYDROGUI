@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -83,12 +82,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     yCoordinates.Add(y);
                 }
 
-                domain.Grid.BeginEdit(new DefaultEditAction(string.Format("Transform grid {0}...", domain.Grid.Name)));
+                domain.Grid.BeginEdit(string.Format("Transform grid {0}...", domain.Grid.Name));
                 domain.Grid.Resize(grid.Size1, grid.Size2, xCoordinates, yCoordinates);
                 domain.Grid.EndEdit();
 
-                domain.Bathymetry.BeginEdit(
-                    new DefaultEditAction(string.Format("Transform bathymetry {0}...", domain.Bathymetry.Name)));
+                domain.Bathymetry.BeginEdit(string.Format("Transform bathymetry {0}...", domain.Bathymetry.Name));
                 domain.Bathymetry.Resize(grid.Size1, grid.Size2, grid.X.Values, grid.Y.Values);
                 domain.Bathymetry.EndEdit();
             }

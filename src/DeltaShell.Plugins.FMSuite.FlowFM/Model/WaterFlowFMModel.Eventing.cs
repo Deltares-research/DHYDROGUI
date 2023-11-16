@@ -9,10 +9,8 @@ using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -236,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                    StringComparison.InvariantCultureIgnoreCase))
                 {
                     var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation)prop.Value;
-                    BeginEdit(new DefaultEditAction("Updating Bathymetry coverage"));
+                    BeginEdit("Updating Bathymetry coverage");
                     UpdateBathymetryCoverage(bedLevelType);
                     EndEdit();
                 }
@@ -262,13 +260,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ISlope,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
-                    BeginEdit(new DefaultEditAction("Switching Bed slope formulation"));
+                    BeginEdit("Switching Bed slope formulation");
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.IHidExp,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
-                    BeginEdit(new DefaultEditAction("Switching Hiding and exposure formulation"));
+                    BeginEdit("Switching Hiding and exposure formulation");
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Kmx,
@@ -286,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Temperature,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
-                    BeginEdit(new DefaultEditAction("Switching heat flux model"));
+                    BeginEdit("Switching heat flux model");
                     HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
                     EndEdit();
                 }
@@ -389,7 +387,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     return;
                 }
 
-                BeginEdit(new DefaultEditAction(""));
+                BeginEdit("");
                 MarkOutputOutOfSync();
                 EndEdit();
             }
@@ -474,7 +472,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void TriggerPropertyChanged(string defaultEditActionName, string propertyName,
                                             Action<object> setPropertyAction)
         {
-            BeginEdit(new DefaultEditAction(defaultEditActionName));
+            BeginEdit(defaultEditActionName);
 
             // To trigger a property changed on the WaterFlowFmModel, this self assignment is necessary.
             object propertyValue = ModelDefinition.GetModelProperty(propertyName).Value;
@@ -574,7 +572,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <summary>
         /// Sync properties that are both in the model and the model definition.
         /// </summary>
-        [EditAction]
         private void OnModelDefinitionChanged()
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;

@@ -9,7 +9,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DelftTools.Utils.UndoRedo;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.ViewManager;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -94,7 +93,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             // Create a gui stub
             var gui = mocks.Stub<IGui>();
-            var undoRedoManager = mocks.StrictMock<IUndoRedoManager>();
             var documentViews = new ViewList(mocks.Stub<IDockingManager>(), ViewLocation.Top);
             var application = mocks.Stub<IApplication>();
             var project = mocks.Stub<Project>();
@@ -110,11 +108,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             application.ProjectClosing += null;
             LastCall.Constraints(Is.NotNull()).Repeat.Any();
-
-            Expect.Call(undoRedoManager.Enabled = false).Repeat.Any();
-
+            
             Expect.Call(gui.Plugins).Return(new List<GuiPlugin>()).Repeat.Any();
-            Expect.Call(gui.UndoRedoManager).Return(undoRedoManager);
             Expect.Call(gui.DocumentViews).Return(documentViews);
 
             application.Expect(a => a.ProjectClosing -= Arg<Action<Project>>.Is.Anything);

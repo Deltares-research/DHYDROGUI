@@ -807,7 +807,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual("Surface water type 2", waterQualityModel.ObservationVariableOutputs[1].Name);
 
             // rename area
-            waterQualityModel.ObservationAreas.BeginEdit(new DefaultEditAction(""));
+            waterQualityModel.ObservationAreas.BeginEdit("");
             waterQualityModel.ObservationAreas.Components[0].Attributes.Remove("abc");
             waterQualityModel.ObservationAreas.Components[0].Attributes.Add("abcd", "0");
             waterQualityModel.ObservationAreas.EndEdit();
@@ -846,7 +846,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual("surface water type 2", waterQualityModel.ObservationVariableOutputs[2].Name);
 
             // rename area
-            waterQualityModel.ObservationAreas.BeginEdit(new DefaultEditAction(""));
+            waterQualityModel.ObservationAreas.BeginEdit("");
             waterQualityModel.ObservationAreas.Components[0].Attributes.Remove("surface water type 1");
             waterQualityModel.ObservationAreas.Components[0].Attributes.Add("surface water type 3", "0");
             waterQualityModel.ObservationAreas.EndEdit();

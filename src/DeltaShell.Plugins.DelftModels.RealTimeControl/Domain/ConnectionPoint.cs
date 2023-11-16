@@ -140,7 +140,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             return connectionPoint;
         }
 
-        [EditAction]
         private void UpdateName()
         {
             if (IsConnected)
@@ -173,7 +172,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             ((INotifyPropertyChange) feature).PropertyChanged -= OnFeaturePropertyChanged;
         }
 
-        [EditAction]
         private void OnFeaturePropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             UpdateName();

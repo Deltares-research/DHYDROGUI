@@ -109,7 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             return HtcFile.GetCorrespondingGridFilePath(filePath);
         }
 
-        [EditAction]
         private void UpdateSolarRadiationInMeteoData()
         {
             if (MeteoData == null)
@@ -139,7 +138,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        [EditAction]
         private IFunction CreateTimeseriesMeteoData()
         {
             IFunction result = new Function("Meteo data");

@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -17,7 +16,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
@@ -247,7 +245,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        [EditAction]
         private void SetChildActivitiesStartTime()
         {
             if (!OverrideStartTime)
@@ -264,7 +261,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             updating = false;
         }
 
-        [EditAction]
         private void SetChildActivitiesStopTime()
         {
             if (!OverrideStopTime)
@@ -281,7 +277,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             updating = false;
         }
 
-        [EditAction]
         private void SetChildActivitiesTimeStep()
         {
             if (!OverrideTimeStep)
@@ -330,7 +325,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        [EditAction]
         private void OnActivitiesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (updating)
@@ -397,7 +391,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             BubbleCollectionChangedEvent(sender, e);
         }
 
-        [EditAction]
         private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // activity was removed / added
@@ -566,14 +559,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             Log.ErrorFormat(Resources.HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_, Name);
         }
 
-        [EditAction]
         private void CurrentWorkflowOnStatusChanged(object sender,
                                                     ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
             Status = currentWorkflow.Status;
         }
 
-        [EditAction]
         private void RebuildModelLinks()
         {
             builder.RebuildAllModelLinks(this);
@@ -584,7 +575,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         protected virtual int CurrentWorkflowIndex
         {
             get => Workflows.IndexOf(CurrentWorkflow);
-            [EditAction]
             set
             {
                 if (Workflows.Count <= 1) //only default workflow: can happen on load
@@ -989,7 +979,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        [EditAction]
         private void OnHydroRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var subRegions = sender as IEventedList<IRegion>;
@@ -1059,7 +1048,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private IDimrApi dimrApi;
         private readonly DimrApiFactory dimrApiFactory = new DimrApiFactory();
 
-        [EditAction]
         public virtual void RefreshDefaultModelWorkflows()
         {
             builder.RefreshDefaultModelWorkflows(this);

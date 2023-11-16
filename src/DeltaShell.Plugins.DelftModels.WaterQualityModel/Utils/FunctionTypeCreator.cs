@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
             string editActionMessage = string.Format("Changing function type of {0} {1}to {2}", function, previousType,
                                                      creator.FunctionTypeName);
-            dataOwner.BeginEdit(new DefaultEditAction(editActionMessage));
+            dataOwner.BeginEdit(editActionMessage);
 
             functionCollection.RemoveAt(oldFunctionIndex);
             functionCollection.Insert(oldFunctionIndex, newfunction);

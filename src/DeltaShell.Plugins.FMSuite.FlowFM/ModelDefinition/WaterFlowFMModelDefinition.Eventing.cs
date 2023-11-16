@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
@@ -27,7 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        [EditAction]
         private void OnWaterFlowFMPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (handlingPropertyChanged)

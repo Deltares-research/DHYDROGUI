@@ -175,7 +175,6 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
             return gateFormula;
         }
 
-        [EditAction]
         private void OnCanBeTimeDependentSet()
         {
             if (canBeTimedependent)

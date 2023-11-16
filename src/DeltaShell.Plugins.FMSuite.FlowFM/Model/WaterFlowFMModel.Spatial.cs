@@ -7,7 +7,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
@@ -101,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             try
             {
-                BeginEdit(new DefaultEditAction("Replacing unstructured grid"));
+                BeginEdit("Replacing unstructured grid");
                 if (writeNetFile)
                 {
                     WriteNetFile(NetFilePath, Grid);
@@ -149,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public void RemoveGrid()
         {
-            BeginEdit(new DefaultEditAction("Removing grid..."));
+            BeginEdit("Removing grid...");
             try
             {
                 Grid = new UnstructuredGrid();
@@ -430,7 +429,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (newGrid == null)
             {
-                coverage.BeginEdit(new DefaultEditAction("Clearing grid from coverage"));
+                coverage.BeginEdit("Clearing grid from coverage");
 
                 ClearVariable(coverage.Components[0]);
                 ClearVariable(coverage.Arguments[0]);

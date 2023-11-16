@@ -9,7 +9,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
@@ -221,7 +220,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 return;
             }
 
-            model.BeginEdit(new DefaultEditAction("Setting current workflow to : " + workflowEditorControl.CurrentWorkflow));
+            model.BeginEdit("Setting current workflow to : " + workflowEditorControl.CurrentWorkflow);
             model.CurrentWorkflow = workflowEditorControl.CurrentWorkflow;
             model.EndEdit();
             

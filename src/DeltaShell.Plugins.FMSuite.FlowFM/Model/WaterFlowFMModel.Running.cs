@@ -1,7 +1,6 @@
 using System.IO;
 using BasicModelInterface;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
@@ -118,7 +117,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => base.Status = value;
         }
 
-        [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
 
         #endregion

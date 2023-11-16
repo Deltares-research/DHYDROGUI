@@ -16,7 +16,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
@@ -730,7 +729,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         public void ReloadAllGrids()
         {
-            BeginEdit(new DefaultEditAction("Reload all grids"));
+            BeginEdit("Reload all grids");
             try
             {
                 WaveDomainHelper.GetAllDomains(OuterDomain).ForEach(LoadWaveDomain);
@@ -796,7 +795,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public void TransformCoordinates(ICoordinateTransformation transformation)
         {
-            BeginEdit(new DefaultEditAction("Converting model coordinates"));
+            BeginEdit("Converting model coordinates");
 
             WaveModelCoordinateConversion.Transform(this, transformation);
             CoordinateSystem = (ICoordinateSystem)transformation.TargetCS;
@@ -954,7 +953,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return Path.GetFullPath(outputDir);
         }
 
-        [EditAction]
         private void RemoveDataItemsForDomain(IWaveDomainData domain)
         {
             foreach (IWaveDomainData subDomain in WaveDomainHelper.GetAllDomains(domain))
@@ -963,7 +961,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        [EditAction]
         private void AddDataItemsForDomain(IWaveDomainData domain)
         {
             foreach (IWaveDomainData subDomain in WaveDomainHelper.GetAllDomains(domain))
@@ -972,7 +969,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        [EditAction]
         private void ReplaceDataItemsForDomain(IWaveDomainData newDomainData)
         {
             foreach (IWaveDomainData subDomain in WaveDomainHelper.GetAllDomains(newDomainData))
@@ -1123,7 +1119,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.BedFriction,
                                                                 StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching bed friction coefficient"));
+                BeginEdit("Switching bed friction coefficient");
 
                 WaveModelProperty bedFrictionProperty = ModelDefinition.GetModelProperty(
                     KnownWaveSections.ProcessesSection,
@@ -1143,7 +1139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.SimulationMode,
                                                                      StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching simulation mode"));
+                BeginEdit("Switching simulation mode");
                 WaveModelProperty simulationModeProperty = modelDefinition.GetModelProperty(
                     KnownWaveSections.GeneralSection,
                     KnownWaveProperties.SimulationMode);
@@ -1162,56 +1158,56 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.DirectionalSpaceType,
                                                                      StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching directional space type"));
+                BeginEdit("Switching directional space type");
                 TriggerPropertyChanged(KnownWaveSections.GeneralSection, KnownWaveProperties.DirectionalSpaceType, o => DirectionalSpaceType = (int)o);
                 EndEdit();
             }
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(
                 KnownWaveProperties.WriteCOM, StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching write COM"));
+                BeginEdit("Switching write COM");
                 TriggerPropertyChanged(KnownWaveSections.OutputSection, KnownWaveProperties.WriteCOM, o => WriteCOM = (bool)o);
                 EndEdit();
             }
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.WriteTable,
                                                                      StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching write table"));
+                BeginEdit("Switching write table");
                 TriggerPropertyChanged(KnownWaveSections.OutputSection, KnownWaveProperties.WriteTable, o => WriteTable = (bool)o);
                 EndEdit();
             }
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.MapWriteNetCDF,
                                                                      StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching MapWriteNetCDF"));
+                BeginEdit("Switching MapWriteNetCDF");
                 TriggerPropertyChanged(KnownWaveSections.OutputSection, KnownWaveProperties.MapWriteNetCDF, o => MapWriteNetCDF = (bool)o);
                 EndEdit();
             }
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.Breaking,
                                                                      StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching Breaking"));
+                BeginEdit("Switching Breaking");
                 TriggerPropertyChanged(KnownWaveSections.ProcessesSection, KnownWaveProperties.Breaking, o => Breaking = (bool)o);
                 EndEdit();
             }
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.Triads,
                                                                      StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching Triads"));
+                BeginEdit("Switching Triads");
                 TriggerPropertyChanged(KnownWaveSections.ProcessesSection, KnownWaveProperties.Triads, o => Triads = (bool)o);
                 EndEdit();
             }
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.Diffraction,
                                                                      StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching Diffraction"));
+                BeginEdit("Switching Diffraction");
                 TriggerPropertyChanged(KnownWaveSections.ProcessesSection, KnownWaveProperties.Diffraction, o => Diffraction = (bool)o);
                 EndEdit();
             }
             else if (prop.PropertyDefinition.FilePropertyKey.Equals(KnownWaveProperties.WaveSetup,
                                                                      StringComparison.InvariantCultureIgnoreCase))
             {
-                BeginEdit(new DefaultEditAction("Switching WaveSetup"));
+                BeginEdit("Switching WaveSetup");
                 TriggerPropertyChanged(KnownWaveSections.ProcessesSection, KnownWaveProperties.WaveSetup, o => WaveSetup = (bool)o);
 
                 if ((bool)prop.Value)
@@ -1239,7 +1235,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        [EditAction]
         private void AfterCoordinateSystemSet()
         {
             IList<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain);
@@ -1318,7 +1313,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             var curvilinearCoverage = (CurvilinearCoverage)bathyValueConverter.OriginalValue;
-            curvilinearCoverage.BeginEdit(new DefaultEditAction("Reloading coverage grid"));
+            curvilinearCoverage.BeginEdit("Reloading coverage grid");
             curvilinearCoverage.Resize(
                 domain.Grid.Size1, domain.Grid.Size2,
                 domain.Grid.X.Values, domain.Grid.Y.Values);
@@ -1617,7 +1612,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             set => base.Status = value;
         }
 
-        [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
 
         /// <summary>

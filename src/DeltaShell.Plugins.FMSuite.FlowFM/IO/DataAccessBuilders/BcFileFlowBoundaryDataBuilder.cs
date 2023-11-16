@@ -490,7 +490,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         IFunction existingData = boundaryCondition.GetDataAtPoint(dataPoint);
                         try
                         {
-                            existingData.BeginEdit(new DefaultEditAction("Importing dataBlock..."));
+                            existingData.BeginEdit("Importing dataBlock...");
                             if (daoDataBlock.ForcingTypeDefinition.ForcingType == BoundaryConditionDataType.AstroCorrection ||
                                 daoDataBlock.ForcingTypeDefinition.ForcingType == BoundaryConditionDataType.HarmonicCorrection)
                             {

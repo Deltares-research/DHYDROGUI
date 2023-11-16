@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using GeoAPI.Geometries;
 using log4net;
@@ -70,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
                 WaveDomainHelper.GetAllDomains(model.OuterDomain)
                                 .First(d => Equals(d.Grid, targetGrid));
 
-            model.BeginEdit(new DefaultEditAction("Importing grid"));
+            model.BeginEdit("Importing grid");
             try
             {
                 CurvilinearGrid grid = Delft3DGridFileReader.Read(path);

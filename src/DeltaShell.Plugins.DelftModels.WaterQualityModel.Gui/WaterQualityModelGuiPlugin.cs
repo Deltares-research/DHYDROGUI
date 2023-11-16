@@ -147,8 +147,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         sharpMapGisGuiPlugin.SpatialOperationsEnabled = true;
                     }
-
-                    gui.UndoRedoManager.Enabled = false;
                 }
             }
         }

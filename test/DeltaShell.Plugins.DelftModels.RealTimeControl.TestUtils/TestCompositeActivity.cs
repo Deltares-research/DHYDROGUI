@@ -93,7 +93,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
         protected override void OnFinish() {}
 
-        [EditAction]
         private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!Equals(sender, activities))

@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
             featuresToAddList.OfType<TFeature>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
 
             GetEditableObject?.Invoke(featureList)
-                             .BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
+                             .BeginEdit($"Importing features of type {typeof(T).Name}");
 
             IEqualityComparer<T> equalityComparer =
                 comparer != null ? (IEqualityComparer<T>)comparer

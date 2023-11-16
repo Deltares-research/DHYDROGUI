@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         private static IFunction ExpandHarmonicFunction(IFunction function, int dimensions)
         {
-            function.BeginEdit(new DefaultEditAction("Expanding harmonic function"));
+            function.BeginEdit("Expanding harmonic function");
             for (var i = 0; i < dimensions; ++i)
             {
                 string amplitudeName = function.Components[4 * i].Name + " corr.";
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         private static IFunction ExpandAstroFunction(IFunction function, int dimensions)
         {
-            function.BeginEdit(new DefaultEditAction("Expanding astro function"));
+            function.BeginEdit("Expanding astro function");
             for (var i = 0; i < dimensions; ++i)
             {
                 string amplitudeName = function.Components[4 * i].Name + " corr.";

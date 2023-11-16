@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                             harmonicComponents.Where(h => h.Name != null).ToList();
                         foreach (IFunction data in SeriesToFill(boundaryCondition))
                         {
-                            data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
+                            data.BeginEdit("Importing data to boundary condition");
                             FunctionHelper.SetValuesRaw(data.Arguments[0], astroComponents.Select(h => h.Name));
                             FunctionHelper.SetValuesRaw(data.Components[0], astroComponents.Select(h => h.Amplitude));
                             FunctionHelper.SetValuesRaw(data.Components[1], astroComponents.Select(h => h.Phase));
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                         astroComponents = harmonicComponents.Where(h => h.Name != null).ToList();
                         foreach (IFunction data in SeriesToFill(boundaryCondition))
                         {
-                            data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
+                            data.BeginEdit("Importing data to boundary condition");
                             FunctionHelper.SetValuesRaw(data.Arguments[0], astroComponents.Select(h => h.Name));
                             FunctionHelper.SetValuesRaw(data.Components[0], astroComponents.Select(h => h.Amplitude));
                             FunctionHelper.SetValuesRaw(data.Components[2], astroComponents.Select(h => h.Phase));
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     case BoundaryConditionDataType.Harmonics:
                         foreach (IFunction data in SeriesToFill(boundaryCondition))
                         {
-                            data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
+                            data.BeginEdit("Importing data to boundary condition");
                             IOrderedEnumerable<HarmonicComponent> orderedComponents =
                                 harmonicComponents.OrderBy(h => h.Frequency);
                             FunctionHelper.SetValuesRaw(data.Arguments[0], orderedComponents.Select(h => h.Frequency));
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     case BoundaryConditionDataType.HarmonicCorrection:
                         foreach (IFunction data in SeriesToFill(boundaryCondition))
                         {
-                            data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
+                            data.BeginEdit("Importing data to boundary condition");
                             IOrderedEnumerable<HarmonicComponent> orderedComponents =
                                 harmonicComponents.OrderBy(h => h.Frequency);
                             FunctionHelper.SetValuesRaw(data.Arguments[0], orderedComponents.Select(h => h.Frequency));

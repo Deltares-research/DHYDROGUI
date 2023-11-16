@@ -61,7 +61,6 @@ namespace DelftTools.Hydro
             return SubRegions;
         }
 
-        [EditAction]
         private void OnSubRegionsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (!Equals(sender, SubRegions))

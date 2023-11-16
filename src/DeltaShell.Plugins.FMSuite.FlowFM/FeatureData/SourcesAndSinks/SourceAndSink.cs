@@ -74,7 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
             return Function.Components.OfType<T>().Select(v => v.Name);
         }
 
-        [EditAction]
         private void AfterFeatureSet()
         {
             Name = Feature.Name + " data";

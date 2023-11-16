@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     {
         public static void ApplyForSupportPointMode<T>(this IBoundaryCondition boundaryCondition, SupportPointMode mode, T[] newComponentValues, Func<T[], IFunction, bool> applyToFunction, string actionName, int selectedIndex = -1)
         {
-            boundaryCondition.BeginEdit(new DefaultEditAction(actionName));
+            boundaryCondition.BeginEdit(actionName);
             int count = boundaryCondition.Feature.Geometry.Coordinates.Length;
             switch (mode)
             {

@@ -18,7 +18,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -453,7 +452,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        [EditAction]
         protected override void OnDataItemAdded(IDataItem item)
         {
             base.OnDataItemAdded(item);
@@ -573,13 +571,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        [EditAction]
         private void OnRemoveModel()
         {
             ClearOutput();
         }
 
-        [EditAction]
         private void ConnectionPointsCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             // add/remove data items for control groups and their inputs/outputs
@@ -635,7 +631,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             AfterControlGroupsCollectionChanged(sender, e);
         }
 
-        [EditAction]
         private void AfterControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             MarkOutputOutOfSync();
@@ -985,7 +980,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected override void OnClearOutput()
         {
-            BeginEdit(new DefaultEditAction("Clearing all real time control output"));
+            BeginEdit("Clearing all real time control output");
 
             DisconnectOutputFileFunctionStore();
             ListOfOutputRestartFiles.Clear();
@@ -1166,7 +1161,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             set => base.Status = value;
         }
 
-        [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
 
         /// <summary>
@@ -1178,7 +1172,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// for trying to connect output... Exception will be thrown,
         /// but caught. Code should be improved for this case
         /// </summary>
-        [EditAction]
         public virtual string DimrExportDirectoryPath
         {
             get => throw new NotSupportedException();

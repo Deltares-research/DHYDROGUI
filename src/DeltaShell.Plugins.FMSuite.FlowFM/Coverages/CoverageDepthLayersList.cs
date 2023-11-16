@@ -36,7 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
         private bool IsDepthIndependent { get; set; }
 
-        [EditAction]
         private void AfterVerticalProfileSet()
         {
             int layerCount = verticalProfileDefinition.ProfilePoints;

@@ -14,7 +14,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common.IO;
@@ -181,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             try
             {
-                BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
+                BeginEdit("Importing hydrodynamics data");
                 HydroData = data;
 
                 importingHydroData = true;
@@ -419,7 +418,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(workingDirectoryWithoutModelName(), GetWaqDataFolderName());
         }
 
-        [EditAction]
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!enableMarkOutputOutOfSync)
@@ -432,7 +430,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             MarkOutputOutOfSync();
         }
 
-        [EditAction]
         protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!enableMarkOutputOutOfSync)
@@ -626,7 +623,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             return Name.Replace(" ", "_");
         }
 
-        [EditAction]
         private void SetWaqPointHeights()
         {
             double defaultZ = GetDefaultZ();
@@ -642,7 +638,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        [EditAction]
         private void SetHorizontalDispersion(double value)
         {
             WaterQualityFunctionFactory.SetDefaultValue(Dispersion[0], value);

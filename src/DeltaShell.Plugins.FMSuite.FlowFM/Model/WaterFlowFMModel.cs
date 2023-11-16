@@ -15,7 +15,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
@@ -304,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             get => depthLayerDefinition;
             set
             {
-                BeginEdit(new DefaultEditAction("Changing layer definition"));
+                BeginEdit("Changing layer definition");
                 depthLayerDefinition = value;
                 ModelDefinition.Kmx = depthLayerDefinition.UseLayers ? depthLayerDefinition.NumLayers : 0;
                 EndEdit();
@@ -727,7 +726,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public void TransformCoordinates(ICoordinateTransformation transformation)
         {
-            BeginEdit(new DefaultEditAction("Converting model coordinates"));
+            BeginEdit("Converting model coordinates");
 
             WaterFlowFMModelCoordinateConversion.ConvertModel(this, transformation);
 

@@ -190,6 +190,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             return pointIndex < PointDepthLayerDefinitions.Count ? PointDepthLayerDefinitions[pointIndex] : null;
         }
 
+        public void BeginEdit(string action)
+        {
+            IsEditing = true;
+        }
+
         public void BeginEdit(IEditAction action)
         {
             IsEditing = true;
@@ -299,7 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         {
             if (e.PropertyName == nameof(Feature2D.Geometry))
             {
-                BeginEdit(new DefaultEditAction("Syncing data with geometry points"));
+                BeginEdit("Syncing data with geometry points");
 
                 List<int> newIndices =
                     DataPointIndices.Select(
@@ -330,10 +335,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             previousGeometry = Feature.Geometry;
         }
 
-        [EditAction]
         protected virtual void AfterDataTypeChanged(BoundaryConditionDataType previousDataType)
         {
-            BeginEdit(new DefaultEditAction("Syncing data with data type"));
+            BeginEdit("Syncing data with data type");
 
             if (IsHorizontallyUniform && !DataPointIndices.Any())
             {
@@ -475,7 +479,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             return i >= 0 && i < Feature.Geometry.Coordinates.Count();
         }
 
-        [EditAction]
         private void DataPointIndicesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             object removedOrAddedItem = e.GetRemovedOrAddedItem();
@@ -531,7 +534,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        [EditAction]
         private void PointDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (syncing)
@@ -568,7 +570,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        [EditAction]
         private void PointDepthLayerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (syncing)
@@ -703,7 +704,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 return;
             }
 
-            data.BeginEdit(new DefaultEditAction("Fixing layer components"));
+            data.BeginEdit("Fixing layer components");
             object removedOrAddedItem = e.GetRemovedOrAddedItem();
 
             switch (e.Action)

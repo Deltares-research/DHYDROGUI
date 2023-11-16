@@ -678,7 +678,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void LinkDataItems(IDataItem target, IDataItem source, bool unlinkExisting = false)
         {
-            Model.BeginEdit(new DefaultEditAction(string.Format("Linking {0} to {1}", target, source)));
+            Model.BeginEdit(string.Format("Linking {0} to {1}", target, source));
 
             // unlink any existing items connected to this item
             if (unlinkExisting)

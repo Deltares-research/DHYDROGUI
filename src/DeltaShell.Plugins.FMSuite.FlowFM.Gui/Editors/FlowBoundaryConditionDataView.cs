@@ -763,7 +763,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private static bool GenerateTimeSeries(IFunction function, TimeSeriesGeneratorDialog generateDialog)
         {
-            function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
+            function.BeginEdit("Generate/modify timeseries");
             IVariable<DateTime> argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
             if (!generateDialog.Apply(argument))
             {
@@ -841,7 +841,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             bool isCorrected = function.Components.Count == 4;
 
-            function.BeginEdit(new DefaultEditAction("Generate/modify harmonic component values"));
+            function.BeginEdit("Generate/modify harmonic component values");
 
             double frequency = newValues[0];
             double amplitude = newValues[1];
@@ -874,7 +874,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 return false;
             }
 
-            function.BeginEdit(new DefaultEditAction("Generate/modify astro component values"));
+            function.BeginEdit("Generate/modify astro component values");
 
             List<string> previousValues = variable.Values.Cast<string>().ToList();
             foreach (string value in previousValues.Except(components))

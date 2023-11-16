@@ -7,7 +7,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
@@ -95,7 +94,6 @@ namespace DeltaShell.Plugins.NetworkEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EditAction]
         private void HandleRegionDataItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var regionDataItem = e.GetRemovedOrAddedItem() as IDataItem;
@@ -136,7 +134,6 @@ namespace DeltaShell.Plugins.NetworkEditor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EditAction]
         private void HandleSubRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var subRegions = sender as IEventedList<IRegion>;

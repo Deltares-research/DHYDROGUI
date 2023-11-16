@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -139,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                                            double noDataValue,
                                            Func<IEnumerable<double>> getZValues)
         {
-            coverage.BeginEdit(new DefaultEditAction("Starting import of bed levels"));
+            coverage.BeginEdit("Starting import of bed levels");
 
             int count = coverage.GetCoordinatesForGrid(grid).Count();
 
@@ -183,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 return;
             }
 
-            coverage.BeginEdit(new DefaultEditAction("Inserting new grid in coverage"));
+            coverage.BeginEdit("Inserting new grid in coverage");
             List<Coordinate> newLocations = coverage.GetCoordinatesForGrid(grid).ToList();
 
             int count = newLocations.Count;
@@ -300,7 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 return;
             }
 
-            coverage.BeginEdit(new DefaultEditAction($"Replacing missing values for coverage {coverage.Name}"));
+            coverage.BeginEdit($"Replacing missing values for coverage {coverage.Name}");
             List<double> values = GenerateCollectionWithReplacedValues(variable).ToList();
             variable.Values.Clear();
 
