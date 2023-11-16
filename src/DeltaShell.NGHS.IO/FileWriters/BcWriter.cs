@@ -5,6 +5,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DHYDRO.Common.IO.Ini;
@@ -129,8 +130,8 @@ namespace DeltaShell.NGHS.IO.FileWriters
             var iniData = new IniData();
             iniData.AddMultipleSections(iniSections);
 
-            CreateDirectoryIfItDoesNotExist(targetFile);
-            
+            CreateDirectoryIfNotExists(targetFile);
+
             log.InfoFormat(Resources.BcWriter_WriteIniFile_Writing_boundary_conditions_to__0__, targetFile);
             using (Stream iniStream = fileSystem.File.Open(targetFile, FileMode.Create))
             {
@@ -138,12 +139,13 @@ namespace DeltaShell.NGHS.IO.FileWriters
             }
         }
 
-        private void CreateDirectoryIfItDoesNotExist(string targetFile)
+        private void CreateDirectoryIfNotExists(string targetFile)
         {
             string directory = fileSystem.Path.GetDirectoryName(targetFile);
-            if (!string.IsNullOrEmpty(directory) && !fileSystem.Directory.Exists(directory))
+
+            if (!string.IsNullOrEmpty(directory))
             {
-                fileSystem.Directory.CreateDirectory(directory);
+                fileSystem.CreateDirectoryIfNotExists(directory);
             }
         }
     }

@@ -686,7 +686,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteIniFile(string targetFile, IEnumerable<IniSection> iniSections)
         {
-            var iniFormatter = new IniFormatter() { Configuration = { WriteComments = false } };
+            var iniFormatter = new IniFormatter { Configuration = { WriteComments = false } };
 
             var iniData = new IniData();
             iniData.AddMultipleSections(iniSections);
