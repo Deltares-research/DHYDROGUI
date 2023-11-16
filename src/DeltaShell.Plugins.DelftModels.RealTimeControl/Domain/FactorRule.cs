@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        [EditAction]
         private void UpdateLookupTable()
         {
             Interpolation = InterpolationType.Linear;

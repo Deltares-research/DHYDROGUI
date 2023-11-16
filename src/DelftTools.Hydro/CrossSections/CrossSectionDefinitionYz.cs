@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
@@ -27,7 +26,7 @@ namespace DelftTools.Hydro.CrossSections
         private void RowChanging(object sender, LightDataRowChangeEventArgs e)
         {
             // here to trigger event
-            BeginEdit(new DefaultEditAction("Row changing"));
+            BeginEdit("Row changing");
             EndEdit();
 
             if (e.Action == DataRowAction.Add || e.Action == DataRowAction.Change)
@@ -89,7 +88,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public override void ShiftLevel(double delta)
         {
-            BeginEdit(new DefaultEditAction("Shift level"));
+            BeginEdit("Shift level");
 
             foreach (var yz in YZDataTable.ToList())
             {

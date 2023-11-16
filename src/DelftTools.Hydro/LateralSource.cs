@@ -56,7 +56,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         private void SetLongNameToDescription(string value)
         {
             Description = value;

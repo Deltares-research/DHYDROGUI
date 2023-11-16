@@ -126,14 +126,12 @@ namespace DelftTools.Hydro.CrossSections
         public virtual double Thalweg
         {
             get { return InnerDefinition.Thalweg; }
-            [EditAction]
             set { throw new InvalidOperationException("Unable to set properties on proxy"); }
         }
 
         public virtual string Description
         {
             get { return InnerDefinition.Description; }
-            [EditAction]
             set { throw new InvalidOperationException("Unable to set properties on proxy"); }
         }
 
@@ -246,6 +244,11 @@ namespace DelftTools.Hydro.CrossSections
         public IEditAction CurrentEditAction
         {
             get { return InnerDefinition.CurrentEditAction; }
+        }
+
+        public void BeginEdit(string action)
+        {
+            InnerDefinition.BeginEdit(action);
         }
 
         public void BeginEdit(IEditAction action)

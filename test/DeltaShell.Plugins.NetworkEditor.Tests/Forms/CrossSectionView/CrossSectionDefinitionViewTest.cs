@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             var tableView = crossSectionView.FieldValue<TableView>("tableView"); //hax
             var controller = tableView.PasteController;
 
-            crossSection.BeginEdit(new DefaultEditAction("test"));
+            crossSection.BeginEdit("test");
             controller.PasteLines(new[] { "0\t1\t1", "1\t1\t1", "2\t1\t1" });
             crossSection.EndEdit();
 

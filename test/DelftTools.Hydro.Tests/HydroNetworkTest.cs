@@ -8,7 +8,6 @@ using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
-using DelftTools.Utils.UndoRedo.DataTable;
 using GeoAPI.Geometries;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
@@ -77,8 +76,6 @@ namespace DelftTools.Hydro.Tests
         [Category(TestCategory.Performance)]
         public void AddManyBranchesWithCrossSections()
         {
-            Console.WriteLine("TrackChanges: " + DataTableObserver.TrackChanges);
-
             TestHelper.AssertIsFasterThan(2500,() =>
                                                      {
                                                          const int count = 10000;

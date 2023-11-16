@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
                 foreach (var data in SeriesToFill(boundaryCondition))
                 {
-                    data.BeginEdit(new DefaultEditAction("Importing data to boundary condition"));
+                    data.BeginEdit("Importing data to boundary condition");
                     FunctionHelper.SetValuesRaw<double>(data.Arguments[0], function.Arguments[0].Values);
                     FunctionHelper.SetValuesRaw<double>(data.Components[0], function.Components[0].Values);
                     data.EndEdit();

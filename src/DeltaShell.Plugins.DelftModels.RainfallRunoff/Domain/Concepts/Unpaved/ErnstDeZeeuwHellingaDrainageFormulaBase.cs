@@ -34,7 +34,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Unpaved
             }
         }
 
-        [EditAction]
         private void OnAfterLevelOneToSet(double value)
         {
             if (value >= levelTwoTo)
@@ -53,7 +52,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Unpaved
             }
         }
         
-        [EditAction]
         private void OnAfterLevelTwoToSet(double value)
         {
             if (value >= LevelThreeTo)

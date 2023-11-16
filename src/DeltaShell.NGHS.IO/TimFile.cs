@@ -74,7 +74,7 @@ namespace DeltaShell.NGHS.IO
             }
             Read(timFilePath, minutes, componentValues);
 
-            function.BeginEdit(new DefaultEditAction("Inserting time series from tim-file"));
+            function.BeginEdit("Inserting time series from tim-file");
             function.Clear();
             FunctionHelper.SetValuesRaw(function.Arguments[0], minutes.Select(m => GetDateTime(m, refDate)));
             for (var i = 0; i < function.Components.Count; ++i)

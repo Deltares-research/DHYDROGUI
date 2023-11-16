@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
@@ -31,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
             }
             set
             {
-                data.OutputSettings.BeginEdit(new DefaultEditAction(string.Format("Setting aggregation option to {0}.", value)));
+                data.OutputSettings.BeginEdit(string.Format("Setting aggregation option to {0}.", value));
                 data.OutputSettings.AggregationOption = value;
                 data.OutputSettings.EndEdit();
             }

@@ -36,7 +36,6 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             }
         }
 
-        [EditAction]
         private void AfterArcHeightSet()
         {
             if (ArcHeight > Height)

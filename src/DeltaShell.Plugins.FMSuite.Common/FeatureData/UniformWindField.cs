@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
-using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
@@ -104,7 +103,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        [EditAction]
         private void UpdateName()
         {
             Name = CreateName(Quantity, components);

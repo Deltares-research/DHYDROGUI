@@ -10,7 +10,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -171,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             try
             {
-                BeginEdit(new DefaultEditAction("Replacing unstructured grid"));
+                BeginEdit("Replacing unstructured grid");
                 if (writeNetFile)
                 {
                     WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation, BedLevelZValues);
@@ -225,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public void RemoveGrid()
         {
-            BeginEdit(new DefaultEditAction("Removing grid..."));
+            BeginEdit("Removing grid...");
             try
             {
                 Grid = new UnstructuredGrid();
@@ -609,7 +608,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (newGrid == null)
             {
-                coverage.BeginEdit(new DefaultEditAction("Clearing grid from coverage"));
+                coverage.BeginEdit("Clearing grid from coverage");
 
                 ClearVariable(coverage.Components[0]);
                 ClearVariable(coverage.Arguments[0]);
@@ -743,7 +742,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (grid != null)
             {
-                BeginEdit(new DefaultEditAction("Updating grid and interpolating values on coverages"));
+                BeginEdit("Updating grid and interpolating values on coverages");
 
                 TypeUtils.CallPrivateMethod(Grid, "ClearCaches");
                 using (var api = new RemoteGridGeomApi())
@@ -841,7 +840,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var originalCoverage = valueConverter.OriginalValue as UnstructuredGridCoverage;
                     if (originalCoverage != null)
                     {
-                        originalCoverage.BeginEdit(new DefaultEditAction("Updating coverage"));
+                        originalCoverage.BeginEdit("Updating coverage");
                         UpdateCoverageAfterGridStateChange(originalCoverage);
                         originalCoverage.EndEdit();
                     }
@@ -869,7 +868,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
                 try
                 {
-                    coverage.BeginEdit(new DefaultEditAction("Updating coverage"));
+                    coverage.BeginEdit("Updating coverage");
                     UpdateCoverageAfterGridStateChange(coverage);
                     coverage.EndEdit();
                 }
@@ -893,7 +892,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void UpdateCoverageOnGridStateChange<T>(T coverage, Action<T> setCoverage) where T : UnstructuredGridCoverage
         {
             if (coverage == null) return;
-            coverage.BeginEdit(new DefaultEditAction("Updating grid and interpolating values"));
+            coverage.BeginEdit("Updating grid and interpolating values");
             var coverageRef = coverage;// prevents events
             setCoverage?.Invoke(null);
             try
@@ -914,7 +913,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (coverage.Grid == null)
             {
-                coverage.BeginEdit(new DefaultEditAction("Clearing grid from coverage"));
+                coverage.BeginEdit("Clearing grid from coverage");
 
                 ClearVariable(coverage.Components[0]);
                 ClearVariable(coverage.Arguments[0]);
@@ -934,7 +933,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return;
             }
 
-            coverage.BeginEdit(new DefaultEditAction("new grid state, do coverage update"));
+            coverage.BeginEdit("new grid state, do coverage update");
 
             ClearVariable(coverage.Components[0]);
             ClearVariable(coverage.Arguments[0]);

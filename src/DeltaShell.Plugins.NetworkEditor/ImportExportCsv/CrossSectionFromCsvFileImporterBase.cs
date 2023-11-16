@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
 
             var existingCrossSections = target.CrossSections.ToDictionary(cs => cs.Name, cs => cs);
 
-            target.BeginEdit(new DefaultEditAction("ImportCrossSections"));
+            target.BeginEdit("ImportCrossSections");
 
             foreach (var data in crossSectionCsvData)
             {
@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
             }
             try
             {
-                crossSectionDefinition.BeginEdit(new DefaultEditAction("Update cross section definition"));
+                crossSectionDefinition.BeginEdit("Update cross section definition");
                 UpdateCrossSectionDefinition(crossSectionDefinition, crossSectionCsvData, target);
                 crossSectionDefinition.EndEdit();
             }
@@ -246,7 +246,7 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
 
             try
             {
-                crossSectionDefinition.BeginEdit(new DefaultEditAction("Create cross section definition"));
+                crossSectionDefinition.BeginEdit("Create cross section definition");
                 UpdateCrossSectionDefinition(crossSectionDefinition, crossSectionCsvData, target);
                 crossSectionDefinition.EndEdit();
             }

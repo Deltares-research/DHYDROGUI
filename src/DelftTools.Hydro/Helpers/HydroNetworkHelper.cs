@@ -6,9 +6,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
-using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -112,7 +110,7 @@ namespace DelftTools.Hydro.Helpers
                 Name = "route_" + GetAvailableRouteNumber(network)
             };
 
-            network.BeginEdit(new DefaultEditAction("Add new route to network"));
+            network.BeginEdit("Add new route to network");
             network.Routes.Add(route);
             route.Network = network;
             network.EndEdit();
@@ -123,7 +121,7 @@ namespace DelftTools.Hydro.Helpers
         public static void RemoveRoute(Route route)
         {
             var hydroNetwork = (IHydroNetwork)route.Network;
-            hydroNetwork.BeginEdit(new DefaultEditAction("Delete feature " + route.Name));
+            hydroNetwork.BeginEdit("Delete feature " + route.Name);
             hydroNetwork.Routes.Remove(route);
             hydroNetwork.EndEdit();
         }
@@ -778,7 +776,6 @@ namespace DelftTools.Hydro.Helpers
             channel.Network.EndEdit();
         }
 
-        [EditAction]
         private static void RemoveFromChannel(IStructure1D structure, IBranch channel)
         {
             if (null == structure.ParentStructure)

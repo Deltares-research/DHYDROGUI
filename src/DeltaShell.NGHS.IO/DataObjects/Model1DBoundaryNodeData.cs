@@ -111,7 +111,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void SetSeriesDataItemValue(IFunction value)
         {
             SeriesDataItem.Value = value;
@@ -452,7 +451,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
 
         #endregion
 
-        [EditAction]
         private void HandleDataItemChanges(object sender, PropertyChangedEventArgs e)
         {
             if ((e.PropertyName == "Name") || (e.PropertyName == "LinkedTo" || e.PropertyName == "Value"))
@@ -462,7 +460,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void SwitchToAppropriateType(IFunction value)
         {
             if (value == null)
@@ -490,7 +487,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void FeatureDataPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Name")
@@ -499,7 +495,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void BranchCollectionChanged(object sender, NotifyCollectionChangedEventArgs NotifyCollectionChangedEventArgs)
         {
             if (WaterLevelOnly != Feature.IsConnectedToMultipleBranches)
@@ -508,7 +503,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void AfterSetWaterLevelOnly()
         {
             if (waterLevelOnly
@@ -520,7 +514,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void AfterSetDataType()
         {
             if (Node is IManhole manhole)
@@ -554,7 +547,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             Name = Feature + " - " + Data;
         }
 
-        [EditAction]
         private void UnlinkDataItems()
         {
             SeriesDataItem.Unlink();
@@ -578,7 +570,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             dataItem.Unlinked -= SeriesDataItemUnlinked;
         }
 
-        [EditAction]
         private void SeriesDataItemLinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
         {
             // match current series data item function to the source function
@@ -635,7 +626,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             throw new NotImplementedException("Should never get here");
         }
 
-        [EditAction]
         private void DisableSalt()
         {
             // change the salt condition type
@@ -643,7 +633,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             SaltConditionType = SaltBoundaryConditionType.None;
         }
 
-        [EditAction]
         private void DisableTemperature()
         {
             // change the temperature condition type
@@ -651,7 +640,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             TemperatureConditionType = TemperatureBoundaryConditionType.None;
         }
 
-        [EditAction]
         private void EnableSalt()
         {
             //add the dataitems and change the salt condition type
@@ -674,7 +662,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             SaltConditionType = SaltBoundaryConditionType.Constant;
         }
 
-        [EditAction]
         private void EnableTemperature()
         {
             //add the dataitems and change the temperature condition type

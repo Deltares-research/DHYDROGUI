@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
-using DelftTools.Utils.Editing;
 using log4net;
 
 namespace DelftTools.Hydro.CrossSections
@@ -64,7 +63,7 @@ namespace DelftTools.Hydro.CrossSections
         {
             crossSectionDefinitionYz.YZDataTable.Clear();
 
-            crossSectionDefinitionYz.BeginEdit(new DefaultEditAction("Updates a YZ crosssection with the given hfsw data"));
+            crossSectionDefinitionYz.BeginEdit("Updates a YZ crosssection with the given hfsw data");
 
             foreach (var hfsw in heightFlowStorageWidth)
             {

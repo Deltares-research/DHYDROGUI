@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             try
             {
-                Region.BeginEdit(new DefaultEditAction("Adding saved hydro links"));
+                Region.BeginEdit("Adding saved hydro links");
                 
                 var regionObjectsLookup = new Dictionary<IHydroRegion, Dictionary<Type, Dictionary<string, IHydroObject>>>();
                 foreach (IRegion region in Region.SubRegions)
@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             try
             {
-                Region.BeginEdit(new DefaultEditAction("Removing hydro links"));
+                Region.BeginEdit("Removing hydro links");
 
                 var sourceRegionsLinksGrouping = Region.Links.Where(l => l.Source is Catchment).GroupBy(l => l.Source.Region);
                 foreach (var sourceRegionGroup in sourceRegionsLinksGrouping)

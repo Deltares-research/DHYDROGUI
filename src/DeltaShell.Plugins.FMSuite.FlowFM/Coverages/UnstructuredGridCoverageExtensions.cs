@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using log4net;
@@ -57,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
         public static void LoadBathymetry(this UnstructuredGridVertexCoverage coverage, UnstructuredGrid grid, double? noDataValue)
         {
-            coverage.BeginEdit(new DefaultEditAction("Starting import of bed levels"));
+            coverage.BeginEdit("Starting import of bed levels");
             var count = grid.Vertices.Count();
             var locationIndexVariable = coverage.Arguments.Last();
             locationIndexVariable.Values.Clear();
@@ -79,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         
         public static void LoadGrid(this UnstructuredGridCoverage coverage, UnstructuredGrid grid, bool reInterpolate = false)
         {
-            coverage.BeginEdit(new DefaultEditAction("Inserting new grid in coverage"));
+            coverage.BeginEdit("Inserting new grid in coverage");
             var newLocations = coverage.GetCoordinatesForGrid(grid).ToList();
             var count = newLocations.Count();
             var locationIndexVariable = coverage.Arguments.Last();
@@ -122,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             locationIndexVariable.ClearWithoutEventing();
             if (count > 0)
             {
-                coverage.BeginEdit(new DefaultEditAction("setting location index variables on coverage"));
+                coverage.BeginEdit("setting location index variables on coverage");
                 FunctionHelper.SetValuesRaw(locationIndexVariable, Enumerable.Range(0, count));
                 coverage.EndEdit();
             }
@@ -156,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                                         ? grid.ReOrderResultsForFlowLinks(targetZ)
                                         : new double[0];
                                 }
-                                coverage.BeginEdit(new DefaultEditAction("Interpolating values on coverage"));
+                                coverage.BeginEdit("Interpolating values on coverage");
                                 coverage.Components[i].ClearWithoutEventing();
                                 FunctionHelper.SetValuesRaw<double>(coverage.Components[i], targetZ);
                                 coverage.EndEdit();
@@ -183,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                         if (!double.TryParse(coverage.Components[i].NoDataValue.ToString(),out value))
                             value = -999.0d;
                     }
-                    coverage.BeginEdit(new DefaultEditAction("Setting empty value on converage"));
+                    coverage.BeginEdit("Setting empty value on converage");
                     coverage.Components[i].ClearWithoutEventing();
                     FunctionHelper.SetValuesRaw(coverage.Components[i], Enumerable.Repeat(value, count));
                     coverage.EndEdit();

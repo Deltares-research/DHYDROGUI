@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                                                                             (ILineString) feature.Geometry);
                 if (crossSection.GeometryBased)
                 {
-                    crossSection.Definition.BeginEdit(new DefaultEditAction("set geometry"));
+                    crossSection.Definition.BeginEdit("set geometry");
                     crossSection.Geometry = feature.Geometry;
                     crossSection.Definition.EndEdit();
                 }

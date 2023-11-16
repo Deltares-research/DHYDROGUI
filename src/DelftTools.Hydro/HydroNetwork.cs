@@ -60,7 +60,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         void RoutesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var route = e.GetRemovedOrAddedItem() as Route;
@@ -104,7 +103,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         void SharedCrossSectionDefinitionsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             //check if the section is in use somewhere..the deletion is not allowed
@@ -164,7 +162,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         void SectionTypesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(CrossSectionSectionType.Name))
@@ -180,7 +177,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         void SectionTypesCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             //check if the section is in use somewhere..the deletion is not allowed

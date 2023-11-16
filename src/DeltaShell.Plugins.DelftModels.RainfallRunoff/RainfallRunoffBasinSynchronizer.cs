@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
@@ -27,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private void RainfallRunoffPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // deal with undo/redo of linking..yes..I know
-            if (!EditActionSettings.Disabled || 
+            if (
                 (e.PropertyName != "Value" && e.PropertyName != "LinkedTo") ||
                 !Equals(sender, subscribedBasinDataItem)) return;
 
@@ -148,7 +147,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             AfterDataItemsSet();
         }
 
-        [EditAction]
         private void DataItemBasinPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!(Equals(sender, subscribedBasinDataItem))) 
@@ -160,7 +158,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        [EditAction]
         void BasinPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var catchment = sender as Catchment;
@@ -180,7 +177,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        [EditAction]
         private void BasinCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (sender is IEventedList<Catchment> catchmentList && 

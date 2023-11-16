@@ -156,7 +156,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Friction
             };
 
             // Call
-            spatialChannelFrictionDefinition.Function.BeginEdit(new DefaultEditAction(""));
+            spatialChannelFrictionDefinition.Function.BeginEdit("");
             spatialChannelFrictionDefinition.Function.EndEdit();
 
             // Assert

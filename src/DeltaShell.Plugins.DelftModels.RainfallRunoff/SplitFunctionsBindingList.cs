@@ -73,6 +73,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             get { return Function?.CurrentEditAction; }
         }
 
+        public void BeginEdit(string action)
+        {
+            Function?.BeginEdit(action);
+        }
+
         public void BeginEdit(IEditAction action)
         {
             Function?.BeginEdit(action);

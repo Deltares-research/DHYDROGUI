@@ -9,10 +9,8 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Drawing;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
@@ -615,7 +613,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
         }
         
-        [EditAction]
         private void SetCurrentNetworkCoverageEditor(INetworkCoverageGroupLayer networkCoverageGroupLayer, bool activateTool)
         {
             if (null == networkCoverageGroupLayer)
@@ -636,7 +633,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         /// </summary>
         /// <param name="networkCoverageGroupLayer"></param>
         /// 
-        [EditAction]
         private void ResetCurrentNetworkCoverageEditor(INetworkCoverageGroupLayer networkCoverageGroupLayer)
         {
             if (null == NetworkLocationTool || null == networkCoverageGroupLayer)

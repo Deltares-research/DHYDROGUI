@@ -64,7 +64,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void SetSeriesDataItemValue(IFunction value)
         {
             SeriesDataItem.Value = value;
@@ -139,7 +138,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             return true;
         }
 
-        [EditAction]
         private void AfterSetDataType()
         {
             switch (dataType)
@@ -304,7 +302,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void SwitchToAppropriateType(IFunction value)
         {
             if (value == null)
@@ -369,7 +366,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        [EditAction]
         private void SeriesDataItemLinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
         {
             if (e.Source.Value is TimeSeries)
@@ -404,7 +400,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             return "";
         }
 
-        [EditAction]
         private void DisableSalt()
         {
             SaltConcentrationTimeSeries = null;
@@ -412,14 +407,12 @@ namespace DeltaShell.NGHS.IO.DataObjects
             SaltLateralDischargeType = SaltLateralDischargeType.Default;
         }
 
-        [EditAction]
         private void DisableTemperature()
         {
             TemperatureTimeSeries = null;
             TemperatureLateralDischargeType = TemperatureLateralDischargeType.None;
         }
 
-        [EditAction]
         private void EnableSalt()
         {
             SaltMassDischargeConstant = 0; //get some defaults here
@@ -447,7 +440,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             SaltLateralDischargeType = SaltLateralDischargeType.Default;
         }
 
-        [EditAction]
         private void EnableTemperature()
         {
             //add the dataitems and change the temperature condition type

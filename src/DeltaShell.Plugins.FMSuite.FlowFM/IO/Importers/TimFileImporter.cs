@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         [InvokeRequired]
         private static void CopyTimeSeries(IFunction functionFrom, IFunction functionTo)
         {
-            functionTo.BeginEdit(new DefaultEditAction("Copying time series from file"));
+            functionTo.BeginEdit("Copying time series from file");
             functionTo.Clear();
             FunctionHelper.SetValuesRaw<DateTime>(functionTo.Arguments[0], functionFrom.Arguments[0].GetValues<DateTime>());
             for (var i = 0; i < functionTo.Components.Count; ++i)

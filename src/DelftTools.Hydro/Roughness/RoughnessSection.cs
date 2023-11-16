@@ -283,7 +283,7 @@ namespace DelftTools.Hydro.Roughness
 
         public void ChangeBranchFunction(IBranch branch, RoughnessFunction roughnessFunction)
         {
-            BeginEdit(new RoughnessSectionChangeBranchFunction(branch, this, GetRoughnessFunctionType(branch), roughnessFunction));
+            BeginEdit(string.Format("Roughness dependency ({0}): {1} -> {2}", branch, GetRoughnessFunctionType(branch), roughnessFunction));
 
             var chainages = RoughnessNetworkCoverage.Locations.Values.Where(l => l.Branch == branch).Select(l => l.Chainage);
 
@@ -358,13 +358,11 @@ namespace DelftTools.Hydro.Roughness
             }
         }
 
-        [EditAction]
         private void ResetNetworkInRoughnessCoverage()
         {
             RoughnessNetworkCoverage.Network = null;
         }
 
-        [EditAction]
         private void SetNetworkInRoughnessCoverage()
         {
             RoughnessNetworkCoverage.Network = Network;
@@ -473,7 +471,6 @@ namespace DelftTools.Hydro.Roughness
             }
         }
 
-        [EditAction]
         private void UpdateRougnessFunction(INetworkLocation networkLocation)
         {
             //sorry for this ...cannot use a dictionary because hashcode changes when chainage change...don't want to 'name' the DelftTools.Utils.Tuple..seem overkill?
@@ -730,7 +727,6 @@ namespace DelftTools.Hydro.Roughness
             }
         }
 
-        [EditAction]
         void CrossSectionSectionTypePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Name")
@@ -747,7 +743,6 @@ namespace DelftTools.Hydro.Roughness
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EditAction]
         protected virtual void RoughnessNetworkCoverageValueChanged(object sender, MultiDimensionalArrayChangingEventArgs e)
         {
             if (isInKnownEditAction)
@@ -935,6 +930,11 @@ namespace DelftTools.Hydro.Roughness
         public virtual bool EditWasCancelled { get; protected set; }
 
         public virtual bool IsEditing { get; protected set; }
+
+        public virtual void BeginEdit(string action)
+        {
+            BeginEdit(new DefaultEditAction(action));
+        }
 
         public virtual void BeginEdit(IEditAction action)
         {

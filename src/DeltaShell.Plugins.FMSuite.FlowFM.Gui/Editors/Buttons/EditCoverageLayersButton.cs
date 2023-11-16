@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 
@@ -22,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
             dialog.ShowDialog();
             if (dialog.DialogResult == DialogResult.OK)
             {
-                model.BeginEdit(new DefaultEditAction("replacing salinity vertical profile definition"));
+                model.BeginEdit("replacing salinity vertical profile definition");
                 depthLayerDefinition.VerticalProfile = dialog.VerticalProfileDefinition;
                 model.EndEdit();
             }

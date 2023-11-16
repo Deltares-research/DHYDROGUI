@@ -60,7 +60,6 @@ namespace DelftTools.Hydro.Roughness
 
         private bool internalChange = false;
 
-        [EditAction]
         protected override void RoughnessNetworkCoverageValueChanged(object sender, DelftTools.Functions.MultiDimensionalArrayChangingEventArgs e)
         {
             if (internalChange)

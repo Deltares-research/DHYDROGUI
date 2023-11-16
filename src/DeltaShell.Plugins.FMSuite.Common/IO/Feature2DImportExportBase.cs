@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                        ? (IEqualityComparer<T>) comparer
                                        : new NameableFeatureComparer<T>();
             
-            GetEditableObject?.Invoke(featureList).BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
+            GetEditableObject?.Invoke(featureList).BeginEdit($"Importing features of type {typeof(T).Name}");
 
             Dictionary<int, int> hashListIndexLookup = null;
             try

@@ -108,7 +108,6 @@ namespace DelftTools.Hydro.SewerFeatures
             Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(crossSectionDefinitionStandard.Shape.MaterialName);
         }
 
-        [EditAction]
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs args)
         {
             if (args.Action != NotifyCollectionChangeAction.Add || args.Item is LateralSource || args.Item is HydroLink)

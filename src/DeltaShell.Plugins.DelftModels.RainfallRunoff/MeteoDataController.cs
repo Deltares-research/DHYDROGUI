@@ -5,9 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using GeoAPI.Extensions.Coverages;
 
@@ -56,7 +54,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             Model.CollectionChanged += StationsCollectionChanged;
         }
 
-        [EditAction]
         private void RainfallRunoffModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!(sender is MeteoData meteoData))

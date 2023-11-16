@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Editing;
 
 namespace DelftTools.Hydro.CrossSections
 {
@@ -16,7 +15,7 @@ namespace DelftTools.Hydro.CrossSections
         {
             crossSectionDefinitionZW.ZWDataTable.Clear();
 
-            crossSectionDefinitionZW.BeginEdit(new DefaultEditAction("Updates a HW crosssection with the given hfsw data"));
+            crossSectionDefinitionZW.BeginEdit("Updates a HW crosssection with the given hfsw data");
 
             foreach (var hfsw in heightFlowStorageWidth)
             {

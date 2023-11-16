@@ -27,7 +27,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
@@ -304,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return depthLayerDefinition; }
             set
             {
-                BeginEdit(new DefaultEditAction("Changing layer definition"));
+                BeginEdit("Changing layer definition");
                 depthLayerDefinition = value;
                 ModelDefinition.Kmx = depthLayerDefinition.UseLayers ? depthLayerDefinition.NumLayers : 0;
                 EndEdit();
@@ -787,7 +786,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <summary>
         /// Sync properties that are both in the model and the model definition.
         /// </summary>
-        [EditAction]
         private void OnModelDefinitionChanged()
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
@@ -1207,7 +1205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public void TransformCoordinates(ICoordinateTransformation transformation)
         {
-            BeginEdit(new DefaultEditAction("Converting model coordinates"));
+            BeginEdit("Converting model coordinates");
 
             WaterFlowFMModelCoordinateConversion.ConvertModel(this, transformation);
 
@@ -2950,7 +2948,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             set { base.Status = value; }
         }
 
-        [EditAction]
         public virtual bool RunsInIntegratedModel
         {
             get

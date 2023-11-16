@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
@@ -154,7 +153,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         
         #region Manual RadioButton Binding
 
-        [EditAction]
         private void SplittingDefinitionRadioCheckedChanged(object sender, EventArgs e)
         {
             //databinding doesn't work well for >2 radio buttons
@@ -182,7 +180,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             bindingSourcePavedViewModel.ResumeBinding();
         }
 
-        [EditAction]
         private void SewerPumpCapacityRadioCheckedChanged(object sender, EventArgs e)
         {
             //databinding doesn't work well for >2 radio buttons

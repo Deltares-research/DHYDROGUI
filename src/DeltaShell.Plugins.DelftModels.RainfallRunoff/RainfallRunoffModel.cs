@@ -612,7 +612,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
         
-        [EditAction]
         private void AfterAreaUnitSet(RainfallRunoffEnums.AreaUnit value)
         {
             GetDataItemValueByTag<Parameter<int>>(RainfallRunoffModelDataSet.AreaUnitTag).Value = (int) value;
@@ -776,7 +775,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return GetAllModelData().FirstOrDefault(cmd => Equals(cmd.Catchment, catchment));
         }
 
-        [EditAction]
         private void OutputSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is EngineParameter && e.PropertyName.Equals(nameof(EngineParameter.IsEnabled)))
@@ -1127,7 +1125,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             set { base.Status = value; }
         }
 
-        [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
 
         public string DimrExportDirectoryPath => WorkingDirectory;

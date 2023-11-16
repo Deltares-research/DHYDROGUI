@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
         protected override bool RemoveNodeData(object parentNodeData, ObservationPoint observationPoint)
         {
             var network = observationPoint.Branch.Network;
-            network.BeginEdit(new DefaultEditAction("Delete feature " + observationPoint.Name));
+            network.BeginEdit("Delete feature " + observationPoint.Name);
             observationPoint.Branch.BranchFeatures.Remove(observationPoint);
             network.EndEdit();
             return true;

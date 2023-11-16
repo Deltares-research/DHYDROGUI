@@ -6,7 +6,6 @@ using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections
@@ -34,7 +33,7 @@ namespace DelftTools.Hydro.CrossSections
         private void RowChanging(object sender, LightDataRowChangeEventArgs e)
         {
             // here to trigger event
-            BeginEdit(new DefaultEditAction("Row changing"));
+            BeginEdit("Row changing");
             EndEdit();
 
             if (skipValidation) return;
@@ -156,7 +155,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public override void ShiftLevel(double delta)
         {
-            BeginEdit(new DefaultEditAction("Shift level"));
+            BeginEdit("Shift level");
 
             skipValidation = true;
             foreach (var hww in ZWDataTable.ToList())
@@ -210,7 +209,7 @@ namespace DelftTools.Hydro.CrossSections
 
             clone.SummerDike = SummerDike.Clone();
 
-            clone.BeginEdit(new DefaultEditAction("Clone"));
+            clone.BeginEdit("Clone");
             
             var dataTable = new FastZWDataTable();
             dataTable.BeginLoadData();
@@ -231,7 +230,7 @@ namespace DelftTools.Hydro.CrossSections
         {
             var crossSectionSource = (CrossSectionDefinitionZW) source;
 
-            BeginEdit(new DefaultEditAction("CopyFrom"));
+            BeginEdit("CopyFrom");
 
             base.CopyFrom(source);
             SummerDike = crossSectionSource.SummerDike.Clone();

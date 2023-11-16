@@ -292,7 +292,6 @@ namespace DelftTools.Hydro.CrossSections
         /// <summary>
         /// Resets the geometry cache and optionally recalculates the thalweg and sections min/max.
         /// </summary>
-        [EditAction]
         private void HandleCrossSectionChanged()
         {
             cachedGeometry = null;
@@ -317,7 +316,6 @@ namespace DelftTools.Hydro.CrossSections
             Thalweg = definitionSource.Thalweg;
         }
 
-        [EditAction]
         protected void SectionsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (inSectionsPropertyChanged)
@@ -371,7 +369,6 @@ namespace DelftTools.Hydro.CrossSections
             inSectionsPropertyChanged = false;
         }
 
-        [EditAction]
         private void SectionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch(e.Action)
@@ -387,7 +384,6 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
         
-        [EditAction]
         private void FixMinMaxOfSections()
         {
             if (!ForceSectionsSpanFullWidth)
@@ -445,7 +441,6 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
-        [EditAction]
         private void FixThalweg()
         {
             if (!GetProfile().Any())

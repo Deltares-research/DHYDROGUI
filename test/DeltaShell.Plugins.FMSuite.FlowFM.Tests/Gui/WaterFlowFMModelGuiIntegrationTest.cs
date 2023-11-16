@@ -1109,7 +1109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         gui.CommandHandler.OpenView(model);
                         var network = model.Network;
 
-                        network.BeginEdit(new DefaultEditAction("Adding pipe..."));
+                        network.BeginEdit("Adding pipe...");
                         IPipe pipe = new Pipe()
                         {
                             Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100),})

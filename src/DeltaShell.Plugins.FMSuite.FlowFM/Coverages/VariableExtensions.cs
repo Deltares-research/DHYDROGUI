@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
     {
         public static void ClearWithoutEventing(this IVariable variable)
         {
-            variable.BeginEdit(new DefaultEditAction("clear coverage")); 
+            variable.BeginEdit("clear coverage"); 
             IMultiDimensionalArray targetMda = variable.Values;
             if (targetMda.Count == 0)
             {

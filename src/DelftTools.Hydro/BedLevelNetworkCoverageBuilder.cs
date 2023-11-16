@@ -1,7 +1,6 @@
 using System;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
-using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -39,8 +38,6 @@ namespace DelftTools.Hydro
             SegmentGenerationMethod segmentGenerationMethod = networkCoverage.SegmentGenerationMethod;
             networkCoverage.SegmentGenerationMethod = SegmentGenerationMethod.None;
 
-            bool editDisabled = EditActionSettings.Disabled;
-            EditActionSettings.Disabled = false;
                 // HACK: switch off edit action attribute in set values in function to allow updating during undo/redo.
             foreach (var crossSection in network.CrossSections)
             {
@@ -51,8 +48,7 @@ namespace DelftTools.Hydro
                     networkCoverage[location] = value;
                 }
             }
-            EditActionSettings.Disabled = editDisabled;
-            
+
             //switch back to previous segmentation method
             networkCoverage.SegmentGenerationMethod = segmentGenerationMethod;
 
@@ -80,9 +76,6 @@ namespace DelftTools.Hydro
             networkCoverage.SegmentGenerationMethod = SegmentGenerationMethod.None;
 
             //extend coverage with the locations in the route.
-            bool editDisabled = EditActionSettings.Disabled;
-            EditActionSettings.Disabled = false;
-                // HACK: switch off edit action attribute in set values in function to allow updating during undo/redo.
             foreach (INetworkLocation location in route.Locations.Values)
             {
                 var networkLocation = (NetworkLocation) location.Clone();
@@ -91,7 +84,6 @@ namespace DelftTools.Hydro
                     networkCoverage[networkLocation] = networkCoverage.Evaluate(networkLocation);
                 }
             }
-            EditActionSettings.Disabled = editDisabled;
             
             // reenable segmentation for performance
             networkCoverage.SegmentGenerationMethod = segmentGenerationMethod;

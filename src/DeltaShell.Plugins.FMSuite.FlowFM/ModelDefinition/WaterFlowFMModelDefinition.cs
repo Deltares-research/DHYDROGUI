@@ -9,7 +9,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
@@ -244,7 +243,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         private bool handlingPropertyChanged;
         private readonly Dictionary<string, Action<WaterFlowFMProperty>> waterFlowFmPropertyChangedHandler;
 
-        [EditAction]
         private void OnWaterFlowFMPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (handlingPropertyChanged) return; //prevent recursion in syncing useTemperature with heat flux model type

@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 case BoundaryConditionDataType.AstroComponents when newDataType == BoundaryConditionDataType.AstroCorrection:
                 {
-                    function.BeginEdit(new DefaultEditAction("Expanding astro function"));
+                    function.BeginEdit("Expanding astro function");
                     for (int i = 0; i < dimensions; ++i)
                     {
                         var amplitudeName = function.Components[4*i].Name + " corr.";
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 }
                 case BoundaryConditionDataType.Harmonics when newDataType == BoundaryConditionDataType.HarmonicCorrection:
                 {
-                    function.BeginEdit(new DefaultEditAction("Expanding harmonic function"));
+                    function.BeginEdit("Expanding harmonic function");
                     for (int i = 0; i < dimensions; ++i)
                     {
                         var amplitudeName = function.Components[4*i].Name + " corr.";

@@ -4,7 +4,6 @@ using System.Drawing;
 using DelftTools.Functions.Filters;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -88,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
             {
                 if (buiFileReader.StationNames.Count > 1)
                 {
-                    temperatures.BeginEdit(new DefaultEditAction("import data"));
+                    temperatures.BeginEdit("import data");
                     temperatures.DataDistributionType = MeteoDataDistributionType.PerStation;
                     temperatures.Data.Clear();
                     temperatures.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
@@ -104,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
                 }
                 else if (buiFileReader.StationNames.Count == 1)
                 {
-                    temperatures.BeginEdit(new DefaultEditAction("import data"));
+                    temperatures.BeginEdit("import data");
                     temperatures.DataDistributionType = MeteoDataDistributionType.Global;
                     temperatures.Data.Clear();
                     temperatures.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);

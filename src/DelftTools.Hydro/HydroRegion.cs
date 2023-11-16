@@ -244,7 +244,6 @@ namespace DelftTools.Hydro
             RemoveLink(link.Source, link.Target);
         }
 
-        [EditAction]
         private void OnSubRegionsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (!Equals(sender, SubRegions))
@@ -271,7 +270,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         private void OnLinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (isCloning)

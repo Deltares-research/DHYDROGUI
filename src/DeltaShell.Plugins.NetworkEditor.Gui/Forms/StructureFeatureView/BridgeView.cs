@@ -8,7 +8,6 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
@@ -152,13 +151,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        [EditAction]
         private void OnTableViewTabulatedDataOnFocusedRowChanged(object sender, EventArgs e)
         {
             bridge.IsTabulated = true;
         }
 
-        [EditAction]
         private void OnTableViewYzDataOnFocusedRowChanged(object sender, EventArgs e)
         {
             bridge.IsYz = true;

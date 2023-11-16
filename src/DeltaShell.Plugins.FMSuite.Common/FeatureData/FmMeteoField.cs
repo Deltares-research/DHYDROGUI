@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 
@@ -74,7 +73,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        [EditAction]
         private void UpdateName()
         {
             Name = CreateName(Quantity, components, FmMeteoLocationType);

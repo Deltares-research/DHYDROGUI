@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
@@ -343,7 +342,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
         private bool dataChanging = false;
 
-        [EditAction]
         private void DrainageComboBoxSelectedValueChanged(object sender, EventArgs e)
         {
             if (dataChanging)

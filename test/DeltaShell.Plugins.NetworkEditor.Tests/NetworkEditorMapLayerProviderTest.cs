@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             layer.RenderRequired = false;
 
-            network.BeginEdit(new DefaultEditAction("edit name"));
+            network.BeginEdit("edit name");
             branch.Name = "new name";
             network.EndEdit();
 

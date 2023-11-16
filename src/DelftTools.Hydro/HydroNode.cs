@@ -125,7 +125,6 @@ namespace DelftTools.Hydro
             return hydroNode;
         }
 
-        [EditAction]
         private void RepairLinks()
         {
             if (IsConnectedToMultipleBranches)
@@ -140,7 +139,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         private void OnBranchesCollectionChanged(object sender, NotifyCollectionChangedEventArgs NotifyCollectionChangedEventArgs)
         {
             if (sender is IList<IBranch>)

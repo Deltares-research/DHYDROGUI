@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Tests.TestObjects;
-using DelftTools.Utils.UndoRedo;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -230,17 +229,6 @@ namespace DelftTools.Hydro.Tests
 
             expectedGeometry = new LineString(new[] { new Coordinate(50, 60), new Coordinate(50, -60) });
             Assert.IsTrue(expectedGeometry.EqualsExact(crossSection.Geometry, 0.0001));
-        }
-
-        [Test]
-        public void ChangingCrossSectionNameIsSingleEditAction()
-        {
-            var crossSectionDefinitionYZ = new CrossSectionDefinitionYZ("");
-            var crossSection = new CrossSection(crossSectionDefinitionYZ) {Name = "Jantje"};
-            using (new UndoRedoManager(crossSection))
-            {
-                crossSection.Name = "Pietje";
-            }
         }
     }
 }

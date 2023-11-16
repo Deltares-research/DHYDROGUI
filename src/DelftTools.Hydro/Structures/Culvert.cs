@@ -278,7 +278,6 @@ namespace DelftTools.Hydro.Structures
         public virtual double Angle1 { get; set; }
         
         [DisplayName("Sub type")]
-        [EditAction]
         [FeatureAttribute(Order = 20)]
         public virtual CulvertType CulvertType {
             get { return culvertType; }
@@ -511,7 +510,6 @@ namespace DelftTools.Hydro.Structures
             Width = sourceCulvert.Width;
         }
 
-        [EditAction]
         private void UpdateFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
         {
             FlowDirection = GetPossibleFlowDirection(allowPositiveFlow, allowNegativeFlow);

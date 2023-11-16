@@ -277,7 +277,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        [EditAction]
         private void SetFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
         {
             FlowDirection = GetPossibleFlowDirection(allowPositiveFlow, allowNegativeFlow);

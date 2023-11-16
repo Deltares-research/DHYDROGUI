@@ -231,7 +231,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        [EditAction]
         private void AfterFeatureSet()
         {
             Name = Feature.Name + " data";

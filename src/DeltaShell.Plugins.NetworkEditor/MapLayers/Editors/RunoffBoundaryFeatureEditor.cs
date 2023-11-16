@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
     {
         public override IFeature AddNewFeatureByGeometry(ILayer layer, IGeometry geometry)
         {
-            DrainageBasin.BeginEdit(new DefaultEditAction("Add new runoff boundary"));
+            DrainageBasin.BeginEdit("Add new runoff boundary");
             try
             {
                 var feat = base.AddNewFeatureByGeometry(layer, geometry);

@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             // Will suspend layout changes. 
-            realTimeControlModel.BeginEdit(new DefaultEditAction("Convert coordinate system"));
+            realTimeControlModel.BeginEdit("Convert coordinate system");
 
             try
             {

@@ -304,7 +304,7 @@ namespace DelftTools.Hydro
         private static void ResetValues(this IDiscretization discretization, ICollection<INetworkLocation> newLocations, IEnumerable<double> fixedPointsMask = null)
         {
             // reset locations
-            discretization.BeginEdit(new DefaultEditAction("Setting values"));
+            discretization.BeginEdit("Setting values");
             discretization.Clear();
 
             fixedPointsMask = fixedPointsMask ?? Enumerable.Repeat(0d, newLocations.Count).ToArray();

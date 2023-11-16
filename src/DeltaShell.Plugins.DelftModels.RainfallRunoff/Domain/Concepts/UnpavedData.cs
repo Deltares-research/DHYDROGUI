@@ -303,7 +303,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
         #endregion
 
-        [EditAction]
         private void CreateInitialGroundwaterLevelFunctionIfNeeded()
         {
             switch (InitialGroundWaterLevelSource)
@@ -329,7 +328,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             }
         }
 
-        [EditAction]
         private void CreateSeepageFunctionsIfNeeded()
         {
             switch (SeepageSource)

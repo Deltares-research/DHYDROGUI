@@ -572,7 +572,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             mockInputDataItem.Role = DataItemRole.Input;
 
             mockModel.Expect(m => m.GetDataItemByValue(null)).IgnoreArguments().Return(mockInputDataItem);
-            mockModel.Expect(m => m.BeginEdit(null)).IgnoreArguments();
+            mockModel.Expect(m => m.BeginEdit("")).IgnoreArguments();
             mockModel.Expect(m => m.EndEdit()).IgnoreArguments();
             mockInputDataItem.Expect(i => i.LinkedBy).IgnoreArguments().Return(new EventedList<IDataItem>());
             mockInputDataItem.Expect(i => i.LinkTo(null)).IgnoreArguments().Return(true);
@@ -600,7 +600,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             dataItem.Role = DataItemRole.Output;
 
             mockModel.Expect(m => m.GetDataItemByValue(null)).IgnoreArguments().Return(dataItem);
-            mockModel.Expect(m => m.BeginEdit(null)).IgnoreArguments();
+            mockModel.Expect(m => m.BeginEdit("")).IgnoreArguments();
             mockModel.Expect(m => m.EndEdit()).IgnoreArguments();
             dataItem.Expect(i => i.LinkTo(null)).IgnoreArguments().Return(true);
 
@@ -626,7 +626,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             flowDataItem.Role = DataItemRole.Input;
 
             rtcModel.Expect(m => m.GetDataItemByValue(null)).IgnoreArguments().Return(flowDataItem);
-            rtcModel.Expect(m => m.BeginEdit(null)).IgnoreArguments();
+            rtcModel.Expect(m => m.BeginEdit("")).IgnoreArguments();
             rtcModel.Expect(m => m.EndEdit()).IgnoreArguments();
             flowDataItem.Expect(i => i.LinkedBy).IgnoreArguments().Return(new EventedList<IDataItem> {existingLinkedDataItem});
             existingLinkedDataItem.Expect(l => l.Unlink()).IgnoreArguments();
@@ -656,7 +656,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             var target = Substitute.For<IDataItem>();
             model.GetDataItemByValue(default(object)).ReturnsForAnyArgs(target);
-            model.WhenForAnyArgs(x => x.BeginEdit(null)).Do(x => { return; });
+            model.WhenForAnyArgs(x => x.BeginEdit("")).Do(x => { return; });
 
             var shape = Substitute.For<Shape>();
             shape.Tag = new Output();

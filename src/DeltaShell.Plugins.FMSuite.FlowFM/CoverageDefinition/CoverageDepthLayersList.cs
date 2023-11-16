@@ -28,7 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition
             }
         }
 
-        [EditAction]
         private void AfterVerticalProfileSet()
         {
             var layerCount = verticalProfileDefinition.ProfilePoints;

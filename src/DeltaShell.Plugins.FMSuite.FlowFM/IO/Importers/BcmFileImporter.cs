@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             int i = 0;
             foreach (var boundaryCondition in boundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions))
             {
-                boundaryCondition.BeginEdit(new DefaultEditAction("Begin import bcm data..."));
+                boundaryCondition.BeginEdit("Begin import bcm data...");
             }
             foreach (var bcBlockData in dataBlocks)
             {

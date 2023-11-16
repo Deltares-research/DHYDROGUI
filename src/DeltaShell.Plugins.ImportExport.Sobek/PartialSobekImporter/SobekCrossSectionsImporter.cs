@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (!HydroNetwork.IsEditing)
                 {
                     initiatedEditing = true;
-                    HydroNetwork.BeginEdit(new DefaultEditAction("Importing cross sections"));
+                    HydroNetwork.BeginEdit("Importing cross sections");
                 }
 
                 foreach (var sobekCrossSectionMapping in mappings)
@@ -428,7 +428,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                          Name = sobekCrossSectionDefinition.ID
                                      };
 
-            crossSectionDefinitionZW.BeginEdit(new DefaultEditAction("Create new cross section definition"));
+            crossSectionDefinitionZW.BeginEdit("Create new cross section definition");
             
             var table = new FastZWDataTable();
             
@@ -558,7 +558,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                                };
             
 
-            crossSectionDefinitionYZ.BeginEdit(new DefaultEditAction("Set YZ data"));
+            crossSectionDefinitionYZ.BeginEdit("Set YZ data");
 
 
             var newYZDataTable = new FastYZDataTable();

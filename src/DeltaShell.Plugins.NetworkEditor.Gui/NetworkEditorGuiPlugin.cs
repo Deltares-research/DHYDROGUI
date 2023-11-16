@@ -20,7 +20,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Utils;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
@@ -554,15 +553,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 // if project already exist call registered handler
                 ApplicationProjectOpened(Gui.Application.Project);
             }
-
-            if (Gui.UndoRedoManager != null)
-            {
-                var excludedTypes = Gui.UndoRedoManager.ChangeTracker.ExcludedTypes;
-                excludedTypes.Add(typeof (NetworkCoverageGroupLayer));
-                excludedTypes.Add(typeof (NetworkCoverageLocationLayer));
-                excludedTypes.Add(typeof (NetworkCoverageSegmentLayer));
-            }
-
+            
             ImportBranchesFromSelectionMapTool.BeforeExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = true;
             ImportBranchesFromSelectionMapTool.AfterExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = false; 
 
@@ -727,7 +718,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        [EditAction]
         private void RootFolderPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (Gui == null || Gui.DocumentViews == null)
@@ -786,7 +776,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EditAction]
         void RootFolderCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!(e.GetRemovedOrAddedItem() is IProjectItem)) // NB IModel and IDataItem derive from IProjectItem

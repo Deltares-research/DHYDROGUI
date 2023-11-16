@@ -380,7 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 {
                     foreach (var function in PointData)
                     {
-                        function.BeginEdit(new DefaultEditAction("Tracer name"));
+                        function.BeginEdit("Tracer name");
 
                         function.Components[0].Name = VariableName;
                         function.Name = VariableName;
@@ -403,7 +403,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 {
                     foreach (var function in PointData)
                     {
-                        function.BeginEdit(new DefaultEditAction("Sediment concentration name"));
+                        function.BeginEdit("Sediment concentration name");
 
                         function.Components[0].Name = VariableName;
                         function.Name = VariableName;

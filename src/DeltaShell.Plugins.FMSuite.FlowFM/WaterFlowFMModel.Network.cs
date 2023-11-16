@@ -143,7 +143,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (NetworkDiscretization != null) NetworkDiscretization.Network = null;
         }
 
-        [EditAction]
         private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (DisableNetworkSynchronization) return;
@@ -250,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (locations != null)
             {
-                NetworkDiscretization.BeginEdit(new DefaultEditAction("Adding point at begin and end of branch"));
+                NetworkDiscretization.BeginEdit("Adding point at begin and end of branch");
                 var networkLocations = locations.Except(NetworkDiscretization.Locations.GetValues()).ToList();
                 networkLocations.RemoveAll(nwl => NetworkDiscretization.Locations.GetValues().Select(l=>l.Geometry.Coordinate).Contains(nwl.Geometry.Coordinate));
                 NetworkDiscretization.Locations.AddValues(networkLocations);
@@ -338,7 +337,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EditAction]
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (DisableNetworkSynchronization) return;
@@ -492,7 +490,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <summary>
         /// Called when a network is inserted into or linked to the model
         /// </summary>
-        [EditAction]
         private void RefreshNetworkRelatedData()
         {
             ClearOutput();

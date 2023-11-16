@@ -282,7 +282,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             {
                 if (!wasAlreadyEditing)
                 {
-                    network.BeginEdit(new DefaultEditAction("Paste channel"));
+                    network.BeginEdit("Paste channel");
                 }
 
                 NetworkHelper.AddChannelToHydroNetwork(network, clonedChannel);

@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             set { SetCalculationArea(value); }
         }
 
-        [EditAction]
         private void SetCalculationArea(double area)
         {
             base.CalculationArea = area;
@@ -52,7 +51,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             set { SetMeteoStationName(value); }
         }
 
-        [EditAction]
         private void SetMeteoStationName(string name)
         {
             base.MeteoStationName = name;

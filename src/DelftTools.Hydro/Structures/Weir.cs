@@ -136,7 +136,6 @@ namespace DelftTools.Hydro.Structures
             protected set => crestLevel.TimeSeries = value;
         }
 
-        [EditAction]
         private void OnCrestLevelChanged()
         {
             if (WeirFormula is GeneralStructureWeirFormula generalStructureWeirFormula)
@@ -145,7 +144,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        [EditAction]
         private void OnCrestWidthChanged()
         {
             if (WeirFormula is GeneralStructureWeirFormula generalStructureWeirFormula)
@@ -154,7 +152,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        [EditAction]
         private void OnWeirFormulaChanged()
         {
             if (WeirFormula is FreeFormWeirFormula)
@@ -224,7 +221,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        [EditAction]
         private void UpdateFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
         {
             if (WeirFormula.HasFlowDirection)

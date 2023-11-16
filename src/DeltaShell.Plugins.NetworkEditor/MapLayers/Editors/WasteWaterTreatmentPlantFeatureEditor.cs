@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
     {
         public override IFeature AddNewFeatureByGeometry(ILayer layer, IGeometry geometry)
         {
-            DrainageBasin.BeginEdit(new DefaultEditAction("Add new waste water treatment plant"));
+            DrainageBasin.BeginEdit("Add new waste water treatment plant");
             try
             {
                 var feat = base.AddNewFeatureByGeometry(layer, geometry);

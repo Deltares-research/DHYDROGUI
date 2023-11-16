@@ -125,7 +125,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     SubscribeToProjectEvents();
                     SubscribeToActivityEvents();
-                    Gui.UndoRedoManager.Enabled = false;
                 }
 
                 // HACK: setting the Gui happens just before Activate in DeltaShellGui, 

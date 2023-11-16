@@ -6,9 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Serialization;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Serialization;
 using IEditableObject = System.ComponentModel.IEditableObject;
 
@@ -187,8 +185,6 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         public IList<LightDataRow> Rows => GetRows().Cast<LightDataRow>().ToList().AsReadOnly();
 
-        private IList MutableRows => GetRows();
-
         public bool EnforceConstraints
         {
             get => enforceConstraints;
@@ -285,99 +281,23 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         #region Undo/Redo
 
-        [EditAction(typeof(ListClearedAction))]
         internal virtual void HandleListCleared(IList<LightDataRow> rows)
         {
         }
 
-        [EditAction(typeof (RowChangeAction))]
         internal virtual void HandleRowChanged(LightDataRow row, double[] oldState, double[] newState)
         {
             OnRowChanging(row, DataRowAction.Change);
         }
 
-        [EditAction(typeof (RowAddAction))]
         protected virtual void HandleRowAdded(LightDataRow row, int index)
         {
             OnRowChanging(row, DataRowAction.Add);
         }
 
-        [EditAction(typeof (RowRemoveAction))]
         protected virtual void HandleRowRemoved(LightDataRow row, int index)
         {
             OnRowChanging(row, DataRowAction.Delete);
-        }
-
-        private class ListClearedAction : EditActionBase
-        {
-            public ListClearedAction()
-                : base("List cleared")
-            {
-            }
-
-            public override bool HandlesRestore => true;
-
-            public override void Restore()
-            {
-                var table = (LightDataTable)Instance;
-                var rows = (IList<LightDataRow>) Arguments[0];
-                table.BeginEdit("Fill list"); // restore in multiple events :-(
-                foreach (var row in rows) 
-                    table.MutableRows.Add(row);
-                table.EndEdit();
-            }
-        }
-
-        private class RowAddAction : EditActionBase
-        {
-            public RowAddAction() : base("Add row")
-            {
-            }
-
-            public override bool HandlesRestore => true;
-
-            public override void Restore()
-            {
-                var table = (LightDataTable) Instance;
-                var index = (int) Arguments[1];
-                table.MutableRows.RemoveAt(index);
-            }
-        }
-
-        private class RowChangeAction : EditActionBase
-        {
-            public RowChangeAction() : base("Change row")
-            {
-            }
-
-            public override bool HandlesRestore => true;
-
-            public override void Restore()
-            {
-                var row = ((LightDataRow) Arguments[0]);
-                var itemArray = (double[]) Arguments[1];
-                row.BeginEdit();
-                for (int i = 0; i < itemArray.Length; i++)
-                    row[i] = itemArray[i];
-                row.EndEdit();
-            }
-        }
-
-        private class RowRemoveAction : EditActionBase
-        {
-            public RowRemoveAction() : base("Remove row")
-            {
-            }
-
-            public override bool HandlesRestore => true;
-
-            public override void Restore()
-            {
-                var table = (LightDataTable) Instance;
-                var row = (LightDataRow) Arguments[0];
-                var index = (int) Arguments[1];
-                table.MutableRows.Insert(index, row);
-            }
         }
 
         #endregion

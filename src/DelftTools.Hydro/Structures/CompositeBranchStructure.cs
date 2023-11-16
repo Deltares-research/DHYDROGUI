@@ -37,7 +37,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        [EditAction]
         private void UpdateChainageInChildStructure(double chainage)
         {
             Structures.ForEach(s => s.Chainage = chainage);
@@ -71,7 +70,6 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         public virtual int Count { get; set; }
 
-        [EditAction]
         void StructuresCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             Count = structures.Count;

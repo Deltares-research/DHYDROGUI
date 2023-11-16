@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Actions;
@@ -131,7 +130,6 @@ namespace DelftTools.Hydro.Roughness
 
         public bool SkipInterpolationForNewLocation { get; set; } = false;
 
-        [EditAction]
         private void InterpolateValuesForNewLocation(FunctionValuesChangingEventArgs e)
         {
             // in case just a location is added (without values), this method makes sure the corresponding 

@@ -21,7 +21,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
-using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.Utils;
@@ -231,7 +230,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 return;
             }
 
-            network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
+            network.BeginEdit("Importing GWSW database.");
             fmModel.UnSubscribeFromNetwork(network);
 
             Dictionary<string, IBranch> branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
@@ -567,7 +566,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
             IHydroNetwork network = fmModel.Network;
 
-            network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
+            network.BeginEdit("Importing GWSW database.");
             fmModel.DisableNetworkSynchronization = true;
             try
             {

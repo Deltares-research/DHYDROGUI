@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
-using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections
@@ -20,7 +19,7 @@ namespace DelftTools.Hydro.CrossSections
                                                     .Select((t, i) => new Coordinate(t, zCoordinates[i]))
                                                     .OrderBy(c => c.X)
                                                     .ToList();
-            crossSectionDefinition.BeginEdit(new DefaultEditAction("Set YZ values"));
+            crossSectionDefinition.BeginEdit("Set YZ values");
 
             crossSectionDefinition.YZDataTable.Clear();
 

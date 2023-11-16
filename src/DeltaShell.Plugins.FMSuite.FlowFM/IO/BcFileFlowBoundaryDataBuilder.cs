@@ -564,7 +564,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var existingData = boundaryCondition.GetDataAtPoint(dataPoint);
                         try
                         {
-                            existingData.BeginEdit(new DefaultEditAction("Importing data..."));
+                            existingData.BeginEdit("Importing data...");
                             if (forcingTypeDefinition.ForcingType == BoundaryConditionDataType.AstroCorrection ||
                                 forcingTypeDefinition.ForcingType == BoundaryConditionDataType.HarmonicCorrection)
                             {

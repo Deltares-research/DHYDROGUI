@@ -13,7 +13,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.UndoRedo;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -278,48 +277,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             WindowsFormsTestHelper.ShowModal(geometryEditorForm);
             mapControl.Dispose();
 
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.WindowsForms)]
-        public void CreateWithUndoRedoHistoryControl()
-        {
-            // no default setup
-            using (var mapControl = new MapControl()) // do not use field, otherwise it will not be disposed!
-            {
-                LogHelper.ConfigureLogging();
-
-                network = new HydroNetwork();
-
-                // setup undo/redo
-                using(var undoRedoManager = new UndoRedoManager(network))
-                {
-
-                    //mapControl.Map.Layers.Clear();
-                    //mapControl.Tools.RemoveAllWhere(t => t is HydroNetworkEditorMapTool);
-
-                    InitializeTestForm();
-                    InitializeFunctionEditorTestForm();
-
-                    mapControl.Tools.Where(mapTool => mapTool.Name != null).ForEach(
-                        mapTool => listBoxTools.Items.Add(mapTool.Name));
-
-                    mapControl.Map.ZoomToFit(new Envelope(500, 500, 500, 500));
-
-
-                    var undoRedoHistoryControl = new UndoRedoHistoryControl { UndoRedoManager = undoRedoManager };
-
-                    int right = 0;
-                    WindowsFormsTestHelper.Show(
-                        geometryEditorForm,
-                        f =>
-                            {
-                                f.Left = 0;
-                                right = f.Width;
-                            });
-                    WindowsFormsTestHelper.ShowModal(undoRedoHistoryControl, f => f.Left = right);
-                }
-            }
         }
 
         private void InitializeFunctionEditorTestForm()

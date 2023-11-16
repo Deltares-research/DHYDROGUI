@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections
@@ -43,7 +42,6 @@ namespace DelftTools.Hydro.CrossSections
             OnAfterSetGeometry(value);
         }
 
-        [EditAction]
         private void OnAfterSetGeometry(IGeometry value)
         {
             Geometry = value;
@@ -87,11 +85,10 @@ namespace DelftTools.Hydro.CrossSections
 
         private bool isEditingDataTable;
 
-        [EditAction]
         private void CrossSectionXYZRowChanging(object sender, LightDataRowChangeEventArgs e)
         {
             // here to trigger event
-            BeginEdit(new DefaultEditAction("Row changing"));
+            BeginEdit("Row changing");
             EndEdit();
             
             if (isEditingDataTable)
@@ -159,7 +156,6 @@ namespace DelftTools.Hydro.CrossSections
             lastSetGeometry = (IGeometry)geometry.Clone();
         }
 
-        [EditAction]
         private void FixProfile(IGeometry oldGeometry, IGeometry newGeometry)
         {
             var profileCoordinates = GetProfile().ToList();
@@ -324,7 +320,7 @@ namespace DelftTools.Hydro.CrossSections
         
         public override void ShiftLevel(double delta)
         {
-            BeginEdit(new DefaultEditAction("Shift level"));
+            BeginEdit("Shift level");
 
             foreach (var coordinate in Geometry.Coordinates)
             {

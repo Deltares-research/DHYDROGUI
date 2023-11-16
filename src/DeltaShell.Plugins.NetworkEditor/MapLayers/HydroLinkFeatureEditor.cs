@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             var source = GetHydroFeature(linkMapGeometry.Coordinates[0], layer);
             var target = GetHydroFeature(linkMapGeometry.Coordinates.Last(), layer, h => source.Item1.CanLinkTo(h));
 
-            Region.BeginEdit(new DefaultEditAction(string.Format("Adding link from {0} to {1}", source.Item1.Name, target.Item1.Name)));
+            Region.BeginEdit(string.Format("Adding link from {0} to {1}", source.Item1.Name, target.Item1.Name));
 
             var link = source.Item1.LinkTo(target.Item1);
 

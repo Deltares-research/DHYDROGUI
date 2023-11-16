@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             //remove the cross section from both branch and networkschematization.
             var network = crossSection.Network;
 
-            network.BeginEdit(new DefaultEditAction("Delete feature " + crossSection.Name));
+            network.BeginEdit("Delete feature " + crossSection.Name);
             var channel = (IChannel) crossSection.Branch;
             channel.BranchFeatures.Remove(crossSection);
             network.EndEdit();

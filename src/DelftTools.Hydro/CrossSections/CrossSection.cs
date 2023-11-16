@@ -29,7 +29,7 @@ namespace DelftTools.Hydro.CrossSections
             get { return base.Name; }
             set
             {
-                BeginEdit(new DefaultEditAction(string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, value)));
+                BeginEdit(string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, value));
                 
                 base.Name = value;
                 AfterNameSet();
@@ -38,7 +38,6 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
-        [EditAction]
         private void AfterNameSet()
         {
             //for practical reasons..sync definition name
@@ -149,7 +148,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual void SetNameWithoutUpdatingDefinition(string name)
         {
-            BeginEdit(new DefaultEditAction(string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, name)));
+            BeginEdit(string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, name));
             base.Name = name;
             EndEdit();
         }
@@ -293,6 +292,11 @@ namespace DelftTools.Hydro.CrossSections
         public virtual bool EditWasCancelled { get; protected set; }
 
         public virtual bool IsEditing { get; protected set; }
+
+        public virtual void BeginEdit(string action)
+        {
+            BeginEdit(new DefaultEditAction(action));
+        }
 
         public virtual void BeginEdit(IEditAction action)
         {

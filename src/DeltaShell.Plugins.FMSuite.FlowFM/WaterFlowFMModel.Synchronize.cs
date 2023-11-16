@@ -10,7 +10,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -57,13 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
             if (IsParameter(KnownProperties.BedlevType))
             {
-                BeginEdit(new DefaultEditAction("Updating Bathymetry coverage"));
+                BeginEdit("Updating Bathymetry coverage");
                 UpdateBathymetryCoverage((UGridFileHelper.BedLevelLocation)prop.Value);
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.UseSalinity))
             {
-                BeginEdit(new DefaultEditAction("Switching salinity process"));
+                BeginEdit("Switching salinity process");
                 OnPropertyChanged(nameof(UseSalinity));
                 BoundaryConditions1D?.ForEach(bc => bc.UseSalt = UseSalinity);
                 LateralSourcesData?.ForEach(lat => lat.UseSalt = UseSalinity);
@@ -71,164 +70,164 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else if (IsParameter(GuiProperties.UseMorSed))
             {
-                BeginEdit(new DefaultEditAction("Switching morphology process"));
+                BeginEdit("Switching morphology process");
                 OnPropertyChanged(nameof(UseMorSed));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.WriteSnappedFeatures))
             {
-                BeginEdit(new DefaultEditAction("Switching write snapped features options"));
+                BeginEdit("Switching write snapped features options");
                 OnPropertyChanged(nameof(WriteSnappedFeatures));
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.ISlope))
             {
-                BeginEdit(new DefaultEditAction("Switching Bed slope formulation"));
+                BeginEdit("Switching Bed slope formulation");
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.IHidExp))
             {
-                BeginEdit(new DefaultEditAction("Switching Hiding and exposure formulation"));
+                BeginEdit("Switching Hiding and exposure formulation");
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.Kmx))
             {
-                BeginEdit(new DefaultEditAction("Switching 3D dynamics"));
+                BeginEdit("Switching 3D dynamics");
                 OnPropertyChanged(nameof(UseDepthLayers));
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.ICdtyp))
             {
-                BeginEdit(new DefaultEditAction("Switching wind formulation type"));
+                BeginEdit("Switching wind formulation type");
                 OnPropertyChanged(nameof(CdType));
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.Temperature))
             {
-                BeginEdit(new DefaultEditAction("Switching heat flux model"));
+                BeginEdit("Switching heat flux model");
                 HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.SecondaryFlow))
             {
-                BeginEdit(new DefaultEditAction("Switching secondary flow process"));
+                BeginEdit("Switching secondary flow process");
                 OnPropertyChanged(nameof(UseSecondaryFlow));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.WriteHisFile))
             {
-                BeginEdit(new DefaultEditAction("Switching WriteHisFile"));
+                BeginEdit("Switching WriteHisFile");
                 OnPropertyChanged(nameof(WriteHisFile));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyHisStart))
             {
-                BeginEdit(new DefaultEditAction("Switching SpecifyHisStart"));
+                BeginEdit("Switching SpecifyHisStart");
                 OnPropertyChanged(nameof(SpecifyHisStart));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyHisStop))
             {
-                BeginEdit(new DefaultEditAction("Switching SpecifyHisStop"));
+                BeginEdit("Switching SpecifyHisStop");
                 OnPropertyChanged(nameof(SpecifyHisStop));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.WriteMapFile))
             {
-                BeginEdit(new DefaultEditAction("Switching WriteMapFile"));
+                BeginEdit("Switching WriteMapFile");
                 OnPropertyChanged(nameof(WriteMapFile));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyMapStart))
             {
-                BeginEdit(new DefaultEditAction("Switching SpecifyMapStart"));
+                BeginEdit("Switching SpecifyMapStart");
                 OnPropertyChanged(nameof(SpecifyMapStart));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyMapStop))
             {
-                BeginEdit(new DefaultEditAction("Switching SpecifyMapStop"));
+                BeginEdit("Switching SpecifyMapStop");
                 OnPropertyChanged(nameof(SpecifyMapStop));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.WriteRstFile))
             {
-                BeginEdit(new DefaultEditAction("Switching WriteRstFile"));
+                BeginEdit("Switching WriteRstFile");
                 OnPropertyChanged(nameof(WriteRstFile));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyRstStart))
             {
-                BeginEdit(new DefaultEditAction("Switching SpecifyRstStart"));
+                BeginEdit("Switching SpecifyRstStart");
                 OnPropertyChanged(nameof(SpecifyRstStart));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyRstStop))
             {
-                BeginEdit(new DefaultEditAction("Switching SpecifyRstStop"));
+                BeginEdit("Switching SpecifyRstStop");
                 OnPropertyChanged(nameof(SpecifyRstStop));
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.WaveModelNr))
             {
-                BeginEdit(new DefaultEditAction("Switching Waves Model Nr"));
+                BeginEdit("Switching Waves Model Nr");
                 OnPropertyChanged(nameof(WaveModel));
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.Irov))
             {
-                BeginEdit(new DefaultEditAction("Switching Wall behavior type"));
+                BeginEdit("Switching Wall behavior type");
                 OnPropertyChanged(nameof(WaveModel));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyWaqOutputInterval))
             {
-                BeginEdit(new DefaultEditAction("Switching Waq output interval time"));
+                BeginEdit("Switching Waq output interval time");
                 OnPropertyChanged(nameof(SpecifyWaqOutputInterval));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyWaqOutputStartTime))
             {
-                BeginEdit(new DefaultEditAction("Switching Waq output start time"));
+                BeginEdit("Switching Waq output start time");
                 OnPropertyChanged(nameof(SpecifyWaqOutputStartTime));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.SpecifyWaqOutputStopTime))
             {
-                BeginEdit(new DefaultEditAction("Switching Waq output end time"));
+                BeginEdit("Switching Waq output end time");
                 OnPropertyChanged(nameof(SpecifyWaqOutputStopTime));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.WriteClassMapFile))
             {
-                BeginEdit(new DefaultEditAction("Switching WriteClassMapFile"));
+                BeginEdit("Switching WriteClassMapFile");
                 OnPropertyChanged(nameof(WriteClassMapFile));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.StartTime))
             {
-                BeginEdit(new DefaultEditAction("Changing start time"));
+                BeginEdit("Changing start time");
                 base.StartTime = StartTime;
                 OnPropertyChanged(nameof(StartTime));
                 EndEdit();
             }
             else if (IsParameter(GuiProperties.StopTime))
             {
-                BeginEdit(new DefaultEditAction("Changing stop time"));
+                BeginEdit("Changing stop time");
                 base.StopTime = StopTime;
                 OnPropertyChanged(nameof(StopTime));
                 EndEdit();
             }
             else if (IsParameter(KnownProperties.DtUser))
             {
-                BeginEdit(new DefaultEditAction("Changing timestep"));
+                BeginEdit("Changing timestep");
                 base.TimeStep = TimeStep;
                 OnPropertyChanged(nameof(TimeStep));
                 EndEdit();
             }
             else
             {
-                BeginEdit(new DefaultEditAction(""));
+                BeginEdit("");
                 EndEdit();
             }
         }

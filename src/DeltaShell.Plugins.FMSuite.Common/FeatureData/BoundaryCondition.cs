@@ -199,6 +199,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public IEditAction CurrentEditAction { get; private set; }
 
+        public void BeginEdit(string action)
+        {
+            IsEditing = true;
+        }
+
         public void BeginEdit(IEditAction action)
         {
             IsEditing = true;
@@ -403,7 +408,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         private bool syncing;
 
-        [EditAction]
         private void DataPointIndicesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (syncing)
@@ -453,7 +457,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        [EditAction]
         private void PointDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (syncing)
@@ -486,7 +489,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        [EditAction]
         private void PointDepthLayerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (syncing)
@@ -594,7 +596,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         {
             if (e.PropertyName == nameof(Feature2D.Geometry))
             {
-                BeginEdit(new DefaultEditAction("Syncing data with geometry points"));
+                BeginEdit("Syncing data with geometry points");
 
                 var newIndices =
                     DataPointIndices.Select(
@@ -623,10 +625,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             previousGeometry = Feature.Geometry;
         }
 
-        [EditAction]
         protected virtual void AfterDataTypeChanged(BoundaryConditionDataType previousDataType)
         {
-            BeginEdit(new DefaultEditAction("Syncing data with data type"));
+            BeginEdit("Syncing data with data type");
 
             if (IsHorizontallyUniform && !DataPointIndices.Any())
             {
@@ -663,7 +664,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
             var data = PointData.ElementAtOrDefault(PointDepthLayerDefinitions.IndexOf(verticalProfile));
             if (data == null) return;
-            data.BeginEdit(new DefaultEditAction("Fixing layer components"));
+            data.BeginEdit("Fixing layer components");
 
             switch (e.Action)
             {

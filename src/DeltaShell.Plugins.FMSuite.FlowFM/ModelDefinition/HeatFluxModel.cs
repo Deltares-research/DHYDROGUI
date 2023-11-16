@@ -63,7 +63,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        [EditAction]
         private void UpdateSolarRadiationInMeteoData()
         {
             if (MeteoData == null) return;
@@ -91,7 +90,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public IFunction MeteoData { get { return meteoData; } }
 
-        [EditAction]
         private IFunction CreateTimeseriesMeteoData()
         {
             IFunction result = new Function("Meteo data");

@@ -233,18 +233,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             yield return new PropertyInfo<Model1DBoundaryNodeData, Model1DBoundaryNodeDataProperties>();
             yield return new PropertyInfo<Model1DLateralSourceData, Model1DLateralDataProperties>();
         }
-
-        public override IGui Gui
-        {
-            get { return base.Gui; }
-            set
-            {
-                base.Gui = value;
-                if (base.Gui != null)
-                {
-                    Gui.UndoRedoManager.Enabled = false;
-                }
-            }
-        }
     }
 }

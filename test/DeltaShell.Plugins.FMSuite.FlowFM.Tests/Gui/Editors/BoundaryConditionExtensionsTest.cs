@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             bcFeature.Expect(bcf => bcf.Geometry).Return(bcFeatGeometry).Repeat.Times(4);
             
             var boundaryCondition = mocks.DynamicMock<IBoundaryCondition>();
-            boundaryCondition.Expect(bc => bc.BeginEdit(Arg<IEditAction>.Is.Anything)).IgnoreArguments().Repeat.Once();
+            boundaryCondition.Expect(bc => bc.BeginEdit("")).IgnoreArguments().Repeat.Once();
             boundaryCondition.Expect(bc => bc.EndEdit()).IgnoreArguments().Repeat.Once();
             boundaryCondition.Expect(bc => bc.Feature).Return(bcFeature).Repeat.Times(4);
             boundaryCondition.Expect(bc => bc.DataPointIndices).Return(bcDataPointIndices).Repeat.Times(6);

@@ -79,8 +79,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 regionEditor = gui.DocumentViews.OfType<ProjectItemMapView>().First();
 
-                gui.UndoRedoManager.TrackChanges = false;
-
                 onMainWindowShown();
             };
         }

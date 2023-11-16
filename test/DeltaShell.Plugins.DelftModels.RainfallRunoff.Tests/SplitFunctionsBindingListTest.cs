@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var bindingList = new SplitFunctionsBindingList(Enumerable.Empty<IFunction>());
 
             // Act & Assert
-            bindingList.BeginEdit(new DefaultEditAction("Test"));
+            bindingList.BeginEdit("Test");
             Assert.False(bindingList.IsEditing, "Not in edit state, because there are no functions to put in edit state");
             Assert.IsNull(bindingList.CurrentEditAction, "No action should be active");
             

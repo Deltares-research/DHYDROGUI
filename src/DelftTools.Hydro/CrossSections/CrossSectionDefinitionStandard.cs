@@ -5,7 +5,6 @@ using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections
@@ -74,7 +73,6 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
-        [EditAction]
         void SetShapeFromType(CrossSectionStandardShapeType shapeType)
         {
             Shape = GetDefaultShape(shapeType);
@@ -90,7 +88,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public override void ShiftLevel(double delta)
         {
-            BeginEdit(new DefaultEditAction("Shift level"));
+            BeginEdit("Shift level");
             LevelShift += delta;
             EndEdit();
         }

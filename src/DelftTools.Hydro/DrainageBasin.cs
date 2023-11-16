@@ -147,8 +147,7 @@ namespace DelftTools.Hydro
         }
 
         private bool isCloning;
-        
-        [EditAction]
+
         private void OnLinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (isCloning)
@@ -236,7 +235,6 @@ namespace DelftTools.Hydro
             HandleCatchmentsCollectionChanged(sender, e);
         }
 
-        [EditAction]
         void HandleCatchmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var catchment = (Catchment)e.GetRemovedOrAddedItem();
@@ -254,7 +252,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         private void OnBoundariesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (sender != Boundaries)
@@ -275,7 +272,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        [EditAction]
         private void OnWasteWaterTreatmentPlantsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (sender != WasteWaterTreatmentPlants)
