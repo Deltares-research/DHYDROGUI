@@ -1,6 +1,5 @@
 ﻿using DelftTools.Hydro.Roughness;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid

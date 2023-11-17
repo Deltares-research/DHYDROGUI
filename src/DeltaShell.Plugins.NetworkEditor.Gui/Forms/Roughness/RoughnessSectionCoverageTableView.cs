@@ -13,7 +13,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
