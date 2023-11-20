@@ -4,7 +4,6 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
-using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
@@ -92,6 +91,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category("Quarantine")]
         public void ImportModelWithLinkageNodesCheckUpdateDiscretization()
         {
+            const double epsilon = 1.0e-7;
+
             string pathToSobekNetwork = TestHelper.GetTestFilePath(@"LMW_LinkageNodes\Network.TP");
 
             var model = new WaterFlowFMModel();
@@ -106,10 +107,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.Greater(nBranches, model.Network.Branches.GroupBy(b => b.OrderNumber).Count()); // Should be true for any network with at least 1 linkage Node
 
             //check calculation points at the end of each branch
-            Assert.AreEqual(nBranches, model.NetworkDiscretization.Locations.Values.Count(l => Math.Abs(l.Chainage - l.Branch.Length) < BranchFeature.Epsilon));
+            Assert.AreEqual(nBranches, model.NetworkDiscretization.Locations.Values.Count(l => Math.Abs(l.Chainage - l.Branch.Length) < epsilon));
 
             //check calculation points at the begin of each branch
-            Assert.AreEqual(nBranches, model.NetworkDiscretization.Locations.Values.Count(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon));
+            Assert.AreEqual(nBranches, model.NetworkDiscretization.Locations.Values.Count(l => Math.Abs(l.Chainage) < epsilon));
         }
     }
 }

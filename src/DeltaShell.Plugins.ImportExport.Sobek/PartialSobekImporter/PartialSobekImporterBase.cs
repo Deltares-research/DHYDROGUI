@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
     public abstract class PartialSobekImporterBase : IPartialSobekImporter
     {
+        protected const double epsilon = 1.0e-7;
+
         private string pathSobek;
         private bool isActive = true;
         private bool isVisible = true;

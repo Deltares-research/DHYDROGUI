@@ -188,9 +188,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void ValidateComputationalGridFailsWhenStructureOnDiscretizationPoint()
         {
-            /* Checking the following condition is covered: 
-             * branchStructures.FirstOrDefault(bs => branchLocations.Any(bl => Math.Abs(bl.Chainage - bs.Chainage) < BranchFeature.Epsilon));
-             */
             var model = WaterFlowFMTestHelper.CreateModelWithDemoNetwork();
             Assert.IsTrue(model.Network.Branches.Any());
 

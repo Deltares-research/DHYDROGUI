@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 {
     public abstract class NetworkFeatureFromGisImporterBase : FeatureFromGisImporterBase
     {
+        private const double epsilon = 1.0e-7;
+
         private static readonly ILog log = LogManager.GetLogger(typeof(NetworkFeatureFromGisImporterBase));
 
         protected IHydroNetwork HydroNetwork => HydroRegion as IHydroNetwork ?? HydroRegion.SubRegions.OfType<IHydroNetwork>().First();
@@ -60,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 }
                 else
                 {
-                    if (Math.Abs(branchFeature.Chainage - structure.ParentStructure.Chainage) < BranchFeature.Epsilon)
+                    if (Math.Abs(branchFeature.Chainage - structure.ParentStructure.Chainage) < epsilon)
                     {
                         structure.Branch.BranchFeatures.Remove(structure);
                         structure.ParentStructure.Structures.Remove(structure);

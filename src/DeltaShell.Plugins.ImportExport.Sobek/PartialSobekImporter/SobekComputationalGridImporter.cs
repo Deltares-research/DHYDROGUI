@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             foreach (var gridPoint in grid.GridPoints)
             {
                 SobekCalcGridPoint point = gridPoint;
-                if (ignoreOffsets.Any(o => Math.Abs(o - point.Offset) < BranchFeature.Epsilon))
+                if (ignoreOffsets.Any(o => Math.Abs(o - point.Offset) < epsilon))
                 {
                     skippedPoints.Add(gridPoint.Offset);
                     continue;

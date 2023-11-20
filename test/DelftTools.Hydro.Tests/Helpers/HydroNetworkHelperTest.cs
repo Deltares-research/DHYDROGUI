@@ -31,6 +31,8 @@ namespace DelftTools.Hydro.Tests.Helpers
     [TestFixture]
     public class HydroNetworkHelperTest
     {
+        private const double epsilon = 1.0e-7;
+
         [Test]
         public void TestAddStructureToExistingCompositeStructureOrToANewOne_GeneratesUniqueNamesForCompositeBranchStructures()
         {
@@ -395,9 +397,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.AreEqual(2, network.CrossSections.Count());
             Assert.AreEqual(1, branch1.CrossSections.Count());
             Assert.AreEqual(1, branch2.CrossSections.Count());
-            Assert.AreEqual(offset1, branch1.CrossSections.First().Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(offset1, branch1.CrossSections.First().Chainage, epsilon);
             Assert.AreEqual(length1, branch1.Geometry.Length);
-            Assert.AreEqual(offset2 - length1, branch2.CrossSections.First().Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(offset2 - length1, branch2.CrossSections.First().Chainage, epsilon);
             Assert.AreEqual(length2, branch2.Geometry.Length);
             Assert.AreEqual(branch1, branch1.CrossSections.First().Branch);
             Assert.AreEqual(branch2, branch2.CrossSections.First().Branch);
@@ -436,9 +438,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.AreEqual(2, network.CrossSections.Count());
             Assert.AreEqual(1, branch1.CrossSections.Count());
             Assert.AreEqual(1, branch2.CrossSections.Count());
-            Assert.AreEqual(offset1, branch1.CrossSections.First().Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(offset1, branch1.CrossSections.First().Chainage, epsilon);
             Assert.AreEqual(length1, branch1.Geometry.Length);
-            Assert.AreEqual(offset2 - length1, branch2.CrossSections.First().Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(offset2 - length1, branch2.CrossSections.First().Chainage, epsilon);
             Assert.AreEqual(length2, branch2.Geometry.Length);
             Assert.AreEqual(branch1, branch1.CrossSections.First().Branch);
             Assert.AreEqual(branch2, branch2.CrossSections.First().Branch);
@@ -559,24 +561,24 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.AreEqual(4, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(3, networkCoverage.Segments.Values.Count);
 
-            Assert.AreEqual(0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(length / 3, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(2 * length / 3, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(length, networkCoverage.Locations.Values[3].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(length / 3, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(2 * length / 3, networkCoverage.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(length, networkCoverage.Locations.Values[3].Chainage, epsilon);
 
-            Assert.AreEqual(0, networkCoverage.Segments.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[0].EndChainage, BranchFeature.Epsilon);
-            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[0].Length, BranchFeature.Epsilon);
+            Assert.AreEqual(0, networkCoverage.Segments.Values[0].Chainage, epsilon);
+            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[0].EndChainage, epsilon);
+            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[0].Length, epsilon);
 
-            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(2 * length / 3, networkCoverage.Segments.Values[1].EndChainage, BranchFeature.Epsilon);
+            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[1].Chainage, epsilon);
+            Assert.AreEqual(2 * length / 3, networkCoverage.Segments.Values[1].EndChainage, epsilon);
 
-            Assert.AreEqual(2 * length / 3, networkCoverage.Segments.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(length, networkCoverage.Segments.Values[2].EndChainage, BranchFeature.Epsilon);
+            Assert.AreEqual(2 * length / 3, networkCoverage.Segments.Values[2].Chainage, epsilon);
+            Assert.AreEqual(length, networkCoverage.Segments.Values[2].EndChainage, epsilon);
 
-            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[0].Length, BranchFeature.Epsilon);
-            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[1].Length, BranchFeature.Epsilon);
-            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[2].Length, BranchFeature.Epsilon);
+            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[0].Length, epsilon);
+            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[1].Length, epsilon);
+            Assert.AreEqual(length / 3, networkCoverage.Segments.Values[2].Length, epsilon);
         }
 
         [Test]
@@ -677,8 +679,8 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.AreEqual(2, network.Nodes.Count);
             Assert.AreEqual(2, network.CrossSections.Count());
             Assert.AreEqual(2, branch1.CrossSections.Count());
-            Assert.AreEqual(offset1, branch1.CrossSections.First().Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(offset2, branch1.CrossSections.Skip(1).First().Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(offset1, branch1.CrossSections.First().Chainage, epsilon);
+            Assert.AreEqual(offset2, branch1.CrossSections.Skip(1).First().Chainage, epsilon);
             Assert.AreEqual(length1 + length2, branch1.Geometry.Length);
 
             Assert.AreEqual(branch1, branch1.CrossSections.First().Branch);
@@ -937,8 +939,8 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(network.CurrentEditAction);
             Assert.AreEqual(nodeFrom, branch1.Target);
             Assert.AreEqual(nodeTo, branch1.Source);
-            Assert.AreEqual(length - offsetCrossSection2, branch1.CrossSections.First().Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(length - offsetCrossSection1, branch1.CrossSections.Skip(1).First().Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(length - offsetCrossSection2, branch1.CrossSections.First().Chainage, epsilon);
+            Assert.AreEqual(length - offsetCrossSection1, branch1.CrossSections.Skip(1).First().Chainage, epsilon);
         }
 
         [Test]
@@ -962,8 +964,8 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(network.CurrentEditAction);
             Assert.AreEqual(nodeFrom, branch1.Target);
             Assert.AreEqual(nodeTo, branch1.Source);
-            Assert.AreEqual(customLength - offsetCrossSection2 * 4, branch1.CrossSections.First().Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(customLength - offsetCrossSection1 * 4, branch1.CrossSections.Skip(1).First().Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(customLength - offsetCrossSection2 * 4, branch1.CrossSections.First().Chainage, epsilon);
+            Assert.AreEqual(customLength - offsetCrossSection1 * 4, branch1.CrossSections.Skip(1).First().Chainage, epsilon);
         }
 
         /// <summary>
@@ -1055,10 +1057,10 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       false, // gridAtFixedLength
                                                       -1); // fixedLength
             Assert.AreEqual(4, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(9.5, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(10.5, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[3].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(9.5, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(10.5, networkCoverage.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[3].Chainage, epsilon);
         }
 
         [Test]
@@ -1087,14 +1089,14 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       false, // gridAtFixedLength
                                                       -1); // fixedLength
             Assert.AreEqual(8, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(19.5, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(20.5, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(39.5, networkCoverage.Locations.Values[3].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(40.5, networkCoverage.Locations.Values[4].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(59.5, networkCoverage.Locations.Values[5].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(60.5, networkCoverage.Locations.Values[6].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[7].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(19.5, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(20.5, networkCoverage.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(39.5, networkCoverage.Locations.Values[3].Chainage, epsilon);
+            Assert.AreEqual(40.5, networkCoverage.Locations.Values[4].Chainage, epsilon);
+            Assert.AreEqual(59.5, networkCoverage.Locations.Values[5].Chainage, epsilon);
+            Assert.AreEqual(60.5, networkCoverage.Locations.Values[6].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[7].Chainage, epsilon);
         }
 
         [Test]
@@ -1127,9 +1129,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             // x                   x ----------------------------- x
             // 0                  0.9                             100
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(0.9, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(0.9, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
         }
 
         [Test]
@@ -1164,9 +1166,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             //        ^
 
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1.3, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(1.3, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
         }
 
         [Test]
@@ -1202,11 +1204,11 @@ namespace DelftTools.Hydro.Tests.Helpers
             //         ^
 
             Assert.AreEqual(5, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(0.3, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1.7, networkCoverage.Locations.Values[3].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[4].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(0.3, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(1.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(1.7, networkCoverage.Locations.Values[3].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[4].Chainage, epsilon);
 
             // repeat with minimumDistance set to 0.5
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
@@ -1220,10 +1222,10 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       -1); // fixedLength
             // expect gridpoints at 0.3 eliminated
             Assert.AreEqual(4, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1.7, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[3].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(1.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(1.7, networkCoverage.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[3].Chainage, epsilon);
         }
 
         [Test]
@@ -1256,9 +1258,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             // x-------------------------------------------x-----(x)--- x
             // 0                                          99.1  (99.8) 100
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(99.1, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(99.1, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
         }
 
         [Test]
@@ -1294,11 +1296,11 @@ namespace DelftTools.Hydro.Tests.Helpers
             // 0                                      98.3     99   (99.6) 100
 
             Assert.AreEqual(4, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(98.3, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(99.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            //Assert.AreEqual(99.6, networkCoverage.Locations.Values[3].Offset, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[3].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(98.3, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(99.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
+            //Assert.AreEqual(99.6, networkCoverage.Locations.Values[3].Offset, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[3].Chainage, epsilon);
         }
 
         [Test]
@@ -1327,7 +1329,7 @@ namespace DelftTools.Hydro.Tests.Helpers
 
 
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(50.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(50.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
         }
 
         [Test]
@@ -1351,12 +1353,12 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       true, // gridAtFixedLength
                                                       10); // fixedLength
             Assert.AreEqual(11, discretization.Locations.Values.Count);
-            Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(50.0, discretization.Locations.Values[5].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, discretization.Locations.Values[10].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(50.0, discretization.Locations.Values[5].Chainage, epsilon);
+            Assert.AreEqual(100.0, discretization.Locations.Values[10].Chainage, epsilon);
 
             INetworkLocation networkLocation = discretization.Locations.Values[7];
-            Assert.AreEqual(70.0, networkLocation.Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(70.0, networkLocation.Chainage, epsilon);
             discretization.ToggleFixedPoint(networkLocation);
             //DiscretizationHelper.SetUserDefinedGridPoint(networkLocation, true);
 
@@ -1375,10 +1377,10 @@ namespace DelftTools.Hydro.Tests.Helpers
             // - none between 70 and 100
             // - (0 - 70) > 40, divide in equal parts -> 35
             Assert.AreEqual(4, discretization.Locations.Values.Count);
-            Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(35.0, discretization.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(70.0, discretization.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, discretization.Locations.Values[3].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(35.0, discretization.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(70.0, discretization.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(100.0, discretization.Locations.Values[3].Chainage, epsilon);
         }
 
         [Test]
@@ -1446,8 +1448,8 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       -1); // fixedLength
 
             Assert.AreEqual(2, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
         }
 
         [Test]
@@ -1475,8 +1477,8 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       -1); // fixedLength
 
             Assert.AreEqual(2, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
         }
 
         [Test]
@@ -1511,14 +1513,14 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       -1); // fixedLength
 
             Assert.AreEqual(8, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(10.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(20.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(30.0, networkCoverage.Locations.Values[3].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(40.0, networkCoverage.Locations.Values[4].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(50.0, networkCoverage.Locations.Values[5].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(60.0, networkCoverage.Locations.Values[6].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[7].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(10.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(20.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(30.0, networkCoverage.Locations.Values[3].Chainage, epsilon);
+            Assert.AreEqual(40.0, networkCoverage.Locations.Values[4].Chainage, epsilon);
+            Assert.AreEqual(50.0, networkCoverage.Locations.Values[5].Chainage, epsilon);
+            Assert.AreEqual(60.0, networkCoverage.Locations.Values[6].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[7].Chainage, epsilon);
         }
 
         [Test]
@@ -1553,9 +1555,9 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       -1); // fixedLength
 
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(5.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(5.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
         }
 
         [Test]
@@ -1590,9 +1592,9 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       -1); // fixedLength
 
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(5.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(5.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
         }
         
         [Test]
@@ -1627,9 +1629,9 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       -1); // fixedLength
 
             Assert.AreEqual(8, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(2.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(1.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(2.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
         }
 
         [Test]
@@ -1664,8 +1666,8 @@ namespace DelftTools.Hydro.Tests.Helpers
                                                       -1); // fixedLength
 
             Assert.AreEqual(2, networkCoverage.Locations.Values.Count);
-            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(100.0, networkCoverage.Locations.Values[1].Chainage, epsilon);
         }
 
         private static void AddLateralAt(IChannel branch, double offset)
@@ -1721,11 +1723,11 @@ namespace DelftTools.Hydro.Tests.Helpers
             // 20 for the cross section, 10 and 30 should not be generated due to existing 
             // fixed points and minimium distance 0f 5.
             Assert.AreEqual(5, discretization.Locations.Values.Count);
-            Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(8.0, discretization.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(20.0, discretization.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(32.0, discretization.Locations.Values[3].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, discretization.Locations.Values[4].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(8.0, discretization.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(20.0, discretization.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(32.0, discretization.Locations.Values[3].Chainage, epsilon);
+            Assert.AreEqual(100.0, discretization.Locations.Values[4].Chainage, epsilon);
         }
 
         [Test]
@@ -1785,12 +1787,12 @@ namespace DelftTools.Hydro.Tests.Helpers
             // fixed points and minimium distance 0f 5.
 
             Assert.AreEqual(6, discretization.Locations.Values.Count);
-            Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(8.0, discretization.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(15.0, discretization.Locations.Values[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(25.0, discretization.Locations.Values[3].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(32.0, discretization.Locations.Values[4].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(100.0, discretization.Locations.Values[5].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, epsilon);
+            Assert.AreEqual(8.0, discretization.Locations.Values[1].Chainage, epsilon);
+            Assert.AreEqual(15.0, discretization.Locations.Values[2].Chainage, epsilon);
+            Assert.AreEqual(25.0, discretization.Locations.Values[3].Chainage, epsilon);
+            Assert.AreEqual(32.0, discretization.Locations.Values[4].Chainage, epsilon);
+            Assert.AreEqual(100.0, discretization.Locations.Values[5].Chainage, epsilon);
         }
 
         /// <summary>
@@ -1882,20 +1884,20 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var gridPoints = discretization.Locations.Values;
             Assert.AreEqual(14, gridPoints.Count);
-            Assert.AreEqual(0.0, gridPoints[0].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1.0, gridPoints[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(227.61, gridPoints[2].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(229.61, gridPoints[3].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(241.42, gridPoints[4].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(243.42, gridPoints[5].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(595.01, gridPoints[6].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(597.01, gridPoints[7].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(730.25, gridPoints[8].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(732.25, gridPoints[9].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1252.95, gridPoints[10].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1254.95, gridPoints[11].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1260.51, gridPoints[12].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(1262, gridPoints[13].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(0.0, gridPoints[0].Chainage, epsilon);
+            Assert.AreEqual(1.0, gridPoints[1].Chainage, epsilon);
+            Assert.AreEqual(227.61, gridPoints[2].Chainage, epsilon);
+            Assert.AreEqual(229.61, gridPoints[3].Chainage, epsilon);
+            Assert.AreEqual(241.42, gridPoints[4].Chainage, epsilon);
+            Assert.AreEqual(243.42, gridPoints[5].Chainage, epsilon);
+            Assert.AreEqual(595.01, gridPoints[6].Chainage, epsilon);
+            Assert.AreEqual(597.01, gridPoints[7].Chainage, epsilon);
+            Assert.AreEqual(730.25, gridPoints[8].Chainage, epsilon);
+            Assert.AreEqual(732.25, gridPoints[9].Chainage, epsilon);
+            Assert.AreEqual(1252.95, gridPoints[10].Chainage, epsilon);
+            Assert.AreEqual(1254.95, gridPoints[11].Chainage, epsilon);
+            Assert.AreEqual(1260.51, gridPoints[12].Chainage, epsilon);
+            Assert.AreEqual(1262, gridPoints[13].Chainage, epsilon);
 
         }
 
@@ -1971,11 +1973,11 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(network.CurrentEditAction);
 
             var locations = testCoverage.GetLocationsForBranch(channelToReverse);
-            Assert.AreEqual(10.0, locations[0].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(10.0, locations[0].Chainage, epsilon);
             Assert.AreEqual(3.3, testCoverage[locations[0]]);
-            Assert.AreEqual(70.0, locations[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(70.0, locations[1].Chainage, epsilon);
             Assert.AreEqual(2.2, testCoverage[locations[1]]);
-            Assert.AreEqual(90.0, locations[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(90.0, locations[2].Chainage, epsilon);
             Assert.AreEqual(1.1, testCoverage[locations[2]]);
         }
 
@@ -2067,17 +2069,17 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var postReversalLocations = testCoverage.GetLocationsForBranch(channelToReverse);
             // Assert correctness of L3 (now first in Locations)
-            Assert.AreEqual(10.0, postReversalLocations[0].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(10.0, postReversalLocations[0].Chainage, epsilon);
             Assert.AreEqual(3.3, testCoverage.Evaluate(times.ElementAt(0), postReversalLocations[0]));
             Assert.AreEqual(4.3, testCoverage.Evaluate(times.ElementAt(1), postReversalLocations[0]));
             Assert.AreEqual(5.3, testCoverage.Evaluate(times.ElementAt(2), postReversalLocations[0]));
             // Assert correctness of L2
-            Assert.AreEqual(70.0, postReversalLocations[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(70.0, postReversalLocations[1].Chainage, epsilon);
             Assert.AreEqual(2.2, testCoverage.Evaluate(times.ElementAt(0), postReversalLocations[1]));
             Assert.AreEqual(3.2, testCoverage.Evaluate(times.ElementAt(1), postReversalLocations[1]));
             Assert.AreEqual(4.2, testCoverage.Evaluate(times.ElementAt(2), postReversalLocations[1]));
             // Assert correctness of L1 (now last in Locations)
-            Assert.AreEqual(90.0, postReversalLocations[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(90.0, postReversalLocations[2].Chainage, epsilon);
             Assert.AreEqual(1.1, testCoverage.Evaluate(times.ElementAt(0), postReversalLocations[2]));
             Assert.AreEqual(2.1, testCoverage.Evaluate(times.ElementAt(1), postReversalLocations[2]));
             Assert.AreEqual(3.1, testCoverage.Evaluate(times.ElementAt(2), postReversalLocations[2]));
@@ -2164,19 +2166,19 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var postReversallocations = testCoverage.GetLocationsForBranch(channelToReverse);
             // For L3
-            Assert.AreEqual(10.0, postReversallocations[0].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(10.0, postReversallocations[0].Chainage, epsilon);
             Assert.AreEqual(11.3, testCoverage[postReversallocations[0], 1.0, 5]);
             Assert.AreEqual(12.3, testCoverage[postReversallocations[0], 1.0, 9]);
             Assert.AreEqual(21.3, testCoverage[postReversallocations[0], 3.0, 5]);
             Assert.AreEqual(22.3, testCoverage[postReversallocations[0], 3.0, 9]);
             // For L2
-            Assert.AreEqual(70.0, postReversallocations[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(70.0, postReversallocations[1].Chainage, epsilon);
             Assert.AreEqual(11.2, testCoverage[postReversallocations[1], 1.0, 5]);
             Assert.AreEqual(12.2, testCoverage[postReversallocations[1], 1.0, 9]);
             Assert.AreEqual(21.2, testCoverage[postReversallocations[1], 3.0, 5]);
             Assert.AreEqual(22.2, testCoverage[postReversallocations[1], 3.0, 9]);
             // FOr L1
-            Assert.AreEqual(90.0, postReversallocations[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(90.0, postReversallocations[2].Chainage, epsilon);
             Assert.AreEqual(11.1, testCoverage[postReversallocations[2], 1.0, 5]);
             Assert.AreEqual(12.1, testCoverage[postReversallocations[2], 1.0, 9]);
             Assert.AreEqual(21.1, testCoverage[postReversallocations[2], 3.0, 5]);
@@ -2214,9 +2216,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(network.CurrentEditAction);
 
             var locations = testCoverage.GetLocationsForBranch(channelToReverse);
-            Assert.AreEqual(170.0, locations[0].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(170.0, locations[0].Chainage, epsilon);
             Assert.AreEqual(2.2, testCoverage[locations[0]]);
-            Assert.AreEqual(190.0, locations[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(190.0, locations[1].Chainage, epsilon);
             Assert.AreEqual(1.1, testCoverage[locations[1]]);
         }
 
@@ -2242,9 +2244,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             // check if locations do not move due to rounding errors
             var locations = testCoverage.Locations.Values;
 
-            Assert.AreEqual(10.0, locations[0].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(10.0, locations[0].Chainage, epsilon);
             Assert.AreEqual(1.1, testCoverage[locations[0]]);
-            Assert.AreEqual(30.0, locations[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(30.0, locations[1].Chainage, epsilon);
             Assert.AreEqual(2.2, testCoverage[locations[1]]);
         }
 
@@ -2283,22 +2285,22 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(network.CurrentEditAction);
 
             var locations = testCoverage.GetLocationsForBranch(channelToReverse);
-            Assert.AreEqual(10.0, locations[0].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(10.0, locations[0].Chainage, epsilon);
             Assert.AreEqual(3.3, testCoverage[locations[0]]);
-            Assert.AreEqual(70.0, locations[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(70.0, locations[1].Chainage, epsilon);
             Assert.AreEqual(2.2, testCoverage[locations[1]]);
-            Assert.AreEqual(90.0, locations[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(90.0, locations[2].Chainage, epsilon);
             Assert.AreEqual(1.1, testCoverage[locations[2]]);
 
             // Change in length of the branch, should cause an automatic update in the location Offsets.
             channelToReverse.Length = 50;
 
             locations = testCoverage.GetLocationsForBranch(channelToReverse);
-            Assert.AreEqual(5.0, locations[0].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(5.0, locations[0].Chainage, epsilon);
             Assert.AreEqual(3.3, testCoverage[locations[0]]);
-            Assert.AreEqual(35.0, locations[1].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(35.0, locations[1].Chainage, epsilon);
             Assert.AreEqual(2.2, testCoverage[locations[1]]);
-            Assert.AreEqual(45.0, locations[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(45.0, locations[2].Chainage, epsilon);
             Assert.AreEqual(1.1, testCoverage[locations[2]]);
         }
 

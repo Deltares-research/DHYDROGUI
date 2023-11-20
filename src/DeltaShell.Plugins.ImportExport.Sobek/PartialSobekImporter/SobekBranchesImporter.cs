@@ -241,7 +241,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (!branch.IsLengthCustom) continue;
 
                 var difference = Math.Abs(branch.Length - branch.Geometry.Length);
-                if (difference < BranchFeature.Epsilon) continue;
+                if (difference < epsilon) continue;
 
                 var percentage = branch.Geometry.Length > 0 ? 100 * (difference / branch.Geometry.Length) : 100.0;
                 if (percentage < 0.01) continue;

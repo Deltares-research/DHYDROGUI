@@ -27,6 +27,8 @@ namespace DelftTools.Hydro.Helpers
     /// </summary>
     public class HydroNetworkHelper
     {
+        private const double epsilon = 1.0e-7;
+
         private const string Unique1DPostFixId = "_1D_";
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
 
@@ -388,7 +390,7 @@ namespace DelftTools.Hydro.Helpers
                         continue;
                     }
 
-                    if (branch.BranchFeatures.OfType<IStructure1D>().Any(bf => Math.Abs(bf.Chainage - feature.Chainage) < BranchFeature.Epsilon))
+                    if (branch.BranchFeatures.OfType<IStructure1D>().Any(bf => Math.Abs(bf.Chainage - feature.Chainage) < epsilon))
                     {
                         log.InfoFormat("No grid point generated for {3} {0}:{1} at {2:f2}. Grid point would overlap with structure.", feature.Name, branch.Name, feature.Chainage, typeName);
                         continue;

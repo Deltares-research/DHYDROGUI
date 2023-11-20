@@ -25,6 +25,8 @@ namespace DelftTools.Hydro.Roughness
     [Entity]
     public class RoughnessSection : Unique<long>, ICloneable, ICopyFrom, INameable, IItemContainer, IEditableObject
     {
+        private const double epsilon = 1.0e-7;
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(RoughnessSection));
         private readonly Stack<IEditAction> editActions = new Stack<IEditAction>();
         //cannot use a dictionary because hashcode is cached. Once a location is set, when the chainage changes the location is no longer found
@@ -500,7 +502,7 @@ namespace DelftTools.Hydro.Roughness
             }
 
             //handle chainage changed
-            if (Math.Abs(previousChainage - networkLocation.Chainage) >= BranchFeature.Epsilon)
+            if (Math.Abs(previousChainage - networkLocation.Chainage) >= epsilon)
             {
                 var roughnessFunction = GetRoughnessFunction(networkLocation.Branch);
                 if (roughnessFunction != null)
