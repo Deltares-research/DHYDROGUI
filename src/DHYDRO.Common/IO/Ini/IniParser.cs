@@ -284,7 +284,7 @@ namespace DHYDRO.Common.IO.Ini
                 throw new FormatException($"Error on line {lineNumber}: property key cannot be empty.");
             }
 
-            if (key.Contains(" "))
+            if (!Configuration.AllowPropertyKeysWithSpaces && key.Contains(" "))
             {
                 throw new FormatException($"Error on line {lineNumber}: property key cannot contain spaces.");
             }

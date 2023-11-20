@@ -360,6 +360,27 @@ namespace DHYDRO.Common.Tests.IO.Ini
         }
 
         [Test]
+        [TestCase("property with spaces")]
+        [TestCase("property\twith\ttabs")]
+        public void Parse_PropertyKeyWithSpacesAndAllowPropertyKeysWithSpacesIsTrue_SectionHasProperty(string propertyKey)
+        {
+            IniParser iniParser = CreateParser();
+
+            iniParser.Configuration.AllowPropertyKeysWithSpaces = true;
+
+            var ini = $@"
+[section]
+{propertyKey}=value";
+
+            IniData iniData = iniParser.Parse(ini);
+            IniSection section = iniData.Sections.First();
+            IniProperty property = section.GetProperty(propertyKey.Replace('\t', ' '));
+
+            Assert.That(property, Is.Not.Null);
+            Assert.That(property.Value, Is.EqualTo("value"));
+        }
+
+        [Test]
         public void Parse_DuplicatePropertyKeysAndAllowDuplicatePropertiesIsFalse_ThrowsFormatException()
         {
             IniParser iniParser = CreateParser();
