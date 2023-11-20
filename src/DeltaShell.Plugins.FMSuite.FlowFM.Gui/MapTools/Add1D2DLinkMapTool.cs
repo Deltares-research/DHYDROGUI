@@ -10,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;
@@ -96,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if ((Unique<long>)this.VectorLayer == (Unique<long>)null || e.Button != MouseButtons.Left)
                 return;
             this.IsBusy = true;
-            this.StartCoordinate = this.GetLocalCoordinate(SharpMap.Converters.Geometries.GeometryFactory.CreateCoordinate(worldPosition.X, worldPosition.Y));
+            this.StartCoordinate = this.GetLocalCoordinate(new Coordinate(worldPosition.X, worldPosition.Y));
         }
 
         public override void OnMouseMove(Coordinate worldPosition, MouseEventArgs e)
@@ -104,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if ((Unique<long>)this.VectorLayer == (Unique<long>)null || this.AdditionalButtonsBeingPressed(e))
                 return;
             if (this.startCoordinate != null)
-                this.EndCoordinate = this.GetLocalCoordinate(SharpMap.Converters.Geometries.GeometryFactory.CreateCoordinate(worldPosition.X, worldPosition.Y));
+                this.EndCoordinate = this.GetLocalCoordinate(new Coordinate(worldPosition.X, worldPosition.Y));
             this.StartDrawing();
             this.DoDrawing(true);
             this.StopDrawing();
@@ -117,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             if (this.startCoordinate != null)
             {
-                this.EndCoordinate = this.GetLocalCoordinate(SharpMap.Converters.Geometries.GeometryFactory.CreateCoordinate(worldPosition.X, worldPosition.Y));
+                this.EndCoordinate = this.GetLocalCoordinate(new Coordinate(worldPosition.X, worldPosition.Y));
                 var snapTolerance = GetSnapTolerance(e.Location, snapToleranceInPixels);
                 Add1D2DLink(this.StartCoordinate, this.EndCoordinate, snapTolerance);
             }
@@ -181,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private void CreateNewLineGeometry()
         {
-            this.newArrowLineGeometry = SharpMap.Converters.Geometries.GeometryFactory.CreateLineString(new Coordinate[2]
+            this.newArrowLineGeometry = new LineString(new Coordinate[2]
             {
                 this.startCoordinate,
                 this.endCoordinate
@@ -212,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             MapTool1D2DLinksHelper.AddNew1D2DLink(fmModel, LinkType, startPoint, endPoint, snapTolerance);
         }
 
-        private double GetSnapTolerance(Point location, int pixelTolerance)
+        private double GetSnapTolerance(System.Drawing.Point location, int pixelTolerance)
         {
             var result = 0.0;
             var start = MapHelper.ImageToWorld((IMap) this.MapControl.Map, location.X, location.Y);

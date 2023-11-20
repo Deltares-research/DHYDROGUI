@@ -3,7 +3,6 @@ using System.Drawing;
 using DelftTools.Controls.Swf.Charting;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
 using GeoAPI.Geometries;
-using SharpMap.Converters.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 {
@@ -19,7 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         {
             try
             {
-                return Geometry.Contains(GeometryFactory.CreatePoint(x, y));
+                return Geometry.Contains(new NetTopologySuite.Geometries.Point(x, y));
             }
             catch (Exception)
             {

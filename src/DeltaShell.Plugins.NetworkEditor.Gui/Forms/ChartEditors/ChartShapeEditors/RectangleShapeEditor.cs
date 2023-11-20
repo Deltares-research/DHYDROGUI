@@ -3,7 +3,7 @@ using DelftTools.Controls.Swf.Charting;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
-using SharpMap.Converters.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors
 {
@@ -15,19 +15,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             if (CanResize)
             {
                 // bottom
-                points.Add(GeometryFactory.CreatePoint(0, 0));
+                points.Add(new Point(0, 0));
                 // right
-                points.Add(GeometryFactory.CreatePoint(0, 0));
+                points.Add(new Point(0, 0));
                 // top
-                points.Add(GeometryFactory.CreatePoint(0, 0));
+                points.Add(new Point(0, 0));
                 // left
-                points.Add(GeometryFactory.CreatePoint(0, 0));
+                points.Add(new Point(0, 0));
             }
 
             UpdateRectangleTrackers();
             if (CanMove)
             {
-                CenterTracker = GeometryFactory.CreatePoint(0, 0);
+                CenterTracker = new Point(0, 0);
             }
         }
 

@@ -3,8 +3,8 @@ using DelftTools.Controls.Swf.Charting;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Operation.Distance;
-using SharpMap.Converters.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors
 {
@@ -29,9 +29,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             for (int i = 0; i < ShapeFeature.Geometry.Coordinates.Length - 1; i++)
             {
                 Coordinate coordinate = ShapeFeature.Geometry.Coordinates[i];
-                points.Add(GeometryFactory.CreatePoint(coordinate.X, coordinate.Y));
+                points.Add(new Point(coordinate.X, coordinate.Y));
             }
-            CenterTracker = GeometryFactory.CreatePoint(0, 0);
+            CenterTracker = new Point(0, 0);
         }
 
         #region IShapeFeatureEditor Members
@@ -96,19 +96,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                                                                     ChartCoordinateService.ToDeviceY(coordinate.Y)));
             }
 
-            ILineString lineString = GeometryFactory.CreateLineString(deviceVertices.ToArray());
+            ILineString lineString =  new LineString(deviceVertices.ToArray());
             Coordinate deviceCoordinate = new Coordinate(
                 ChartCoordinateService.ToDeviceX(worldPosition.X),
                 ChartCoordinateService.ToDeviceY(worldPosition.Y));
              
-            DistanceOp distanceOp = new DistanceOp(lineString, GeometryFactory.CreatePoint(deviceCoordinate));
+            DistanceOp distanceOp = new DistanceOp(lineString, new Point(deviceCoordinate));
             GeometryLocation[] closestLocations = distanceOp.ClosestLocations();
             if (-1 == closestLocations[0].SegmentIndex) 
                 return;
             vertices.Insert(closestLocations[0].SegmentIndex + 1, worldPosition);
 
-            ILinearRing linearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-            IPolygon polygon = GeometryFactory.CreatePolygon(linearRing, null);
+            ILinearRing linearRing =  new LinearRing(vertices.ToArray());
+            IPolygon polygon = new Polygon(linearRing, (ILinearRing[])null);
             ShapeFeature.Geometry = polygon;
             Initialize();
             CurrentTracker = points[closestLocations[0].SegmentIndex + 1];

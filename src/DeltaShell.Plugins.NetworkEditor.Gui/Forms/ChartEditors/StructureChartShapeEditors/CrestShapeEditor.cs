@@ -5,7 +5,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
-using SharpMap.Converters.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapeEditors
 {
@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             if ((CanResize) || (CanMove))
             {
-                points.Add(GeometryFactory.CreatePoint(0, 0));
+                points.Add(new Point(0, 0));
             }
             UpdateTrackers();
         }

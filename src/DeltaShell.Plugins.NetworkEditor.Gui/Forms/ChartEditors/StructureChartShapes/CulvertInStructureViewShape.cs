@@ -6,7 +6,7 @@ using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
-using SharpMap.Converters.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
@@ -171,8 +171,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             //add the first as the last so we get a closed ring
             drawCoordinates.Add(drawCoordinates.First());
 
-            ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(drawCoordinates.ToArray());
-            IPolygon polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
+            ILinearRing newLinearRing = new LinearRing(drawCoordinates.ToArray());
+            IPolygon polygon = new Polygon(newLinearRing, (ILinearRing[])null);
             var feature = new PolygonShapeFeature(Chart, polygon);
 
             feature.NormalStyle = CulvertStyling.NormalStyle;

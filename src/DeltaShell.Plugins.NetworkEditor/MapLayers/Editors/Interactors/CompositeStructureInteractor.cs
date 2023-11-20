@@ -10,7 +10,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
-using SharpMap.Converters.Geometries;
 using SharpMap.Editors;
 using SharpMap.Editors.Interactors.Network;
 using SharpMap.Rendering;
@@ -51,7 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                                                                          8,
                                                                          8) : null;
 
-            var geometry = GeometryFactory.CreatePoint(CalculateCoordinate(SourceFeature.Geometry));
+            var geometry = new NetTopologySuite.Geometries.Point(CalculateCoordinate(SourceFeature.Geometry));
             Trackers.Add(new TrackerFeature(this, geometry, 0, SelectedImageTracker));
             Trackers[0].Selected = true;
         }

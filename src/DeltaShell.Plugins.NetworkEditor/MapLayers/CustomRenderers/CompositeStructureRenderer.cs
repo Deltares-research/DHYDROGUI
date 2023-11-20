@@ -11,7 +11,6 @@ using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Layers;
 using SharpMap.Rendering;
-using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
@@ -215,8 +214,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
             vertices.Add((Coordinate) vertices[0].Clone());
 
-            var newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-            var polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
+            var newLinearRing = new LinearRing(vertices.ToArray());
+            IPolygon polygon = new Polygon(newLinearRing, (ILinearRing[]) null);
 
             if (layer.CoordinateTransformation != null)
             {

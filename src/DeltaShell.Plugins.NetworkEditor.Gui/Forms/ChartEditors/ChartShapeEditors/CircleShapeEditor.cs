@@ -4,7 +4,7 @@ using DelftTools.Controls.Swf.Charting;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
-using SharpMap.Converters.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors
 {
@@ -31,22 +31,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
 
             var circleShapeFeature = (CircleShapeFeature)ShapeFeature;
             // bottom
-            points.Add(GeometryFactory.CreatePoint(
-                           circleShapeFeature.Center.X,
-                           circleShapeFeature.Center.Y + circleShapeFeature.YRadius / 2));
+            points.Add(new Point(
+                circleShapeFeature.Center.X,
+                circleShapeFeature.Center.Y + circleShapeFeature.YRadius / 2));
             // right
-            points.Add(GeometryFactory.CreatePoint(
-                           circleShapeFeature.Center.X + circleShapeFeature.XRadius / 2,
-                           circleShapeFeature.Center.Y));
+            points.Add(new Point(
+                circleShapeFeature.Center.X + circleShapeFeature.XRadius / 2,
+                circleShapeFeature.Center.Y));
             // top
-            points.Add(GeometryFactory.CreatePoint(
-                           circleShapeFeature.Center.X,
-                           circleShapeFeature.Center.Y - circleShapeFeature.YRadius / 2));
+            points.Add(new Point(
+                circleShapeFeature.Center.X,
+                circleShapeFeature.Center.Y - circleShapeFeature.YRadius / 2));
             // left
-            points.Add(GeometryFactory.CreatePoint(
-                           circleShapeFeature.Center.X - circleShapeFeature.XRadius / 2,
-                           circleShapeFeature.Center.Y));
-            CenterTracker = GeometryFactory.CreatePoint(0, 0);
+            points.Add(new Point(
+                circleShapeFeature.Center.X - circleShapeFeature.XRadius / 2,
+                circleShapeFeature.Center.Y));
+            CenterTracker = new Point(0, 0);
         }
 
         #region IShapeFeatureEditor Members

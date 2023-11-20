@@ -16,7 +16,6 @@ using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
-using SharpMap.Converters.Geometries;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Editors;
 using SharpMap.Editors.Interactors;
@@ -88,7 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             for (int i = 0; i < geometry.Coordinates.Length; i++)
             {
                 var coordinate = geometry.Coordinates[i];
-                var selectPoint = GeometryFactory.CreatePoint(coordinate.X, coordinate.Y);
+                var selectPoint = new NetTopologySuite.Geometries.Point(coordinate.X, coordinate.Y);
                 
                 Trackers.Add(new TrackerFeature(this, selectPoint, i, imageTracker));
             }

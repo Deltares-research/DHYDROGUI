@@ -5,9 +5,9 @@ using System.Linq;
 using DelftTools.Hydro;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
-using SharpMap.Converters.Geometries;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Layers;
 using SharpMap.Rendering;
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             customGeometries[feature] = GetRenderedFeatureGeometry(feature, layer);
             
             var polygon = (IPolygon)customGeometries[feature];
-            var point = GeometryFactory.CreatePoint(polygon.EnvelopeInternal.Centre);
+            var point = new NetTopologySuite.Geometries.Point(polygon.EnvelopeInternal.Centre);
 
             var style = GetCurrentStyle(vectorLayer,feature);
             
@@ -210,8 +210,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             vertices.Add(new Coordinate(d + (2 * halfWidth), anchor.Y + upwardTranslationFactor * halfHeight));
             vertices.Add((Coordinate)vertices[0].Clone());
             
-            var newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-            var polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
+            var newLinearRing = new LinearRing(vertices.ToArray());
+            IPolygon polygon = new Polygon(newLinearRing, (ILinearRing[])null);
 
             if (layer.CoordinateTransformation != null)
             {

@@ -16,7 +16,6 @@ using SharpMap.Api.Editors;
 using SharpMap.Editors.FallOff;
 using SharpMap.Editors.Interactors.Network;
 using SharpMap.UI.Forms;
-using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
 {
@@ -219,7 +218,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
         [Obsolete("HACK")]
         public static void MoveNodeTo(INode node, double x, double y)
         {
-            var newGeometry = GeometryFactory.CreatePoint(x, y);
+            var newGeometry = new Point(x, y);
             foreach (var branch in node.IncomingBranches)
             {
                 if (branch.Source.Geometry.Distance(newGeometry) < 1.0e-8)

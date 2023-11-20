@@ -6,8 +6,8 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Api.Editors;
-using SharpMap.Converters.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapeEditors
 {
@@ -33,9 +33,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             for (int i = 2; i < geometry.Coordinates.Length - 1; i++)
             {
                 Coordinate coordinate = geometry.Coordinates[i];
-                points.Add(GeometryFactory.CreatePoint(coordinate.X, coordinate.Y));
+                points.Add(new Point(coordinate.X, coordinate.Y));
             }
-            CenterTracker = GeometryFactory.CreatePoint(0, 0);
+            CenterTracker = new Point(0, 0);
         }
 
         private void ChangeValue(double oldValue, double newValue, double value)
@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                          (Coordinate) worldPosition.Clone(),
                                                          (Coordinate) points[index].Coordinates[0].Clone()
                                                      };
-                snapResult.VisibleSnaps.Add(GeometryFactory.CreateLineString(coordinates.ToArray()));
+                snapResult.VisibleSnaps.Add(new LineString(coordinates.ToArray()));
                 return snapResult;
             }
             return null;

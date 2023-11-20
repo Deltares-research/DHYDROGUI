@@ -4,7 +4,7 @@ using System.Drawing;
 using DelftTools.Controls.Swf.Charting;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
 using GeoAPI.Geometries;
-using SharpMap.Converters.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 {
@@ -121,8 +121,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                                        new Coordinate(left, top)
                                    };
                 vertices.Add((Coordinate)vertices[0].Clone());
-                ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-                return GeometryFactory.CreatePolygon(newLinearRing, null);
+                ILinearRing newLinearRing = new LinearRing(vertices.ToArray());
+                return new Polygon(newLinearRing, (ILinearRing[])null);
             }
             set
             {

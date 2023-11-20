@@ -5,7 +5,6 @@ using DelftTools.Controls.Swf.Charting;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
-using SharpMap.Converters.Geometries;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
@@ -26,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             {
                 Rectangle rectangle = borderShape.GetBounds();
                 double worldHeight = chartCoordinateService.ToWorldHeight(rectangle.Height);
-                points.Add(GeometryFactory.CreatePoint(borderShape.X, RectangleSeriesShapeFeature.Y + worldHeight / 2));
+                points.Add(new NetTopologySuite.Geometries.Point(borderShape.X, RectangleSeriesShapeFeature.Y + worldHeight / 2));
             }
         }
 

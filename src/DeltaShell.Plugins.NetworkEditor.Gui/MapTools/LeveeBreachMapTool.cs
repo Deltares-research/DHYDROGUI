@@ -6,7 +6,6 @@ using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Api.Editors;
-using SharpMap.Converters.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Editors.Snapping;
 using SharpMap.Layers;
@@ -110,7 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             movingBreachLocation = true;
             StartDrawing();
-            newBreachLocationPoint = GeometryFactory.CreatePoint(worldPosition);
+            newBreachLocationPoint = new NetTopologySuite.Geometries.Point(worldPosition);
             ((DataTableFeatureProvider)newBreachLocationLayer.DataSource).Clear();
             newBreachLocationLayer.DataSource.Add(newBreachLocationPoint);
             newBreachLocationFeature = newBreachLocationLayer.DataSource.GetFeature(0);

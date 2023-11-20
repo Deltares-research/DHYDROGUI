@@ -22,7 +22,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShap
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
-using SharpMap.Converters.Geometries;
 using SharpMap.Styles;
 using ValidationAspects;
 
@@ -571,7 +570,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     minZValue = bottom;
                 }
             }
-            return GeometryFactory.CreateEnvelope(left, right, bottom, top);
+            return new Envelope(left, right, bottom, top);
         }
         
         private static Envelope GetBoundingRectBridge(IBridge bridge)
@@ -586,11 +585,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             if (yzValues.Count() <= 1)
             {
-                return GeometryFactory.CreateEnvelope(0, 0, 0, 0);
+                return new Envelope(0, 0, 0, 0);
             }
             var yValues = yzValues.Select(yz => yz.X + offSetY);
             var zValues = yzValues.Select(yz => yz.Y);
-            return GeometryFactory.CreateEnvelope(yValues.Min(), yValues.Max(), zValues.Min(), zValues.Max());
+            return new Envelope(yValues.Min(), yValues.Max(), zValues.Min(), zValues.Max());
         }
 
         private static Envelope GetBoundingRectCulver(ICulvert culvert)
@@ -615,7 +614,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             double width =
                 chartView.ChartCoordinateService.ToWorldWidth(PumpSmallIcon.Width);
 
-            return GeometryFactory.CreateEnvelope(pump.OffsetY, pump.OffsetY + width, minY, maxY);
+            return new Envelope(pump.OffsetY, pump.OffsetY + width, minY, maxY);
         }
         #endregion
 

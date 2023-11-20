@@ -7,7 +7,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapeEditors;
 using GeoAPI.Geometries;
-using SharpMap.Converters.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
@@ -97,8 +97,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         
         private static IPolygon CreatePolygon(IEnumerable<Coordinate> coordinates)
         {
-            ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(coordinates.ToArray());
-            return GeometryFactory.CreatePolygon(newLinearRing, null);
+            ILinearRing newLinearRing = new LinearRing(coordinates.ToArray());
+            return new Polygon(newLinearRing, (ILinearRing[])null);
         }
 
         public IList<Coordinate> GetCoordinates()
