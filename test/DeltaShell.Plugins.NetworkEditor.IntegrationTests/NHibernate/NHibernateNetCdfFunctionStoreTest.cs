@@ -325,7 +325,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveProjectNCToNetCdfNoValues()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -335,7 +335,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // create test network
@@ -365,7 +368,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectUnlocksNetCdfFiles()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -375,7 +378,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // add a coverage to the project.
@@ -412,7 +418,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectDeletesUnsavedNetCdfFiles()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
 
@@ -424,6 +430,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Run();
 
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // save the project
@@ -455,7 +463,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectDeletesUnsavedNetCdfFilesInSourceFolder()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -465,7 +473,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // save the project
@@ -497,7 +508,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveProjectDeletesDeletedNetCdfFilesInSourceFolder()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -507,7 +518,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // save the project
@@ -544,7 +558,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectKeepsDeletedNetCdfFilesInSourceFolder()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -554,7 +568,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // save the project
@@ -591,7 +608,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectRollbacksDeletedNetCdfStoreInTransaction()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -601,7 +618,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // save the project
@@ -650,7 +670,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectDoesNotLockDeletedNetCdfStore()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -662,6 +682,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 gui.Run();
 
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // save the project
@@ -711,7 +733,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void ModifyingNetCdfFunctionStoreAfterSaveShouldCreateChangesFile()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -721,7 +743,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // add a coverage to the project.
@@ -765,7 +790,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectThreeTimesWithChangesInNetCdfCopiesFile()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -775,7 +800,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // add a coverage to the project.
@@ -811,7 +839,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectTwiceWithNetCdfCopiesFile()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
@@ -821,7 +849,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
+                
                 IApplication app = gui.Application;
+                app.CreateNewProject();
+                
                 Project project = app.Project;
 
                 // add a coverage to the project.

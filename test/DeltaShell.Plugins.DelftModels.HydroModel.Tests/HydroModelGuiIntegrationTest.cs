@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
@@ -13,10 +12,12 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -58,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [Category(TestCategory.Wpf)]
     public class HydroModelGuiIntegrationTest
     {
-        private DeltaShellGui gui;
+        private IGui gui;
         private IApplication app;
 
         [SetUp]
@@ -250,7 +251,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             new RunningActivityLogAppender();
             //HACK: inside this constructor singleton magic happens, this should not be required
 
-            gui = new DeltaShellGui();
+            gui = DeltaShellCoreFactory.CreateGui();
             app = gui.Application;
 
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -274,6 +275,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             gui.Plugins.Add(new WaveGuiPlugin());
 
             gui.Run();
+            app.CreateNewProject();
         }
 
         private void DisposeGui()

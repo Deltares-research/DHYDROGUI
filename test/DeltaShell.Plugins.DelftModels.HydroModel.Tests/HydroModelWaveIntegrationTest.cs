@@ -1,7 +1,7 @@
 ﻿using System;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModel_WhenAddingWaveModelAsOnlyActivity_ThenWaveCommunicationsFilePathIsEmpty()
         {
             // Arrange
-            using (IApplication app = new DeltaShellApplication())
+            using (IApplication app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new HydroModelApplicationPlugin());
                 app.Plugins.Add(new WaveApplicationPlugin());
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModelWithWave_WhenAddingFmModel_ThenWaveCommunicationsFilePathIsSetToSpecificRelativePath()
         {
             // Arrange
-            using (IApplication app = new DeltaShellApplication())
+            using (IApplication app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new HydroModelApplicationPlugin());
                 app.Plugins.Add(new WaveApplicationPlugin());
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModelWithWaveAndFM_WhenRemovingFmModel_ThenWaveCommunicationsFilePathIsEmpty()
         {
             // Arrange
-            using (IApplication app = new DeltaShellApplication())
+            using (IApplication app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new HydroModelApplicationPlugin());
                 app.Plugins.Add(new WaveApplicationPlugin());
@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModelWithWaveAndFM_WhenChangingFmModelName_ThenWaveCommunicationsFilePathIsAdjusted()
         {
             // Arrange
-            using (IApplication app = new DeltaShellApplication())
+            using (IApplication app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new HydroModelApplicationPlugin());
                 app.Plugins.Add(new WaveApplicationPlugin());

@@ -15,6 +15,7 @@ using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(mduPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -57,7 +58,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
-
+                app.CreateNewProject();
+                
                 Action mainWindowShown = delegate
                 {
                     Project project = app.Project;
@@ -72,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void JumpToSubTabThroughProjectExplorerWithModelViewNotYetOpen()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -83,6 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -111,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void JumpToSubTabThroughProjectExplorerWithModelViewAlreadyOpenOpen()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -122,6 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -271,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenARunningGui_WhenSavingClosingAndOpeningTheSameProject_ShouldReturnAProjectTreeWithOutputReferencedToTheLastInstanceOfTheModel()
         {
             using (var tempDirectory = new TemporaryDirectory())
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 
@@ -301,6 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         private void ReopenANewCreatedProjectAndCheckItsProjectTree(TemporaryDirectory tempDirectory, string modelFolder, IGui gui)
         {
             IApplication app = gui.Application;
+            app.CreateNewProject();
 
             CreateModelWithOutputCollapsed(modelFolder, gui, out int nrOfDataItems);
 

@@ -10,7 +10,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             try
             {
-                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -54,6 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     var model = new WaterQualityModel();
                     app.Project.RootFolder.Add(model);
@@ -141,13 +142,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                using (var app = new DeltaShellApplication
+                var app = DeltaShellCoreFactory.CreateApplication();
+                app.UserSettings = userSettings;
+                using (app)
                 {
-                    UserSettings = userSettings,
-                    IsProjectCreatedInTemporaryDirectory = true
-                })
-                {
-                    app.IsProjectCreatedInTemporaryDirectory = true;
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
                     app.Plugins.Add(new NetworkEditorApplicationPlugin());
@@ -155,6 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     var model = new WaterQualityModel();
                     app.Project.RootFolder.Add(model);
@@ -218,11 +217,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                using (var app = new DeltaShellApplication
-                {
-                    UserSettings = userSettings,
-                    IsProjectCreatedInTemporaryDirectory = true
-                })
+                var app = DeltaShellCoreFactory.CreateApplication();
+                app.UserSettings = userSettings;
+                using (app)
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -231,6 +228,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     var model = new WaterQualityModel();
                     app.Project.RootFolder.Add(model);
@@ -290,7 +288,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -303,6 +301,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(waqPlugin);
 
                     app.Run();
+                    app.CreateNewProject();
 
                     // create a model
                     var model = new WaterQualityModel();
@@ -366,13 +365,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                using (var app = new DeltaShellApplication
+                var app = DeltaShellCoreFactory.CreateApplication();
+                app.UserSettings = application;
+                using (app)
                 {
-                    UserSettings = application,
-                    IsProjectCreatedInTemporaryDirectory = true
-                })
-                {
-                    app.IsProjectCreatedInTemporaryDirectory = true;
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
                     app.Plugins.Add(new NetworkEditorApplicationPlugin());
@@ -380,6 +376,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     var model = new WaterQualityModel();
                     app.Project.RootFolder.Add(model);
@@ -441,13 +438,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             using (var tempDirectory = new TemporaryDirectory())
             {
                 string workingDirectoryPath = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
-                ApplicationSettingsBase userSettings =
-                    ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
-                using (var app = new DeltaShellApplication
-                {
-                    UserSettings = userSettings,
-                    IsProjectCreatedInTemporaryDirectory = true
-                })
+                ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+                
+                var app = DeltaShellCoreFactory.CreateApplication();
+                app.UserSettings = userSettings;
+                using (app)
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -456,6 +451,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     string hydFileDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(Path.GetDirectoryName(hydFile));
                     string hydFileInTemp = Path.Combine(hydFileDirectoryInTemp, hydFileName);
@@ -517,7 +513,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -526,6 +522,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     // create a model
                     var model = new WaterQualityModel();
@@ -574,7 +571,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -583,6 +580,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     // create a model
                     var originalWaqModel = new WaterQualityModel();
@@ -631,7 +629,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -640,6 +638,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     // create a model
                     var model = new WaterQualityModel();
@@ -744,7 +743,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -752,6 +751,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
 
                     // create a model
                     WaterQualityModel waqModel = WaterQualityModelWorkDirectoryTest.CreateWaqModelWithData();
@@ -802,7 +802,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             // call
             string savePath = Path.Combine(saveLocation);
 
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.AddRange(GetPlugins());
 

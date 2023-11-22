@@ -41,7 +41,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.Helpers
 
         public string HandleInputFileImport(string fileFilter)
         {
-            string selectedFile = dialogService.SelectFile(fileFilter);
+            var dialogOptions = new FileDialogOptions { FileFilter = fileFilter };
+            
+            string selectedFile = dialogService.ShowOpenFileDialog(dialogOptions);
 
             if (selectedFile == null)
             {

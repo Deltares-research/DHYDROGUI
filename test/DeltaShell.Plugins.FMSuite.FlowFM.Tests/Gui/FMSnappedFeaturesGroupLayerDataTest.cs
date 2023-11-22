@@ -4,9 +4,11 @@ using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -41,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             const int expectedNumberOfLayers = 13;
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -90,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -110,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -137,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -165,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -186,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -216,7 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -246,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -274,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -302,7 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -330,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -361,7 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -382,7 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static IEventedList<ILayer> SnappedLayers(DeltaShellGui gui, string netFile)
+        private static IEventedList<ILayer> SnappedLayers(IGui gui, string netFile)
         {
             IApplication app = gui.Application;
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -397,6 +399,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             gui.Plugins.Add(new FlowFMGuiPlugin());
 
             gui.Run();
+
+            app.CreateNewProject();
 
             WaterFlowFMModel fmModel = AddFMModelToProject(app);
 
@@ -437,6 +441,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static WaterFlowFMModel AddFMModelToProject(IApplication app)
         {
+            app.CreateNewProject();
+
             // Add water flow model to project
             Project project = app.Project;
             project.RootFolder.Add(new WaterFlowFMModel());

@@ -6,7 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             string file = TestHelper.GetTestFilePath(path);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 SetupPluginsForApp(app);

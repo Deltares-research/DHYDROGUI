@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
             var importerService = Substitute.For<IInputFileImporterService>();
             var userInputService = Substitute.For<IRequestUserInputService<FileAlreadyExistsChoice>>();
 
-            dialogService.SelectFile(null).ReturnsForAnyArgs((string)null);
+            dialogService.ShowOpenFileDialog(null).ReturnsForAnyArgs((string)null);
 
             var helper = new TimeFrameEditorFileImportHelper(dialogService,
                                                              importerService,
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
 
             // Assert
             Assert.That(result, Is.Null);
-            dialogService.Received(1).SelectFile(fileFilter, "", false);
+            dialogService.Received(1).ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == fileFilter));
             importerService.DidNotReceiveWithAnyArgs().CopyFile(null);
         }
 
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
             importerService.IsInInputFolder(selectedFilePath).Returns(true);
             importerService.GetRelativePath(selectedFilePath).Returns(relativeSelectedFilePath);
 
-            dialogService.SelectFile(null).ReturnsForAnyArgs(selectedFilePath);
+            dialogService.ShowOpenFileDialog(null).ReturnsForAnyArgs(selectedFilePath);
 
             var helper = new TimeFrameEditorFileImportHelper(dialogService,
                                                              importerService,
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
 
             const string selectedFilePath = "someSelectedFilePath.txt";
 
-            dialogService.SelectFile(null).ReturnsForAnyArgs(selectedFilePath);
+            dialogService.ShowOpenFileDialog(null).ReturnsForAnyArgs(selectedFilePath);
             importerService.IsInInputFolder(selectedFilePath).Returns(false);
             importerService.HasFile(selectedFilePath).Returns(true);
             userInputService.RequestUserInput(null, null).ReturnsForAnyArgs((FileAlreadyExistsChoice?)null);
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
 
             const string selectedFilePath = "someSelectedFilePath.txt";
 
-            dialogService.SelectFile(null).ReturnsForAnyArgs(selectedFilePath);
+            dialogService.ShowOpenFileDialog(null).ReturnsForAnyArgs(selectedFilePath);
             importerService.IsInInputFolder(selectedFilePath).Returns(false);
             importerService.HasFile(selectedFilePath).Returns(true);
             userInputService.RequestUserInput(null, null).ReturnsForAnyArgs(FileAlreadyExistsChoice.Overwrite);
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
             const string selectedFilePath2 = "someSelectedFilePath_0.txt";
             string absPath = Path.GetFullPath(Path.Combine(".", selectedFilePath));
 
-            dialogService.SelectFile(null).ReturnsForAnyArgs(absPath);
+            dialogService.ShowOpenFileDialog(null).ReturnsForAnyArgs(absPath);
             importerService.IsInInputFolder(selectedFilePath).Returns(false);
             importerService.HasFile(selectedFilePath).Returns(true);
             importerService.HasFile(selectedFilePath2).Returns(true);
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
             const string selectedFilePath = "someSelectedFilePath.txt";
             string absPath = Path.GetFullPath(Path.Combine(".", selectedFilePath));
 
-            dialogService.SelectFile(null).ReturnsForAnyArgs(absPath);
+            dialogService.ShowOpenFileDialog(null).ReturnsForAnyArgs(absPath);
             importerService.IsInInputFolder(selectedFilePath).Returns(false);
             importerService.HasFile(selectedFilePath).Returns(true);
             userInputService.RequestUserInput(null, null).ReturnsForAnyArgs(FileAlreadyExistsChoice.UseExisting);
@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
 
             const string selectedFilePath = "someSelectedFilePath.txt";
 
-            dialogService.SelectFile(null).ReturnsForAnyArgs(selectedFilePath);
+            dialogService.ShowOpenFileDialog(null).ReturnsForAnyArgs(selectedFilePath);
             importerService.IsInInputFolder(selectedFilePath).Returns(false);
             importerService.HasFile(selectedFilePath).Returns(true);
             userInputService.RequestUserInput(null, null).ReturnsForAnyArgs(FileAlreadyExistsChoice.Cancel);
@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.TimeFrame.Helpers
             const string selectedFilePath = "someSelectedFilePath.txt";
             string absPath = Path.GetFullPath(Path.Combine(".", selectedFilePath));
 
-            dialogService.SelectFile(null).ReturnsForAnyArgs(absPath);
+            dialogService.ShowOpenFileDialog(null).ReturnsForAnyArgs(absPath);
             importerService.IsInInputFolder(selectedFilePath).Returns(false);
             importerService.HasFile(selectedFilePath).Returns(false);
 

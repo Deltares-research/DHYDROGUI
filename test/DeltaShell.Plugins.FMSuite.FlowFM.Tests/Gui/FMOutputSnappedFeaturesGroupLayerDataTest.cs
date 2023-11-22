@@ -7,8 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -43,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
@@ -91,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -157,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
@@ -261,14 +260,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            ApplicationSettingsBase application =
-                ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+            ApplicationSettingsBase application = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
-            using (var app = new DeltaShellApplication
-            {
-                UserSettings = application,
-                IsProjectCreatedInTemporaryDirectory = true
-            })
+            var app = DeltaShellCoreFactory.CreateApplication();
+            app.UserSettings = application;
+            using (app)
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -341,11 +337,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             ApplicationSettingsBase application =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
-            using (var app = new DeltaShellApplication
-            {
-                UserSettings = application,
-                IsProjectCreatedInTemporaryDirectory = true
-            })
+            var app = DeltaShellCoreFactory.CreateApplication();
+            app.UserSettings = application;
+            using (app)
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -434,11 +428,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             ApplicationSettingsBase application =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
-            using (var app = new DeltaShellApplication
-            {
-                UserSettings = application,
-                IsProjectCreatedInTemporaryDirectory = true
-            })
+            var app = DeltaShellCoreFactory.CreateApplication();
+            app.UserSettings = application;
+            using (app)
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());

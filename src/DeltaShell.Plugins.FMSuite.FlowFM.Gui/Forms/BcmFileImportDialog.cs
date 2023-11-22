@@ -1,7 +1,9 @@
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
@@ -9,8 +11,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     {
         public override DelftDialogResult ShowModal()
         {
-            string[] filePaths = new FileDialogService().SelectFiles(new BcmFileImporter().FileFilter, "", true);
-            if (filePaths == null)
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions
+            {
+                FileFilter = new BcmFileImporter().FileFilter,
+                RestoreDirectory = true
+            };
+            
+            string[] filePaths = fileDialogService.ShowOpenFilesDialog(fileDialogOptions);
+            if (!filePaths.Any())
             {
                 return DelftDialogResult.Cancel;
             }

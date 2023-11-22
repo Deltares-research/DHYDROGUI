@@ -2,9 +2,10 @@
 using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Given
             using (var temporaryDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetConfiguredHydroApplication(temporaryDirectory.Path))
+            using (var app = GetConfiguredHydroApplication(temporaryDirectory.Path))
             {
                 // path setup
                 string relativeModelDataPath = Path.Combine("WavesDirectoryStructureTest", zipName);
@@ -57,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static DeltaShellApplication GetConfiguredHydroApplication(string temporaryDirectoryPath)
+        private static IApplication GetConfiguredHydroApplication(string temporaryDirectoryPath)
         {
             string workDir = Path.Combine(temporaryDirectoryPath, "workDir");
             Directory.CreateDirectory(workDir);
@@ -65,11 +66,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var applicationSettingsMock = Substitute.For<ApplicationSettingsBase>();
             applicationSettingsMock["WorkDirectory"] = workDir;
 
-            var app = new DeltaShellApplication
-            {
-                UserSettings = applicationSettingsMock,
-                IsProjectCreatedInTemporaryDirectory = true
-            };
+            var app = DeltaShellCoreFactory.CreateApplication();
+            app.UserSettings = applicationSettingsMock;
 
             AddPluginsToApplication(app);
             app.Plugins.Add(new HydroModelApplicationPlugin());
@@ -77,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             return app;
         }
 
-        private static void AddPluginsToApplication(DeltaShellApplication app)
+        private static void AddPluginsToApplication(IApplication app)
         {
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -148,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Given
             using (var temporaryDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetConfiguredHydroApplication(temporaryDirectory.Path))
+            using (var app = GetConfiguredHydroApplication(temporaryDirectory.Path))
             {
                 string testData = TestHelper.GetTestFilePath(Path.Combine("WavesDirectoryStructureTest", zipName));
                 ZipFileUtils.Extract(testData, temporaryDirectory.Path);

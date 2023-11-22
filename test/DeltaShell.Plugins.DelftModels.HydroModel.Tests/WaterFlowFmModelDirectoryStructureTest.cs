@@ -18,7 +18,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyTrachytopeFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -273,7 +273,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyFourierAndCalibrationFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -316,7 +316,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyWindFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -358,7 +358,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyTrachytopeFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyFourierAndCalibrationFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -457,7 +457,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyWindFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -506,7 +506,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyWindFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -562,7 +562,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyTrachytopeFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -616,7 +616,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyFourierAndCalibrationFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -673,7 +673,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyWindFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -726,7 +726,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyTrachytopeFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -778,7 +778,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyTrachytopeFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -857,7 +857,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CopyFourierAndCalibrationFilesToTemp();
             CopyTrachytopeFilesToTemp();
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 using (var model = new WaterFlowFMModel())
                 {
@@ -927,7 +927,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyProjectToDestinationDir("IntegratedModel");
 
-                using (DeltaShellApplication app = GetConfiguredHydroApplication())
+                using (var app = GetConfiguredHydroApplication())
                 {
                     app.OpenProject(projectFilePath);
                     // Execute SaveAs() manually (migrating through GUI does this already).
@@ -998,7 +998,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             CopyProjectToDestinationDir("TestModel");
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 // Given
                 CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
@@ -1072,7 +1072,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             CopyProjectToDestinationDir("TestModel");
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 // Given
                 CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
@@ -1154,7 +1154,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyProjectToDestinationDir("TestModel");
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
@@ -1205,7 +1205,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyProjectToDestinationDir("TestModel");
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
@@ -1259,7 +1259,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyProjectToDestinationDir("TestModel");
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
@@ -1313,7 +1313,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyProjectToDestinationDir("TestModel");
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
@@ -1368,7 +1368,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyProjectToDestinationDir("TestModel");
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
@@ -1439,7 +1439,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             CopyProjectToDestinationDir(projectFolder);
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 app.OpenProject(projectFilePath);
 
@@ -1486,7 +1486,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             CreateTestDirectories();
             CopyProjectToDestinationDir("TestModel");
 
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 // Given
                 string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
@@ -1687,44 +1687,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(Path.Combine(outputDirectoryPath, "FlowFM1_his.nc"), fmModel.OutputHisFileStore.Path);
         }
 
-        private DeltaShellApplication GetConfiguredApplication()
+        private IApplication GetConfiguredApplication()
         {
             var applicationSettingsMock = MockRepository.GenerateStub<ApplicationSettingsBase>();
             applicationSettingsMock["WorkDirectory"] = workingDirPath;
 
             applicationSettingsMock.Replay();
 
-            var app = new DeltaShellApplication
-            {
-                UserSettings = applicationSettingsMock,
-                IsProjectCreatedInTemporaryDirectory = true
-            };
-
+            var app = DeltaShellCoreFactory.CreateApplication();
+            app.UserSettings = applicationSettingsMock;
+            
             AddPluginsToApplication(app);
             app.Run();
+            app.CreateNewProject();
             return app;
         }
 
-        private DeltaShellApplication GetConfiguredHydroApplication()
+        private IApplication GetConfiguredHydroApplication()
         {
             var applicationSettingsMock = MockRepository.GenerateStub<ApplicationSettingsBase>();
             applicationSettingsMock["WorkDirectory"] = workingDirPath;
 
             applicationSettingsMock.Replay();
 
-            var app = new DeltaShellApplication
-            {
-                UserSettings = applicationSettingsMock,
-                IsProjectCreatedInTemporaryDirectory = true
-            };
+            var app = DeltaShellCoreFactory.CreateApplication();
+            app.UserSettings = applicationSettingsMock;
 
             AddPluginsToApplication(app);
             app.Plugins.Add(new HydroModelApplicationPlugin());
             app.Run();
+            app.CreateNewProject();
             return app;
         }
 
-        private static void AddPluginsToApplication(DeltaShellApplication app)
+        private static void AddPluginsToApplication(IApplication app)
         {
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -2086,7 +2082,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                         UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev);
         }
 
-        private static void ValidateAndRunModel(WaterFlowFMModel model, DeltaShellApplication app)
+        private static void ValidateAndRunModel(WaterFlowFMModel model, IApplication app)
         {
             model.ValidateBeforeRun = true;
             ValidationReport report = model.Validate();

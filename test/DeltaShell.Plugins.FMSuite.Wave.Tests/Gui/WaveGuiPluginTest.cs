@@ -9,7 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
@@ -100,13 +100,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         {
             string mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var guiPlugin = new WaveGuiPlugin();
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(guiPlugin);
 
                 gui.Run();
+                gui.Application.CreateNewProject();
 
                 // reimport model 
                 for (var i = 0; i < 2; i++)

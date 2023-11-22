@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
@@ -56,10 +56,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             }
 
             // get running DeltaShell application
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
+
+                app.CreateNewProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
@@ -153,10 +155,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             string dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("output_mapfiles", "dummy.nc"));
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
+
+                app.CreateNewProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
@@ -220,11 +224,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             }
 
             // get running DeltaShell application
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
+                app.CreateNewProject();
+                
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(fmModel);

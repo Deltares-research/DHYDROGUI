@@ -9,7 +9,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             try
             {
-                using (var gui = new DeltaShellGui())
+                using (var gui = DeltaShellCoreFactory.CreateGui())
                 {
                     IApplication app = gui.Application;
                     app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
                     gui.Run();
+                    app.CreateNewProject();
 
                     Action mainWindowShown = delegate
                     {

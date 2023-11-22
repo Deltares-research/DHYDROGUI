@@ -7,6 +7,7 @@ using System.Security;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Controls.Wpf.Services;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -250,7 +251,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         private void ButtonSelectProcessFilePathClick(object sender, EventArgs e)
         {
-            string filePath = new FileDialogService().SelectFile("Process file|*.dll");
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions { FileFilter = "Process file|*.dll" };
+            
+            string filePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
             if (filePath == null)
             {
                 return;
@@ -261,7 +265,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         private void ButtonSelectProcessDefinitionsFilePathClick(object sender, EventArgs e)
         {
-            string filePath = new FileDialogService().SelectFile("Process definition files|*.def;*.dat");
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions { FileFilter = "Process definition files|*.def;*.dat" };
+            
+            string filePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
             if (filePath == null)
             {
                 return;

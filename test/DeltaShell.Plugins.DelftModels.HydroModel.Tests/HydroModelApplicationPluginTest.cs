@@ -6,6 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
@@ -53,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new HydroModelApplicationPlugin();
                 SetUpApplication(app, appPlugin);
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_RealTimeControl()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new RealTimeControlApplicationPlugin();
                 SetUpApplication(app, appPlugin);
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_WaterQuality()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new WaterQualityModelApplicationPlugin();
                 SetUpApplication(app, appPlugin);
@@ -108,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new FlowFMApplicationPlugin();
                 SetUpApplication(app, appPlugin);
@@ -126,7 +127,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_Wave()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new WaveApplicationPlugin();
                 SetUpApplication(app, appPlugin);
@@ -160,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void GivenAnApplicationWithHydroModelAndFlowFmPluginLoaded_WhenGettingFileImporters_ThenADimrImporterShouldBeReturnedThatCanImportOnWaterFlowFMModel()
         {
-            using (var application = new DeltaShellApplication())
+            using (var application = DeltaShellCoreFactory.CreateApplication())
             {
                 // Given
                 var hydroModelAppPlugin = new HydroModelApplicationPlugin();
@@ -187,7 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProjectWithAModelThatHasAChildModel_WhenAddingAModelTheSameNameAsTheChildModel_ThenModelIsRenamed()
         {
             // Setup
-            using (DeltaShellApplication app = CreateApplicationWithModel("parent_model"))
+            using (var app = CreateApplicationWithModel("parent_model"))
             {
                 IModel integratedModel = app.GetAllModelsInProject().Single();
 
@@ -215,7 +216,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProject_WhenAModelIsAdded_ThenModelNameShouldBeTrimmed()
         {
             // Setup
-            using (DeltaShellApplication app = CreateApplication())
+            using (var app = CreateApplication())
             {
                 var model = Substitute.For<IModel>();
                 model.Name = "  Name  ";
@@ -233,7 +234,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProjectWithAModel_WhenRenamingTheModel_TheModelNameShouldBeTrimmed()
         {
             // Setup
-            using (DeltaShellApplication app = CreateApplication())
+            using (var app = CreateApplication())
             {
                 // ModelBase implements INotifyPropertyChange
                 var model = Substitute.ForPartsOf<ModelBase>();
@@ -253,7 +254,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProject_WhenAddingAModelWithAChildModel_ThenModelNamesAreTrimmed()
         {
             // Setup
-            using (DeltaShellApplication app = CreateApplication())
+            using (var app = CreateApplication())
             {
                 var parentModel = Substitute.For<IModel>();
                 parentModel.Name = "  parent  ";
@@ -352,9 +353,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
         }
 
-        private static void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)
+        private static void SetUpApplication(IApplication app, ApplicationPlugin appPlugin)
         {
-            app.Project = new Project();
+            app.Run();
+            app.CreateNewProject();
             appPlugin.Application = app;
         }
 
@@ -365,7 +367,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProjectWithAModel_WhenAddingANewModelWithTheSameName_ThenModelIsRenamed(string duplicateModelName, string expectedModelName)
         {
             // Setup
-            using (DeltaShellApplication app = CreateApplicationWithModel(duplicateModelName))
+            using (var app = CreateApplicationWithModel(duplicateModelName))
             {
                 var model = Substitute.For<IModel>();
                 model.Name = duplicateModelName;
@@ -386,7 +388,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProjectWithAModel_WhenAddingANewModelWithTheSameName_ThenModelIsRenamed(string originalName, string duplicateModelName, string expectedModelName)
         {
             // Setup
-            using (DeltaShellApplication app = CreateApplicationWithModel(originalName))
+            using (var app = CreateApplicationWithModel(originalName))
             {
                 var model = Substitute.For<IModel>();
                 model.Name = duplicateModelName;
@@ -405,7 +407,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProjectWithAModel_WhenAddingAModelWithAChildModelWithTheSameName_ThenModelIsRenamed(string childModelName)
         {
             // Setup
-            using (DeltaShellApplication app = CreateApplicationWithModel("Unique"))
+            using (var app = CreateApplicationWithModel("Unique"))
             {
                 var parentModel = Substitute.For<IModel>();
                 parentModel.Name = "parent_model";
@@ -432,7 +434,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAProjectWithAModel_WhenRenamingAnotherModelToTheSameName_ThenModelIsRenamed(string duplicateName)
         {
             // Setup
-            using (DeltaShellApplication app = CreateApplicationWithModel("Unique"))
+            using (var app = CreateApplicationWithModel("Unique"))
             {
                 // ModelBase implements INotifyPropertyChange
                 var model = Substitute.ForPartsOf<ModelBase>();
@@ -448,9 +450,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static DeltaShellApplication CreateApplicationWithModel(string modelName)
+        private static IApplication CreateApplicationWithModel(string modelName)
         {
-            DeltaShellApplication application = CreateApplication();
+            var application = CreateApplication();
 
             var model = Substitute.For<IModel>();
             model.Name = modelName;
@@ -459,10 +461,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             return application;
         }
 
-        private static DeltaShellApplication CreateApplication()
+        private static IApplication CreateApplication()
         {
             var plugin = new HydroModelApplicationPlugin();
-            var application = new DeltaShellApplication();
+            var application = DeltaShellCoreFactory.CreateApplication();
             plugin.Application = application;
 
             application.Run();

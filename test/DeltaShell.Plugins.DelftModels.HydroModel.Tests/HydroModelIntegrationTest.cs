@@ -1,9 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
-            using (DeltaShellApplication application = GetApplication())
+            using (var application = GetApplication())
             {
                 string zippedProjPath = TestHelper.GetTestFilePath("relinkDataItemsProject.zip");
                 ZipFileUtils.Extract(zippedProjPath, tempDir.Path);
@@ -51,9 +52,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static DeltaShellApplication GetApplication()
+        private static IApplication GetApplication()
         {
-            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
+            var app = DeltaShellCoreFactory.CreateApplication();
 
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());

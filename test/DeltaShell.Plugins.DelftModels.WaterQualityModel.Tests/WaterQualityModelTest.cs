@@ -9,7 +9,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -1617,7 +1617,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var expectedStartTime = "2014-01-01 00:00:00";
             var expectedEndTime = "2014-01-08 00:00:00";
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var waqPlugin = new WaterQualityModelApplicationPlugin();
 
@@ -1631,6 +1631,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 app.Plugins.Add(new ToolboxApplicationPlugin());
 
                 app.Run();
+                app.CreateNewProject();
 
                 // Initialize Project by saving it.
                 string tempDirectory = FileUtils.CreateTempDirectory();

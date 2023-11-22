@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -518,8 +519,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             }
             else
             {
-                string selectedFilePath = new FileDialogService().SelectFile(Properties.Resources.WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_file____def____def,
-                                                                             Path.GetDirectoryName(processDefinitionPath));
+                var fileDialogService = new FileDialogService();
+                var fileDialogOptions = new FileDialogOptions
+                {
+                    FileFilter = Properties.Resources.WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_file____def____def,
+                    InitialDirectory = Path.GetDirectoryName(processDefinitionPath)
+                };
+                
+                string selectedFilePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
 
                 if (selectedFilePath == null)
                 {
@@ -558,7 +565,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         {
             Log.ErrorFormat("Could not find hyd file {0}", hydPath);
 
-            string selectedFilePath = new FileDialogService().SelectFile("Hydrodynamics file (*.hyd)|*.hyd", Path.GetDirectoryName(hydPath));
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions
+            {
+                FileFilter = "Hydrodynamics file (*.hyd)|*.hyd",
+                InitialDirectory = Path.GetDirectoryName(hydPath)
+            };
+            
+            string selectedFilePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
 
             if (selectedFilePath != null)
             {

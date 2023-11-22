@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using log4net;
@@ -146,7 +147,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         private static string SelectFilePath(string filter)
         {
-            return new FileDialogService().SelectFile(filter);
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions { FileFilter = filter };
+            
+            return fileDialogService.ShowOpenFileDialog(fileDialogOptions);
         }
 
         private void CancelButtonClick(object sender, EventArgs e)

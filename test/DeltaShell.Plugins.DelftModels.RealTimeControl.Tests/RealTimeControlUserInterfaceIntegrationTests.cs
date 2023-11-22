@@ -2,7 +2,7 @@
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var _ = new InputItemShape();
 
             var path = "SaveAndLoad.dsproj";
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication application = gui.Application;
                 application.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -37,6 +37,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 application.Plugins.Add(new RealTimeControlApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Run();
+
+                application.CreateNewProject();
 
                 Project project = application.Project;
 

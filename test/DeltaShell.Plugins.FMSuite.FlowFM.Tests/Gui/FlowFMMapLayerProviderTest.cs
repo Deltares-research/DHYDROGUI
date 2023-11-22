@@ -16,7 +16,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(mduPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
@@ -123,6 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(fmGuiPlugin);
 
                 gui.Run();
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -159,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -172,6 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+                app.CreateNewProject();
 
                 Project project = app.Project;
                 project.RootFolder.Add(model);
@@ -276,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
@@ -289,6 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(fmGuiPlugin);
 
                 gui.Run();
+                app.CreateNewProject();
 
                 Project project = app.Project;
                 project.RootFolder.Add(model);

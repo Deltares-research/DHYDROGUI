@@ -11,6 +11,7 @@ using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Controls.Swf.Table.Validation;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;

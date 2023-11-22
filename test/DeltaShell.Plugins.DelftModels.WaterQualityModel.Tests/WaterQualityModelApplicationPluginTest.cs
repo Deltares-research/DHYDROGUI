@@ -12,7 +12,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Integration)]
         public void GivenAModel_WhenModelIsRenamed_DataDirectoryPathIsChanged()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var waqPlugin = new WaterQualityModelApplicationPlugin();
                 var waqModel = new WaterQualityModel {Name = "WAQ1"};
@@ -98,6 +98,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 app.Plugins.Add(new ScriptingApplicationPlugin());
                 app.Plugins.Add(new ToolboxApplicationPlugin());
                 app.Run();
+
+                app.CreateNewProject();
 
                 string tempDirectory = FileUtils.CreateTempDirectory();
                 app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
@@ -123,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void ImportCorrectSubFileAndThenCorruptItAndExpectExceptionMessage()
         {
             using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetRunningApplication(tempDirectory.Path))
+            using (var app = GetRunningApplication(tempDirectory.Path))
             using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
             {
                 string boundaryDataTableFilePath = Path.Combine(model.BoundaryDataManager.FolderPath, "bacteria.tbl");
@@ -151,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void Check_When_RunningTwice_WaqModel_OutputFiles_And_Saving_TheFilesArePersisted()
         {
             using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetRunningApplication(tempDirectory.Path))
+            using (var app = GetRunningApplication(tempDirectory.Path))
             using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
             {
                 //First run
@@ -193,9 +195,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 var model = new WaterQualityModel();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var app = GetConfiguredApplication())
                 {
                     app.Run();
+                    app.CreateNewProject();
                     app.Project.RootFolder.Add(model);
                     AddCurrentModelPaths(model);
 
@@ -306,7 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void AfterOpeningAProjectTheWorkingDirectoryInModelSettingsShouldBeBasedOnTheCurrentApplicationWorkingDirectory()
         {
             using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication application = GetConfiguredApplication())
+            using (var application = GetConfiguredApplication())
             using (var model = new WaterQualityModel())
             {
                 // Arrange
@@ -315,6 +318,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 model.SetWorkingDirectoryInModelSettings(() => application.WorkDirectory);
                 application.Run();
+                application.CreateNewProject();
                 application.Project.RootFolder.Add(model);
 
                 string savePath = Path.Combine(tempDirectory.Path, "test");
@@ -365,10 +369,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // Arrange
             using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication application = GetConfiguredApplication())
+            using (var application = GetConfiguredApplication())
             using (var model = new WaterQualityModel())
             {
                 application.Run();
+                application.CreateNewProject();
                 application.Project.RootFolder.Add(model);
 
                 string savePath = Path.Combine(tempDirectory.Path, "test");
@@ -394,10 +399,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             //Arrange
             using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication application = GetConfiguredApplication())
+            using (var application = GetConfiguredApplication())
             using (var model = new WaterQualityModel())
             {
                 application.Run();
+                application.CreateNewProject();
                 application.Project.RootFolder.Add(model);
 
                 string savePath = Path.Combine(tempDirectory.Path, "test");
@@ -441,19 +447,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         private static WaterQualityModelApplicationPlugin SetupWaterQualityApplicationPlugin(
             string workingDirectoryPath)
         {
+            var app = DeltaShellCoreFactory.CreateApplication();
+            app.UserSettings =  ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+            
             return new WaterQualityModelApplicationPlugin
             {
-                Application = new DeltaShellApplication
-                {
-                    IsProjectCreatedInTemporaryDirectory = true,
-                    UserSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath)
-                }
+                Application = app
             };
         }
 
-        private static DeltaShellApplication GetConfiguredApplication()
+        private static IApplication GetConfiguredApplication()
         {
-            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
+            var app = DeltaShellCoreFactory.CreateApplication();
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -462,10 +467,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             return app;
         }
 
-        private static WaterQualityModel GetWesternscheldtModelInApplication(string tempDirectory, DeltaShellApplication application)
+        private static WaterQualityModel GetWesternscheldtModelInApplication(string tempDirectory, IApplication application)
         {
             var waqModel = new WaterQualityModel();
 
+            application.CreateNewProject();
             application.Project.RootFolder.Add(waqModel);
             waqModel.SetWorkingDirectoryInModelSettings(() => application.WorkDirectory);
 
@@ -488,16 +494,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             return waqModel;
         }
 
-        private static DeltaShellApplication GetRunningApplication(string tempDirectory)
+        private static IApplication GetRunningApplication(string tempDirectory)
         {
             string workingDirectoryPath = Path.Combine(tempDirectory, "DeltaShell_Working_Directory");
             ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
-            var app = new DeltaShellApplication
-            {
-                UserSettings = userSettings,
-                IsProjectCreatedInTemporaryDirectory = true
-            };
+            var app = DeltaShellCoreFactory.CreateApplication();
+            app.UserSettings = userSettings;
 
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Plugins.Add(new WaterQualityModelApplicationPlugin());
@@ -509,7 +512,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             app.Plugins.Add(new ToolboxApplicationPlugin());
 
             app.Run();
-
+            app.CreateNewProject();
             app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
 
             return app;

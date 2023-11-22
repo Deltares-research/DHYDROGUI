@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using DelftTools.Controls;
 using DelftTools.Controls.Wpf.Commands;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
@@ -61,7 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void SelectFile(object obj)
         {
-            string selectedFilePath = new FileDialogService().SelectFile(Resources.Spectrum_Files_Filter);
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions { FileFilter = Resources.Spectrum_Files_Filter };
+            
+            string selectedFilePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
             if (selectedFilePath != null)
             {
                 FilePath = selectedFilePath;

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 
@@ -63,7 +64,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void FileOpenButtonClick(object sender, EventArgs e)
         {
-            string selectedFilePath = new FileDialogService().SelectFile(WindSelectionDialog.MakeFileFilter(windField));
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions { FileFilter = WindSelectionDialog.MakeFileFilter(windField) };
+            
+            string selectedFilePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
 
             if (selectedFilePath != null)
             {

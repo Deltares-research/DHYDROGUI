@@ -452,7 +452,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveStandAloneWaterQualityModelWithHydFileImported()
         {
             string filePath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var waqAppPlugin = new WaterQualityModelApplicationPlugin();
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -464,6 +464,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 app.Plugins.Add(waqAppPlugin);
 
                 app.Run();
+                app.CreateNewProject();
 
                 var importedWaq = (WaterQualityModel) new HydFileImporter().ImportItem(filePath);
 

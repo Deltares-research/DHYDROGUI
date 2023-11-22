@@ -6,7 +6,7 @@ using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
         [Category(TestCategory.Slow)]
         public void TestShowFunctionListViewWithDataAndFunctionCreators()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
                 gui.Plugins.Add(new CommonToolsGuiPlugin());

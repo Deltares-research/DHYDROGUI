@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             using (var temp = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetApplication())
+            using (var app = GetApplication())
             {
                 string testData = temp.CopyDirectoryToTempDirectory(TestHelper.GetTestFilePath("RealTimeControlDirectoryStructureTest"));
 
@@ -45,9 +46,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static DeltaShellApplication GetApplication()
+        private static IApplication GetApplication()
         {
-            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
+            var app = DeltaShellCoreFactory.CreateApplication();
 
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());

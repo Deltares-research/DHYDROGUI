@@ -8,7 +8,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             try
             {
-                using (var app = new DeltaShellApplication())
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());

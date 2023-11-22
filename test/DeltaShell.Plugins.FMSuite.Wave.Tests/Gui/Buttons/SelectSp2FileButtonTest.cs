@@ -60,7 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons
             var inputObject = new WaveModel();
 
             var selectedFilePath = $"some{pathSeparator}file.path";
-            fileDialogService.SelectFile(fileFilter).Returns(selectedFilePath);
+            fileDialogService.ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == fileFilter))
+                             .Returns(selectedFilePath);
 
             // Call
             buttonBehaviour.Execute(inputObject);
@@ -79,7 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons
             var buttonBehaviour = new SelectSp2FileButton(fileDialogService);
             var inputObject = new WaveModel();
 
-            fileDialogService.SelectFile(fileFilter).Returns((string)null);
+            fileDialogService.ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == fileFilter))
+                             .Returns((string)null);
 
             // Call
             buttonBehaviour.Execute(inputObject);
@@ -87,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons
             // Assert
             object fileLocation = inputObject.ModelDefinition.BoundaryContainer.FilePathForBoundariesPerFile;
             Assert.That(fileLocation, Is.Empty);
-            fileDialogService.Received(1).SelectFile(fileFilter);
+            fileDialogService.Received(1).ShowOpenFileDialog(Arg.Any<FileDialogOptions>());
         }
     }
 }

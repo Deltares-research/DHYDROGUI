@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Functions;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
@@ -323,7 +324,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             if (functionWrapper.Function.IsSegmentFile())
             {
                 //Create dialog asking for the file location.
-                string filePath = new FileDialogService().SelectFile("");
+                var fileDialogService = new FileDialogService();
+                var fileDialogOptions = new FileDialogOptions();
+                
+                string filePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
                 if (filePath == null)
                 {
                     return;

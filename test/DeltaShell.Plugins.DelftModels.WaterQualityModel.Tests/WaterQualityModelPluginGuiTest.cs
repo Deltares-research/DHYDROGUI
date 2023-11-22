@@ -11,6 +11,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.ViewManager;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void OpenedMonitoringOutputViewsAreClosedAfterRemovingMonitoringOutput()
         {
-            using (DeltaShellGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
+            using (IGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
                 WaterQualityModel waterQualityModel1D = gui.Application.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
 
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void OpenedMonitoringOutputViewsAreClosedAfterRemovingMonitoringOutputDataItemSet()
         {
-            using (DeltaShellGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
+            using (IGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
                 WaterQualityModel waterQualityModel1D = gui.Application.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
 
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)]
         public void OpenedMonitoringOutputViewsAreClosedAfterRemovingModel()
         {
-            using (DeltaShellGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
+            using (IGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
                 // Remove the model
                 gui.Application.Project.RootFolder.Items.Clear();
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)]
         public void OpenedMonitoringOutputViewsAreClosedAfterClosingProject()
         {
-            using (DeltaShellGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
+            using (IGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
                 // Close the current project by creating a new one
                 gui.Application.CreateNewProject();
@@ -156,9 +157,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             mocks.VerifyAll();
         }
 
-        private static DeltaShellGui CreateDeltaShellGuiWithMonitoringOutputView()
+        private static IGui CreateDeltaShellGuiWithMonitoringOutputView()
         {
-            var gui = new DeltaShellGui();
+            var gui = DeltaShellCoreFactory.CreateGui();
 
             gui.Application.Plugins.Add(new WaterQualityModelApplicationPlugin());
             gui.Plugins.Add(new SharpMapGisGuiPlugin());
@@ -167,7 +168,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             gui.Plugins.Add(waterQualityModel1DGuiPlugin);
 
             gui.Run();
-
+            gui.Application.CreateNewProject();
+            
             // Create a WaterQualityModel1D with dummy WaterQualityObservationVariableOutput and add it to the project root folder
             var waterQualityModel1D = new WaterQualityModel {ModelSettings = {MonitoringOutputLevel = MonitoringOutputLevel.Points}};
             var observationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>>

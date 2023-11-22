@@ -52,7 +52,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
                 throw new ArgumentException(string.Format(Resources.Expected_argument_0_to_be_of_type_1_, nameof(inputObject), typeof(WaveModel)));
             }
 
-            string selectedFilePath = fileDialogService.SelectFile(FileFilter);
+            var fileDialogOptions = new FileDialogOptions { FileFilter = FileFilter };
+            
+            string selectedFilePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
             if (selectedFilePath == null)
             {
                 return;

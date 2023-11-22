@@ -12,6 +12,10 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
@@ -139,6 +143,10 @@
     </Reference>
     <Reference Include="SharpMapTestUtils">
       <HintPath>$(PkgDeltaShell_TestProject)\lib\net48\SharpMapTestUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.IntegrationTestUtils">
+      <HintPath>$(PkgDeltaShell_TestProject)\lib\net48\DeltaShell.IntegrationTestUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Windows.Forms" />

@@ -6,13 +6,14 @@ using System.Reflection;
 using System.Windows.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -68,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         string.Format("Failed to unzip file: {0}", testCaseZipFilePath));
 
             // Step 2: using(running GUI) add correct plugins for Delft3DFM
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 LoadAllPlugins(gui);
                 gui.Run();
@@ -147,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 tempDirectory.CopyDirectoryToTempDirectory(fileInfo.DirectoryName);
                 
                 // Step 2: using(running GUI) add correct plugins for Delft3DFM
-                using (var gui = new DeltaShellGui())
+                using (var gui = DeltaShellCoreFactory.CreateGui())
                 {
                     LoadAllPlugins(gui);
                     gui.Run();
@@ -257,7 +258,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static void LoadAllPlugins(DeltaShellGui gui)
+        private static void LoadAllPlugins(IGui gui)
         {
             gui.Plugins.Add(new DimrGuiPlugin());
             gui.Plugins.Add(new CommonToolsGuiPlugin());

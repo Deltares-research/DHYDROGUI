@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;

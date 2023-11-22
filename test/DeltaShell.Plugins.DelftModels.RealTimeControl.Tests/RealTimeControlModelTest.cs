@@ -17,7 +17,7 @@ using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
 using DelftTools.Utils.IO;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Restart;
 using DeltaShell.NGHS.IO;
@@ -1192,7 +1192,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [NUnit.Framework.Category(TestCategory.Wpf)]
         public void RulePropertyChangedShouldRefreshTreeView()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 InitGui(gui);
 
@@ -2508,6 +2508,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             gui.Plugins.Add(new RealTimeControlGuiPlugin());
 
             gui.Run();
+            app.CreateNewProject();
         }
 
         /// <summary>

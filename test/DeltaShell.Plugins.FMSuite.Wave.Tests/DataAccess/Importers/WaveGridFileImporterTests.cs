@@ -6,7 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
             try
             {
-                using (DeltaShellApplication app = GetRunningApplication(savePath))
+                using (var app = GetRunningApplication(savePath))
                 {
                     importer = new WaveGridFileImporter("Waves Model", () => app.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>());
 
@@ -296,13 +296,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
             Assert.IsTrue(succes);
         }
 
-        private static DeltaShellApplication GetRunningApplication(string savePath)
+        private static IApplication GetRunningApplication(string savePath)
         {
-            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
+            var app = DeltaShellCoreFactory.CreateApplication();
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Run();
+            app.CreateNewProject();
             app.SaveProjectAs(savePath);
             return app;
         }

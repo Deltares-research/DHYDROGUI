@@ -40,8 +40,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
 
             string fileFilter = GetFileFilter(boundaryCondition);
-
-            string selectedFilePath = fileDialogService.SelectFile(fileFilter);
+            var fileDialogOptions = new FileDialogOptions { FileFilter = fileFilter };
+            
+            string selectedFilePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
             if (selectedFilePath == null)
             {
                 return;

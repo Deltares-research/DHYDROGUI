@@ -8,10 +8,9 @@ using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -46,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void Save_FlowFM_Model_With_BridgePillars_Pillars_Are_Exported()
         {
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -54,6 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
+
+                app.CreateNewProject();
 
                 var bridgepillarsDsproj = "bridgePillars.dsproj";
                 app.SaveProjectAs(bridgepillarsDsproj); // save to initialize file repository..
@@ -136,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void Load_FlowFM_Model_With_BridgePillars_Pillar_Is_Imported()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -144,6 +145,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
+
+                app.CreateNewProject();
 
                 string path = TestHelper.GetTestFilePath(@"ImportProjectWithBridgePillars\ProjectWithBridgePillars.dsproj");
                 path = TestHelper.CreateLocalCopy(path);
@@ -165,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void SaveAndLoad_FlowFM_Model_With_BridgePillars_Pillars()
         {
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -173,6 +176,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
+
+                app.CreateNewProject();
 
                 var bridgepillarsDsproj = "bridgePillars.dsproj";
                 app.SaveProjectAs(bridgepillarsDsproj); // save to initialize file repository..
@@ -261,7 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.VerySlow)]
         public void ReadWriteModelWithSpatialOperationsTest()
         {
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -269,6 +274,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
+
+                app.CreateNewProject();
 
                 app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
 
@@ -343,7 +350,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenWaterFlowFmModel_WhenEnablingMorphologyAndSpatialOperations_ThenModelShoulLoadAndRun()
         {
             using(var tempDir = new TemporaryDirectory())
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -352,6 +359,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
 
+                app.CreateNewProject();
                 app.SaveProjectAs("spatial_hibernate.dsproj");
 
                 DFlowFMModelRepository.f005_boundary_conditions
@@ -387,15 +395,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 
             string dsprojName = Path.Combine(dir, "FM_Only_Save_Load_Spatial_Operation.dsproj");
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.IsProjectCreatedInTemporaryDirectory = true;
                 app.Run();
+
+                app.CreateNewProject();
 
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
@@ -434,7 +443,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 
             string dsprojName = Path.Combine(dir, "FM_Only.dsproj");
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -449,6 +458,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -485,7 +496,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var dsprojName = "FM_Only.dsproj";
             // the temporary project is required in order to set the path on the model. Else, it saves null in the Path property of the fm model.
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -494,6 +505,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
 
                 app.Run();
+
+                app.CreateNewProject();
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
@@ -506,7 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -534,7 +547,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 
             string dsprojName = Path.Combine(dir, "FM_Only.dsproj");
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -550,6 +563,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 gui.Run();
 
+                app.CreateNewProject();
+
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
@@ -561,7 +576,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -594,7 +609,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadFlowFMModelWithLessPluginConfigurations()
         {
             var dsprojName = "FM_Only.dsproj";
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -613,6 +628,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 gui.Run();
 
+                app.CreateNewProject();
+
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 string mduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
@@ -624,7 +641,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());

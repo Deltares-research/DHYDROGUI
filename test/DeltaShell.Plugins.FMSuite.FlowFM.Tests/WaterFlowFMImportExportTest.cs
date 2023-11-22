@@ -13,6 +13,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -271,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                using (DeltaShellApplication app = GetConfiguredApplication(tempProjectFilePath))
+                using (var app = GetConfiguredApplication(tempProjectFilePath))
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -359,7 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                using (DeltaShellApplication app = GetConfiguredApplication(tempProjectFilePath))
+                using (var app = GetConfiguredApplication(tempProjectFilePath))
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -643,16 +644,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private DeltaShellApplication GetConfiguredApplication(string savePath)
+        private IApplication GetConfiguredApplication(string savePath)
         {
-            var app = new DeltaShellApplication();
-            app.IsProjectCreatedInTemporaryDirectory = true;
+            var app = DeltaShellCoreFactory.CreateApplication();
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Plugins.Add(new FlowFMApplicationPlugin());
             app.Plugins.Add(new NetworkEditorApplicationPlugin());
             app.Run();
+            app.CreateNewProject();
             app.SaveProjectAs(Path.Combine(savePath));
             return app;
         }

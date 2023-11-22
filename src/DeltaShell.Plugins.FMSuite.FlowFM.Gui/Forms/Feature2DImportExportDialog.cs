@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
@@ -9,6 +11,7 @@ using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.UI.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
@@ -35,10 +38,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             if (ImportMode)
             {
-                importFileNames = new FileDialogService().SelectFiles(FileFilter);
-                if (importFileNames == null)
+                var fileDialogService = new FileDialogService();
+                var fileDialogOptions = new FileDialogOptions { FileFilter = FileFilter };
+                
+                importFileNames = fileDialogService.ShowOpenFilesDialog(fileDialogOptions);
+                if (!importFileNames.Any())
                 {
-                    importFileNames = new string[0];
                     return DelftDialogResult.Cancel;
                 }
 

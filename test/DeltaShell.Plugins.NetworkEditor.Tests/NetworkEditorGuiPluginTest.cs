@@ -5,7 +5,7 @@ using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Test]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
 
@@ -41,6 +41,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 gui.Run();
 
+                app.CreateNewProject();
+                
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
                 var networkCoverage = new NetworkCoverage {Name = "coverage1"};

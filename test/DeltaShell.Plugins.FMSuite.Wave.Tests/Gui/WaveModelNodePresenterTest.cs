@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.NetworkEditor;
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             var model = new WaveModel(mdwPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 gui.Plugins.Add(new WaveGuiPlugin());
 
                 gui.Run();
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -53,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             mdwPath = TestHelper.CreateLocalCopy(mdwPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -63,6 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 gui.Plugins.Add(new WaveGuiPlugin());
 
                 gui.Run();
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -95,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             mdwPath = TestHelper.CreateLocalCopy(mdwPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -105,7 +107,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 gui.Plugins.Add(new WaveGuiPlugin());
 
                 gui.Run();
-
+                app.CreateNewProject();
+                
                 Action mainWindowShown = delegate
                 {
                     // Add new folder to project

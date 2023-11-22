@@ -5,10 +5,11 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -31,12 +32,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [Category(TestCategory.Slow)]
     public class WaterFlowFMSaveLoadTest
     {
-        private DeltaShellApplication app;
+        private IApplication app;
 
         [SetUp]
         public void SetUp()
         {
-            app = new DeltaShellApplication();
+            app = DeltaShellCoreFactory.CreateApplication();
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -54,6 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadModelEmptyModel()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -76,6 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadModelVerifyStartTimeIsSaved()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu_time.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -108,6 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadModelVerifyHeatFluxModelTypeIsSaved()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdutemp.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -144,6 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ExportImportModelVerifyHeatFluxModelTypeIsExported()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdutemp.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -180,6 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadModelVerifyMduIsReloaded()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -206,6 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadModelVerifyMduIsReloadedAndModelDoesNotLeakEventSubscriptions()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -237,6 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ImportIntoProjectVerifyGridFileIsDirectlyCopiedToDeltaShellDataDir()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path);
@@ -257,6 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ImportIntoProjectVerifyFilesNotYetSupportedInUiButReferencedInMduAreCopiedAlong()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "copyalong.dsproj";
             app.SaveProjectAs(path);
@@ -290,6 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveAsLoadModelVerifyMduIsCopiedAlong()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path);
@@ -322,6 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveAsLoadModelVerifyGridIsCopiedAlong()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu_grid.dsproj";
             app.SaveProjectAs(path);
@@ -350,6 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CreateModelFromScratchModifySaveAsAndReload()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu_obs.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -378,6 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CreateModelFromScratchSaveModifySaveAndReload()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu_resave.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -408,6 +421,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadBathymetryDefinitions()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu_resave.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -426,6 +440,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CreateFromScratchAddBoundarySaveAndReload()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu_drt.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -462,8 +477,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ImportHarlingenRunSaveAsLoadCheckOutput()
         {
-            app.IsProjectCreatedInTemporaryDirectory = true;
             app.Run();
+            app.CreateNewProject();
 
             // import
             const string path = "har.dsproj";
@@ -493,8 +508,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ImportHarlingenSaveRunCloseLoadCheckOutput()
         {
-            app.IsProjectCreatedInTemporaryDirectory = true;
             app.Run();
+            app.CreateNewProject();
 
             // import
             const string path = "har.dsproj";
@@ -522,8 +537,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void DeleteDataPointSaveLoadShouldNotKeepDataPoint()
         {
-            app.IsProjectCreatedInTemporaryDirectory = true;
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
 
@@ -589,6 +604,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveModelBuiltFromScratchWithWind()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -615,6 +631,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadSaveAsSaveShouldCopyWindFiles()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -659,6 +676,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void TestRunWithGate()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -695,6 +713,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadVerifyAreaFeatures()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -727,6 +746,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadFixedWeirTest()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -767,6 +787,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveLoadDeleteGridTest()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu_grid.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -799,6 +820,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveAndLoadMorphologySedimentSimpleModel()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -867,6 +889,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SaveAndLoadMorphologySedimentParametersSimpleModel()
         {
             app.Run();
+            app.CreateNewProject();
 
             const string path = "mdu.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
@@ -918,8 +941,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 try
                 {
                     // Arrange
-                    app.IsProjectCreatedInTemporaryDirectory = true;
                     app.Run();
+                    app.CreateNewProject();
 
                     using (WaterFlowFMModel model = CreatedModelWithOutputInProject())
                     {
@@ -989,6 +1012,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void OpenSaveAndLoadAllMorphologySedimentTestModels(string mduTestPath)
         {
             app.Run();
+            app.CreateNewProject();
 
             string testModelPath = Path.Combine(@"MorphologySediment_Models\", mduTestPath);
             string mduPath = TestHelper.GetTestFilePath(testModelPath);

@@ -4,12 +4,14 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
@@ -51,8 +53,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public virtual DelftDialogResult ShowModal()
         {
-            string[] filePaths = new FileDialogService().SelectFiles(new BcFileImporter().FileFilter, "", true);
-            if (filePaths == null)
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions
+            {
+                FileFilter = new BcFileImporter().FileFilter,
+                RestoreDirectory = true
+            };
+            
+            string[] filePaths = fileDialogService.ShowOpenFilesDialog(fileDialogOptions);
+            if (!filePaths.Any())
             {
                 return DelftDialogResult.Cancel;
             }

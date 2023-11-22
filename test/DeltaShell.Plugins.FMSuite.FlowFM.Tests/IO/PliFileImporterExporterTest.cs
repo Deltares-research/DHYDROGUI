@@ -11,7 +11,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Performance)]
         public void ImportLargeListOfFixedWeirsInDeltaShell()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -99,6 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 gui.Plugins.Add(new CommonToolsGuiPlugin());
 
                 gui.Run();
+                app.CreateNewProject();
 
                 var model = new WaterFlowFMModel();
 

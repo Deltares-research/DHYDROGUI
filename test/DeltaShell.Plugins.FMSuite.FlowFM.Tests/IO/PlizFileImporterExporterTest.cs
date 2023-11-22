@@ -9,7 +9,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             importPath = TestHelper.CreateLocalCopy(importPath);
             Assert.IsTrue(File.Exists(importPath));
 
-            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridge pillars in the Importer/Exporter.
@@ -53,6 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
 
+                app.CreateNewProject();
+                
                 //Setup new model and pillars.
                 var model = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);
@@ -262,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
             FileUtils.DeleteIfExists(exportPath);
 
-            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridgepillars in the Importer/Exporter.
@@ -273,6 +275,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
+
+                app.CreateNewProject();
 
                 //Setup new model and pillars.
                 var model = new WaterFlowFMModel();
@@ -365,7 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
             FileUtils.DeleteIfExists(exportPath);
 
-            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridgepillars in the Importer/Exporter.
@@ -377,6 +381,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
 
+                app.CreateNewProject();
+                
                 //Setup new model and pillars.
                 var model = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(model);

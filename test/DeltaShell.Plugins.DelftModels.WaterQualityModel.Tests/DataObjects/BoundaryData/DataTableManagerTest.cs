@@ -8,7 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
@@ -475,7 +475,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
         {
             const string bacteriaCopy = "bacteria(1)";
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var waqPlugin = new WaterQualityModelApplicationPlugin();
 
@@ -489,6 +489,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 app.Plugins.Add(new ToolboxApplicationPlugin());
 
                 app.Run();
+                app.CreateNewProject();
 
                 // Initialize Project by saving it.
                 string tempDirectory = FileUtils.CreateTempDirectory();
@@ -537,7 +538,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
         {
             const string bacteriaCopy = "bacteria(1)";
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var waqPlugin = new WaterQualityModelApplicationPlugin();
 
@@ -551,6 +552,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 app.Plugins.Add(new ToolboxApplicationPlugin());
 
                 app.Run();
+                app.CreateNewProject();
 
                 // Initialize Project by saving it.
                 string tempDirectory = FileUtils.CreateTempDirectory();

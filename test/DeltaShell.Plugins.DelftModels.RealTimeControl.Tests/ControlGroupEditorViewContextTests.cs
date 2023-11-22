@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using Netron.GraphLib;
@@ -16,9 +16,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Category(TestCategory.Slow)]
         public void RestoredViewContextIsCorrectBoundToDomainObjects()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Run();
+                gui.Application.CreateNewProject();
+                
                 var controlGroup = new ControlGroup();
                 controlGroup.Rules.Add(new PIDRule {Name = "testRule"});
 

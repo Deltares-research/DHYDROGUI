@@ -12,8 +12,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
-using DeltaShell.Core;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -43,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             var dsprojName = "WAQ_Only.dsproj";
             // the temporary project is required in order to set the path on the model. Else, it saves null in the Path property of the waq model.
-            using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -51,13 +50,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 app.Plugins.Add(new WaterQualityModelApplicationPlugin());
                 app.Run();
 
+                app.CreateNewProject();
+                
                 var model = new WaterQualityModel();
                 app.Project.RootFolder.Add(model);
 
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -77,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             string dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(WaterQualityModelNHibernateIntegrationTest)).Location);
             string dsprojName = Path.Combine(dir, "WAQ_Only.dsproj");
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -93,13 +94,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 gui.Run();
 
+                app.CreateNewProject();
+                
                 var model = new WaterQualityModel();
                 gui.Application.Project.RootFolder.Add(model);
 
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -142,17 +145,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                using (var app = new DeltaShellApplication
-                {
-                    UserSettings = userSettings,
-                    IsProjectCreatedInTemporaryDirectory = true
-                })
+                var app = DeltaShellCoreFactory.CreateApplication();
+                app.UserSettings = userSettings;
+                using (app)
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
                     app.Plugins.Add(new SharpMapGisApplicationPlugin());
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
                     app.Run();
+
+                    app.CreateNewProject();
 
                     // model setup
                     var waqModel = new WaterQualityModel();
@@ -224,7 +227,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 Assert.That(filesOutputDirBeforeMigration.Any() && filesWorkingDirBeforeMigration.Any(),
                             "Precondition violated.");
 
-                using (DeltaShellApplication app = CreateRunningApplication(tempDirectory.Path))
+                using (var app = CreateRunningApplication(tempDirectory.Path))
                 {
                     // When
                     app.OpenProject(projectFilePath);
@@ -272,10 +275,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             // Setup
             using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = CreateRunningApplication(tempDirectory.Path))
+            using (var app = CreateRunningApplication(tempDirectory.Path))
             {
                 try
                 {
+                    app.CreateNewProject();
+                    
                     WaterQualityModel model = CreateValidWaqModel();
                     model.SetWorkingDirectoryInModelSettings(() => app.WorkDirectory);
                     app.Project.RootFolder.Add(model);
@@ -364,9 +369,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             // Setup
             using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = CreateRunningApplication(tempDirectory.Path))
+            using (var app = CreateRunningApplication(tempDirectory.Path))
             using (WaterQualityModel model = CreateValidWaqModel())
             {
+                app.CreateNewProject();
+                
                 model.SetWorkingDirectoryInModelSettings(() => app.WorkDirectory);
                 app.Project.RootFolder.Add(model);
 
@@ -463,16 +470,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                                                .Select(f => f.Name).ToList();
         }
 
-        private static DeltaShellApplication CreateRunningApplication(string tempDirectoryPath)
+        private static IApplication CreateRunningApplication(string tempDirectoryPath)
         {
             string workingDirectoryPath = Path.Combine(tempDirectoryPath, "DeltaShell_Working_Directory");
-            ApplicationSettingsBase userSettings =
-                ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
-            var application = new DeltaShellApplication
-            {
-                UserSettings = userSettings,
-                IsProjectCreatedInTemporaryDirectory = true
-            };
+            ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+            var application = DeltaShellCoreFactory.CreateApplication();
+            application.UserSettings = userSettings;
             application.Plugins.Add(new NHibernateDaoApplicationPlugin());
             application.Plugins.Add(new CommonToolsApplicationPlugin());
             application.Plugins.Add(new SharpMapGisApplicationPlugin());

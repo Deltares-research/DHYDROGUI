@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views
@@ -55,7 +56,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
 
         private static bool TryGetFileSelection(string fileFilter, out string selectedFilePath)
         {
-            selectedFilePath = new FileDialogService().SelectFile(fileFilter);
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions { FileFilter = fileFilter };
+            
+            selectedFilePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
             return selectedFilePath != null;
         }
     }

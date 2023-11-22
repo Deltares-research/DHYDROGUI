@@ -106,6 +106,10 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.IntegrationTestUtils">
+      <HintPath>$(PkgDeltaShell_TestProject)\lib\net48\DeltaShell.IntegrationTestUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />

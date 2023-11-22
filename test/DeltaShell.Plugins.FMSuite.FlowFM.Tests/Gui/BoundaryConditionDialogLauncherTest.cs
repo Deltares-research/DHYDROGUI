@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 
-            fileDialogService.Received().SelectFile($@"{timExtension}|{morphologyExtension}");
+            fileDialogService.Received().ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == $@"{timExtension}|{morphologyExtension}"));
         }
 
         [TestCaseSource(typeof(FlowBoundaryTestData), "TimeSeries")]
@@ -84,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 
-            fileDialogService.Received().SelectFile($@"{boundaryConditionExtension}|{timExtension}");
+            fileDialogService.Received().ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == $@"{boundaryConditionExtension}|{timExtension}"));
         }
 
         [TestCaseSource(typeof(FlowBoundaryTestData), "Harmonics")]
@@ -100,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 
-            fileDialogService.Received().SelectFile($@"{boundaryConditionExtension}|{cmpExtension}");
+            fileDialogService.Received().ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == $@"{boundaryConditionExtension}|{cmpExtension}"));
         }
 
         [TestCaseSource(typeof(FlowBoundaryTestData), "Qh")]
@@ -113,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 
-            fileDialogService.Received().SelectFile($@"{boundaryConditionExtension}|{qhExtension}");
+            fileDialogService.Received().ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == $@"{boundaryConditionExtension}|{qhExtension}"));
         }
     }
 

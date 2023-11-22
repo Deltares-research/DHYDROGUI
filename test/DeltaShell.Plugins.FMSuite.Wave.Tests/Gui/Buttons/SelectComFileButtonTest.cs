@@ -1,6 +1,7 @@
 ﻿using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons
@@ -9,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons
     public class SelectComFileButtonTest
     {
         private const string fileFilter = "Communication files|*_com.nc";
-
+        
         [Test]
         public void Constructor_FileDialogServiceNull_ThrownArgumentNullException()
         {
@@ -61,7 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons
 
             var selectedFilePath = $"some{pathSeparator}file.path";
 
-            fileDialogService.SelectFile(fileFilter).Returns(selectedFilePath);
+            fileDialogService.ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == fileFilter))
+                             .Returns(selectedFilePath);
 
             // Call
             buttonBehaviour.Execute(inputObject);
@@ -81,7 +83,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons
             var buttonBehaviour = new SelectComFileButton(fileDialogService);
             var inputObject = new WaveModel();
 
-            fileDialogService.SelectFile(fileFilter).Returns((string)null);
+            fileDialogService.ShowOpenFileDialog(Arg.Is<FileDialogOptions>(options => options.FileFilter == fileFilter))
+                             .Returns((string)null);
 
             // Call
             buttonBehaviour.Execute(inputObject);
@@ -90,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons
             object fileLocation = inputObject.ModelDefinition
                                              .GetModelProperty("Output", "COMFile").Value;
             Assert.That(fileLocation, Is.Empty);
-            fileDialogService.Received(1).SelectFile(fileFilter);
+            fileDialogService.Received(1).ShowOpenFileDialog(Arg.Any<FileDialogOptions>());
         }
     }
 }
