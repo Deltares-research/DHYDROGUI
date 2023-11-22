@@ -9,7 +9,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
 
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(app);
                     
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
                     using (var model = GetRRModel())
@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
                     using (var model = GetRRModel())
@@ -304,7 +304,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
                     using (var model = GetRRModel())
@@ -376,7 +376,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 unpavedData.TotalAreaForGroundWaterCalculations = 802;
                 unpavedData.UseDifferentAreaForGroundWaterCalculations = true;
 
-                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
 
@@ -454,7 +454,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 seepageSeries[new DateTime((int) expected * 2)] = expected * 2;
                 unpavedData.SeepageSeries = seepageSeries;
 
-                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
                     application.Project.RootFolder.Items.Add(model1);
@@ -518,7 +518,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 
 
-                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
 
@@ -579,7 +579,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
                     var boundary = new RunoffBoundary {Name = "Boundary1"};
@@ -628,7 +628,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 var expected = 555.0;
                 PavedData pavedData;
 
-                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
                     TimeSeries sewerPumpVariableCapacitySeries;
@@ -753,7 +753,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
                     using (var model = GetRRModel())
@@ -963,7 +963,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 unpavedData.BoundarySettings.UseLocalBoundaryData = useLocalBoundaryData;
 
-                using (var application = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
 
@@ -1024,6 +1024,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             app.Plugins.Add(new SobekImportApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Run();
+            app.CreateNewProject();
         }
 
         /// <summary>
@@ -1039,7 +1040,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             try
             {
-                using (var application = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+                using (var application = DeltaShellCoreFactory.CreateApplication())
                 {
                     CreateRunningDeltaShellApplication(application);
                     using (var model = new RainfallRunoffModel())

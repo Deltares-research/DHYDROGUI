@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -51,9 +53,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// Creates a running <see cref="DeltaShellGui"/> instance with all relevant plugins.
         /// </summary>
         /// <returns>The created <see cref="DeltaShellGui"/> instance.</returns>
-        public static DeltaShellGui CreateRunningDeltaShellGui()
+        public static IGui CreateRunningDeltaShellGui()
         {
-            var gui = new DeltaShellGui();
+            var gui = DeltaShellCoreFactory.CreateGui();
             gui.Plugins.Add(new DimrGuiPlugin());
             gui.Plugins.Add(new CommonToolsGuiPlugin());
             gui.Plugins.Add(new FlowFMGuiPlugin());
@@ -82,6 +84,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             app.Plugins.Add(new ToolboxApplicationPlugin());
 
             gui.Run();
+
+            app.CreateNewProject();
             
             return gui;
         }

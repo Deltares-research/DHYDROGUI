@@ -11,7 +11,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters;
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.WindowsForms)]
         public void ShowTreeViewWithBasinAndPluginGui()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Run();
@@ -421,7 +421,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.WindowsForms)]
         public void NetworkTreeViewWithDeltaShell()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
 

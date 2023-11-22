@@ -9,7 +9,7 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"smallModelWithManyTimeSteps\r01.mdu");
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -58,6 +58,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.MainWindow.Show();
 
+                app.CreateNewProject();
+                
                 var model = new WaterFlowFMModel(mduPath);
 
                 app.Project.RootFolder.Add(model);
@@ -85,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -96,6 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -120,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -131,6 +135,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -165,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -176,6 +182,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -220,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void ReloadCentralMapAfterModelWithOutputSaved()
         {
             var mduPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"harlingen\har.mdu"));
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Plugins.Add(new CommonToolsGuiPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -236,6 +244,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 app.Plugins.Add(new FlowFMApplicationPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = () =>
                 {
@@ -262,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -273,6 +283,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                     {
@@ -310,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -321,6 +333,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = () =>
                 {
@@ -351,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -362,6 +376,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = () =>
                 {

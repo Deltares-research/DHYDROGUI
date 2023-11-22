@@ -289,6 +289,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
                 model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
+                app.CreateNewProject();
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
 
@@ -415,6 +416,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
                 model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
+                app.CreateNewProject();
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
 
@@ -439,6 +441,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
+
+                app.CreateNewProject();
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
 
@@ -641,6 +645,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             {
                 var model = CreateModel();
 
+                app.CreateNewProject();
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
                 
@@ -751,6 +756,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                     precipitationTime = precipitationTime.AddHours(1);
                 }
 
+                app.CreateNewProject();
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
 

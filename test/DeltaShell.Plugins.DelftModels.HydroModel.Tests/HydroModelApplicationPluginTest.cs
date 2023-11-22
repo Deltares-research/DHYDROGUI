@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
@@ -14,7 +13,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.Scripting;
@@ -28,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class HydroModelApplicationPluginTest
     {
-        private void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)
+        private void SetUpApplication(IApplication app, ApplicationPlugin appPlugin)
         {
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -39,12 +37,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.Plugins.Add(new ToolboxApplicationPlugin());
             app.Plugins.Add(appPlugin);
             app.Run();
+            app.CreateNewProject();
         }
 
         [Test]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new HydroModelApplicationPlugin();
                 SetUpApplication(app, appPlugin);
@@ -62,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_RainfallRunoff()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new RainfallRunoffApplicationPlugin();
                 SetUpApplication(app, appPlugin);
@@ -80,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_RealTimeControl()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new RealTimeControlApplicationPlugin();
                 SetUpApplication(app, appPlugin);
@@ -99,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 var appPlugin = new FlowFMApplicationPlugin();
                 SetUpApplication(app, appPlugin);

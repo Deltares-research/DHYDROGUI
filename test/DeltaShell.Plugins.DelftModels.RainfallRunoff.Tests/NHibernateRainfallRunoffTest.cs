@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Settings;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Core.Services;
@@ -17,6 +18,7 @@ using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
 using log4net.Core;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
@@ -30,6 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         private NHibernateProjectRepository projectRepository;
         private NHibernateProjectRepositoryFactory factory;
+        private ISettingsManager settingsManager;
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()
@@ -42,7 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             factory.AddPlugin(new SharpMapGisApplicationPlugin());
             factory.AddPlugin(new CommonToolsApplicationPlugin());
             factory.AddPlugin(new NetCdfApplicationPlugin());
-            }
+
+            settingsManager = Substitute.For<ISettingsManager>();
+        }
 
         [SetUp]
         public void SetUp()
@@ -191,7 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             model.StartTime = new DateTime(2011, 2, 2);
             model.Basin = new DrainageBasin {Name = ""};
 
-            _hybridProjectRepository = new HybridProjectRepository(factory);
+            _hybridProjectRepository = new HybridProjectRepository(factory, settingsManager);
             project = new Project();
 
             var dataItem = new DataItem(model);

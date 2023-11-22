@@ -6,7 +6,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.SharpMapGis;
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Performance)]
         public void PerformanceOfTableCellsSelectionShouldBeFast()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 
@@ -42,6 +42,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Run();
+
+                app.CreateNewProject();
 
                 var project = app.Project;
 

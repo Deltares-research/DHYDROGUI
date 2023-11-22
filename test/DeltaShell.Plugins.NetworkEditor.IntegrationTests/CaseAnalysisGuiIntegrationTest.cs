@@ -3,7 +3,7 @@ using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis;
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Slow)]
         public void PerformOperationOnCopiedItemWorksOk()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 
@@ -50,8 +50,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 app.Plugins.Add(new NetCdfApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
 
-                
                 gui.Run();
+
+                app.CreateNewProject();
 
                 var project = app.Project;
 

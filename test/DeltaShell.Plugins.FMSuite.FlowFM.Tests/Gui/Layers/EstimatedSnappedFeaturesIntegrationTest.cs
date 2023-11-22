@@ -5,9 +5,11 @@ using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -41,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             const int expectedNumberOfLayers = 17;
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -225,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -239,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             }
         }
 
-        private static IEventedList<ILayer> SnappedLayers(DeltaShellGui gui, string netFile)
+        private static IEventedList<ILayer> SnappedLayers(IGui gui, string netFile)
         {
             IApplication app = gui.Application;
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -291,6 +293,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         }
         private static WaterFlowFMModel AddFMModelToProject(IApplication app)
         {
+            app.CreateNewProject();
+
             // Add water flow model to project
             Project project = app.Project;
             project.RootFolder.Add(new WaterFlowFMModel());

@@ -11,7 +11,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.Gui;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string.Format("Failed to unzip file: {0}", localZipFilePath));
 
             // Step 3: using(running GUI) add correct plugins for Delft3DFM
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 //load the plugins
                 gui.Plugins.Add(new DimrGuiPlugin());
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string.Format("Failed to unzip file: {0}", localZipFilePath));
 
             // Step 3: using(running GUI) add correct plugins for SOBEK3
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 //load the plugins
                 gui.Plugins.Add(new DimrGuiPlugin());

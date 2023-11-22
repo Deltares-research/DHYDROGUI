@@ -6,7 +6,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         {
             string dsprojName = "FM_FMF1dRTCRR.dsproj";
             
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 //apps : common
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             }
 
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 //apps : common
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         public void ReadSimpleFlowFmModelWithRtcWithoutAndWithWaqandWavePluginsConfiguration()
         {
             string dsprojName = "FMRTC_FMRTCWAQWAVE.dsproj";
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 //apps : common
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             }
 
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 //apps : common
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());

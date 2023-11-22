@@ -6,6 +6,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.ViewManager;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -167,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             //Problem with the refreshing the 2D boundary condition view upon importing
             //resolved differently in B&O line...
             
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -178,6 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -516,7 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -528,6 +531,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Run();
 
+                app.CreateNewProject();
+                
                 Action mainWindowShown = delegate
                     {
                         var project = app.Project;

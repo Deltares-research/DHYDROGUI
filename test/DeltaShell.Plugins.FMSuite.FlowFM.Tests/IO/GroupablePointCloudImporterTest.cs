@@ -7,12 +7,11 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -36,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             try
             {
-                using (var gui = new DeltaShellGui())
+                using (var gui = DeltaShellCoreFactory.CreateGui())
                 {
                     var app = gui.Application;
                     app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -50,6 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     gui.Run();
 
+                    app.CreateNewProject();
+                    
                     Action mainWindowShown = delegate
                     {
                         app.Project.RootFolder.Add(new WaterFlowFMModel());

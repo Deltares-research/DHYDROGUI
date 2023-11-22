@@ -16,8 +16,8 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.ViewManager;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         [Ignore("Not a test, used to find out how CompositeStructureView works in combination with DotNetBar")]
         public void ShowCulvertViewInMainWindowTools7333()
         {
-            using(var gui = new DeltaShellGui())
+            using(var gui = DeltaShellCoreFactory.CreateGui())
             {
                 gui.Run();
 

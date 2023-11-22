@@ -15,7 +15,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             var store = new FMClassMapFileFunctionStore(flowfmClmNc);
                 
             
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmModel = new WaterFlowFMModel();
                 TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputClassMapFileStore), store);
@@ -68,6 +68,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 gui.Plugins.Add(new FlowFMGuiPlugin());
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -98,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             var store = new FMHisFileFunctionStore(network, area)
                 {Path = TestHelper.GetTestFilePath("output_hisfiles\\pump_his.nc")};
             
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmModel = new WaterFlowFMModel(){Area = area,Network = network};
                 TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store);
@@ -113,6 +115,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 gui.Plugins.Add(new FlowFMGuiPlugin());
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -172,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 {Path = TestHelper.GetTestFilePath("output_hisfiles\\culvert_his.nc")};
             var featuresByCoverage =  TypeUtils.GetField<FMHisFileFunctionStore, IDictionary<string, IEnumerable<IFeature>>>(store, "FeaturesByCoverage");
             Assert.That(featuresByCoverage["culvert"].Count(), Is.EqualTo(2));
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmModel = new WaterFlowFMModel(){Area = area,Network = network};
                 TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store); 
@@ -187,6 +191,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 gui.Plugins.Add(new FlowFMGuiPlugin());
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
+                
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -321,7 +327,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
@@ -334,6 +340,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 gui.Plugins.Add(fmGuiPlugin);
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 var project = app.Project;
                 project.RootFolder.Add(model);
@@ -356,7 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -370,6 +378,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
 
                 gui.Run();
 
+                app.CreateNewProject();
+                
                 var project = app.Project;
                 project.RootFolder.Add(model);
 
@@ -389,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
@@ -402,6 +412,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 gui.Plugins.Add(fmGuiPlugin);
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Project project = app.Project;
                 project.RootFolder.Add(model);

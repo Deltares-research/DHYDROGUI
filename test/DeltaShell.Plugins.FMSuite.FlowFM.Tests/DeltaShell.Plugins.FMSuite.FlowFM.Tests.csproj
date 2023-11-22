@@ -36,7 +36,7 @@
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <Reference Include="BasicModelInterface">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\BasicModelInterface.dll</HintPath>
@@ -66,6 +66,10 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.TestUtils">
+      <HintPath>$(PkgDeltaShell_TestProject)\lib\net48\DelftTools.TestUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Units">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
@@ -80,6 +84,10 @@
     </Reference>
     <Reference Include="DeltaShell.Gui">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Gui.exe</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.IntegrationTestUtils">
+      <HintPath>$(PkgDeltaShell_TestProject)\lib\net48\DeltaShell.IntegrationTestUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">

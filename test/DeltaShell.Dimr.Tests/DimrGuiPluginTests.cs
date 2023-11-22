@@ -5,7 +5,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Dimr.Gui.Properties;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -17,7 +17,7 @@ namespace DeltaShell.Dimr.Tests
         [Test]
         public void TestDimrGuiPlugin()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var dimrGuiPlugin = new DimrGuiPlugin();
                 gui.Plugins.Add(dimrGuiPlugin);

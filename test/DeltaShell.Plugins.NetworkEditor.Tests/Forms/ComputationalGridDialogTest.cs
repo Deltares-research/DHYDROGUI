@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
 using NUnit.Framework;
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
         [Category(TestCategory.Slow)]
         public void ShowComputationalGridDialog()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.UserSettings["autosaveWindowLayout"] = false;
@@ -48,6 +48,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
             
                 gui.Run();
 
+                app.CreateNewProject(); 
+                
                 IDiscretization defaultDiscretization = null;
                 var network = new HydroNetwork();
                 var channel = new Channel();

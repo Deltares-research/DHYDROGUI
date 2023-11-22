@@ -19,7 +19,7 @@ using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             using (CultureUtils.SwitchToCulture("nl-NL"))
             {
                 clipboardMock.GetText_Returns_SetText();
-                using (var gui = new DeltaShellGui())
+                using (var gui = DeltaShellCoreFactory.CreateGui())
                 {
                     var app = gui.Application;
 
@@ -72,6 +72,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                     gui.Run();
 
+                    app.CreateNewProject();
+                    
                     // Create a network coverage and add it to the root folder
                     var networkCoverage = new NetworkCoverage {Network = new HydroNetwork {Name = "HydroNetwork 1"}};
                     app.Project.RootFolder.Add(networkCoverage);
@@ -109,7 +111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 
@@ -125,6 +127,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 
                 gui.Run();
 
+                app.CreateNewProject();
+                
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
                 var networkCoverage = new NetworkCoverage { Name = "coverage1" };
@@ -153,7 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void SelectingSubElementOfNetworkWithNoNetworkViewOpenDoesNotCauseException()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 
@@ -166,6 +170,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
@@ -236,7 +242,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 
@@ -250,6 +256,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 
                 gui.Run();
 
+                app.CreateNewProject();
+                
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
                 var network = new HydroNetwork();
@@ -319,7 +327,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void ShowPipeViewWithSharedCrossSection()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 
@@ -333,6 +341,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 gui.Run();
 
+                app.CreateNewProject();
+                
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
                 var mocks = new MockRepository();
                 var model = mocks.DynamicMultiMock<IModelWithRoughnessSections>(typeof(IModelWithNetwork), typeof(IItemContainer));

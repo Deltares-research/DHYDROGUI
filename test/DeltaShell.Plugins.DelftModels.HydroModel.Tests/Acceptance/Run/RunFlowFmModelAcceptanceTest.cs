@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             int preconditionExpectedBranchFeaturesCount)
         {
             // [Given]
-            using (DeltaShellGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
+            using (IGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
                 WaterFlowFMModel fmModel = ImportFlowFmModelAndAssertPreconditions(acceptanceModelName,
                                                                                    acceptanceModelFileName,
@@ -112,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             string acceptanceModelName,
             string acceptanceModelFileName,
             ActualCountFuncDelegate actualCountFunc,
-            DeltaShellGui gui,
+            IGui gui,
             int expectedBranchFeaturesCount)
         {
             var importer = new WaterFlowFMFileImporter(()=> TestHelper.GetTestWorkingDirectory());

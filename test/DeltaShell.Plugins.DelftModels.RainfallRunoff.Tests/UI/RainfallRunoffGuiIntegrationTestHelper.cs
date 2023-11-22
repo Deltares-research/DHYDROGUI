@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DeltaShell.Core;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -52,9 +53,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
         }
 
        
-        internal static DeltaShellGui GetRunningGuiWithRRPlugins()
+        internal static IGui GetRunningGuiWithRRPlugins()
         {
-            var deltaShell = new DeltaShellGui();
+            var deltaShell = DeltaShellCoreFactory.CreateGui();
 
             deltaShell.Application.Plugins.Add(new NetCdfApplicationPlugin());
             deltaShell.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -68,12 +69,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             deltaShell.Application.Plugins.ForEach(p => p.Application = deltaShell.Application);
             deltaShell.Run();
 
+            deltaShell.Application.CreateNewProject();
+
             return deltaShell;
         }
 
-        internal static DeltaShellApplication GetDeltaShellApplicationWithRRPlugins()
+        internal static IApplication GetDeltaShellApplicationWithRRPlugins()
         {
-            var app = new DeltaShellApplication();
+            var app = DeltaShellCoreFactory.CreateApplication();
             
             app.Plugins.Add(new NetCdfApplicationPlugin());
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -84,6 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             app.Plugins.Add(new RainfallRunoffApplicationPlugin());
 
             app.Run();
+            app.CreateNewProject();
 
             return app;
         }

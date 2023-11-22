@@ -7,6 +7,7 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
@@ -75,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 int preconditionExpectedCatchmentsCount)
         {
             // [Given]
-            using (DeltaShellGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
+            using (IGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
                 HydroModel hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
 

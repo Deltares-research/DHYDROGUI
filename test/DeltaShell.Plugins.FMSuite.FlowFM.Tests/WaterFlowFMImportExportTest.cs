@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.Utils.Extensions;
@@ -450,16 +451,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private DeltaShellApplication GetConfiguredApplication(string savePath)
+        private IApplication GetConfiguredApplication(string savePath)
         {
-            var app = new DeltaShellApplication();
-            app.IsProjectCreatedInTemporaryDirectory = true;
+            var app = DeltaShellCoreFactory.CreateApplication();
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Plugins.Add(new FlowFMApplicationPlugin());
             app.Plugins.Add(new NetworkEditorApplicationPlugin());
             app.Run();
+            app.CreateNewProject();
             app.SaveProjectAs(Path.Combine(savePath));
             return app;
         }

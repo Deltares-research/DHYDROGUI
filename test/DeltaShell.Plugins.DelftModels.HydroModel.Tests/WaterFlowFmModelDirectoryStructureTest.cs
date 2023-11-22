@@ -13,7 +13,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -1448,16 +1448,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private DeltaShellApplication GetConfiguredApplication()
+        private IApplication GetConfiguredApplication()
         {
-            var app = new DeltaShellApplication();
-            app.IsProjectCreatedInTemporaryDirectory = true;
+            var app = DeltaShellCoreFactory.CreateApplication();
             AddPluginsToApplication(app);
             app.SaveProjectAs(tempProjectFilePath);
             return app;
         }
 
-        private static void AddPluginsToApplication(DeltaShellApplication app)
+        private static void AddPluginsToApplication(IApplication app)
         {
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());

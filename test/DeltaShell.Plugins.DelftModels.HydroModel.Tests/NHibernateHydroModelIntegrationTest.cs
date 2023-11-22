@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             using (var temp = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (var app = GetConfiguredApplication())
             {
                 string file = temp.CopyTestDataFileAndDirectoryToTempDirectory(Path.Combine("BackwardCompatibility", "ProjectWithHydrolinksCreatedWith2022.04.dsproj"));
 
@@ -124,14 +124,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private DeltaShellApplication GetConfiguredApplication()
+        private IApplication GetConfiguredApplication()
         {
-            var app = new DeltaShellApplication();
+            var app = DeltaShellCoreFactory.CreateApplication();
             AddPluginsToApplication(app);
             return app;
         }
 
-        private static void AddPluginsToApplication(DeltaShellApplication app)
+        private static void AddPluginsToApplication(IApplication app)
         {
             // DeltaShell plugins
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());

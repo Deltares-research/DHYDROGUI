@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
@@ -123,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             string acceptanceModelName,
             string acceptanceModelFileName,
             ActualCountFuncDelegate actualCountFunc,
-            DeltaShellGui gui,
+            IGui gui,
             int expectedBranchFeaturesCount)
         {
             var importer = new WaterFlowFMFileImporter(()=> TestHelper.GetTestWorkingDirectory());

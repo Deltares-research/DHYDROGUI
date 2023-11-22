@@ -8,7 +8,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests {
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 var projectPath = Path.Combine(tempDir,"RtcFM.dsproj");
-                using (var app = new DeltaShellApplication())
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());

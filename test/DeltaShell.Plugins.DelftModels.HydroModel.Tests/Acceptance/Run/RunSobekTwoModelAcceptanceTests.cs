@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             bool isFmOnly)
         {
             // [Given]
-            using (DeltaShellGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
+            using (IGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
                 IHydroModel hydroModel;
                 if (isFmOnly)

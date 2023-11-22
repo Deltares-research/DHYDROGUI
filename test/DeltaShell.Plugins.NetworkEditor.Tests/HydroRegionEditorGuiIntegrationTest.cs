@@ -6,9 +6,10 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     [Category(TestCategory.WindowsForms)]
     public class HydroRegionEditorGuiIntegrationTest
     {
-        protected DeltaShellGui gui;
+        protected IGui gui;
         protected Project project;
         protected IHydroRegion region;
         protected IDrainageBasin basin;
@@ -45,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [SetUp]
         public void SetUp()
         {
-            gui = new DeltaShellGui();
+            gui = DeltaShellCoreFactory.CreateGui();
             var app = gui.Application;
 
             app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -58,6 +59,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             gui.Plugins.Add(new CommonToolsGuiPlugin());
             gui.Run();
 
+            app.CreateNewProject();
+            
             project = app.Project;
 
             // add data

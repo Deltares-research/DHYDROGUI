@@ -3,12 +3,16 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -49,10 +53,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             }
 
             // get running DeltaShell application
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
+                app.CreateNewProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
@@ -100,10 +109,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             if (Directory.Exists(testDir)) Directory.Delete(testDir, true);
 
             // get running DeltaShell application
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
+                app.CreateNewProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();
@@ -188,10 +202,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             if (Directory.Exists(testDir)) Directory.Delete(testDir, true);
             var dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("output_mapfiles", "dummy.nc"));
 
-            using (var app = new DeltaShellApplication())
+            using (var app = DeltaShellCoreFactory.CreateApplication())
             {
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
+                app.CreateNewProject();
 
                 // create FM Model
                 var fmModel = new WaterFlowFMModel();

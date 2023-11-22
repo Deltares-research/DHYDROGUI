@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
@@ -70,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             int preconditionExpectedCatchmentsCount)
         {
             // [Given]
-            using (DeltaShellGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
+            using (IGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
                 Console.WriteLine("Importing model");
                 HydroModel hydroModel = DimrAcceptanceModelTestHelper.ImportDimrModelAndAssertPreconditions(acceptanceModelName,

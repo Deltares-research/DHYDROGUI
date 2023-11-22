@@ -6,7 +6,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
@@ -29,16 +29,17 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Slow)]
         public void ShowFMWeirShouldDisplayFMWeirView()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Run();
+
+                app.CreateNewProject();
 
                 var project = app.Project;
                 var network = new HydroNetwork();
@@ -88,16 +89,17 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Slow)]
         public void ShowFMPumpShouldDisplaySreaStructureViewWithPumpView()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Run();
+
+                app.CreateNewProject();
 
                 var project = app.Project;
                 var network = new HydroNetwork();

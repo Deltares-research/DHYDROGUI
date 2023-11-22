@@ -9,16 +9,16 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Core;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
@@ -371,7 +371,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.WindowsForms), Apartment(ApartmentState.STA)]
         public void CreateNewModelWithRuralAndUrbanNetworkConnectedCheckAfterSaveLoadTheyAreStillConnectedAndYouCanOpenPipeViewInTheGui()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -389,6 +389,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
+                
                 Action mainWindowShown = delegate
                 {
                     const string path = "mdu.dsproj";
@@ -577,7 +580,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             using (var temp = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (IApplication app = GetConfiguredApplication())
             using (HydroModel integratedModel = CreateIntegratedModelWithTwoCatchmentsLinkedToSameLateral(catchmentType))
             {
                 app.Project.RootFolder.Add(integratedModel);
@@ -875,7 +878,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Setup
             using (var temp = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetConfiguredApplication())
+            using (IApplication app = GetConfiguredApplication())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
                 app.Project.RootFolder.Add(integratedModel);
@@ -1009,24 +1012,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             return integratedModel;
         }
         
-        private static string ExportToDimrXml(TemporaryDirectory tempDir, HydroModel integratedModel)
+        private static IApplication GetConfiguredApplication()
         {
-            string exportFilePath = Path.Combine(tempDir.Path, "dimr.xml");
-            var exporter = new DHydroConfigXmlExporter { ExportFilePath = exportFilePath };
-
-            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
-            exporter.Export(integratedModel, null);
-            return exportFilePath;
-        }
-
-        private DeltaShellApplication GetConfiguredApplication()
-        {
-            var app = new DeltaShellApplication(){ IsProjectCreatedInTemporaryDirectory = true };
+            IApplication app = DeltaShellCoreFactory.CreateApplication();
             AddPluginsToApplication(app);
             return app;
         }
 
-        private static void AddPluginsToApplication(DeltaShellApplication app)
+        private static void AddPluginsToApplication(IApplication app)
         {
             // DeltaShell plugins
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -1041,6 +1034,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.Plugins.Add(new NetworkEditorApplicationPlugin());
 
             app.Run();
+            app.CreateNewProject();
+        }
+        
+        private static string ExportToDimrXml(TemporaryDirectory tempDir, HydroModel integratedModel)
+        {
+            string exportFilePath = Path.Combine(tempDir.Path, "dimr.xml");
+            var exporter = new DHydroConfigXmlExporter { ExportFilePath = exportFilePath };
+
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
+            exporter.Export(integratedModel, null);
+            return exportFilePath;
         }
 
         private static void SetRequiredSettingsForDimrImport()

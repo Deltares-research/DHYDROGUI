@@ -7,6 +7,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -35,10 +36,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             {
                 var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
                 var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
-                using (var app = new DeltaShellApplication())
+                using (var app = DeltaShellCoreFactory.CreateApplication())
                 {
                     app.Plugins.Add(new FlowFMApplicationPlugin());
                     app.Run();
+                    app.CreateNewProject();
+                    
                     using (var fmModel = new WaterFlowFMModel(mduFilePath))
                     {
                         app.Project.RootFolder.Add(fmModel);
@@ -221,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
             
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -233,6 +236,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -265,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -277,6 +282,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {
@@ -309,7 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -321,6 +328,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
+
+                app.CreateNewProject();
 
                 Action mainWindowShown = delegate
                 {

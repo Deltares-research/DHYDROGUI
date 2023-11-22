@@ -7,7 +7,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Networks;
@@ -389,7 +389,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         [Category(TestCategory.WorkInProgress)] //TOOLS-7472
         public void CrossSectionYZWithSinglePointGeometryShouldNotCrash()
         {
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
 

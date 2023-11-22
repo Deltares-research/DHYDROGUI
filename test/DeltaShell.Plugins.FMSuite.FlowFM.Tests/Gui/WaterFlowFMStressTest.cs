@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DeltaShell.Gui;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             //Assert.AreEqual(159473, ((SamplesOperationInfo)model.InitialWaterLevels.Operations[0]).Points.Count);
             Assert.AreEqual(3024001, model.BoundaryConditions.Last().GetDataAtPoint(0).Arguments[0].Values.Count);
 
-            using (var gui = new DeltaShellGui())
+            using (var gui = DeltaShellCoreFactory.CreateGui())
             {
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());

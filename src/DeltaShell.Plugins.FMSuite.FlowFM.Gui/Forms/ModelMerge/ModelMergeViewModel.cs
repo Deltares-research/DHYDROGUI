@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using DelftTools.Controls;
 using DelftTools.Controls.Wpf.Commands;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge;
@@ -201,8 +202,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge
 
         private async Task ImportModel()
         {
-            IFileDialogService fileDialogService = new FileDialogService();
-            string filePath = fileDialogService.SelectFile("Mdu file (*.mdu)|*.mdu");
+            var fileDialogService = new FileDialogService();
+            var fileDialogOptions = new FileDialogOptions { FileFilter = "Mdu file (*.mdu)|*.mdu" };
+            
+            string filePath = fileDialogService.ShowOpenFileDialog(fileDialogOptions);
 
             SelectedPath = filePath;
 
