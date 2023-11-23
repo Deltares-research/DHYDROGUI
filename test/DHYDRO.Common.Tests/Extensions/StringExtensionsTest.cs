@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DHYDRO.Common.Extensions;
 using NUnit.Framework;
 
@@ -187,7 +188,7 @@ namespace DHYDRO.Common.Tests.Extensions
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
         }
-        
+
         [Test]
         [TestCase("abc", 'c')]
         [TestCase("abc def", ' ')]
@@ -202,7 +203,7 @@ namespace DHYDRO.Common.Tests.Extensions
             // Assert
             Assert.That(result, Is.True);
         }
-        
+
         [Test]
         [TestCase("abc", 'C')]
         [TestCase("abc def", '\0')]
@@ -216,7 +217,7 @@ namespace DHYDRO.Common.Tests.Extensions
             // Assert
             Assert.That(result, Is.False);
         }
-        
+
         [Test]
         public void StartsWith_ArgumentNull_ThrowsArgumentNullException()
         {
@@ -229,7 +230,7 @@ namespace DHYDRO.Common.Tests.Extensions
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
         }
-        
+
         [Test]
         [TestCase("abc", 'a')]
         [TestCase("def", 'd')]
@@ -242,7 +243,7 @@ namespace DHYDRO.Common.Tests.Extensions
             // Assert
             Assert.That(result, Is.True);
         }
-        
+
         [Test]
         [TestCase("abc", 'b')]
         [TestCase("def", 'f')]
@@ -255,6 +256,75 @@ namespace DHYDRO.Common.Tests.Extensions
 
             // Assert
             Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void ReplaceCaseInsensitive_SourceNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            string source = null;
+
+            // Call
+            void Call() => source.ReplaceCaseInsensitive("a", "b");
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ReplaceCaseInsensitive_ToReplaceNull_ThrowsArgumentException()
+        {
+            // Setup
+            const string source = "some_input";
+
+            // Call
+            void Call() => source.ReplaceCaseInsensitive(null, "b");
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ReplaceCaseInsensitive_ReplacementNull_ThrowsArgumentException()
+        {
+            // Setup
+            const string source = "some_input";
+
+            // Call
+            void Call() => source.ReplaceCaseInsensitive("a", null);
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        [TestCase("Hello world", "world", "universe", ExpectedResult = "Hello universe")]
+        [TestCase("Hello world", "WORLD", "universe", ExpectedResult = "Hello universe")]
+        [TestCase("Hello world, HELLO WORLD", "world", "universe", ExpectedResult = "Hello universe, HELLO WORLD")]
+        [TestCase("Hello world, HELLO WORLD", "WORLD", "universe", ExpectedResult = "Hello universe, HELLO WORLD")]
+        [TestCase("Hello world", "earth", "universe", ExpectedResult = "Hello world")]
+        [TestCase("Hello world", "world", "", ExpectedResult = "Hello ")]
+        [TestCase("", "world", "universe", ExpectedResult = "")]
+        [TestCase("", "", "universe", ExpectedResult = "universe")]
+        [TestCase(" world", "", "Hello", ExpectedResult = "Hello world")]
+        public string ReplaceCaseInsensitive_SearchesValueToReplaceCaseInsensitive_AndReplacesIt(string source,
+                                                                                                 string toReplace,
+                                                                                                 string replacement)
+        {
+            return source.ReplaceCaseInsensitive(toReplace, replacement);
+        }
+        
+        [Test]
+        public void ReplaceFirst_UndefinedStringComparison_ThrowsInvalidEnumArgumentException()
+        {
+            // Setup
+            const string source = "some_input";
+
+            // Call
+            void Call() => source.ReplaceFirst("a", "b", (StringComparison)999);
+
+            // Assert
+            Assert.That(Call, Throws.TypeOf<InvalidEnumArgumentException>());
         }
 
         private static IEnumerable<TestCaseData> GetContainsWhitespaceCases()

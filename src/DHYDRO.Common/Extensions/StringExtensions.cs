@@ -135,5 +135,54 @@ namespace DHYDRO.Common.Extensions
 
             return source.Length > 0 && source[0] == value;
         }
+
+        /// <summary>
+        /// Returns a new string in which the first occurrence of a specified string in the source instance is replaced with another specified string.
+        /// </summary>
+        /// <param name="source"> The source instance. </param>
+        /// <param name="toReplace"> The string to be replaced. </param>
+        /// <param name="replacement"> The string to replace the first occurence of <paramref name="toReplace"/>.</param>
+        /// <returns>a new string in which all occurrences of a specified string in the source instance are replaced with another specified string.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/>, <paramref name="toReplace"/> or <paramref name="replacement"/> is <c>null</c>
+        /// </exception>
+        public static string ReplaceCaseInsensitive(this string source, string toReplace, string replacement)
+        {
+            return source.ReplaceFirst(toReplace, replacement, 
+                                       StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Returns a new string in which the first occurrence of a specified string in the source instance is replaced with another specified string.
+        /// </summary>
+        /// <param name="source"> The source instance. </param>
+        /// <param name="toReplace"> The string to be replaced. </param>
+        /// <param name="replacement"> The string to replace the first occurence of <paramref name="toReplace"/>.</param>
+        /// <param name="stringComparison"> The string comparison method to search for the <paramref name="toReplace"/> instance. </param>
+        /// <returns>A new string in which all occurrences of a specified string in the source instance are replaced with another specified string.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/>, <paramref name="toReplace"/> or <paramref name="replacement"/> is <c>null</c>
+        /// </exception>
+        /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
+        /// Thrown when <paramref name="stringComparison"/> is not a defined <see cref="StringComparison"/>.
+        /// </exception>
+        public static string ReplaceFirst(this string source, string toReplace, string replacement, StringComparison stringComparison)
+        {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(toReplace, nameof(toReplace));
+            Ensure.NotNull(replacement, nameof(replacement));
+            Ensure.IsDefined(stringComparison, nameof(stringComparison));
+            
+            int index = source.IndexOf(toReplace, stringComparison);
+            if (index == -1)
+            {
+                return source;
+            }
+            
+            string removedOldValue = source.Remove(index, toReplace.Length);
+            string addedNewValue = removedOldValue.Insert(index, replacement);
+
+            return addedNewValue;
+        }
     }
 }
