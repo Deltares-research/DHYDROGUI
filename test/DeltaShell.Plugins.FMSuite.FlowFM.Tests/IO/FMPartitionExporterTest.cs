@@ -3,14 +3,13 @@ using System.Linq;
 using System.Text;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using Nini.Ini;
+using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -369,6 +368,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionExporterShouldNotLoseValues()
         {
             const string relativePath = "partition";
+            
             using (var app = DeltaShellCoreFactory.CreateApplication())
             {
                 app.Plugins.Add(new FlowFMApplicationPlugin());
@@ -387,8 +387,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 FMModelPartitionExporter exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
                 Assert.IsNotNull(exporter);
+                
                 exporter.NumDomains = 4;
                 exporter.IsContiguous = true;
+                
                 if (!Directory.Exists(relativePath))
                 {
                     Directory.CreateDirectory(relativePath);
@@ -396,6 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string exportDir = Path.GetFullPath(relativePath);
                 exporter.Export(model, Path.Combine(exportDir, "SongHau.mdu"));
+                
                 var outputFiles = new[]
                 {
                     "SongHau_0000.mdu",
@@ -403,32 +406,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "SongHau_0002.mdu",
                     "SongHau_0003.mdu"
                 };
+                
                 foreach (string file in outputFiles)
                 {
                     string path = Path.Combine(exportDir, file);
                     Assert.IsTrue(File.Exists(path));
-                    var reader = new IniReader(path);
-                    reader.SetCommentDelimiters(new[]
-                    {
-                        '#'
-                    });
-                    var document = new IniDocument(reader);
-                    IniSection externalForcing = document.Sections["external forcing"];
-                    IniSection geometry = document.Sections["geometry"];
-                    IniSection output = document.Sections["output"];
 
-                    string strExtForceFile = externalForcing.GetValue("ExtForceFile");
-                    string strExtForceFileNew = externalForcing.GetValue("ExtForceFileNew");
-                    string strLandBoundaryFile = geometry.GetValue("LandBoundaryFile");
-                    string strObsFile = output.GetValue("ObsFile");
+                    var parser = new IniParser();
+                    
+                    string ini = File.ReadAllText(path);
+                    IniData iniData = parser.Parse(ini);
+                    
+                    IniSection externalForcing = iniData.GetSection("external forcing");
+                    IniSection geometry = iniData.GetSection("geometry");
+                    IniSection output = iniData.GetSection("output");
 
-                    Assert.IsNotEmpty(strExtForceFile, string.Format("ExtForceFile not set in {0}", file));
-                    Assert.IsNotEmpty(strExtForceFileNew, string.Format("ExtForceFileNew not set in {0}", file));
-                    Assert.IsNotEmpty(strLandBoundaryFile, string.Format("LandBoundaryFile not set in {0}", file));
-                    Assert.IsNotEmpty(strObsFile, string.Format("ObsFile not set in {0}", file));
+                    string strExtForceFile = externalForcing.GetPropertyValueOrDefault("ExtForceFile");
+                    string strExtForceFileNew = externalForcing.GetPropertyValueOrDefault("ExtForceFileNew");
+                    string strLandBoundaryFile = geometry.GetPropertyValueOrDefault("LandBoundaryFile");
+                    string strObsFile = output.GetPropertyValueOrDefault("ObsFile");
 
-                    string partitionFile = geometry.GetValue("PartitionFile");
-                    Assert.Null(partitionFile, string.Format("PartitionFile present in {0} - this is not valid.", file));
+                    Assert.IsNotEmpty(strExtForceFile, $"ExtForceFile not set in {file}");
+                    Assert.IsNotEmpty(strExtForceFileNew, $"ExtForceFileNew not set in {file}");
+                    Assert.IsNotEmpty(strLandBoundaryFile, $"LandBoundaryFile not set in {file}");
+                    Assert.IsNotEmpty(strObsFile, $"ObsFile not set in {file}");
+
+                    string partitionFile = geometry.GetPropertyValueOrDefault("PartitionFile");
+                    Assert.Null(partitionFile, $"PartitionFile present in {file} - this is not valid.");
                 }
             }
 
