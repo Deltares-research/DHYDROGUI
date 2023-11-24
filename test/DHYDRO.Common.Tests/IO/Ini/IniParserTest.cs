@@ -206,8 +206,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 [section2]";
 
             IniData iniData = iniParser.Parse(ini);
-            IniSection section1 = iniData.GetSection("section1");
-            IniSection section2 = iniData.GetSection("section2");
+            IniSection section1 = iniData.FindSection("section1");
+            IniSection section2 = iniData.FindSection("section2");
 
             Assert.That(section1, Is.Not.Null);
             Assert.That(section2, Is.Not.Null);
@@ -229,7 +229,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 [section]";
 
             IniData iniData = iniParser.Parse(ini);
-            IniSection section = iniData.GetSection("section");
+            IniSection section = iniData.FindSection("section");
 
             Assert.That(section, Is.Not.Null);
             Assert.That(section.Comments, Has.Exactly(1).EqualTo("section comment"));
@@ -248,7 +248,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 [section]";
 
             IniData iniData = iniParser.Parse(ini);
-            IniSection section = iniData.GetSection("section");
+            IniSection section = iniData.FindSection("section");
 
             Assert.That(section, Is.Not.Null);
             Assert.That(section.Comments, Has.Exactly(1).EqualTo(string.Empty));
@@ -266,7 +266,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 [section]";
 
             IniData iniData = iniParser.Parse(ini);
-            IniSection section = iniData.GetSection("section");
+            IniSection section = iniData.FindSection("section");
 
             Assert.That(section, Is.Not.Null);
             Assert.That(section.Comments, Is.Empty);
@@ -280,7 +280,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             const string ini = "[section] # inline comment";
 
             IniData iniData = iniParser.Parse(ini);
-            IniSection section = iniData.GetSection("section");
+            IniSection section = iniData.FindSection("section");
 
             Assert.That(section, Is.Not.Null);
             Assert.That(section.Comments, Is.Empty);
@@ -310,7 +310,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Value, Is.EqualTo("value"));
@@ -336,7 +336,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty(propertyKey);
+            IniProperty property = section.FindProperty(propertyKey);
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Value, Is.EqualTo("value"));
@@ -374,7 +374,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty(propertyKey.Replace('\t', ' '));
+            IniProperty property = section.FindProperty(propertyKey.Replace('\t', ' '));
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Value, Is.EqualTo("value"));
@@ -426,8 +426,8 @@ property2=value2";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property1 = section.GetProperty("property1");
-            IniProperty property2 = section.GetProperty("property2");
+            IniProperty property1 = section.FindProperty("property1");
+            IniProperty property2 = section.FindProperty("property2");
 
             Assert.That(property1, Is.Not.Null);
             Assert.That(property2, Is.Not.Null);
@@ -446,7 +446,7 @@ property=";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Value, Is.Empty);
@@ -470,7 +470,7 @@ property={propertyValue}";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Value, Is.EqualTo(propertyValue));
@@ -489,7 +489,7 @@ key=value";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("key");
+            IniProperty property = section.FindProperty("key");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(section.Comments, Is.Empty);
@@ -507,7 +507,7 @@ property=value # inline comment";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Comment, Is.EqualTo("inline comment"));
@@ -526,7 +526,7 @@ property=value # inline comment";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Comment, Is.Empty);
@@ -546,7 +546,7 @@ property=#{comment}";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Value, Is.Empty);
@@ -566,7 +566,7 @@ property=#value# # comment";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Value, Is.EqualTo("value"));
@@ -591,7 +591,7 @@ value3 {multiLineValueDelimiter}";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Value, Is.EqualTo(@"value1
@@ -648,7 +648,7 @@ value3";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(section.Comments, Is.Empty);
@@ -673,7 +673,7 @@ value3 # comment3";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Comment, Is.EqualTo(@"comment1
@@ -700,7 +700,7 @@ value3 # comment3";
 
             IniData iniData = iniParser.Parse(ini);
             IniSection section = iniData.Sections.First();
-            IniProperty property = section.GetProperty("property");
+            IniProperty property = section.FindProperty("property");
 
             Assert.That(property, Is.Not.Null);
             Assert.That(property.Comment.Trim(), Is.Empty);

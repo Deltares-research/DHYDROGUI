@@ -12,7 +12,7 @@ namespace DHYDRO.Common.IO.Ini
     /// This class encapsulates a collection of sections within an INI data structure.
     /// <para/>
     /// It's allowed to add multiple sections with the same name within the INI data.
-    /// When using methods like <see cref="GetSection"/> the first section found with the specified name is operated upon.
+    /// When using methods like <see cref="FindSection"/> the first section found with the specified name is operated upon.
     /// <para/>
     /// Section names are compared in a case-insensitive manner.
     /// </remarks>
@@ -102,16 +102,16 @@ namespace DHYDRO.Common.IO.Ini
         {
             Ensure.NotNullOrEmpty(name, nameof(name));
 
-            return GetSection(name) != null;
+            return FindSection(name) != null;
         }
 
         /// <summary>
-        /// Gets the first section found in the INI data with the specified name.
+        /// Searches for a section in the INI data with the specified name, and returns the first occurrence.
         /// </summary>
         /// <param name="name">The name of the section to retrieve.</param>
-        /// <returns>The first <see cref="IniSection"/> with the specified name, or <c>null</c> if not found.</returns>
+        /// <returns>The first <see cref="IniSection"/> that matches the specified name, or <c>null</c> if not found.</returns>
         /// <exception cref="ArgumentException">When <paramref name="name"/> is <c>null</c> or empty.</exception>
-        public IniSection GetSection(string name)
+        public IniSection FindSection(string name)
         {
             Ensure.NotNullOrEmpty(name, nameof(name));
 

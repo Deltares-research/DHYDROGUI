@@ -191,35 +191,35 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         [TestCase("")]
         [TestCase(null)]
-        public void GetSection_NameIsNullOrEmpty_ThrowsArgumentException(string name)
+        public void FindSection_NameIsNullOrEmpty_ThrowsArgumentException(string name)
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentException>(() => iniData.GetSection(name));
+            Assert.Throws<ArgumentException>(() => iniData.FindSection(name));
         }
 
         [Test]
         [TestCase("testsection")]
         [TestCase("TestSection")]
         [TestCase("TESTSECTION")]
-        public void GetSection_ExistingCaseInsensitiveName_ReturnsSection(string name)
+        public void FindSection_ExistingCaseInsensitiveName_ReturnsSection(string name)
         {
             var iniData = new IniData();
             iniData.AddSection("TestSection");
 
-            IniSection foundSection = iniData.GetSection(name);
+            IniSection foundSection = iniData.FindSection(name);
 
             Assert.NotNull(foundSection);
             Assert.AreEqual("TestSection", foundSection.Name);
         }
 
         [Test]
-        public void GetSection_NonExistingName_ReturnsNull()
+        public void FindSection_NonExistingName_ReturnsNull()
         {
             var iniData = new IniData();
             iniData.AddSection("TestSection");
 
-            IniSection foundSection = iniData.GetSection("NonExistingName");
+            IniSection foundSection = iniData.FindSection("NonExistingName");
 
             Assert.Null(foundSection);
         }

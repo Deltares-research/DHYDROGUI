@@ -14,7 +14,7 @@ namespace DHYDRO.Common.IO.Ini
     /// This class encapsulates a single section in an INI file, containing properties with key-value pairs.
     /// <para/>
     /// It is allowed to add multiple properties with the same key within a section.
-    /// When using methods like <see cref="GetProperty"/> and <see cref="AddOrUpdateProperty{T}"/>, the first property found
+    /// When using methods like <see cref="FindProperty"/> and <see cref="AddOrUpdateProperty{T}"/>, the first property found
     /// with the specified key is operated upon.
     /// <para/>
     /// Property keys are compared in a case-insensitive manner.
@@ -149,11 +149,11 @@ namespace DHYDRO.Common.IO.Ini
         {
             Ensure.NotNullOrEmpty(key, nameof(key));
 
-            IniProperty property = GetProperty(key);
+            IniProperty property = FindProperty(key);
 
             if (property != null)
             {
-                property.SetConvertedValue(value);
+                property.SetValue(value);
                 return property;
             }
             else
@@ -172,16 +172,16 @@ namespace DHYDRO.Common.IO.Ini
         {
             Ensure.NotNullOrEmpty(key, nameof(key));
 
-            return GetProperty(key) != null;
+            return FindProperty(key) != null;
         }
 
         /// <summary>
-        /// Gets the first property found in the section with the specified key.
+        /// Searches for a property in the section with the specified key, and returns the first occurrence.
         /// </summary>
         /// <param name="key">The key of the property to retrieve.</param>
-        /// <returns>The first <see cref="IniProperty"/> in the section with the specified key, or <c>null</c> if not found.</returns>
+        /// <returns>The first <see cref="IniProperty"/> in the section that matches the specified key, or <c>null</c> if not found.</returns>
         /// <exception cref="ArgumentException">When <paramref name="key"/> is <c>null</c> or empty.</exception>
-        public IniProperty GetProperty(string key)
+        public IniProperty FindProperty(string key)
         {
             Ensure.NotNullOrEmpty(key, nameof(key));
 
@@ -213,11 +213,11 @@ namespace DHYDRO.Common.IO.Ini
         /// The value of the first property with the specified key if found; otherwise, the <paramref name="defaultValue"/>.
         /// </returns>
         /// <exception cref="ArgumentException">When <paramref name="key"/> is <c>null</c> or empty.</exception>
-        public string GetPropertyValueOrDefault(string key, string defaultValue = null)
+        public string GetPropertyValue(string key, string defaultValue = null)
         {
             Ensure.NotNullOrEmpty(key, nameof(key));
 
-            IniProperty property = GetProperty(key);
+            IniProperty property = FindProperty(key);
 
             return property?.Value ?? defaultValue;
         }
@@ -231,16 +231,16 @@ namespace DHYDRO.Common.IO.Ini
         /// <typeparam name="T">The target type to convert the property value to. Must implement <see cref="IConvertible"/>.</typeparam>
         /// <returns><c>true</c> if the property was found and successfully converted; otherwise, <c>false</c>.</returns>
         /// <exception cref="ArgumentException">When <paramref name="key"/> is <c>null</c> or empty.</exception>
-        public bool TryGetConvertedPropertyValue<T>(string key, out T convertedValue)
+        public bool TryGetPropertyValue<T>(string key, out T convertedValue)
             where T : IConvertible
         {
             Ensure.NotNullOrEmpty(key, nameof(key));
 
-            IniProperty property = GetProperty(key);
+            IniProperty property = FindProperty(key);
 
             if (property != null)
             {
-                return property.TryGetConvertedValue(out convertedValue);
+                return property.TryGetValue(out convertedValue);
             }
 
             convertedValue = default;

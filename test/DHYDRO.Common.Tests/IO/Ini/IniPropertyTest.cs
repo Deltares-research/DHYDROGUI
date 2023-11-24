@@ -162,34 +162,34 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase("2.7100000e+000", 2.71)]
         [TestCase("Monday", DayOfWeek.Monday)]
         [TestCase("TestValue", "TestValue")]
-        public void TryGetConvertedValue_ValidValueAndType_ReturnsTrueAndConvertedValue<T>(string value, T expectedValue)
+        public void TryGetValue_ValidValueAndType_ReturnsTrueAndConvertedValue<T>(string value, T expectedValue)
             where T : IConvertible
         {
             var property = new IniProperty("TestKey", value);
 
-            bool result = property.TryGetConvertedValue(out T convertedValue);
+            bool result = property.TryGetValue(out T convertedValue);
 
             Assert.IsTrue(result);
             Assert.AreEqual(expectedValue, convertedValue);
         }
 
         [Test]
-        public void TryGetConvertedValue_ValidDateTimeValueAndType_ReturnsTrueAndConvertedValue()
+        public void TryGetValue_ValidDateTimeValueAndType_ReturnsTrueAndConvertedValue()
         {
             var property = new IniProperty("TestKey", "2023-08-14");
 
-            bool result = property.TryGetConvertedValue(out DateTime convertedValue);
+            bool result = property.TryGetValue(out DateTime convertedValue);
 
             Assert.IsTrue(result);
             Assert.AreEqual(new DateTime(2023, 8, 14), convertedValue);
         }
 
         [Test]
-        public void TryGetConvertedValue_StringTypeAndValueIsNull_ReturnsTrueAndDefaultValue()
+        public void TryGetValue_StringTypeAndValueIsNull_ReturnsTrueAndDefaultValue()
         {
             var property = new IniProperty("TestKey") { Value = null };
 
-            bool result = property.TryGetConvertedValue(out string convertedValue);
+            bool result = property.TryGetValue(out string convertedValue);
 
             Assert.IsTrue(result);
             Assert.IsNull(convertedValue);
@@ -200,12 +200,12 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase(default(float))]
         [TestCase(default(double))]
         [TestCase(default(DayOfWeek))]
-        public void TryGetConvertedValue_InvalidType_ReturnsFalseAndDefaultValue<T>(T defaultValue)
+        public void TryGetValue_InvalidType_ReturnsFalseAndDefaultValue<T>(T defaultValue)
             where T : IConvertible
         {
             var property = new IniProperty("TestKey", "TestValue");
 
-            bool result = property.TryGetConvertedValue(out T convertedValue);
+            bool result = property.TryGetValue(out T convertedValue);
 
             Assert.IsFalse(result);
             Assert.AreEqual(defaultValue, convertedValue);
@@ -218,33 +218,33 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase(0.123d, "1.2300000e-001")]
         [TestCase(DayOfWeek.Monday, "Monday")]
         [TestCase("TestValue", "TestValue")]
-        public void SetConvertedValue_ValidValue_UpdatesValue<T>(T value, string expectedValue)
+        public void SetValue_ValidValue_UpdatesValue<T>(T value, string expectedValue)
             where T : IConvertible
         {
             var property = new IniProperty("TestKey");
 
-            property.SetConvertedValue(value);
+            property.SetValue(value);
 
             Assert.AreEqual(expectedValue, property.Value);
         }
 
         [Test]
-        public void SetConvertedValue_ValidDateTimeValue_UpdatesValue()
+        public void SetValue_ValidDateTimeValue_UpdatesValue()
         {
             var property = new IniProperty("TestKey");
             var value = new DateTime(2023, 8, 14, 12, 0, 0);
 
-            property.SetConvertedValue(value);
+            property.SetValue(value);
 
             Assert.AreEqual("2023-08-14 12:00:00", property.Value);
         }
 
         [Test]
-        public void SetConvertedValue_StringValueIsNull_UpdatesValue()
+        public void SetValue_StringValueIsNull_UpdatesValue()
         {
             var property = new IniProperty("TestKey");
 
-            property.SetConvertedValue<string>(null);
+            property.SetValue<string>(null);
 
             Assert.IsEmpty(property.Value);
         }

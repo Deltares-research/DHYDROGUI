@@ -289,35 +289,35 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         [TestCase("")]
         [TestCase(null)]
-        public void GetProperty_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
+        public void FindProperty_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.GetProperty(key));
+            Assert.Throws<ArgumentException>(() => section.FindProperty(key));
         }
 
         [Test]
         [TestCase("testkey")]
         [TestCase("TestKey")]
         [TestCase("TESTKEY")]
-        public void GetProperty_ExistingCaseInsensitiveKey_ReturnsProperty(string key)
+        public void FindProperty_ExistingCaseInsensitiveKey_ReturnsProperty(string key)
         {
             var section = new IniSection("TestSection");
             section.AddProperty("TestKey", "TestValue");
 
-            IniProperty foundProperty = section.GetProperty(key);
+            IniProperty foundProperty = section.FindProperty(key);
 
             Assert.NotNull(foundProperty);
             Assert.AreEqual("TestKey", foundProperty.Key);
         }
 
         [Test]
-        public void GetProperty_NonExistingKey_ReturnsNull()
+        public void FindProperty_NonExistingKey_ReturnsNull()
         {
             var section = new IniSection("TestSection");
             section.AddProperty("TestKey", "TestValue");
 
-            IniProperty foundProperty = section.GetProperty("NonExistingKey");
+            IniProperty foundProperty = section.FindProperty("NonExistingKey");
 
             Assert.Null(foundProperty);
         }
@@ -364,34 +364,34 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         [TestCase("")]
         [TestCase(null)]
-        public void GetPropertyValueOrDefault_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
+        public void GetPropertyValue_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.GetPropertyValueOrDefault(key));
+            Assert.Throws<ArgumentException>(() => section.GetPropertyValue(key));
         }
 
         [Test]
         [TestCase("testkey")]
         [TestCase("TestKey")]
         [TestCase("TESTKEY")]
-        public void GetPropertyValueOrDefault_ExistingCaseInsensitiveKey_ReturnsValue(string key)
+        public void GetPropertyValue_ExistingCaseInsensitiveKey_ReturnsValue(string key)
         {
             var section = new IniSection("TestSection");
             section.AddProperty("TestKey", "TestValue");
 
-            string value = section.GetPropertyValueOrDefault(key);
+            string value = section.GetPropertyValue(key);
 
             Assert.AreEqual("TestValue", value);
         }
 
         [Test]
-        public void GetPropertyValueOrDefault_NonExistingKey_ReturnsDefaultValue()
+        public void GetPropertyValue_NonExistingKey_ReturnsDefaultValue()
         {
             var section = new IniSection("TestSection");
             section.AddProperty("TestKey", "TestValue");
 
-            string value = section.GetPropertyValueOrDefault("NonExistentKey", "DefaultValue");
+            string value = section.GetPropertyValue("NonExistentKey", "DefaultValue");
 
             Assert.AreEqual("DefaultValue", value);
         }
@@ -399,23 +399,23 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         [TestCase("")]
         [TestCase(null)]
-        public void TryGetConvertedPropertyValue_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
+        public void TryGetPropertyValue_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.TryGetConvertedPropertyValue(key, out double _));
+            Assert.Throws<ArgumentException>(() => section.TryGetPropertyValue(key, out double _));
         }
 
         [Test]
         [TestCase("testkey")]
         [TestCase("TestKey")]
         [TestCase("TESTKEY")]
-        public void TryGetConvertedPropertyValue_ExistingCaseInsensitiveKey_ReturnsTrueAndConvertedValue(string key)
+        public void TryGetPropertyValue_ExistingCaseInsensitiveKey_ReturnsTrueAndConvertedValue(string key)
         {
             var section = new IniSection("SectionName");
             section.AddProperty("TestKey", "123.01");
 
-            bool result = section.TryGetConvertedPropertyValue(key, out double convertedValue);
+            bool result = section.TryGetPropertyValue(key, out double convertedValue);
 
             Assert.IsTrue(result);
             Assert.AreEqual(123.01, convertedValue);
@@ -427,13 +427,13 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase("2.7100000e+000", 2.71)]
         [TestCase("Monday", DayOfWeek.Monday)]
         [TestCase("TestValue", "TestValue")]
-        public void TryGetConvertedPropertyValue_ExistingKeyAndValidType_ReturnsTrueAndConvertedValue<T>(string value, T expectedValue)
+        public void TryGetPropertyValue_ExistingKeyAndValidType_ReturnsTrueAndConvertedValue<T>(string value, T expectedValue)
             where T : IConvertible
         {
             var section = new IniSection("SectionName");
             section.AddProperty("TestKey", value);
 
-            bool result = section.TryGetConvertedPropertyValue("TestKey", out T convertedValue);
+            bool result = section.TryGetPropertyValue("TestKey", out T convertedValue);
 
             Assert.IsTrue(result);
             Assert.AreEqual(expectedValue, convertedValue);
@@ -444,24 +444,24 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase(default(float))]
         [TestCase(default(double))]
         [TestCase(default(DayOfWeek))]
-        public void TryGetConvertedPropertyValue_ExistingKeyAndInvalidType_ReturnsFalseAndDefault<T>(T defaultValue)
+        public void TryGetPropertyValue_ExistingKeyAndInvalidType_ReturnsFalseAndDefault<T>(T defaultValue)
             where T : IConvertible
         {
             var section = new IniSection("SectionName");
             section.AddProperty("TestKey", "TestValue");
 
-            bool result = section.TryGetConvertedPropertyValue("TestKey", out T convertedValue);
+            bool result = section.TryGetPropertyValue("TestKey", out T convertedValue);
 
             Assert.IsFalse(result);
             Assert.AreEqual(defaultValue, convertedValue);
         }
 
         [Test]
-        public void TryGetConvertedPropertyValue_NonExistingKey_ReturnsFalseAndDefault()
+        public void TryGetPropertyValue_NonExistingKey_ReturnsFalseAndDefault()
         {
             var section = new IniSection("SectionName");
 
-            bool result = section.TryGetConvertedPropertyValue("NonExistentKey", out int convertedValue);
+            bool result = section.TryGetPropertyValue("NonExistentKey", out int convertedValue);
 
             Assert.IsFalse(result);
             Assert.AreEqual(default(int), convertedValue);
