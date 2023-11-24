@@ -34,12 +34,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
             IniSection innerDomain = iniData.GetAllSections("Domain").ToList()[1];
             Assert.AreEqual(85, innerDomain.LineNumber);
 
-            IniProperty bedLevelProperty = innerDomain.GetProperty("BedLevel");
+            IniProperty bedLevelProperty = innerDomain.FindProperty("BedLevel");
             Assert.AreEqual(88, bedLevelProperty.LineNumber);
             Assert.AreEqual("inner.dep", bedLevelProperty.Value);
 
-            Assert.AreEqual("36", innerDomain.GetPropertyValueOrDefault("NDir"));
-            Assert.AreEqual(null, innerDomain.GetPropertyValueOrDefault("harazafraz"));
+            Assert.AreEqual("36", innerDomain.GetPropertyValue("NDir"));
+            Assert.AreEqual(null, innerDomain.GetPropertyValue("harazafraz"));
         }
 
         [Test]

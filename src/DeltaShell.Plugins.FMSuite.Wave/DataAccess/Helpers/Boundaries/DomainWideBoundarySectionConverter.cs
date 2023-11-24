@@ -72,9 +72,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
                 throw new ArgumentException("Section is not an mdw boundary section.", nameof(boundarySection));
             }
 
-            return new DomainWideBoundaryMdwBlock {DomainWideSpectrumFile = boundarySection.GetPropertyValueOrDefault(KnownWaveProperties.OverallSpecFile)};
+            return new DomainWideBoundaryMdwBlock {DomainWideSpectrumFile = boundarySection.GetPropertyValue(KnownWaveProperties.OverallSpecFile)};
         }
 
-        private static T GetEnumValue<T>(this IniSection section, string propertyName) => EnumUtils.GetEnumValueByDescription<T>(section.GetPropertyValueOrDefault(propertyName));
+        private static T GetEnumValue<T>(this IniSection section, string propertyName) => EnumUtils.GetEnumValueByDescription<T>(section.GetPropertyValue(propertyName));
     }
 }

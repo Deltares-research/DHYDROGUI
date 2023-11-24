@@ -969,18 +969,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             Assert.AreEqual(3, iniData.SectionCount,
                             "3 sections were expected to be read from the structures file.");
-            IniSection weirSection = GetSectionForStructureType(iniData, StructureRegion.StructureTypeName.Weir);
+            IniSection weirSection = FindSectionForStructureType(iniData, StructureRegion.StructureTypeName.Weir);
             Assert.IsNotNull(weirSection,
                              $"There was no INI section with structure type {StructureRegion.StructureTypeName.Weir}");
             ValidateCommonWeirIniProperties(weirSection);
 
-            IniSection gateSection = GetSectionForStructureType(iniData, StructureRegion.StructureTypeName.Gate);
+            IniSection gateSection = FindSectionForStructureType(iniData, StructureRegion.StructureTypeName.Gate);
             Assert.IsNotNull(weirSection,
                              $"There was no INI section with structure type {StructureRegion.StructureTypeName.Gate}");
             ValidateCommonWeirIniProperties(gateSection);
             ValidateGateIniProperties(gateSection);
 
-            IniSection generalStructureSection = GetSectionForStructureType(iniData, StructureRegion.StructureTypeName.GeneralStructure);
+            IniSection generalStructureSection = FindSectionForStructureType(iniData, StructureRegion.StructureTypeName.GeneralStructure);
             Assert.IsNotNull(weirSection,
                              $"There was no INI section with structure type {StructureRegion.StructureTypeName.GeneralStructure}");
             ValidateCommonWeirIniProperties(generalStructureSection);
@@ -1014,7 +1014,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             ValidateProperty(section, KnownStructureProperties.CrestWidth, "2");
         }
 
-        private static IniSection GetSectionForStructureType(IniData iniData, string type)
+        private static IniSection FindSectionForStructureType(IniData iniData, string type)
         {
             return iniData.Sections.FirstOrDefault(c => c.Properties.FirstOrDefault(p => p.IsKeyEqualTo(KnownStructureProperties.Type))?.Value == type);
         }

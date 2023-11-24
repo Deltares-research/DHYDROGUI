@@ -303,8 +303,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var reader = new MduIniReader();
                     IniData iniData = reader.ReadIniFile(fileStream, mduFilePath);
 
-                    IniSection geometrySection = iniData.GetSection("geometry");
-                    gridFileName = geometrySection?.GetPropertyValueOrDefault(KnownProperties.NetFile);
+                    IniSection geometrySection = iniData.FindSection("geometry");
+                    gridFileName = geometrySection?.GetPropertyValue(KnownProperties.NetFile);
 
                     return gridFileName != null;
                 }

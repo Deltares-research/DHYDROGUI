@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
         private static void SectionContains(IniSection section, string propertyKey, object propertyValue)
         {
-            IniProperty property = section.GetProperty(propertyKey);
+            IniProperty property = section.FindProperty(propertyKey);
             Assert.That(property, Is.Not.Null,
                         $"Section should contain property <{propertyKey}>.");
             Assert.That(property.Value, Is.EqualTo(propertyValue),
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
         private static void SectionDoesNotContain(IniSection section, string propertyKey)
         {
-            IniProperty property = section.GetProperty(propertyKey);
+            IniProperty property = section.FindProperty(propertyKey);
             Assert.That(property, Is.Null, $"Section should not contain property <{propertyKey}>.");
         }
     }

@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
             // Not synchronized with modeldefintionproperties, since property is missing in csv file
 
-            string curvesFileName = outputSection.GetPropertyValueOrDefault(KnownWaveProperties.CurveFile);
+            string curvesFileName = outputSection.GetPropertyValue(KnownWaveProperties.CurveFile);
             if (modelDefinition.FeatureContainer.ObservationCrossSections.Any())
             {
                 if (string.IsNullOrEmpty(curvesFileName))

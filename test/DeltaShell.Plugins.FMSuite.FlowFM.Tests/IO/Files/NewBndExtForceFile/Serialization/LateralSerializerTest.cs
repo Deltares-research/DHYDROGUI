@@ -45,14 +45,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             // Assert
             Assert.That(section.Name, Is.EqualTo("lateral"));
             Assert.That(section.Properties, Has.Count.EqualTo(8));
-            Assert.That(section.GetPropertyValueOrDefault("id"), Is.EqualTo("some_name"));
-            Assert.That(section.GetPropertyValueOrDefault("name"), Is.EqualTo("some_name"));
-            Assert.That(section.GetPropertyValueOrDefault("type"), Is.EqualTo("discharge"));
-            Assert.That(section.GetPropertyValueOrDefault("locationType"), Is.EqualTo("2d"));
-            Assert.That(section.GetPropertyValueOrDefault("numCoordinates"), Is.EqualTo("1"));
-            Assert.That(section.GetPropertyValueOrDefault("xCoordinates"), Is.EqualTo("1.2300000e+000"));
-            Assert.That(section.GetPropertyValueOrDefault("yCoordinates"), Is.EqualTo("2.3400000e+000"));
-            Assert.That(section.GetPropertyValueOrDefault("discharge"), Is.EqualTo("0.0000000e+000"));
+            Assert.That(section.GetPropertyValue("id"), Is.EqualTo("some_name"));
+            Assert.That(section.GetPropertyValue("name"), Is.EqualTo("some_name"));
+            Assert.That(section.GetPropertyValue("type"), Is.EqualTo("discharge"));
+            Assert.That(section.GetPropertyValue("locationType"), Is.EqualTo("2d"));
+            Assert.That(section.GetPropertyValue("numCoordinates"), Is.EqualTo("1"));
+            Assert.That(section.GetPropertyValue("xCoordinates"), Is.EqualTo("1.2300000e+000"));
+            Assert.That(section.GetPropertyValue("yCoordinates"), Is.EqualTo("2.3400000e+000"));
+            Assert.That(section.GetPropertyValue("discharge"), Is.EqualTo("0.0000000e+000"));
         }
 
         [Test]
@@ -80,14 +80,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             // Assert
             Assert.That(section.Name, Is.EqualTo("lateral"));
             Assert.That(section.Properties, Has.Count.EqualTo(8));
-            Assert.That(section.GetPropertyValueOrDefault("id"), Is.EqualTo("some_id"));
-            Assert.That(section.GetPropertyValueOrDefault("name"), Is.EqualTo("some_id"));
-            Assert.That(section.GetPropertyValueOrDefault("type"), Is.EqualTo("discharge"));
-            Assert.That(section.GetPropertyValueOrDefault("locationType"), Is.EqualTo("2d"));
-            Assert.That(section.GetPropertyValueOrDefault("numCoordinates"), Is.EqualTo("3"));
-            Assert.That(section.GetPropertyValueOrDefault("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
-            Assert.That(section.GetPropertyValueOrDefault("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
-            Assert.That(section.GetPropertyValueOrDefault("discharge"), Is.EqualTo("1.2300000e+000"));
+            Assert.That(section.GetPropertyValue("id"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValue("name"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValue("type"), Is.EqualTo("discharge"));
+            Assert.That(section.GetPropertyValue("locationType"), Is.EqualTo("2d"));
+            Assert.That(section.GetPropertyValue("numCoordinates"), Is.EqualTo("3"));
+            Assert.That(section.GetPropertyValue("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
+            Assert.That(section.GetPropertyValue("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
+            Assert.That(section.GetPropertyValue("discharge"), Is.EqualTo("1.2300000e+000"));
         }
 
         [Test]
@@ -113,14 +113,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             // Assert
             Assert.That(section.Name, Is.EqualTo("lateral"));
             Assert.That(section.Properties, Has.Count.EqualTo(8));
-            Assert.That(section.GetPropertyValueOrDefault("id"), Is.EqualTo("some_id"));
-            Assert.That(section.GetPropertyValueOrDefault("name"), Is.EqualTo("some_id"));
-            Assert.That(section.GetPropertyValueOrDefault("type"), Is.EqualTo("discharge"));
-            Assert.That(section.GetPropertyValueOrDefault("locationType"), Is.EqualTo("2d"));
-            Assert.That(section.GetPropertyValueOrDefault("numCoordinates"), Is.EqualTo("3"));
-            Assert.That(section.GetPropertyValueOrDefault("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
-            Assert.That(section.GetPropertyValueOrDefault("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
-            Assert.That(section.GetPropertyValueOrDefault("discharge"), Is.EqualTo("lateral_discharge.bc"));
+            Assert.That(section.GetPropertyValue("id"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValue("name"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValue("type"), Is.EqualTo("discharge"));
+            Assert.That(section.GetPropertyValue("locationType"), Is.EqualTo("2d"));
+            Assert.That(section.GetPropertyValue("numCoordinates"), Is.EqualTo("3"));
+            Assert.That(section.GetPropertyValue("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
+            Assert.That(section.GetPropertyValue("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
+            Assert.That(section.GetPropertyValue("discharge"), Is.EqualTo("lateral_discharge.bc"));
         }
 
         [Test]
@@ -147,14 +147,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             // Assert
             Assert.That(section.Name, Is.EqualTo("lateral"));
             Assert.That(section.Properties, Has.Count.EqualTo(8));
-            Assert.That(section.GetPropertyValueOrDefault("id"), Is.EqualTo("some_id"));
-            Assert.That(section.GetPropertyValueOrDefault("name"), Is.EqualTo("some_id"));
-            Assert.That(section.GetPropertyValueOrDefault("type"), Is.EqualTo("discharge"));
-            Assert.That(section.GetPropertyValueOrDefault("locationType"), Is.EqualTo("2d"));
-            Assert.That(section.GetPropertyValueOrDefault("numCoordinates"), Is.EqualTo("3"));
-            Assert.That(section.GetPropertyValueOrDefault("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
-            Assert.That(section.GetPropertyValueOrDefault("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
-            Assert.That(section.GetPropertyValueOrDefault("discharge"), Is.EqualTo("realtime"));
+            Assert.That(section.GetPropertyValue("id"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValue("name"), Is.EqualTo("some_id"));
+            Assert.That(section.GetPropertyValue("type"), Is.EqualTo("discharge"));
+            Assert.That(section.GetPropertyValue("locationType"), Is.EqualTo("2d"));
+            Assert.That(section.GetPropertyValue("numCoordinates"), Is.EqualTo("3"));
+            Assert.That(section.GetPropertyValue("xCoordinates"), Is.EqualTo("1.2300000e+000 2.3400000e+000 3.4500000e+000"));
+            Assert.That(section.GetPropertyValue("yCoordinates"), Is.EqualTo("4.5600000e+000 5.6700000e+000 6.7800000e+000"));
+            Assert.That(section.GetPropertyValue("discharge"), Is.EqualTo("realtime"));
         }
 
         private static Polygon GetPolygonGeometry(double[] xCoordinates, double[] yCoordinates)

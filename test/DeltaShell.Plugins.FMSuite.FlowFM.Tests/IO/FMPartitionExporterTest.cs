@@ -417,21 +417,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     string ini = File.ReadAllText(path);
                     IniData iniData = parser.Parse(ini);
                     
-                    IniSection externalForcing = iniData.GetSection("external forcing");
-                    IniSection geometry = iniData.GetSection("geometry");
-                    IniSection output = iniData.GetSection("output");
+                    IniSection externalForcing = iniData.FindSection("external forcing");
+                    IniSection geometry = iniData.FindSection("geometry");
+                    IniSection output = iniData.FindSection("output");
 
-                    string strExtForceFile = externalForcing.GetPropertyValueOrDefault("ExtForceFile");
-                    string strExtForceFileNew = externalForcing.GetPropertyValueOrDefault("ExtForceFileNew");
-                    string strLandBoundaryFile = geometry.GetPropertyValueOrDefault("LandBoundaryFile");
-                    string strObsFile = output.GetPropertyValueOrDefault("ObsFile");
+                    string strExtForceFile = externalForcing.GetPropertyValue("ExtForceFile");
+                    string strExtForceFileNew = externalForcing.GetPropertyValue("ExtForceFileNew");
+                    string strLandBoundaryFile = geometry.GetPropertyValue("LandBoundaryFile");
+                    string strObsFile = output.GetPropertyValue("ObsFile");
 
                     Assert.IsNotEmpty(strExtForceFile, $"ExtForceFile not set in {file}");
                     Assert.IsNotEmpty(strExtForceFileNew, $"ExtForceFileNew not set in {file}");
                     Assert.IsNotEmpty(strLandBoundaryFile, $"LandBoundaryFile not set in {file}");
                     Assert.IsNotEmpty(strObsFile, $"ObsFile not set in {file}");
 
-                    string partitionFile = geometry.GetPropertyValueOrDefault("PartitionFile");
+                    string partitionFile = geometry.GetPropertyValue("PartitionFile");
                     Assert.Null(partitionFile, $"PartitionFile present in {file} - this is not valid.");
                 }
             }

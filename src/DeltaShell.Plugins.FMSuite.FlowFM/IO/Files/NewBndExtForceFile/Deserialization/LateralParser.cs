@@ -192,6 +192,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
         private static bool HasValue(string value) => !string.IsNullOrWhiteSpace(value);
 
         private static string Retrieve(IniSection category, string property) =>
-            category.GetPropertyValueOrDefault(property);
+            category.GetPropertyValue(property);
     }
 }

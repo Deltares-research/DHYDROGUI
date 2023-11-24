@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
         private static void SetSpreadingTypeOfSpatiallyVaryingBoundaryWithoutActiveSupportPoints(
             IniSection boundarySection, IWaveBoundaryConditionDefinition conditionDefinition)
         {
-            if (boundarySection.GetPropertyValueOrDefault(KnownWaveProperties.DirectionalSpreadingType) != string.Empty)
+            if (boundarySection.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingType) != string.Empty)
             {
                 return;
             }

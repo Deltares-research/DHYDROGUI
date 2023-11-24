@@ -116,8 +116,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 IniData iniData = new MduIniReader().ReadIniFile(fileStream, filePath);
 
-                IniSection geometrySection = iniData.GetSection("geometry");
-                IniProperty netFileProperty = geometrySection?.GetProperty(KnownProperties.NetFile);
+                IniSection geometrySection = iniData.FindSection("geometry");
+                IniProperty netFileProperty = geometrySection?.FindProperty(KnownProperties.NetFile);
 
                 string netFileRelativePath = netFileProperty?.Value;
                 return netFileRelativePath != null ? Path.Combine(mduFileDir, netFileRelativePath) : null;

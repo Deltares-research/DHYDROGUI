@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 WritePropertyValue(BndExtForceFileConstants.QuantityKey, bndExtForceFileItem);
                 WritePropertyValue(BndExtForceFileConstants.LocationFileKey, bndExtForceFileItem);
 
-                string openBoundaryToleranceProperty = bndExtForceFileItem.GetPropertyValueOrDefault(BndExtForceFileConstants.OpenBoundaryToleranceKey);
+                string openBoundaryToleranceProperty = bndExtForceFileItem.GetPropertyValue(BndExtForceFileConstants.OpenBoundaryToleranceKey);
                 
                 if (openBoundaryToleranceProperty != null)
                 {
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void WritePropertyValueIfNotNull(string propertyKey, IniSection bndExtForceFileItem)
         {
-            string propertyValue = bndExtForceFileItem.GetPropertyValueOrDefault(propertyKey);
+            string propertyValue = bndExtForceFileItem.GetPropertyValue(propertyKey);
             if (propertyValue != null)
             {
                 WritePropertyValue(propertyKey, propertyValue);
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void WritePropertyValue(string propertyKey, IniSection bndExtForceFileItem)
         {
-            WritePropertyValue(propertyKey, bndExtForceFileItem.GetPropertyValueOrDefault(propertyKey));
+            WritePropertyValue(propertyKey, bndExtForceFileItem.GetPropertyValue(propertyKey));
         }
 
         private void WritePropertyValue(string propertyKey, string propertyValue)

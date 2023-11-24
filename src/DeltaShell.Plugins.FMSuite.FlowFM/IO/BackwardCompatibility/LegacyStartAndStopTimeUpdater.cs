@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
 
         private static IniProperty EnsurePropertyIsPresentInSection(IniSection section, string propertyKey)
         {
-            IniProperty requiredProperty = section.GetProperty(propertyKey);
+            IniProperty requiredProperty = section.FindProperty(propertyKey);
             if (requiredProperty is null)
             {
                 throw new InvalidOperationException(string.Format(Resources.PropertyUpdater_Required_keyword_0_is_missing, propertyKey));
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
 
         private static void UpdatePropertyValue(string newPropertyKey, IniSection section, ILogHandler logHandler)
         {
-            IniProperty legacyProperty = section.GetProperty(newPropertyKey);
+            IniProperty legacyProperty = section.FindProperty(newPropertyKey);
             
             string tUnit = GetTUnitFromSection(section);
             string refDateAsString = GetRefDateFromSection(section);
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
 
         private static string GetPropertyValue(string propertyKey, IniSection section)
         {
-            return section.GetPropertyValueOrDefault(propertyKey);
+            return section.GetPropertyValue(propertyKey);
         }
 
         private static string GetNewValue(IniProperty legacyProperty, string refDateAsString, string tUnit)

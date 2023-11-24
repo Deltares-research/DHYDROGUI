@@ -50,13 +50,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
             {
                 block.OrientationType = boundarySection.GetEnumValue<BoundaryOrientationType>(KnownWaveProperties.Orientation);
 
-                string distanceDirType = boundarySection.GetPropertyValueOrDefault(KnownWaveProperties.DistanceDir);
+                string distanceDirType = boundarySection.GetPropertyValue(KnownWaveProperties.DistanceDir);
                 block.DistanceDirType = distanceDirType != null
                                             ? EnumUtils.GetEnumValueByDescription<DistanceDirType>(distanceDirType)
                                             : DistanceDirType.CounterClockwise;
             }
 
-            block.Name = boundarySection.GetPropertyValueOrDefault(KnownWaveProperties.Name);
+            block.Name = boundarySection.GetPropertyValue(KnownWaveProperties.Name);
             block.XStartCoordinate = boundarySection.GetDoubleValue(KnownWaveProperties.StartCoordinateX).Round();
             block.YStartCoordinate = boundarySection.GetDoubleValue(KnownWaveProperties.StartCoordinateY).Round();
             block.XEndCoordinate = boundarySection.GetDoubleValue(KnownWaveProperties.EndCoordinateX).Round();
@@ -103,9 +103,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
 
         private static double Round(this double value) => SpatialDouble.Round(value);
 
-        private static T GetEnumValue<T>(this IniSection section, string propertyKey) => EnumUtils.GetEnumValueByDescription<T>(section.GetPropertyValueOrDefault(propertyKey));
+        private static T GetEnumValue<T>(this IniSection section, string propertyKey) => EnumUtils.GetEnumValueByDescription<T>(section.GetPropertyValue(propertyKey));
 
-        private static double GetDoubleValue(this IniSection section, string propertyKey) => section.GetPropertyValueOrDefault(propertyKey, double.NaN.ToString(CultureInfo.InvariantCulture)).ToDouble();
+        private static double GetDoubleValue(this IniSection section, string propertyKey) => section.GetPropertyValue(propertyKey, double.NaN.ToString(CultureInfo.InvariantCulture)).ToDouble();
 
         private static double[] GetDoubleValues(this IniSection section, string propertyKey) => section.GetAllProperties(propertyKey).Select(p => p.Value).Select(ToDouble).ToArray();
 

@@ -35,14 +35,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     IniData iniData = new IniReader().ReadIniFile(stream, mduFilepath);
                     Assert.That(iniData, Is.Not.Null);
 
-                    IniSection restartSection = iniData.GetSection("restart");
+                    IniSection restartSection = iniData.FindSection("restart");
                     Assert.That(restartSection, Is.Not.Null);
 
-                    IniProperty restartFile = restartSection.GetProperty(KnownProperties.RestartFile);
+                    IniProperty restartFile = restartSection.FindProperty(KnownProperties.RestartFile);
                     Assert.That(restartFile, Is.Not.Null);
                     Assert.That(restartFile.Value, Is.EqualTo(restartFilename));
 
-                    IniProperty restartStartDate = restartSection.GetProperty(KnownProperties.RestartDateTime);
+                    IniProperty restartStartDate = restartSection.FindProperty(KnownProperties.RestartDateTime);
                     Assert.That(restartStartDate, Is.Not.Null);
                     const string expectedRestartStartDate = "19900718123456"; // 18-07-1990 12:34:56
                     Assert.That(restartStartDate.Value, Is.EqualTo(expectedRestartStartDate));
@@ -72,14 +72,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     IniData iniData = new IniReader().ReadIniFile(stream, mduFilepath);
                     Assert.That(iniData, Is.Not.Null);
 
-                    IniSection restartSection = iniData.GetSection("restart");
+                    IniSection restartSection = iniData.FindSection("restart");
                     Assert.That(restartSection, Is.Not.Null);
 
-                    IniProperty restartFile = restartSection.GetProperty(KnownProperties.RestartFile);
+                    IniProperty restartFile = restartSection.FindProperty(KnownProperties.RestartFile);
                     Assert.That(restartFile, Is.Not.Null);
                     Assert.That(restartFile.Value, Is.EqualTo(restartFilename));
 
-                    IniProperty restartStartDate = restartSection.GetProperty(KnownProperties.RestartDateTime);
+                    IniProperty restartStartDate = restartSection.FindProperty(KnownProperties.RestartDateTime);
                     Assert.That(restartStartDate, Is.Not.Null);
                     var expectedRestartStartDate = string.Empty;
                     Assert.That(restartStartDate.Value, Is.EqualTo(expectedRestartStartDate));
@@ -105,14 +105,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     IniData iniData = new IniReader().ReadIniFile(stream, mduFilepath);
                     Assert.That(iniData, Is.Not.Null);
 
-                    IniSection restartSection = iniData.GetSection("restart");
+                    IniSection restartSection = iniData.FindSection("restart");
                     Assert.That(restartSection, Is.Not.Null);
 
-                    IniProperty restartFile = restartSection.GetProperty(KnownProperties.RestartFile);
+                    IniProperty restartFile = restartSection.FindProperty(KnownProperties.RestartFile);
                     Assert.That(restartFile, Is.Not.Null);
                     Assert.That(restartFile.Value, Is.Empty);
 
-                    IniProperty restartStartDate = restartSection.GetProperty(KnownProperties.RestartDateTime);
+                    IniProperty restartStartDate = restartSection.FindProperty(KnownProperties.RestartDateTime);
                     Assert.That(restartStartDate, Is.Not.Null);
                     var expectedRestartStartDate = string.Empty;
                     Assert.That(restartStartDate.Value, Is.EqualTo(expectedRestartStartDate));

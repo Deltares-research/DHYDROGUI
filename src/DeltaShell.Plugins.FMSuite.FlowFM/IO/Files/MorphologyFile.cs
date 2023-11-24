@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             
             iniData.AddMultipleSections(CreateSectionsFromMorphologyProperties(modelDefinition));
 
-            IniSection headerSection = iniData.GetSection(Header) ?? new IniSection(Header);
+            IniSection headerSection = iniData.FindSection(Header) ?? new IniSection(Header);
 
             List<IBoundaryCondition> morBoundaries = modelDefinition
                                                      .BoundaryConditions
@@ -358,7 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                         string mduFilePath,
                                                         WaterFlowFMModelDefinition modelDefinition)
         {
-            string propertyValue = section.GetPropertyValueOrDefault(BoundaryBedCondition);
+            string propertyValue = section.GetPropertyValue(BoundaryBedCondition);
 
             var iBedCond = (int)MorphologyBoundaryConditionQuantityType.NoBedLevelConstraint;
             if (!int.TryParse(propertyValue, out iBedCond))
@@ -409,7 +409,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static IEnumerable<Feature2D> ReadPolyLines(IniSection section, string mduFilePath,
                                                             WaterFlowFMModelDefinition modelDefinition)
         {
-            IniProperty boundaryProperty = section.GetProperty(BoundaryName);
+            IniProperty boundaryProperty = section.FindProperty(BoundaryName);
             if (boundaryProperty == null)
             {
                 return Enumerable.Empty<Feature2D>();

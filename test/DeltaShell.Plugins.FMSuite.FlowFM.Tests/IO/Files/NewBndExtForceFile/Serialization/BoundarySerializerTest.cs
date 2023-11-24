@@ -36,10 +36,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             // Assert
             Assert.That(section.Name, Is.EqualTo("boundary"));
             Assert.That(section.Properties, Has.Count.EqualTo(5));
-            Assert.That(section.GetPropertyValueOrDefault("quantity"), Is.EqualTo("some_quantity"));
-            Assert.That(section.GetPropertyValueOrDefault("locationFile"), Is.EqualTo("some_location_file"));
+            Assert.That(section.GetPropertyValue("quantity"), Is.EqualTo("some_quantity"));
+            Assert.That(section.GetPropertyValue("locationFile"), Is.EqualTo("some_location_file"));
             Assert.That(section.GetAllProperties("forcingFile").Select(p => p.Value), Is.EqualTo(forcingFiles));
-            Assert.That(section.GetPropertyValueOrDefault("returnTime"), Is.EqualTo("1.2300000e+000"));
+            Assert.That(section.GetPropertyValue("returnTime"), Is.EqualTo("1.2300000e+000"));
         }
 
         [Test]
@@ -56,8 +56,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Se
             // Assert
             Assert.That(section.Name, Is.EqualTo("boundary"));
             Assert.That(section.Properties, Has.Count.EqualTo(4));
-            Assert.That(section.GetPropertyValueOrDefault("quantity"), Is.EqualTo("some_quantity"));
-            Assert.That(section.GetPropertyValueOrDefault("locationFile"), Is.EqualTo("some_location_file"));
+            Assert.That(section.GetPropertyValue("quantity"), Is.EqualTo("some_quantity"));
+            Assert.That(section.GetPropertyValue("locationFile"), Is.EqualTo("some_location_file"));
             Assert.That(section.GetAllProperties("forcingFile").Select(p => p.Value), Is.EqualTo(forcingFiles));
         }
     }

@@ -123,12 +123,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             Assert.That(iniData, Is.Not.Null,
                         "Expected the returned INI data not to be null.");
 
-            IniSection polygonSection = iniData.GetSection(RgfConfig.PolygonsHeader);
+            IniSection polygonSection = iniData.FindSection(RgfConfig.PolygonsHeader);
             AssertValidSection(polygonSection,
                                 RgfConfig.PolygonsHeader,
                                 new Tuple<string, string>(RgfConfig.PolygonFileName, expectedPolFileName));
 
-            IniSection batchSection = iniData.GetSection(RgfConfig.BatchHeader);
+            IniSection batchSection = iniData.FindSection(RgfConfig.BatchHeader);
             AssertValidSection(batchSection,
                                RgfConfig.BatchHeader,
                                new Tuple<string, string>(RgfConfig.BatchFileName, expectedGridFileName),
@@ -282,7 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             Assert.That(iniData, Is.Not.Null,
                         "Expected the returned INI data not to be null.");
 
-            IniSection geometrySection = iniData.GetSection(RgfConfig.GeometryHeader);
+            IniSection geometrySection = iniData.FindSection(RgfConfig.GeometryHeader);
             AssertValidSection(geometrySection, RgfConfig.GeometryHeader,
                                 new Tuple<string, string>(RgfConfig.LandBoundaryFile, additionalPath),
                                 new Tuple<string, string>(RgfConfig.LandBoundaryFormat, expectedFormat));
@@ -308,7 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             Assert.That(iniData, Is.Not.Null,
                         "Expected the returned INI data not to be null.");
 
-            IniSection gridSection = iniData.GetSection(RgfConfig.GridHeader);
+            IniSection gridSection = iniData.FindSection(RgfConfig.GridHeader);
             AssertValidSection(gridSection, RgfConfig.GridHeader,
                                 new Tuple<string, string>(RgfConfig.GridFileName, gridFilePath),
                                 new Tuple<string, string>(RgfConfig.GridType, gridFileFormat));
@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 
             foreach (Tuple<string, string> prop in expectedProperties)
             {
-                IniProperty propInSection = section.GetProperty(prop.Item1);
+                IniProperty propInSection = section.FindProperty(prop.Item1);
                 Assert.That(propInSection, Is.Not.Null,
                             $"Expected a {prop.Item1} property to be in {headerName} header.");
 

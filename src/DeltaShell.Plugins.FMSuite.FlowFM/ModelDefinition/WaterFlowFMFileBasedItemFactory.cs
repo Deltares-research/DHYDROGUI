@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                         List<string> locationFiles =
                             bndExtForceFileItems.Select(
-                                                    item => item.GetPropertyValueOrDefault(BndExtForceFileConstants.LocationFileKey))
+                                                    item => item.GetPropertyValue(BndExtForceFileConstants.LocationFileKey))
                                                 .ToList();
 
                         foreach (string locationFile in locationFiles.Distinct())
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         }
 
                         IEnumerable<string> forcingFiles =
-                            bndExtForceFileItems.Select(item => item.GetPropertyValueOrDefault(BndExtForceFileConstants.ForcingFileKey));
+                            bndExtForceFileItems.Select(item => item.GetPropertyValue(BndExtForceFileConstants.ForcingFileKey));
 
                         foreach (string forcingFile in forcingFiles.Distinct())
                         {

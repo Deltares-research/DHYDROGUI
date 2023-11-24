@@ -397,7 +397,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void SedimentSectionLoader(IniSection section, string path, WaterFlowFMModel model)
         {
-            string name = section.GetPropertyValueOrDefault(Name.Key);
+            string name = section.GetPropertyValue(Name.Key);
 
             ValidationIssue validationIssue = WaterFlowFMSedimentMorphologyValidator.ValidateSedimentName(name);
             if (validationIssue != null && validationIssue.Severity == ValidationSeverity.Error)
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             var fraction = new SedimentFraction {Name = name};
 
-            string sedimentTypeKey = section.GetPropertyValueOrDefault(SedimentType.Key);
+            string sedimentTypeKey = section.GetPropertyValue(SedimentType.Key);
             ISedimentType sedimentType =
                 fraction.AvailableSedimentTypes.FirstOrDefault(st => st.Key == sedimentTypeKey);
             if (sedimentType == null)
@@ -425,7 +425,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             fraction.CurrentSedimentType = sedimentType;
             int traFrm;
-            if (int.TryParse(section.GetPropertyValueOrDefault("TraFrm"), out traFrm))
+            if (int.TryParse(section.GetPropertyValue("TraFrm"), out traFrm))
             {
                 ISedimentFormulaType sedimentFormula =
                     fraction.SupportedFormulaTypes.FirstOrDefault(ft => ft.TraFrm == traFrm);

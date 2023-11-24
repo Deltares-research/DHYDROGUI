@@ -37,13 +37,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
 
         private static string ParseQuantity(IniSection section)
         {
-            string quantity = section.GetPropertyValueOrDefault(BndExtForceFileConstants.QuantityKey);
+            string quantity = section.GetPropertyValue(BndExtForceFileConstants.QuantityKey);
             return HasValue(quantity) ? quantity : null;
         }
 
         private static string ParseLocationFile(IniSection section)
         {
-            string locationFile = section.GetPropertyValueOrDefault(BndExtForceFileConstants.LocationFileKey);
+            string locationFile = section.GetPropertyValue(BndExtForceFileConstants.LocationFileKey);
             return HasValue(locationFile) ? locationFile : null;
         }
 
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
 
         private static double? ParseReturnTime(IniSection section)
         {
-            string returnTimeString = section.GetPropertyValueOrDefault(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
+            string returnTimeString = section.GetPropertyValue(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
             double? returnTime = ParseReturnTime(returnTimeString);
             return returnTime;
         }

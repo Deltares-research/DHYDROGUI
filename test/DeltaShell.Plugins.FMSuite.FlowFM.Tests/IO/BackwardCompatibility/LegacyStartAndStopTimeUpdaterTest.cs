@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
             updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
-            IniProperty updatedProperty = section.GetProperty(newPropertyKey);
+            IniProperty updatedProperty = section.FindProperty(newPropertyKey);
             Assert.NotNull(updatedProperty);
 
             const string expectedLogMessage = "Backwards Compatibility: '{0}' has been updated to '{1}'";
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
             IniSection section = CreateSectionWithRefDateAndTUnit();
             section.AddProperty(property);
             
-            IniProperty tUnitProperty = section.GetProperty(KnownProperties.Tunit);
+            IniProperty tUnitProperty = section.FindProperty(KnownProperties.Tunit);
             tUnitProperty.Value = null;
 
             var updater = new LegacyStartAndStopTimeUpdater();
@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
             updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
-            IniProperty updatedProperty = section.GetProperty(newPropertyKey);
+            IniProperty updatedProperty = section.FindProperty(newPropertyKey);
             Assert.NotNull(updatedProperty);
 
             const string expectedTUnitValue = "S"; // Updater should set the value to S if it is missing!
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
             IniSection section = CreateSectionWithRefDateAndTUnit();
             section.AddProperty(property);
 
-            IniProperty tUnitProperty = section.GetProperty(KnownProperties.RefDate);
+            IniProperty tUnitProperty = section.FindProperty(KnownProperties.RefDate);
             tUnitProperty.Value = null;
 
             var updater = new LegacyStartAndStopTimeUpdater();
@@ -220,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.BackwardCompatibility
             updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
-            IniProperty updatedProperty = section.GetProperty(newPropertyKey);
+            IniProperty updatedProperty = section.FindProperty(newPropertyKey);
             Assert.NotNull(updatedProperty);
 
             const string expectedValue = "19900718000010"; // refdate = 1990-07-18, TStart/TStop = 10 and TUnit = S

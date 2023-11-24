@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             updater.UpdateProperty(oldPropertyKey, newPropertyKey, section, logHandler);
 
             // Assert
-            IniProperty updatedProperty = section.GetProperty(newPropertyKey);
+            IniProperty updatedProperty = section.FindProperty(newPropertyKey);
             Assert.NotNull(updatedProperty);
 
             const string expectedLogMessage = "Backwards Compatibility: '{0}' has been updated to '{1}'";
