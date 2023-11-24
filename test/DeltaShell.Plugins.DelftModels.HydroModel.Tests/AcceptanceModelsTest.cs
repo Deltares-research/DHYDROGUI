@@ -77,6 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Action mainWindowShown = delegate
                 {
                     IApplication app = gui.Application;
+                    app.CreateNewProject();
 
                     exportConfig.WorkingDirectory = app.WorkDirectory;
                     exportConfig.OutputName = TestContext.CurrentContext.Test.Name;
@@ -156,6 +157,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Action mainWindowShown = delegate
                     {
                         IApplication app = gui.Application;
+                        app.CreateNewProject();
 
                         exportConfig.WorkingDirectory = app.WorkDirectory;
                         exportConfig.OutputName = TestContext.CurrentContext.Test.Name;
