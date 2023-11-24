@@ -48,7 +48,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
         private void AssertProperty(IniSection iniSection, string propertyName, string expValue)
         {
-            IniProperty property = iniSection.GetProperty(propertyName);
+            IniProperty property = iniSection.FindProperty(propertyName);
             Assert.That(property, Is.Not.Null);
 
             Assert.That(property.Value, Is.EqualTo(expValue));

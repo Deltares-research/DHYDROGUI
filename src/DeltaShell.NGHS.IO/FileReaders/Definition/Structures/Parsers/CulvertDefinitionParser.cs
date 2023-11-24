@@ -103,7 +103,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                     culvert.GateOpeningLossCoefficientFunction.CreateFunctionFromArrays(relOpening, lossCoeff);
             }
 
-            culvert.CulvertType = string.Equals(IniSection.GetPropertyValueOrDefault(StructureRegion.SubType.Key), invertedSiphonTypeName, StringComparison.InvariantCultureIgnoreCase)
+            culvert.CulvertType = string.Equals(IniSection.GetPropertyValue(StructureRegion.SubType.Key), invertedSiphonTypeName, StringComparison.InvariantCultureIgnoreCase)
                                       ? CulvertType.InvertedSiphon
                                       : CulvertType.Culvert;
 

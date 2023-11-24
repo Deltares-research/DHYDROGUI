@@ -67,7 +67,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             iniSection.AddProperty("branchId", "some_branch");
             iniSection.AddProperty("chainage", 50.0);
             iniSection.LineNumber = 6;
-            iniSection.RemoveProperty(iniSection.GetProperty("useTable"));
+            iniSection.RemoveProperty(iniSection.FindProperty("useTable"));
 
             IHydroNetwork network = GetNetworkWithChannel(100, "some_branch");
 

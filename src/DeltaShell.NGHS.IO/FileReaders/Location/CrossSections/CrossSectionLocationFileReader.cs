@@ -78,7 +78,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
             value = null;
             string key = setting.Key;
 
-            IniProperty property = iniSection.GetProperty(key);
+            IniProperty property = iniSection.FindProperty(key);
             if (property == null)
             {
                 log.ErrorFormat(Resources.IniProperty_NotFound, key, iniSection.Name, iniSection.LineNumber);
@@ -107,7 +107,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections
 
             if (!double.TryParse(strValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleValue))
             {
-                int lineNumber = iniSection.GetProperty(setting.Key).LineNumber;
+                int lineNumber = iniSection.FindProperty(setting.Key).LineNumber;
                 log.ErrorFormat(Resources.IniProperty_InvalidDouble, setting.Key, iniSection.Name, lineNumber, strValue);
                 return false;
             }

@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         
         public static T ReadProperty<T>(this IniSection iniSection, string key, bool isOptional = false, T defaultValue = default(T), bool logError = true)
         {
-            var iniProperty = iniSection.GetProperty(key);
+            var iniProperty = iniSection.FindProperty(key);
 
             var typeConverter = TypeDescriptor.GetConverter(typeof(T));
             if (iniProperty != null && CanConvertFromString(typeConverter, iniProperty.Value))
@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.Helpers
 
         public static IList<T> ReadPropertiesToListOfType<T>(this IniSection iniSection, string key, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>), bool useStandardSeparators = true, bool logError = true)
         {
-            var iniProperty = iniSection.GetProperty(key);
+            var iniProperty = iniSection.FindProperty(key);
 
             if (iniProperty != null)
             { 

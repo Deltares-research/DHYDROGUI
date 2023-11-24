@@ -116,7 +116,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             
             foreach (IniSection iniSection in iniSections)
             {
-                string name = iniSection.GetPropertyValueOrDefault(Name.Key);
+                string name = iniSection.GetPropertyValue(Name.Key);
                 IList<string> branchNames = iniSection.ReadPropertiesToListOfType(Branches.Key, true, ';', default(IList<string>), false);
                 IList<double> chainages = iniSection.ReadPropertiesToListOfType<double>(Chainages.Key, true);
 

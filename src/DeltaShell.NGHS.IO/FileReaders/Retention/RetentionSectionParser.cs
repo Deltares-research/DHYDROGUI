@@ -159,7 +159,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
                 return false;
             }
 
-            IniProperty useTableProperty = iniSection.GetProperty(RetentionRegion.UseTable.Key);
+            IniProperty useTableProperty = iniSection.FindProperty(RetentionRegion.UseTable.Key);
             if (useTableProperty != null)
             {
                 return useTableProperty.ReadBooleanValue();
