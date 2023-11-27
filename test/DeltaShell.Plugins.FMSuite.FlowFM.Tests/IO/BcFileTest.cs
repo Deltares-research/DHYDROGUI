@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
@@ -9,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 
@@ -146,6 +148,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        public void Read_BcFileWithCapitalPropertyKeys_PropertiesAreProcessedCaseInsensitive()
+        {
+            // Setup
+            var fileContent = new[]
+            {
+                "[General]",
+                "fileVersion            = 1.01",
+                "fileType               = boundConds",
+                "",
+                "[FORCING]",
+                "NAME                   = PLI1_0001",
+                "FUNCTION               = TIMESERIES",
+                "TIME-INTERPOLATION     = LINEAR",
+                "VERTICAL POSITION TYPE = BED-SURFACE",
+                "VERTICAL INTERPOLATION = LINEAR",
+                "QUANTITY               = TIME",
+                "UNIT                   = MINUTES SINCE 2013-01-01",
+                "QUANTITY               = WATERLEVELBND",
+                "UNIT                   = M",
+                "QUANTITY               = SALINITYBND",
+                "UNIT                   = PPT",
+                "VERTICAL POSITION      = 1",
+                "QUANTITY               = SALINITYBND",
+                "UNIT                   = PPT",
+                "VERTICAL POSITION      = 2",
+                "0     0.5   22    0",
+                "1440  0.65  30    0"
+            };
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string filePath = temp.CreateFile("FlowFM.bc", string.Join("\n", fileContent));
+
+                var bcFile = new BcFile();
+
+                // Call
+                IEnumerable<BcBlockData> bcData = bcFile.Read(filePath);
+
+                // Assert
+                BcBlockData bcSection = bcData.Single();
+
+                Assert.That(bcSection.SupportPoint, Is.EqualTo("PLI1_0001"));
+                Assert.That(bcSection.FunctionType, Is.EqualTo("TIMESERIES"));
+                Assert.That(bcSection.TimeInterpolationType, Is.EqualTo("LINEAR"));
+                Assert.That(bcSection.VerticalPositionType, Is.EqualTo("BED-SURFACE"));
+                Assert.That(bcSection.VerticalInterpolationType, Is.EqualTo("LINEAR"));
+                Assert.That(bcSection.Quantities, Has.Count.EqualTo(4));
+
+                AssertQuantityData(bcSection.Quantities[0], "TIME", "MINUTES SINCE 2013-01-01", null, new[] { "0", "1440" });
+                AssertQuantityData(bcSection.Quantities[1], "WATERLEVELBND", "M", null, new[] { "0.5", "0.65" });
+                AssertQuantityData(bcSection.Quantities[2], "SALINITYBND", "PPT", "1", new[] { "22", "30" });
+                AssertQuantityData(bcSection.Quantities[3], "SALINITYBND", "PPT", "2", new[] { "0", "0" });
+            }
+        }
+
+        [Test]
+        public void Read_UnsupportedSectionEncountered_LogsWarning()
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            {
+                const string fileContent = "[some_section] \n property1 = value1 \n property2 = value2";
+                string filePath = temp.CreateFile("FlowFM.bc", fileContent);
+
+                var bcFile = new BcFile();
+
+                // Call
+                void Call() => _ = bcFile.Read(filePath).ToArray();
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(warnings, Does.Contain($"Section [some_section] not supported on line 1. File: {filePath}"));
+            }
+        }
+
+        private void AssertQuantityData(BcQuantityData bcQuantityData, string quantity, string unit, string verticalPosition, string[] values)
+        {
+            Assert.That(bcQuantityData.QuantityName, Is.EqualTo(quantity));
+            Assert.That(bcQuantityData.Unit, Is.EqualTo(unit));
+            Assert.That(bcQuantityData.VerticalPosition, Is.EqualTo(verticalPosition));
+            Assert.That(bcQuantityData.Values, Is.EqualTo(values));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadWaterLevelAndSalinityLayersConditions()
         {
             string filePath = TestHelper.GetTestFilePath(@"BcFiles\WaterLevelAndSalinityLayers.bc");
@@ -278,12 +365,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             
             using (var temp = new TemporaryDirectory())
             {
-                string filePath = System.IO.Path.Combine(temp.Path, "lateral_discharge.bc");
+                string filePath = Path.Combine(temp.Path, "lateral_discharge.bc");
                 
                 // Call
                 bcFile.WriteLateralData(laterals, filePath, bcFileDataBuilder, referenceDate);
 
-                fileLines = System.IO.File.ReadAllLines(filePath).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
+                fileLines = File.ReadAllLines(filePath).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
             }
             
             // Assert

@@ -35,9 +35,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
         public void InsertBoundaryData_WithTracerTypedBlockData_ThenCreatedFlowBoundaryConditionHasTracerQuantityTypeAndHasExpectedTracerName()
         {
             // Setup
-            const string supportPointName = "boundary_0001";
+            const string boundaryName = "boundary";
+            const string supportPointName = boundaryName + "_0001";
             const string tracerName = "MyTracer";
-            BoundaryConditionSet[] boundaryConditionSets = CreateBoundaryConditionSet(supportPointName);
+            BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSet(boundaryName);
 
             var blockData = new BcBlockData
             {
@@ -47,13 +48,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             };
 
             // Call
-            bool insertWasSuccessful = builder.InsertBoundaryData(boundaryConditionSets, blockData);
+            bool insertWasSuccessful = builder.InsertBoundaryData(new[] { boundaryConditionSet }, blockData);
 
             // Assert
             Assert.That(insertWasSuccessful, Is.True);
             Assert.That(blockData.Quantities.Single().TracerName, Is.EqualTo(tracerName));
 
-            var flowBoundaryCondition = (FlowBoundaryCondition)boundaryConditionSets.Single().BoundaryConditions.Single();
+            var flowBoundaryCondition = (FlowBoundaryCondition)boundaryConditionSet.BoundaryConditions.Single();
             Assert.That(flowBoundaryCondition.FlowQuantity, Is.EqualTo(FlowBoundaryQuantityType.Tracer));
             Assert.That(flowBoundaryCondition.TracerName, Is.EqualTo(tracerName));
         }
@@ -1467,8 +1468,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
         public void InsertBoundaryData_LongValue_DoesNotLogAnException(string startTime, string unit, long nUnits, DateTime expectedEndTime)
         {
             // Setup
-            const string supportPointName = "boundary_0001";
-            BoundaryConditionSet[] boundaryConditionSets = CreateBoundaryConditionSet(supportPointName);
+            const string boundaryName = "boundary";
+            const string supportPointName = boundaryName + "_0001";
+            BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSet(boundaryName);
 
             var blockData =
                 new BcBlockData
@@ -1494,7 +1496,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
             // Call
             var isSuccessful = false;
-            void Call() => isSuccessful = builder.InsertBoundaryData(boundaryConditionSets, blockData);
+            void Call() => isSuccessful = builder.InsertBoundaryData(new[] { boundaryConditionSet }, blockData);
 
             string[] messages = TestHelper.GetAllRenderedMessages(Call).ToArray();
 
@@ -1506,8 +1508,87 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             // interested if that is read correctly. In order to do this we need 
             // to access the following:
             // yes ... really ...
-            object interpretedEndTime = (boundaryConditionSets[0].BoundaryConditions[0].Data as IEventedList<IFunction>)?[0].Arguments[0].Values[1];
+            object interpretedEndTime = (boundaryConditionSet.BoundaryConditions[0].Data as IEventedList<IFunction>)?[0].Arguments[0].Values[1];
             Assert.That(interpretedEndTime, Is.EqualTo(expectedEndTime));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void InsertBoundaryData_WithCapitalPropertyValues_DataIsProcessedCaseInsensitive()
+        {
+            // Setup
+            var fileContent = new[]
+            {
+                "[General]",
+                "fileVersion            = 1.01",
+                "fileType               = boundConds",
+                "",
+                "[FORCING]",
+                "NAME                   = PLI1_0001",
+                "FUNCTION               = TIMESERIES",
+                "TIME-INTERPOLATION     = LINEAR",
+                "VERTICAL POSITION TYPE = BED-SURFACE",
+                "VERTICAL INTERPOLATION = LINEAR",
+                "QUANTITY               = TIME",
+                "UNIT                   = MINUTES SINCE 2013-01-01",
+                "QUANTITY               = WATERLEVELBND",
+                "UNIT                   = M",
+                "QUANTITY               = SALINITYBND",
+                "UNIT                   = PPT",
+                "VERTICAL POSITION      = 1",
+                "QUANTITY               = SALINITYBND",
+                "UNIT                   = PPT",
+                "VERTICAL POSITION      = 2",
+                "0     0.5   22    0",
+                "1440  0.65  30    0"
+            };
+            
+            BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSet("PLI1");
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string filePath = temp.CreateFile("FlowFM.bc", string.Join("\n", fileContent));
+
+                var bcFile = new BcFile();
+                BcBlockData dataBlocks = bcFile.Read(filePath).Single();
+
+                // Call
+                builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks);
+            }
+
+            // Assert
+            IEventedList<IBoundaryCondition> boundaryConditions = boundaryConditionSet.BoundaryConditions;
+            Assert.That(boundaryConditions, Has.Count.EqualTo(2));
+
+            // Assert water level boundary data 
+            var waterLevelBoundaryCondition = boundaryConditions[0] as FlowBoundaryCondition;
+            Assert.That(waterLevelBoundaryCondition, Is.Not.Null);
+
+            Assert.That(waterLevelBoundaryCondition.DataPointIndices.Single(), Is.EqualTo(0));
+            Assert.That(waterLevelBoundaryCondition.DataType, Is.EqualTo(BoundaryConditionDataType.TimeSeries));
+            Assert.That(waterLevelBoundaryCondition.FlowQuantity, Is.EqualTo(FlowBoundaryQuantityType.WaterLevel));
+
+            IFunction waterLevelFunction = waterLevelBoundaryCondition.GetDataAtPoint(0);
+            var waterLevelTimes = new[] { new DateTime(2013, 1, 1), new DateTime(2013, 1, 2) };
+            Assert.That(waterLevelFunction.Arguments.Single().Values, Is.EqualTo(waterLevelTimes));
+            var waterLevels = new[] { 0.5, 0.65 };
+            Assert.That(waterLevelFunction.Components.Single().Values, Is.EqualTo(waterLevels));
+
+            // Assert salinity boundary data for first and second layer
+            var salinityBoundaryCondition = boundaryConditions[1] as FlowBoundaryCondition;
+            Assert.That(salinityBoundaryCondition, Is.Not.Null);
+
+            Assert.That(salinityBoundaryCondition.DataPointIndices.Single(), Is.EqualTo(0));
+            Assert.That(salinityBoundaryCondition.DataType, Is.EqualTo(BoundaryConditionDataType.TimeSeries));
+            Assert.That(salinityBoundaryCondition.FlowQuantity, Is.EqualTo(FlowBoundaryQuantityType.Salinity));
+
+            IFunction salinityFunction = salinityBoundaryCondition.GetDataAtPoint(0);
+            var salinityTimes = new[] { new DateTime(2013, 1, 1), new DateTime(2013, 1, 2) };
+            Assert.That(salinityFunction.Arguments.Single().Values, Is.EqualTo(salinityTimes));
+            var salinitiesLayer1 = new[] { 22.0, 30.0 };
+            Assert.That(salinityFunction.Components[0].Values, Is.EqualTo(salinitiesLayer1));
+            var salinitiesLayer2 = new[] { 0.0, 0.0 };
+            Assert.That(salinityFunction.Components[1].Values, Is.EqualTo(salinitiesLayer2));
         }
 
         private static string NoBoundaryWithSedimentFractionMessage(string sedimentFractionName)
@@ -1515,7 +1596,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             return $"There was no boundary condition with sediment fraction '{sedimentFractionName}'.";
         }
 
-        private static BoundaryConditionSet[] CreateBoundaryConditionSet(string supportPointName)
+        private static BoundaryConditionSet CreateBoundaryConditionSet(string boundaryName)
         {
             var feature = new Feature2D
             {
@@ -1524,13 +1605,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                     new Coordinate(0, 0),
                     new Coordinate(1, 1)
                 }),
-                Attributes = new DictionaryFeatureAttributeCollection { { "Locations", new List<string> { supportPointName } } }
+                Name = boundaryName
             };
 
-            return new[]
-            {
-                new BoundaryConditionSet {Feature = feature}
-            };
+            return new BoundaryConditionSet { Feature = feature };
         }
 
         private static BoundaryConditionSet CreateBoundaryConditionSetWithFlowBoundaryCondition(string boundaryName, string sedimentFractionName)

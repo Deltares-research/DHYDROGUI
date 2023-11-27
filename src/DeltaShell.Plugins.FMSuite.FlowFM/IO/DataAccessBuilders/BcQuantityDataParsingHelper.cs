@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DHYDRO.Common.Extensions;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
 
             List<string> splitFormat = format.Split().ToList();
-            if (splitFormat[1] == "since")
+            if (splitFormat[1].EqualsCaseInsensitive("since"))
             {
                 string dateString = string.Join(" ", splitFormat.Skip(2));
                 DateTime startDate = TryParseDate(dateString, locationName).DateTime;
@@ -133,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
         private static bool IncorrectTimeUnitFormat(string format)
         {
-            return string.IsNullOrEmpty(format) || format == "-" || !format.Contains("since");
+            return string.IsNullOrEmpty(format) || format == "-" || !format.ContainsCaseInsensitive("since");
         }
 
         private static DateTimeOffset TryParseDate(string dateString, string supportPointName)

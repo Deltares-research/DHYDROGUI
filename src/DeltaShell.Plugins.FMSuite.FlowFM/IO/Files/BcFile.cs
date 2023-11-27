@@ -35,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public const string BlockKey = "[forcing]";
         public const string QuantityKey = "Quantity";
+        private const string generalHeader = "[general]";
         private const string SupportPointKey = "Name";
         private const string ForcingTypeKey = "Function";
         private const string SeriesIndexKey = "FunctionIndex";
@@ -46,6 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private const string VerticalPositionKey = "Vertical position";
         private const string OffsetKey = "Offset";
         private const string FactorKey = "Factor";
+        private const StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase;
         protected readonly ILog log = LogManager.GetLogger(typeof(BcFile));
 
         private readonly List<FlowBoundaryQuantityType> supportedProcesses = new List<FlowBoundaryQuantityType>()
@@ -204,7 +206,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 string line = GetNextLine();
                 while (line != null)
                 {
-                    if (line.StartsWith(BlockKey))
+                    line = line.Trim();
+
+                    if (line.Equals(generalHeader, stringComparison))
+                    {
+                        line = GetNextLine();
+                        continue;
+                    }
+                    
+                    if (line.Equals(BlockKey, stringComparison))
                     {
                         BcBlockData block = ReadDataBlock(out line);
                         if (block != null)
@@ -214,7 +224,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     }
                     else
                     {
-                        log.WarnFormat("Omitting line {0} not starting with {1}", LineNumber, BlockKey);
+                        if (IsNewSection(line))
+                        {
+                            log.WarnFormat("Section {0} not supported on line {1}. File: {2}", line, LineNumber, inputFile);
+                        }
+
                         line = GetNextLine();
                     }
                 }
@@ -223,6 +237,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 CloseInputFile();
             }
+        }
+
+        private static bool IsNewSection(string line)
+        {
+            return line.StartsWith("[") && line.EndsWith("]");
         }
 
         protected virtual List<string> SupportedProcesses
@@ -402,52 +421,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     break;
                 }
 
-                if (split[0] == SupportPointKey)
+                string key = split[0];
+                if (key.Equals(SupportPointKey, stringComparison))
                 {
                     supportPointName = split[1];
                 }
 
-                if (split[0] == ForcingTypeKey)
+                if (key.Equals(ForcingTypeKey, stringComparison))
                 {
                     forcingType = split[1];
                 }
 
-                if (split[0] == TimeInterpolationKey)
+                if (key.Equals(TimeInterpolationKey, stringComparison))
                 {
                     timeInterpolationType = split[1];
                 }
 
-                if (split[0] == VerticalPositionTypeKey)
+                if (key.Equals(VerticalPositionTypeKey, stringComparison))
                 {
                     verticalPositionType = split[1];
                 }
 
-                if (split[0] == VerticalPositionSpecKey)
+                if (key.Equals(VerticalPositionSpecKey, stringComparison))
                 {
                     verticalPositionSpecification = split[1];
                 }
 
-                if (split[0] == VerticalIntepolationKey)
+                if (key.Equals(VerticalIntepolationKey, stringComparison))
                 {
                     verticalInterpolationType = split[1];
                 }
 
-                if (split[0] == SeriesIndexKey)
+                if (key.Equals(SeriesIndexKey, stringComparison))
                 {
                     seriesIndex = split[1];
                 }
 
-                if (split[0] == OffsetKey)
+                if (key.Equals(OffsetKey, stringComparison))
                 {
                     offset = split[1];
                 }
 
-                if (split[0] == FactorKey)
+                if (key.Equals(FactorKey, stringComparison))
                 {
                     factor = split[1];
                 }
 
-                if (split[0] == QuantityKey)
+                if (key.Equals(QuantityKey, stringComparison))
                 {
                     if (quantityData != null)
                     {
@@ -460,7 +480,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     }
                 }
 
-                if (split[0] == UnitKey)
+                if (key.Equals(UnitKey, stringComparison))
                 {
                     if (quantityData == null)
                     {
@@ -470,7 +490,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     quantityData.Unit = split[1];
                 }
 
-                if (split[0] == VerticalPositionKey)
+                if (key.Equals(VerticalPositionKey, stringComparison))
                 {
                     if (quantityData == null)
                     {
@@ -490,7 +510,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             while (line != null)
             {
-                if (line.StartsWith(BlockKey))
+                if (line.StartsWith(BlockKey, stringComparison))
                 {
                     break;
                 }

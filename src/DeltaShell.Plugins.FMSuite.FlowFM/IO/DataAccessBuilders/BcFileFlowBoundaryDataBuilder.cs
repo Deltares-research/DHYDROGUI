@@ -14,6 +14,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.Extensions;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
     public class BcFileFlowBoundaryDataBuilder
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(BcFileFlowBoundaryDataBuilder));
-
+        private const StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase;
         private static readonly IDictionary<string, ForcingTypeDefinition> ForcingTypeDefinitions =
             new Dictionary<string, ForcingTypeDefinition>( StringComparer.CurrentCultureIgnoreCase )
             {
@@ -244,7 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 GetMatchingBoundaryConditionSet(boundaryConditionSets, dataBlock.SupportPoint);
             if (matchingBoundaryConditionSet == null)
             {
-                if (dataBlock.Quantities.All(q => q.QuantityName != BcFileConstants.LateralDischargeQuantityName))
+                if (dataBlock.Quantities.All(q => !q.QuantityName.Equals(BcFileConstants.LateralDischargeQuantityName, stringComparison)))
                 {
                     Log.WarnFormat(
                         "File {0}, block starting at line {1}: support point {2} was not found in boundaries; omitting dataBlock block.",
@@ -279,9 +280,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     string quantityName = GetQuantityName(quantityData);
 
                     // if it's an argument quantity, add it to the argVariables and continue
-                    if (daoDataBlock.ForcingTypeDefinition.ArgumentDefinitions.Contains(quantityName))
+                    if (daoDataBlock.ForcingTypeDefinition.ArgumentDefinitions.Contains(quantityName, StringComparer.InvariantCultureIgnoreCase))
                     {
-                        argVariables.Add(daoDataBlock.ForcingTypeDefinition.ArgumentDefinitions.ToList().IndexOf(quantityName),
+                        argVariables.Add(daoDataBlock.ForcingTypeDefinition.ArgumentDefinitions.ToList().FindIndex(q => q.Equals(quantityName, stringComparison)),
                                          quantityData);
 
                         continue;
@@ -297,14 +298,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     }
 
                     // add component variable
-                    if (QuantityNameToTypeDictionary.Keys.Any(key => quantityName.StartsWith(key)))
+                    if (QuantityNameToTypeDictionary.Keys.Any(key => quantityName.StartsWith(key, stringComparison)))
                     {
                         KeyValuePair<string, FlowBoundaryQuantityType> quantityKeyValuePair =
-                            QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key == quantityName);
+                            QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key.Equals(quantityName, stringComparison));
                         if (quantityKeyValuePair.Key == null)
                         {
                             quantityKeyValuePair =
-                                QuantityNameToTypeDictionary.FirstOrDefault(kvp => quantityName.StartsWith(kvp.Key));
+                                QuantityNameToTypeDictionary.FirstOrDefault(kvp => quantityName.StartsWith(kvp.Key, stringComparison));
                         }
 
                         if (quantityKeyValuePair.Key != null &&
@@ -317,9 +318,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                             List<string> existingQuantities = compVariables
                                                               .Where(v => v.Key.Item1 == quantityKeyValuePair.Value)
                                                               .Select(v => v.Value.QuantityName)
-                                                              .Distinct().ToList();
+                                                              .Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
 
-                            int quantityIndex = existingQuantities.IndexOf(quantityData.QuantityName);
+                            int quantityIndex = existingQuantities.FindIndex(q => q.Equals(quantityData.QuantityName, stringComparison));
                             if (quantityIndex == -1)
                             {
                                 quantityIndex = existingQuantities.Count;
@@ -736,11 +737,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
 
             KeyValuePair<string, FlowBoundaryQuantityType> flowQuantityComponentsPair =
-                QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key.Equals(quantityName));
+                QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key.Equals(quantityName, stringComparison));
             if (flowQuantityComponentsPair.Key == null)
             {
                 flowQuantityComponentsPair =
-                    QuantityNameToTypeDictionary.FirstOrDefault(kvp => quantityName.StartsWith(kvp.Key));
+                    QuantityNameToTypeDictionary.FirstOrDefault(kvp => quantityName.StartsWith(kvp.Key, stringComparison));
             }
 
             if (flowQuantityComponentsPair.Key == null)
@@ -859,7 +860,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     break;
                 }
 
-                if (Equals(quantityName, componentKey) &&
+                if (quantityName.Equals(componentKey, stringComparison) &&
                     forcingTypeDefinition.ForcingType == BoundaryConditionDataType.Qh)
                 {
                     quantityName = QuantityNameToTypeDictionary
@@ -868,7 +869,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     break;
                 }
 
-                if (quantityName.EndsWith(componentKey))
+                if (quantityName.EndsWith(componentKey, stringComparison))
                 {
                     quantityName = quantityName.Substring(0, quantityName.Length - componentKey.Length).TrimEnd();
                     break;
@@ -881,12 +882,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         private static string GetQuantityName(BcQuantityData quantityData)
         {
             string quantityName = quantityData.QuantityName;
-            if (quantityName.StartsWith(ExtForceQuantNames.TracerAtBound + "_"))
+            if (quantityName.StartsWith(ExtForceQuantNames.TracerAtBound + "_", stringComparison))
             {
                 quantityData.TracerName = quantityName.Substring(10);
                 quantityName = ExtForceQuantNames.TracerAtBound;
             }
-            else if (quantityName.StartsWith(ExtForceQuantNames.TracerAtBound))
+            else if (quantityName.StartsWith(ExtForceQuantNames.TracerAtBound, stringComparison))
             {
                 quantityData.TracerName = quantityName.Substring(9);
                 quantityName = ExtForceQuantNames.TracerAtBound;
@@ -913,7 +914,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
         private static string GetFractionNameFromQuantityName(string quantityName)
         {
-            return quantityName.Replace(ExtForceQuantNames.ConcentrationAtBound, string.Empty);
+            return quantityName.ReplaceCaseInsensitive(ExtForceQuantNames.ConcentrationAtBound, string.Empty);
         }
 
         private IEnumerable<string> GetFractionNames(
@@ -922,7 +923,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         {
             return quantityGroup.Key == FlowBoundaryQuantityType.MorphologyBedLoadTransport
                        ? quantityGroup.Select(qg => qg.Value).Select(q =>
-                                                                         q.QuantityName.Replace(
+                                                                         q.QuantityName.ReplaceCaseInsensitive(
                                                                              BcmFileFlowBoundaryDataBuilder
                                                                                  .BedLoadAtBound, string.Empty))
                        : Enumerable.Empty<string>();
