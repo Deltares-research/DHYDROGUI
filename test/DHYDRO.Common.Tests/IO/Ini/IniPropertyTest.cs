@@ -185,13 +185,29 @@ namespace DHYDRO.Common.Tests.IO.Ini
         }
 
         [Test]
-        public void TryGetValue_StringTypeAndValueIsNull_ReturnsTrueAndDefaultValue()
+        [TestCase(default(int))]
+        [TestCase(default(float))]
+        [TestCase(default(double))]
+        [TestCase(default(DayOfWeek))]
+        public void TryGetValue_NullValue_ReturnsFalseAndDefaultValue<T>(T defaultValue)
+            where T : IConvertible
+        {
+            var property = new IniProperty("TestKey") { Value = null };
+
+            bool result = property.TryGetValue(out T convertedValue);
+
+            Assert.IsFalse(result);
+            Assert.AreEqual(defaultValue, convertedValue);
+        }
+        
+        [Test]
+        public void TryGetValue_NullStringValue_ReturnsFalseAndDefaultValue()
         {
             var property = new IniProperty("TestKey") { Value = null };
 
             bool result = property.TryGetValue(out string convertedValue);
 
-            Assert.IsTrue(result);
+            Assert.IsFalse(result);
             Assert.IsNull(convertedValue);
         }
 
@@ -200,7 +216,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase(default(float))]
         [TestCase(default(double))]
         [TestCase(default(DayOfWeek))]
-        public void TryGetValue_InvalidType_ReturnsFalseAndDefaultValue<T>(T defaultValue)
+        public void TryGetValue_InvalidFormattedValue_ReturnsFalseAndDefaultValue<T>(T defaultValue)
             where T : IConvertible
         {
             var property = new IniProperty("TestKey", "TestValue");
