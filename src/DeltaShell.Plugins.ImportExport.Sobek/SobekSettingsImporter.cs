@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using DeltaShell.Sobek.Readers.Readers;
-using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -15,7 +13,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 {
     public class SobekSettingsImporter : PartialSobekImporterBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SobekSettingsImporter));
+        private static readonly ILog log = LogManager.GetLogger(typeof(SobekSettingsImporter));
 
         private SobekCaseSettings sobekCaseSettings;
         private WaterFlowFMModel waterFlowFMModel;
@@ -29,7 +27,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         protected override void PartialImport()
         {
-            Log.DebugFormat("Importing model settings ...");
+            log.DebugFormat("Importing model settings ...");
 
             waterFlowFMModel = GetModel<WaterFlowFMModel>();
             
@@ -53,16 +51,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             {
                 if (!File.Exists(path))
                 {
-                    Log.WarnFormat("Import of case settings skipped, file {0} does not exist.", path);
+                    log.WarnFormat("Import of case settings skipped, file {0} does not exist.", path);
                     return;
                 }
-                sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+
+                sobekCaseSettings = new SobekCaseSettingsReader().GetSobekCaseSettings(path);
 
                 SetModelParameters();
             }
             catch (Exception exception)
             {
-                Log.ErrorFormat("Error reading case settings {0}; reason {1}", path, exception.Message);
+                log.ErrorFormat("Error reading case settings {0}; reason {1}", path, exception.Message);
             }
         }
 
@@ -85,7 +84,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
             catch (Exception exception)
             {
-                Log.ErrorFormat("Error reading case settings {0}; reason {1}", path, exception.Message);
+                log.ErrorFormat("Error reading case settings {0}; reason {1}", path, exception.Message);
             }
         }
 
@@ -93,7 +92,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             if (CaseData.WindFile == null)
             {
-                Log.Error("No wind data available.");
+                log.Error("No wind data available.");
             }
         }
         

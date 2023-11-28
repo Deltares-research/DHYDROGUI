@@ -166,10 +166,6 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Nini">
-      <HintPath>.\Nini.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">

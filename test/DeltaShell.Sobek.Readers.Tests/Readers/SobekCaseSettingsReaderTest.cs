@@ -2,7 +2,6 @@
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Sobek.Readers.Readers;
-using Nini.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Sobek.Readers.Tests.Readers
@@ -10,13 +9,21 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     [TestFixture]
     public class SobekCaseSettingsReaderTest
     {
+        private SobekCaseSettingsReader settingsReader;
+
+        [SetUp]
+        public void SetUp()
+        {
+            settingsReader = new SobekCaseSettingsReader();
+        }
+        
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadCaseSettings()
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\SETTINGS.DAT");
 
-            var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
             Assert.AreEqual(new DateTime(2007, 1, 15, 1, 0, 0), sobekCaseSettings.StartTime);
             Assert.AreEqual(new DateTime(2007, 1, 17, 1, 0, 0), sobekCaseSettings.StopTime);
@@ -39,7 +46,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"QHBound.lit\1\SETTINGS.DAT");
 
-            var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
             Assert.AreEqual(0.1, sobekCaseSettings.InitialDepthValue, 1.0e-6);
         }
@@ -50,7 +57,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         {
             var path = TestHelper.GetTestFilePath("SETTINGS_with_resultspumps.DAT");
 
-            var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
             Assert.IsTrue(sobekCaseSettings.PumpResults);
         }
@@ -59,9 +66,9 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         public void ReadCorruptFile()
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\NETWORK.TP"); 
-            Assert.Throws<IniException>(() =>
+            Assert.Throws<FormatException>(() =>
             {
-                SobekCaseSettingsReader.GetSobekCaseSettings(path);
+                settingsReader.GetSobekCaseSettings(path);
             });
         }
 
@@ -71,7 +78,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         {
             var path =TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"steady.lit\2\SETTINGS.DAT");
 
-            var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
             //ramdon samples
             Assert.AreEqual(0.1, sobekCaseSettings.InitialDepthValue, 1.0e-6);
             Assert.AreEqual(2.0, sobekCaseSettings.CourantNumber, 1.0e-6);
@@ -155,7 +162,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"steady.lit\2\SETTINGS.DAT");
 
-            var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
             Assert.AreEqual(null, sobekCaseSettings.Iadvec1D);
             Assert.AreEqual(null, sobekCaseSettings.Limtyphu1D);
@@ -169,7 +176,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         {
             var path = TestHelper.GetTestFilePath("SETTINGS_WITH_IADVEC1D.DAT");
 
-            var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
             Assert.AreEqual(2.0, sobekCaseSettings.Iadvec1D);
             Assert.AreEqual(2.0, sobekCaseSettings.Limtyphu1D);
@@ -182,7 +189,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SobekModelWithWaterQualityData\Sobek212\Test\1\SETTINGS.DAT");
 
-            var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
             Assert.AreEqual(sobekCaseSettings.MeasurementFile, "");
             Assert.AreEqual(sobekCaseSettings.Fraction, true);

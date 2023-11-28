@@ -8,6 +8,10 @@
       <IncludeAssets>compile;build</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="DHYDRO.Common">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="log4net">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -58,9 +62,6 @@
     <Reference Include="NetTopologySuite.Extensions">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Nini">
-      <HintPath>lib\Nini.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

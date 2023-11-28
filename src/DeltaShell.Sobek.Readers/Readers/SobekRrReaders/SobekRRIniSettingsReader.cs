@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using DelftTools.Utils;
+using DHYDRO.Common.IO.Ini;
 using log4net;
-using Nini.Config;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
@@ -11,23 +12,21 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRIniSettingsReader));
 
-        private string path; 
+        private string path;
+        private IniData iniData;
         private SobekRRIniSettings settings;
-        private IniConfigSource iniReader;
 
         public SobekRRIniSettings GetSobekRRIniSettings(string argPath)
         {
             path = argPath;
 
             using (CultureUtils.SwitchToInvariantCulture())
+            using (FileStream stream = File.OpenRead(path))
             {
-                settings = new SobekRRIniSettings();
-                settings.PeriodFromEvent = true;
-
-                iniReader = new IniConfigSource(path);
-                iniReader.Alias.AddAlias("-1", true);
-                iniReader.Alias.AddAlias("0", false);
-                iniReader.Alias.AddAlias("1", true);
+                settings = new SobekRRIniSettings { PeriodFromEvent = true };
+                
+                var iniParser = new IniParser { Configuration = { AllowPropertyKeysWithSpaces = true } };
+                iniData = iniParser.Parse(stream);
 
                 GetGeneralSettings();
                 GetOutputSettings();
@@ -40,88 +39,78 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         {
             settings.OutputTimestepMultiplier = 1;
 
-            var outputOptions = iniReader.Configs["OutputOptions"];
-            if (outputOptions != null)
+            IniSection outputOptions = iniData.FindSection("OutputOptions");
+            if (outputOptions != null && outputOptions.TryGetPropertyValue("OutputAtTimestep", out double multiplier))
             {
-                var multiplier = outputOptions.GetDouble("OutputAtTimestep");
                 settings.OutputTimestepMultiplier = multiplier;
             }
 
-            var optionSettings = iniReader.Configs["Options"];
+            IniSection optionSettings = iniData.FindSection("Options");
             if (optionSettings != null)
             {
-                if (optionSettings.Contains("UnsaturatedZone"))
+                if (optionSettings.TryGetPropertyValue("UnsaturatedZone", out int unsaturatedZone))
                 {
-                    var unsaturatedZone = optionSettings.GetInt("UnsaturatedZone");
                     settings.UnsaturatedZone = unsaturatedZone;
                 }
 
-                if (optionSettings.Contains("GreenhouseYear"))
+                if (optionSettings.TryGetPropertyValue("GreenhouseYear", out short greenhouseYear))
                 {
-                    var greenhouseYearOption = optionSettings.GetInt("GreenhouseYear");
-                    var settingsGreenhouseYear = Convert.ToInt16(greenhouseYearOption);
-                    settings.GreenhouseYear = settingsGreenhouseYear;
+                    settings.GreenhouseYear = greenhouseYear;
                 }
 
-                if (optionSettings.Contains("InitCapsimOption"))
+                if (optionSettings.TryGetPropertyValue("InitCapsimOption", out int initCapsimOption))
                 {
-                    var initCapsimOption = optionSettings.GetInt("InitCapsimOption");
                     settings.InitCapsimOption = initCapsimOption;
                 }
 
-                if (optionSettings.Contains("CapsimPerCropArea"))
+                if (optionSettings.TryGetPropertyValue("CapsimPerCropArea", out int capsimPerCropArea))
                 {
-                    var capsimPerCropArea = optionSettings.GetInt("CapsimPerCropArea");
                     settings.CapsimPerCropArea = capsimPerCropArea;
                     settings.CapsimPerCropAreaIsDefined = true;
                 }
             }
 
-            var timeSettings = iniReader.Configs["TimeSettings"];
+            IniSection timeSettings = iniData.FindSection("TimeSettings");
             if (timeSettings != null)
             {
-                if (timeSettings.Contains("PeriodFromEvent"))
+                if (timeSettings.TryGetPropertyValue("PeriodFromEvent", out bool periodFromEvent))
                 {
-                    var periodFromEvent = timeSettings.GetBoolean("PeriodFromEvent");
                     settings.PeriodFromEvent = periodFromEvent;
                 }
-                if (timeSettings.Contains("StartTime"))
+
+                if (timeSettings.TryGetPropertyValue("StartTime", out string startTimeStr))
                 {
-                    DateTime startTime;
-                    var startTimeStr = timeSettings.GetString("StartTime");
-                    if (!TryConvertToDateTime(startTimeStr, out startTime))
-                    {
-                        log.ErrorFormat("Parsing RR StartTime from {0} failed.", path);
-                    }
-                    else
+                    if (TryConvertToDateTime(startTimeStr, out DateTime startTime))
                     {
                         settings.StartTime = startTime;
                     }
-                }
-                if (timeSettings.Contains("EndTime"))
-                {
-                    DateTime endTime;
-                    var endTimeStr = timeSettings.GetString("EndTime");
-                    if (!TryConvertToDateTime(endTimeStr, out endTime))
-                    {
-                        log.ErrorFormat("Parsing RR EndTime from {0} failed.", path);
-                    }
                     else
+                    {
+                        log.ErrorFormat("Parsing RR StartTime from {0} failed.", path);
+                    }
+                }
+
+                if (timeSettings.TryGetPropertyValue("EndTime", out string endTimeStr))
+                {
+                    if (TryConvertToDateTime(endTimeStr, out DateTime endTime))
                     {
                         settings.EndTime = endTime;
                     }
-                }
-                if (timeSettings.Contains("TimestepSize"))
-                {
-                    int timestep;
-                    var timeStepStr = timeSettings.GetString("TimestepSize");
-                    if (!Int32.TryParse(timeStepStr, out timestep))
+                    else
                     {
-                        log.ErrorFormat("Parsing RR TimestepSize from {0} failed.", path);
+                        log.ErrorFormat("Parsing RR EndTime from {0} failed.", path);
+                    }
+                }
+
+                if (timeSettings.TryGetPropertyValue("TimestepSize", out string timeStepStr))
+                {
+                    if (int.TryParse(timeStepStr, out int timestep))
+                    {
+                        settings.TimestepSize = new TimeSpan(0, 0, timestep);
                     }
                     else
                     {
-                        settings.TimestepSize = new TimeSpan(0, 0, timestep);
+                        log.ErrorFormat("Parsing RR TimestepSize from {0} failed.", path);
                     }
                 }
             }
@@ -138,7 +127,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             try
             {
-                string[] parts = dateTimeStr.Split(';');
+                string[] parts = dateTimeStr.Replace('\'', ' ').Split(';');
                 string dateStr = parts[0];
                 string timeStr = parts[1];
 
@@ -164,37 +153,39 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
         private void GetOutputSettings()
         {
-            IConfig outputOptions = iniReader.Configs["OutputOptions"];
+            IniSection outputOptions = iniData.FindSection("OutputOptions");
             if (outputOptions == null)
             {
                 return;
             }
 
-            int aggregationOptions = outputOptions.GetInt("OutputAtTimestepOption");
-            settings.AggregationOptions = aggregationOptions;
-            
-            var actionDict = new Dictionary<string, Action<bool>>()
-                {
-                    {"OutputRRPaved", (bool b) => settings.OutputRRPaved = b},
-                    {"OutputRRUnpaved", (bool b) => settings.OutputRRUnpaved = b},
-                    {"OutputRRGreenhouse", (bool b) => settings.OutputRRGreenhouse = b},
-                    {"OutputRROpenWater", (bool b) => settings.OutputRROpenWater = b},
-                    {"OutputRRStructure", (bool b) => settings.OutputRRStructure = b},
-                    {"OutputRRBoundary", (bool b) => settings.OutputRRBoundary = b},
-                    {"OutputRRWWTP", (bool b) => settings.OutputRRWWTP = b},
-                    {"OutputRRNWRW", (bool b) => settings.OutputRRNWRW = b},
-                    {"OutputRRIndustry", (bool b) => settings.OutputRRIndustry = b},
-                    {"OutputRRSacramento", (bool b) => settings.OutputRRSacramento = b},
-                    {"OutputRRRunoff", (bool b) => settings.OutputRRRunoff = b},
-                    {"OutputRRLinkFlows", (bool b) => settings.OutputRRLinkFlows = b},
-                    {"OutputRRBalance", (bool b) => settings.OutputRRBalance = b}
-                };
-            
-            foreach (var kvp in actionDict) // KeyValuePair
+            if (outputOptions.TryGetPropertyValue("OutputAtTimestepOption", out int aggregationOptions))
             {
-                if (outputOptions.Contains(kvp.Key))
+                settings.AggregationOptions = aggregationOptions;
+            }
+
+            var actionDict = new Dictionary<string, Action<bool>>()
+            {
+                { "OutputRRPaved", (bool b) => settings.OutputRRPaved = b },
+                { "OutputRRUnpaved", (bool b) => settings.OutputRRUnpaved = b },
+                { "OutputRRGreenhouse", (bool b) => settings.OutputRRGreenhouse = b },
+                { "OutputRROpenWater", (bool b) => settings.OutputRROpenWater = b },
+                { "OutputRRStructure", (bool b) => settings.OutputRRStructure = b },
+                { "OutputRRBoundary", (bool b) => settings.OutputRRBoundary = b },
+                { "OutputRRWWTP", (bool b) => settings.OutputRRWWTP = b },
+                { "OutputRRNWRW", (bool b) => settings.OutputRRNWRW = b },
+                { "OutputRRIndustry", (bool b) => settings.OutputRRIndustry = b },
+                { "OutputRRSacramento", (bool b) => settings.OutputRRSacramento = b },
+                { "OutputRRRunoff", (bool b) => settings.OutputRRRunoff = b },
+                { "OutputRRLinkFlows", (bool b) => settings.OutputRRLinkFlows = b },
+                { "OutputRRBalance", (bool b) => settings.OutputRRBalance = b }
+            };
+
+            foreach (KeyValuePair<string, Action<bool>> kvp in actionDict)
+            {
+                if (outputOptions.TryGetPropertyValue(kvp.Key, out bool value))
                 {
-                    kvp.Value(outputOptions.GetBoolean(kvp.Key));
+                    kvp.Value(value);
                 }
             }
         }
