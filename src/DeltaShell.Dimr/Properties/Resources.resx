@@ -123,4 +123,7 @@
   <data name="DimrRunner_Could_not_load_dimr_api" xml:space="preserve">
     <value>Could not load the Dimr api.</value>
   </data>
+  <data name="DimrXmlValidator_ReportLog_DIMR_xml__0__is_not_valid__It_is_missing_the_following_element_s____1_" xml:space="preserve">
+    <value>DIMR xml {0} is not valid. It is missing the following element(s): {1}</value>
+  </data>
 </root>

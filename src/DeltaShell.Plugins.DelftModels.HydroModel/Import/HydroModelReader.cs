@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
 using DeltaShell.Dimr;
+using DeltaShell.Dimr.dimr_xsd;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -27,7 +28,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <param name="path">Path to the Dimr.xml</param>
         /// <param name="fileImporters">File importers for importing sub-models</param>
         /// <param name="reportProgress">String to feedback to importer what importers are working on.</param>
-        /// <returns>Read <see cref="HydroModel"/></returns>
+        /// <returns>
+        /// The read <see cref="HydroModel"/>,
+        /// in the case <paramref name="path"/> is <c>Null</c> or the Dimr.xml from <paramref name="path"/> is invalid <c>Null</c> is returned.
+        /// </returns>
         public static HydroModel Read(string path, IList<IDimrModelFileImporter> fileImporters, Action<string> reportProgress = null)
         {
             var logHandler = new LogHandler("import of the Hydro Model");
@@ -41,6 +45,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             reportProgress?.Invoke(Resources.HydroModelReader_Read_Parsing_Dimr_xml_file);
             var dataObject = delftConfigXmlParser.Read<dimrXML>(path);
 
+            var dimrXmlValidator = new DimrXmlValidator(logHandler);
+            if (!dimrXmlValidator.IsValid(dataObject, path))
+            {
+                logHandler.LogReport();
+                return null;
+            }
+            
             var hydroModelConverter = new HydroModelConverter(logHandler);
             HydroModel hydroModel = hydroModelConverter.Convert(dataObject, path, fileImporters, reportProgress);
             var allActivitiesRecursive = hydroModel.GetAllActivitiesRecursive<IHydroModel>().OfType<IHasCoordinateSystem>();

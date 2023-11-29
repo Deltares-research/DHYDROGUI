@@ -15,6 +15,7 @@
       <IncludeAssets>compile;build</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="DHYDRO.Common" />
     <PackageReference Include="Dimr.Libs" />
     <PackageReference Include="log4net">
       <IncludeAssets>compile</IncludeAssets>
