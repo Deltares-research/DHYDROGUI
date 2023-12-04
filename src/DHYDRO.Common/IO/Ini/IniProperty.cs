@@ -110,7 +110,7 @@ namespace DHYDRO.Common.IO.Ini
         /// <param name="convertedValue">The converted value if the conversion succeeded; otherwise, the default value.</param>
         /// <typeparam name="T">The type to convert the value to, must implement <see cref="IConvertible"/>.</typeparam>
         /// <returns><c>true</c> if the conversion succeeded and the value was retrieved; otherwise, <c>false</c>.</returns>
-        public bool TryGetValue<T>(out T convertedValue)
+        public bool TryGetConvertedValue<T>(out T convertedValue)
             where T : IConvertible
         {
             try
@@ -130,7 +130,7 @@ namespace DHYDRO.Common.IO.Ini
         /// </summary>
         /// <param name="value">The new value to set. Will be converted to a formatted string.</param>
         /// <typeparam name="T">The type of the value, must implement <see cref="IConvertible"/>.</typeparam>
-        public void SetValue<T>(T value)
+        public void SetConvertedValue<T>(T value)
             where T : IConvertible
         {
             Value = IniValueConverter.ConvertToString(value);

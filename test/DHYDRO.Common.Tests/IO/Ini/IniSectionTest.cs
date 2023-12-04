@@ -399,26 +399,36 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [Test]
         [TestCase("")]
         [TestCase(null)]
-        public void TryGetPropertyValue_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
+        public void GetPropertyValueGeneric_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.TryGetPropertyValue(key, out double _));
+            Assert.Throws<ArgumentException>(() => section.GetPropertyValue<string>(key));
         }
 
         [Test]
         [TestCase("testkey")]
         [TestCase("TestKey")]
         [TestCase("TESTKEY")]
-        public void TryGetPropertyValue_ExistingCaseInsensitiveKey_ReturnsTrueAndConvertedValue(string key)
+        public void GetPropertyValueGeneric_ExistingCaseInsensitiveKey_ReturnsValue(string key)
         {
-            var section = new IniSection("SectionName");
-            section.AddProperty("TestKey", "123.01");
+            var section = new IniSection("TestSection");
+            section.AddProperty("TestKey", "TestValue");
 
-            bool result = section.TryGetPropertyValue(key, out double convertedValue);
+            var value = section.GetPropertyValue<string>(key);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual(123.01, convertedValue);
+            Assert.AreEqual("TestValue", value);
+        }
+
+        [Test]
+        public void GetPropertyValueGeneric_NonExistingKey_ReturnsDefaultValue()
+        {
+            var section = new IniSection("TestSection");
+            section.AddProperty("TestKey", "TestValue");
+
+            var value = section.GetPropertyValue<string>("NonExistentKey", "DefaultValue");
+
+            Assert.AreEqual("DefaultValue", value);
         }
 
         [Test]
@@ -427,44 +437,47 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase("2.7100000e+000", 2.71)]
         [TestCase("Monday", DayOfWeek.Monday)]
         [TestCase("TestValue", "TestValue")]
-        public void TryGetPropertyValue_ExistingKeyAndValidType_ReturnsTrueAndConvertedValue<T>(string value, T expectedValue)
+        public void GetPropertyValueGeneric_ExistingKeyAndValidType_ReturnsConvertedValue<T>(string value, T expectedValue)
             where T : IConvertible
         {
             var section = new IniSection("SectionName");
             section.AddProperty("TestKey", value);
 
-            bool result = section.TryGetPropertyValue("TestKey", out T convertedValue);
+            var convertedValue = section.GetPropertyValue<T>("TestKey");
 
-            Assert.IsTrue(result);
             Assert.AreEqual(expectedValue, convertedValue);
         }
 
         [Test]
-        [TestCase(default(int))]
-        [TestCase(default(float))]
-        [TestCase(default(double))]
-        [TestCase(default(DayOfWeek))]
-        public void TryGetPropertyValue_ExistingKeyAndInvalidType_ReturnsFalseAndDefault<T>(T defaultValue)
+        [TestCase(-1)]
+        [TestCase(-999.0f)]
+        [TestCase(-999.0d)]
+        [TestCase(DayOfWeek.Monday)]
+        public void GetPropertyValueGeneric_ExistingKeyAndInvalidValue_ReturnsDefault<T>(T defaultValue)
             where T : IConvertible
         {
             var section = new IniSection("SectionName");
             section.AddProperty("TestKey", "TestValue");
 
-            bool result = section.TryGetPropertyValue("TestKey", out T convertedValue);
+            T convertedValue = section.GetPropertyValue("TestKey", defaultValue);
 
-            Assert.IsFalse(result);
             Assert.AreEqual(defaultValue, convertedValue);
         }
 
         [Test]
-        public void TryGetPropertyValue_NonExistingKey_ReturnsFalseAndDefault()
+        [TestCase(-1)]
+        [TestCase(-999.0f)]
+        [TestCase(-999.0d)]
+        [TestCase(DayOfWeek.Monday)]
+        public void GetPropertyValueGeneric_ExistingKeyAndNullValue_ReturnsDefault<T>(T defaultValue)
+            where T : IConvertible
         {
             var section = new IniSection("SectionName");
+            section.AddProperty<string>("TestKey", null);
 
-            bool result = section.TryGetPropertyValue("NonExistentKey", out int convertedValue);
+            T convertedValue = section.GetPropertyValue("TestKey", defaultValue);
 
-            Assert.IsFalse(result);
-            Assert.AreEqual(default(int), convertedValue);
+            Assert.AreEqual(defaultValue, convertedValue);
         }
 
         [Test]
@@ -649,12 +662,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.RenameProperties(oldKey, "NewKey");
 
-            var expected = new[] 
-            { 
-                new IniProperty("NewKey", "Value1"), 
-                new IniProperty("Key2", "Value2"), 
-                new IniProperty("NewKey", "Value3") 
-            };
+            var expected = new[] { new IniProperty("NewKey", "Value1"), new IniProperty("Key2", "Value2"), new IniProperty("NewKey", "Value3") };
 
             Assert.That(section.Properties, Is.EqualTo(expected));
         }
@@ -845,7 +853,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section1.AddProperty("TestKey", "TestValue");
             section2.AddProperty("TESTKEY", "TESTVALUE");
-            
+
             section1.AddComment("TestComment");
             section2.AddComment("TESTCOMMENT");
 
@@ -892,7 +900,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             Assert.IsFalse(result);
         }
-        
+
         [Test]
         public void GetHashCode_SameCaseInsensitiveNames_SameHashCode()
         {

@@ -153,7 +153,7 @@ namespace DHYDRO.Common.IO.Ini
 
             if (property != null)
             {
-                property.SetValue(value);
+                property.SetConvertedValue(value);
                 return property;
             }
             else
@@ -179,7 +179,7 @@ namespace DHYDRO.Common.IO.Ini
         /// Searches for a property in the section with the specified key, and returns the first occurrence.
         /// </summary>
         /// <param name="key">The key of the property to retrieve.</param>
-        /// <returns>The first <see cref="IniProperty"/> in the section that matches the specified key, or <c>null</c> if not found.</returns>
+        /// <returns>The first property in the section that matches the specified key, or <c>null</c> if not found.</returns>
         /// <exception cref="ArgumentException">When <paramref name="key"/> is <c>null</c> or empty.</exception>
         public IniProperty FindProperty(string key)
         {
@@ -223,28 +223,32 @@ namespace DHYDRO.Common.IO.Ini
         }
 
         /// <summary>
-        /// Tries to get the value of the first property found in the section with the specified key and converts it to the
-        /// specified type.
+        /// Gets the converted value of the first property found in the section with the specified key, or returns a default value
+        /// if the property is not found.
         /// </summary>
         /// <param name="key">The key of the property to retrieve the value for.</param>
-        /// <param name="convertedValue">The converted value of the property if found; otherwise, the default value.</param>
+        /// <param name="defaultValue">The default value to return if the property is not found. Default value is <c>default(T)</c>.</param>
         /// <typeparam name="T">The target type to convert the property value to. Must implement <see cref="IConvertible"/>.</typeparam>
-        /// <returns><c>true</c> if the property was found and successfully converted; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        /// The value of the first property with the specified key if found and successfully converted;
+        /// otherwise the <paramref name="defaultValue"/>.
+        /// </returns>
         /// <exception cref="ArgumentException">When <paramref name="key"/> is <c>null</c> or empty.</exception>
-        public bool TryGetPropertyValue<T>(string key, out T convertedValue)
+        public T GetPropertyValue<T>(string key, T defaultValue = default)
             where T : IConvertible
         {
             Ensure.NotNullOrEmpty(key, nameof(key));
 
             IniProperty property = FindProperty(key);
 
-            if (property != null)
+            if (property == null)
             {
-                return property.TryGetValue(out convertedValue);
+                return defaultValue;
             }
 
-            convertedValue = default;
-            return false;
+            return property.TryGetConvertedValue(out T convertedValue)
+                       ? convertedValue
+                       : defaultValue;
         }
 
         /// <summary>
@@ -328,7 +332,7 @@ namespace DHYDRO.Common.IO.Ini
 
             comments.Add(comment);
         }
-        
+
         /// <summary>
         /// Adds a collection of comment lines to the section's comments.
         /// </summary>
@@ -395,7 +399,7 @@ namespace DHYDRO.Common.IO.Ini
                 return true;
             }
 
-            StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
+            var comparison = StringComparison.InvariantCultureIgnoreCase;
             StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
 
             return string.Equals(Name, other.Name, comparison) &&
