@@ -56,19 +56,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
 
         private static double? ParseReturnTime(IniSection section)
         {
-            string returnTimeString = section.GetPropertyValue(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
-            double? returnTime = ParseReturnTime(returnTimeString);
-            return returnTime;
-        }
-
-        private static double? ParseReturnTime(string returnTime)
-        {
-            if (returnTime.TryParseToDouble(out double convertedReturnTime))
-            {
-                return convertedReturnTime;
-            }
-
-            return null;
+            IniProperty property = section.FindProperty(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
+            return property != null && property.TryGetConvertedValue(out double returnTime) ? (double?)returnTime : null;
         }
 
         private static bool HasValue(string value)

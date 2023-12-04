@@ -307,65 +307,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
             if (timePointData.HydrodynamicsInputDataType == HydrodynamicsInputDataType.Constant)
             {
-                double waterLevel = double.Parse(generalSection.GetPropertyValue(KnownWaveProperties.WaterLevel, "0.0"),
-                                                 NumberStyles.Any, CultureInfo.InvariantCulture);
-                double velocityX = double.Parse(generalSection.GetPropertyValue(KnownWaveProperties.WaterVelocityX, "0.0"),
-                                                NumberStyles.Any, CultureInfo.InvariantCulture);
-                double velocityY = double.Parse(generalSection.GetPropertyValue(KnownWaveProperties.WaterVelocityY, "0.0"),
-                                                NumberStyles.Any, CultureInfo.InvariantCulture);
-                timePointData.HydrodynamicsConstantData.WaterLevel = waterLevel;
-                timePointData.HydrodynamicsConstantData.VelocityX = velocityX;
-                timePointData.HydrodynamicsConstantData.VelocityY = velocityY;
+                timePointData.HydrodynamicsConstantData.WaterLevel = generalSection.GetPropertyValue<double>(KnownWaveProperties.WaterLevel);
+                timePointData.HydrodynamicsConstantData.VelocityX = generalSection.GetPropertyValue<double>(KnownWaveProperties.WaterVelocityX);
+                timePointData.HydrodynamicsConstantData.VelocityY = generalSection.GetPropertyValue<double>(KnownWaveProperties.WaterVelocityY);
             }
 
             if (timePointData.WindInputDataType == WindInputDataType.Constant)
             {
-                double windSpeed = double.Parse(generalSection.GetPropertyValue(KnownWaveProperties.WindSpeed, "0.0"),
-                                                NumberStyles.Any, CultureInfo.InvariantCulture);
-                double windDirection = double.Parse(generalSection.GetPropertyValue(KnownWaveProperties.WindDirection, "0.0"),
-                                                    NumberStyles.Any, CultureInfo.InvariantCulture);
-                timePointData.WindConstantData.Speed = windSpeed;
-                timePointData.WindConstantData.Direction = windDirection;
+                timePointData.WindConstantData.Speed = generalSection.GetPropertyValue<double>(KnownWaveProperties.WindSpeed);
+                timePointData.WindConstantData.Direction = generalSection.GetPropertyValue<double>(KnownWaveProperties.WindDirection);
             }
 
             foreach (IniSection timePoint in timePointSections)
             {
-                DateTime time = referenceDate.AddMinutes(double.Parse(timePoint.GetPropertyValue(KnownWaveProperties.Time, "0.0"),
-                                                                      NumberStyles.Any,
-                                                                      CultureInfo.InvariantCulture));
+                var timeValue = timePoint.GetPropertyValue<double>(KnownWaveProperties.Time);
+
+                DateTime time = referenceDate.AddMinutes(timeValue);
                 times.Add(time);
 
-                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WaterLevel), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out double waterLevel))
-                {
-                    waterLevel = (double)timePointData.TimeVaryingData.Components[0].DefaultValue;
-                }
+                IFunction timeVaryingData = timePointData.TimeVaryingData;
+                double waterLevel = timePoint.GetPropertyValue(KnownWaveProperties.WaterLevel, (double)timeVaryingData.Components[0].DefaultValue);
+                double velocityX = timePoint.GetPropertyValue(KnownWaveProperties.WaterVelocityX, (double)timeVaryingData.Components[1].DefaultValue);
+                double velocityY = timePoint.GetPropertyValue(KnownWaveProperties.WaterVelocityY, (double)timeVaryingData.Components[2].DefaultValue);
+                double windSpeed = timePoint.GetPropertyValue(KnownWaveProperties.WindSpeed, (double)timeVaryingData.Components[3].DefaultValue);
+                double windDirection = timePoint.GetPropertyValue(KnownWaveProperties.WindDirection, (double)timeVaryingData.Components[4].DefaultValue);
 
-                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WaterVelocityX), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out double velocityX))
-                {
-                    velocityX = (double)timePointData.TimeVaryingData.Components[1].DefaultValue;
-                }
-
-                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WaterVelocityY), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out double velocityY))
-                {
-                    velocityY = (double)timePointData.TimeVaryingData.Components[2].DefaultValue;
-                }
-
-                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WindSpeed), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out double windSpeed))
-                {
-                    windSpeed = (double)timePointData.TimeVaryingData.Components[3].DefaultValue;
-                }
-
-                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WindDirection), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out double windDirection))
-                {
-                    windDirection = (double)timePointData.TimeVaryingData.Components[4].DefaultValue;
-                }
-
-                timePointData.TimeVaryingData[time] = new[]
+                timeVaryingData[time] = new[]
                 {
                     waterLevel,
                     velocityX,

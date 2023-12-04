@@ -147,13 +147,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
 
         private static int? ParseNumCoordinates(IniSection section)
         {
-            string numCoordinatesStr = Retrieve(section, BndExtForceFileConstants.NumCoordinatesKey);
-            if (int.TryParse(numCoordinatesStr, out int numCoordinates))
-            {
-                return numCoordinates;
-            }
-
-            return null;
+            IniProperty property = section.FindProperty(BndExtForceFileConstants.NumCoordinatesKey);
+            return property != null && property.TryGetConvertedValue(out int numCoordinates) ? numCoordinates : (int?)null;
         }
 
         private IEnumerable<double> ParseXCoordinates(IniSection section) =>
@@ -191,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
 
         private static bool HasValue(string value) => !string.IsNullOrWhiteSpace(value);
 
-        private static string Retrieve(IniSection category, string property) =>
-            category.GetPropertyValue(property);
+        private static string Retrieve(IniSection section, string property) =>
+            section.GetPropertyValue(property);
     }
 }

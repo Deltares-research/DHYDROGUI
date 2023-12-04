@@ -358,10 +358,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                         string mduFilePath,
                                                         WaterFlowFMModelDefinition modelDefinition)
         {
-            string propertyValue = section.GetPropertyValue(BoundaryBedCondition);
+            IniProperty property = section.FindProperty(BoundaryBedCondition);
 
-            var iBedCond = (int)MorphologyBoundaryConditionQuantityType.NoBedLevelConstraint;
-            if (!int.TryParse(propertyValue, out iBedCond))
+            if (property == null || !property.TryGetConvertedValue(out int iBedCond))
             {
                 Log.ErrorFormat(
                     Resources

@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries
 
         private static T GetEnumValue<T>(this IniSection section, string propertyKey) => EnumUtils.GetEnumValueByDescription<T>(section.GetPropertyValue(propertyKey));
 
-        private static double GetDoubleValue(this IniSection section, string propertyKey) => section.GetPropertyValue(propertyKey, double.NaN.ToString(CultureInfo.InvariantCulture)).ToDouble();
+        private static double GetDoubleValue(this IniSection section, string propertyKey) => section.GetPropertyValue(propertyKey, double.NaN);
 
         private static double[] GetDoubleValues(this IniSection section, string propertyKey) => section.GetAllProperties(propertyKey).Select(p => p.Value).Select(ToDouble).ToArray();
 

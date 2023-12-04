@@ -424,11 +424,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             fraction.CurrentSedimentType = sedimentType;
-            int traFrm;
-            if (int.TryParse(section.GetPropertyValue("TraFrm"), out traFrm))
+
+            IniProperty traFrmProperty = section.FindProperty("TraFrm");
+            
+            if (traFrmProperty != null && traFrmProperty.TryGetConvertedValue(out int traFrm))
             {
                 ISedimentFormulaType sedimentFormula =
                     fraction.SupportedFormulaTypes.FirstOrDefault(ft => ft.TraFrm == traFrm);
+                
                 if (sedimentFormula != null)
                 {
                     foreach (ISedimentProperty sedimentFormulaProperty in sedimentFormula.Properties)

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
@@ -53,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
                     GridFileName = gridFileName,
                     BedLevelGridFileName = domainSection.GetPropertyValue("BedLevelGrid", ""),
                     BedLevelFileName = domainSection.GetPropertyValue("BedLevel", ""),
-                    NestedInDomain = int.Parse(domainSection.GetPropertyValue("NestedInDomain", "-1"), NumberStyles.Any, CultureInfo.InvariantCulture)
+                    NestedInDomain = domainSection.GetPropertyValue("NestedInDomain", -1)
                 };
 
                 CreateDirectionalSpaceData(domainSection, domain);
@@ -67,15 +66,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
 
         private static void CreateHydroFromFlowSettingsData(IniSection domainSection, WaveDomainData domain)
         {
-            string bedLevelUsage = domainSection.GetPropertyValue("FlowBedLevel");
-            if (bedLevelUsage != null)
+            if (domainSection.ContainsProperty("FlowBedLevel"))
             {
-                domain.HydroFromFlowData.BedLevelUsage = (UsageFromFlowType) int.Parse(bedLevelUsage, NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.HydroFromFlowData.WaterLevelUsage = (UsageFromFlowType) int.Parse(domainSection.GetPropertyValue("FlowWaterLevel", "0"),
-                                                                                         NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.HydroFromFlowData.VelocityUsage = (UsageFromFlowType) int.Parse(domainSection.GetPropertyValue("FlowVelocity", "0"),
-                                                                                       NumberStyles.Any,
-                                                                                       CultureInfo.InvariantCulture);
+                domain.HydroFromFlowData.BedLevelUsage = domainSection.GetPropertyValue<UsageFromFlowType>("FlowBedLevel");
+                domain.HydroFromFlowData.WaterLevelUsage = domainSection.GetPropertyValue<UsageFromFlowType>("FlowWaterLevel");
+                domain.HydroFromFlowData.VelocityUsage = domainSection.GetPropertyValue<UsageFromFlowType>("FlowVelocity");
+                
                 string velocityType = domainSection.GetPropertyValue("FlowVelocityType", "not-specified");
                 switch (velocityType)
                 {
@@ -90,9 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
                         break;
                 }
 
-                domain.HydroFromFlowData.WindUsage = (UsageFromFlowType) int.Parse(domainSection.GetPropertyValue("FlowWind", "0"),
-                                                                                   NumberStyles.Any, CultureInfo.InvariantCulture);
-
+                domain.HydroFromFlowData.WindUsage = domainSection.GetPropertyValue<UsageFromFlowType>("FlowWind");
                 domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = false;
             }
             else
@@ -103,14 +97,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
 
         private static void CreateFrequencySpaceData(IniSection domainSection, WaveDomainData domain)
         {
-            string nFreq = domainSection.GetPropertyValue("NFreq");
-            if (nFreq != null)
+            if (domainSection.ContainsProperty("NFreq"))
             {
-                domain.SpectralDomainData.NFreq = (int) double.Parse(nFreq, NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.SpectralDomainData.FreqMin = double.Parse(domainSection.GetPropertyValue("FreqMin", "0.0"),
-                                                                 NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.SpectralDomainData.FreqMax = double.Parse(domainSection.GetPropertyValue("FreqMax", "0.0"),
-                                                                 NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.SpectralDomainData.NFreq = domainSection.GetPropertyValue<int>("NFreq");
+                domain.SpectralDomainData.FreqMin = domainSection.GetPropertyValue<double>("FreqMin");
+                domain.SpectralDomainData.FreqMax = domainSection.GetPropertyValue<double>("FreqMax");
                 domain.SpectralDomainData.UseDefaultFrequencySpace = false;
             }
             else
@@ -121,18 +112,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain
 
         private static void CreateDirectionalSpaceData(IniSection domainSection, WaveDomainData domain)
         {
-            string spaceType = domainSection.GetPropertyValue("DirSpace");
-            if (spaceType != null)
+            if (domainSection.ContainsProperty("DirSpace"))
             {
-                domain.SpectralDomainData.DirectionalSpaceType = spaceType == "circle"
-                                                                     ? WaveDirectionalSpaceType.Circle
-                                                                     : WaveDirectionalSpaceType.Sector;
-                domain.SpectralDomainData.NDir = int.Parse(domainSection.GetPropertyValue("NDir", "0"),
-                                                           NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.SpectralDomainData.StartDir = double.Parse(domainSection.GetPropertyValue("StartDir", "0.0"),
-                                                                  NumberStyles.Any, CultureInfo.InvariantCulture);
-                domain.SpectralDomainData.EndDir = double.Parse(domainSection.GetPropertyValue("EndDir", "0.0"),
-                                                                NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.SpectralDomainData.DirectionalSpaceType = domainSection.GetPropertyValue<WaveDirectionalSpaceType>("DirSpace");
+                domain.SpectralDomainData.NDir = domainSection.GetPropertyValue<int>("NDir");
+                domain.SpectralDomainData.StartDir = domainSection.GetPropertyValue<double>("StartDir");
+                domain.SpectralDomainData.EndDir = domainSection.GetPropertyValue<double>("EndDir");
                 domain.SpectralDomainData.UseDefaultDirectionalSpace = false;
             }
             else
