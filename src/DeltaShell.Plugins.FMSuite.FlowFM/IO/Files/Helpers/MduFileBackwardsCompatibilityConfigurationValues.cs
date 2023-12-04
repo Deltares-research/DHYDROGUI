@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
+using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility;
+using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 {
@@ -40,5 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         };
 
         public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } = new Dictionary<string, string>() {{"model", "General"}};
+        
+        public IEnumerable<IniPropertyInfo> UnsupportedPropertyValues { get; } = Enumerable.Empty<IniPropertyInfo>();
     }
 }

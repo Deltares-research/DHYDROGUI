@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
+using System.Linq;
+using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers
 {
@@ -21,7 +22,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers
                 {"tscale", new NewPropertyData("TimeInterval", new DefaultPropertyUpdater())}
             };
 
-        public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } =
-            new Dictionary<string, string>();
+        public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } = new Dictionary<string, string>();
+
+        public IEnumerable<IniPropertyInfo> UnsupportedPropertyValues { get; } = Enumerable.Empty<IniPropertyInfo>();
     }
 }

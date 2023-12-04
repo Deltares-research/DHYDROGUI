@@ -88,6 +88,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
+        /// </summary>
+        public static string Backwards_Compatibility____0___has_been_updated_to___1__ {
+            get {
+                return ResourceManager.GetString("Backwards_Compatibility____0___has_been_updated_to___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backwards Compatibility: Value for &apos;{0}&apos; has been updated from &apos;{1}&apos; to &apos;{2}&apos;.
+        /// </summary>
+        public static string Backwards_Compatibility__Value_for___0___has_been_updated_from___1___to___2__ {
+            get {
+                return ResourceManager.GetString("Backwards_Compatibility__Value_for___0___has_been_updated_from___1___to___2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File {0}, block starting at line {1}, not possible to parse boundary data block..
         /// </summary>
         public static string BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___not_possible_to_parse_boundary_data_block_ {
@@ -882,15 +900,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Properties &apos;numCoordinates&apos;, &apos;xCoordinates&apos; and &apos;yCoordinates&apos; must be provided..
-        /// </summary>
-        public static string Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided {
-            get {
-                return ResourceManager.GetString("Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Parameter {0} should be between 0 and {1} (the current value of {2})..
         /// </summary>
         public static string Parameter__0__should_be_between_0_and__1___the_current_value_of__2___ {
@@ -905,6 +914,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string Parameter__0__should_be_less_than_zero {
             get {
                 return ResourceManager.GetString("Parameter__0__should_be_less_than_zero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter {0} should be &gt; 0.00..
+        /// </summary>
+        public static string Parameter__0__should_be_more_than_zero {
+            get {
+                return ResourceManager.GetString("Parameter__0__should_be_more_than_zero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Properties &apos;numCoordinates&apos;, &apos;xCoordinates&apos; and &apos;yCoordinates&apos; must be provided..
+        /// </summary>
+        public static string Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided {
+            get {
+                return ResourceManager.GetString("Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided", resourceCulture);
             }
         }
         
@@ -933,15 +960,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("Property_numCoordinates_must_either_be_1_point_or_any_value_greater_than_2_polygo" +
                         "n", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameter {0} should be &gt; 0.00..
-        /// </summary>
-        public static string Parameter__0__should_be_more_than_zero {
-            get {
-                return ResourceManager.GetString("Parameter__0__should_be_more_than_zero", resourceCulture);
             }
         }
         

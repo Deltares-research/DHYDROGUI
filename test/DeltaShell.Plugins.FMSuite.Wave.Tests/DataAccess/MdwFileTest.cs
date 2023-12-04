@@ -7,7 +7,6 @@ using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -566,9 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                             Is.False,
                             "Expected no property with the file name TScale");
 
-                string expectedMsg = string.Format(
-                    Resources.IniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
-                    "TScale", "TimeInterval");
+                var expectedMsg = "Backwards Compatibility: 'TScale' has been updated to 'TimeInterval'";
                 Assert.That(logMessages.Any(x => x.Contains(expectedMsg)), Is.True, "Expected a warning messages logged.");
             }
         }

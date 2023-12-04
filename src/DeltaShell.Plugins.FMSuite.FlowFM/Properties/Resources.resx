@@ -775,4 +775,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="Parameter__0__should_be_between_0_and__1___the_current_value_of__2___" xml:space="preserve">
     <value>Parameter {0} should be between 0 and {1} (the current value of {2}).</value>
   </data>
+  <data name="Backwards_Compatibility____0___has_been_updated_to___1__" xml:space="preserve">
+    <value>Backwards Compatibility: '{0}' has been updated to '{1}'</value>
+  </data>
+  <data name="Backwards_Compatibility__Value_for___0___has_been_updated_from___1___to___2__" xml:space="preserve">
+    <value>Backwards Compatibility: Value for '{0}' has been updated from '{1}' to '{2}'</value>
+  </data>
 </root>

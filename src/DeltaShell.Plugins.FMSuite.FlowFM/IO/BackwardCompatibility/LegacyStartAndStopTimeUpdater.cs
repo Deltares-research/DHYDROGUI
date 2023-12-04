@@ -1,13 +1,12 @@
 ﻿using System;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common;
-using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DHYDRO.Common.Extensions;
 using DHYDRO.Common.IO.Ini;
+using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 using DHYDRO.Common.Logging;
-using CommonResources = DeltaShell.Plugins.FMSuite.Common.Properties.Resources;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
 {
@@ -166,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
         private static void LogWarningAboutUpdatedKey(string oldPropertyKey, string newPropertyKey, ILogHandler logHandler)
         {
             logHandler.ReportWarningFormat(
-                CommonResources.IniBackwardsCompatibilityHelper_GetUpdatedKey_Backwards_Compatibility____0___has_been_updated_to___1__,
+                Resources.Backwards_Compatibility____0___has_been_updated_to___1__,
                 oldPropertyKey,
                 newPropertyKey);
         }
@@ -174,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility
         private static void ReportWarningAboutUpdatedValue(IniProperty legacyProperty, string newValue, ILogHandler logHandler)
         {
             logHandler.ReportWarningFormat(
-                CommonResources.IniBackwardsCompatibilityHelper_Value_for_0_has_been_updated_from_1_to_2,
+                Resources.Backwards_Compatibility__Value_for___0___has_been_updated_from___1___to___2__,
                 legacyProperty.Key,
                 legacyProperty.Value,
                 newValue);

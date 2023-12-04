@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers;
+using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers
