@@ -26,6 +26,7 @@ namespace DHYDRO.Common.IO.Ini.BackwardCompatibility
         public IniBackwardsCompatibilityHelper(IIniBackwardsCompatibilityConfigurationValues configurationValues)
         {
             Ensure.NotNull(configurationValues, nameof(configurationValues));
+
             this.configurationValues = configurationValues;
         }
 
@@ -47,6 +48,31 @@ namespace DHYDRO.Common.IO.Ini.BackwardCompatibility
             Ensure.NotNull(propertyKey, nameof(propertyKey));
 
             return configurationValues.ObsoleteProperties.Contains(propertyKey.ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Determines whether the provided <paramref name="propertyKey"/> is currently considered obsolete.
+        /// </summary>
+        /// <param name="propertyKey">The property name to check.</param>
+        /// <param name="section">The section the property belongs to.</param>
+        /// <returns>
+        /// <c>true</c> if the specified property name is obsolete; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
+        /// <remarks>
+        /// Note that property names are case-insensitive and will be matched as such.
+        /// </remarks>
+        public bool IsConditionalObsoletePropertyKey(string propertyKey, IniSection section)
+        {
+            Ensure.NotNull(propertyKey, nameof(propertyKey));
+            Ensure.NotNull(section, nameof(section));
+
+            if (configurationValues.ConditionalObsoleteProperties.TryGetValue(propertyKey.ToLowerInvariant(), out string conditionalProperty))
+            {
+                return section.Properties.Any(property => property.IsKeyEqualTo(conditionalProperty));
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -72,6 +98,16 @@ namespace DHYDRO.Common.IO.Ini.BackwardCompatibility
                                       .Any(v => IsUnsupportedPropertyValue(v, sectionName, propertyKey, value));
         }
 
+        private static bool IsUnsupportedPropertyValue(IniPropertyInfo propertyInfo,
+                                                       string sectionName,
+                                                       string propertyKey,
+                                                       string value)
+        {
+            return propertyInfo.Section.Equals(sectionName, caseInsensitiveComparison) &&
+                   propertyInfo.Property.Equals(propertyKey, caseInsensitiveComparison) &&
+                   propertyInfo.Value.Equals(value, caseInsensitiveComparison);
+        }
+
         /// <summary>
         /// Get the mapping of <paramref name="propertyKey"/> if one exists, else null.
         /// </summary>
@@ -91,7 +127,26 @@ namespace DHYDRO.Common.IO.Ini.BackwardCompatibility
         {
             Ensure.NotNull(propertyKey, nameof(propertyKey));
 
-            return GetUpdatedName(propertyKey, configurationValues.LegacyPropertyMapping, logHandler);
+            return GetUpdatedKey(propertyKey, configurationValues.LegacyPropertyMapping, logHandler);
+        }
+
+        private static string GetUpdatedKey(string propertyKey,
+                                            IReadOnlyDictionary<string, NewPropertyData> mapping,
+                                            ILogHandler logHandler)
+        {
+            string propertyKeyLower = propertyKey.ToLower();
+
+            if (!mapping.ContainsKey(propertyKeyLower))
+            {
+                return null;
+            }
+
+            string mappedKey = mapping[propertyKeyLower].Key;
+            logHandler?.ReportWarningFormat(Resources.Backwards_Compatibility_0_has_been_updated_to_1_,
+                                            propertyKey,
+                                            mappedKey);
+
+            return mappedKey;
         }
 
         /// <summary>
@@ -135,14 +190,61 @@ namespace DHYDRO.Common.IO.Ini.BackwardCompatibility
             return newName;
         }
 
-        private static bool IsUnsupportedPropertyValue(IniPropertyInfo propertyInfo,
-                                                       string sectionName,
-                                                       string propertyKey,
-                                                       string value)
+        /// <summary>
+        /// Removes the obsolete properties from the given section.
+        /// For each removed property a warning is reported.
+        /// </summary>
+        /// <param name="section">The INI section to delete the obsolete properties from. </param>
+        /// <param name="logHandler"> The log handler to log messages with. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any argument is <c>null</c>
+        /// </exception>
+        public void RemoveObsoletePropertiesWithWarning(IniSection section, ILogHandler logHandler)
         {
-            return propertyInfo.Section.Equals(sectionName, caseInsensitiveComparison) &&
-                   propertyInfo.Property.Equals(propertyKey, caseInsensitiveComparison) &&
-                   propertyInfo.Value.Equals(value, caseInsensitiveComparison);
+            Ensure.NotNull(section, nameof(section));
+            Ensure.NotNull(logHandler, nameof(logHandler));
+
+            foreach (IniProperty property in section.Properties.ToArray())
+            {
+                if (!IsObsoletePropertyKey(property.Key) && !IsConditionalObsoletePropertyKey(property.Key, section))
+                {
+                    continue;
+                }
+
+                logHandler.ReportWarning(string.Format(Resources.Key__0__is_deprecated_and_automatically_removed_from_model_, property.Key));
+                section.RemoveProperty(property);
+            }
+        }
+
+        /// <summary>
+        /// Updates a property to its latest version.
+        /// </summary>
+        /// <param name="property">The <see cref="IniSection"/> to update.</param>
+        /// <param name="section">The <see cref="IniSection"/> the property belongs to.</param>
+        /// <param name="logHandler">The log handler to log messages with.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
+        public void UpdateProperty(IniProperty property, IniSection section, ILogHandler logHandler)
+        {
+            Ensure.NotNull(property, nameof(property));
+            Ensure.NotNull(section, nameof(section));
+            Ensure.NotNull(logHandler, nameof(logHandler));
+
+            if (!IsLegacyProperty(property))
+            {
+                return;
+            }
+
+            NewPropertyData newData = configurationValues.LegacyPropertyMapping[property.Key.ToLower()];
+
+            string newKey = GetUpdatedPropertyKey(property.Key);
+
+            IPropertyUpdater updater = newData.Updater;
+            updater.UpdateProperty(property.Key, newKey, section, logHandler);
+        }
+
+        private bool IsLegacyProperty(IniProperty property)
+        {
+            return configurationValues.LegacyPropertyMapping.ContainsKey(property.Key.ToLower());
         }
     }
 }

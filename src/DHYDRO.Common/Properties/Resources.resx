@@ -27,4 +27,7 @@
     <data name="Backwards_Compatibility_0_has_been_updated_to_1_" xml:space="preserve">
         <value>Backwards Compatibility: '{0}' has been updated to '{1}'</value>
     </data>
+    <data name="Key__0__is_deprecated_and_automatically_removed_from_model_" xml:space="preserve">
+        <value>Key {0} is deprecated and automatically removed from model.</value>
+    </data>
 </root>

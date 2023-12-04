@@ -20,8 +20,21 @@ namespace DHYDRO.Common.IO.Ini.BackwardCompatibility
         ISet<string> ObsoleteProperties { get; }
 
         /// <summary>
-        /// Gets the mapping of legacy property names to their up to date
-        /// equivalents.
+        /// Gets the properties that are obsolete only when other properties are present as well.
+        /// </summary>
+        /// <remarks>
+        /// Note that all properties are assumed to be case-insensitive, as
+        /// such it is required for all properties in <see cref="ConditionalObsoleteProperties"/>
+        /// to be written in lowercase, i.e. the following invariant should hold:
+        /// FORALL p IN <see cref="ConditionalObsoleteProperties"/>: p == p.ToLower()
+        /// The keys in the mapping are considered obsolete, only if the properties, represented
+        /// by the values in the mapping, are also present.
+        /// </remarks>
+        IReadOnlyDictionary<string, string> ConditionalObsoleteProperties { get; }
+
+        /// <summary>
+        /// Gets the mapping of legacy property keys to the data required to
+        /// update them to their up to date equivalents.
         /// </summary>
         /// <remarks>
         /// Note that all properties are assumed to be case-insensitive, as
@@ -30,7 +43,7 @@ namespace DHYDRO.Common.IO.Ini.BackwardCompatibility
         /// i.e. the following invariant should hold:
         /// FORALL p IN LegacyPropertyMapping.Keys: p == p.ToLower()
         /// </remarks>
-        IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; }
+        IReadOnlyDictionary<string, NewPropertyData> LegacyPropertyMapping { get; }
 
         /// <summary>
         /// Gets the mapping of legacy section names to their up to date

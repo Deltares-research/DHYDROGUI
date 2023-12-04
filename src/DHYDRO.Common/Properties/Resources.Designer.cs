@@ -67,5 +67,14 @@ namespace DHYDRO.Common.Properties {
                 return ResourceManager.GetString("Backwards_Compatibility_0_has_been_updated_to_1_", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key {0} is deprecated and automatically removed from model..
+        /// </summary>
+        public static string Key__0__is_deprecated_and_automatically_removed_from_model_ {
+            get {
+                return ResourceManager.GetString("Key__0__is_deprecated_and_automatically_removed_from_model_", resourceCulture);
+            }
+        }
     }
 }
