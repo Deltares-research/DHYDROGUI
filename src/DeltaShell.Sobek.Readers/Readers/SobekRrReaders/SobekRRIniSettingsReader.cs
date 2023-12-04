@@ -37,35 +37,19 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
         private void GetGeneralSettings()
         {
-            settings.OutputTimestepMultiplier = 1;
-
             IniSection outputOptions = iniData.FindSection("OutputOptions");
-            if (outputOptions != null && outputOptions.TryGetPropertyValue("OutputAtTimestep", out double multiplier))
-            {
-                settings.OutputTimestepMultiplier = multiplier;
-            }
+            settings.OutputTimestepMultiplier = outputOptions?.GetPropertyValue("OutputAtTimestep", 1.0d) ?? 1.0d;
 
             IniSection optionSettings = iniData.FindSection("Options");
             if (optionSettings != null)
             {
-                if (optionSettings.TryGetPropertyValue("UnsaturatedZone", out int unsaturatedZone))
-                {
-                    settings.UnsaturatedZone = unsaturatedZone;
-                }
+                settings.UnsaturatedZone = optionSettings.GetPropertyValue<int>("UnsaturatedZone");
+                settings.GreenhouseYear = optionSettings.GetPropertyValue<short>("GreenhouseYear");
+                settings.InitCapsimOption = optionSettings.GetPropertyValue<int>("InitCapsimOption");
 
-                if (optionSettings.TryGetPropertyValue("GreenhouseYear", out short greenhouseYear))
+                if (optionSettings.ContainsProperty("CapsimPerCropArea"))
                 {
-                    settings.GreenhouseYear = greenhouseYear;
-                }
-
-                if (optionSettings.TryGetPropertyValue("InitCapsimOption", out int initCapsimOption))
-                {
-                    settings.InitCapsimOption = initCapsimOption;
-                }
-
-                if (optionSettings.TryGetPropertyValue("CapsimPerCropArea", out int capsimPerCropArea))
-                {
-                    settings.CapsimPerCropArea = capsimPerCropArea;
+                    settings.CapsimPerCropArea = optionSettings.GetPropertyValue<int>("CapsimPerCropArea");
                     settings.CapsimPerCropAreaIsDefined = true;
                 }
             }
@@ -73,12 +57,13 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             IniSection timeSettings = iniData.FindSection("TimeSettings");
             if (timeSettings != null)
             {
-                if (timeSettings.TryGetPropertyValue("PeriodFromEvent", out bool periodFromEvent))
-                {
-                    settings.PeriodFromEvent = periodFromEvent;
-                }
+                settings.PeriodFromEvent = timeSettings.GetPropertyValue<bool>("PeriodFromEvent");
 
-                if (timeSettings.TryGetPropertyValue("StartTime", out string startTimeStr))
+                string startTimeStr = timeSettings.GetPropertyValue("StartTime");
+                string endTimeStr = timeSettings.GetPropertyValue("EndTime");
+                string timeStepStr = timeSettings.GetPropertyValue("TimestepSize");
+
+                if (!string.IsNullOrEmpty(startTimeStr))
                 {
                     if (TryConvertToDateTime(startTimeStr, out DateTime startTime))
                     {
@@ -90,7 +75,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                     }
                 }
 
-                if (timeSettings.TryGetPropertyValue("EndTime", out string endTimeStr))
+                if (!string.IsNullOrEmpty(endTimeStr))
                 {
                     if (TryConvertToDateTime(endTimeStr, out DateTime endTime))
                     {
@@ -102,7 +87,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                     }
                 }
 
-                if (timeSettings.TryGetPropertyValue("TimestepSize", out string timeStepStr))
+                if (!string.IsNullOrEmpty(timeStepStr))
                 {
                     if (int.TryParse(timeStepStr, out int timestep))
                     {
@@ -158,13 +143,10 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             {
                 return;
             }
+            
+            settings.AggregationOptions = outputOptions.GetPropertyValue<int>("OutputAtTimestepOption");
 
-            if (outputOptions.TryGetPropertyValue("OutputAtTimestepOption", out int aggregationOptions))
-            {
-                settings.AggregationOptions = aggregationOptions;
-            }
-
-            var actionDict = new Dictionary<string, Action<bool>>()
+            var actionDict = new Dictionary<string, Action<bool>>
             {
                 { "OutputRRPaved", (bool b) => settings.OutputRRPaved = b },
                 { "OutputRRUnpaved", (bool b) => settings.OutputRRUnpaved = b },
@@ -183,10 +165,9 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             foreach (KeyValuePair<string, Action<bool>> kvp in actionDict)
             {
-                if (outputOptions.TryGetPropertyValue(kvp.Key, out bool value))
-                {
-                    kvp.Value(value);
-                }
+                var propertyValue = outputOptions.GetPropertyValue<bool>(kvp.Key);
+                
+                kvp.Value(propertyValue);
             }
         }
     }
