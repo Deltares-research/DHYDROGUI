@@ -20,15 +20,15 @@ namespace DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility
         public ISet<string> ObsoleteProperties { get; } = new HashSet<string>();
 
         /// <inheritdoc/>
-        public IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; } = 
-            new ReadOnlyDictionary<string, string>(new Dictionary<string, string>());
+        public IReadOnlyDictionary<string, string> ConditionalObsoleteProperties { get; } = new Dictionary<string, string>();
 
         /// <inheritdoc/>
-        public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } = 
-            new Dictionary<string, string>(new Dictionary<string, string>());
+        public IReadOnlyDictionary<string, NewPropertyData> LegacyPropertyMapping { get; } = new Dictionary<string, NewPropertyData>();
 
         /// <inheritdoc/>
-        public IEnumerable<IniPropertyInfo> UnsupportedPropertyValues { get; } =
-            new ReadOnlyCollection<IniPropertyInfo>(unsupportedPropertyValues);
+        public IReadOnlyDictionary<string, string> LegacySectionMapping { get; } = new Dictionary<string, string>();
+
+        /// <inheritdoc/>
+        public IEnumerable<IniPropertyInfo> UnsupportedPropertyValues { get; } = new ReadOnlyCollection<IniPropertyInfo>(unsupportedPropertyValues);
     }
 }
