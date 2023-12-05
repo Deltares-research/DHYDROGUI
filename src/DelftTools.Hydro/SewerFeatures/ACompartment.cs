@@ -7,7 +7,8 @@ namespace DelftTools.Hydro.SewerFeatures
     /// </summary>
     public abstract class ACompartment
     {
-        public abstract ILogHandler LogHandler { get; }
+        public virtual ILogHandler LogHandler { get; }
+        
         /// <summary>
         /// Processes a compartment and then returns the processed compartment.
         /// </summary>
