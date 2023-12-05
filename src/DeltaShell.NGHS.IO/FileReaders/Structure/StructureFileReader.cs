@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
@@ -9,6 +8,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
@@ -22,15 +22,32 @@ using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Structure
 {
-    public static class StructureFileReader
+    public sealed class StructureFileReader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(StructureFileReader));
-        private static readonly IniBackwardsCompatibilityHelper backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(new StructureFileBackwardsCompatibilityConfigurationValues());
 
-        public static void ReadFile(string structureFilename, 
-                                    ICrossSectionDefinition[] crossSectionDefinitions, 
-                                    IHydroNetwork network,
-                                    DateTime referenceDateTime)
+        private readonly IFileSystem fileSystem;
+        private readonly IniBackwardsCompatibilityHelper backwardsCompatibilityHelper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StructureFileReader"/> class.
+        /// </summary>
+        /// <param name="fileSystem">Provides access to the file system.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="fileSystem"/> is <c>null</c>.</exception>
+        public StructureFileReader(IFileSystem fileSystem)
+        {
+            Ensure.NotNull(fileSystem, nameof(fileSystem));
+
+            this.fileSystem = fileSystem;
+            
+            var configurationValues = new StructureFileBackwardsCompatibilityConfigurationValues();
+            backwardsCompatibilityHelper = new IniBackwardsCompatibilityHelper(configurationValues);
+        }
+
+        public void ReadFile(string structureFilename, 
+                             ICrossSectionDefinition[] crossSectionDefinitions, 
+                             IHydroNetwork network,
+                             DateTime referenceDateTime)
         {
             var fileReadingExceptions = new List<FileReadingException>();
 
@@ -68,11 +85,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
         private static void AddStructuresToNetwork(IList<IStructure1D> structures)
         {
             var compoundStructures = structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure);
-            var nonCoumpoundStructures = structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure);
+            var nonCompoundStructures = structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure);
 
             AddCompositeStructuresToNetwork(compoundStructures);
 
-            var grouping = nonCoumpoundStructures.GroupBy(s => s.Branch);
+            var grouping = nonCompoundStructures.GroupBy(s => s.Branch);
 
             foreach (var group in grouping)
             {
@@ -102,19 +119,30 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
             });
         }
 
-        private static IList<IniSection> ReadStructureIniSections(string structureFilename)
+        private IList<IniSection> ReadStructureIniSections(string structureFilename)
         {
-            if (!File.Exists(structureFilename))
+            if (!fileSystem.File.Exists(structureFilename))
+            {
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_doesnt_exist, structureFilename));
+            }
 
-            var structuresIniSections = new IniReader().ReadIniFile(structureFilename);
-            if (structuresIniSections.Count == 0)
+            log.InfoFormat(Resources.StructureFileReader_ReadStructureIniFile_Reading_structure_definitions_from__0__, structureFilename);
+            
+            IniData iniData;
+            using (FileSystemStream stream = fileSystem.File.OpenRead(structureFilename))
+            {
+                iniData = new IniParser().Parse(stream);
+            }
+            
+            if (iniData.SectionCount == 0)
+            {
                 throw new FileReadingException(string.Format(Resources.Could_not_read_file_0_properly_it_seems_empty, structureFilename));
+            }
 
-            return ApplyBackwardCompatibility(structuresIniSections).ToList();
+            return ApplyBackwardCompatibility(iniData.Sections).ToList();
         }
      
-        private static IEnumerable<IniSection> ApplyBackwardCompatibility(IEnumerable<IniSection> iniSections)
+        private IEnumerable<IniSection> ApplyBackwardCompatibility(IEnumerable<IniSection> iniSections)
         {
             foreach (IniSection iniSection in iniSections)
             {
@@ -135,7 +163,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Structure
             }
         }
 
-        private static IEnumerable<IniProperty> GetPropertiesWithUnsupportedValues(IniSection iniSection)
+        private IEnumerable<IniProperty> GetPropertiesWithUnsupportedValues(IniSection iniSection)
         {
             return iniSection.Properties.Where(p => backwardsCompatibilityHelper.IsUnsupportedPropertyValue(iniSection.Name,
                                                                                                           p.Key,

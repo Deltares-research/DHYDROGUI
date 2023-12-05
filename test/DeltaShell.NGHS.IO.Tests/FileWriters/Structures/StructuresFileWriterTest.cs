@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -19,6 +18,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     public class StructuresFileWriterTest : TemporaryDirectoryBaseFixture
     {
         private static readonly Random random = new Random();
+        
+        private MockFileSystem fileSystem;
+        private StructureFileWriter fileWriter;
+
+        [SetUp]
+        public void SetUp()
+        {
+            fileSystem = new MockFileSystem();
+            fileWriter = new StructureFileWriter(fileSystem);
+        }
+        
+        [Test]
+        public void Constructor_FileSystemIsNull_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => _ = new StructureFileWriter(null));
+        }
 
         private static IEnumerable<TestCaseData> WriteFileData()
         {
@@ -46,9 +61,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         {
             // Setup
             DateTime referenceTime = DateTime.Today;
-            string filePath = Path.Combine(TempDir.Path, "structures.ini");
+            const string filePath = "structures.ini";
 
-            bool isCalled = false;
+            var isCalled = false;
             IHydroRegion[] hydroRegions = {};
 
             IEnumerable<IniSection> CreateStructureSections(IEnumerable<IHydroRegion> regions,
@@ -62,24 +77,24 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
 
             // Call
-            StructureFileWriter.WriteFile(filePath, 
-                                          hydroRegions, 
-                                          referenceTime, 
-                                          CreateStructureSections);
+            fileWriter.WriteFile(filePath, 
+                                 hydroRegions, 
+                                 referenceTime, 
+                                 CreateStructureSections);
 
             // Assert
             Assert.That(isCalled, Is.True);
-            Assert.That(File.Exists(filePath), Is.True);
+            Assert.That(fileSystem.FileExists(filePath), Is.True);
 
-            IList<IniSection> result = 
-                new IniReader().ReadIniFile(filePath);
+            MockFileData structureFileData = fileSystem.GetFile(filePath);
+            IniData result = new IniParser().Parse(structureFileData.TextContents);
 
             IList<IniSection> expectedSections = 
                 GetExpectedSections(iniSections);
 
-            Assert.That(result.Count, Is.EqualTo(expectedSections.Count));
+            Assert.That(result.Sections.Count, Is.EqualTo(expectedSections.Count));
 
-            IEnumerable<(IniSection, IniSection)> resultSections = result.Zip(expectedSections, (c1, c2) => (c1, c2));
+            IEnumerable<(IniSection, IniSection)> resultSections = result.Sections.Zip(expectedSections, (c1, c2) => (c1, c2));
             foreach ((IniSection resultCat, IniSection expectedCat) in resultSections)
                 AssertSameSection(resultCat, expectedCat);
         }

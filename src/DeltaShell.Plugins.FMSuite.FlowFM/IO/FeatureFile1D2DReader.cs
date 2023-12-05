@@ -167,7 +167,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            StructureFileReader.ReadFile(structureFile, crossSectionDefinitions, network, referenceDateTime);
+            var reader = new StructureFileReader(new FileSystem());
+            reader.ReadFile(structureFile, crossSectionDefinitions, network, referenceDateTime);
         }
 
         private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)

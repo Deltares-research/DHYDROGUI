@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
+using System.Text;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
@@ -22,6 +24,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Structure
     [TestFixture]
     public class StructureFileReaderTest
     {
+        private MockFileSystem fileSystem;
+        private StructureFileReader fileReader;
+
+        [SetUp]
+        public void SetUp()
+        {
+            fileSystem = new MockFileSystem();
+            fileReader = new StructureFileReader(fileSystem);
+        }
+
+        [Test]
+        public void Constructor_FileSystemIsNull_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => _ = new StructureFileReader(null));
+        }
+        
         [Test, Category(TestCategory.DataAccess)]
         public void GivenStructureFileReader_ReadingStructureFile_ShouldResultInAddedStructuresInNetwork()
         {
@@ -30,6 +48,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Structure
             var crossSectionLocationFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\StructureFileReaderTest\crsloc.ini");
             var crossSectionDefinitionFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\StructureFileReaderTest\crsdef.ini");
             var structureFilePath = Path.Combine(TestHelper.GetTestDataDirectory(),@"FileReaders\StructureFileReaderTest\structures.ini");
+            
+            fileSystem.AddFile(structureFilePath, new MockFileData(File.ReadAllText(structureFilePath)));
 
             IHydroNetwork network = new HydroNetwork();
             IDiscretization discretization = new Discretization();
@@ -44,7 +64,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Structure
             var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath, crossSectionDefinitionFilePath, network, null);
 
             // Act
-            StructureFileReader.ReadFile(structureFilePath, definitions, network, DateTime.Today);
+            fileReader.ReadFile(structureFilePath, definitions, network, DateTime.Today);
 
             // Assert
             Assert.AreEqual(26, network.BranchFeatures.Count());
@@ -55,75 +75,77 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Structure
             Assert.AreEqual(1, network.Pumps.Count());
         }
         
-        private const string connection = "Connection";
         [TestCase(StructureRegion.StructureTypeName.Weir, SewerCrossSectionDefinitionFactory.DefaultWeirSewerStructureProfileName, -10.0d, -10.0d)]
         [TestCase(StructureRegion.StructureTypeName.Orifice, SewerCrossSectionDefinitionFactory.DefaultWeirSewerStructureProfileName, -10.0d, -10.0d)]
         [TestCase(StructureRegion.StructureTypeName.Pump, SewerCrossSectionDefinitionFactory.DefaultPumpSewerStructureProfileName, 0.0d, 0.0d)]
         public void GivenStructureFileReader_ReadingStructureFileWithSewerConnectionsWithoutCrsDefs_ShouldResultInAddedStructuresWithDefaultSewerConnectionProfilesInNetwork(string typeString, string expectedSewerStructureProfileName, double expectedLevelSource, double expectedLevelTarget)
         {
             //Arrange
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                var structureFilePath = Path.Combine(tempDirectory.Path, "structures.ini");
-                GenerateStructureFile(structureFilePath, typeString);
+            const string path = "structures.ini";
+            string ini = GenerateStructureFileData(typeString);
 
-                IHydroNetwork network = Substitute.For<IHydroNetwork>();
-                var sewerConnection = new SewerConnection(connection) { Network = network };
-                IEventedList<IBranch> branches = new EventedList<IBranch>(Enumerable.Repeat(sewerConnection, 1));
-                network.Branches.Returns(branches);
-                network.SewerConnections.Returns(Enumerable.Repeat(sewerConnection, 1));
+            fileSystem.AddFile(path, new MockFileData(ini));
 
-                ICrossSectionDefinition[] crsDefs = Enumerable.Empty<ICrossSectionDefinition>().ToArray();
+            var network = Substitute.For<IHydroNetwork>();
+            var sewerConnection = new SewerConnection("Connection") { Network = network };
+                
+            IEventedList<IBranch> branches = new EventedList<IBranch>(Enumerable.Repeat(sewerConnection, 1));
+                
+            network.Branches.Returns(branches);
+            network.SewerConnections.Returns(Enumerable.Repeat(sewerConnection, 1));
 
-                // Act
-                StructureFileReader.ReadFile(structureFilePath, crsDefs, network, DateTime.Today);
+            ICrossSectionDefinition[] crsDefs = Enumerable.Empty<ICrossSectionDefinition>().ToArray();
 
-                // Assert
-                Assert.That(sewerConnection.CrossSection, Is.Not.Null);
-                Assert.That(sewerConnection.CrossSectionDefinitionName, Is.EqualTo(expectedSewerStructureProfileName));
-                Assert.That(sewerConnection.LevelSource, Is.EqualTo(expectedLevelSource));
-                Assert.That(sewerConnection.LevelTarget, Is.EqualTo(expectedLevelTarget));
-            }
+            // Act
+            fileReader.ReadFile(path, crsDefs, network, DateTime.Today);
+
+            // Assert
+            Assert.That(sewerConnection.CrossSection, Is.Not.Null);
+            Assert.That(sewerConnection.CrossSectionDefinitionName, Is.EqualTo(expectedSewerStructureProfileName));
+            Assert.That(sewerConnection.LevelSource, Is.EqualTo(expectedLevelSource));
+            Assert.That(sewerConnection.LevelTarget, Is.EqualTo(expectedLevelTarget));
         }
 
         [Test]
         public void GivenStructureFileReader_ReadingStructureFileWithoutCrsDefs_ShouldResultInPipeWithDefaultPipeProfileInNetwork()
         {
             //Arrange
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                var structureFilePath = Path.Combine(tempDirectory.Path, "structures.ini");
-                GenerateStructureFile(structureFilePath);
+            const string path = "structures.ini";
+            string ini = GenerateStructureFileData();
 
-                IHydroNetwork network = Substitute.For<IHydroNetwork>();
-                var pipe = new Pipe { PipeId = connection, Network = network };
+            fileSystem.AddFile(path, new MockFileData(ini));
 
-                IEventedList<IBranch> branches = new EventedList<IBranch>(Enumerable.Repeat(pipe,1));
-                network.Branches.Returns(branches);
-                network.SewerConnections.Returns(Enumerable.Repeat(pipe, 1));
+            var network = Substitute.For<IHydroNetwork>();
+            var pipe = new Pipe { PipeId = "Connection", Network = network };
+
+            IEventedList<IBranch> branches = new EventedList<IBranch>(Enumerable.Repeat(pipe,1));
+            network.Branches.Returns(branches);
+            network.SewerConnections.Returns(Enumerable.Repeat(pipe, 1));
                 
-                ICrossSectionDefinition[] crsDefs = Enumerable.Empty<ICrossSectionDefinition>().ToArray();
+            ICrossSectionDefinition[] crsDefs = Enumerable.Empty<ICrossSectionDefinition>().ToArray();
 
-                // Act
-                StructureFileReader.ReadFile(structureFilePath, crsDefs, network, DateTime.Today);
+            // Act
+            fileReader.ReadFile(path, crsDefs, network, DateTime.Today);
 
-                // Assert
-                Assert.That(pipe.CrossSection, Is.Not.Null);
-                Assert.That(pipe.CrossSectionDefinitionName, Is.EqualTo(SewerCrossSectionDefinitionFactory.DefaultPipeProfileName));
-                Assert.That(pipe.LevelSource, Is.EqualTo(-10.0d).Within(0.001));
-                Assert.That(pipe.LevelTarget, Is.EqualTo(-10.0d).Within(0.001));
-            }
+            // Assert
+            Assert.That(pipe.CrossSection, Is.Not.Null);
+            Assert.That(pipe.CrossSectionDefinitionName, Is.EqualTo(SewerCrossSectionDefinitionFactory.DefaultPipeProfileName));
+            Assert.That(pipe.LevelSource, Is.EqualTo(-10.0d).Within(0.001));
+            Assert.That(pipe.LevelTarget, Is.EqualTo(-10.0d).Within(0.001));
         }
 
-        private void GenerateStructureFile(string structureFilePath, string typeString = StructureRegion.StructureTypeName.Weir)
+        private static string GenerateStructureFileData(string typeString = StructureRegion.StructureTypeName.Weir)
         {
-            string structure = $"[{StructureRegion.Header}]\r\n";
-            structure += $"\t{StructureRegion.Id.Key} = StructureId\r\n";
-            structure += $"\t{StructureRegion.BranchId.Key} = {connection}\r\n";
-            structure += $"\t{StructureRegion.DefinitionType.Key} = {typeString}\r\n";
-            structure += $"\t{StructureRegion.Direction.Key} = suctionSide\r\n";
-            structure += $"\t{StructureRegion.Capacity.Key} = 1.0000\r\n";
-            File.WriteAllText(structureFilePath,  structure);
+            var sb = new StringBuilder();
+            
+            sb.AppendLine($"[{StructureRegion.Header}]");
+            sb.AppendLine($"\t{StructureRegion.Id.Key} = StructureId");
+            sb.AppendLine($"\t{StructureRegion.BranchId.Key} = Connection");
+            sb.AppendLine($"\t{StructureRegion.DefinitionType.Key} = {typeString}");
+            sb.AppendLine($"\t{StructureRegion.Direction.Key} = suctionSide");
+            sb.AppendLine($"\t{StructureRegion.Capacity.Key} = 1.0000");
+            
+            return sb.ToString();
         }
     }
 }

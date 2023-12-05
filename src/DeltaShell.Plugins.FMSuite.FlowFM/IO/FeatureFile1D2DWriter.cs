@@ -192,8 +192,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 IHydroRegion[] regions = { network, area };
                 var referenceTime = modelDefinition.GetReferenceDateAsDateTime();
-                
-                StructureFileWriter.WriteFile(structuresFilePath, 
+
+                var structureFileWriter = new StructureFileWriter(new FileSystem());
+                structureFileWriter.WriteFile(structuresFilePath, 
                                               regions, 
                                               referenceTime,
                                               StructureFile.GenerateStructureIniSectionsFromFmModel);
