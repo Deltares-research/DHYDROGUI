@@ -53,10 +53,63 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         }
         
         /// <summary>
+        /// Creates a function for max water level, no data values and nan values are replaced with bed level values.
+        /// </summary>
+        /// <param name="networkCoverage">Coverage for max water level.</param>
+        /// <param name="bedLevel">Bed level, used to replace no data values and nan values for bed level values.</param>
+        /// <returns>Function created for max water level.</returns>
+        public IFunction CreateMaxWaterLevelFunction(INetworkCoverage networkCoverage,  IFunction bedLevel)
+        {
+            if (networkCoverage == null) 
+                return null;
+
+            IList<INetworkLocation> locations = RouteHelper.GetLocationsInRoute(networkCoverage, route);
+            List<double> chainagesValues = locations.Select(loc => RouteHelper.GetRouteChainage(route, loc)).ToList();
+            
+            List<double> values = locations
+                                  .Select(location => GetMaxWaterLevel(networkCoverage, location))
+                                  .ToList();
+            
+            ReplaceNoDataValuesIntoBedLevelValues(networkCoverage, bedLevel, values, chainagesValues);
+
+            return NetworkSideViewHelper.CreateFunction(waterLevelUnit, chainagesValues, values, $"Max {networkCoverage.Name}");
+        }
+
+        private static double GetMaxWaterLevel(INetworkCoverage networkCoverage, INetworkLocation location)
+        {
+            IMultiDimensionalArray<double> waterLevels = GetWaterLevelsByFilter(networkCoverage, location);
+
+            if (waterLevels == null || !waterLevels.Any())
+            {
+                waterLevels = GetWaterLevelsByTimeSeries(networkCoverage, location);
+                if (waterLevels == null || !waterLevels.Any())
+                {
+                    return double.NaN;
+                }
+            }
+
+            return waterLevels.Max();
+        }
+
+        private static IMultiDimensionalArray<double> GetWaterLevelsByTimeSeries(INetworkCoverage networkCoverage, INetworkLocation location)
+        {
+            IFunction time = networkCoverage.GetTimeSeries(location);
+            return time?.GetValues<double>();
+        }
+
+        private static IMultiDimensionalArray<double> GetWaterLevelsByFilter(INetworkCoverage networkCoverage, INetworkLocation location)
+        {
+            var filter = new VariableValueFilter<INetworkLocation>(networkCoverage.Locations, location);
+            return networkCoverage.GetValues<double>(filter);
+        }
+
+        /// <summary>
         /// Creates the water level function for the side view.
         /// </summary>
+        /// <param name="waterLevelCoverage">Coverage for water level.</param>
+        /// <param name="bedLevel">Bed level, used to replace no data values and nan values for bed level values.</param>
         /// <returns>The created water level function.</returns>
-        public IFunction CreateWaterLevelSideViewFunction(INetworkCoverage waterLevelCoverage)
+        public IFunction CreateWaterLevelSideViewFunction(INetworkCoverage waterLevelCoverage, IFunction bedLevel)
         {
             if (DataRequiredToCreateFunctionIsMissing(waterLevelCoverage))
             {
@@ -69,8 +122,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
 
             IEnumerable<LocationInRoute> locationsInRoute = GetLocationsInRoute(waterLevelCoverage);
-            IEnumerable<double> locationChainages = GetChainageForLocations(locationsInRoute);
-            IEnumerable<double> waterLevels = GetWaterLevelForLocations(locationsInRoute, waterLevelCoverage);
+            var locationChainages = GetChainageForLocations(locationsInRoute).ToList();
+            var waterLevels = GetWaterLevelForLocations(locationsInRoute, waterLevelCoverage).ToList();
+
+            ReplaceNoDataValuesIntoBedLevelValues(waterLevelCoverage, bedLevel, waterLevels, locationChainages);
 
             IFunction function = CreateFunctionFromChainagesAndYValues(locationChainages, waterLevels, waterLevelUnit);
 
@@ -81,7 +136,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             return function;
         }
+
+        private static void ReplaceNoDataValuesIntoBedLevelValues(INetworkCoverage levelCoverage, IFunction bedLevel, IList<double> levels, IReadOnlyList<double> locationChainages)
+        {
+            if (bedLevel == null)
+            {
+                return;
+            }
+
+            var noDataValue = levelCoverage.Components[0].NoDataValue as double?;
+            
+            for (var i = 0; i < levels.Count; i++)
+            {
+                if (IsInValidValue(levels[i], noDataValue))
+                {
+                    levels[i] = bedLevel.Evaluate<double>(locationChainages[i]);
+                }
+            }
+        }
         
+        private static bool IsInValidValue(double value, double? noDataValue)
+        {
+            return  value.Equals(noDataValue) || double.IsNaN(value);
+        }
+
         private static bool WaterLevelNetworkCoverageHasNoValues(INetworkCoverage networkCoverage)
         {
             if (networkCoverage?.Locations?.Values == null

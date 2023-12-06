@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private readonly IDictionary<string, IFunction> createdRoutes = new Dictionary<string, IFunction>();
         private NetworkSideViewCoverageManager networkSideViewCoverageManager;
         private static readonly IUnit waterLevelUnit = new Unit("Water level", "m AD");
-        private List<DelftTools.Utils.Tuple<double, double>> maxWaterLevelValues;
+        private IFunction maxWaterLevelValues;
         private readonly SideViewFunctionCreator sideViewFunctionCreator;
 
         public NetworkSideViewDataController(Route route, NetworkSideViewCoverageManager coverageManager, ModelNameForCoverageDelegate modelNameForCoverageDelegate = null)
@@ -148,40 +148,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     AllFeatureCoverages.Add(FilterWithTime(featureCoverage, null));
                     break;
             }
-        }
-
-        private IFunction CreateMaxLevelFunction(INetworkCoverage networkCoverage)
-        {
-            if (networkCoverage == null) 
-                return null;
-
-            var chainagesValues = new List<double>();
-            var values = new List<double>();
-
-            if (maxWaterLevelValues == null)
-            {
-                var locations = RouteHelper.GetLocationsInRoute(networkCoverage, NetworkRoute);
-                chainagesValues = locations.Select(loc => RouteHelper.GetRouteChainage(NetworkRoute, loc)).ToList();
-
-                values = locations
-                         .Select(l =>
-                         {
-                             var multiDimensionalArray = networkCoverage.GetValues<double>(new VariableValueFilter<INetworkLocation>(networkCoverage.Locations, l));
-                             return multiDimensionalArray != null && multiDimensionalArray.Count > 0 ? multiDimensionalArray.Max() : double.NaN;
-                         })
-                         .Where(v => !double.IsNaN(v))
-                         .ToList();
-
-                // cache values because they do not change when using time navigator
-                maxWaterLevelValues = chainagesValues.Zip(values).ToList();
-            }
-            else
-            {
-                chainagesValues = maxWaterLevelValues.Select(kvp => kvp.First).ToList();
-                values = maxWaterLevelValues.Select(kvp => kvp.Second).ToList();
-            }
-
-            return NetworkSideViewHelper.CreateFunction(waterLevelUnit, chainagesValues, values, $"Max {networkCoverage.Name}");
         }
 
         private static INetworkCoverage FilterWithTime(INetworkCoverage coverage, DateTime? time)
@@ -291,7 +257,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public IFunction CreateWaterLevelSideViewFunction()
         {
-            return sideViewFunctionCreator.CreateWaterLevelSideViewFunction(waterLevelNetworkCoverage);
+            IFunction bedLevel = ProfileSideViewFunctions.FirstOrDefault(function => function.Name == BedLevelNetworkCoverageBuilder.BedLevelCoverageName);
+            return sideViewFunctionCreator.CreateWaterLevelSideViewFunction(waterLevelNetworkCoverage, bedLevel);
         }
 
         public IFunction CreateRouteFunctionFromNetworkCoverage(INetworkCoverage coverage, IUnit yUnit)
@@ -518,11 +485,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
+        /// <summary>
+        /// Returns the max water level function.
+        /// </summary>
         public IFunction MaxWaterLevelFunction
         {
             get
             {
-                return CreateMaxLevelFunction((INetworkCoverage) waterLevelNetworkCoverage?.Parent);
+                IFunction bedLevel = ProfileSideViewFunctions.FirstOrDefault(function => function.Name == BedLevelNetworkCoverageBuilder.BedLevelCoverageName);
+                if (maxWaterLevelValues == null)
+                {
+                    maxWaterLevelValues = sideViewFunctionCreator.CreateMaxWaterLevelFunction((INetworkCoverage)waterLevelNetworkCoverage?.Parent, bedLevel);
+                }
+
+                return maxWaterLevelValues;
             }
         }
         
@@ -745,12 +721,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public static void UpdateMinMaxFromFunctionValues(IFunction function, ref double minValue, ref double maxValue)
         {
             var mda = function.GetValues<double>();
-            var mdaNoNaNs = mda.Where(v => !double.IsNaN(v)).ToList();
+            var noDataValue = function.Components.FirstOrDefault()?.NoDataValue as double?;
+            
+            var mdaNoNaNs = mda.Where(value => IsValidValue(value, noDataValue)).ToList();
             if (mdaNoNaNs.Any())
             {
                 minValue = double.IsNaN(minValue) ? mdaNoNaNs.Min() : Math.Min(mdaNoNaNs.Min(), minValue);
                 maxValue = double.IsNaN(maxValue) ? mdaNoNaNs.Max() : Math.Max(mdaNoNaNs.Max(), maxValue);
             }
+        }
+        
+        private static bool IsValidValue(double value, double? noDataValue)
+        {
+            return !double.IsNaN(value) && !value.Equals(noDataValue);
         }
 
         private static bool IsValidCoverage(IFunction function)

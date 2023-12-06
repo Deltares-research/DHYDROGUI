@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
@@ -12,12 +13,17 @@ using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 using NSubstitute;
 using NUnit.Framework;
+using Arg = NSubstitute.Arg;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {
     [TestFixture]
     public class SideViewFunctionCreatorTest
     {
+        private const string name = "expectedName";
+        private const double noDataValue = -999.0d;
+        private const double maxWaterLevel = 40.0d;
+        
         [Test]
         [TestCaseSource(nameof(ConstructorArgumentNullCases))]
         public void Constructor_ArgumentNull_ThrowsArgumentNullException(Route route,
@@ -72,7 +78,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             action(route, coverage);
             
             // Call
-            IFunction result = sideViewFunctionCreator.CreateWaterLevelSideViewFunction(coverage);
+            IFunction result = sideViewFunctionCreator.CreateWaterLevelSideViewFunction(coverage, Substitute.For<IFunction>());
             
             // Assert
             Assert.That(result, Is.Null);
@@ -115,7 +121,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
                                                               Substitute.For<IList<IStructure1D>>(),
                                                               Substitute.For<IUnit>());
             // Call
-            IFunction waterLevelFunction = functionCreator.CreateWaterLevelSideViewFunction(waterLevelCoverage);
+            IFunction waterLevelFunction = functionCreator.CreateWaterLevelSideViewFunction(waterLevelCoverage, Substitute.For<IFunction>());
 
             // Assert
             Assert.That(waterLevelFunction, Is.Not.Null);
@@ -126,6 +132,325 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             Assert.That(values[1], Is.EqualTo(baseBottomLevel));
             Assert.That(values[2], Is.EqualTo(baseBottomLevel + offset1));
             Assert.That(values[3], Is.EqualTo(baseBottomLevel + offset2));
+        }
+        
+        [Test]
+        public void CreateWaterLevelSideViewFunction_WhenBedLevelNull_WaterLevelsNeverBelowPipeBottomLevel()
+        {
+            // Setup
+            const double baseBottomLevel = 3.0;
+            const double offset1 = 1;
+            const double offset2 = 100;
+
+            IHydroNetwork network = CreateNetworkWithTwoPipes(baseBottomLevel);
+            NetworkCoverage waterLevelCoverage = CreateCoverageWithWaterLevelBelowAndAboveBottomLevels(baseBottomLevel,
+                                                                                                       offset1,
+                                                                                                       offset2,
+                                                                                                       network);
+            Route route = CreateRoute(network);
+
+            var functionCreator = new SideViewFunctionCreator(route,
+                                                              Substitute.For<IDictionary<string, IFunction>>(),
+                                                              Substitute.For<IList<IStructure1D>>(),
+                                                              Substitute.For<IUnit>());
+            // Call
+            IFunction waterLevelFunction = functionCreator.CreateWaterLevelSideViewFunction(waterLevelCoverage, null);
+
+            // Assert
+            Assert.That(waterLevelFunction, Is.Not.Null);
+            
+            IMultiDimensionalArray values = waterLevelFunction.GetValues();
+            Assert.That(values.Count, Is.EqualTo(4)); // 2 for each pipe
+            Assert.That(values[0], Is.EqualTo(baseBottomLevel));
+            Assert.That(values[1], Is.EqualTo(baseBottomLevel));
+            Assert.That(values[2], Is.EqualTo(baseBottomLevel + offset1));
+            Assert.That(values[3], Is.EqualTo(baseBottomLevel + offset2));
+        }
+        
+        [Test]
+        public void CreateWaterLevelSideViewFunction_GivenWaterLevelWithNoDataValueSetButDataAllSet_WaterLevelsNeverBelowPipeBottomLevel()
+        {
+            // Setup
+            const double baseBottomLevel = 3.0;
+            const double offset1 = 1;
+            const double offset2 = 100;
+
+            IHydroNetwork network = CreateNetworkWithTwoPipes(baseBottomLevel);
+            NetworkCoverage waterLevelCoverage = CreateCoverageWithWaterLevelBelowAndAboveBottomLevels(baseBottomLevel,
+                                                                                                       offset1,
+                                                                                                       offset2,
+                                                                                                       network);
+            Route route = CreateRoute(network);
+
+            var functionCreator = new SideViewFunctionCreator(route,
+                                                              Substitute.For<IDictionary<string, IFunction>>(),
+                                                              Substitute.For<IList<IStructure1D>>(),
+                                                              Substitute.For<IUnit>());
+
+            var bedLevel = Substitute.For<IFunction>();
+            waterLevelCoverage.Components[0].NoDataValue = -999;
+            const double bedLevelValueNoDataValueIsChangedTo = 30.0d;
+            bedLevel.Evaluate<double>(Arg.Any<object>()).Returns(bedLevelValueNoDataValueIsChangedTo);
+            
+            // Call
+            IFunction waterLevelFunction = functionCreator.CreateWaterLevelSideViewFunction(waterLevelCoverage, bedLevel);
+
+            // Assert
+            Assert.That(waterLevelFunction, Is.Not.Null);
+            
+            IMultiDimensionalArray values = waterLevelFunction.GetValues();
+            Assert.That(values.Count, Is.EqualTo(4)); // 2 for each pipe
+            Assert.That(values[0], Is.EqualTo(baseBottomLevel));
+            Assert.That(values[1], Is.EqualTo(baseBottomLevel));
+            Assert.That(values[2], Is.EqualTo(baseBottomLevel + offset1));
+            Assert.That(values[3], Is.EqualTo(baseBottomLevel + offset2));
+        }
+        
+        [Test]
+        public void CreateWaterLevelSideViewFunction_GivenWaterLevelWithNoDataValueSetOnDataElementInWaterLevel_WaterLevelForDataElementOnNoDataValueReplacedWithBedLevelValue()
+        {
+            // Setup
+            const double baseBottomLevel = 3.0;
+            const double offset1 = 1;
+            const double offset2 = 100;
+
+            IHydroNetwork network = CreateNetworkWithTwoPipes(baseBottomLevel);
+            NetworkCoverage waterLevelCoverage = CreateCoverageWithWaterLevelBelowAndAboveBottomLevels(baseBottomLevel,
+                                                                                                       offset1,
+                                                                                                       offset2,
+                                                                                                       network);
+            Route route = CreateRoute(network);
+
+            var functionCreator = new SideViewFunctionCreator(route,
+                                                              Substitute.For<IDictionary<string, IFunction>>(),
+                                                              Substitute.For<IList<IStructure1D>>(),
+                                                              Substitute.For<IUnit>());
+
+            var bedLevel = Substitute.For<IFunction>();
+            waterLevelCoverage.Components[0].NoDataValue = baseBottomLevel + offset2;
+            const double bedLevelValueNoDataValueIsChangedTo = 30.0d;
+            bedLevel.Evaluate<double>(Arg.Any<object>()).Returns(bedLevelValueNoDataValueIsChangedTo);
+            
+            // Call
+            IFunction waterLevelFunction = functionCreator.CreateWaterLevelSideViewFunction(waterLevelCoverage, bedLevel);
+
+            // Assert
+            Assert.That(waterLevelFunction, Is.Not.Null);
+            
+            IMultiDimensionalArray values = waterLevelFunction.GetValues();
+            Assert.That(values.Count, Is.EqualTo(4)); // 2 for each pipe
+            Assert.That(values[0], Is.EqualTo(baseBottomLevel));
+            Assert.That(values[1], Is.EqualTo(baseBottomLevel));
+            Assert.That(values[2], Is.EqualTo(baseBottomLevel + offset1));
+            Assert.That(values[3], Is.EqualTo(bedLevelValueNoDataValueIsChangedTo));
+        }
+
+        [Test]
+        public void CreateMaxWaterLevelFunction_GivenNetworkCoverageNull_ReturnNull()
+        {
+            // Setup
+            SideViewFunctionCreator functionCreator = CreateSideViewFunctionCreator();
+            
+            var bedLevel = Substitute.For<IFunction>();
+            
+            // Call
+            IFunction waterLevelFunction = functionCreator.CreateMaxWaterLevelFunction(null, bedLevel);
+            
+            // Assert
+            Assert.That(waterLevelFunction, Is.Null);
+        }
+        
+        [Test]
+        public void CreateMaxWaterLevelFunction_GivenNoCachedMaxWaterLevelValues_ReturnFunctionWithMaxWaterLevelValues()
+        {
+            // Setup
+            SideViewFunctionCreator functionCreator = CreateSideViewFunctionCreator();
+            var expectedName = $"Max {name}";
+
+            var mda = Substitute.For<IMultiDimensionalArray<double>>();
+            INetworkCoverage networkCoverage = GetNetworkCoverage(mda);
+
+            var bedLevel = Substitute.For<IFunction>();
+            
+            // Call
+            IFunction waterLevelFunction = functionCreator.CreateMaxWaterLevelFunction(networkCoverage, bedLevel);
+
+            // Assert
+            Assert.That(waterLevelFunction, Is.Not.Null);
+            Assert.That(waterLevelFunction.Name, Is.EqualTo(expectedName));
+            
+            IMultiDimensionalArray values = waterLevelFunction.GetValues();
+            Assert.That(values.Contains(double.NaN), Is.False);
+            Assert.That(values.Contains(noDataValue), Is.False);
+            
+            bedLevel.Received(4).Evaluate<double>(Arg.Any<double>());
+        }
+
+        [Test]
+        public void CreateMaxWaterLevelFunction_GivenMultiDimensionalArrayIsNull_ReturnFunctionWithMaxWaterLevelValues()
+        {
+            // Setup
+            SideViewFunctionCreator functionCreator = CreateSideViewFunctionCreator();
+            var expectedName = $"Max {name}";
+
+            INetworkCoverage networkCoverage = GetNetworkCoverage(null);
+            var bedLevel = Substitute.For<IFunction>();
+            
+            // Call
+            IFunction waterLevelFunction = functionCreator.CreateMaxWaterLevelFunction(networkCoverage, bedLevel);
+
+            // Assert
+            Assert.That(waterLevelFunction, Is.Not.Null);
+            Assert.That(waterLevelFunction.Name, Is.EqualTo(expectedName));
+            
+            bedLevel.Received(4).Evaluate<double>(Arg.Any<double>());
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(GetMultiDimensionalArrayWithValues))]
+        public void CreateMaxWaterLevelFunction_GivenValuesIncludingAtLeastOneValidValue_ReturnFunctionWithMaxWaterLevelValues(MultiDimensionalArray<double> mda)
+        {
+            // Setup
+            SideViewFunctionCreator functionCreator = CreateSideViewFunctionCreator();
+            var expectedName = $"Max {name}";
+            
+            INetworkCoverage networkCoverage = GetNetworkCoverage(mda);
+            
+            var bedLevel = Substitute.For<IFunction>();
+            
+            // Call
+            IFunction waterLevelFunction = functionCreator.CreateMaxWaterLevelFunction(networkCoverage, bedLevel);
+
+            // Assert
+            Assert.That(waterLevelFunction, Is.Not.Null);
+            Assert.That(waterLevelFunction.Name, Is.EqualTo(expectedName));
+            
+            IMultiDimensionalArray values = waterLevelFunction.GetValues();
+            
+            bedLevel.Received(0).Evaluate<double>(Arg.Any<double>());
+            
+            Assert.That(values[0], Is.EqualTo(maxWaterLevel));
+            Assert.That(values[1], Is.EqualTo(maxWaterLevel));
+            Assert.That(values[2], Is.EqualTo(maxWaterLevel));
+            Assert.That(values[3], Is.EqualTo(maxWaterLevel));
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(GetMultiDimensionalArrayWithNanAndNoDataValue))]
+        public void CreateMaxWaterLevelFunction_GivenGetMultiDimensionalArrayWithNanAndNoDataValue_ReturnFunctionWithMaxWaterLevelValuesSetToBedLevel(MultiDimensionalArray<double> mda)
+        {
+            // Setup
+            SideViewFunctionCreator functionCreator = CreateSideViewFunctionCreator();
+            const double bedLevelValue = 10.0d;
+            var expectedName = $"Max {name}";
+
+            INetworkCoverage networkCoverage = GetNetworkCoverage(mda);
+            
+            var bedLevel = Substitute.For<IFunction>();
+            
+            bedLevel.Evaluate<double>(Arg.Any<double>()).Returns(bedLevelValue);
+            
+            // Call
+            IFunction waterLevelFunction = functionCreator.CreateMaxWaterLevelFunction(networkCoverage, bedLevel);
+
+            // Assert
+            Assert.That(waterLevelFunction, Is.Not.Null);
+            Assert.That(waterLevelFunction.Name, Is.EqualTo(expectedName));
+            
+            IMultiDimensionalArray values = waterLevelFunction.GetValues();
+            
+            bedLevel.Received(4).Evaluate<double>(Arg.Any<double>());
+            
+            Assert.That(values[0], Is.EqualTo(bedLevelValue));
+            Assert.That(values[1], Is.EqualTo(bedLevelValue));
+            Assert.That(values[2], Is.EqualTo(bedLevelValue));
+            Assert.That(values[3], Is.EqualTo(bedLevelValue));
+        }
+        
+        private static IEnumerable<TestCaseData> GetMultiDimensionalArrayWithValues()
+        {
+            var mda = new MultiDimensionalArray<double>
+            {
+                10.0d,
+                20.0d,
+                30.0d,
+                maxWaterLevel
+            };
+
+            yield return new TestCaseData(mda).SetName("MultiDimensionalArray with only valid values");
+            
+            mda = new MultiDimensionalArray<double>
+            {
+                noDataValue,
+                20.0d,
+                30.0d,
+                maxWaterLevel
+            };
+
+            yield return new TestCaseData(mda).SetName("MultiDimensionalArray with valid values and one no data value");
+            
+            mda = new MultiDimensionalArray<double>
+            {
+                double.NaN,
+                20.0d,
+                30.0d,
+                maxWaterLevel
+            };
+
+            yield return new TestCaseData(mda).SetName("MultiDimensionalArray with valid values and one nan value");
+            
+            mda = new MultiDimensionalArray<double>
+            {
+                double.NaN,
+                20.0d,
+                noDataValue,
+                maxWaterLevel
+            };
+
+            yield return new TestCaseData(mda).SetName("MultiDimensionalArray with valid values and one no data value and one nan value");
+            
+            mda = new MultiDimensionalArray<double>
+            {
+                double.NaN,
+                noDataValue,
+                noDataValue,
+                maxWaterLevel
+            };
+
+            yield return new TestCaseData(mda).SetName("MultiDimensionalArray with single valid value");
+        }
+        
+        private static IEnumerable<TestCaseData> GetMultiDimensionalArrayWithNanAndNoDataValue()
+        {
+            var mda = new MultiDimensionalArray<double>
+            {
+                noDataValue,
+                noDataValue,
+                noDataValue,
+                noDataValue
+            };
+
+            yield return new TestCaseData(mda).SetName("MultiDimensionalArray with only no data values");
+            
+            mda = new MultiDimensionalArray<double>
+            {
+                double.NaN,
+                double.NaN,
+                double.NaN,
+                double.NaN
+            };
+
+            yield return new TestCaseData(mda).SetName("MultiDimensionalArray with only nan values");
+            
+            mda = new MultiDimensionalArray<double>
+            {
+                noDataValue,
+                noDataValue,
+                double.NaN,
+                double.NaN
+            };
+
+            yield return new TestCaseData(mda).SetName("MultiDimensionalArray with a mix of no data values and nan values");
         }
 
         private static IHydroNetwork CreateNetworkWithTwoPipes(double baseBottomLevel)
@@ -208,6 +533,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             route.Components[0].Unit = new Unit("meters", "m");
 
             return route;
+        }
+        
+        private static SideViewFunctionCreator CreateSideViewFunctionCreator()
+        {
+            const double baseBottomLevel = 3.0;
+            IHydroNetwork network = CreateNetworkWithTwoPipes(baseBottomLevel);
+            Route route = CreateRoute(network);
+            var functionCreator = new SideViewFunctionCreator(route,
+                                                              Substitute.For<IDictionary<string, IFunction>>(),
+                                                              Substitute.For<IList<IStructure1D>>(),
+                                                              Substitute.For<IUnit>());
+            return functionCreator;
+        }
+        
+        
+        private static INetworkCoverage GetNetworkCoverage(IMultiDimensionalArray<double> mda)
+        {
+            var networkCoverage = Substitute.For<INetworkCoverage>();
+            networkCoverage.Name.Returns(name);
+            var variable = Substitute.For<IVariable<INetworkLocation>>();
+            variable.ValueType.Returns(typeof(NetworkLocation));
+            networkCoverage.Locations.Returns(variable);
+            networkCoverage.Components[0].NoDataValue = noDataValue;
+            networkCoverage.GetValues<double>(Arg.Any<IVariableValueFilter>()).Returns(mda);
+            return networkCoverage;
         }
     }
 }
