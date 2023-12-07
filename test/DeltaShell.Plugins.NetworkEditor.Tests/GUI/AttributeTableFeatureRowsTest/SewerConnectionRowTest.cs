@@ -1,6 +1,7 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -19,7 +20,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new SewerConnectionRow(null);
+                new SewerConnectionRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new SewerConnectionRow(Substitute.For<ISewerConnection>(), null);
             }
 
             // Assert
@@ -31,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection();
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -45,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection();
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -59,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection { Name = "some_name" };
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -74,10 +88,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var sewerConnection = new SewerConnection { Name = "some_name" };
-            sewerConnection.AttachNameValidator(validator);
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -92,10 +107,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var sewerConnection = new SewerConnection { Name = "some_name" };
-            sewerConnection.AttachNameValidator(validator);
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -112,7 +128,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             node.Name = "some_node";
             var sewerConnection = Substitute.For<ISewerConnection>();
             sewerConnection.Source.Returns(node);
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             string result = row.FromManhole;
@@ -129,7 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             node.Name = "some_node";
             var sewerConnection = Substitute.For<ISewerConnection>();
             sewerConnection.Target.Returns(node);
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             string result = row.ToManhole;
@@ -145,7 +161,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var compartment = new Compartment { Name = "some_compartment" };
             var sewerConnection = Substitute.For<ISewerConnection>();
             sewerConnection.SourceCompartment.Returns(compartment);
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             string result = row.FromCompartment;
@@ -161,7 +177,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var compartment = new Compartment { Name = "some_compartment" };
             var sewerConnection = Substitute.For<ISewerConnection>();
             sewerConnection.TargetCompartment.Returns(compartment);
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             string result = row.ToCompartment;
@@ -177,7 +193,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var geometry = Substitute.For<IGeometry>();
             geometry.Length.Returns(123.45);
             var sewerConnection = new SewerConnection { Geometry = geometry };
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             double result = row.GeometryLength;
@@ -191,7 +207,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection();
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             row.Length = 45.67;
@@ -205,7 +221,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection { Length = 45.67 };
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             double result = row.Length;
@@ -219,7 +235,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection();
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             row.OrderNumber = 3;
@@ -233,7 +249,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection { OrderNumber = 3 };
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             int result = row.OrderNumber;
@@ -247,7 +263,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection();
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             row.InvertLevelFrom = 10.5;
@@ -261,7 +277,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection { LevelSource = 10.5 };
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             double result = row.InvertLevelFrom;
@@ -275,7 +291,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection();
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             row.InvertLevelTo = 8.9;
@@ -289,7 +305,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection { LevelTarget = 8.9 };
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             double result = row.InvertLevelTo;
@@ -303,7 +319,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection();
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             row.SewerType = sewerConnectionWaterType;
@@ -317,7 +333,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var sewerConnection = new SewerConnection { WaterType = sewerConnectionWaterType };
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             SewerConnectionWaterType result = row.SewerType;
@@ -332,7 +348,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var sewerConnection = Substitute.For<ISewerConnection>();
             sewerConnection.SpecialConnectionType.Returns(sewerConnectionSpecialConnectionType);
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             SewerConnectionSpecialConnectionType result = row.SewerSpecialConnectionType;
@@ -347,7 +363,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var sewerConnection = Substitute.For<ISewerConnection>();
             sewerConnection.DefinitionName.Returns("some_definition");
-            var row = new SewerConnectionRow(sewerConnection);
+            var row = new SewerConnectionRow(sewerConnection, new NameValidator());
 
             // Act
             string result = row.DefinitionName;

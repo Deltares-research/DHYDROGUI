@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
@@ -95,11 +96,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<Pump2D>());
             }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new Pump2DTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new Pump2D(), null);
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -110,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var feature = new Pump2D();
 
             // Act
-            Pump2DRow result = creationContext.CreateFeatureRowObject(feature);
+            Pump2DRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<Pump2D>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

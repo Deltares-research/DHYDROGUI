@@ -21,9 +21,11 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
 using DeltaShell.NGHS.Common.Gui.PropertyGrid;
+using DeltaShell.NGHS.Common.Gui.PropertyGrid.PropertyInfoCreation;
 using DeltaShell.NGHS.Common.Gui.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
@@ -34,6 +36,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid.PropertyInfoCreation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
@@ -89,11 +92,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private readonly IMapLayerProvider networkEditorMapLayerProvider;
         private IGui gui;
         private IGraphicsProvider graphicsProvider;
+        private readonly PropertyInfoCreator propertyInfoCreator;
 
         public NetworkEditorGuiPlugin()
         {
             guiContainer = new GuiContainer();
             tableViewInfoCreator = new TableViewInfoCreator(guiContainer);
+            propertyInfoCreator = new PropertyInfoCreator(guiContainer);
             InitializeComponent();
             Instance = this;
             networkEditorMapLayerProvider = new NetworkEditorMapLayerProvider();
@@ -171,38 +176,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 AdditionalDataCheck = l => l.CustomRenderers.OfType<CrossSectionRenderer>().Any()
             };
             yield return new PropertyInfo<WmtsLayer, WmtsLayerProperties>();
-            yield return new PropertyInfo<ICrossSection, CrossSectionProperties>();
+            yield return propertyInfoCreator.Create(new CrossSectionPropertyInfoCreationContext());
             yield return new PropertyInfo<ICrossSectionDefinition, CrossSectionDefinitionProperties>();
-            yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
-            yield return new PropertyInfo<Manhole, ManholeProperties>();
-            yield return new PropertyInfo<IChannel, ChannelProperties>();
+            yield return propertyInfoCreator.Create(new HydroNodePropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new ManholePropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new ChannelPropertyInfoCreationContext());
             yield return new PropertyInfo<IHydroNetwork, HydroNetworkProperties>();
             yield return new PropertyInfo<IDrainageBasin, DrainageBasinProperties>();
             yield return new PropertyInfo<HydroRegion, HydroRegionProperties>();
             yield return new PropertyInfo<Discretization, DiscretizationProperties>();
             yield return new PropertyInfo<INetworkCoverage, NetworkCoverageProperties>();
             yield return new PropertyInfo<IFeatureCoverage, FeatureCoverageProperties>();
-            yield return new PropertyInfo<ICompositeBranchStructure, CompositeStructureProperties>();
-            yield return new PropertyInfo<IWeir, WeirProperties>{AdditionalDataCheck = w => w.HydroNetwork != null};
-            yield return new PropertyInfo<IGate, GateProperties>();
-            yield return new PropertyInfo<IPump, PumpProperties>();
-            yield return new PropertyInfo<IBridge, BridgeProperties>();
-            yield return new PropertyInfo<ICulvert, CulvertProperties>();
-            yield return new PropertyInfo<LateralSource, LateralSourceProperties>();
-            yield return new PropertyInfo<ObservationPoint, ObservationPointProperties>();
-            yield return new PropertyInfo<WasteWaterTreatmentPlant, WasteWaterTreatmentPlantProperties>();
-            yield return new PropertyInfo<RunoffBoundary, RunoffBoundaryProperties>();
-            yield return new PropertyInfo<NetworkLocation, NetworkLocationProperties>();
+            yield return propertyInfoCreator.Create(new CompositeStructurePropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new WeirPropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new GatePropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new PumpPropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new BridgePropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new CulvertPropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new LateralSourcePropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new ObservationPointPropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new WasteWaterTreatmentPlantPropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new RunoffBoundaryPropertyInfoCreationContext());
             yield return new PropertyInfo<NetworkSegment, NetworkSegmentProperties>();
             yield return new PropertyInfo<CrossSectionSectionType, CrossSectionSectionTypeProperties>();
-            yield return new PropertyInfo<Retention, RetentionProperties>();
-            yield return new PropertyInfo<HydroLink, HydroLinkProperties>();
+            yield return propertyInfoCreator.Create(new RetentionPropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new HydroLinkPropertyInfoCreationContext());
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
             yield return new PropertyInfo<ReverseRoughnessSection, ReverseRoughnessSectionProperties>();
             yield return new PropertyInfo<RoughnessSection, RoughnessSectionPropertiesBase<RoughnessSection>>();
-            yield return new PropertyInfo<SewerConnection, SewerConnectionProperties>();
-            yield return new PropertyInfo<ICompartment, CompartmentProperties>();
-            yield return new PropertyInfo<ILeveeBreach, LeveeBreachProperties>();
+            yield return propertyInfoCreator.Create(new SewerConnectionPropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new CompartmentPropertyInfoCreationContext());
+            yield return propertyInfoCreator.Create(new LeveeBreachPropertyInfoCreationContext());
         }
 
 
@@ -291,7 +295,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
                             v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
                             v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                            v.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature));
+                            var nameValidator = NameValidator.CreateDefault();
+                            nameValidator.AddValidator(new UniqueNameValidator(o));
+                            v.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature, nameValidator));
                             if(o is IEnumerable<IOrifice>)
                                 v.TableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirRow.Formula)].Visible = false;
                         }
@@ -318,7 +324,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
                     v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
                     v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                    v.SetCreateFeatureRowFunction(feature => new GateRow((IGate)feature));
+                    var nameValidator = NameValidator.CreateDefault();
+                    nameValidator.AddValidator(new UniqueNameValidator(o));
+                    v.SetCreateFeatureRowFunction(feature => new GateRow((IGate)feature, nameValidator));
                 }
             };
 

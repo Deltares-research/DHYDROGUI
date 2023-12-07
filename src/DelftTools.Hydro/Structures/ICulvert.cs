@@ -7,9 +7,6 @@ namespace DelftTools.Hydro.Structures
                                 IFrictionData, 
                                 IGroundLayer
     {
-        //repeat members for binding in FPAT :(
-        string Name { get; set; }
-
         string LongName { get; set; }
 
         /// <summary>

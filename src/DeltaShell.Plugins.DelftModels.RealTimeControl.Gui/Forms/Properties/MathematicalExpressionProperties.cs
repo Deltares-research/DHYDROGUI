@@ -11,13 +11,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
     [ResourcesDisplayName(typeof(Resources), "MathematicalExpressionProperties_DisplayName")]
     public class MathematicalExpressionProperties : ObjectProperties<MathematicalExpression>
     {
-        [Browsable(false)]
-        public override object Data
-        {
-            get => data;
-            set => data = (MathematicalExpression) value;
-        }
-
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDescription(typeof(Resources), "MathematicalExpressionProperties_Name_Description")]

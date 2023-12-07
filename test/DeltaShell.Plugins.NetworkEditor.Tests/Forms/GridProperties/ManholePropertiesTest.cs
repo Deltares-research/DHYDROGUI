@@ -23,8 +23,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
 
             var data = new Manhole { Name = "some_name" };
-            data.AttachNameValidator(validator);
             var properties = new ManholeProperties { Data = data };
+            properties.ManholeNameValidator.AddValidator(validator);
 
             // Act
             properties.Name = "some_invalid_name";
@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
 
             var data = new Manhole { Name = "some_name" };
-            data.AttachNameValidator(validator);
             var properties = new ManholeProperties { Data = data };
+            properties.ManholeNameValidator.AddValidator(validator);
 
             // Act
             properties.Name = "some_valid_name";
@@ -161,8 +161,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 
             Assert.AreEqual(storageTable, properties.CompartmentOneStorage);
         }
-        
-                [Test]
+
+        [Test]
         public void CompartmentTwoName_SetValidValue_ValueIsSet()
         {
             ManholeProperties properties = CreatePropertiesWithManhole();
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 
             Assert.AreEqual(storageTable, properties.CompartmentTwoStorage);
         }
-        
+
         [Test]
         public void CompartmentThreeName_SetValidValue_ValueIsSet()
         {

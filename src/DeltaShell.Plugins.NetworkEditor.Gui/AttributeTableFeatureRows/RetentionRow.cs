@@ -4,6 +4,8 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -18,26 +20,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class RetentionRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly IRetention retention;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="RetentionRow"/> class.
         /// </summary>
         /// <param name="retention"> The retention to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="retention"/> is <c>null</c>.
+        /// Thrown when <paramref name="retention"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public RetentionRow(IRetention retention)
+        public RetentionRow(IRetention retention, NameValidator nameValidator)
             : base((INotifyPropertyChanged)retention)
         {
             Ensure.NotNull(retention, nameof(retention));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.retention = retention;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => retention.Name;
-            set => retention.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    retention.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

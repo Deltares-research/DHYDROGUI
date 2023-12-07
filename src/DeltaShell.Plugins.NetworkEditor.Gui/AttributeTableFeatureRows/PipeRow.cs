@@ -3,6 +3,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -17,26 +19,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class PipeRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly IPipe pipe;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="PipeRow"/> class.
         /// </summary>
         /// <param name="pipe"> The pipe to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="pipe"/> is <c>null</c>.
+        /// Thrown when <paramref name="pipe"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public PipeRow(IPipe pipe)
+        public PipeRow(IPipe pipe, NameValidator nameValidator)
             : base(pipe)
         {
             Ensure.NotNull(pipe, nameof(pipe));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.pipe = pipe;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => pipe.Name;
-            set => pipe.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    pipe.Name = value;
+                }
+            }
         }
 
         [DisplayName("From manhole")]

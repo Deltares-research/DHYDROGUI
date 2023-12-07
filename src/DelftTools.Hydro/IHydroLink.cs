@@ -1,4 +1,4 @@
-﻿using DelftTools.Utils.Validation.NameValidation;
+﻿using DelftTools.Utils;
 using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro
@@ -6,7 +6,7 @@ namespace DelftTools.Hydro
     /// <summary>
     /// Represents a link between two instances of an <see cref="IHydroObject"/>.
     /// </summary>
-    public interface IHydroLink : IFeature, IHasNameValidation
+    public interface IHydroLink : IFeature, INameable
     {
         /// <summary>
         /// Gets or sets the source hydro object of this hydro link.

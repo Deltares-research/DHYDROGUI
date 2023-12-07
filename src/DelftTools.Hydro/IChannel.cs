@@ -8,9 +8,6 @@ namespace DelftTools.Hydro
 {
     public interface IChannel : IBranch, IHydroNetworkFeature, IItemContainer
     {
-        //reintroducing members for databinding.
-        string Name { get; set; }
-
         /// <summary>
         /// Name as defined in sobek under name. Since Name is taken by ID name is stored here
         /// </summary>

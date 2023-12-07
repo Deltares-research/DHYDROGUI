@@ -1,5 +1,7 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System.ComponentModel;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -17,7 +19,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new PumpRow(null);
+                new PumpRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new PumpRow(Substitute.For<IPump, INotifyPropertyChanged>(), null);
             }
 
             // Assert
@@ -29,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -44,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -59,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -73,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { Name = "some_name" };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -88,10 +103,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var pump = new Pump { Name = "some_name" };
-            pump.AttachNameValidator(validator);
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -106,10 +122,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var pump = new Pump { Name = "some_name" };
-            pump.AttachNameValidator(validator);
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -123,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.LongName = "some_long_name";
@@ -137,7 +154,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { LongName = "some_long_name" };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -152,8 +169,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var branch = Substitute.For<IBranch>();
             branch.Name = "some_branch_name";
-            var bridge = new Pump { Branch = branch };
-            var row = new PumpRow(bridge);
+            var pump = new Pump { Branch = branch };
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -167,7 +184,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.PositiveDirection = directionIsPositive;
@@ -181,7 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { DirectionIsPositive = directionIsPositive };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             bool result = row.PositiveDirection;
@@ -195,7 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.Capacity = 1.23;
@@ -209,7 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { Capacity = 1.23 };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             double result = row.Capacity;
@@ -223,7 +240,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.StartDelivery = 1.23;
@@ -237,7 +254,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { StartDelivery = 1.23 };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             double result = row.StartDelivery;
@@ -251,7 +268,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.StopDelivery = 1.23;
@@ -265,7 +282,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { StopDelivery = 1.23 };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             double result = row.StopDelivery;
@@ -279,7 +296,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.StartSuction = 1.23;
@@ -293,7 +310,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { StartSuction = 1.23 };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             double result = row.StartSuction;
@@ -307,7 +324,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.StopSuction = 1.23;
@@ -321,7 +338,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { StopSuction = 1.23 };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             double result = row.StopSuction;
@@ -335,7 +352,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump();
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             row.ControlOn = pumpControlDirection;
@@ -349,7 +366,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pump = new Pump { ControlDirection = pumpControlDirection };
-            var row = new PumpRow(pump);
+            var row = new PumpRow(pump, new NameValidator());
 
             // Act
             PumpControlDirection result = row.ControlOn;

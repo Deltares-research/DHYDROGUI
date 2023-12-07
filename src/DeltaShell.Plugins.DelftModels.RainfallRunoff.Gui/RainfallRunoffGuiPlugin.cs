@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -8,13 +7,15 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils.Aop;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.PropertyGrid.PropertyInfoCreation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.MapLayerProviders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses.PropertyInfoCreation;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
@@ -22,6 +23,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
     [Extension(typeof(IPlugin))]
     public class RainfallRunoffGuiPlugin : GuiPlugin, IRainfallRunoffGuiPlugin
     {
+        private readonly GuiContainer guiContainer;
+        private readonly PropertyInfoCreator propertyInfoCreator;
+        
+        public RainfallRunoffGuiPlugin()
+        {
+            guiContainer = new GuiContainer();
+            propertyInfoCreator = new PropertyInfoCreator(guiContainer);
+        }
+
         public override string Name => 
             "Rainfall runoff model (UI)";
 
@@ -53,16 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             yield return new PropertyInfo<SacramentoData, SacramentoDataProperties>();
             yield return new PropertyInfo<HbvData, HbvDataProperties>();
             yield return new PropertyInfo<MeteoData, MeteoDataProperties>();
-            yield return new PropertyInfo<Catchment, CatchmentProperties>
-            {
-                AfterCreate = cp =>
-                {
-                    cp.CatchmentData = Gui.Application.GetAllModelsInProject()
-                                          .OfType<IRainfallRunoffModel>()
-                                          .SelectMany(m => m.ModelData)
-                                          .FirstOrDefault(d => ReferenceEquals(d.Catchment, cp.Data));
-                }
-            };
+            yield return propertyInfoCreator.Create(new CatchmentPropertyInfoCreationContext());
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
@@ -104,6 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 }
 
                 base.Gui = value;
+                guiContainer.Gui = value;
 
                 if (base.Gui != null)
                 {

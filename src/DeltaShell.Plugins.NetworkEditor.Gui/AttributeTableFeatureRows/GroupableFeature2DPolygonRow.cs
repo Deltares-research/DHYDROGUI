@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,19 +17,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class GroupableFeature2DPolygonRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly GroupableFeature2DPolygon feature;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="GroupableFeature2DPolygonRow"/> class.
         /// </summary>
         /// <param name="feature"> The feature to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="feature"/> is <c>null</c>.
+        /// Thrown when <paramref name="feature"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public GroupableFeature2DPolygonRow(GroupableFeature2DPolygon feature)
+        public GroupableFeature2DPolygonRow(GroupableFeature2DPolygon feature, NameValidator nameValidator)
             : base(feature)
         {
             Ensure.NotNull(feature, nameof(feature));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.feature = feature;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Group name")]
@@ -41,7 +48,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => feature.Name;
-            set => feature.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    feature.Name = value;
+                }
+            }
         }
 
         /// <summary>

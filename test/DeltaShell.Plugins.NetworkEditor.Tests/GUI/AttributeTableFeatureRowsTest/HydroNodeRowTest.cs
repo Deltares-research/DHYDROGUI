@@ -2,6 +2,7 @@ using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -20,7 +21,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new HydroNodeRow(null);
+                new HydroNodeRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new HydroNodeRow(new HydroNode(), null);
             }
 
             // Assert
@@ -32,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroNode = new HydroNode();
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -47,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var hydroNode = new HydroNode();
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -62,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroNode = new HydroNode();
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -76,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroNode = new HydroNode { Name = "some_name" };
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -91,10 +105,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var hydroNode = new HydroNode { Name = "some_name" };
-            hydroNode.AttachNameValidator(validator);
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -109,10 +124,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var hydroNode = new HydroNode { Name = "some_name" };
-            hydroNode.AttachNameValidator(validator);
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -126,7 +142,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroNode = new HydroNode();
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             row.LongName = "some_long_name";
@@ -140,7 +156,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroNode = new HydroNode { LongName = "some_long_name" };
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -156,7 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var point = Substitute.For<IPoint>();
             point.Coordinate.Returns(new Coordinate(1.23, 4.56));
             var hydroNode = new HydroNode { Geometry = point };
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             double result = row.XCoordinate;
@@ -172,7 +188,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var point = Substitute.For<IPoint>();
             point.Coordinate.Returns(new Coordinate(1.23, 4.56));
             var hydroNode = new HydroNode { Geometry = point };
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             double result = row.YCoordinate;
@@ -186,7 +202,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroNode = new HydroNode { IncomingBranches = new EventedList<IBranch>(new IBranch[3]) };
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             int result = row.IncomingBranchesCount;
@@ -200,7 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroNode = new HydroNode { OutgoingBranches = new EventedList<IBranch>(new IBranch[3]) };
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             double result = row.OutgoingBranchesCount;
@@ -215,7 +231,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IHydroNode hydroNode = Substitute.For<IHydroNode, INotifyPropertyChanged>();
             hydroNode.IsOnSingleBranch.Returns(isOnSingleBranch);
-            var row = new HydroNodeRow(hydroNode);
+            var row = new HydroNodeRow(hydroNode, new NameValidator());
 
             // Act
             bool result = row.IsOnSingleBranch;

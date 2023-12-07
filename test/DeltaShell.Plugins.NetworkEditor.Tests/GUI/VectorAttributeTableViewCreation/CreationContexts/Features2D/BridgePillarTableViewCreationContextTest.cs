@@ -97,7 +97,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<BridgePillar>());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new BridgePillarTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new BridgePillar(), null);
             }
 
             // Assert
@@ -112,7 +128,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var feature = new BridgePillar();
 
             // Act
-            BridgePillarRow result = creationContext.CreateFeatureRowObject(feature);
+            BridgePillarRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<BridgePillar>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

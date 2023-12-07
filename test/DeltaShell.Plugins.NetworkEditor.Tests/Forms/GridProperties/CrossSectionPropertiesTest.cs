@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var data = new CrossSection(crossSectionDefinition) { Name = "some_name" };
-            data.AttachNameValidator(validator);
             var properties = new CrossSectionProperties { Data = data };
+            properties.NameValidator.AddValidator(validator);
 
             // Act
             properties.Name = "some_invalid_name";
@@ -38,8 +38,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var data = new CrossSection(crossSectionDefinition) { Name = "some_name" };
-            data.AttachNameValidator(validator);
             var properties = new CrossSectionProperties { Data = data };
+            properties.NameValidator.AddValidator(validator);
 
             // Act
             properties.Name = "some_valid_name";

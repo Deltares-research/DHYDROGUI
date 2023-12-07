@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation
             view.ZoomToFeature = feature => map.MapView.EnsureVisible(feature);
             view.CanAddDeleteAttributes = false;
             view.DynamicAttributeVisible = s => false;
-            view.SetCreateFeatureRowFunction(f => creationContext.CreateFeatureRowObject((TFeature)f));
+            view.SetCreateFeatureRowFunction(f => creationContext.CreateFeatureRowObject((TFeature)f, data));
             creationContext.CustomizeTableView(view, data, guiContainer);
         }
 

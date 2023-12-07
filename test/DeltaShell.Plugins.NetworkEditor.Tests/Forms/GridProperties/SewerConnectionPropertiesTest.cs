@@ -17,8 +17,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
 
             var data = new SewerConnection { Name = "some_name" };
-            data.AttachNameValidator(validator);
             var properties = new SewerConnectionProperties { Data = data };
+            properties.NameValidator.AddValidator(validator);
 
             // Act
             properties.Name = "some_invalid_name";
@@ -35,8 +35,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
 
             var data = new SewerConnection { Name = "some_name" };
-            data.AttachNameValidator(validator);
             var properties = new SewerConnectionProperties { Data = data };
+            properties.NameValidator.AddValidator(validator);
 
             // Act
             properties.Name = "some_valid_name";

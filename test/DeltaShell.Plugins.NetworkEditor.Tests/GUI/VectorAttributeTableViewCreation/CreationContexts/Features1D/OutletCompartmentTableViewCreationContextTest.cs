@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
@@ -96,7 +97,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<OutletCompartment>());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new OutletCompartmentTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new OutletCompartment(), null);
             }
 
             // Assert
@@ -111,7 +128,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             OutletCompartment feature = Substitute.For<OutletCompartment, INotifyPropertyChanged>();
 
             // Act
-            OutletCompartmentRow result = creationContext.CreateFeatureRowObject(feature);
+            OutletCompartmentRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<OutletCompartment>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

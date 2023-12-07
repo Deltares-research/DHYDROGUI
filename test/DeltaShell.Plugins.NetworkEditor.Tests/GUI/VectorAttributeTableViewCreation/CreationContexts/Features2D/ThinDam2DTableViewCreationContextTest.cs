@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
@@ -95,11 +96,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<ThinDam2D>());
             }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new ThinDam2DTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new ThinDam2D(), null);
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -110,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var feature = new ThinDam2D();
 
             // Act
-            ThinDam2DRow result = creationContext.CreateFeatureRowObject(feature);
+            ThinDam2DRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<ThinDam2D>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

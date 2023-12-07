@@ -4,6 +4,9 @@ using System.Globalization;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -17,10 +20,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         protected string OpeningWidthTimeSeriesString = "Time series";
 
         protected string TimeSeriesString = "Time series";
+        private readonly NameValidator nameValidator;
 
-        public GateRow(IGate gate)
+        /// <summary>
+        /// Initialize a new instance of the <see cref="GateRow"/> class.
+        /// </summary>
+        /// <param name="gate"> The gate to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="gate"/> or <paramref name="nameValidator"/> is <c>null</c>.
+        /// </exception>
+        public GateRow(IGate gate, NameValidator nameValidator)
         {
-            Gate = gate;
+            Ensure.NotNull(gate, nameof(gate));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
+            this.gate = gate;
+            this.nameValidator = nameValidator;
         }
 
         private IGate Gate
@@ -45,7 +61,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public virtual string Name
         {
             get => Gate.Name;
-            set => Gate.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    Gate.Name = value;
+                }
+            }
         }
 
         [DynamicReadOnly]

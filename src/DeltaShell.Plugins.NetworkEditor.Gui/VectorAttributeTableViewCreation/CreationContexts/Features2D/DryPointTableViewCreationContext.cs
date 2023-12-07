@@ -27,9 +27,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
             return ReferenceEquals(region.DryPoints, data);
         }
 
-        public override GroupablePointFeatureRow CreateFeatureRowObject(GroupablePointFeature feature)
+        public override GroupablePointFeatureRow CreateFeatureRowObject(GroupablePointFeature feature, IEnumerable<GroupablePointFeature> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+
             return new GroupablePointFeatureRow(feature);
         }
     }

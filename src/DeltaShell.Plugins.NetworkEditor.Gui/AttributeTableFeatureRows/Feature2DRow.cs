@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class Feature2DRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly Feature2D feature2D;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="Feature2DRow"/> class.
         /// </summary>
         /// <param name="feature2D"> The feature 2D to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="feature2D"/> is <c>null</c>.
+        /// Thrown when <paramref name="feature2D"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public Feature2DRow(Feature2D feature2D)
+        public Feature2DRow(Feature2D feature2D, NameValidator nameValidator)
             : base(feature2D)
         {
             Ensure.NotNull(feature2D, nameof(feature2D));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.feature2D = feature2D;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => feature2D.Name;
-            set => feature2D.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    feature2D.Name = value;
+                }
+            }
         }
 
         /// <summary>

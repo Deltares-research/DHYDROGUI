@@ -6,6 +6,8 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -20,19 +22,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class OutletCompartmentRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly OutletCompartment outletCompartment;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="OutletCompartmentRow"/> class.
         /// </summary>
         /// <param name="outletCompartment"> The outlet compartment to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="outletCompartment"/> is <c>null</c>.
+        /// Thrown when <paramref name="outletCompartment"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public OutletCompartmentRow(OutletCompartment outletCompartment)
+        public OutletCompartmentRow(OutletCompartment outletCompartment, NameValidator nameValidator)
             : base((INotifyPropertyChanged)outletCompartment)
         {
             Ensure.NotNull(outletCompartment, nameof(outletCompartment));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.outletCompartment = outletCompartment;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Manhole name")]
@@ -42,7 +49,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => outletCompartment.Name;
-            set => outletCompartment.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    outletCompartment.Name = value;
+                }
+            }
         }
 
         [DisplayName("Shape")]

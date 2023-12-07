@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
@@ -20,7 +21,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new CompartmentRow(null);
+                new CompartmentRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new CompartmentRow(new Compartment(), null);
             }
 
             // Assert
@@ -32,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -47,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -64,7 +78,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var manhole = Substitute.For<IManhole>();
             manhole.Name = "some_manhole_name";
             var compartment = new Compartment { ParentManhole = manhole };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             string result = row.ManholeName;
@@ -78,7 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -92,7 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { Name = "some_name" };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -107,10 +121,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var compartment = new Compartment { Name = "some_name" };
-            compartment.AttachNameValidator(validator);
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -125,10 +140,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var compartment = new Compartment { Name = "some_name" };
-            compartment.AttachNameValidator(validator);
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -142,7 +158,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.Shape = compartmentShape;
@@ -156,7 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { Shape = compartmentShape };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             CompartmentShape result = row.Shape;
@@ -170,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.CompartmentStorageType = compartmentStorageType;
@@ -184,7 +200,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { CompartmentStorageType = compartmentStorageType };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             CompartmentStorageType result = row.CompartmentStorageType;
@@ -198,7 +214,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.Length = 1.23;
@@ -212,7 +228,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { ManholeLength = 1.23 };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             double result = row.Length;
@@ -226,7 +242,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.Width = 1.23;
@@ -240,7 +256,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { ManholeWidth = 1.23 };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             double result = row.Width;
@@ -254,7 +270,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.FloodableArea = 1.23;
@@ -268,7 +284,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { FloodableArea = 1.23 };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             double result = row.FloodableArea;
@@ -282,7 +298,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.BottomLevel = 1.23;
@@ -296,7 +312,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { BottomLevel = 1.23 };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             double result = row.BottomLevel;
@@ -310,7 +326,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.SurfaceLevel = 1.23;
@@ -324,7 +340,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { SurfaceLevel = 1.23 };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             double result = row.SurfaceLevel;
@@ -338,7 +354,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.UseStorageTable = useStorageTable;
@@ -352,7 +368,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { UseTable = useStorageTable };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             bool result = row.UseStorageTable;
@@ -366,7 +382,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
             var function = Substitute.For<IFunction>();
 
             // Act
@@ -382,7 +398,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var function = Substitute.For<IFunction>();
             var compartment = new Compartment { Storage = function };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             IFunction result = row.Storage;
@@ -396,7 +412,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment();
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             row.InterpolationType = interpolationType;
@@ -410,7 +426,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compartment = new Compartment { InterpolationType = interpolationType };
-            var row = new CompartmentRow(compartment);
+            var row = new CompartmentRow(compartment, new NameValidator());
 
             // Act
             InterpolationType result = row.InterpolationType;

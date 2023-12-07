@@ -1,7 +1,9 @@
+using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -19,7 +21,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new RetentionRow(null);
+                new RetentionRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new RetentionRow(Substitute.For<IRetention, INotifyPropertyChanged>(), null);
             }
 
             // Assert
@@ -31,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -46,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -61,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -75,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention { Name = "some_name" };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -90,10 +105,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var retention = new Retention { Name = "some_name" };
-            retention.AttachNameValidator(validator);
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -108,10 +124,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var retention = new Retention { Name = "some_name" };
-            retention.AttachNameValidator(validator);
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -125,7 +142,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             row.LongName = "some_long_name";
@@ -139,7 +156,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention { LongName = "some_long_name" };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -155,7 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var branch = Substitute.For<IBranch>();
             branch.Name = "some_branch_name";
             var retention = new Retention { Branch = branch };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -169,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             row.Chainage = 1.23;
@@ -183,7 +200,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention { Chainage = 1.23 };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             double result = row.Chainage;
@@ -197,7 +214,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             row.Type = retentionType;
@@ -211,7 +228,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention { Type = retentionType };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             RetentionType result = row.Type;
@@ -225,7 +242,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             row.StorageArea = 1.23;
@@ -239,7 +256,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention { StorageArea = 1.23 };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             double result = row.StorageArea;
@@ -253,7 +270,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             row.BedLevel = 1.23;
@@ -267,7 +284,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention { BedLevel = 1.23 };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             double result = row.BedLevel;
@@ -281,7 +298,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             row.UseTable = true;
@@ -295,7 +312,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention { UseTable = true };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             bool result = row.UseTable;
@@ -309,7 +326,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
             var data = new Function();
 
             // Act
@@ -325,7 +342,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var function = new Function();
             var retention = new Retention { Data = function };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             IFunction result = row.Data;
@@ -339,7 +356,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention();
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             row.InterpolationType = interpolationType;
@@ -353,7 +370,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var retention = new Retention { InterpolationType = interpolationType };
-            var row = new RetentionRow(retention);
+            var row = new RetentionRow(retention, new NameValidator());
 
             // Act
             InterpolationType result = row.InterpolationType;

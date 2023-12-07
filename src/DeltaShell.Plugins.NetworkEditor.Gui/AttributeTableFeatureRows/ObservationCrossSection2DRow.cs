@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,19 +17,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class ObservationCrossSection2DRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly ObservationCrossSection2D observationCrossSection2D;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="ObservationCrossSection2DRow"/> class.
         /// </summary>
         /// <param name="observationCrossSection2D"> The observation cross-section 2D to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="observationCrossSection2D"/> is <c>null</c>.
+        /// Thrown when <paramref name="observationCrossSection2D"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public ObservationCrossSection2DRow(ObservationCrossSection2D observationCrossSection2D)
+        public ObservationCrossSection2DRow(ObservationCrossSection2D observationCrossSection2D, NameValidator nameValidator)
             : base(observationCrossSection2D)
         {
             Ensure.NotNull(observationCrossSection2D, nameof(observationCrossSection2D));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.observationCrossSection2D = observationCrossSection2D;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Group name")]
@@ -41,7 +48,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => observationCrossSection2D.Name;
-            set => observationCrossSection2D.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    observationCrossSection2D.Name = value;
+                }
+            }
         }
 
         /// <summary>

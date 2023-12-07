@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.CreationContexts.Features2D;
@@ -94,11 +95,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<LandBoundary2D>());
             }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new LandBoundary2DTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new LandBoundary2D(), null);
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -109,7 +126,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var feature = new LandBoundary2D();
 
             // Act
-            LandBoundary2DRow result = creationContext.CreateFeatureRowObject(feature);
+            LandBoundary2DRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<LandBoundary2D>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

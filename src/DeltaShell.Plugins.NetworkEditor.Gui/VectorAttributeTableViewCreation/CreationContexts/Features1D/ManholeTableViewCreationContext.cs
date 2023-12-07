@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -30,10 +31,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
         }
 
         /// <inheritdoc/>
-        public ManholeRow CreateFeatureRowObject(IManhole feature)
+        public ManholeRow CreateFeatureRowObject(IManhole feature, IEnumerable<IManhole> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new ManholeRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+
+            return new ManholeRow(feature, nameValidator);
         }
 
         /// <inheritdoc/>

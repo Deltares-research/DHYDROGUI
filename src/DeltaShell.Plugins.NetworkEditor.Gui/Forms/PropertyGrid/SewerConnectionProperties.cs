@@ -7,6 +7,9 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using log4net;
 
@@ -15,6 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     public class SewerConnectionProperties : ObjectProperties<SewerConnection>
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SewerConnectionProperties));
+        private NameValidator nameValidator = NameValidator.CreateDefault();
 
         #region Connection properties
 
@@ -24,7 +28,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string Name
         {
             get { return data.Name ?? string.Empty; }
-            set { data.SetNameIfValid(value); }
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    data.Name = value;
+                }
+            }
         }
 
         [Category(PropertyWindowCategoryHelper.RelationsCategory)]
@@ -276,5 +286,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         private string GetTargetName() => data.Target.Name;
 
         #endregion
+        
+        /// <summary>
+        /// Get or set the <see cref="NameValidator"/> for this instance.
+        /// Property is initialized with a default name validator. 
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public NameValidator NameValidator
+        {
+            get => nameValidator;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                nameValidator = value;
+            }
+        }
     }
 }

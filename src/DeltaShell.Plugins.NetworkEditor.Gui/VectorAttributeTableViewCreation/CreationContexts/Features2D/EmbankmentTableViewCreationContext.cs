@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -33,10 +34,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
             // no customization needed
         }
 
-        public EmbankmentRow CreateFeatureRowObject(Embankment feature)
+        public EmbankmentRow CreateFeatureRowObject(Embankment feature, IEnumerable<Embankment> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new EmbankmentRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+
+            return new EmbankmentRow(feature, nameValidator);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
@@ -16,7 +17,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new WasteWaterTreatmentPlantRow(null);
+                new WasteWaterTreatmentPlantRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new WasteWaterTreatmentPlantRow(new WasteWaterTreatmentPlant(), null);
             }
 
             // Assert
@@ -28,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -43,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -58,7 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -72,7 +86,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant { Name = "some_name" };
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -87,10 +101,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant { Name = "some_name" };
-            wasteWaterTreatmentPlant.AttachNameValidator(validator);
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -105,10 +120,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant { Name = "some_name" };
-            wasteWaterTreatmentPlant.AttachNameValidator(validator);
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -122,7 +138,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, new NameValidator());
 
             // Act
             row.Description = "some_name";
@@ -136,7 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant { Description = "some_name" };
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, new NameValidator());
 
             // Act
             string result = row.Description;
@@ -150,7 +166,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, new NameValidator());
 
             // Act
             row.LongName = "some_name";
@@ -164,7 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant { LongName = "some_name" };
-            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant);
+            var row = new WasteWaterTreatmentPlantRow(wasteWaterTreatmentPlant, new NameValidator());
 
             // Act
             string result = row.LongName;

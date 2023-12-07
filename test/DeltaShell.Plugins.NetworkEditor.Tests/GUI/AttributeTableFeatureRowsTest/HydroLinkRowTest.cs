@@ -1,5 +1,6 @@
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
@@ -16,7 +17,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new HydroLinkRow(null);
+                new HydroLinkRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new HydroLinkRow(new HydroLink(), null);
             }
 
             // Assert
@@ -28,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroLink = new HydroLink();
-            var row = new HydroLinkRow(hydroLink);
+            var row = new HydroLinkRow(hydroLink, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -43,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var hydroLink = new HydroLink();
-            var row = new HydroLinkRow(hydroLink);
+            var row = new HydroLinkRow(hydroLink, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -58,7 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroLink = new HydroLink();
-            var row = new HydroLinkRow(hydroLink);
+            var row = new HydroLinkRow(hydroLink, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -72,7 +86,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var hydroLink = new HydroLink { Name = "some_name" };
-            var row = new HydroLinkRow(hydroLink);
+            var row = new HydroLinkRow(hydroLink, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -87,10 +101,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var hydroLink = new HydroLink { Name = "some_name" };
-            hydroLink.AttachNameValidator(validator);
-            var row = new HydroLinkRow(hydroLink);
+            var row = new HydroLinkRow(hydroLink, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -105,10 +120,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var hydroLink = new HydroLink { Name = "some_name" };
-            hydroLink.AttachNameValidator(validator);
-            var row = new HydroLinkRow(hydroLink);
+            var row = new HydroLinkRow(hydroLink, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -124,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var hydroObject = Substitute.For<IHydroObject>();
             hydroObject.Name = "some_node_name";
             var hydroLink = new HydroLink { Source = hydroObject };
-            var row = new HydroLinkRow(hydroLink);
+            var row = new HydroLinkRow(hydroLink, new NameValidator());
 
             // Act
             string result = row.Source;
@@ -140,7 +156,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var hydroObject = Substitute.For<IHydroObject>();
             hydroObject.Name = "some_node_name";
             var hydroLink = new HydroLink { Target = hydroObject };
-            var row = new HydroLinkRow(hydroLink);
+            var row = new HydroLinkRow(hydroLink, new NameValidator());
 
             // Act
             string result = row.Target;

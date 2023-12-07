@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
@@ -96,7 +97,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<HydroLink>());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new HydroLinkTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new HydroLink(), null);
             }
 
             // Assert
@@ -111,14 +128,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             HydroLink feature = Substitute.For<HydroLink, INotifyPropertyChanged>();
 
             // Act
-            HydroLinkRow result = creationContext.CreateFeatureRowObject(feature);
+            HydroLinkRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<HydroLink>());
 
             // Assert
             Assert.That(result, Is.Not.Null);
         }
 
         [Test]
-        public void CustomizeTableView_DoesNothing()
+        public void CustomizeTableViews_DoesNothing()
         {
             // Arrange
             var creationContext = new HydroLinkTableViewCreationContext();

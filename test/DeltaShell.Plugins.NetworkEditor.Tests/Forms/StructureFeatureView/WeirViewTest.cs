@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView;
@@ -176,7 +177,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 DataSource = new FeatureCollection(new[] { new Weir() }.ToList(), typeof(Weir))
             };
-            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature));
+            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature, new NameValidator()));
             WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
             {
                 var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
@@ -197,7 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 DataSource = new FeatureCollection(new[] { new Orifice() }.ToList(), typeof(Orifice))
             };
-            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature));
+            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature, new NameValidator()));
             WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
             {
                 var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
@@ -221,7 +222,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 DataSource = new FeatureCollection(new[] { weir1, weir2, weir3 }.ToList(), typeof(Weir))
             };
-            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature));
+            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature, new NameValidator()));
             WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
             {
                 var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
@@ -250,7 +251,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 DataSource = new FeatureCollection(new[] {weir1, weir2, weir3}.ToList(), typeof(Weir))
             };
-            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir) feature));
+            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir) feature, new NameValidator()));
             WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
             {
                 var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>()
@@ -287,7 +288,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 DataSource = new FeatureCollection(new[] { orifice }.ToList(), typeof(Orifice))
             };
-            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature));
+            view.SetCreateFeatureRowFunction(feature => new WeirRow((IWeir)feature, new NameValidator()));
             WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
             {
                 var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();

@@ -7,6 +7,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -35,10 +36,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
         }
 
         /// <inheritdoc/>
-        public RetentionRow CreateFeatureRowObject(IRetention feature)
+        public RetentionRow CreateFeatureRowObject(IRetention feature, IEnumerable<IRetention> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new RetentionRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+
+            return new RetentionRow(feature, nameValidator);
         }
 
         /// <inheritdoc/>

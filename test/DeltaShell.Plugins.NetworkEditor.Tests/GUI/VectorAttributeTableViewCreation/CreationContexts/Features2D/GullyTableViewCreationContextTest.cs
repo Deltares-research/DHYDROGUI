@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.CreationContexts.Features2D;
@@ -94,11 +95,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<Gully>());
             }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new GullyTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new Gully(), null);
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -109,7 +126,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var feature = new Gully();
 
             // Act
-            GullyRow result = creationContext.CreateFeatureRowObject(feature);
+            GullyRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<Gully>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

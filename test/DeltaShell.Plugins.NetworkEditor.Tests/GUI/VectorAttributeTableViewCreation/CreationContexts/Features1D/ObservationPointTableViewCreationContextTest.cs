@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.CreationContexts.Features1D;
@@ -95,7 +96,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<IObservationPoint>());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new ObservationPointTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(Substitute.For<IObservationPoint>(), null);
             }
 
             // Assert
@@ -110,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             IObservationPoint feature = Substitute.For<IObservationPoint, INotifyPropertyChanged>();
 
             // Act
-            ObservationPointRow result = creationContext.CreateFeatureRowObject(feature);
+            ObservationPointRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<IObservationPoint>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

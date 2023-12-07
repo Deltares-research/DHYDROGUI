@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
@@ -95,11 +96,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<FixedWeir>());
             }
 
             // Assert
             Assert.That(Call, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new FixedWeirTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new FixedWeir(), null);
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -110,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             var feature = new FixedWeir();
 
             // Act
-            FixedWeirRow result = creationContext.CreateFeatureRowObject(feature);
+            FixedWeirRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<FixedWeir>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

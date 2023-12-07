@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.CreationContexts.Features2D
@@ -29,10 +30,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
         }
 
         /// <inheritdoc/>
-        public override BridgePillarRow CreateFeatureRowObject(BridgePillar feature)
+        public override BridgePillarRow CreateFeatureRowObject(BridgePillar feature, IEnumerable<BridgePillar> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new BridgePillarRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+
+            return new BridgePillarRow(feature, nameValidator);
         }
     }
 }

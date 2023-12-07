@@ -7,6 +7,9 @@ using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using NetTopologySuite.Extensions.Geometries;
@@ -16,18 +19,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "LeveeBreachProperties_DisplayName")]
     public class LeveeBreachProperties : ObjectProperties<ILeveeBreach>
     {
+        private NameValidator nameValidator = NameValidator.CreateDefault();
+        
         private bool useBreachLocationSnapping;
-        private ILeveeBreach leveeBreach;
 
-        public override object Data
+        public override ILeveeBreach Data
         {
             [ExcludeFromCodeCoverage]
-            get { return leveeBreach; }
+            get { return data; }
             set
             {
-                leveeBreach = (ILeveeBreach) value;
-                if (leveeBreach?.BreachLocation != null && leveeBreach?.Geometry != null)
-                    useBreachLocationSnapping = GeometryHelper.PointIsOnLineBetweenPreviousAndNext(leveeBreach.Geometry.Coordinates.First(), leveeBreach.BreachLocation.Coordinate, leveeBreach.Geometry.Coordinates.Last());
+                data = value;
+                if (data?.BreachLocation != null && data.Geometry != null)
+                    useBreachLocationSnapping = GeometryHelper.PointIsOnLineBetweenPreviousAndNext(data.Geometry.Coordinates.First(), data.BreachLocation.Coordinate, data.Geometry.Coordinates.Last());
             }
         }
 
@@ -37,8 +41,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public string Name
         {
-            get { return leveeBreach.Name; }
-            set { leveeBreach.SetNameIfValid(value); }
+            get { return data.Name; }
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    data.Name = value;
+                }
+            }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -50,7 +60,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set
             {
                 useBreachLocationSnapping = value;
-                BreachLocationX = leveeBreach.BreachLocationX;
+                BreachLocationX = data.BreachLocationX;
             }
         }
 
@@ -59,20 +69,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         public double BreachLocationX
         {
-            get { return leveeBreach.BreachLocationX; }
+            get { return data.BreachLocationX; }
             set {
                 if (useBreachLocationSnapping)
                 {
-                    var beginPoint = leveeBreach.Geometry.Coordinates.First();
-                    var endPoint = leveeBreach.Geometry.Coordinates.Last();
+                    var beginPoint = data.Geometry.Coordinates.First();
+                    var endPoint = data.Geometry.Coordinates.Last();
                     var xDiff = endPoint.X - beginPoint.X;
                     var yDiff = endPoint.Y - beginPoint.Y;
                     //value is nieuwe X, nu nieuwe Y uitrekenen
                     var ratio = yDiff / xDiff;
                     var newYLocation = endPoint.Y - ((endPoint.X - value) * ratio);
-                    leveeBreach.BreachLocationY = newYLocation;
+                    data.BreachLocationY = newYLocation;
                 }
-                leveeBreach.BreachLocationX = value;
+                data.BreachLocationX = value;
             }
         }
 
@@ -81,21 +91,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(4)]
         public double BreachLocationY
         {
-            get { return leveeBreach.BreachLocationY; }
+            get { return data.BreachLocationY; }
             set
             {
                 if (useBreachLocationSnapping)
                 {
-                    var beginPoint = leveeBreach.Geometry.Coordinates.First();
-                    var endPoint = leveeBreach.Geometry.Coordinates.Last();
+                    var beginPoint = data.Geometry.Coordinates.First();
+                    var endPoint = data.Geometry.Coordinates.Last();
                     var xDiff = endPoint.X - beginPoint.X;
                     var yDiff = endPoint.Y - beginPoint.Y;
                     //value is nieuwe Y, nu nieuwe X uitrekenen
                     var ratio = yDiff / xDiff;
                     var newXLocation = endPoint.X - ((endPoint.Y - value) / ratio);
-                    leveeBreach.BreachLocationX = newXLocation;
+                    data.BreachLocationX = newXLocation;
                 }
-                leveeBreach.BreachLocationY = value;
+                data.BreachLocationY = value;
             }
         }
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -105,8 +115,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public LeveeBreachGrowthFormula LeveeBreachFormula
         {
-            get { return leveeBreach.LeveeBreachFormula; }
-            set { leveeBreach.LeveeBreachFormula = value; }
+            get { return data.LeveeBreachFormula; }
+            set { data.LeveeBreachFormula = value; }
         }
         
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -115,12 +125,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public bool BreachGrowthActive
         {
             get {
-                var activeLeveeBreachSettings = leveeBreach.GetActiveLeveeBreachSettings();
+                var activeLeveeBreachSettings = data.GetActiveLeveeBreachSettings();
                 return activeLeveeBreachSettings.BreachGrowthActive;
             }
             set
             {
-                var activeLeveeBreachSettings = leveeBreach.GetActiveLeveeBreachSettings();
+                var activeLeveeBreachSettings = data.GetActiveLeveeBreachSettings();
                 activeLeveeBreachSettings.BreachGrowthActive = value;
             }
         }
@@ -132,12 +142,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public DateTime StartTimeBreachGrowth
         {
             get {
-                var activeLeveeBreachSettings = leveeBreach.GetActiveLeveeBreachSettings();
+                var activeLeveeBreachSettings = data.GetActiveLeveeBreachSettings();
                 return activeLeveeBreachSettings.StartTimeBreachGrowth;
             }
             set
             {
-                var activeLeveeBreachSettings = leveeBreach.GetActiveLeveeBreachSettings();
+                var activeLeveeBreachSettings = data.GetActiveLeveeBreachSettings();
                 activeLeveeBreachSettings.StartTimeBreachGrowth = value;
             }
         }
@@ -148,8 +158,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public bool WaterLevelFlowLocationsActive
         {
-            get { return leveeBreach.WaterLevelFlowLocationsActive; }
-            set { leveeBreach.WaterLevelFlowLocationsActive = value; }
+            get { return data.WaterLevelFlowLocationsActive; }
+            set { data.WaterLevelFlowLocationsActive = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -159,8 +169,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public double WaterLevelUpstreamLocationX
         {
-            get { return leveeBreach.WaterLevelUpstreamLocationX; }
-            set { leveeBreach.WaterLevelUpstreamLocationX= value; }
+            get { return data.WaterLevelUpstreamLocationX; }
+            set { data.WaterLevelUpstreamLocationX= value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -170,8 +180,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public double WaterLevelUpstreamLocationY
         {
-            get { return leveeBreach.WaterLevelUpstreamLocationY; }
-            set { leveeBreach.WaterLevelUpstreamLocationY = value; }
+            get { return data.WaterLevelUpstreamLocationY; }
+            set { data.WaterLevelUpstreamLocationY = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -180,8 +190,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(11)]
         public double WaterLevelDownstreamLocationX
         {
-            get { return leveeBreach.WaterLevelDownstreamLocationX; }
-            set { leveeBreach.WaterLevelDownstreamLocationX = value; }
+            get { return data.WaterLevelDownstreamLocationX; }
+            set { data.WaterLevelDownstreamLocationX = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -190,8 +200,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(12)]
         public double WaterLevelDownstreamLocationY
         {
-            get { return leveeBreach.WaterLevelDownstreamLocationY; }
-            set { leveeBreach.WaterLevelDownstreamLocationY = value; }
+            get { return data.WaterLevelDownstreamLocationY; }
+            set { data.WaterLevelDownstreamLocationY = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -200,8 +210,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public double LeveeStartLocationX
         {
-            get { return leveeBreach.Geometry.Coordinates[0].X; }
-            set { leveeBreach.Geometry.Coordinates[0].X = value; }
+            get { return data.Geometry.Coordinates[0].X; }
+            set { data.Geometry.Coordinates[0].X = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -210,8 +220,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public double LeveeStartLocationY
         {
-            get { return leveeBreach.Geometry.Coordinates[0].Y; }
-            set { leveeBreach.Geometry.Coordinates[0].Y = value; }
+            get { return data.Geometry.Coordinates[0].Y; }
+            set { data.Geometry.Coordinates[0].Y = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -220,8 +230,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public double LeveeEndLocationX
         {
-            get { return leveeBreach.Geometry.Coordinates[1].X; }
-            set { leveeBreach.Geometry.Coordinates[1].X = value; }
+            get { return data.Geometry.Coordinates[1].X; }
+            set { data.Geometry.Coordinates[1].X = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -230,8 +240,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public double LeveeEndLocationY
         {
-            get { return leveeBreach.Geometry.Coordinates[1].Y; }
-            set { leveeBreach.Geometry.Coordinates[1].Y = value; }
+            get { return data.Geometry.Coordinates[1].Y; }
+            set { data.Geometry.Coordinates[1].Y = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -240,7 +250,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [ExcludeFromCodeCoverage]
         public double LeveeGeometryLength
         {
-            get { return leveeBreach.Geometry.Length; }
+            get { return data.Geometry.Length; }
         }
 
         [DynamicVisibleValidationMethod]
@@ -252,7 +262,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 propertyName == nameof(WaterLevelDownstreamLocationX) ||
                 propertyName == nameof(WaterLevelDownstreamLocationY) )
             {
-                return leveeBreach.WaterLevelFlowLocationsActive;
+                return data.WaterLevelFlowLocationsActive;
             }
 
             if (propertyName == nameof(LeveeBreachFormula) ||
@@ -262,6 +272,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
 
             return true;
+        }
+        
+        /// <summary>
+        /// Get or set the <see cref="NameValidator"/> for this instance.
+        /// Property is initialized with a default name validator. 
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public NameValidator NameValidator
+        {
+            get => nameValidator;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                nameValidator = value;
+            }
         }
     }
 

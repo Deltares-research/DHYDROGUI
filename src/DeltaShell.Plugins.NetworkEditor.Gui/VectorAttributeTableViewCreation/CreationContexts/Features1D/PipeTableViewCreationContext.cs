@@ -8,6 +8,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -36,10 +37,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
         }
 
         /// <inheritdoc/>
-        public PipeRow CreateFeatureRowObject(IPipe feature)
+        public PipeRow CreateFeatureRowObject(IPipe feature, IEnumerable<IPipe> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new PipeRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+
+            return new PipeRow(feature, nameValidator);
         }
 
         /// <inheritdoc/>

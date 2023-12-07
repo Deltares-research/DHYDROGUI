@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.CreationContexts.Features2D
@@ -27,10 +28,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
             return ReferenceEquals(region.LandBoundaries, data);
         }
 
-        public override LandBoundary2DRow CreateFeatureRowObject(LandBoundary2D feature)
+        public override LandBoundary2DRow CreateFeatureRowObject(LandBoundary2D feature, IEnumerable<LandBoundary2D> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new LandBoundary2DRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+            
+            return new LandBoundary2DRow(feature, nameValidator);
         }
     }
 }

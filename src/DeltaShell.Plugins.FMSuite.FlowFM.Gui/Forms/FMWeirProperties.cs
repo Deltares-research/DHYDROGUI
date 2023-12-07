@@ -1,25 +1,35 @@
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     [ResourcesDisplayName(typeof(Resources), "WeirProperties_DisplayName")]
-    public class FMWeirProperties : ObjectProperties<IWeir>
+    public class FMWeirProperties : ObjectProperties<Weir2D>
     {
+        private NameValidator nameValidator = NameValidator.CreateDefault();
+        
         [Category("General")]
         [PropertyOrder(0)]
         public string Name
         {
             get { return data.Name; }
-            set { data.SetNameIfValid(value); }
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    data.Name = value;
+                }
+            }
         }
 
         [Category("General")]
@@ -111,6 +121,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return data.CrestWidth <= 0.0;
             }
             return false;
+        }
+        
+        /// <summary>
+        /// Get or set the <see cref="NameValidator"/> for this instance.
+        /// Property is initialized with a default name validator. 
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public NameValidator NameValidator
+        {
+            get => nameValidator;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                nameValidator = value;
+            }
         }
     }
 }

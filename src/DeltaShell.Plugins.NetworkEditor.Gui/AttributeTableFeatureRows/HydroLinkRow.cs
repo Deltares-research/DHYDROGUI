@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class HydroLinkRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly HydroLink hydroLink;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="HydroLinkRow"/> class.
         /// </summary>
         /// <param name="hydroLink"> The hydro link to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="hydroLink"/> is <c>null</c>.
+        /// Thrown when <paramref name="hydroLink"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public HydroLinkRow(HydroLink hydroLink)
+        public HydroLinkRow(HydroLink hydroLink, NameValidator nameValidator)
             : base((INotifyPropertyChanged)hydroLink)
         {
             Ensure.NotNull(hydroLink, nameof(hydroLink));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.hydroLink = hydroLink;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => hydroLink.Name;
-            set => hydroLink.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    hydroLink.Name = value;
+                }
+            }
         }
 
         [DisplayName("Source")]

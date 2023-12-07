@@ -2,6 +2,9 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using NetTopologySuite.Extensions.Networks;
@@ -11,13 +14,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "CompositeStructureProperties_DisplayName")]
     public class CompositeStructureProperties : ObjectProperties<ICompositeBranchStructure>
     {
+        private NameValidator nameValidator = NameValidator.CreateDefault();
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Name")]
         [PropertyOrder(0)]
         public string Name
         {
             get { return data.Name; }
-            set { data.SetNameIfValid(value); }
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    data.Name = value;
+                }
+            }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -64,6 +74,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get { return data.ParentStructure != null ? data.ParentStructure.Chainage : data.Chainage; }
             set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
+        }
+        
+        /// <summary>
+        /// Get or set the <see cref="NameValidator"/> for this instance.
+        /// Property is initialized with a default name validator. 
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public NameValidator NameValidator
+        {
+            get => nameValidator;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                nameValidator = value;
+            }
         }
     }
 }

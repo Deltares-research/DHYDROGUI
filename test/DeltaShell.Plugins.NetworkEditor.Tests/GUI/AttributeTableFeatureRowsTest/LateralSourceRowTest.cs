@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -18,7 +19,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new LateralSourceRow(null);
+                new LateralSourceRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new LateralSourceRow(Substitute.For<ILateralSource, INotifyPropertyChanged>(), null);
             }
 
             // Assert
@@ -30,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var lateralSource = new LateralSource();
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -45,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var lateralSource = new LateralSource();
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -60,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var lateralSource = new LateralSource();
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -74,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var lateralSource = new LateralSource { Name = "some_name" };
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -89,10 +103,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var lateralSource = new LateralSource { Name = "some_name" };
-            lateralSource.AttachNameValidator(validator);
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -107,10 +122,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var lateralSource = new LateralSource { Name = "some_name" };
-            lateralSource.AttachNameValidator(validator);
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -124,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var lateralSource = new LateralSource();
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             row.LongName = "some_long_name";
@@ -138,7 +154,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var lateralSource = new LateralSource { LongName = "some_long_name" };
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -154,7 +170,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var branch = Substitute.For<IBranch>();
             branch.Name = "some_branch_name";
             var lateralSource = new LateralSource { Branch = branch };
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -168,7 +184,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var lateralSource = new LateralSource();
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             row.Chainage = 1.23;
@@ -182,7 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var lateralSource = new LateralSource { Chainage = 1.23 };
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             double result = row.Chainage;
@@ -197,7 +213,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             ILateralSource lateralSource = Substitute.For<ILateralSource, INotifyPropertyChanged>();
             lateralSource.IsDiffuse.Returns(isDiffuse);
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             bool result = row.DiffuseLateral;
@@ -211,7 +227,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var lateralSource = new LateralSource { Length = 4.56 };
-            var row = new LateralSourceRow(lateralSource);
+            var row = new LateralSourceRow(lateralSource, new NameValidator());
 
             // Act
             double result = row.Length;

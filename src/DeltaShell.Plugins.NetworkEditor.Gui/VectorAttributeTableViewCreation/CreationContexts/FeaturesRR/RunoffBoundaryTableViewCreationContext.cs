@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -28,10 +29,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
             return ReferenceEquals(region.Boundaries, data);
         }
 
-        public RunoffBoundaryRow CreateFeatureRowObject(RunoffBoundary feature)
+        public RunoffBoundaryRow CreateFeatureRowObject(RunoffBoundary feature, IEnumerable<RunoffBoundary> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new RunoffBoundaryRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+
+            return new RunoffBoundaryRow(feature, nameValidator);
         }
 
         public void CustomizeTableView(VectorLayerAttributeTableView view, IEnumerable<RunoffBoundary> data, GuiContainer guiContainer)

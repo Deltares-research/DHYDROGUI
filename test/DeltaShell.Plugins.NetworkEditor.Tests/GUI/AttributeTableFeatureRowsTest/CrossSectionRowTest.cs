@@ -1,5 +1,7 @@
+using System.ComponentModel;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -17,7 +19,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new CrossSectionRow(null);
+                new CrossSectionRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new CrossSectionRow(Substitute.For<ICrossSection, INotifyPropertyChanged>(), null);
             }
 
             // Assert
@@ -30,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -46,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var eventRaised = false;
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -62,7 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -77,7 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition) { Name = "some_name" };
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -92,11 +107,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition) { Name = "some_name" };
-            crossSection.AttachNameValidator(validator);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -111,11 +127,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition) { Name = "some_name" };
-            crossSection.AttachNameValidator(validator);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -130,7 +147,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             row.LongName = "some_name";
@@ -145,7 +162,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition) { LongName = "some_name" };
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -162,7 +179,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             branch.Name = "some_branch_name";
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition) { Branch = branch };
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -177,7 +194,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             row.Chainage = 1.23;
@@ -192,7 +209,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             var crossSection = new CrossSection(crossSectionDefinition) { Chainage = 1.23 };
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             double result = row.Chainage;
@@ -208,7 +225,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             crossSectionDefinition.LowestPoint.Returns(1.23);
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             double result = row.LowestPoint;
@@ -224,7 +241,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             crossSectionDefinition.HighestPoint.Returns(1.23);
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             double result = row.HighestPoint;
@@ -240,7 +257,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             crossSectionDefinition.CrossSectionType.Returns(crossSectionType);
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             CrossSectionType result = row.CrossSectionType;
@@ -256,7 +273,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             crossSectionDefinition.Width.Returns(1.23);
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             double result = row.Width;
@@ -272,7 +289,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             crossSectionDefinition.Thalweg.Returns(1.23456);
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             double result = row.Thalweg;
@@ -288,7 +305,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var crossSectionDefinition = Substitute.For<ICrossSectionDefinition>();
             crossSectionDefinition.Name = "some_cross_section_definition_name";
             var crossSection = new CrossSection(crossSectionDefinition);
-            var row = new CrossSectionRow(crossSection);
+            var row = new CrossSectionRow(crossSection, new NameValidator());
 
             // Act
             string result = row.DefinitionName;

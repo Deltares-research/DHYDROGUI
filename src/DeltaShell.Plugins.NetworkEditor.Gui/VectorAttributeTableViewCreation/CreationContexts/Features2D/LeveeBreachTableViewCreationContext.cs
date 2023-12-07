@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -29,10 +30,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
             return ReferenceEquals(region.LeveeBreaches, data);
         }
 
-        public Feature2DRow CreateFeatureRowObject(Feature2D feature)
+        public Feature2DRow CreateFeatureRowObject(Feature2D feature, IEnumerable<Feature2D> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new Feature2DRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+
+            return new Feature2DRow(feature, nameValidator);
         }
 
         public void CustomizeTableView(VectorLayerAttributeTableView view, IEnumerable<Feature2D> data, GuiContainer guiContainer)

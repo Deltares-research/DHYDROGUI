@@ -2,6 +2,7 @@ using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -19,7 +20,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new CulvertRow(null);
+                new CulvertRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new CulvertRow(Substitute.For<ICulvert, INotifyPropertyChanged>(), null);
             }
 
             // Assert
@@ -31,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -46,7 +60,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -61,7 +75,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -75,7 +89,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Name = "some_name" };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -90,10 +104,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var culvert = new Culvert { Name = "some_name" };
-            culvert.AttachNameValidator(validator);
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -108,10 +123,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var culvert = new Culvert { Name = "some_name" };
-            culvert.AttachNameValidator(validator);
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -125,7 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.LongName = "some_long_name";
@@ -139,7 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { LongName = "some_long_name" };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -155,7 +171,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var branch = Substitute.For<IBranch>();
             branch.Name = "some_branch_name";
             var culvert = new Culvert { Branch = branch };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -169,7 +185,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Length = 1.23;
@@ -183,7 +199,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Length = 1.23 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Length;
@@ -197,7 +213,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.RoughnessType = culvertFrictionType;
@@ -211,7 +227,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { FrictionType = culvertFrictionType };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             CulvertFrictionType result = row.RoughnessType;
@@ -225,7 +241,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Roughness = 0.05;
@@ -239,7 +255,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Friction = 0.1 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Roughness;
@@ -253,7 +269,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.InletLevel = 5.0;
@@ -267,7 +283,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { InletLevel = 2.0 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.InletLevel;
@@ -281,7 +297,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.OutletLevel = 3.0;
@@ -295,7 +311,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { OutletLevel = 4.0 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.OutletLevel;
@@ -309,7 +325,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.InletLossCoefficient = 0.2;
@@ -323,7 +339,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { InletLossCoefficient = 0.3 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.InletLossCoefficient;
@@ -337,7 +353,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.FlowDirection = flowDirection;
@@ -351,7 +367,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { FlowDirection = flowDirection };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             FlowDirection result = row.FlowDirection;
@@ -365,7 +381,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.OutletLossCoefficient = 0.25;
@@ -379,7 +395,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { OutletLossCoefficient = 0.35 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.OutletLossCoefficient;
@@ -393,7 +409,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.BendLossCoefficient = 0.15;
@@ -407,7 +423,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { BendLossCoefficient = 0.25 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.BendLossCoefficient;
@@ -421,7 +437,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Gated = true;
@@ -435,7 +451,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { IsGated = false };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             bool result = row.Gated;
@@ -450,7 +466,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             ICulvert culvert = Substitute.For<ICulvert, INotifyPropertyChanged>();
             culvert.GateLowerEdgeLevel.Returns(3.0);
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.GateLowerEdge;
@@ -464,7 +480,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.GateOpening = 0.75;
@@ -478,7 +494,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { GateInitialOpening = 0.6 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.GateOpening;
@@ -492,7 +508,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.SubType = culvertType;
@@ -506,7 +522,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { CulvertType = culvertType };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             CulvertType result = row.SubType;
@@ -520,7 +536,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Shape = CulvertGeometryType.Round;
@@ -534,7 +550,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { GeometryType = culvertGeometryType };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             CulvertGeometryType result = row.Shape;
@@ -548,7 +564,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Width = 1.5;
@@ -562,7 +578,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Width = 2.0 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Width;
@@ -576,7 +592,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Height = 2.5;
@@ -590,7 +606,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Height = 3.0 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Height;
@@ -604,7 +620,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.ArcHeight = 1.2;
@@ -618,7 +634,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { ArcHeight = 1.5 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.ArcHeight;
@@ -632,7 +648,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Diameter = 1.8;
@@ -646,7 +662,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Diameter = 2.2 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Diameter;
@@ -660,7 +676,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Radius = 1.0;
@@ -674,7 +690,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Radius = 1.5 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Radius;
@@ -688,7 +704,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Radius1 = 2.0;
@@ -702,7 +718,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Radius1 = 2.5 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Radius1;
@@ -716,7 +732,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Radius2 = 3.0;
@@ -730,7 +746,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Radius2 = 3.5 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Radius2;
@@ -744,7 +760,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Radius3 = 4.0;
@@ -758,7 +774,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Radius3 = 4.5 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Radius3;
@@ -772,7 +788,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Angle = 45.0;
@@ -786,7 +802,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Angle = 60.0 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Angle;
@@ -800,7 +816,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert();
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             row.Angle1 = 30.0;
@@ -814,7 +830,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var culvert = new Culvert { Angle1 = 35.0 };
-            var row = new CulvertRow(culvert);
+            var row = new CulvertRow(culvert, new NameValidator());
 
             // Act
             double result = row.Angle1;

@@ -96,7 +96,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<RunoffBoundary>());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new RunoffBoundaryTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new RunoffBoundary(), null);
             }
 
             // Assert
@@ -111,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             RunoffBoundary feature = Substitute.For<RunoffBoundary, INotifyPropertyChanged>();
 
             // Act
-            RunoffBoundaryRow result = creationContext.CreateFeatureRowObject(feature);
+            RunoffBoundaryRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<RunoffBoundary>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

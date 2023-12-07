@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class WasteWaterTreatmentPlantRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly WasteWaterTreatmentPlant wasteWaterTreatmentPlant;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="WasteWaterTreatmentPlantRow"/> class.
         /// </summary>
         /// <param name="wasteWaterTreatmentPlant"> The waste water treatment plant to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="wasteWaterTreatmentPlant"/> is <c>null</c>.
+        /// Thrown when <paramref name="wasteWaterTreatmentPlant"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public WasteWaterTreatmentPlantRow(WasteWaterTreatmentPlant wasteWaterTreatmentPlant)
+        public WasteWaterTreatmentPlantRow(WasteWaterTreatmentPlant wasteWaterTreatmentPlant, NameValidator nameValidator)
             : base((INotifyPropertyChanged)wasteWaterTreatmentPlant)
         {
             Ensure.NotNull(wasteWaterTreatmentPlant, nameof(wasteWaterTreatmentPlant));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.wasteWaterTreatmentPlant = wasteWaterTreatmentPlant;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => wasteWaterTreatmentPlant.Name;
-            set => wasteWaterTreatmentPlant.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    wasteWaterTreatmentPlant.Name = value;
+                }
+            }
         }
 
         [DisplayName("Description")]

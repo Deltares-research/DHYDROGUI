@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -11,6 +14,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "NetworkLocationProperties_DisplayName")]
     public class NetworkLocationProperties : ObjectProperties<INetworkLocation>
     {
+        private NameValidator nameValidator = NameValidator.CreateDefault();
+        
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Branch")]
         [PropertyOrder(1)]
@@ -43,7 +48,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string Name
         {
             get { return data.Name; }
-            set { data.SetNameIfValid(value); }
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    data.Name = value;
+                }
+            }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -54,6 +65,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data.LongName; }
             set { data.LongName = value; }
         }
-
+        
+        /// <summary>
+        /// Get or set the <see cref="NameValidator"/> for this instance.
+        /// Property is initialized with a default name validator. 
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public NameValidator NameValidator
+        {
+            get => nameValidator;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                nameValidator = value;
+            }
+        }
     }
 }

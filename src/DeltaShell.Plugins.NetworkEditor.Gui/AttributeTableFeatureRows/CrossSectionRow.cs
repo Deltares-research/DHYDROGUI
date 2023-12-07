@@ -2,6 +2,8 @@ using System;
 using System.ComponentModel;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -16,26 +18,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class CrossSectionRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly ICrossSection crossSection;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="CrossSectionRow"/> class.
         /// </summary>
         /// <param name="crossSection"> The cross-section to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="crossSection"/> is <c>null</c>.
+        /// Thrown when <paramref name="crossSection"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public CrossSectionRow(ICrossSection crossSection)
+        public CrossSectionRow(ICrossSection crossSection, NameValidator nameValidator)
             : base((INotifyPropertyChanged)crossSection)
         {
             Ensure.NotNull(crossSection, nameof(crossSection));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.crossSection = crossSection;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => crossSection.Name;
-            set => crossSection.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    crossSection.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

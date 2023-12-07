@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class Gate2DRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly Gate2D gate2D;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="Gate2DRow"/> class.
         /// </summary>
         /// <param name="gate2D"> The gate 2D to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="gate2D"/> is <c>null</c>.
+        /// Thrown when <paramref name="gate2D"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public Gate2DRow(Gate2D gate2D)
+        public Gate2DRow(Gate2D gate2D, NameValidator nameValidator)
             : base(gate2D)
         {
             Ensure.NotNull(gate2D, nameof(gate2D));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.gate2D = gate2D;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => gate2D.Name;
-            set => gate2D.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    gate2D.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

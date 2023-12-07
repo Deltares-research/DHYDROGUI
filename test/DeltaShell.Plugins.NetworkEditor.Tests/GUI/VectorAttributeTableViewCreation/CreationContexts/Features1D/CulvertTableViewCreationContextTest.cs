@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
@@ -96,7 +97,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<ICulvert>());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new CulvertTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(Substitute.For<ICulvert>(), null);
             }
 
             // Assert
@@ -111,7 +128,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             ICulvert feature = Substitute.For<ICulvert, INotifyPropertyChanged>();
 
             // Act
-            CulvertRow result = creationContext.CreateFeatureRowObject(feature);
+            CulvertRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<ICulvert>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

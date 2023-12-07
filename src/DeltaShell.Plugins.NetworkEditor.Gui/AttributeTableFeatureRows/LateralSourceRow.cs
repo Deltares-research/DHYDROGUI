@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class LateralSourceRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly ILateralSource lateralSource;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="LateralSourceRow"/> class.
         /// </summary>
         /// <param name="lateralSource"> The lateral source to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="lateralSource"/> is <c>null</c>.
+        /// Thrown when <paramref name="lateralSource"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public LateralSourceRow(ILateralSource lateralSource)
+        public LateralSourceRow(ILateralSource lateralSource, NameValidator nameValidator)
             : base((INotifyPropertyChanged)lateralSource)
         {
             Ensure.NotNull(lateralSource, nameof(lateralSource));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.lateralSource = lateralSource;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => lateralSource.Name;
-            set => lateralSource.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    lateralSource.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

@@ -1,5 +1,6 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
@@ -16,7 +17,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new Gate2DRow(null);
+                new Gate2DRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new Gate2DRow(new Gate2D(), null);
             }
 
             // Assert
@@ -28,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -43,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -58,7 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -72,7 +86,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { Name = "some_name" };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -87,10 +101,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var gate2D = new Gate2D { Name = "some_name" };
-            gate2D.AttachNameValidator(validator);
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -105,10 +120,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var gate2D = new Gate2D { Name = "some_name" };
-            gate2D.AttachNameValidator(validator);
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -122,7 +138,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.LongName = "some_long_name";
@@ -136,7 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { LongName = "some_long_name" };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -150,7 +166,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -164,7 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.GroupName = "some_group_name";
@@ -178,7 +194,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { GroupName = "some_group_name" };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             string result = row.GroupName;
@@ -192,7 +208,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.SillLevel = 1.23;
@@ -206,7 +222,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { SillLevel = 1.23 };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             double result = row.SillLevel;
@@ -220,7 +236,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.LowerEdgeLevel = 1.23;
@@ -234,7 +250,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { LowerEdgeLevel = 1.23 };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             double result = row.LowerEdgeLevel;
@@ -248,7 +264,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.OpeningWidth = 1.23;
@@ -262,7 +278,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { OpeningWidth = 1.23 };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             double result = row.OpeningWidth;
@@ -276,7 +292,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.DoorHeight = 1.23;
@@ -290,7 +306,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { DoorHeight = 1.23 };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             double result = row.DoorHeight;
@@ -304,7 +320,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.HorizontalOpeningDirection = gateOpeningDirection;
@@ -318,7 +334,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { HorizontalOpeningDirection = gateOpeningDirection };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             GateOpeningDirection result = row.HorizontalOpeningDirection;
@@ -332,7 +348,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D();
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             row.SillWidth = 1.23;
@@ -346,7 +362,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gate2D = new Gate2D { SillWidth = 1.23 };
-            var row = new Gate2DRow(gate2D);
+            var row = new Gate2DRow(gate2D, new NameValidator());
 
             // Act
             double result = row.SillWidth;

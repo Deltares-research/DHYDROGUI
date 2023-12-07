@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,19 +17,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class ThinDam2DRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly ThinDam2D thinDam2D;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="ThinDam2DRow"/> class.
         /// </summary>
         /// <param name="thinDam2D"> The thin dam 2D to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="thinDam2D"/> is <c>null</c>.
+        /// Thrown when <paramref name="thinDam2D"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public ThinDam2DRow(ThinDam2D thinDam2D)
+        public ThinDam2DRow(ThinDam2D thinDam2D, NameValidator nameValidator)
             : base(thinDam2D)
         {
             Ensure.NotNull(thinDam2D, nameof(thinDam2D));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.thinDam2D = thinDam2D;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Group name")]
@@ -41,7 +48,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => thinDam2D.Name;
-            set => thinDam2D.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    thinDam2D.Name = value;
+                }
+            }
         }
 
         /// <summary>

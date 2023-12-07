@@ -9,18 +9,30 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     public class ManholeProperties : ObjectProperties<Manhole>
     {
+        private NameValidator manholeNameValidator = NameValidator.CreateDefault();
+        private NameValidator compartmentNameValidator = NameValidator.CreateDefault();
+        
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(0)]
         public string Name
         {
             get { return data.Name; }
-            set { data.SetNameIfValid(value); }
+            set
+            {
+                if (manholeNameValidator.ValidateWithLogging(value))
+                {
+                    data.Name = value;
+                }
+            }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -54,7 +66,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string CompartmentOneName
         {
             get { return GetStringPropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.Name); }
-            set { data.Compartments[manholeOneIndex].SetNameIfValid(value); }
+            set
+            {
+                if (compartmentNameValidator.ValidateWithLogging(value))
+                {
+                    data.Compartments[manholeOneIndex].Name = value;
+                }
+            }
         }
 
         [Category("Compartment 1")]
@@ -140,7 +158,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string CompartmentTwoName
         {
             get { return GetStringPropertyFromCompartmentAtIndex(manholeTwoIndex, comp => comp.Name); }
-            set { data.Compartments[manholeTwoIndex].SetNameIfValid(value); }
+            set
+            {
+                if (compartmentNameValidator.ValidateWithLogging(value))
+                {
+                    data.Compartments[manholeTwoIndex].Name = value;
+                }
+            }
         }
 
         [Category("Compartment 2")]
@@ -226,7 +250,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string CompartmentThreeName
         {
             get { return GetStringPropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.Name); }
-            set { data.Compartments[manholeThreeIndex].SetNameIfValid(value); }
+            set
+            {
+                if (compartmentNameValidator.ValidateWithLogging(value))
+                {
+                    data.Compartments[manholeThreeIndex].Name = value;
+                }
+            }
         }
 
         [Category("Compartment 3")]
@@ -375,6 +405,54 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             ICompartment compartment = data.Compartments.ElementAtOrDefault(index);
             return compartment != null ? func(compartment) : defaultValue;
+        }
+
+        /// <summary>
+        /// Sets the name validator to be called when setting the name of the manhole.
+        /// </summary>
+        /// <param name="nameValidator"> The name validator. </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="nameValidator"/> is <c>null</c>.
+        /// </exception>
+        public void SetManholeNameValidator(NameValidator nameValidator)
+        {
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            manholeNameValidator = nameValidator;
+        }
+
+        /// <summary>
+        /// Get or set the <see cref="NameValidator"/> for this instance that is used for the name validation of the manhole.
+        /// Property is initialized with a default name validator.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public NameValidator ManholeNameValidator
+        {
+            get => manholeNameValidator;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                manholeNameValidator = value;
+            }
+        }
+
+        /// <summary>
+        /// Get or set the <see cref="NameValidator"/> for this instance that is used for the name validation of the manhole
+        /// compartments.
+        /// Property is initialized with a default name validator.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public NameValidator CompartmentNameValidator
+        {
+            get => compartmentNameValidator;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                compartmentNameValidator = value;
+            }
         }
     }
 }

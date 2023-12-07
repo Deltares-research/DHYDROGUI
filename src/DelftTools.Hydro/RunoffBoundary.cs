@@ -9,7 +9,7 @@ using NetTopologySuite.Extensions.Features;
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class RunoffBoundary : RainfallRunoffFeature, IHydroObject, IComparable
+    public class RunoffBoundary : Feature, IHydroObject, IComparable
     {
         public RunoffBoundary()
         {
@@ -17,6 +17,10 @@ namespace DelftTools.Hydro
             Links = new EventedList<HydroLink>();
             Attributes = new DictionaryFeatureAttributeCollection();
         }
+        
+        [DisplayName("Name")]
+        [FeatureAttribute]
+        public virtual string Name { get; set; }
 
         [Aggregation]
         public virtual IDrainageBasin Basin { get; set; }

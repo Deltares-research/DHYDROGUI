@@ -2,6 +2,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -20,7 +21,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new PipeRow(null);
+                new PipeRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new PipeRow(Substitute.For<IPipe>(), null);
             }
 
             // Assert
@@ -32,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -47,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var pipe = new Pipe();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -62,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -76,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe { Name = "some_name" };
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -91,10 +105,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var pipe = new Pipe { Name = "some_name" };
-            pipe.AttachNameValidator(validator);
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -109,10 +124,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var pipe = new Pipe { Name = "some_name" };
-            pipe.AttachNameValidator(validator);
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -129,7 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             node.Name = "some_node";
             var pipe = Substitute.For<IPipe>();
             pipe.Source.Returns(node);
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             string result = row.FromManhole;
@@ -146,7 +162,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             node.Name = "some_node";
             var pipe = Substitute.For<IPipe>();
             pipe.Target.Returns(node);
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             string result = row.ToManhole;
@@ -162,7 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var compartment = new Compartment { Name = "some_compartment" };
             var pipe = Substitute.For<IPipe>();
             pipe.SourceCompartment.Returns(compartment);
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             string result = row.FromCompartment;
@@ -178,7 +194,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var compartment = new Compartment { Name = "some_compartment" };
             var pipe = Substitute.For<IPipe>();
             pipe.TargetCompartment.Returns(compartment);
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             string result = row.ToCompartment;
@@ -194,7 +210,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var geometry = Substitute.For<IGeometry>();
             geometry.Length.Returns(150.7);
             var pipe = new Pipe { Geometry = geometry };
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             double result = row.GeometryLength;
@@ -208,7 +224,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             row.Length = 15.0;
@@ -222,7 +238,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe { Length = 12.5 };
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             double result = row.Length;
@@ -236,7 +252,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe { OrderNumber = 42 };
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             int result = row.OrderNumber;
@@ -250,7 +266,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             row.OrderNumber = 10;
@@ -264,7 +280,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe { LevelSource = 5.3 };
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             double result = row.InvertLevelFrom;
@@ -278,7 +294,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             row.InvertLevelFrom = 7.1;
@@ -292,7 +308,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe { LevelTarget = 8.7 };
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             double result = row.InvertLevelTo;
@@ -306,7 +322,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             row.InvertLevelTo = 9.2;
@@ -320,7 +336,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe { WaterType = sewerConnectionWaterType };
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             SewerConnectionWaterType result = row.SewerType;
@@ -334,7 +350,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = new Pipe();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             row.SewerType = sewerConnectionWaterType;
@@ -349,7 +365,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var pipe = Substitute.For<IPipe>();
             pipe.SpecialConnectionType.Returns(sewerConnectionSpecialConnectionType);
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             SewerConnectionSpecialConnectionType result = row.SewerSpecialConnectionType;
@@ -366,7 +382,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             profile.ShapeType = crossSectionStandardShapeType;
             var pipe = Substitute.For<IPipe>();
             pipe.Profile.Returns(profile);
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             CrossSectionStandardShapeType? result = row.ProfileType;
@@ -385,7 +401,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             crossSection.Definition.Returns(crossSectionDefinition);
 
             var pipe = new Pipe { CrossSection = crossSection };
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             double result = row.Width;
@@ -399,7 +415,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var pipe = Substitute.For<IPipe>();
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             row.DefinitionName = "some_definition";
@@ -414,7 +430,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var pipe = Substitute.For<IPipe>();
             pipe.DefinitionName.Returns("some_definition");
-            var row = new PipeRow(pipe);
+            var row = new PipeRow(pipe, new NameValidator());
 
             // Act
             string result = row.DefinitionName;

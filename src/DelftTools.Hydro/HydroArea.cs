@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Validation.NameValidation;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
@@ -38,45 +37,27 @@ namespace DelftTools.Hydro
         {
             Name = "Area";
             Links = new EventedList<HydroLink>();
-            _ = new UniqueNameValidationService<HydroLink>(Links);
 
             LandBoundaries = new EventedList<LandBoundary2D>();
-            _ = new UniqueNameValidationService<LandBoundary2D>(LandBoundaries);
             DryPoints = new EventedList<GroupablePointFeature>();
             DryAreas = new EventedList<GroupableFeature2DPolygon>();
-            _ = new UniqueNameValidationService<GroupableFeature2DPolygon>(DryAreas);
             ThinDams = new EventedList<ThinDam2D>();
-            _ = new UniqueNameValidationService<ThinDam2D>(ThinDams);
             FixedWeirs = new EventedList<FixedWeir>();
-            _ = new UniqueNameValidationService<FixedWeir>(FixedWeirs);
             LeveeBreaches = new EventedList<Feature2D>();
-            _ = new UniqueNameValidationService<Feature2D>(LeveeBreaches);
             ObservationPoints = new EventedList<GroupableFeature2DPoint>();
-            _ = new UniqueNameValidationService<GroupableFeature2DPoint>(ObservationPoints);
             ObservationCrossSections = new EventedList<ObservationCrossSection2D>();
-            _ = new UniqueNameValidationService<ObservationCrossSection2D>(ObservationCrossSections);
             DumpingLocations = new EventedList<GroupableFeature2D>();
-            _ = new UniqueNameValidationService<GroupableFeature2D>(DumpingLocations);
             DredgingLocations = new EventedList<GroupableFeature2D>();
-            _ = new UniqueNameValidationService<GroupableFeature2D>(DredgingLocations);
             Embankments = new EventedList<Embankment>();
-            _ = new UniqueNameValidationService<Embankment>(Embankments);
             Enclosures = new EventedList<GroupableFeature2DPolygon>();
-            _ = new UniqueNameValidationService<GroupableFeature2DPolygon>(Enclosures);
             BridgePillars = new EventedList<BridgePillar>();
-            _ = new UniqueNameValidationService<BridgePillar>(BridgePillars);
 
             Pumps = new EventedList<Pump2D>();
-            _ = new UniqueNameValidationService<Pump2D>(Pumps);
             Weirs = new EventedList<Weir2D>();
-            _ = new UniqueNameValidationService<Weir2D>(Weirs);
             Gates = new EventedList<Gate2D>();
-            _ = new UniqueNameValidationService<Gate2D>(Gates);
 
             RoofAreas = new EventedList<GroupableFeature2DPolygon>();
-            _ = new UniqueNameValidationService<GroupableFeature2DPolygon>(RoofAreas);
             Gullies = new EventedList<Gully>();
-            _ = new UniqueNameValidationService<Gully>(Gullies);
         }
 
         public virtual IEventedList<LandBoundary2D> LandBoundaries { get; protected set; }

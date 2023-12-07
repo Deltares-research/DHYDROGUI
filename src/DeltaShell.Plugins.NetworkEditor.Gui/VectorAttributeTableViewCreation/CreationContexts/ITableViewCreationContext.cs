@@ -39,11 +39,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
         /// Create a feature row object representing the data of the provided feature.
         /// </summary>
         /// <param name="feature"> The feature to represent. </param>
+        /// <param name="allFeatures"> All features within the group of the feature. </param>
         /// <returns> A new instance of a <see cref="IFeatureRowObject"/>.</returns>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="feature"/> is <c>null</c>/
+        /// Thrown when <paramref name="feature"/> or <paramref name="allFeatures"/> is <c>null</c>/
         /// </exception>
-        TFeatureRow CreateFeatureRowObject(TFeature feature);
+        TFeatureRow CreateFeatureRowObject(TFeature feature, IEnumerable<TFeature> allFeatures);
 
         /// <summary>
         /// Customize the attribute table view.

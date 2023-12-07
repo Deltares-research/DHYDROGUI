@@ -3,6 +3,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -17,26 +19,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class CulvertRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly ICulvert culvert;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="CulvertRow"/> class.
         /// </summary>
         /// <param name="culvert"> The culvert to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="culvert"/> is <c>null</c>.
+        /// Thrown when <paramref name="culvert"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public CulvertRow(ICulvert culvert)
+        public CulvertRow(ICulvert culvert, NameValidator nameValidator)
             : base((INotifyPropertyChanged)culvert)
         {
             Ensure.NotNull(culvert, nameof(culvert));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.culvert = culvert;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => culvert.Name;
-            set => culvert.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    culvert.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

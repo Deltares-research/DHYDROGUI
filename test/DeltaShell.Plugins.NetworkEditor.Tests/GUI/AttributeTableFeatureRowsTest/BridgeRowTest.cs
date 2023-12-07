@@ -1,6 +1,7 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -18,7 +19,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new BridgeRow(null);
+                new BridgeRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new BridgeRow(new Bridge(), null);
             }
 
             // Assert
@@ -30,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -45,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -60,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -74,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { Name = "some_name" };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -89,10 +103,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var bridge = new Bridge { Name = "some_name" };
-            bridge.AttachNameValidator(validator);
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -107,10 +122,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var bridgePillar = new Bridge { Name = "some_name" };
-            bridgePillar.AttachNameValidator(validator);
-            var row = new BridgeRow(bridgePillar);
+            var row = new BridgeRow(bridgePillar, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -124,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.LongName = "some_long_name";
@@ -138,7 +154,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { LongName = "some_long_name" };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -154,7 +170,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var branch = Substitute.For<IBranch>();
             branch.Name = "some_branch_name";
             var bridge = new Bridge { Branch = branch };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -168,7 +184,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.BridgeType = bridgeType;
@@ -182,7 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { BridgeType = bridgeType };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             BridgeType result = row.BridgeType;
@@ -196,7 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.BridgeLength = 1.23;
@@ -210,7 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { BridgeLength = 1.23 };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             double result = row.BridgeLength;
@@ -224,7 +240,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.FlowDirection = flowDirection;
@@ -238,7 +254,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { FlowDirection = flowDirection };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             FlowDirection result = row.FlowDirection;
@@ -252,7 +268,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.InletLossCoefficient = 1.23;
@@ -266,7 +282,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { InletLossCoefficient = 1.23 };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             double result = row.InletLossCoefficient;
@@ -280,7 +296,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.OutletLossCoefficient = 1.23;
@@ -294,7 +310,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { OutletLossCoefficient = 1.23 };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             double result = row.OutletLossCoefficient;
@@ -308,7 +324,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.FrictionType = frictionType;
@@ -322,7 +338,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { FrictionType = frictionType };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             BridgeFrictionType result = row.FrictionType;
@@ -336,7 +352,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.Friction = 1.23;
@@ -350,7 +366,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { Friction = 1.23 };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             double result = row.Friction;
@@ -364,7 +380,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.Shift = 1.23;
@@ -378,7 +394,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { Shift = 1.23 };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             double result = row.Shift;
@@ -392,7 +408,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.Width = 1.23;
@@ -406,7 +422,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { Width = 1.23 };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             double result = row.Width;
@@ -420,7 +436,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge();
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             row.Height = 1.23;
@@ -434,7 +450,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var bridge = new Bridge { Height = 1.23 };
-            var row = new BridgeRow(bridge);
+            var row = new BridgeRow(bridge, new NameValidator());
 
             // Act
             double result = row.Height;

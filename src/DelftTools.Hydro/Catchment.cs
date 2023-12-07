@@ -17,7 +17,7 @@ namespace DelftTools.Hydro
     /// Represents a catchment entity in a hydrological system.
     /// </summary>
     [Entity]
-    public class Catchment : RainfallRunoffFeature, ICopyFrom, IHydroObject, IComparable
+    public class Catchment : Feature, ICopyFrom, IHydroObject, IComparable
     {
         private IPoint interiorPointCache;
         private bool settingDerivedGeometry;
@@ -58,6 +58,10 @@ namespace DelftTools.Hydro
                 
             }
         }
+        
+        [DisplayName("Name")]
+        [FeatureAttribute]
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the long name of the catchment.

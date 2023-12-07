@@ -6,7 +6,6 @@ using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Validation.NameValidation;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -24,13 +23,9 @@ namespace DelftTools.Hydro
         {
             Name = "drainage basin";
             Catchments = new EventedList<Catchment>();
-            _ = new UniqueNameValidationService<Catchment>(Catchments);
             WasteWaterTreatmentPlants = new EventedList<WasteWaterTreatmentPlant>();
-            _ = new UniqueNameValidationService<WasteWaterTreatmentPlant>(WasteWaterTreatmentPlants);
             Boundaries = new EventedList<RunoffBoundary>();
-            _ = new UniqueNameValidationService<RunoffBoundary>(Boundaries);
             Links = new EventedList<HydroLink>();
-            _ = new UniqueNameValidationService<HydroLink>(Links);
             
             CatchmentTypes = new EventedList<CatchmentType>();
             

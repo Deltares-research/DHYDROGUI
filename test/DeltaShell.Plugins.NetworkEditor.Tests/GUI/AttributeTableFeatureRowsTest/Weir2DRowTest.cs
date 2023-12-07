@@ -2,6 +2,7 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
@@ -18,7 +19,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new Weir2DRow(null);
+                new Weir2DRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new Weir2DRow(new Weir2D(), null);
             }
 
             // Assert
@@ -30,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -45,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -60,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -74,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D { Name = "some_name" };
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -89,10 +103,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var weir2D = new Weir2D { Name = "some_name" };
-            weir2D.AttachNameValidator(validator);
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -107,10 +122,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var weir2D = new Weir2D { Name = "some_name" };
-            weir2D.AttachNameValidator(validator);
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -124,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             row.LongName = "some_name";
@@ -138,7 +154,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D { LongName = "some_name" };
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -152,7 +168,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -167,7 +183,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var weir2D = new Weir2D();
             var weirFormula = new SimpleWeirFormula();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             string result = row.WeirFormulaName;
@@ -181,7 +197,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             row.CrestWidth = 10.0;
@@ -195,7 +211,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D { CrestWidth = 10.0 };
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             double result = row.CrestWidth;
@@ -209,7 +225,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             row.CrestLevel = 10.0;
@@ -223,7 +239,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D { CrestLevel = 10.0 };
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             double result = row.CrestLevel;
@@ -237,7 +253,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             row.FlowDirection = flowDirection;
@@ -251,7 +267,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D { FlowDirection = flowDirection };
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             FlowDirection result = row.FlowDirection;
@@ -265,7 +281,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D();
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             row.GroupName = "some_group_name";
@@ -279,7 +295,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var weir2D = new Weir2D { GroupName = "some_group_name" };
-            var row = new Weir2DRow(weir2D);
+            var row = new Weir2DRow(weir2D, new NameValidator());
 
             // Act
             string result = row.GroupName;

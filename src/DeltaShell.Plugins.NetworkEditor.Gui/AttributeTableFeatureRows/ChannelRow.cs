@@ -3,6 +3,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -18,26 +20,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class ChannelRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly IChannel channel;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="ChannelRow"/> class.
         /// </summary>
         /// <param name="channel"> The channel to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="channel"/> is <c>null</c>.
+        /// Thrown when <paramref name="channel"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public ChannelRow(IChannel channel)
+        public ChannelRow(IChannel channel, NameValidator nameValidator)
             : base((INotifyPropertyChanged)channel)
         {
             Ensure.NotNull(channel, nameof(channel));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.channel = channel;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => channel.Name;
-            set => channel.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    channel.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

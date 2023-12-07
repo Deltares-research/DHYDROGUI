@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class Pump2DRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly Pump2D pump2D;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="Pump2DRow"/> class.
         /// </summary>
         /// <param name="pump2D"> The pump 2D to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="pump2D"/> is <c>null</c>.
+        /// Thrown when <paramref name="pump2D"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public Pump2DRow(Pump2D pump2D)
+        public Pump2DRow(Pump2D pump2D, NameValidator nameValidator)
             : base(pump2D)
         {
             Ensure.NotNull(pump2D, nameof(pump2D));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.pump2D = pump2D;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => pump2D.Name;
-            set => pump2D.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    pump2D.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

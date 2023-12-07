@@ -1,5 +1,6 @@
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -17,7 +18,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new GullyRow(null);
+                new GullyRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new GullyRow(new Gully(), null);
             }
 
             // Assert
@@ -29,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gully = new Gully();
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -44,7 +58,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var gully = new Gully();
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -59,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gully = new Gully();
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, new NameValidator());
 
             // Act
             row.GroupName = "some_group_name";
@@ -73,7 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gully = new Gully { GroupName = "some_group_name" };
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, new NameValidator());
 
             // Act
             string result = row.GroupName;
@@ -87,7 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gully = new Gully();
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -101,7 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var gully = new Gully { Name = "some_name" };
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -116,10 +130,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var gully = new Gully { Name = "some_name" };
-            gully.AttachNameValidator(validator);
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -134,10 +149,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var gully = new Gully { Name = "some_name" };
-            gully.AttachNameValidator(validator);
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -153,7 +169,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var point = Substitute.For<IPoint>();
             point.Coordinate.Returns(new Coordinate(1.23, 4.56));
             var gully = new Gully { Geometry = point };
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, new NameValidator());
 
             // Act
             double result = row.X;
@@ -169,7 +185,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var point = Substitute.For<IPoint>();
             point.Coordinate.Returns(new Coordinate(1.23, 4.56));
             var gully = new Gully { Geometry = point };
-            var row = new GullyRow(gully);
+            var row = new GullyRow(gully, new NameValidator());
 
             // Act
             double result = row.Y;

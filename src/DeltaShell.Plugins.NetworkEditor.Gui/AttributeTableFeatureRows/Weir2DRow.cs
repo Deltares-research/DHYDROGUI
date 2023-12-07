@@ -2,6 +2,8 @@ using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class Weir2DRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly Weir2D weir2D;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="Weir2DRow"/> class.
         /// </summary>
         /// <param name="weir2D"> The weir 2D to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="weir2D"/> is <c>null</c>.
+        /// Thrown when <paramref name="weir2D"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public Weir2DRow(Weir2D weir2D)
+        public Weir2DRow(Weir2D weir2D, NameValidator nameValidator)
             : base(weir2D)
         {
             Ensure.NotNull(weir2D, nameof(weir2D));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.weir2D = weir2D;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => weir2D.Name;
-            set => weir2D.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    weir2D.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

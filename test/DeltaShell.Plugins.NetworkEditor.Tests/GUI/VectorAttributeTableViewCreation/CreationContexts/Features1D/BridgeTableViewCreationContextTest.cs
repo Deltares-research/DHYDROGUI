@@ -96,7 +96,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Act
             void Call()
             {
-                creationContext.CreateFeatureRowObject(null);
+                creationContext.CreateFeatureRowObject(null, Enumerable.Empty<IBridge>());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFeatureRowObject_ALlFeaturesNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var creationContext = new BridgeTableViewCreationContext();
+
+            // Act
+            void Call()
+            {
+                creationContext.CreateFeatureRowObject(new Bridge(), null);
             }
 
             // Assert
@@ -111,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             IBridge feature = Substitute.For<IBridge, INotifyPropertyChanged>();
 
             // Act
-            BridgeRow result = creationContext.CreateFeatureRowObject(feature);
+            BridgeRow result = creationContext.CreateFeatureRowObject(feature, Enumerable.Empty<IBridge>());
 
             // Assert
             Assert.That(result, Is.Not.Null);

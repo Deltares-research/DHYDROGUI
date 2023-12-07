@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
         public abstract bool IsRegionData(HydroArea region, IEnumerable<TGroupableFeature> data);
 
         /// <inheritdoc/>
-        public abstract TFeatureRow CreateFeatureRowObject(TGroupableFeature feature);
+        public abstract TFeatureRow CreateFeatureRowObject(TGroupableFeature feature, IEnumerable<TGroupableFeature> allFeatures);
 
         /// <inheritdoc/>
         public void CustomizeTableView(VectorLayerAttributeTableView view, IEnumerable<TGroupableFeature> data, GuiContainer guiContainer)

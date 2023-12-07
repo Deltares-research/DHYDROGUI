@@ -1,5 +1,6 @@
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
@@ -16,7 +17,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new EmbankmentRow(null);
+                new EmbankmentRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new EmbankmentRow(new Embankment(), null);
             }
 
             // Assert
@@ -28,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var embankment = new Embankment();
-            var row = new EmbankmentRow(embankment);
+            var row = new EmbankmentRow(embankment, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -43,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var embankment = new Embankment();
-            var row = new EmbankmentRow(embankment);
+            var row = new EmbankmentRow(embankment, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -58,7 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var embankment = new Embankment();
-            var row = new EmbankmentRow(embankment);
+            var row = new EmbankmentRow(embankment, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -72,7 +86,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var embankment = new Embankment { Name = "some_name" };
-            var row = new EmbankmentRow(embankment);
+            var row = new EmbankmentRow(embankment, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -87,10 +101,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var embankment = new Embankment { Name = "some_name" };
-            embankment.AttachNameValidator(validator);
-            var row = new EmbankmentRow(embankment);
+            var row = new EmbankmentRow(embankment, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -105,10 +120,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var embankment = new Embankment { Name = "some_name" };
-            embankment.AttachNameValidator(validator);
-            var row = new EmbankmentRow(embankment);
+            var row = new EmbankmentRow(embankment, nameValidator);
 
             // Act
             row.Name = "some_valid_name";

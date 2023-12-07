@@ -1,7 +1,9 @@
+using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -19,7 +21,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new CompositeBranchStructureRow(null);
+                new CompositeBranchStructureRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new CompositeBranchStructureRow(Substitute.For<ICompositeBranchStructure, INotifyPropertyChanged>(), null);
             }
 
             // Assert
@@ -31,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compositeBranchStructure = new CompositeBranchStructure();
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -46,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var compositeBranchStructure = new CompositeBranchStructure();
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -61,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compositeBranchStructure = new CompositeBranchStructure();
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -75,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compositeBranchStructure = new CompositeBranchStructure { Name = "some_name" };
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -90,10 +105,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var compositeBranchStructure = new CompositeBranchStructure { Name = "some_name" };
-            compositeBranchStructure.AttachNameValidator(validator);
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -108,10 +124,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var compositeBranchStructure = new CompositeBranchStructure { Name = "some_name" };
-            compositeBranchStructure.AttachNameValidator(validator);
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -125,7 +142,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compositeBranchStructure = new CompositeBranchStructure();
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, new NameValidator());
 
             // Act
             row.LongName = "some_name";
@@ -139,7 +156,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var compositeBranchStructure = new CompositeBranchStructure { LongName = "some_name" };
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -155,7 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var branch = Substitute.For<IBranch>();
             branch.Name = "some_branch_name";
             var compositeBranchStructure = new CompositeBranchStructure { Branch = branch };
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, new NameValidator());
 
             // Act
             string result = row.Branch;
@@ -170,7 +187,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var compositeBranchStructure = new CompositeBranchStructure();
             compositeBranchStructure.Structures = new EventedList<IStructure1D>(new IStructure1D[3]);
-            var row = new CompositeBranchStructureRow(compositeBranchStructure);
+            var row = new CompositeBranchStructureRow(compositeBranchStructure, new NameValidator());
 
             // Act
             int result = row.Structures;

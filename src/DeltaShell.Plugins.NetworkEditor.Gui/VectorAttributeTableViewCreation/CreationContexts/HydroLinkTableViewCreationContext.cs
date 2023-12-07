@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -28,10 +29,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.
             return ReferenceEquals(region.Links, data);
         }
 
-        public HydroLinkRow CreateFeatureRowObject(HydroLink feature)
+        public HydroLinkRow CreateFeatureRowObject(HydroLink feature, IEnumerable<HydroLink> allFeatures)
         {
             Ensure.NotNull(feature, nameof(feature));
-            return new HydroLinkRow(feature);
+            Ensure.NotNull(allFeatures, nameof(allFeatures));
+            
+            var nameValidator = NameValidator.CreateDefault();
+            nameValidator.AddValidator(new UniqueNameValidator(allFeatures));
+
+            return new HydroLinkRow(feature, nameValidator);
         }
 
         public void CustomizeTableView(VectorLayerAttributeTableView view, IEnumerable<HydroLink> data, GuiContainer guiContainer)

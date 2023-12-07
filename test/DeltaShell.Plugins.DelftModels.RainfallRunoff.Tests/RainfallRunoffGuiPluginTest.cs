@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         {
             //Arrange
             var catchment = new Catchment();
+            catchment.Basin = Substitute.For<IDrainageBasin>();
             var catchmentData = new UnpavedData(catchment);
 
             var model = Substitute.For<IRainfallRunoffModel>();

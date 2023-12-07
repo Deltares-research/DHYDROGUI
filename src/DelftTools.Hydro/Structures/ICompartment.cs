@@ -1,12 +1,12 @@
 ﻿using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Utils.Validation.NameValidation;
+using DelftTools.Utils;
 using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface ICompartment : ISewerFeature, IHasNameValidation
+    public interface ICompartment : ISewerFeature, INameable
     {
         /// <summary>
         /// The manhole that contains this compartment.

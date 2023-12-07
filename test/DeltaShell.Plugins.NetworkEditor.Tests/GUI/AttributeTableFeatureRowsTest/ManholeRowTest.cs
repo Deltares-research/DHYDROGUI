@@ -3,6 +3,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -20,7 +21,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new ManholeRow(null);
+                new ManholeRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new ManholeRow(Substitute.For<IManhole, INotifyPropertyChanged>(), null);
             }
 
             // Assert
@@ -32,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var manhole = new Manhole();
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -47,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var manhole = new Manhole();
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -62,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var manhole = new Manhole();
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -76,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var manhole = new Manhole { Name = "some_name" };
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -91,10 +105,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var manhole = new Manhole { Name = "some_name" };
-            manhole.AttachNameValidator(validator);
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -109,10 +124,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var manhole = new Manhole { Name = "some_name" };
-            manhole.AttachNameValidator(validator);
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -127,7 +143,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IManhole manhole = Substitute.For<IManhole, INotifyPropertyChanged>();
             manhole.Compartments.Returns(new EventedList<ICompartment>(new ICompartment[3]));
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, new NameValidator());
 
             // Act
             int result = row.CompartmentCount;
@@ -143,7 +159,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var point = Substitute.For<IPoint>();
             point.Coordinate.Returns(new Coordinate(1.23, 4.56));
             var manhole = new Manhole { Geometry = point };
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, new NameValidator());
 
             // Act
             double result = row.XCoordinate;
@@ -159,7 +175,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var point = Substitute.For<IPoint>();
             point.Coordinate.Returns(new Coordinate(1.23, 4.56));
             var manhole = new Manhole { Geometry = point };
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, new NameValidator());
 
             // Act
             double result = row.YCoordinate;
@@ -174,7 +190,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // 
             IManhole manhole = Substitute.For<IManhole, INotifyPropertyChanged>();
             manhole.IsOnSingleBranch.Returns(isOnSingleBranch);
-            var row = new ManholeRow(manhole);
+            var row = new ManholeRow(manhole, new NameValidator());
 
             // Act
             bool result = row.IsOnSingleBranch;

@@ -4,7 +4,6 @@ namespace DelftTools.Hydro.Structures
 {
     public interface IBridge : IStructureWithCrossSectionDefinition, IFrictionData, IGroundLayer
     {
-        string Name { get; set; }
         string LongName { get; set; }
 
         /// <summary>

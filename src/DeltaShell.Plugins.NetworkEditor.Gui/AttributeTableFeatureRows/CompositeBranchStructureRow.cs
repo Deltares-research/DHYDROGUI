@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class CompositeBranchStructureRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly ICompositeBranchStructure compositeBranchStructure;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="CompositeBranchStructureRow"/> class.
         /// </summary>
         /// <param name="compositeBranchStructure"> The composite branch structure to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="compositeBranchStructure"/> is <c>null</c>.
+        /// Thrown when <paramref name="compositeBranchStructure"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public CompositeBranchStructureRow(ICompositeBranchStructure compositeBranchStructure)
+        public CompositeBranchStructureRow(ICompositeBranchStructure compositeBranchStructure, NameValidator nameValidator)
             : base((INotifyPropertyChanged)compositeBranchStructure)
         {
             Ensure.NotNull(compositeBranchStructure, nameof(compositeBranchStructure));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.compositeBranchStructure = compositeBranchStructure;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => compositeBranchStructure.Name;
-            set => compositeBranchStructure.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    compositeBranchStructure.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

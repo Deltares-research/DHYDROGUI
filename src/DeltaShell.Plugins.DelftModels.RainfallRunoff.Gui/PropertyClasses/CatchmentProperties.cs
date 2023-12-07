@@ -2,7 +2,9 @@
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
@@ -11,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
     public class CatchmentProperties : ObjectProperties<Catchment>
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(CatchmentProperties));
+        private NameValidator nameValidator = NameValidator.CreateDefault();
 
         [Browsable(false)]
         internal CatchmentModelData CatchmentData { get; set; }
@@ -19,41 +22,35 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         [PropertyOrder(0)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.SetNameIfValid(value); }
+            get => data.Name;
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    data.Name = value;
+                }
+            }
         }
 
         [Category("General")]
         [PropertyOrder(1)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get => data.LongName;
+            set => data.LongName = value;
         }
 
-        public CatchmentType CatchmentType
-        {
-            get
-            {
-                return data.CatchmentType;
-            }
-        }
+        public CatchmentType CatchmentType => data.CatchmentType;
 
         [Category("General")]
         [DisplayName("Catchment type")]
         [PropertyOrder(2)]
         public virtual CatchmentTypes CatchmentTypes
         {
-            get
-            {
-                return data.CatchmentType.Types;
-            }
-            set
-            {
-                data.CatchmentTypes = value;
-            }
+            get => data.CatchmentType.Types;
+            set => data.CatchmentTypes = value;
         }
-        
+
         [Description("Catchment area based on input data used for computation.\n" +
                      "This can differ from the geometry area")]
         [Category("General")]
@@ -61,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         [PropertyOrder(3)]
         public double ComputationArea
         {
-            get { return CatchmentData?.CalculationArea ?? double.NaN; }
+            get => CatchmentData?.CalculationArea ?? double.NaN;
             set
             {
                 if (CatchmentData == null)
@@ -78,18 +75,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         [Category("General")]
         [DisplayName("Geometry area (m²)")]
         [PropertyOrder(4)]
-        public double GeometryArea
-        {
-            get { return data.Geometry?.Area ?? double.NaN; }
-        }
+        public double GeometryArea => data.Geometry?.Area ?? double.NaN;
 
         [Description("If TRUE, catchment geometry is derived from computation area")]
         [Category("General")]
         [DisplayName("Generated geometry")]
         [PropertyOrder(5)]
-        public bool IsDefaultGeometry
+        public bool IsDefaultGeometry => data.IsGeometryDerivedFromAreaSize;
+
+        /// <summary>
+        /// Get or set the <see cref="NameValidator"/> for this instance.
+        /// Property is initialized with a default name validator. 
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public NameValidator NameValidator
         {
-            get { return data.IsGeometryDerivedFromAreaSize; }
+            get => nameValidator;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                nameValidator = value;
+            }
         }
     }
 }

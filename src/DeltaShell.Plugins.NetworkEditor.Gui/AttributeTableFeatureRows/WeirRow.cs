@@ -7,6 +7,9 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -15,6 +18,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
 {
     public class WeirRow : IDisposable, INotifyPropertyChange, IFeatureRowObject
     {
+        private readonly NameValidator nameValidator;
+        
         public enum FormulaEnum
         {
             [Description("Simple weir")]
@@ -37,9 +42,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
 
         private IWeir weir;
 
-        public WeirRow(IWeir weir)
+        /// <summary>
+        /// Initialize a new instance of the <see cref="WeirRow"/> class.
+        /// </summary>
+        /// <param name="weir"> The weir to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="weir"/> or <paramref name="nameValidator"/> is <c>null</c>.
+        /// </exception>
+        public WeirRow(IWeir weir, NameValidator nameValidator)
         {
+            Ensure.NotNull(weir, nameof(weir));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             Weir = weir;
+            this.nameValidator = nameValidator;
 
             SetFormula(ConvertFormula(Weir.WeirFormula), false);
         }
@@ -71,7 +88,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => Weir.Name;
-            set => Weir.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    weir.Name = value;
+                }
+            }
         }
 
         [DisplayName("Long name")]

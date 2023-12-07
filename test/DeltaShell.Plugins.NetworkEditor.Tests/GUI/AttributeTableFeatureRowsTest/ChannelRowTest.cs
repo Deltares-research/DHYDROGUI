@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -21,7 +22,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Act
             void Call()
             {
-                new ChannelRow(null);
+                new ChannelRow(null, new NameValidator());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_WithNullNameValidator_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call()
+            {
+                new ChannelRow(Substitute.For<IChannel, INotifyPropertyChanged>(), null);
             }
 
             // Assert
@@ -33,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel();
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             IFeature result = row.GetFeature();
@@ -48,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var eventRaised = false;
             var channel = new Channel();
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
             row.PropertyChanged += (sender, args) => eventRaised = true;
 
             // Act
@@ -63,7 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel();
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             row.Name = "some_name";
@@ -77,7 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel { Name = "some_name" };
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             string result = row.Name;
@@ -92,10 +106,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_invalid_name").Returns(ValidationResult.Fail("message"));
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var channel = new Channel { Name = "some_name" };
-            channel.AttachNameValidator(validator);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, nameValidator);
 
             // Act
             row.Name = "some_invalid_name";
@@ -110,10 +125,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var validator = Substitute.For<IValidator<string>>();
             validator.Validate("some_valid_name").Returns(ValidationResult.Success);
+            var nameValidator = new NameValidator();
+            nameValidator.AddValidator(validator);
 
             var channel = new Channel { Name = "some_name" };
-            channel.AttachNameValidator(validator);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, nameValidator);
 
             // Act
             row.Name = "some_valid_name";
@@ -127,7 +143,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel();
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             row.LongName = "some_long_name";
@@ -141,7 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel { LongName = "some_long_name" };
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             string result = row.LongName;
@@ -156,7 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var node = Substitute.For<INode>();
             var channel = new Channel { Source = node };
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             INode result = row.Source;
@@ -171,7 +187,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             var node = Substitute.For<INode>();
             var channel = new Channel { Target = node };
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             INode result = row.Target;
@@ -185,7 +201,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             row.IsLengthCustom = isLengthCustom;
@@ -200,7 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.IsLengthCustom = isLengthCustom;
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             bool result = row.IsLengthCustom;
@@ -214,7 +230,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel();
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             row.Length = 1.23;
@@ -228,7 +244,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel { Length = 1.23 };
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             double result = row.Length;
@@ -244,7 +260,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             var geometry = Substitute.For<IGeometry>();
             geometry.Length.Returns(1.23);
             var channel = new Channel { Geometry = geometry };
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             double result = row.GeometryLength;
@@ -258,7 +274,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel();
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             row.OrderNumber = 123;
@@ -272,7 +288,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
         {
             // Arrange
             var channel = new Channel { OrderNumber = 123 };
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             double result = row.OrderNumber;
@@ -287,7 +303,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.CrossSections.Returns(new ICrossSection[3]);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             int result = row.CrossSectionCount;
@@ -302,7 +318,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.Structures.Returns(new IStructure1D[3]);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             int result = row.StructureCount;
@@ -317,7 +333,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.Pumps.Returns(new IPump[3]);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             int result = row.PumpCount;
@@ -332,7 +348,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.Culverts.Returns(new ICulvert[3]);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             int result = row.CulvertCount;
@@ -347,7 +363,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.Bridges.Returns(new IBridge[3]);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             int result = row.BridgeCount;
@@ -362,7 +378,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.Weirs.Returns(new IWeir[3]);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             int result = row.WeirCount;
@@ -377,7 +393,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.Gates.Returns(new IGate[3]);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             int result = row.GateCount;
@@ -392,7 +408,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.AttributeTableFeatureRowsTe
             // Arrange
             IChannel channel = Substitute.For<IChannel, INotifyPropertyChanged>();
             channel.BranchSources.Returns(new LateralSource[3]);
-            var row = new ChannelRow(channel);
+            var row = new ChannelRow(channel, new NameValidator());
 
             // Act
             int result = row.LateralSourcesCount;

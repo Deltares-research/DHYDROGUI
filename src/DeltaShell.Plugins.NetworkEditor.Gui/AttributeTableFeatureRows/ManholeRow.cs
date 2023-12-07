@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,26 +17,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class ManholeRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly IManhole manhole;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="ManholeRow"/> class.
         /// </summary>
         /// <param name="manhole"> The manhole to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="manhole"/> is <c>null</c>.
+        /// Thrown when <paramref name="manhole"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public ManholeRow(IManhole manhole)
+        public ManholeRow(IManhole manhole, NameValidator nameValidator)
             : base((INotifyPropertyChanged)manhole)
         {
             Ensure.NotNull(manhole, nameof(manhole));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.manhole = manhole;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => manhole.Name;
-            set => manhole.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    manhole.Name = value;
+                }
+            }
         }
 
         [DisplayName("Compartments")]

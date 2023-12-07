@@ -2,6 +2,8 @@ using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -16,26 +18,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class SewerConnectionRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly ISewerConnection sewerConnection;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="SewerConnectionRow"/> class.
         /// </summary>
         /// <param name="sewerConnection"> The sewer connection to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="sewerConnection"/> is <c>null</c>.
+        /// Thrown when <paramref name="sewerConnection"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public SewerConnectionRow(ISewerConnection sewerConnection)
+        public SewerConnectionRow(ISewerConnection sewerConnection, NameValidator nameValidator)
             : base(sewerConnection)
         {
             Ensure.NotNull(sewerConnection, nameof(sewerConnection));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.sewerConnection = sewerConnection;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Name")]
         public string Name
         {
             get => sewerConnection.Name;
-            set => sewerConnection.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    sewerConnection.Name = value;
+                }
+            }
         }
 
         [DisplayName("From manhole")]

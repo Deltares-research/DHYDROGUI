@@ -24,6 +24,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
+using DeltaShell.NGHS.Common.Gui.PropertyGrid.PropertyInfoCreation;
 using DeltaShell.NGHS.Common.Gui.WPF.SettingsView;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
@@ -44,6 +45,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PropertyGrid.PropertyInfoCreation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Views;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -70,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
     [Extension(typeof(IPlugin))]
     public class FlowFMGuiPlugin : GuiPlugin
     {
-        private readonly GuiContainer guiContainer = new GuiContainer();
+        private readonly GuiContainer guiContainer;
         private TableViewTimeSeriesGeneratorTool tableViewTimeSeriesGeneratorTool;
 
         private const string CoordinateSystemMemberName = nameof(WaterFlowFMModel.CoordinateSystem);
@@ -82,9 +84,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static Func<MapView> getActiveMapViewFunc;
         private string _fmModelSettingsSuffix = " (FM model settings)";
         private Ribbon.Ribbon ribbon;
+        private readonly PropertyInfoCreator propertyInfoCreator;
 
         public FlowFMGuiPlugin()
         {
+            guiContainer = new GuiContainer();
+            propertyInfoCreator = new PropertyInfoCreator(guiContainer);
             getActiveMapViewFunc = GetActiveMapView;
             GraphicsProvider = new FmGuiGraphicsProvider();
         }
@@ -683,7 +688,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
-            yield return new PropertyInfo<IWeir, FMWeirProperties> { AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
+            yield return propertyInfoCreator.Create(new FMWeirPropertyInfoCreationContext());
             yield return new PropertyInfo<FmModelTreeShortcut, HydroNetworkProperties>
             {
                 AdditionalDataCheck = w => w.Data is IHydroNetwork,
@@ -695,6 +700,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 GetObjectPropertiesData = o => o.Data
             };
 
+            yield return propertyInfoCreator.Create(new NetworkLocationPropertyInfoCreationContext());
         }
 
         public override void OnActiveViewChanged(IView view)

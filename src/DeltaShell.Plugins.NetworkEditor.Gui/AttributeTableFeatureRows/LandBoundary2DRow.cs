@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,19 +17,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class LandBoundary2DRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly LandBoundary2D landBoundary2D;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="LandBoundary2DRow"/> class.
         /// </summary>
         /// <param name="landBoundary2D"> The land boundary 2D to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="landBoundary2D"/> is <c>null</c>.
+        /// Thrown when <paramref name="landBoundary2D"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public LandBoundary2DRow(LandBoundary2D landBoundary2D)
+        public LandBoundary2DRow(LandBoundary2D landBoundary2D, NameValidator nameValidator)
             : base(landBoundary2D)
         {
             Ensure.NotNull(landBoundary2D, nameof(landBoundary2D));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.landBoundary2D = landBoundary2D;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Group name")]
@@ -41,7 +48,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => landBoundary2D.Name;
-            set => landBoundary2D.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    landBoundary2D.Name = value;
+                }
+            }
         }
 
         /// <summary>

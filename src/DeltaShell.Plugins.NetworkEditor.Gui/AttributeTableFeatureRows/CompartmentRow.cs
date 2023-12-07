@@ -6,6 +6,8 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -20,19 +22,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public sealed class CompartmentRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly Compartment compartment;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="CompartmentRow"/> class.
         /// </summary>
         /// <param name="compartment"> The compartment to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="compartment"/> is <c>null</c>.
+        /// Thrown when <paramref name="compartment"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public CompartmentRow(Compartment compartment)
+        public CompartmentRow(Compartment compartment, NameValidator nameValidator)
             : base((INotifyPropertyChanged)compartment)
         {
             Ensure.NotNull(compartment, nameof(compartment));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.compartment = compartment;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Manhole name")]
@@ -42,7 +49,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => compartment.Name;
-            set => compartment.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    compartment.Name = value;
+                }
+            }
         }
 
         [DisplayName("Shape")]

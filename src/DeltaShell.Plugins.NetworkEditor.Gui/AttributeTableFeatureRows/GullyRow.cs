@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
@@ -15,19 +17,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
     public class GullyRow : PropertyChangedPropagator, IFeatureRowObject
     {
         private readonly Gully gully;
+        private readonly NameValidator nameValidator;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="GullyRow"/> class.
         /// </summary>
         /// <param name="gully"> The gully to be presented. </param>
+        /// <param name="nameValidator"> The name validator to use when the name is set. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="gully"/> is <c>null</c>.
+        /// Thrown when <paramref name="gully"/> or <paramref name="nameValidator"/> is <c>null</c>.
         /// </exception>
-        public GullyRow(Gully gully)
+        public GullyRow(Gully gully, NameValidator nameValidator)
             : base(gully)
         {
             Ensure.NotNull(gully, nameof(gully));
+            Ensure.NotNull(nameValidator, nameof(nameValidator));
+            
             this.gully = gully;
+            this.nameValidator = nameValidator;
         }
 
         [DisplayName("Group name")]
@@ -41,7 +48,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
         public string Name
         {
             get => gully.Name;
-            set => gully.SetNameIfValid(value);
+            set
+            {
+                if (nameValidator.ValidateWithLogging(value))
+                {
+                    gully.Name = value;
+                }
+            }
         }
 
         [DisplayName("X")]

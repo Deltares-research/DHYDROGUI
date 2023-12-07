@@ -10,7 +10,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class WasteWaterTreatmentPlant : RainfallRunoffFeature, IHydroObject, IComparable
+    public class WasteWaterTreatmentPlant : Feature, IHydroObject, IComparable
     {
         public WasteWaterTreatmentPlant()
         {
@@ -40,6 +40,10 @@ namespace DelftTools.Hydro
 
             return wwtp;
         }
+        
+        [DisplayName("Name")]
+        [FeatureAttribute]
+        public virtual string Name { get; set; }
 
         [DisplayName("LongName")]
         [FeatureAttribute]
