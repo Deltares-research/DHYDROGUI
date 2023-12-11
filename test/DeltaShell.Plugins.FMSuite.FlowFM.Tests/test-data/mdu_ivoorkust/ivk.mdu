@@ -147,7 +147,7 @@ DtMax             = 60                  # Max timestep in seconds
 DtInit            = 1                   # Initial timestep in seconds
 Tunit             = H                   # Time units in MDU (H, M or S)
 TStart            = 504                 # Start time w.r.t. RefDate (in TUnit)
-TStop             = 504.2               # Stop  time w.r.t. RefDate (in TUnit)
+TStop             = 504.166666666667    # Stop  time w.r.t. RefDate (in TUnit)
 AutoTimestep      = 1                   # Use CFL timestep limit or not (1/0)
 
 [restart]
