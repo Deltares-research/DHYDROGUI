@@ -37076,3 +37076,9 @@ test/RainfallRunoffModelEngineTest/packages.config -text
 tools/gather_for_infer.py -text
 tools/gather_to_sign_dll.py -text
 tools/xsd/xsd.exe -text
+*.rxtst merge=rx-tree-merge
+*.rxrep merge=rx-tree-merge
+*.csproj merge=rx-tree-merge
+*.cs merge=rx-tree-merge
+*.vb merge=rx-tree-merge
+*.rximg merge=rx-img-merge

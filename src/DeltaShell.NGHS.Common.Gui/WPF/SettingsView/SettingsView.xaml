@@ -166,7 +166,8 @@
                     <CheckBox Grid.Column="1"
                               IsChecked="{Binding Value, Mode=TwoWay}"
                               Style="{StaticResource ControlStyle}"
-                              Template="{StaticResource CheckBoxControlTemplate}" />
+                              Template="{StaticResource CheckBoxControlTemplate}"  
+                              AutomationProperties.AutomationId="{Binding Name}" />
                 </Grid>
             </DataTemplate>
 

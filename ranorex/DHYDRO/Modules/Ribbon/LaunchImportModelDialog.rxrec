@@ -1,0 +1,867 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="6f1d6c49-e9dc-4bf1-9704-45d24f0cb355"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="LaunchImportModelDialog"
+	namespace="DHYDRO.Modules.Ribbon">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="03bc646c-f0ad-4a4c-b02e-535c846bf1a2"
+		sx="229"
+		sy="96"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="ba572ca3-a430-40f9-ad29-6e6577ae5073"
+			sourcename="Recorder">
+				<element
+				capabilities="wpfelement, wpfgroupelement"
+				dontcache="False"
+				enabled="True"
+				flavor="wpf"
+				hasfocus="False"
+				index="1"
+				prefcap="button"
+				rect="201,59,52,85"
+				role="button"
+				snapElem=""
+				valid="True"
+				visible="True">
+					<attribute
+					name="text"
+					type="System.String">
+						Import
+					</attribute>
+					<attribute
+					name="automationid"
+					type="System.String">
+						ButtonImport
+					</attribute>
+					<attribute
+					name="automationproperties_acceleratorkey"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_accesskey"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_helptext"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_iscolumnheader"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_isrequiredforform"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_isrowheader"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_itemstatus"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_itemtype"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_name"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="basetype"
+					type="System.String">
+						System.Windows.Controls.ItemsControl
+					</attribute>
+					<attribute
+					name="fulltype"
+					type="System.String">
+						Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton&gt;
+					</attribute>
+					<attribute
+					name="name"
+					type="System.String">
+						ButtonImport
+					</attribute>
+					<attribute
+					name="type"
+					type="System.String">
+						DepoGroup&lt;DropDownButton&gt;
+					</attribute>
+					<attribute
+					name="ranorexgroupleaderid"
+					type="System.Guid">
+						baf20444-8daa-4787-892a-5a1f6831984f
+					</attribute>
+					<attribute
+					name="ranorexgroupmemberids"
+					type="System.Guid[]">
+						AAEAAAD/////AQAAAAAAAAAHAQAAAAABAAAABQAAAAMLU3lzdGVtLkd1aWQE/v///wtTeXN0ZW0u
+R3VpZAsAAAACX2ECX2ICX2MCX2QCX2UCX2YCX2cCX2gCX2kCX2oCX2sAAAAAAAAAAAAAAAgHBwIC
+AgICAgICRATyuqqNh0eJKlofaDGYTwH9/////v///xB8mDMxo5NLoH8EHuBD9fIB/P////7////E
+tMnhpc1zQZR6vDu1dcD2Afv////+////liKGij3fVEeilA4OGlHshgH6/////v///151/DIyYy5I
+nbjFB4Ogb2YL
+					</attribute>
+					<attribute
+					name="ranorexgroupobjectid"
+					type="System.Guid">
+						2ea75ccb-a40a-4b46-9538-df829b5a054f
+					</attribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ActualHeight property of type Double."
+					name="ActualHeight"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ActualWidth property of type Double."
+					name="ActualWidth"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.AllowDrop property of type Boolean."
+					name="AllowDrop"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.AlternationCount property of type Int32."
+					name="AlternationCount"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.AlternationIndex property of type Int32."
+					name="AlternationIndex"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Background property of type Brush."
+					name="Background"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.BackgroundColor property of type String."
+					name="BackgroundColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.BindingGroup property of type BindingGroup."
+					name="BindingGroup"
+					readonly="False"
+					type="System.Windows.Data.BindingGroup, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.BitmapEffect property of type BitmapEffect."
+					name="BitmapEffect"
+					readonly="False"
+					type="System.Windows.Media.Effects.BitmapEffect, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.BitmapEffectInput property of type BitmapEffectInput."
+					name="BitmapEffectInput"
+					readonly="False"
+					type="System.Windows.Media.Effects.BitmapEffectInput, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.BorderBrush property of type Brush."
+					name="BorderBrush"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.BorderColor property of type String."
+					name="BorderColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.CacheMode property of type CacheMode."
+					name="CacheMode"
+					readonly="False"
+					type="System.Windows.Media.CacheMode, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.CanAddToQuickAccessToolBar property of type Boolean."
+					name="CanAddToQuickAccessToolBar"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Clip property of type Geometry."
+					name="Clip"
+					readonly="False"
+					type="System.Windows.Media.Geometry, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ClipToBounds property of type Boolean."
+					name="ClipToBounds"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ClosePopupOnMouseDown property of type Boolean."
+					name="ClosePopupOnMouseDown"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ClosePopupOnMouseDownDelay property of type Int32."
+					name="ClosePopupOnMouseDownDelay"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Column property of type Int32."
+					name="Column"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ColumnSpan property of type Int32."
+					name="ColumnSpan"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ContextMenu property of type ContextMenu."
+					name="ContextMenu"
+					readonly="False"
+					type="System.Windows.Controls.ContextMenu, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.DataContext property of type Object."
+					name="DataContext"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.DisplayMemberPath property of type String."
+					name="DisplayMemberPath"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.DropDownHeight property of type Double."
+					name="DropDownHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Effect property of type Effect."
+					name="Effect"
+					readonly="False"
+					type="System.Windows.Media.Effects.Effect, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Fill property of type Brush."
+					name="Fill"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.FlowDirection property of type FlowDirection."
+					name="FlowDirection"
+					readonly="False"
+					type="System.Windows.FlowDirection, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Focusable property of type Boolean."
+					name="Focusable"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.FontSize property of type Double."
+					name="FontSize"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ForceCursor property of type Boolean."
+					name="ForceCursor"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Foreground property of type Brush."
+					name="Foreground"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ForegroundColor property of type String."
+					name="ForegroundColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.GroupStyleSelector property of type GroupStyleSelector."
+					name="GroupStyleSelector"
+					readonly="False"
+					type="System.Windows.Controls.GroupStyleSelector, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.HasItems property of type Boolean."
+					name="HasItems"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.HasTriangle property of type Boolean."
+					name="HasTriangle"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Header property of type Object."
+					name="Header"
+					readonly="False"
+					type="System.Object"
+					weight="107">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Height property of type Double."
+					name="Height"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.HorizontalAlignment property of type HorizontalAlignment."
+					name="HorizontalAlignment"
+					readonly="False"
+					type="System.Windows.HorizontalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.HorizontalContentAlignment property of type HorizontalAlignment."
+					name="HorizontalContentAlignment"
+					readonly="False"
+					type="System.Windows.HorizontalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Icon property of type Object."
+					name="Icon"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsDropDownOpen property of type Boolean."
+					name="IsDropDownOpen"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsGrouping property of type Boolean."
+					name="IsGrouping"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsHitTestVisible property of type Boolean."
+					name="IsHitTestVisible"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsItemsHost property of type Boolean."
+					name="IsItemsHost"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsManipulationEnabled property of type Boolean."
+					name="IsManipulationEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsSharedSizeScope property of type Boolean."
+					name="IsSharedSizeScope"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsTabStop property of type Boolean."
+					name="IsTabStop"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsTextSearchCaseSensitive property of type Boolean."
+					name="IsTextSearchCaseSensitive"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.IsTextSearchEnabled property of type Boolean."
+					name="IsTextSearchEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ItemBindingGroup property of type BindingGroup."
+					name="ItemBindingGroup"
+					readonly="False"
+					type="System.Windows.Data.BindingGroup, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ItemForItemContainer property of type Object."
+					name="ItemForItemContainer"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ItemStringFormat property of type String."
+					name="ItemStringFormat"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Keys property of type String."
+					name="Keys"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.LargeIcon property of type Object."
+					name="LargeIcon"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.LayoutTransform property of type Transform."
+					name="LayoutTransform"
+					readonly="False"
+					type="System.Windows.Media.Transform, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.MaxDropDownHeight property of type Double."
+					name="MaxDropDownHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.MaxHeight property of type Double."
+					name="MaxHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.MaxWidth property of type Double."
+					name="MaxWidth"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.MinHeight property of type Double."
+					name="MinHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.MinWidth property of type Double."
+					name="MinWidth"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Opacity property of type Double."
+					name="Opacity"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.OpacityMask property of type Brush."
+					name="OpacityMask"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Orientation property of type Orientation."
+					name="Orientation"
+					readonly="False"
+					type="System.Windows.Controls.Orientation, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.OverridesDefaultStyle property of type Boolean."
+					name="OverridesDefaultStyle"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.RadiusX property of type Double."
+					name="RadiusX"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.RadiusY property of type Double."
+					name="RadiusY"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.RenderTransform property of type Transform."
+					name="RenderTransform"
+					readonly="False"
+					type="System.Windows.Media.Transform, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.RenderTransformOrigin property of type Point."
+					name="RenderTransformOrigin"
+					readonly="False"
+					type="System.Windows.Point, WindowsBase, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Row property of type Int32."
+					name="Row"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.RowSpan property of type Int32."
+					name="RowSpan"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.SharedSizeGroupName property of type String."
+					name="SharedSizeGroupName"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ShowGridLines property of type Boolean."
+					name="ShowGridLines"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.SnapsToDevicePixels property of type Boolean."
+					name="SnapsToDevicePixels"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Stretch property of type Stretch."
+					name="Stretch"
+					readonly="False"
+					type="System.Windows.Media.Stretch, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Stroke property of type Brush."
+					name="Stroke"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.StrokeDashArray property of type DoubleCollection."
+					name="StrokeDashArray"
+					readonly="False"
+					type="System.Windows.Media.DoubleCollection, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.StrokeDashCap property of type PenLineCap."
+					name="StrokeDashCap"
+					readonly="False"
+					type="System.Windows.Media.PenLineCap, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.StrokeDashOffset property of type Double."
+					name="StrokeDashOffset"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.StrokeEndLineCap property of type PenLineCap."
+					name="StrokeEndLineCap"
+					readonly="False"
+					type="System.Windows.Media.PenLineCap, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.StrokeLineJoin property of type PenLineJoin."
+					name="StrokeLineJoin"
+					readonly="False"
+					type="System.Windows.Media.PenLineJoin, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.StrokeMiterLimit property of type Double."
+					name="StrokeMiterLimit"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.StrokeStartLineCap property of type PenLineCap."
+					name="StrokeStartLineCap"
+					readonly="False"
+					type="System.Windows.Media.PenLineCap, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.StrokeThickness property of type Double."
+					name="StrokeThickness"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.TabIndex property of type Int32."
+					name="TabIndex"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Tag property of type Object."
+					name="Tag"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ToolTip property of type Object."
+					name="ToolTip"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Uid property of type String."
+					name="Uid"
+					readonly="False"
+					type="System.String"
+					weight="150">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.UseLayoutRounding property of type Boolean."
+					name="UseLayoutRounding"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.VerticalAlignment property of type VerticalAlignment."
+					name="VerticalAlignment"
+					readonly="False"
+					type="System.Windows.VerticalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.VerticalContentAlignment property of type VerticalAlignment."
+					name="VerticalContentAlignment"
+					readonly="False"
+					type="System.Windows.VerticalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Visibility property of type Visibility."
+					name="Visibility"
+					readonly="False"
+					type="System.Windows.Visibility, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.Width property of type Double."
+					name="Width"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.ZIndex property of type Int32."
+					name="ZIndex"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicaction
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.CreateQuickAccessItem method."
+					displayName="CreateQuickAccessItem">
+						<returns
+						description="Return value."
+						displayName="returns"
+						type="System.Windows.FrameworkElement, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+						</returns>
+					</dynamicaction>
+					<dynamicaction
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.OnApplyTemplate method."
+					displayName="OnApplyTemplate">
+						<returns
+						description="Return value."
+						displayName="returns"
+						type="System.Void">
+						</returns>
+					</dynamicaction>
+					<dynamicaction
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Fluent.DropDownButton>.OnKeyTipBack method."
+					displayName="OnKeyTipBack">
+						<returns
+						description="Return value."
+						displayName="returns"
+						type="System.Void">
+						</returns>
+					</dynamicaction>
+				</element>
+				<path>
+					/form[@automationid='Window']/list[@automationid='ListView']/menubar[@automationid='MainWindowRibbon']/list[@automationid='PART_RibbonTabControl']/container[2]/list[2]/button[@automationid='ButtonImport']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<helperscreenshot
+			guid="d37143b6-7fc2-40b8-adcc-96cc25ba3f5d">
+				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
+			</helperscreenshot>
+		</mouseitem>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="1c5cfa8a-633c-4bb9-b571-99ade96ffd2b"
+		sx="314"
+		sy="454"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="9742f7de-fb0c-4ab0-a8d0-07dd1a12ecba"
+			sourcename="RepositoryEditor">
+				<path>
+					/contextmenu[@processname='DeltaShell.Gui']/list/listitem[@text~$NameModelTypeToImport]
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		LaunchImportModelDialog.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

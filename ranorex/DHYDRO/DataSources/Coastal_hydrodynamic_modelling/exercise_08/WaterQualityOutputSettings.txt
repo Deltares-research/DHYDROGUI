@@ -1,0 +1,1 @@
+﻿SpecifyWaqOutputInterval;	Checked;	bool;	false

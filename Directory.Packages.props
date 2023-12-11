@@ -31,6 +31,8 @@
     <PackageVersion Include="PostSharp" Version="2023.0.3" />
     <PackageVersion Include="PostSharp.Redist" Version="2023.0.3" />
     <PackageVersion Include="ProtoBufRemote" Version="1.1.31" />
+    <PackageVersion Include="Ranorex.AutomationHelpers" Version="1.6.6" />
+    <PackageVersion Include="Ranorex.ReportToPDF" Version="1.0.17" />
     <PackageVersion Include="RGFGRID" Version="7.3.0.77422" />
     <PackageVersion Include="RhinoMocks" Version="3.6.1" />
     <PackageVersion Include="SharpTestsEx" Version="1.2.1" />
