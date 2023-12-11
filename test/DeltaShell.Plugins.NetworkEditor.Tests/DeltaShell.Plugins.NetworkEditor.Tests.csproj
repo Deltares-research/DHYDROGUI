@@ -9,6 +9,7 @@
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="SharpTestsEx" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />

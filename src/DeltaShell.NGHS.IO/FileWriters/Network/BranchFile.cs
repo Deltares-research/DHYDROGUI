@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
@@ -17,42 +17,32 @@ using DeltaShell.NGHS.Utils.Extensions;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using GeoAPI.Extensions.Networks;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Network
 {
-    public static class BranchFile
+    public sealed class BranchFile
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(BranchFile));
         private static readonly Version version = new Version(2, 0);
-        
+
+        private readonly IFileSystem fileSystem;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BranchFile"/> class.
+        /// </summary>
+        /// <param name="fileSystem">Provides access to the file system.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="fileSystem"/> is <c>null</c>.</exception>
+        public BranchFile(IFileSystem fileSystem)
+        {
+            Ensure.NotNull(fileSystem, nameof(fileSystem));
+            
+            this.fileSystem = fileSystem;
+        }
+
         public enum BranchType
         {
             Channel = 0, SewerConnection = 1, Pipe = 2
-        }
-
-        public static BranchProperties GetBranchProperties(this IBranch branch)
-        {
-            var branchProperties = new BranchProperties
-            {
-                Name = branch.Name,
-                IsCustomLength = branch.IsLengthCustom
-            };
-
-            switch (branch)
-            {
-                case Channel _:
-                    branchProperties.BranchType = BranchType.Channel;
-                    break;
-                case IPipe pipe:
-                    SetSewerConnectionProperties(branchProperties, pipe);
-                    branchProperties.BranchType = BranchType.Pipe;
-                    branchProperties.Material = pipe.Material;
-                    break;
-                case ISewerConnection sewerConnection:
-                    SetSewerConnectionProperties(branchProperties, sewerConnection);
-                    break;
-            }
-
-            return branchProperties;
         }
 
         /// <summary>
@@ -60,27 +50,23 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         /// </summary>
         /// <param name="filePath"> The file path to the branches.gui file. </param>
         /// <param name="branches"> The branches to write. </param>
-        /// <param name="iniWriter"> The Delft INI writer. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="branches"/> or <paramref name="iniWriter"/> is <c>null</c>.
+        /// Thrown when <paramref name="branches"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="filePath"/> is <c>null</c> or white space.
         /// </exception>
-        public static void Write(string filePath, IEnumerable<IBranch> branches, IIniWriter iniWriter)
+        public void Write(string filePath, IEnumerable<IBranch> branches)
         {
             Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
             Ensure.NotNull(branches, nameof(branches));
-            Ensure.NotNull(iniWriter, nameof(iniWriter));
-            
-            var iniSections = new List<IniSection>
-            {
-                CreateGeneralIniSection()
-            };
+
+            var iniData = new IniData();
+            iniData.AddSection(CreateGeneralIniSection());
 
             foreach (var branch in branches)
             {
-                var properties = branch.GetBranchProperties();
+                var properties = GetBranchProperties(branch);
 
                 var iniSection = new IniSection(NetworkRegion.BranchIniHeader);
                 iniSection.AddPropertyFromConfiguration(NetworkRegion.BranchId, properties.Name);
@@ -109,13 +95,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                     iniSection.AddPropertyFromConfiguration(NetworkRegion.BranchMaterial, (int) properties.Material);
                 }
 
-                iniSections.Add(iniSection);
+                iniData.AddSection(iniSection);
             }
 
-            // write branch file
-            iniWriter.WriteIniFile(iniSections, filePath);
+            WriteIniFile(iniData, filePath);
         }
-
+        
         private static IniSection CreateGeneralIniSection()
         {
             return GeneralRegionGenerator.GenerateGeneralRegion(
@@ -123,13 +108,49 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 version.Minor,
                 GeneralRegion.FileTypeName.Branches);
         }
+        
+        public static BranchProperties GetBranchProperties(IBranch branch)
+        {
+            var branchProperties = new BranchProperties
+            {
+                Name = branch.Name,
+                IsCustomLength = branch.IsLengthCustom
+            };
+
+            switch (branch)
+            {
+                case Channel _:
+                    branchProperties.BranchType = BranchType.Channel;
+                    break;
+                case IPipe pipe:
+                    SetSewerConnectionProperties(branchProperties, pipe);
+                    branchProperties.BranchType = BranchType.Pipe;
+                    branchProperties.Material = pipe.Material;
+                    break;
+                case ISewerConnection sewerConnection:
+                    SetSewerConnectionProperties(branchProperties, sewerConnection);
+                    break;
+            }
+
+            return branchProperties;
+        }
+
+        private void WriteIniFile(IniData iniData, string path)
+        {
+            log.InfoFormat(Resources.BranchFile_WriteIniFile_Writing_branches_to__0__, path);
+            
+            using (FileSystemStream fileStream = fileSystem.File.Open(path, FileMode.Create))
+            {
+                var formatter = new IniFormatter { Configuration = { PropertyIndentationLevel = 4 } };
+                formatter.Format(iniData, fileStream);
+            }
+        }
 
         /// <summary>
         /// Reads the branch information from the branches.gui file.
         /// </summary>
         /// <param name="filePath"> The file path to the branches.gui file. </param>
         /// <param name="netFilePath"> The file path to the network file. </param>
-        /// <param name="iniReader"> The Delft INI reader. </param>
         /// <param name="logHandler"> The log handler to log messages with. </param>
         /// <returns>
         /// A collection of the branch properties that were collected from file.
@@ -141,21 +162,21 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         /// </list>
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="iniReader"/> or <paramref name="logHandler"/> is <c>null</c>
+        /// Thrown when <paramref name="logHandler"/> is <c>null</c>
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="filePath"/> or <paramref name="netFilePath"/> is <c>null</c> or white space.
         /// </exception>
-        public static IList<BranchProperties> Read(string filePath, string netFilePath, IIniReader iniReader, ILogHandler logHandler)
+        public IList<BranchProperties> Read(string filePath, string netFilePath, ILogHandler logHandler)
         {
             Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
             Ensure.NotNullOrWhiteSpace(netFilePath, nameof(netFilePath));
-            Ensure.NotNull(iniReader, nameof(iniReader));
             Ensure.NotNull(logHandler, nameof(logHandler));
             
-            IList<IniSection> iniSections = iniReader.ReadIniFile(filePath);
+            IniData iniData = ReadIniFile(filePath);
             
-            Dictionary<string, IEnumerable<IniSection>> groupedIniSections = iniSections.ToGroupedDictionary(iniSection => iniSection.Name);
+            var groupedIniSections = iniData.Sections.ToGroupedDictionary(iniSection => iniSection.Name);
+            
             if (groupedIniSections.TryGetValue(GeneralRegion.IniHeader, out IEnumerable<IniSection> generalIniSections))
             {
                 if (!ValidateGeneralIniSection(generalIniSections.First(), logHandler))
@@ -175,8 +196,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
             return ReadBranchProperties(branchIniSections, netFilePath).Values.ToList();
         }
+        
+        private IniData ReadIniFile(string path)
+        {
+            log.InfoFormat(Resources.BranchFile_ReadIniFile_Reading_branches_from__0__, path);
+            
+            using (FileSystemStream fileStream = fileSystem.File.OpenRead(path))
+            {
+                var parser = new IniParser();
+                return parser.Parse(fileStream);
+            }
+        }
 
-        private static IDictionary<string, BranchProperties> ReadBranchProperties(IEnumerable<IniSection> branchIniSections, string netFilePath)
+        private IDictionary<string, BranchProperties> ReadBranchProperties(IEnumerable<IniSection> branchIniSections, string netFilePath)
         {
             var propertiesPerBranch = new Dictionary<string, BranchProperties>();
 
@@ -185,17 +217,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 var branchProperties = new BranchProperties
                 {
                     Name = iniSection.ReadProperty<string>(NetworkRegion.BranchId.Key),
-                    BranchType = iniSection.GetEnumValueByKey<BranchType>(NetworkRegion.BranchType.Key),
+                    BranchType = iniSection.GetPropertyValue<BranchType>(NetworkRegion.BranchType.Key),
                     IsCustomLength = iniSection.ReadProperty<bool>(NetworkRegion.IsLengthCustom.Key, true),
-                    /* WaterType = iniSection.GetEnumValueByKey<SewerConnectionWaterType>(KnownPropertyNames.WaterType),*/
-                    Material = iniSection.GetEnumValueByKey<SewerProfileMapping.SewerProfileMaterial>(NetworkRegion.BranchMaterial.Key),
+                    Material = iniSection.GetPropertyValue<SewerProfileMapping.SewerProfileMaterial>(NetworkRegion.BranchMaterial.Key),
                     SourceCompartmentName = iniSection.ReadProperty<string>(NetworkRegion.SourceCompartmentName.Key, true),
                     TargetCompartmentName = iniSection.ReadProperty<string>(NetworkRegion.TargetCompartmentName.Key, true)
                 };
                 propertiesPerBranch.Add(branchProperties.Name, branchProperties);
             }
             
-            if (!File.Exists(netFilePath)) return propertiesPerBranch;
+            if (!fileSystem.File.Exists(netFilePath)) return propertiesPerBranch;
             var file = NetCdfFile.OpenExisting(netFilePath);
             try
             {
@@ -270,11 +301,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
                 
             }
-        }
-
-        private static T GetEnumValueByKey<T>(this IniSection iniSection, string propertyKey)
-        {
-            return (T) Enum.Parse(typeof(T), iniSection.ReadProperty<int>(propertyKey, true).ToString());
         }
 
         private static void SetSewerConnectionProperties(BranchProperties branchProperties, ISewerConnection pipe)

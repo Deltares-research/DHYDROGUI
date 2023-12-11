@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
@@ -21,11 +21,13 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns>The read branch properties. Returns an empty collection if the branch file does not exist.</returns>
         public static IEnumerable<BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
         {
-            string branchTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
+            var branchTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
+            var branchFile = new BranchFile(new FileSystem());
             var logHandler = new LogHandler(Resources.Reading_the_branches_gui_file, typeof(BranchFile));
-            IEnumerable<BranchProperties> propertiesPerBranch = File.Exists(branchTypeFilePath)
-                                                                    ? BranchFile.Read(branchTypeFilePath, netFilePath, new IniReader(), logHandler)
-                                                                    : Enumerable.Empty<BranchProperties>();
+            
+            var propertiesPerBranch = File.Exists(branchTypeFilePath)
+                                          ? branchFile.Read(branchTypeFilePath, netFilePath, logHandler)
+                                          : Enumerable.Empty<BranchProperties>();
 
             logHandler.LogReport();
 

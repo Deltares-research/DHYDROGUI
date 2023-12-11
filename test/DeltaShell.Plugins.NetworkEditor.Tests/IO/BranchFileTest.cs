@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Network;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
@@ -26,22 +22,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class BranchFileTest
     {
-        private string filePath;
-
+        private const string branchFilePath = "branches.gui";
+        private const string networkFilePath = "FlowFM_net.nc";
+        
+        private MockFileSystem fileSystem;
+        private BranchFile branchFile;
+        private ILogHandler logHandler;
+        
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
-            filePath = Path.Combine(FileUtils.CreateTempDirectory(), NetworkPropertiesHelper.BranchGuiFileName);
+            fileSystem = new MockFileSystem();
+            branchFile = new BranchFile(fileSystem);
+            logHandler = Substitute.For<ILogHandler>();
         }
-
-        [TearDown]
-        public void TearDown()
+        
+        [Test]
+        public void Constructor_FileSystemIsNull_ThrowsArgumentNullException()
         {
-            FileUtils.DeleteIfExists(filePath);
+            Assert.Throws<ArgumentNullException>(() => _ = new BranchFile(null));
         }
 
         [Test]
-        public void GivenTwoSewerConnections_WhenWritingBranchTypeFile_ThenBranchTypesAreCorretlyWritten()
+        public void GivenTwoSewerConnections_WhenWritingBranchTypeFile_ThenBranchTypesAreCorrectlyWritten()
         {
             var sewerConnections = new List<IBranch>
             {
@@ -91,7 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
-        public void GivenTwoChannels_WhenWritingBranchTypeFile_ThenBranchTypesAreCorretlyWritten()
+        public void GivenTwoChannels_WhenWritingBranchTypeFile_ThenBranchTypesAreCorrectlyWritten()
         {
             var channels = new List<IBranch>
             {
@@ -102,7 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
-        public void GivenDifferentTypesOfBranches_WhenWritingBranchTypeFile_ThenBranchTypesAreCorretlyWritten()
+        public void GivenDifferentTypesOfBranches_WhenWritingBranchTypeFile_ThenBranchTypesAreCorrectlyWritten()
         {
             var branches = new List<IBranch>
             {
@@ -127,7 +130,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             };
 
             // Act
-            var properties = branch.GetBranchProperties();
+            var properties = BranchFile.GetBranchProperties(branch);
 
             // Assert
             Assert.AreEqual(BranchFile.BranchType.Channel, properties.BranchType);
@@ -160,7 +163,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             };
 
             // Act
-            var properties = pipe.GetBranchProperties();
+            var properties = BranchFile.GetBranchProperties(pipe);
 
             // Assert
             Assert.AreEqual(BranchFile.BranchType.Pipe, properties.BranchType);
@@ -197,7 +200,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             };
 
             // Act
-            var properties = sewerConnection.GetBranchProperties();
+            var properties = BranchFile.GetBranchProperties(sewerConnection);
 
             // Assert
             Assert.AreEqual(BranchFile.BranchType.SewerConnection, properties.BranchType);
@@ -215,7 +218,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_FilePathNullOrWhiteSpace_ThrowsArgumentException(string filePath)
         {
             // Call
-            void Call() => BranchFile.Read(filePath, "FlowFM_net.nc", Substitute.For<IIniReader>(), Substitute.For<ILogHandler>());
+            void Call() => branchFile.Read(filePath, networkFilePath, logHandler);
 
             // Assert
             Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("filePath"));
@@ -228,32 +231,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_NetFilePathNullOrWhiteSpace_ThrowsArgumentException(string netFilePath)
         {
             // Call
-            void Call() => BranchFile.Read("branches.gui", netFilePath, Substitute.For<IIniReader>(), Substitute.For<ILogHandler>());
+            void Call() => branchFile.Read(branchFilePath, netFilePath, logHandler);
 
             // Assert
             Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("netFilePath"));
         }
 
         [Test]
-        public void Read_IniReaderNull_ThrowsArgumentNullException()
-        {
-            // Call
-            void Call() => BranchFile.Read("branches.gui", "FlowFM_net.nc", null, Substitute.For<ILogHandler>());
-
-            // Assert
-            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("iniReader"));
-        }
-
-        [Test]
         public void Read_LogHandlerNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => BranchFile.Read("branches.gui", "FlowFM_net.nc", Substitute.For<IIniReader>(), null);
+            void Call() => branchFile.Read(branchFilePath, networkFilePath, null);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("logHandler"));
         }
-
+        
         [Test]
         [TestCase(null)]
         [TestCase("")]
@@ -261,20 +254,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_NullOrWhiteSpaceFileVersion_SkipsReadingFile(string fileVersion)
         {
             // Setup
-            var filePath = "branches.gui";
-            var iniReader = Substitute.For<IIniReader>();
-            var logHandler = Substitute.For<ILogHandler>();
+            var iniData = new IniData();
+            iniData.AddSection(CreateGeneralIniSection(fileVersion));
+            iniData.AddSection(CreateBranchIniSection("1"));
+            iniData.AddSection(CreateBranchIniSection("2"));
 
-            var readIniSections = new List<IniSection>
-            {
-                CreateGeneralIniSection(fileVersion),
-                CreateBranchIniSection("1"),
-                CreateBranchIniSection("2")
-            };
-            iniReader.ReadIniFile(filePath).Returns(readIniSections);
-
+            fileSystem.AddFile(branchFilePath, CreateBranchFileData(iniData));
+            
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
+            IList<BranchProperties> branchProperties = branchFile.Read(branchFilePath, networkFilePath, logHandler);
 
             // Assert
             logHandler.Received(1).ReportError($"File version in general section is empty. branches.gui file will not be read.");
@@ -285,20 +273,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_InvalidFileVersion_SkipsReadingFile()
         {
             // Setup
-            var filePath = "branches.gui";
-            var iniReader = Substitute.For<IIniReader>();
-            var logHandler = Substitute.For<ILogHandler>();
+            var iniData = new IniData();
+            iniData.AddSection(CreateGeneralIniSection("abc"));
+            iniData.AddSection(CreateBranchIniSection("1"));
+            iniData.AddSection(CreateBranchIniSection("2"));
 
-            var readIniSections = new List<IniSection>
-            {
-                CreateGeneralIniSection("abc"),
-                CreateBranchIniSection("1"),
-                CreateBranchIniSection("2")
-            };
-            iniReader.ReadIniFile(filePath).Returns(readIniSections);
-
+            fileSystem.AddFile(branchFilePath, CreateBranchFileData(iniData));
+            
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
+            IList<BranchProperties> branchProperties = branchFile.Read(branchFilePath, networkFilePath, logHandler);
 
             // Assert
             logHandler.Received(1).ReportError("File version in general section is invalid: abc. branches.gui file will not be read.");
@@ -309,22 +292,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_UnsupportedFileVersion_SkipsReadingFile()
         {
             // Setup
-            var filePath = "branches.gui";
-            var iniReader = Substitute.For<IIniReader>();
-            var logHandler = Substitute.For<ILogHandler>();
-
             const string fileVersion = "1.01";
 
-            var readIniSections = new List<IniSection>
-            {
-                CreateGeneralIniSection(fileVersion),
-                CreateBranchIniSection("1"),
-                CreateBranchIniSection("2")
-            };
-            iniReader.ReadIniFile(filePath).Returns(readIniSections);
+            var iniData = new IniData();
+            iniData.AddSection(CreateGeneralIniSection(fileVersion));
+            iniData.AddSection(CreateBranchIniSection("1"));
+            iniData.AddSection(CreateBranchIniSection("2"));
+
+            fileSystem.AddFile(branchFilePath, CreateBranchFileData(iniData));
 
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
+            IList<BranchProperties> branchProperties = branchFile.Read(branchFilePath, networkFilePath, logHandler);
 
             // Assert
             logHandler.Received(1).ReportError($"File version in general section is not supported: {fileVersion}. branches.gui file will not be read.");
@@ -335,19 +313,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_MissingGeneralIniSection_LogsWarningAndReadsFileCorrectly()
         {
             // Setup
-            var filePath = "branches.gui";
-            var iniReader = Substitute.For<IIniReader>();
-            var logHandler = Substitute.For<ILogHandler>();
+            var iniData = new IniData();
+            iniData.AddSection(CreateBranchIniSection("1"));
+            iniData.AddSection(CreateBranchIniSection("2"));
 
-            var readIniSections = new List<IniSection>
-            {
-                CreateBranchIniSection("1"),
-                CreateBranchIniSection("2")
-            };
-            iniReader.ReadIniFile(filePath).Returns(readIniSections);
+            fileSystem.AddFile(branchFilePath, CreateBranchFileData(iniData));
 
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
+            IList<BranchProperties> branchProperties = branchFile.Read(branchFilePath, networkFilePath, logHandler);
 
             // Assert
             logHandler.Received(1).ReportWarning("branches.gui file does not contain a general section. Model has probably been made with an older version of this software.");
@@ -373,20 +346,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Read_SupportedFileVersion_ReadsFileCorrectly()
         {
             // Setup
-            var filePath = "branches.gui";
-            var iniReader = Substitute.For<IIniReader>();
-            var logHandler = Substitute.For<ILogHandler>();
+            var iniData = new IniData();
+            iniData.AddSection(CreateGeneralIniSection());
+            iniData.AddSection(CreateBranchIniSection("1"));
+            iniData.AddSection(CreateBranchIniSection("2"));
 
-            var readIniSections = new List<IniSection>
-            {
-                CreateGeneralIniSection(),
-                CreateBranchIniSection("1"),
-                CreateBranchIniSection("2")
-            };
-            iniReader.ReadIniFile(filePath).Returns(readIniSections);
+            fileSystem.AddFile(branchFilePath, CreateBranchFileData(iniData));
 
             // Call
-            IList<BranchProperties> branchProperties = BranchFile.Read(filePath, "FlowFM_net.nc", iniReader, logHandler);
+            IList<BranchProperties> branchProperties = branchFile.Read(branchFilePath, networkFilePath, logHandler);
 
             // Assert
             Assert.That(branchProperties, Has.Count.EqualTo(2));
@@ -413,7 +381,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Write_FilePathNullOrWhiteSpace_ThrowsArgumentException(string filePath)
         {
             // Call
-            void Call() => BranchFile.Write(filePath, Enumerable.Empty<IBranch>(), Substitute.For<IIniWriter>());
+            void Call() => branchFile.Write(filePath, Enumerable.Empty<IBranch>());
 
             // Assert
             Assert.That(Call, Throws.ArgumentException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("filePath"));
@@ -423,49 +391,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         public void Write_BranchesNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => BranchFile.Write("branches.gui", null, Substitute.For<IIniWriter>());
+            void Call() => branchFile.Write(branchFilePath, null);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("branches"));
         }
-
-        [Test]
-        public void Write_IniWriterNull_ThrowsArgumentNullException()
-        {
-            // Call
-            void Call() => BranchFile.Write("branches.gui", Enumerable.Empty<IBranch>(), null);
-
-            // Assert
-            Assert.That(Call, Throws.ArgumentNullException.With.Property(nameof(ArgumentException.ParamName)).EqualTo("iniWriter"));
-        }
-
+        
         [Test]
         public void Write_AddsGeneralIniSection()
         {
             // Setup
-            var iniWriter = Substitute.For<IIniWriter>();
-
-            IniSection generalIniSection = CreateGeneralIniSection();
-
-            IniSection[] expectedIniSections =
-            {
-                generalIniSection
-            };
+            var iniData = new IniData();
+            iniData.AddSection(CreateGeneralIniSection());
+            
+            MockFileData expected = CreateBranchFileData(iniData);
 
             // Call
-            BranchFile.Write("branches.gui", Enumerable.Empty<IBranch>(), iniWriter);
+            branchFile.Write(branchFilePath, Enumerable.Empty<IBranch>());
 
+            MockFileData actual = fileSystem.GetFile(branchFilePath);
+            
             // Assert
-            iniWriter.Received(1).WriteIniFile(
-                MatchingIniSections(expectedIniSections),
-                "branches.gui",
-                true);
+            Assert.That(actual.TextContents, Is.EqualTo(expected.TextContents));
         }
 
-        private void WriteAndCheckBranchTypeFileContent(List<IBranch> branches)
+        private void WriteAndCheckBranchTypeFileContent(IReadOnlyList<IBranch> branches)
         {
-            BranchFile.Write(filePath, branches, new IniWriter());
-            IList<BranchProperties> propertiesPerBranch = BranchFile.Read(filePath, "FlowFM_net.nc", new IniReader(), Substitute.For<ILogHandler>());
+            branchFile.Write(branchFilePath, branches);
+
+            IList<BranchProperties> propertiesPerBranch = branchFile.Read(branchFilePath, networkFilePath, logHandler);
+            
             for (var n = 0; n < propertiesPerBranch.Count; n++)
             {
                 Assert.That(propertiesPerBranch[n].Name, Is.EqualTo(branches[n].Name));
@@ -473,7 +428,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
                 Assert.That(propertiesPerBranch[n].Material, Is.EqualTo(GetMaterial(branches[n])));
             }
         }
-
+        
         private static SewerProfileMapping.SewerProfileMaterial GetMaterial(IBranch branch)
         {
             var pipe = branch as Pipe;
@@ -484,20 +439,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         {
             switch (branch)
             {
-                case IPipe p:
+                case IPipe _:
                     return BranchFile.BranchType.Pipe;
-                case ISewerConnection s:
+                case ISewerConnection _:
                     return BranchFile.BranchType.SewerConnection;
                 default:
                     return BranchFile.BranchType.Channel;
 
             }
-
-        }
-
-        private static IEnumerable<IniSection> MatchingIniSections(IEnumerable<IniSection> expectedIniSections)
-        {
-            return Arg.Is<IEnumerable<IniSection>>(actualIniSections => expectedIniSections.SequenceEqual(actualIniSections));
         }
 
         private static IniSection CreateGeneralIniSection(string fileVersion = "2.00")
@@ -519,6 +468,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             branchIniSection.AddPropertyWithOptionalComment("targetCompartmentName", $"some_target_compartment_{id}", "Target compartment name this sewer connection is ending");
 
             return branchIniSection;
+        }
+
+        private static MockFileData CreateBranchFileData(IniData iniData)
+        {
+            var formatter = new IniFormatter { Configuration = { PropertyIndentationLevel = 4 } };
+            string ini = formatter.Format(iniData);
+            
+            return new MockFileData(ini);
         }
     }
 }

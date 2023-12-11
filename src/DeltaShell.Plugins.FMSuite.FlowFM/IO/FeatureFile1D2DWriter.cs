@@ -8,7 +8,6 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
-using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -92,13 +91,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteBranchFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<IBranch> branches)
         {
-            var branchesFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, NetworkPropertiesHelper.BranchGuiFileName);
-            FileUtils.DeleteIfExists(branchesFilePath);
             if (!branches.Any())
             {
                 modelDefinition.SetModelProperty(KnownProperties.BranchFile, string.Empty);
             }
-            BranchFile.Write(branchesFilePath, branches, new IniWriter());
+            
+            var branchFile = new BranchFile(new FileSystem());
+            var branchesFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, NetworkPropertiesHelper.BranchGuiFileName);
+
+            branchFile.Write(branchesFilePath, branches);
+            
             modelDefinition.SetModelProperty(KnownProperties.BranchFile, NetworkPropertiesHelper.BranchGuiFileName);
         }
 

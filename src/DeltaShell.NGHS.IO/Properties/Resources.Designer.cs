@@ -218,6 +218,24 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading branches from {0}..
+        /// </summary>
+        public static string BranchFile_ReadIniFile_Reading_branches_from__0__ {
+            get {
+                return ResourceManager.GetString("BranchFile_ReadIniFile_Reading_branches_from__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing branches to {0}..
+        /// </summary>
+        public static string BranchFile_WriteIniFile_Writing_branches_to__0__ {
+            get {
+                return ResourceManager.GetString("BranchFile_WriteIniFile_Writing_branches_to__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
         /// </summary>
         public static string Could_not_read_file_0_properly_it_doesnt_exist {

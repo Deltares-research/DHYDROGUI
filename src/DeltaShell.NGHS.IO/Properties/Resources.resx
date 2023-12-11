@@ -589,4 +589,10 @@
   <data name="StructureFileWriter_WriteFile_Writing_structure_definitions_to__0__" xml:space="preserve">
     <value>Writing structure definitions to {0}.</value>
   </data>
+  <data name="BranchFile_ReadIniFile_Reading_branches_from__0__" xml:space="preserve">
+    <value>Reading branches from {0}.</value>
+  </data>
+  <data name="BranchFile_WriteIniFile_Writing_branches_to__0__" xml:space="preserve">
+    <value>Writing branches to {0}.</value>
+  </data>
 </root>
