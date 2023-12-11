@@ -1,0 +1,864 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="982f95be-ef94-48ae-963c-65ed5e0c6a8a"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="SetRestartSettings"
+	namespace="DHYDRO.Modules.ModelSettings">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<setvaluerecorditem
+		attrname="Text"
+		enabled="True"
+		optional="False"
+		searchpropertyid="594832de-c490-4da0-87c8-616963ccb13b">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="b63c0915-280b-4900-9068-2caed3a89651"
+			sourcename="RepositoryEditor">
+				<element
+				capabilities="wpfelement, wpfgroupelement"
+				dontcache="False"
+				enabled="True"
+				flavor="wpf"
+				hasfocus="False"
+				index="1"
+				prefcap="text"
+				rect="1156,630,175,20"
+				role="text"
+				snapElem=""
+				valid="True"
+				visible="True">
+					<attribute
+					name="caption"
+					type="System.String">
+						PART_TextBox
+					</attribute>
+					<attribute
+					name="selectionlength"
+					type="System.Int32">
+						2
+					</attribute>
+					<attribute
+					name="selectionstart"
+					type="System.Int32">
+						14
+					</attribute>
+					<attribute
+					name="selectiontext"
+					type="System.String">
+						2019-01-01 00:00:00
+					</attribute>
+					<attribute
+					name="text"
+					type="System.String">
+						2019-01-01 00:00:00
+					</attribute>
+					<attribute
+					name="automationid"
+					type="System.String">
+						PART_TextBox
+					</attribute>
+					<attribute
+					name="automationproperties_acceleratorkey"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_accesskey"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_helptext"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_iscolumnheader"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_isrequiredforform"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_isrowheader"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_itemstatus"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_itemtype"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_name"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="basetype"
+					type="System.String">
+						System.Windows.Controls.TextBox
+					</attribute>
+					<attribute
+					name="fulltype"
+					type="System.String">
+						Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox&gt;
+					</attribute>
+					<attribute
+					name="name"
+					type="System.String">
+						PART_TextBox
+					</attribute>
+					<attribute
+					name="type"
+					type="System.String">
+						DepoGroup&lt;WatermarkTextBox&gt;
+					</attribute>
+					<attribute
+					name="ranorexgroupleaderid"
+					type="System.Guid">
+						b6286dcd-fe5a-4822-84c7-1583a7963923
+					</attribute>
+					<attribute
+					name="ranorexgroupmemberids"
+					type="System.Guid[]">
+						AAEAAAD/////AQAAAAAAAAAHAQAAAAABAAAAEgAAAAMLU3lzdGVtLkd1aWQE/v///wtTeXN0ZW0u
+R3VpZAsAAAACX2ECX2ICX2MCX2QCX2UCX2YCX2cCX2gCX2kCX2oCX2sAAAAAAAAAAAAAAAgHBwIC
+AgICAgICVJrVh358kUe94nrPyaBFwAH9/////v///81tKLZa/iJIhMcVg6eWOSMB/P////7///9J
+g7c0D2FsTZbbxGoMo+wTAfv////+////ARllXzukgEqvr8yR1sGtQAH6/////v///4TE5UzO89FH
+nFTYAf1qr34B+f////7///9l6emQxsyeRLNC1c2fR254Afj////+/////HKwEzT0SUiZADif2mGU
++AH3/////v///8eUJGtnMdtIpLbjWls01I0B9v////7///+ZKvSwzTcDRJ1vgPIhlpdbAfX////+
+////PEW9KNgq9kaHmutUSIqEhgH0/////v///w7YSkOQoN9Ag1pQgvj/RiYB8/////7///+fyn8K
+TSQkTpqO8pNfyZWaAfL////+/////hAtVOQbE0CQWVE7eLRFWQHx/////v///1JmNI1MSYhKt1rx
+iEOE3M4B8P////7////kYhUtfLluTK6ox4U/bBpVAe/////+////YVxf82SpmUyojnGWlDwMcAHu
+/////v///3KJqIiB16RGirrKgHJKGB4B7f////7///81vehV6SqZRbuUbAOhsI+PCw==
+					</attribute>
+					<attribute
+					name="ranorexgroupobjectid"
+					type="System.Guid">
+						6968c68b-4715-45a9-b46a-d14ce0dd7ec0
+					</attribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.AcceptsReturn property of type Boolean."
+					name="AcceptsReturn"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.AcceptsTab property of type Boolean."
+					name="AcceptsTab"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ActualHeight property of type Double."
+					name="ActualHeight"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ActualWidth property of type Double."
+					name="ActualWidth"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.AllowDrop property of type Boolean."
+					name="AllowDrop"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.AutoMoveFocus property of type Boolean."
+					name="AutoMoveFocus"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.AutoWordSelection property of type Boolean."
+					name="AutoWordSelection"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Background property of type Brush."
+					name="Background"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.BackgroundColor property of type String."
+					name="BackgroundColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.BindingGroup property of type BindingGroup."
+					name="BindingGroup"
+					readonly="False"
+					type="System.Windows.Data.BindingGroup, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.BitmapEffect property of type BitmapEffect."
+					name="BitmapEffect"
+					readonly="False"
+					type="System.Windows.Media.Effects.BitmapEffect, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.BitmapEffectInput property of type BitmapEffectInput."
+					name="BitmapEffectInput"
+					readonly="False"
+					type="System.Windows.Media.Effects.BitmapEffectInput, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.BorderBrush property of type Brush."
+					name="BorderBrush"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.BorderColor property of type String."
+					name="BorderColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.CacheMode property of type CacheMode."
+					name="CacheMode"
+					readonly="False"
+					type="System.Windows.Media.CacheMode, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.CanContentScroll property of type Boolean."
+					name="CanContentScroll"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.CaretBrush property of type Brush."
+					name="CaretBrush"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.CharacterCasing property of type CharacterCasing."
+					name="CharacterCasing"
+					readonly="False"
+					type="System.Windows.Controls.CharacterCasing, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Clip property of type Geometry."
+					name="Clip"
+					readonly="False"
+					type="System.Windows.Media.Geometry, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ClipToBounds property of type Boolean."
+					name="ClipToBounds"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Column property of type Int32."
+					name="Column"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ColumnSpan property of type Int32."
+					name="ColumnSpan"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ComputedHorizontalScrollBarVisibility property of type Visibility."
+					name="ComputedHorizontalScrollBarVisibility"
+					type="System.Windows.Visibility, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ComputedVerticalScrollBarVisibility property of type Visibility."
+					name="ComputedVerticalScrollBarVisibility"
+					type="System.Windows.Visibility, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ContentHorizontalOffset property of type Double."
+					name="ContentHorizontalOffset"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ContentSource property of type String."
+					name="ContentSource"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ContentVerticalOffset property of type Double."
+					name="ContentVerticalOffset"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ContextMenu property of type ContextMenu."
+					name="ContextMenu"
+					readonly="False"
+					type="System.Windows.Controls.ContextMenu, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.DataContext property of type Object."
+					name="DataContext"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Effect property of type Effect."
+					name="Effect"
+					readonly="False"
+					type="System.Windows.Media.Effects.Effect, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ExtentHeight property of type Double."
+					name="ExtentHeight"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ExtentWidth property of type Double."
+					name="ExtentWidth"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Fill property of type Brush."
+					name="Fill"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.FlowDirection property of type FlowDirection."
+					name="FlowDirection"
+					readonly="False"
+					type="System.Windows.FlowDirection, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Focusable property of type Boolean."
+					name="Focusable"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.FontSize property of type Double."
+					name="FontSize"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ForceCursor property of type Boolean."
+					name="ForceCursor"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Foreground property of type Brush."
+					name="Foreground"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ForegroundColor property of type String."
+					name="ForegroundColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.HasContent property of type Boolean."
+					name="HasContent"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Height property of type Double."
+					name="Height"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.HorizontalAlignment property of type HorizontalAlignment."
+					name="HorizontalAlignment"
+					readonly="False"
+					type="System.Windows.HorizontalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.HorizontalContentAlignment property of type HorizontalAlignment."
+					name="HorizontalContentAlignment"
+					readonly="False"
+					type="System.Windows.HorizontalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.HorizontalOffset property of type Double."
+					name="HorizontalOffset"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.HorizontalScrollBarVisibility property of type ScrollBarVisibility."
+					name="HorizontalScrollBarVisibility"
+					readonly="False"
+					type="System.Windows.Controls.ScrollBarVisibility, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsBeingWatched property of type Boolean."
+					name="IsBeingWatched"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsDeferredScrollingEnabled property of type Boolean."
+					name="IsDeferredScrollingEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsHitTestVisible property of type Boolean."
+					name="IsHitTestVisible"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsInactiveSelectionHighlightEnabled property of type Boolean."
+					name="IsInactiveSelectionHighlightEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsItemsHost property of type Boolean."
+					name="IsItemsHost"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsManipulationEnabled property of type Boolean."
+					name="IsManipulationEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsReadOnly property of type Boolean."
+					name="IsReadOnly"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsReadOnlyCaretVisible property of type Boolean."
+					name="IsReadOnlyCaretVisible"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsSelectionActive property of type Boolean."
+					name="IsSelectionActive"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsSharedSizeScope property of type Boolean."
+					name="IsSharedSizeScope"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsTabStop property of type Boolean."
+					name="IsTabStop"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.IsUndoEnabled property of type Boolean."
+					name="IsUndoEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.KeepWatermarkOnGotFocus property of type Boolean."
+					name="KeepWatermarkOnGotFocus"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.LayoutTransform property of type Transform."
+					name="LayoutTransform"
+					readonly="False"
+					type="System.Windows.Media.Transform, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.MaxHeight property of type Double."
+					name="MaxHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.MaxLength property of type Int32."
+					name="MaxLength"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.MaxLines property of type Int32."
+					name="MaxLines"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.MaxWidth property of type Double."
+					name="MaxWidth"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.MinHeight property of type Double."
+					name="MinHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.MinLines property of type Int32."
+					name="MinLines"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.MinWidth property of type Double."
+					name="MinWidth"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Opacity property of type Double."
+					name="Opacity"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.OpacityMask property of type Brush."
+					name="OpacityMask"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.OverridesDefaultStyle property of type Boolean."
+					name="OverridesDefaultStyle"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.PageHeight property of type Double."
+					name="PageHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.PanningDeceleration property of type Double."
+					name="PanningDeceleration"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.PanningMode property of type PanningMode."
+					name="PanningMode"
+					readonly="False"
+					type="System.Windows.Controls.PanningMode, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.PanningRatio property of type Double."
+					name="PanningRatio"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.RadiusX property of type Double."
+					name="RadiusX"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.RadiusY property of type Double."
+					name="RadiusY"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.RecognizesAccessKey property of type Boolean."
+					name="RecognizesAccessKey"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.RenderTransform property of type Transform."
+					name="RenderTransform"
+					readonly="False"
+					type="System.Windows.Media.Transform, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.RenderTransformOrigin property of type Point."
+					name="RenderTransformOrigin"
+					readonly="False"
+					type="System.Windows.Point, WindowsBase, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Row property of type Int32."
+					name="Row"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.RowSpan property of type Int32."
+					name="RowSpan"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ScrollableHeight property of type Double."
+					name="ScrollableHeight"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ScrollableWidth property of type Double."
+					name="ScrollableWidth"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.SelectionBrush property of type Brush."
+					name="SelectionBrush"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.SelectionOpacity property of type Double."
+					name="SelectionOpacity"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.SelectionTextBrush property of type Brush."
+					name="SelectionTextBrush"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ShowGridLines property of type Boolean."
+					name="ShowGridLines"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.SnapsToDevicePixels property of type Boolean."
+					name="SnapsToDevicePixels"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Stretch property of type Stretch."
+					name="Stretch"
+					readonly="False"
+					type="System.Windows.Media.Stretch, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Stroke property of type Brush."
+					name="Stroke"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.StrokeDashArray property of type DoubleCollection."
+					name="StrokeDashArray"
+					readonly="False"
+					type="System.Windows.Media.DoubleCollection, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.StrokeDashCap property of type PenLineCap."
+					name="StrokeDashCap"
+					readonly="False"
+					type="System.Windows.Media.PenLineCap, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.StrokeDashOffset property of type Double."
+					name="StrokeDashOffset"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.StrokeEndLineCap property of type PenLineCap."
+					name="StrokeEndLineCap"
+					readonly="False"
+					type="System.Windows.Media.PenLineCap, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.StrokeLineJoin property of type PenLineJoin."
+					name="StrokeLineJoin"
+					readonly="False"
+					type="System.Windows.Media.PenLineJoin, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.StrokeMiterLimit property of type Double."
+					name="StrokeMiterLimit"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.StrokeStartLineCap property of type PenLineCap."
+					name="StrokeStartLineCap"
+					readonly="False"
+					type="System.Windows.Media.PenLineCap, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.StrokeThickness property of type Double."
+					name="StrokeThickness"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.TabIndex property of type Int32."
+					name="TabIndex"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Tag property of type Object."
+					name="Tag"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.TextAlignment property of type TextAlignment."
+					name="TextAlignment"
+					readonly="False"
+					type="System.Windows.TextAlignment, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.TextDecorations property of type TextDecorationCollection."
+					name="TextDecorations"
+					readonly="False"
+					type="System.Windows.TextDecorationCollection, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.TextWrapping property of type TextWrapping."
+					name="TextWrapping"
+					readonly="False"
+					type="System.Windows.TextWrapping, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ToolTip property of type Object."
+					name="ToolTip"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Uid property of type String."
+					name="Uid"
+					readonly="False"
+					type="System.String"
+					weight="150">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.UndoLimit property of type Int32."
+					name="UndoLimit"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.UseLayoutRounding property of type Boolean."
+					name="UseLayoutRounding"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.VerticalAlignment property of type VerticalAlignment."
+					name="VerticalAlignment"
+					readonly="False"
+					type="System.Windows.VerticalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.VerticalContentAlignment property of type VerticalAlignment."
+					name="VerticalContentAlignment"
+					readonly="False"
+					type="System.Windows.VerticalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.VerticalOffset property of type Double."
+					name="VerticalOffset"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.VerticalScrollBarVisibility property of type ScrollBarVisibility."
+					name="VerticalScrollBarVisibility"
+					readonly="False"
+					type="System.Windows.Controls.ScrollBarVisibility, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ViewportHeight property of type Double."
+					name="ViewportHeight"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ViewportWidth property of type Double."
+					name="ViewportWidth"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Visibility property of type Visibility."
+					name="Visibility"
+					readonly="False"
+					type="System.Windows.Visibility, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Watermark property of type Object."
+					name="Watermark"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.Width property of type Double."
+					name="Width"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;Xceed.Wpf.Toolkit.WatermarkTextBox>.ZIndex property of type Int32."
+					name="ZIndex"
+					type="System.Int32">
+					</dynamicattribute>
+				</element>
+				<path>
+					/form[@automationid='Window']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Restart']/text[@caption='Rst output start time']/button/text
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<AttributeValue>
+				2019-01-01 00:00:00
+			</AttributeValue>
+		</setvaluerecorditem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		SetRestartSettings.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

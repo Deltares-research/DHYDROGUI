@@ -1,0 +1,1 @@
+INCLUDE 'R:/input/courses/Environmental_modelling/flow-model/westernscheldt01.atr' ; attributes file

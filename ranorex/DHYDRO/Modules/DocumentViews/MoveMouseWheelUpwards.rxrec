@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="1cc8d8f9-47fe-41a8-9b0a-7e0063144f08"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="MoveMouseWheelUpwards"
+	namespace="DHYDRO.Modules.DocumentViews">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mousewheelitem
+		delta="240"
+		duration="300ms"
+		enabled="True"
+		optional="False"
+		orientation="Vertical">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+		</mousewheelitem>
+		<explicitdelayitem
+		duration="300ms"
+		enabled="True"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+		</explicitdelayitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		MoveMousewheelUpwards.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

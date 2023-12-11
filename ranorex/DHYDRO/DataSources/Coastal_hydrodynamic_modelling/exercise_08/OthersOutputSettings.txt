@@ -1,0 +1,2 @@
+﻿Writebalancefile;	Checked;	bool;	false
+Richardsononoutput;	Checked;	bool;	true

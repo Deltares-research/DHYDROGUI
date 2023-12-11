@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="4e466133-8e56-4206-a5e9-ae3a77f13e2e"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="StartAddObstacle"
+	namespace="DHYDRO.Modules.Ribbon">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="fb42e398-2b2b-4342-960a-3442cee19f70"
+		sx="18"
+		sy="71"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="ae5ffa17-4370-42c1-a0f7-bed0a3093d81"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container[@basetype&lt;'ScrollViewer']/list/button[@automationid='ButtonAddObstacle']/text[@automationid='controlLabel']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		StartAddObstacle.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

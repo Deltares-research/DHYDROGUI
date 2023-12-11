@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="d2d170aa-97ab-410b-a768-292db4e582bb"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="SetMapOutputSettings"
+	namespace="DHYDRO.Modules.ModelSettings">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<setvaluerecorditem
+		attrname="Text"
+		enabled="True"
+		optional="False"
+		searchpropertyid="12b865e6-07f6-4c67-89bf-eeee5bff8bc4">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="22ede231-9ae7-45f7-87a2-a84563fbfcaa"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@automationid='Window']/list[@automationid='ListView']/tabpagelist[@automationid='MainTabControl']/list/list[@header='Map']/container/text[@caption='Specific Map output times']/parent::container/text[@focusable='True']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+			<AttributeValue>
+			</AttributeValue>
+		</setvaluerecorditem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		SetMapOutputSettings.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

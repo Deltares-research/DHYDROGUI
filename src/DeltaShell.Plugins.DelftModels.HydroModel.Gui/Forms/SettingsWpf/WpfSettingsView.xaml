@@ -183,19 +183,20 @@
 
             <!-- DataTemplate for bool -->
             <DataTemplate x:Key="CheckboxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
-                <Grid Style="{StaticResource GridStyle}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelWidth}" />
-                        <ColumnDefinition Width="{StaticResource ControlWidth}" />
-                        <ColumnDefinition Width="{StaticResource UnitWidth}" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0"
-                               Text="{Binding Label}"
-                               Style="{StaticResource LabelTextBlockStyle}" />
-                    <CheckBox Grid.Column="1"
-                              IsChecked="{Binding Value, Mode=TwoWay}"
-                              Style="{StaticResource ControlStyle}" />
-                </Grid>
+                <Grid Tag = "{Binding Name}" Style="{StaticResource GridStyle}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                            <ColumnDefinition Width="{StaticResource UnitWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding Label}"
+                                   Style="{StaticResource LabelTextBlockStyle}" />
+                        <CheckBox Grid.Column="1"
+                                  IsChecked="{Binding Value, Mode=TwoWay}"
+                                  Style="{StaticResource ControlStyle}" 
+                                  AutomationProperties.AutomationId="{Binding Name}" />
+                    </Grid>
             </DataTemplate>
 
             <!-- DataTemplate for DateTime -->

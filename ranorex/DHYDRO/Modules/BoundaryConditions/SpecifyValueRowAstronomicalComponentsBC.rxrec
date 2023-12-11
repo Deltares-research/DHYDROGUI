@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="f992420c-d0ad-479e-a26e-4e48b5779c7b"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="SpecifyValueRowAstronomicalComponentsBC"
+	namespace="DHYDRO.Modules.BoundaryConditions">
+	</codegen>
+	<variables>
+		<var
+		id="c7d820f1-a714-4322-9bea-9eb6265d3336"
+		name="ParameterValue">
+		</var>
+	</variables>
+	<recorditems>
+		<userrecorditem
+		classname="SpecifyValueRowAstronomicalComponentsBC"
+		enabled="True"
+		isexternaltestmethod="False"
+		methodname="TypeInParameterValue"
+		namespace="DHYDRO.Modules.BoundaryConditions"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<arguments
+			id="45258926-b629-4097-a04e-485efd5b7dc3">
+				<argument
+				argname="cellInfo"
+				id="6e0c4c9f-b858-40a6-b64c-df89273bb303">
+					<argvaluetype>
+						Ranorex.Core.Repository.RepoItemInfo, Ranorex.Core, Culture=neutral
+					</argvaluetype>
+					<argvalue>
+					</argvalue>
+					<info
+					id="c1573adb-283b-4e77-af6d-6284a61a48ec"
+					sourcename="ItemRecorderEditor">
+						<path>
+							/form[@automationid='Window']/list[@automationid='ListView']/container/container/container[@controlname='BoundaryConditionEditor']/container/container[@controlname='panel2']/container/container[@controlname='boundaryDataSplitContainer']/container/container[@controlname='functionView']/container/container/container[@controlname='tableView1']/element/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblevalue&gt;$NameAstronomicalComponent]/cell[@accessiblename&gt;$ParameterName]
+						</path>
+						<robustPath>
+						</robustPath>
+					</info>
+				</argument>
+			</arguments>
+		</userrecorditem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		SpecifyValueRowAstronomicalComponentsBC.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

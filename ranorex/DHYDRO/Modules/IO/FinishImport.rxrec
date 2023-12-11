@@ -1,0 +1,779 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="9cde4c1a-031f-4166-961e-c6d425b673b7"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="FinishImport"
+	namespace="DHYDRO.Modules.IO">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<WaitForRecordItem
+		enabled="True"
+		optional="False"
+		searchpropertyid="fa1878ad-6165-45f5-b6e4-745e7351556c"
+		waitaction="Exists"
+		waittimeout="5000ms">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="6c88f1ee-d399-4e50-a365-81bd657f345d"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@controlname='WizardDialog']/?/element[@controlname='btnNext']/button
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</WaitForRecordItem>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="7e3c527b-9e90-4fe3-9fad-396f9cadb999"
+		sx="1167"
+		sy="839"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="6c88f1ee-d399-4e50-a365-81bd657f345d"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@controlname='WizardDialog']/?/element[@controlname='btnNext']/button
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="7e3c527b-9e90-4fe3-9fad-396f9cadb999"
+		sx="1167"
+		sy="839"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="e1f2b5c6-6482-4a5d-bd4e-92d66bf3f5e6"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@controlname='WizardDialog']/element[@controlname='wizardControl1']/element[@controlname='btnFinish']/button[@accessiblename='&amp;Finish']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+		<explicitdelayitem
+		duration="300ms"
+		enabled="True"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+		</explicitdelayitem>
+		<WaitForRecordItem
+		enabled="True"
+		optional="False"
+		searchpropertyid="60074caf-ba5c-4a53-917b-dc366c642a6d"
+		waitaction="NotExists"
+		waittimeout="5000ms">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="ef7c636b-dd8a-440a-9635-37aed9c65791"
+			sourcename="RepositoryEditor">
+				<element
+				capabilities="nativewindow, wpfwin32element, wpfelement, wpfgroupelement"
+				dontcache="False"
+				enabled="True"
+				flavor="wpf"
+				hasfocus="False"
+				index="0"
+				prefcap="form"
+				rect="614,320,693,400"
+				role="form"
+				snapElem=""
+				valid="True"
+				visible="False">
+					<attribute
+					name="active"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="appicon"
+					type="System.Drawing.Icon, System.Drawing, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+						iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAHMSURBVDhPlZJJKERxHMfff96beZbRNCsjk5lB
+YmylyTMKBw6cEMVBypIsZUuJSQ7IaThIoUQuJNtlLjM5uMiFgyVLZLmR1OSieOP7N3OQWYxvffpt
+39/rP/P/M0GkBrwv/b+0hJAFxBwg8aMCaSAZhP8wlscNRvMVx3FOGc/vWYXix9WtvfejK4/Y3NH/
+ivkctfncwdWq1safmVLTb/mo6IN4fdLF4Kjj7fTB61WpdCeYtwD22xlC9IiJfrTAnpqRe7d/4hHb
++8Y8iQbjpYRld9GvBmEVi+OOWXIL7nuHp9/kcYpj//E7QCUwUVMo0eUlS7bwgLiFug7kgSrUk2AR
+eR8ILhgcHCd1I20CNtQTMZqUm6IRt1g07BI1meXP6M1iJqX+36rAcBOxFJQRlnPldK1/2IacYlaD
+410ijTpEvx4oQYCwS+YRC0EM8jl9fs2rMLAtCgMur6Vt5UObVfFCiGQHc/qTAsQBAcQCelX9vCLh
+2tqzJv5EJlefY1YG/lQcsIJOQlh3fuPyp9IsPNGToSenhkiVhKWZaLXxHnEKdYKvHVr0qdJHlA2a
+sbQB1pHXAgX4UzpAr9AOukGJv0f/o4hFzfSew757hmGYL8D+a5NGf/UdAAAAAElFTkSuQmCC
+					</attribute>
+					<attribute
+					name="state"
+					type="System.Windows.Forms.FormWindowState, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+						Normal
+					</attribute>
+					<attribute
+					name="title"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="apphung"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="class"
+					type="System.String">
+						HwndWrapper[DeltaShell.Gui.exe;;1cff934c-139e-4f5d-8603-40ce4d06a503]
+					</attribute>
+					<attribute
+					name="handle"
+					type="System.IntPtr">
+						1317260
+					</attribute>
+					<attribute
+					name="processid"
+					type="System.Int32">
+						39980
+					</attribute>
+					<attribute
+					name="processname"
+					type="System.String">
+						DeltaShell.Gui
+					</attribute>
+					<attribute
+					name="windowextendedstyle"
+					type="Ranorex.Core.WinApi.Win32+WindowExtendedStyles, Ranorex.Core.WinApi, Culture=neutral">
+						RightScrollBar, Left, WindowEdge, ApplicationWindow, Layered
+					</attribute>
+					<attribute
+					name="windowstyle"
+					type="Ranorex.Core.WinApi.Win32+WindowStyles, Ranorex.Core.WinApi, Culture=neutral">
+						Tiled, MaximizeBox, Group, SizeBox, SystemMenu, ClipChildren, ClipSiblings
+					</attribute>
+					<attribute
+					name="windowtext"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="win32ownerwindowlevel"
+					type="System.Int32">
+						1
+					</attribute>
+					<attribute
+					name="win32parentwindowlevel"
+					type="System.Int32">
+						0
+					</attribute>
+					<attribute
+					name="wpfnative"
+					type="System.Boolean">
+						True
+					</attribute>
+					<attribute
+					name="automationproperties_acceleratorkey"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_accesskey"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_helptext"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_iscolumnheader"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_isrequiredforform"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_isrowheader"
+					type="System.Boolean">
+						False
+					</attribute>
+					<attribute
+					name="automationproperties_itemstatus"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_itemtype"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="automationproperties_name"
+					type="System.String">
+					</attribute>
+					<attribute
+					name="basetype"
+					type="System.String">
+						System.Windows.Controls.ContentControl
+					</attribute>
+					<attribute
+					name="fulltype"
+					type="System.String">
+						Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog&gt;
+					</attribute>
+					<attribute
+					name="type"
+					type="System.String">
+						DepoGroup&lt;ActivityProgressDialog&gt;
+					</attribute>
+					<attribute
+					name="ranorexgroupleaderid"
+					type="System.Guid">
+						81d898a6-520e-4763-af6b-46d2d935f09b
+					</attribute>
+					<attribute
+					name="ranorexgroupmemberids"
+					type="System.Guid[]">
+						AAEAAAD/////AQAAAAAAAAAHAQAAAAABAAAACAAAAAMLU3lzdGVtLkd1aWQE/v///wtTeXN0ZW0u
+R3VpZAsAAAACX2ECX2ICX2MCX2QCX2UCX2YCX2cCX2gCX2kCX2oCX2sAAAAAAAAAAAAAAAgHBwIC
+AgICAgICppjYgQ5SY0eva0bS2TXwmwH9/////v///4PCyhBA291NgKkzc+QKq/8B/P////7///8T
+dXQD89KPR7u0aqdPpVrUAfv////+////FeyLLOCwSUCSKrbFiB/exQH6/////v///0UNaoPhmMRP
+gCMvRnsr/BcB+f////7///9uL7pxYDy0QIbSNfbdw3IfAfj////+////M2zTI2b23kWBnIAcq0qw
+uAH3/////v///5i3wj24kX1HqxKWziuaBVUL
+					</attribute>
+					<attribute
+					name="ranorexgroupobjectid"
+					type="System.Guid">
+						84b1414b-56f8-4a93-869e-d84d83f97b44
+					</attribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ActualHeight property of type Double."
+					name="ActualHeight"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ActualWidth property of type Double."
+					name="ActualWidth"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.AllowDrop property of type Boolean."
+					name="AllowDrop"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.AllowsTransparency property of type Boolean."
+					name="AllowsTransparency"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Background property of type Brush."
+					name="Background"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.BackgroundColor property of type String."
+					name="BackgroundColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.BaseUri property of type Uri."
+					name="BaseUri"
+					readonly="False"
+					type="System.Uri, System, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.BindingGroup property of type BindingGroup."
+					name="BindingGroup"
+					readonly="False"
+					type="System.Windows.Data.BindingGroup, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.BitmapEffect property of type BitmapEffect."
+					name="BitmapEffect"
+					readonly="False"
+					type="System.Windows.Media.Effects.BitmapEffect, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.BitmapEffectInput property of type BitmapEffectInput."
+					name="BitmapEffectInput"
+					readonly="False"
+					type="System.Windows.Media.Effects.BitmapEffectInput, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.BorderBrush property of type Brush."
+					name="BorderBrush"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.BorderColor property of type String."
+					name="BorderColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.CacheMode property of type CacheMode."
+					name="CacheMode"
+					readonly="False"
+					type="System.Windows.Media.CacheMode, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Clip property of type Geometry."
+					name="Clip"
+					readonly="False"
+					type="System.Windows.Media.Geometry, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ClipToBounds property of type Boolean."
+					name="ClipToBounds"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Column property of type Int32."
+					name="Column"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ColumnSpan property of type Int32."
+					name="ColumnSpan"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Content property of type Object."
+					name="Content"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ContentSource property of type String."
+					name="ContentSource"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ContentStringFormat property of type String."
+					name="ContentStringFormat"
+					readonly="False"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ContextMenu property of type ContextMenu."
+					name="ContextMenu"
+					readonly="False"
+					type="System.Windows.Controls.ContextMenu, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.DataContext property of type Object."
+					name="DataContext"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Effect property of type Effect."
+					name="Effect"
+					readonly="False"
+					type="System.Windows.Media.Effects.Effect, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.FlowDirection property of type FlowDirection."
+					name="FlowDirection"
+					readonly="False"
+					type="System.Windows.FlowDirection, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Focusable property of type Boolean."
+					name="Focusable"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.FontSize property of type Double."
+					name="FontSize"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ForceCursor property of type Boolean."
+					name="ForceCursor"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Foreground property of type Brush."
+					name="Foreground"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ForegroundColor property of type String."
+					name="ForegroundColor"
+					type="System.String">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.HasContent property of type Boolean."
+					name="HasContent"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Height property of type Double."
+					name="Height"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.HorizontalAlignment property of type HorizontalAlignment."
+					name="HorizontalAlignment"
+					readonly="False"
+					type="System.Windows.HorizontalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.HorizontalContentAlignment property of type HorizontalAlignment."
+					name="HorizontalContentAlignment"
+					readonly="False"
+					type="System.Windows.HorizontalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Icon property of type ImageSource."
+					name="Icon"
+					readonly="False"
+					type="System.Windows.Media.ImageSource, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.IsActive property of type Boolean."
+					name="IsActive"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.IsHitTestVisible property of type Boolean."
+					name="IsHitTestVisible"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.IsItemsHost property of type Boolean."
+					name="IsItemsHost"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.IsManipulationEnabled property of type Boolean."
+					name="IsManipulationEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.IsSharedSizeScope property of type Boolean."
+					name="IsSharedSizeScope"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.IsTabStop property of type Boolean."
+					name="IsTabStop"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.LayoutTransform property of type Transform."
+					name="LayoutTransform"
+					readonly="False"
+					type="System.Windows.Media.Transform, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Left property of type Double."
+					name="Left"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.MaxHeight property of type Double."
+					name="MaxHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.MaxWidth property of type Double."
+					name="MaxWidth"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.MinHeight property of type Double."
+					name="MinHeight"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.MinWidth property of type Double."
+					name="MinWidth"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Opacity property of type Double."
+					name="Opacity"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.OpacityMask property of type Brush."
+					name="OpacityMask"
+					readonly="False"
+					type="System.Windows.Media.Brush, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.OverridesDefaultStyle property of type Boolean."
+					name="OverridesDefaultStyle"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.RecognizesAccessKey property of type Boolean."
+					name="RecognizesAccessKey"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.RenderTransform property of type Transform."
+					name="RenderTransform"
+					readonly="False"
+					type="System.Windows.Media.Transform, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.RenderTransformOrigin property of type Point."
+					name="RenderTransformOrigin"
+					readonly="False"
+					type="System.Windows.Point, WindowsBase, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ResizeMode property of type ResizeMode."
+					name="ResizeMode"
+					readonly="False"
+					type="System.Windows.ResizeMode, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Row property of type Int32."
+					name="Row"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.RowSpan property of type Int32."
+					name="RowSpan"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ShowActivated property of type Boolean."
+					name="ShowActivated"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ShowGridLines property of type Boolean."
+					name="ShowGridLines"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ShowInTaskbar property of type Boolean."
+					name="ShowInTaskbar"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ShowKeyboardCues property of type Boolean."
+					name="ShowKeyboardCues"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.SizeToContent property of type SizeToContent."
+					name="SizeToContent"
+					readonly="False"
+					type="System.Windows.SizeToContent, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.SnapsToDevicePixels property of type Boolean."
+					name="SnapsToDevicePixels"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.TabIndex property of type Int32."
+					name="TabIndex"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Tag property of type Object."
+					name="Tag"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.TaskbarItemInfo property of type TaskbarItemInfo."
+					name="TaskbarItemInfo"
+					readonly="False"
+					type="System.Windows.Shell.TaskbarItemInfo, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ToolTip property of type Object."
+					name="ToolTip"
+					readonly="False"
+					type="System.Object">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Top property of type Double."
+					name="Top"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Topmost property of type Boolean."
+					name="Topmost"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Uid property of type String."
+					name="Uid"
+					readonly="False"
+					type="System.String"
+					weight="150">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.UseLayoutRounding property of type Boolean."
+					name="UseLayoutRounding"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.VerticalAlignment property of type VerticalAlignment."
+					name="VerticalAlignment"
+					readonly="False"
+					type="System.Windows.VerticalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.VerticalContentAlignment property of type VerticalAlignment."
+					name="VerticalContentAlignment"
+					readonly="False"
+					type="System.Windows.VerticalAlignment, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Visibility property of type Visibility."
+					name="Visibility"
+					readonly="False"
+					type="System.Windows.Visibility, PresentationCore, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.Width property of type Double."
+					name="Width"
+					readonly="False"
+					type="System.Double">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.WindowState property of type WindowState."
+					name="WindowState"
+					readonly="False"
+					type="System.Windows.WindowState, PresentationFramework, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.XmlNamespaceMaps property of type Hashtable."
+					name="XmlNamespaceMaps"
+					readonly="False"
+					type="System.Collections.Hashtable">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.ZIndex property of type Int32."
+					name="ZIndex"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicaction
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;DeltaShell.Gui.Forms.ProgressDialog.ActivityProgressDialog>.InitializeComponent method."
+					displayName="InitializeComponent">
+						<returns
+						description="Return value."
+						displayName="returns"
+						type="System.Void">
+						</returns>
+					</dynamicaction>
+				</element>
+				<path>
+					/form[@title='' and @processname='DeltaShell.Gui']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</WaitForRecordItem>
+		<explicitdelayitem
+		duration="300ms"
+		enabled="True"
+		optional="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+		</explicitdelayitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRORepository"
+	relativepath="..\..\DHYDRORepository.rxrep">
+		<codegen
+		classname="DHYDRORepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		FinishImport.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>
