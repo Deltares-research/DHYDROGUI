@@ -30,7 +30,7 @@ mode="Desktop">
 		<var
 		id="77a8be37-3703-46ab-ac4e-fbc2db12af5a"
 		name="ExecutablePath">
-			..\..\..\..\bin\Debug\DeltaShell.Gui.exe
+			..\..\..\bin\Release\DeltaShell.Gui.exe
 		</var>
 	</variables>
 	<recorditems>
@@ -93,15 +93,15 @@ mode="Desktop">
 					name="appicon"
 					type="System.Drawing.Icon, System.Drawing, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 						iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
-jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGlSURBVDhPlZJNKMNhHMf/e7F/eW1bk9eQdlnR
-SquxA8plu6Cs5KLGhZSYw8LBATlIilYonJREOHDY2lVODlheIi83ktIuav7zeWwHsRe+9en3e34v
-z//3/J9HSiIjyHH3/zKpVKplbC2oExjADBWQfmOaJzUazRX2AEJarfbR3eV53w+FFb3B+ErML8ri
-1cnVywbncKtWq4+wF1VmS+TsIRZjfUq+BzRflSkkRixJYIJxprjbOAwrxaXlb2x4yRR7xNshrXIo
-nKD5vrLaEuHrJ4nx+8AFVaIolUTzKs0P2B3WbrBCG+tpWMEfguSiYA6CuN3QgD/F6DeOsXXFMbqm
-6HS6Z2KL5LJE/U85SW5jm6AFP2Bp9UUbfMuKyep65yjHxDtBD79EvWoJWw/Z+H5Zzn+1excUuzcQ
-szhHorKc/UJ8l7w40i9pwQ45IK5qmNGvbYOzyneIhcm1QEblgQ36+Wqwrnnyg/M/icmI5YqCv6qM
-pnlxpdgZ1kXxcGqJpyoeUQ14aNqCTfwOKICMKgRxheMwAI2JmPhHf5YoFvec9t1LkiR9AnQ9XOo/
-lAA5AAAAAElFTkSuQmCC
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGmSURBVDhPlZJNKMNhHMf/2/72j1nemtZazZKS
+8lJazXbgsMM4iFC7ES6kxA6Eg/KSUpK0Qs3JQSIuLsZVTg5MXiIvN9JKuyj+83lsB7EN3/r0+z2/
+l+f/e/7PIyVRAShx9/8yaTSaZWwFaBPkQwnYIP3GNE/qdLpL7C4cyLL80OLreN3ZD6u5efkRYgFR
+Fq9Orm42CMONVqs9xJ4XFZdGT+9jMdYn5LtA91mZQmJESwITjDHF7dpuWDVbrC9seMEUO8SbIa0M
+FI7TfGezl0b5+nFi/B5oALsoSiXRHKT5HrvFug2qoIn1NKzgD0ByUTAHIdx2cOFPMfq1e3RVdY8E
+Vb1e/0RskVyGqP+uepKb2Drw4O+VNQ69uYaXVFOl95WjHBH3QR78EPWaJWwNZOEHFMUYcfoXVKd/
+L1bm9b8pSuYz8W3y4kg/JIMTDCCuapDRrxz9s+pXiJ2R88CvMoIDevlqqLpu4p3zP4rJiGWLgr/K
+StO8uFLsDGtzPJxa4qmKR1QOnTRtwDp+K+TAryoEcYVj0Ae1iZj4R3+WKBb3nPbdS5IkfQD9hly7
+lHKOcQAAAABJRU5ErkJggg==
 					</attribute>
 					<attribute
 					name="state"
