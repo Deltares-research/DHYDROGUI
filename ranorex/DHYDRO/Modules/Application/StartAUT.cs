@@ -42,7 +42,7 @@ namespace DHYDRO.Modules.Application
         public StartAUT()
         {
             StartAutProcessIDVar = "";
-            ExecutablePath = "..\\..\\..\\..\\bin\\Debug\\DeltaShell.Gui.exe";
+            ExecutablePath = "..\\..\\..\\bin\\Debug\\DeltaShell.Gui.exe";
         }
 
         /// <summary>

@@ -101,7 +101,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -951,7 +951,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -1704,7 +1704,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -1860,7 +1860,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -2256,7 +2256,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -2314,7 +2314,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>

@@ -440,7 +440,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -691,12 +691,12 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 					<param
 					mask="False"
 					name="RelativePathToProcessDefinitionFile"
-					value="..\..\..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\dwaq\resources\proc_def.def">
+					value="..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\dwaq\resources\proc_def.def">
 					</param>
 				</parameters>
 			</testcase>
@@ -802,7 +802,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -930,7 +930,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 					<param
 					mask="False"
@@ -1672,7 +1672,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
@@ -2284,12 +2284,12 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 					<param
 					mask="False"
 					name="RelativePathToProcessDefinitionFile"
-					value="..\..\..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\dwaq\resources\proc_def.def">
+					value="..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\dwaq\resources\proc_def.def">
 					</param>
 				</parameters>
 			</testcase>
@@ -2937,7 +2937,7 @@
 					<param
 					mask="False"
 					name="ExecutablePath"
-					value="..\..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
+					value="..\..\..\bin\Release\DeltaShell\DeltaShell.Gui.exe">
 					</param>
 				</parameters>
 			</testcase>
