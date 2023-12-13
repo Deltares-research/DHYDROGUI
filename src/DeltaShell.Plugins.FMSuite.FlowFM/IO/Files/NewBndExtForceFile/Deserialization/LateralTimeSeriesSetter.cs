@@ -85,6 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             InterpolationType timeInterpolation = BcQuantityDataParsingHelper.ParseTimeInterpolationType(bcBlock);
 
             CompleteFunction(dischargeFunction, dateTimes, discharges, timeInterpolation);
+            dischargeFunction.TimeZone = BcQuantityDataParsingHelper.ParseTimeZone(timeQuantity.Unit, bcBlock.SupportPoint);
         }
 
         private bool TryParseDischarges(BcQuantityData dischargeQuantity, out IEnumerable<double> values, int lineNumber)

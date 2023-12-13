@@ -14,12 +14,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
     [TestFixture]
     public class LateralTimeSeriesSetterTest
     {
+        private ILogHandler logHandler;
+
+        [SetUp]
+        public void SetUp()
+        {
+            logHandler = Substitute.For<ILogHandler>();
+        }
+        
         [Test]
         [TestCaseSource(nameof(Constructor_ArgNullCases))]
-        public void Constructor_ArgNull_ThrowsArgumentNullException(ILogHandler logHandler, IEnumerable<BcBlockData> bcBlockData)
+        public void Constructor_ArgNull_ThrowsArgumentNullException(ILogHandler logHandlerArgNullTest, IEnumerable<BcBlockData> bcBlockData)
         {
             // Call
-            void Call() => _ = new LateralTimeSeriesSetter(logHandler, bcBlockData);
+            void Call() => _ = new LateralTimeSeriesSetter(logHandlerArgNullTest, bcBlockData);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -31,7 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [TestCase(" ")]
         public void SetDischargeFunction_LateralIdNullOrWhiteSpace_ThrowsArgumentException(string lateralId)
         {
-            var logHandler = Substitute.For<ILogHandler>();
             IEnumerable<BcBlockData> bcBlockData = Enumerable.Empty<BcBlockData>();
             var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, bcBlockData);
             var lateralDischargeFunction = new LateralDischargeFunction();
@@ -46,7 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         public void SetDischargeFunction_DischargeFunctionNull_ThrowsArgumentNullException()
         {
-            var logHandler = Substitute.For<ILogHandler>();
             IEnumerable<BcBlockData> bcBlockData = Enumerable.Empty<BcBlockData>();
             var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, bcBlockData);
             const string lateralId = "some_id";
@@ -61,7 +67,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         public void SetDischargeFunction_MissingCorrespondingDataForId_ReportsError()
         {
-            var logHandler = Substitute.For<ILogHandler>();
             BcBlockData bcBlockData = BcBlockDataBuilder.Start().WithLateralId("some_id").WithFunctionType("timeseries").WithTimeQuantity().WithLateralDischargeQuantity().Finish();
             var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, new[] { bcBlockData });
             var lateralDischargeFunction = new LateralDischargeFunction();
@@ -76,7 +81,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         public void SetDischargeFunction_UnsupportedFunctionType_ReportsError()
         {
-            var logHandler = Substitute.For<ILogHandler>();
             BcBlockData bcBlockData = BcBlockDataBuilder.Start().WithLateralId("some_id").WithFunctionType("some_unsupported_function").WithTimeQuantity().WithLateralDischargeQuantity().Finish();
             var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, new[] { bcBlockData });
             var lateralDischargeFunction = new LateralDischargeFunction();
@@ -91,7 +95,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         public void SetDischargeFunction_MissingTimeQuantity_ReportsError()
         {
-            var logHandler = Substitute.For<ILogHandler>();
             BcBlockData bcBlockData = BcBlockDataBuilder.Start().WithLateralId("some_id").WithFunctionType("timeseries").WithLateralDischargeQuantity().Finish();
             var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, new[] { bcBlockData });
             var lateralDischargeFunction = new LateralDischargeFunction();
@@ -106,7 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         public void SetDischargeFunction_MissingLateralDischargeQuantity_ReportsError()
         {
-            var logHandler = Substitute.For<ILogHandler>();
             BcBlockData bcBlockData = BcBlockDataBuilder.Start().WithLateralId("some_id").WithFunctionType("timeseries").WithTimeQuantity().Finish();
             var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, new[] { bcBlockData });
             var lateralDischargeFunction = new LateralDischargeFunction();
@@ -121,7 +123,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         public void SetDischargeFunction_WithInvalidDischargeValue_ReportsError()
         {
-            var logHandler = Substitute.For<ILogHandler>();
             BcBlockData bcBlockData = BcBlockDataBuilder.Start().WithLateralId("some_id").WithFunctionType("timeseries").WithTimeQuantity().Finish();
             var dischargeQuantityData = new BcQuantityData
             {
@@ -148,7 +149,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         [Test]
         public void SetDischargeFunction_SetsTheCorrectDataOnTheLateralDischargeFunction()
         {
-            var logHandler = Substitute.For<ILogHandler>();
             BcBlockData bcBlockData = BcBlockDataBuilder.Start().WithLateralId("some_id").WithFunctionType("timeseries").WithTimeQuantity().WithLateralDischargeQuantity().Finish();
             var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, new[] { bcBlockData });
             var lateralDischargeFunction = new LateralDischargeFunction();
@@ -163,6 +163,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
             Assert.That(lateralDischargeFunction[referenceDate.AddSeconds(60)], Is.EqualTo(1.23));
             Assert.That(lateralDischargeFunction[referenceDate.AddSeconds(120)], Is.EqualTo(2.34));
             Assert.That(lateralDischargeFunction[referenceDate.AddSeconds(180)], Is.EqualTo(3.45));
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(TimeZones))]
+        public void SetDischargeFunctionWithTimeZone_SetsTheCorrectTimeZoneOnTheLateralDischargeFunction(string timeQuantityTimeZone, TimeSpan expectedTimeZone)
+        {
+            // Arrange
+            BcBlockData bcBlockData = BcBlockDataBuilder.Start().WithLateralId("some_id").WithFunctionType("timeseries").WithTimeQuantityWithTimeZone(timeQuantityTimeZone).WithLateralDischargeQuantity().Finish();
+            var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, new[] { bcBlockData });
+            var lateralDischargeFunction = new LateralDischargeFunction();
+
+            // Call
+            lateralTimeSeriesSetter.SetDischargeFunction("some_id", lateralDischargeFunction);
+
+            // Assert
+            Assert.That(lateralDischargeFunction.TimeZone, Is.EqualTo(expectedTimeZone));
+        }
+        
+        [Test]
+        public void SetDischargeFunctionWithNoTimeZone_SetsTheCorrectZeroTimeZoneOnTheLateralDischargeFunction()
+        {
+            // Arrange
+            BcBlockData bcBlockData = BcBlockDataBuilder.Start().WithLateralId("some_id").WithFunctionType("timeseries").WithTimeQuantity().WithLateralDischargeQuantity().Finish();
+            var lateralTimeSeriesSetter = new LateralTimeSeriesSetter(logHandler, new[] { bcBlockData });
+            var lateralDischargeFunction = new LateralDischargeFunction();
+
+            // Call
+            lateralTimeSeriesSetter.SetDischargeFunction("some_id", lateralDischargeFunction);
+
+            // Assert
+            Assert.That(lateralDischargeFunction.TimeZone, Is.EqualTo(TimeSpan.Zero));
+        }
+        
+        private static IEnumerable<TestCaseData> TimeZones()
+        {
+            var timeZone = new TimeSpan(1, 0, 0);
+            yield return new TestCaseData($"+{timeZone:hh\\:mm}", timeZone).SetName("Time zone of +1 hour");
+            
+            timeZone = new TimeSpan(10, 0, 0);
+            yield return new TestCaseData($"+{timeZone:hh\\:mm}", timeZone).SetName("Time zone of +10 hours");
+            
+            timeZone = new TimeSpan(-1, 0, 0);
+            yield return new TestCaseData($"-{timeZone:hh\\:mm}", timeZone).SetName("Time zone of -1 hour");
+            
+            timeZone = new TimeSpan(-10, 0, 0);
+            yield return new TestCaseData($"-{timeZone:hh\\:mm}", timeZone).SetName("Time zone of -10 hours");
         }
 
         private static IEnumerable<TestCaseData> Constructor_ArgNullCases()
@@ -199,6 +245,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
                 {
                     QuantityName = "time",
                     Unit = "seconds since 2023-07-31 00:00:00",
+                    Values = new List<string>
+                    {
+                        "60",
+                        "120",
+                        "180"
+                    }
+                };
+                bcBlockData.Quantities.Add(timeQuantityData);
+                return this;
+            }
+            
+            public BcBlockDataBuilder WithTimeQuantityWithTimeZone(string timeZone)
+            {
+                var timeQuantityData = new BcQuantityData
+                {
+                    QuantityName = "time",
+                    Unit = $"seconds since 2023-07-31 00:00:00 {timeZone}",
                     Values = new List<string>
                     {
                         "60",

@@ -1449,6 +1449,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             var expDischargeValues = new[] { "1.23", "2.34", "3.45" };
             Assert.That(dischargeQuantity.Values, Is.EqualTo(expDischargeValues));
         }
+        
+        [Test]
+        [TestCaseSource(nameof(TimeZones))]
+        public void CreateBcBlockForLateralWithTimeZone_CreatesBcBlockDataWithTimeQuantityUnitWithExpectedTimeZone(TimeSpan timeZone, string expectedTimeUnit)
+        {
+            // Setup
+            var bcFileDataBuilder = new BcFileFlowBoundaryDataBuilder();
+            var referenceDate = new DateTime(2023, 7, 31);
+            Lateral lateral = GetLateralWithGivenTimeZone(timeZone, referenceDate);
+
+            // Call
+            BcBlockData bcBlockData = bcFileDataBuilder.CreateBcBlockForLateral(lateral, referenceDate);
+            
+            // Assert
+            BcQuantityData timeQuantity = bcBlockData.Quantities[0];
+            Assert.That(timeQuantity.Unit, Is.EqualTo(expectedTimeUnit));
+        }
+
+        private static Lateral GetLateralWithGivenTimeZone(TimeSpan timeZone, DateTime referenceDate)
+        {
+            var feature = new Feature2D { Name = "some_name" };
+            var lateral = new Lateral { Feature = feature };
+            lateral.Data.Discharge.Type = LateralDischargeType.TimeSeries;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(60)] = 1.23;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(120)] = 2.34;
+            lateral.Data.Discharge.TimeSeries[referenceDate.AddSeconds(180)] = 3.45;
+            lateral.Data.Discharge.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
+            lateral.Data.Discharge.TimeSeries.TimeZone = timeZone;
+            return lateral;
+        }
+
+        private static IEnumerable<TestCaseData> TimeZones()
+        {
+            TimeSpan timeZone = new TimeSpan(1, 0, 0);
+            yield return new TestCaseData(timeZone, $"seconds since 2023-07-31 00:00:00 +{timeZone:hh\\:mm}").SetName("Time zone of +1 hour");
+            
+            timeZone = new TimeSpan(10, 0, 0);
+            yield return new TestCaseData(timeZone, $"seconds since 2023-07-31 00:00:00 +{timeZone:hh\\:mm}").SetName("Time zone of +10 hours");
+            
+            timeZone = new TimeSpan(-1, 0, 0);
+            yield return new TestCaseData(timeZone, $"seconds since 2023-07-31 00:00:00 -{timeZone:hh\\:mm}").SetName("Time zone of -1 hour");
+            
+            timeZone = new TimeSpan(-10, 0, 0);
+            yield return new TestCaseData(timeZone, $"seconds since 2023-07-31 00:00:00 -{timeZone:hh\\:mm}").SetName("Time zone of -10 hours");
+            
+            timeZone = new TimeSpan(0, 0, 0);
+            yield return new TestCaseData(timeZone, $"seconds since 2023-07-31 00:00:00").SetName("No Time zone");
+        }
 
         public static IEnumerable<TestCaseData> GetLongValueTestData()
         {

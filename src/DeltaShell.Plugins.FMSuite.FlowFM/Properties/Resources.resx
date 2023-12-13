@@ -781,4 +781,13 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="Backwards_Compatibility__Value_for___0___has_been_updated_from___1___to___2__" xml:space="preserve">
     <value>Backwards Compatibility: Value for '{0}' has been updated from '{1}' to '{2}'</value>
   </data>
+  <data name="WaterFlowFMLateralValidator_ValidateDischargeTimeZone_Time_zone_of_lateral___0___falls_outside_of_allowed_range__12_00_and__12_00" xml:space="preserve">
+    <value>Time zone of lateral '{0}' falls outside of allowed range -12:00 and +12:00</value>
+  </data>
+  <data name="WaterFlowFMLateralValidator_Validate_No_Laterals_available" xml:space="preserve">
+    <value>No Laterals available</value>
+  </data>
+  <data name="WaterFlowFMLateralValidator_Validate_Water_flow_FM_model_Laterals" xml:space="preserve">
+    <value>Water flow FM model Laterals</value>
+  </data>
 </root>

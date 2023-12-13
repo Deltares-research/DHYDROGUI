@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -658,7 +657,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         private BcQuantityData CreateLateralDischargeTimesQuantityData(Lateral lateral, DateTime? referenceDate)
         {
             const string quantity = "time";
-            return CreateBcQuantityDataForArgument(quantity, lateral.Data.Discharge.TimeSeries.Time, referenceDate, TimeSpan.Zero);
+            LateralDischargeFunction timeSeries = lateral.Data.Discharge.TimeSeries;
+            return CreateBcQuantityDataForArgument(quantity, timeSeries.Time, referenceDate, timeSeries.TimeZone);
+
         }
 
         private static BcQuantityData CreateLateralDischargeValuesQuantityData(Lateral lateral)

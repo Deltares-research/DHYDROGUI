@@ -32,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMWindValidator.Validate(model),
                 WaterFlowFMModelDefinitionValidator.Validate(model),
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
+                WaterFlowFMLateralValidator.Validate(model),
                 FMStructuresValidator.Validate(model),
                 WaterFlowFMRestartInputValidator.Validate(model),
                 RestartTimeRangeValidator.ValidateWriteRestartSettings(model.WriteRestart,

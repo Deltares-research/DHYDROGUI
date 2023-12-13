@@ -1628,6 +1628,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Laterals available.
+        /// </summary>
+        public static string WaterFlowFMLateralValidator_Validate_No_Laterals_available {
+            get {
+                return ResourceManager.GetString("WaterFlowFMLateralValidator_Validate_No_Laterals_available", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Water flow FM model Laterals.
+        /// </summary>
+        public static string WaterFlowFMLateralValidator_Validate_Water_flow_FM_model_Laterals {
+            get {
+                return ResourceManager.GetString("WaterFlowFMLateralValidator_Validate_Water_flow_FM_model_Laterals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time zone of lateral &apos;{0}&apos; falls outside of allowed range -12:00 and +12:00.
+        /// </summary>
+        public static string WaterFlowFMLateralValidator_ValidateDischargeTimeZone_Time_zone_of_lateral___0___falls_outside_of_allowed_range__12_00_and__12_00 {
+            get {
+                return ResourceManager.GetString("WaterFlowFMLateralValidator_ValidateDischargeTimeZone_Time_zone_of_lateral___0___" +
+                        "falls_outside_of_allowed_range__12_00_and__12_00", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  Structure component&apos;{0}&apos; has been removed from Control Group &apos;{1}&apos; due to type change..
         /// </summary>
         public static string WaterFlowFMModel_ChangingWeirFormulaWhenAlsoUsedInRTC_Structure_component__0__has_been_removed_from_RTC_Control_Group__1__due_to_type_change {

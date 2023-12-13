@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
@@ -29,6 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals
         /// Get the discharge component.
         /// </summary>
         public IVariable DischargeComponent => Components[0];
+        
+        /// <summary>
+        /// Gets and Sets the timezone.
+        /// </summary>
+        public TimeSpan TimeZone { get; set; }
 
         private void AddVariable(string name, string unitDescription, string unitSymbol)
         {
