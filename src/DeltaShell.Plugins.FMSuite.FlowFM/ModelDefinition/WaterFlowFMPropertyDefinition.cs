@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string RefDate = "refdate";
         public const string TStart = "tstart";
         public const string TStop = "tstop";
+        public const string TZone = "tzone";
         public const string Tunit = "tunit";
         public const string Version = "version";
         public const string GuiVersion = "guiversion";

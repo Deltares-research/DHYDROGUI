@@ -271,6 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             Factor = 1;
             ThatcherHarlemanTimeLag = TimeSpan.Zero;
             verticalInterpolationType = SupportedVerticalInterpolationTypes.First();
+            TimeZone = TimeSpan.Zero;
         }
 
         public FlowBoundaryQuantityType FlowQuantity { get; private set; }

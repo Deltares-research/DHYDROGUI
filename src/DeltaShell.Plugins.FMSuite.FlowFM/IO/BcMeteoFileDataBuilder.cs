@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var argument in data.Arguments)
             {
                 var quantity = forcingTypeDefinition.ArgumentDefinitions[i++];
-                bcBlockData.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime));
+                bcBlockData.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime, TimeSpan.Zero));
             }
 
             string quantityName;
@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         var variable = fmMeteoField.Data.Arguments[arg.Key];
                         variable.Values.Clear();
-                        variable.SetValues(ParseValues(arg.Value, variable.ValueType));
+                        variable.SetValues(ParseValues(arg.Value, variable.ValueType, data.SupportPoint));
                         if (variable is IVariable<DateTime>)
                         {
                             variable.InterpolationType = timeInterpolationType;
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     foreach (var comp in compVariables)
                     {
                         var variable = fmMeteoField.Data.Components[0];
-                        variable.SetValues(ParseValues(comp.Value, variable.ValueType));
+                        variable.SetValues(ParseValues(comp.Value, variable.ValueType, data.SupportPoint));
                     }
                 }
             }

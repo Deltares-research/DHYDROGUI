@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Units;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -628,6 +630,114 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(new[] { 0.9, 1.1 },
                             boundaryConditionSet.BoundaryConditions[2].GetDataAtPoint(2).Components[0].Values);
 
+        }
+        
+        
+        [Test]
+        [TestCaseSource(nameof(BcBlockDataWithTimeZoneOffset))]
+        public void GivenABoundaryConditionSetAndABcBlockDataWithTimeZoneOffset_WhenInsertBoundaryDataIsCalled_ThenTimeZoneIsExpectedTimeZone(string timeUnit, TimeSpan expectedTimeZone)
+        {
+            // Given
+            const string boundaryName = "tfl_01_0001";
+            const string valUnit = "m";
+            const string quantity = "waterlevelbnd";
+            var builder = new BcFileFlowBoundaryDataBuilder();
+
+            BcBlockData dataBlock = CreateBcBlockData(boundaryName, "support", timeUnit, valUnit, quantity);
+            BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSetWithFlowBoundaryCondition(boundaryName, "sand");
+
+            // When
+            builder.InsertBoundaryData(new[]
+            {
+                boundaryConditionSet
+            }, dataBlock);
+
+            // Then
+            var flowBoundaryCondition = boundaryConditionSet.BoundaryConditions[1] as FlowBoundaryCondition;
+            Assert.That(flowBoundaryCondition, Is.Not.Null);
+            Assert.That(flowBoundaryCondition.TimeZone, Is.EqualTo(expectedTimeZone));
+        }
+        
+        private static BcBlockData CreateBcBlockData(string boundaryName,
+                                                     string supportPointName,
+                                                     string timeUnit,
+                                                     string valUnit,
+                                                     string quantity)
+        {
+            var timeQuantity = new BcQuantityData
+            {
+                Quantity = "time",
+                Unit = timeUnit
+            };
+            timeQuantity.Values.AddRange(new[]
+            {
+                "0",
+                "43200",
+                "86400"
+            });
+
+            var fractionQuantity = new BcQuantityData
+            {
+                Quantity = quantity,
+                Unit = valUnit
+            };
+            fractionQuantity.Values.AddRange(new[]
+            {
+                "1",
+                "2",
+                "3"
+            });
+
+            var dataBlock = new BcBlockData
+            {
+                SupportPoint = supportPointName,
+                FunctionType = "timeseries",
+                LineNumber = 1,
+                TimeInterpolationType = "linear",
+                VerticalInterpolationType = "linear",
+                VerticalPositionType = "single"
+            };
+            dataBlock.SupportPoint = $"{boundaryName}_0001";
+
+            dataBlock.Quantities.AddRange(new[]
+            {
+                timeQuantity,
+                fractionQuantity
+            });
+
+            return dataBlock;
+        }
+        
+        private static BoundaryConditionSet CreateBoundaryConditionSetWithFlowBoundaryCondition(string boundaryName, string sedimentFractionName)
+        {
+            var feature = new Feature2D
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(1, 0),
+                    new Coordinate(2, 0)
+                }),
+                Name = boundaryName
+            };
+
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
+
+            var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration,
+                                                              BoundaryConditionDataType.TimeSeries)
+            {
+                SedimentFractionName = sedimentFractionName,
+                Feature = feature
+            };
+
+            boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
+
+            return boundaryConditionSet;
+        }
+        
+        public static IEnumerable<TestCaseData> BcBlockDataWithTimeZoneOffset()
+        {
+            yield return new TestCaseData("seconds since 1992-09-01 18:00:00 +04:40", new TimeSpan(4,40,0));
+            yield return new TestCaseData("seconds since 1992-09-01 18:00:00 -10:12", new TimeSpan(-10,-12,0));
         }
     }
 }

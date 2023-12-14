@@ -62,6 +62,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         /// When true - only <see cref="float"/> can be used to define Z layers.
         /// </summary>
         bool IsVerticallyUniform { get; }
+        
+        /// <summary>
+        /// Gets or sets the timezone for this boundary condition.
+
+        /// </summary>
+        TimeSpan TimeZone { get; set; }
 
         /// <summary>
         /// Adds a new point and data, depth layers. Returns the created function.

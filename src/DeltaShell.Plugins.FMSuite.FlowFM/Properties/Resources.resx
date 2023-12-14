@@ -685,4 +685,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="BndExtForceFile_ReadIniFile_Reading_external_forcings_from__0__" xml:space="preserve">
     <value>Reading external forcings from {0}.</value>
   </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00" xml:space="preserve">
+    <value>Time zone of boundary condition '{0}' falls outside of allowed range -12:00 and +12:00</value>
+  </data>
 </root>

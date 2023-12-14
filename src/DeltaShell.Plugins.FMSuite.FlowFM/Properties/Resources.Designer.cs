@@ -1182,6 +1182,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Time zone of boundary condition &apos;{0}&apos; falls outside of allowed range -12:00 and +12:00.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00 {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone" +
+                        "_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A morphology boundary condition cannot have more than one point with generated data..
         /// </summary>
         public static string WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_ {

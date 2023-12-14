@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
               {new[] {BedLoadAtBound}, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
         };
 
-        protected override BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument, DateTime? referenceTime)
+        protected override BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument, DateTime? referenceTime, TimeSpan timeZone)
         {
             var refTime = "";
             Func<double, double> converter = null;
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return Enumerable.Empty<string>();
         }
 
-        protected override IEnumerable<object> ParseValues(BcQuantityData data, Type type)
+        protected override IEnumerable<object> ParseValues(BcQuantityData data, Type type, string supportPointName)
         {
             IEnumerable<string> stringValues = data.Values;
             string format = data.Unit;

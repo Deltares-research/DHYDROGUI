@@ -38,6 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
             pointDepthLayerDefinitions = new EventedList<VerticalProfileDefinition>();
             pointDepthLayerDefinitions.CollectionChanged += PointDepthLayerDefinitionsCollectionChanged;
+            TimeZone = TimeSpan.Zero;
         }
 
         protected override void UpdateName()
@@ -67,6 +68,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         public abstract bool IsHorizontallyUniform { get; }
 
         public abstract bool IsVerticallyUniform { get; }
+        
+        public TimeSpan TimeZone { get; set; }
 
         public abstract IUnit VariableUnit { get; }
 

@@ -5,8 +5,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Extensions.Feature;
@@ -575,7 +573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                     ? typeof (string)
                                     : typeof (double);
 
-                                var parsedArgumentValues = ParseValues(argVariables[0], type).ToList();
+                                var parsedArgumentValues = ParseValues(argVariables[0], type, data.SupportPoint).ToList();
 
                                 var indexMapping = parsedArgumentValues.Select(existingArgument.IndexOf).ToList();
 
@@ -585,7 +583,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                     var l = (k%2 == 0) ? 2*k + 2 : 2*k + 1;
                                     var variable = existingData.Components[l];
                                     var variableValues = variable.GetValues<double>().ToList();
-                                    var values = ParseValues(comp.Value, variable.ValueType).ToList();
+                                    var values = ParseValues(comp.Value, variable.ValueType, data.SupportPoint).ToList();
 
                                     for (int i = 0; i < parsedArgumentValues.Count; ++i)
                                     {
@@ -607,10 +605,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 {
                                     var variable = existingData.Arguments[arg.Key];
                                     variable.Values.Clear();
-                                    variable.SetValues(ParseValues(arg.Value, variable.ValueType));
+                                    variable.SetValues(ParseValues(arg.Value, variable.ValueType, data.SupportPoint));
                                     if (variable is IVariable<DateTime>)
                                     {
                                         variable.InterpolationType = timeInterpolationType;
+                                    }
+                                    
+                                    if (variable.ValueType == typeof(DateTime))
+                                    {
+                                        boundaryCondition.TimeZone = BcQuantityDataParsingHelper.ParseTimeZone(arg.Value.Unit, data.SupportPoint);
                                     }
                                 }
 
@@ -621,7 +624,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                     {
                                         throw new ArgumentOutOfRangeException(comp.Key.Item1.ToString());
                                     }
-                                    variable.SetValues(ParseValues(comp.Value, variable.ValueType));
+                                    variable.SetValues(ParseValues(comp.Value, variable.ValueType, data.SupportPoint));
                                 }
                             }
                             existingData.EndEdit();
@@ -911,63 +914,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        protected virtual IEnumerable<object> ParseValues(BcQuantityData data, Type type)
+        protected virtual IEnumerable<object> ParseValues(BcQuantityData data, Type type, string supportPointName)
         {
             IEnumerable<string> stringValues = data.Values;
             string format = data.Unit;
             if (type == typeof (DateTime))
             {
-                if (String.IsNullOrEmpty(format) || format == "-")
-                {
-                    return
-                        stringValues.Select(s => DateTime.ParseExact(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture))
-                            .Cast<object>();
-                }
-                var splittedFormat = format.SplitOnEmptySpace().ToList();
-                if (splittedFormat[1] == "since")
-                {
-                    var dateString = string.Join(" ", splittedFormat.Skip(2));
-                    DateTime startDate;
-
-                    var succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                        DateTimeStyles.AdjustToUniversal, out startDate);
-
-                    if (!succes)
-                    {
-                        succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd hh:mm:ss",
-                            CultureInfo.InvariantCulture,
-                            DateTimeStyles.AdjustToUniversal, out startDate);
-                    }
-
-                    if (!succes)
-                    {
-                        throw new FormatException("Time format " + dateString + " is not supported by bc file parser");
-                    }
-                    if (splittedFormat[0].ToLower() == "seconds")
-                    {
-                        return
-                            stringValues.Select(s => startDate + new TimeSpan(0, 0, 0, Convert.ToInt32(double.Parse(s))))
-                                .Cast<object>();
-                    }
-                    if (splittedFormat[0].ToLower() == "minutes")
-                    {
-                        return
-                            stringValues.Select(s => startDate + new TimeSpan(0, 0, Convert.ToInt32(double.Parse(s)), 0))
-                                .Cast<object>();
-                    }
-                    if (splittedFormat[0].ToLower() == "hours")
-                    {
-                        return
-                            stringValues.Select(s => startDate + new TimeSpan(0, Convert.ToInt32(double.Parse(s)), 0, 0))
-                                .Cast<object>();
-                    }
-                    if (splittedFormat[0].ToLower() == "days")
-                    {
-                        return
-                            stringValues.Select(s => startDate + new TimeSpan(Convert.ToInt32(double.Parse(s)), 0, 0, 0))
-                                .Cast<object>();
-                    }
-                }
+                return BcQuantityDataParsingHelper.ParseDateTimes(supportPointName, data).Cast<object>();
             }
             if (type == typeof (string))
             {
@@ -1077,7 +1030,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var argument in data.Arguments)
             {
                 var quantity = forcingTypeDefinition.ArgumentDefinitions[i++];
-                bcBlockData.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime));
+                bcBlockData.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime, boundaryCondition.TimeZone));
             }
 
             var skipCorrection = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) && !correctionFile;
@@ -1186,13 +1139,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return forcingTypeDefinition;
         }
 
-        protected virtual BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument, DateTime? referenceTime)
+        protected virtual BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument, DateTime? referenceTime, TimeSpan timeZone)
         {
             var unit = argument.Unit?.Symbol;
             Func<double, double> converter = null;
             if (argument.ValueType == typeof(DateTime) && referenceTime != null)
             {
-                unit = "seconds since " + referenceTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                unit = BcQuantityDataParsingHelper.GetDateTimeUnit(referenceTime.Value, timeZone);
             }
             if (argument.ValueType == typeof (double) && unit?.ToLower() == "deg/h") //convert frequencies to periods...
             {

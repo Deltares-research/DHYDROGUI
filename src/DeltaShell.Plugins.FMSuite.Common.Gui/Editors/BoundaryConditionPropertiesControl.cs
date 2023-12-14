@@ -11,9 +11,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         protected BoundaryConditionPropertiesControl()
         {
             InitializeComponent();
+            TimeZoneTextBox.Text = TimeSpan.Zero.ToString();
         }
-        
+
         private IBoundaryCondition boundaryCondition;
+        
         public virtual IBoundaryCondition BoundaryCondition
         {
             protected get { return boundaryCondition; }
@@ -40,7 +42,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                     dataTypeComboBox.SelectedItem = boundaryCondition.DataType;
                     dataTypeComboBox.SelectedValueChanged += DataTypeComboBoxOnSelectedValueChanged;
                 }
+                UpdateTimeZoneTextBoxForBoundaryCondition();
             }
+        }
+        
+        private void UpdateTimeZoneTextBoxForBoundaryCondition()
+        {
+            TimeZoneTextBox.Text = boundaryCondition == null ? TimeSpan.Zero.ToString() : boundaryCondition.TimeZone.ToString();
         }
 
         public BoundaryConditionEditorController Controller { get; set; }
