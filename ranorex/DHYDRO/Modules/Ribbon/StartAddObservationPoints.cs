@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area.AddObservationPointButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area.AddObservationPointButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area.AddObservationPointButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area2D.AddObservationPointButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area2D.AddObservationPointButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Area2D.AddObservationPointButton.Click();
             Delay.Milliseconds(0);
             
         }

@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="565968a3-b904-44e0-99a2-75e73d7f734b"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="StartAddOrifice"
+	namespace="DHYDRO.Modules.Ribbon">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="ccb1b794-3dac-4204-96d1-396fb4b982ab"
+		sx="891"
+		sy="102"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="da83233e-0ba0-4191-a514-f13d15d7bba0"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/menubar/list[@name='PART_RibbonTabControl']/container[@basetype&lt;'ScrollViewer']/container[@caption='']/list[@automationid='Network1D']/button[@automationid='ButtonAddNewOrifice']
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		StartAddOrifice.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

@@ -178,6 +178,28 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
+			<testmodule
+			id="1305bb8c-8908-485b-9e82-2b69e29f038d"
+			name="CloseUniqueDocumentView"
+			ref="00a1264a-0541-4204-af34-49b608e5c993"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="DocumentViewHeader"
+					datasourceid="7304073f-9512-430d-877d-66c83bb7a083"
+					variableid="c59b92c8-da08-43b9-af0d-b0842c2d175b"
+					variablename="HeaderPanelText">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="HeaderPanelText"
+					datasourceid="7304073f-9512-430d-877d-66c83bb7a083"
+					variableid="c59b92c8-da08-43b9-af0d-b0842c2d175b"
+					variablename="HeaderPanelText">
+					</var>
+				</missingdatabinding>
+			</testmodule>
 			<modulegroup
 			id="14b8dd9a-d701-4ca3-83c0-07347a19c215"
 			name="ImportDFlowFMModel"
@@ -215,6 +237,20 @@
 			id="156c2754-d6e0-4b3f-afad-4a452225347c"
 			name="DrawWestBoundary">
 			</smartfoldernode>
+			<testmodule
+			id="16041bf4-9e66-4ea8-873f-e6e721fab7d7"
+			name="AddWmsLayer"
+			ref="b2458327-5e7e-4dee-a92d-01925cab6a50"
+			type="Recording">
+				<databinding>
+					<var
+					dataname="NameWmsLayer"
+					datasourceid="4756e7dc-6290-42fc-b3df-b2567a10da99"
+					variableid="beb100b1-338a-40cb-88d7-c0742d11d276"
+					variablename="NameWmsLayer">
+					</var>
+				</databinding>
+			</testmodule>
 			<testmodule
 			id="180d8385-f57f-4f6b-968e-18e60ea53106"
 			name="ConfigureInterpolationParameter"
@@ -728,6 +764,22 @@
 			name="QueryTimeSeries"
 			ref="22840b78-eb71-4a50-a3fb-3fe29024e64e"
 			type="Recording">
+				<databinding>
+					<var
+					dataname="TimeSeries"
+					datasourceid="7304073f-9512-430d-877d-66c83bb7a083"
+					variableid="39062ae9-f6ff-445c-8185-18ce296904b9"
+					variablename="NameQueryTimeSeriesCell">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="NameQueryTimeSeriesCell"
+					datasourceid="7304073f-9512-430d-877d-66c83bb7a083"
+					variableid="39062ae9-f6ff-445c-8185-18ce296904b9"
+					variablename="NameQueryTimeSeriesCell">
+					</var>
+				</missingdatabinding>
 			</testmodule>
 			<smartfoldernode
 			id="423e8cda-bbab-4cfa-a47b-bab44b328dab"
@@ -736,6 +788,13 @@
 			<smartfoldernode
 			id="43a8a07e-34d1-49d8-bd8a-ff0edfaa9dff"
 			name="CloseBCEditorView">
+				<parameters>
+					<param
+					mask="False"
+					name="HeaderPanelText"
+					value="Boundary conditions">
+					</param>
+				</parameters>
 			</smartfoldernode>
 			<testmodule
 			id="45c9e7f1-5c27-4d56-ae33-57aefb42dead"
@@ -760,7 +819,7 @@
 					<param
 					mask="False"
 					name="NameWmsLayer"
-					value="Bing Hybrid">
+					value="Open Street Map">
 					</param>
 					<param
 					mask="False"
@@ -781,6 +840,11 @@
 					mask="False"
 					name="maximumValueRangeLegendProperties"
 					value="-0.5">
+					</param>
+					<param
+					mask="False"
+					name="ZoomAmount"
+					value="240">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -1016,6 +1080,14 @@
 			name="CloseUniqueDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
+				<databinding>
+					<var
+					dataname="HeaderPanelText"
+					datasourceid="85cfeed4-ab71-490f-b6fb-de06b8a92091"
+					variableid="c59b92c8-da08-43b9-af0d-b0842c2d175b"
+					variablename="HeaderPanelText">
+					</var>
+				</databinding>
 			</testmodule>
 			<smartfoldernode
 			errorbehavior="ContinueParent"
@@ -1146,6 +1218,14 @@
 			name="CloseUniqueDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
+				<databinding>
+					<var
+					dataname="HeaderPanelText"
+					datasourceid="91e0e23d-8dce-487c-9edb-a026003705de"
+					variableid="c59b92c8-da08-43b9-af0d-b0842c2d175b"
+					variablename="HeaderPanelText">
+					</var>
+				</databinding>
 			</testmodule>
 			<testmodule
 			id="62e4e203-788f-4645-ab20-972ab4a9efbe"
@@ -1320,6 +1400,16 @@
 					name="WorldCoordinatesObservationPoint"
 					value="40533;378581">
 					</param>
+					<param
+					mask="False"
+					name="TimeSeries"
+					value="water level (waterlevel)">
+					</param>
+					<param
+					mask="False"
+					name="DocumentViewHeader"
+					value="water level">
+					</param>
 				</parameters>
 			</smartfoldernode>
 			<modulegroup
@@ -1422,7 +1512,7 @@
 			</modulegroup>
 			<testmodule
 			id="7ce90888-e1fa-4e5b-a2af-3809ee150421"
-			name="MakeOutputMapVariableVisible"
+			name="MakeOutputMapVariableVisible2D"
 			ref="ca3eeb8a-6166-4e23-be36-1c1d6ae8a4fa"
 			type="Recording">
 				<databinding>
@@ -1519,6 +1609,13 @@
 			<smartfoldernode
 			id="85cfeed4-ab71-490f-b6fb-de06b8a92091"
 			name="CloseMapView">
+				<parameters>
+					<param
+					mask="False"
+					name="HeaderPanelText"
+					value="FlowFM">
+					</param>
+				</parameters>
 			</smartfoldernode>
 			<smartfoldernode
 			id="8748ea1e-e631-4180-ab6b-d8d7560cdf69"
@@ -1603,6 +1700,13 @@
 			<smartfoldernode
 			id="91e0e23d-8dce-487c-9edb-a026003705de"
 			name="CloseBCEditorView">
+				<parameters>
+					<param
+					mask="False"
+					name="HeaderPanelText"
+					value="Boundary conditions">
+					</param>
+				</parameters>
 			</smartfoldernode>
 			<testmodule
 			id="921f6d38-13e7-4e22-8ed8-edefcbbf0566"
@@ -2360,25 +2464,19 @@
 			name="CloseUniqueDocumentView"
 			ref="00a1264a-0541-4204-af34-49b608e5c993"
 			type="Recording">
+				<databinding>
+					<var
+					dataname="HeaderPanelText"
+					datasourceid="43a8a07e-34d1-49d8-bd8a-ff0edfaa9dff"
+					variableid="c59b92c8-da08-43b9-af0d-b0842c2d175b"
+					variablename="HeaderPanelText">
+					</var>
+				</databinding>
 			</testmodule>
 			<smartfoldernode
 			id="da6169af-7184-4bbc-bf56-13fbb387c1f9"
 			name="DrawCrossSections">
 			</smartfoldernode>
-			<testmodule
-			id="da9b238c-ba8e-4d27-b5d4-6d8d5cbb6805"
-			name="AddWmsLayer"
-			ref="3991aa22-d888-4b92-9bd0-c66dd1ec1041"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="NameWmsLayer"
-					datasourceid="4756e7dc-6290-42fc-b3df-b2567a10da99"
-					variableid="beb100b1-338a-40cb-88d7-c0742d11d276"
-					variablename="NameWmsLayer">
-					</var>
-				</databinding>
-			</testmodule>
 			<smartfoldernode
 			datasource="TimeSeriesEastBC"
 			id="db391f64-325e-4e97-863e-201392b99128"
@@ -2581,6 +2679,14 @@
 			name="MoveMouseWheelUpwards"
 			ref="1cc8d8f9-47fe-41a8-9b0a-7e0063144f08"
 			type="Recording">
+				<databinding>
+					<var
+					dataname="ZoomAmount"
+					datasourceid="4756e7dc-6290-42fc-b3df-b2567a10da99"
+					variableid="85a93012-814f-4f72-a31c-c1a549fe1c24"
+					variablename="ZoomAmount">
+					</var>
+				</databinding>
 			</testmodule>
 			<modulegroup
 			id="efb6ed25-01f0-45b5-a544-66a8b1722c1d"
@@ -3546,6 +3652,10 @@
 							id="9e8d24f5-62e6-49ba-a074-1bdcdca35259"
 							name="ScreenshotCentralDocumentView">
 							</testmodule>
+							<testmodule
+							id="1305bb8c-8908-485b-9e82-2b69e29f038d"
+							name="CloseUniqueDocumentView">
+							</testmodule>
 						</smartfoldernode>
 						<smartfoldernode
 						id="4756e7dc-6290-42fc-b3df-b2567a10da99"
@@ -3555,7 +3665,7 @@
 							name="ShowMapPanel">
 							</testmodule>
 							<testmodule
-							id="da9b238c-ba8e-4d27-b5d4-6d8d5cbb6805"
+							id="16041bf4-9e66-4ea8-873f-e6e721fab7d7"
 							name="AddWmsLayer">
 							</testmodule>
 							<testmodule
@@ -3564,7 +3674,7 @@
 							</testmodule>
 							<testmodule
 							id="7ce90888-e1fa-4e5b-a2af-3809ee150421"
-							name="MakeOutputMapVariableVisible">
+							name="MakeOutputMapVariableVisible2D">
 							</testmodule>
 							<testmodule
 							id="9cc1b9a6-0814-4344-aca5-2b5e4f7e268d"

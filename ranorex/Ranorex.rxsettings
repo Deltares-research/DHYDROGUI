@@ -84,12 +84,12 @@ rxversion="10.7">
 	<rxpath.weights>
 		<rxpathweights>
 			<rule
-			attribute="accessiblename"
-			capability="accessible"
+			attribute=""
+			capability="menuitem"
 			conditionsoperator="or"
 			enabled="True"
 			name="RuleForObstacleType"
-			setweight="99">
+			setweight="115">
 			</rule>
 			<rule
 			attribute="id"
@@ -465,7 +465,7 @@ rxversion="10.7">
 		True
 	</plugins.win32.EnableDynamicMsaa>
 	<plugins.win32.ProcessWhitelist>
-		DeltaShell.Gui;chrome;
+		DeltaShell.Gui;
 	</plugins.win32.ProcessWhitelist>
 	<plugins.win32.ProcessBlacklist>
 	</plugins.win32.ProcessBlacklist>

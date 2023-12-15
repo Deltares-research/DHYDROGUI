@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<recordtable
+embeddedrepository="False"
+id="67b3d6fd-6b0c-4563-8f6e-17eb15b3d49f"
+mode="Global">
+	<repeatcount>
+		1
+	</repeatcount>
+	<turbomode>
+		False
+	</turbomode>
+	<genreport>
+		True
+	</genreport>
+	<speedfactor>
+		1
+	</speedfactor>
+	<useDefaultItemLogging>
+		True
+	</useDefaultItemLogging>
+	<codegen
+	classname="ClickButtonInTimeNavigator"
+	namespace="DHYDRO.Modules.TimeNavigator">
+	</codegen>
+	<variables>
+	</variables>
+	<recorditems>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="ead2e71b-381f-43f7-ad86-2fdf978aeadd"
+		sx="0"
+		sy="0"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="47740fb7-4876-4a03-b478-72aded569c9b"
+			sourcename="RepositoryEditor">
+				<path>
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@controltypename='WinFormsAdapter']/container[@controlname='TimeSeriesNavigator']/container[@controlname='panelControls']/toolbar[@controlname='toolStrip1']/button[@accessiblename=$ButtonName]
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
+	</recorditems>
+	<repository
+	id="1172ad89-feac-41dc-8339-48a2c92780c2"
+	name="DHYDRO1D2DRepository"
+	relativepath="..\..\DHYDRO1D2DRepository.rxrep">
+		<codegen
+		classname="DHYDRO1D2DRepository"
+		namespace="DHYDRO">
+		</codegen>
+		<rootfolder
+		id="fe79b221-ceb8-4c0d-a388-04ca7c0e64d9"
+		name="_rootdummy_">
+		</rootfolder>
+	</repository>
+	<usercodefile
+	lang="CSharp">
+		ClickButtonInTimeNavigator.UserCode.cs
+	</usercodefile>
+	<references>
+	</references>
+</recordtable>

@@ -53,6 +53,16 @@ namespace DHYDRO.Modules.DocumentViews
 
 #region Variables
 
+        /// <summary>
+        /// Gets or sets the value of variable HeaderPanelText.
+        /// </summary>
+        [TestVariable("c59b92c8-da08-43b9-af0d-b0842c2d175b")]
+        public string HeaderPanelText
+        {
+            get { return repo.HeaderPanelText; }
+            set { repo.HeaderPanelText = value; }
+        }
+
 #endregion
 
         /// <summary>
@@ -79,8 +89,11 @@ namespace DHYDRO.Modules.DocumentViews
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.TabPageList.TabPage.DocumentCloseButton' at Center.", repo.DSWindow.ListView.TabPageList.TabPage.DocumentCloseButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.TabPageList.TabPage.DocumentCloseButton.Click();
+            Report.Log(ReportLevel.Info, "Wait", "Waiting 5s to exist. Associated repository item: 'DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButton'", repo.DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButtonInfo, new ActionTimeout(5000), new RecordItemIndex(0));
+            repo.DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButtonInfo.WaitForExists(5000);
+            
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButton' at Center.", repo.DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButtonInfo, new RecordItemIndex(1));
+            repo.DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButton.Click();
             Delay.Milliseconds(0);
             
         }

@@ -111,7 +111,7 @@ namespace DHYDRO.Modules.DocumentViews
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Move item 'DSWindow.ListView.CentralMapContainer.CentralMap' at position from variable $PixelCoordinates.", repo.DSWindow.ListView.CentralMapContainer.CentralMapInfo, new RecordItemIndex(2));
             repo.DSWindow.ListView.CentralMapContainer.CentralMap.MoveTo(PixelCoordinates, 10);
-            Delay.Milliseconds(0);
+            Delay.Milliseconds(5580);
             
         }
 

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <recordtable
 embeddedrepository="False"
-id="ea292564-9c6e-4072-8380-ce96f8a1fefb"
+id="4a87fd22-0092-4a00-bc50-8f2547d0eb19"
 mode="Global">
 	<repeatcount>
 		1
@@ -19,8 +19,8 @@ mode="Global">
 		True
 	</useDefaultItemLogging>
 	<codegen
-	classname="CloseAttributeTable"
-	namespace="DHYDRO.Modules.DocumentViews">
+	classname="RunIntegratedModel"
+	namespace="DHYDRO.Modules.IntegratedModelSettings">
 	</codegen>
 	<variables>
 	</variables>
@@ -33,26 +33,26 @@ mode="Global">
 		loc="Center"
 		movetime="300ms"
 		optional="False"
-		searchpropertyid="0c4d8823-ad4d-4227-8f02-e6cd7ad6a710"
-		sx="410"
-		sy="422"
+		searchpropertyid="d5ed4ea7-6aa7-48f6-b794-257ab13feaff"
+		sx="1108"
+		sy="875"
 		warnoutofbounds="False">
 			<comment>
 			</comment>
 			<bindings>
 			</bindings>
 			<info
-			id="145b8214-90f4-47a6-95c4-bce87c9aa5d5"
-			sourcename="Recorder">
+			id="c73928fc-8e02-477b-976d-d9f7fffd01c6"
+			sourcename="RepositoryEditor">
 				<element
 				capabilities="wpfelement, wpfgroupelement"
 				dontcache="False"
 				enabled="True"
 				flavor="wpf"
 				hasfocus="False"
-				index="1"
+				index="2"
 				prefcap="button"
-				rect="400,412,24,24"
+				rect="1071,860,75,31"
 				role="button"
 				snapElem=""
 				valid="True"
@@ -63,9 +63,9 @@ mode="Global">
 						False
 					</attribute>
 					<attribute
-					name="automationid"
+					name="text"
 					type="System.String">
-						DocumentCloseButton
+						Run
 					</attribute>
 					<attribute
 					name="automationproperties_acceleratorkey"
@@ -117,11 +117,6 @@ mode="Global">
 						Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button&gt;
 					</attribute>
 					<attribute
-					name="name"
-					type="System.String">
-						DocumentCloseButton
-					</attribute>
-					<attribute
 					name="type"
 					type="System.String">
 						DepoGroup&lt;Button&gt;
@@ -129,20 +124,20 @@ mode="Global">
 					<attribute
 					name="ranorexgroupleaderid"
 					type="System.Guid">
-						406d1e2d-32ce-4402-b014-c98f949c4356
+						e7bed132-089a-4eb1-ad7c-aa5573ff3b58
 					</attribute>
 					<attribute
 					name="ranorexgroupmemberids"
 					type="System.Guid[]">
-						AAEAAAD/////AQAAAAAAAAAHAQAAAAABAAAAAwAAAAMLU3lzdGVtLkd1aWQE/v///wtTeXN0ZW0u
+						AAEAAAD/////AQAAAAAAAAAHAQAAAAABAAAABAAAAAMLU3lzdGVtLkd1aWQE/v///wtTeXN0ZW0u
 R3VpZAsAAAACX2ECX2ICX2MCX2QCX2UCX2YCX2cCX2gCX2kCX2oCX2sAAAAAAAAAAAAAAAgHBwIC
-AgICAgICLR5tQM4yAkSwFMmPlJxDVgH9/////v///wGrfB2AeW9EljO5UXn9h9YB/P////7///8O
-j756ZximTYBVIXmXnDSKCw==
+AgICAgICMtG+55oIsU6tfKpVc/87WAH9/////v///6Az2OmpDjNJo/kQZ6YWfWIB/P////7///+y
+Gn04oSVYT4jPTdqwBxIeAfv////+////eQVy1lMTd06eeXl1gLseyws=
 					</attribute>
 					<attribute
 					name="ranorexgroupobjectid"
 					type="System.Guid">
-						f1775ed2-a894-49cc-a140-54aff3d499fd
+						7693e596-6681-40a6-982c-85b07cac460d
 					</attribute>
 					<dynamicattribute
 					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.ActualHeight property of type Double."
@@ -223,6 +218,18 @@ j756ZximTYBVIXmXnDSKCw==
 					name="ClipToBounds"
 					readonly="False"
 					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.Column property of type Int32."
+					name="Column"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.ColumnSpan property of type Int32."
+					name="ColumnSpan"
+					readonly="False"
+					type="System.Int32">
 					</dynamicattribute>
 					<dynamicattribute
 					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.CommandParameter property of type Object."
@@ -348,6 +355,18 @@ j756ZximTYBVIXmXnDSKCw==
 					type="System.Boolean">
 					</dynamicattribute>
 					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.IsInputMethodEnabled property of type Boolean."
+					name="IsInputMethodEnabled"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.IsItemsHost property of type Boolean."
+					name="IsItemsHost"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
 					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.IsManipulationEnabled property of type Boolean."
 					name="IsManipulationEnabled"
 					readonly="False"
@@ -356,6 +375,12 @@ j756ZximTYBVIXmXnDSKCw==
 					<dynamicattribute
 					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.IsPressed property of type Boolean."
 					name="IsPressed"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.IsSharedSizeScope property of type Boolean."
+					name="IsSharedSizeScope"
+					readonly="False"
 					type="System.Boolean">
 					</dynamicattribute>
 					<dynamicattribute
@@ -431,6 +456,24 @@ j756ZximTYBVIXmXnDSKCw==
 					type="System.Windows.Point, WindowsBase, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
 					</dynamicattribute>
 					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.Row property of type Int32."
+					name="Row"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.RowSpan property of type Int32."
+					name="RowSpan"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.ShowGridLines property of type Boolean."
+					name="ShowGridLines"
+					readonly="False"
+					type="System.Boolean">
+					</dynamicattribute>
+					<dynamicattribute
 					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.SnapsToDevicePixels property of type Boolean."
 					name="SnapsToDevicePixels"
 					readonly="False"
@@ -491,64 +534,19 @@ j756ZximTYBVIXmXnDSKCw==
 					readonly="False"
 					type="System.Double">
 					</dynamicattribute>
+					<dynamicattribute
+					description="The WPF Ranorex.Plugin.Wpf.DepoGroup&lt;System.Windows.Controls.Button>.ZIndex property of type Int32."
+					name="ZIndex"
+					readonly="False"
+					type="System.Int32">
+					</dynamicattribute>
 				</element>
 				<path>
-					/form[@automationid='Window']/list[@automationid='ListView']//container[@controlname='ProjectItemMapView']//tabpagelist[@instance='0']/button[@automationid='MenuDropDownButton']/tabpage[@index='0']/button[@automationid='DocumentCloseButton']
+					/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container/container[@controlname='ProjectItemMapView']/container/container/element/tabpagelist/container[1]/container[@caption='']/container[@controlname='HydroModelSettings']/element[@controlname='elementHost1']/container[@caption='']/text[@caption='Workflows']/container[@caption='']/button[@text='Run']
 				</path>
 				<robustPath>
 				</robustPath>
 			</info>
-			<helperscreenshot
-			guid="5b742f79-9932-490b-b832-a847a15b26d0">
-				/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDABwTFRgVERwYFhgfHRwhKUUtKSYmKVQ8QDJFZFhpZ2JY
-YF9ufJ6GbnWWd19giruLlqOpsbOxa4TC0MGszp6usar/2wBDAR0fHykkKVEtLVGqcmByqqqqqqqq
-qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/wAARCACQAJADASIA
-AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
-AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
-ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
-p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
-AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
-BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
-U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
-uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDpKKKK
-ACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA
-KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKZiX++n/fJ/
-xoxL/fT/AL5P+NAD6KZiX++n/fJ/xoxL/fT/AL5P+NAD6KZiX++n/fJ/xoxL/fT/AL5P+NAD6KZi
-X++n/fJ/xrGijubq7ulF5LGI5CMAnHU+/HSk3Y0p01JNt2SNyisn+z7r/oIzfr/jR/Z91/0EZv1/
-xpXl2K5Kf8/4M1qKwb6G6tIBJ9umfLBcZI7H39q3qE76CnTUUpJ3TCiiiqMgooooAKKKKAKsd7ve
-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
-			</helperscreenshot>
 		</mouseitem>
 	</recorditems>
 	<repository
@@ -566,7 +564,7 @@ h/hSICJnyxb5V5OPU1JTB/r3/wB1f5mgB9FFFABRRRQB/9k=
 	</repository>
 	<usercodefile
 	lang="CSharp">
-		CloseAttributeTable.UserCode.cs
+		RunIntegratedModel.UserCode.cs
 	</usercodefile>
 	<references>
 	</references>

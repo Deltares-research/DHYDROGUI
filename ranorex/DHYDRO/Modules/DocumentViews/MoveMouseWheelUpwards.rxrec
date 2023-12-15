@@ -23,6 +23,11 @@ mode="Global">
 	namespace="DHYDRO.Modules.DocumentViews">
 	</codegen>
 	<variables>
+		<var
+		id="85a93012-814f-4f72-a31c-c1a549fe1c24"
+		name="ZoomAmount">
+			240
+		</var>
 	</variables>
 	<recorditems>
 		<mousewheelitem
@@ -34,6 +39,10 @@ mode="Global">
 			<comment>
 			</comment>
 			<bindings>
+				<binding
+				target="Delta"
+				variable="ZoomAmount">
+				</binding>
 			</bindings>
 		</mousewheelitem>
 		<explicitdelayitem

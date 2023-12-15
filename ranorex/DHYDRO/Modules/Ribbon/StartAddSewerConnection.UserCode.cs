@@ -20,9 +20,9 @@ using Ranorex.Core;
 using Ranorex.Core.Repository;
 using Ranorex.Core.Testing;
 
-namespace DHYDRO.Modules.DocumentViews
+namespace DHYDRO.Modules.Ribbon
 {
-    public partial class CloseAttributeTable
+    public partial class StartAddSewerConnection
     {
         /// <summary>
         /// This method gets called right after the recording has been started.

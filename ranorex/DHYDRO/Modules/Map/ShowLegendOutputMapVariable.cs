@@ -89,8 +89,8 @@ namespace DHYDRO.Modules.Map
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Right Click item 'DSWindow.ListView.OutputMapTreeItem.OutputMapFileTreeItem.OutputMapVariableTreeItem.OutputMapVariableText' at Center.", repo.DSWindow.ListView.OutputMapTreeItem.OutputMapFileTreeItem.OutputMapVariableTreeItem.OutputMapVariableTextInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.OutputMapTreeItem.OutputMapFileTreeItem.OutputMapVariableTreeItem.OutputMapVariableText.Click(System.Windows.Forms.MouseButtons.Right);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Right Click item 'DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableText2D' at Center.", repo.DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableText2DInfo, new RecordItemIndex(0));
+            repo.DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableText2D.Click(System.Windows.Forms.MouseButtons.Right);
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));

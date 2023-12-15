@@ -102,12 +102,12 @@ namespace DHYDRO.Modules.ModelSettings
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'DSWindow.ListView.PropertyItemTree'.", repo.DSWindow.ListView.PropertyItemTreeInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.PropertyItemTree.Focus();
+            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'PropertyItemTree'.", repo.PropertyItemTreeInfo, new RecordItemIndex(0));
+            repo.PropertyItemTree.Focus();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.PropertyItemTree' at Center.", repo.DSWindow.ListView.PropertyItemTreeInfo, new RecordItemIndex(1));
-            repo.DSWindow.ListView.PropertyItemTree.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'PropertyItemTree' at Center.", repo.PropertyItemTreeInfo, new RecordItemIndex(1));
+            repo.PropertyItemTree.Click();
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Keyboard", "Key sequence '{LControlKey down}{Akey}{LControlKey up}{Delete}' with focus on 'DSWindow.ListView.PropertyPanel.Edit'.", repo.DSWindow.ListView.PropertyPanel.EditInfo, new RecordItemIndex(2));

@@ -81,7 +81,7 @@ namespace DHYDRO.Code
 
         private static double ToDouble(string doubleStr)
         {
-            return double.Parse(doubleStr, CultureInfo.CurrentCulture);
+        	return double.Parse(doubleStr, NumberStyles.Any, CultureInfo.CurrentCulture);
         }
     }
 }

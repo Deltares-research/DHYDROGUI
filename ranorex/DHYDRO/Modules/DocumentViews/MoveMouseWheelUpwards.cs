@@ -41,6 +41,7 @@ namespace DHYDRO.Modules.DocumentViews
         /// </summary>
         public MoveMouseWheelUpwards()
         {
+            ZoomAmount = "240";
         }
 
         /// <summary>
@@ -52,6 +53,18 @@ namespace DHYDRO.Modules.DocumentViews
         }
 
 #region Variables
+
+        string _ZoomAmount;
+
+        /// <summary>
+        /// Gets or sets the value of variable ZoomAmount.
+        /// </summary>
+        [TestVariable("85a93012-814f-4f72-a31c-c1a549fe1c24")]
+        public string ZoomAmount
+        {
+            get { return _ZoomAmount; }
+            set { _ZoomAmount = value; }
+        }
 
 #endregion
 
@@ -79,8 +92,8 @@ namespace DHYDRO.Modules.DocumentViews
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse scroll Vertical by 240 units.", new RecordItemIndex(0));
-            Mouse.ScrollWheel(240);
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse scroll Vertical by number of units from variable $ZoomAmount.", new RecordItemIndex(0));
+            Mouse.ScrollWheel(Int32.Parse(ZoomAmount));
             Delay.Milliseconds(300);
             
             Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));

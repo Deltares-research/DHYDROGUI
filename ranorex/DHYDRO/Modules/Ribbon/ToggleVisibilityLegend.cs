@@ -79,8 +79,8 @@ namespace DHYDRO.Modules.Ribbon
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.LegendeButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.LegendeButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.LegendeButton.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Decorations.LegendButton' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Decorations.LegendButtonInfo, new RecordItemIndex(0));
+            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Decorations.LegendButton.Click();
             Delay.Milliseconds(0);
             
         }

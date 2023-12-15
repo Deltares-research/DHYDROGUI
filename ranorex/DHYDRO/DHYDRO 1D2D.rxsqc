@@ -1,0 +1,12 @@
+[
+  {
+    "Enabled": "True",
+    "TestSuite": "D_FlowFM_Tutorials",
+    "RunConfig": "TestRun"
+  },
+  {
+    "Enabled": "True",
+    "TestSuite": "Urban_Modelling_1_Workflow",
+    "RunConfig": "TestRun"
+  }
+]

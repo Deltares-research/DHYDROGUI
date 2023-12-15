@@ -20,48 +20,38 @@ using Ranorex.Core;
 using Ranorex.Core.Testing;
 using Ranorex.Core.Repository;
 
-namespace DHYDRO.Modules.DocumentViews
+namespace DHYDRO.Modules.Ribbon
 {
 #pragma warning disable 0436 //(CS0436) The type 'type' in 'assembly' conflicts with the imported type 'type2' in 'assembly'. Using the type defined in 'assembly'.
     /// <summary>
-    ///The CloseAttributeTable recording.
+    ///The StartAddWeir recording.
     /// </summary>
-    [TestModule("ea292564-9c6e-4072-8380-ce96f8a1fefb", ModuleType.Recording, 1)]
-    public partial class CloseAttributeTable : ITestModule
+    [TestModule("434b4fea-ff8c-4f86-8143-d88f5c74891e", ModuleType.Recording, 1)]
+    public partial class StartAddWeir : ITestModule
     {
         /// <summary>
         /// Holds an instance of the global::DHYDRO.DHYDRO1D2DRepository repository.
         /// </summary>
         public static global::DHYDRO.DHYDRO1D2DRepository repo = global::DHYDRO.DHYDRO1D2DRepository.Instance;
 
-        static CloseAttributeTable instance = new CloseAttributeTable();
+        static StartAddWeir instance = new StartAddWeir();
 
         /// <summary>
         /// Constructs a new instance.
         /// </summary>
-        public CloseAttributeTable()
+        public StartAddWeir()
         {
         }
 
         /// <summary>
         /// Gets a static instance of this recording.
         /// </summary>
-        public static CloseAttributeTable Instance
+        public static StartAddWeir Instance
         {
             get { return instance; }
         }
 
 #region Variables
-
-        /// <summary>
-        /// Gets or sets the value of variable TextAttributeTable.
-        /// </summary>
-        [TestVariable("e1d949c6-ef32-44b1-9a7e-a2137b7a46b7")]
-        public string TextAttributeTable
-        {
-            get { return repo.TextAttributeTable; }
-            set { repo.TextAttributeTable = value; }
-        }
 
 #endregion
 
@@ -89,8 +79,8 @@ namespace DHYDRO.Modules.DocumentViews
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.CentralMapContainer.AttributeTableTab.ButtonDocumentClose' at Center.", repo.DSWindow.ListView.CentralMapContainer.AttributeTableTab.ButtonDocumentCloseInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.CentralMapContainer.AttributeTableTab.ButtonDocumentClose.Click();
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewWeir' at Center.", repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewWeirInfo, new RecordItemIndex(0));
+            repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Network1D.ButtonAddNewWeir.Click();
             Delay.Milliseconds(0);
             
         }

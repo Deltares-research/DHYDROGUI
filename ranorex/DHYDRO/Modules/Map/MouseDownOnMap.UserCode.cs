@@ -20,9 +20,9 @@ using Ranorex.Core;
 using Ranorex.Core.Repository;
 using Ranorex.Core.Testing;
 
-namespace DHYDRO.Modules.Application
+namespace DHYDRO.Modules.Map
 {
-    public partial class AddWmsLayer
+    public partial class MouseDownOnMap
     {
         /// <summary>
         /// This method gets called right after the recording has been started.
@@ -30,7 +30,12 @@ namespace DHYDRO.Modules.Application
         /// </summary>
         private void Init()
         {
-            // Your recording specific initialization code goes here.
+            SetPixelCoordinates();
+        }
+
+        private void SetPixelCoordinates()
+        {
+            PixelCoordinates = MapCoordinateHelper.GetPixelCoordinatesValue(WorldCoordinates);
         }
 
     }

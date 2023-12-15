@@ -69,6 +69,9 @@ src/DeltaShell.Dimr/dimr_xsd/dimr.cs
 
 # Ranorex
 [Rr]eports
+RanorexReport.css
+RanorexReport.png
+RanorexReport.xsl
 *.rxlog
 *.rxlog.data
 *.rxuser

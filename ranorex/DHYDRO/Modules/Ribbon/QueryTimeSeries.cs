@@ -53,6 +53,16 @@ namespace DHYDRO.Modules.Ribbon
 
 #region Variables
 
+        /// <summary>
+        /// Gets or sets the value of variable NameQueryTimeSeriesCell.
+        /// </summary>
+        [TestVariable("39062ae9-f6ff-445c-8185-18ce296904b9")]
+        public string NameQueryTimeSeriesCell
+        {
+            get { return repo.NameQueryTimeSeriesCell; }
+            set { repo.NameQueryTimeSeriesCell = value; }
+        }
+
 #endregion
 
         /// <summary>
@@ -83,18 +93,12 @@ namespace DHYDRO.Modules.Ribbon
             repo.DSWindow.ListView.MenuBar.RibbonTabControl.Ribbon.Tools.QueryTimeSeries.Click();
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'GridBasedDialog.WaterLevelCell' at 25;12.", repo.GridBasedDialog.WaterLevelCellInfo, new RecordItemIndex(1));
-            repo.GridBasedDialog.WaterLevelCell.Click("25;12");
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'GridBasedDialog.GenericQueryTimeSeriesCell' at 25;12.", repo.GridBasedDialog.GenericQueryTimeSeriesCellInfo, new RecordItemIndex(1));
+            repo.GridBasedDialog.GenericQueryTimeSeriesCell.Click("25;12");
             Delay.Milliseconds(0);
             
             Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'GridBasedDialog.ButtonOk' at 47;19.", repo.GridBasedDialog.ButtonOkInfo, new RecordItemIndex(2));
             repo.GridBasedDialog.ButtonOk.Click("47;19");
-            Delay.Milliseconds(0);
-            
-            Report.Screenshot(ReportLevel.Info, "User", "", repo.DSWindow.ListView.CentralMapContainer.Self, false, new RecordItemIndex(3));
-            
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButton' at 9;10.", repo.DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButtonInfo, new RecordItemIndex(4));
-            repo.DSWindow.ListView.TabsDocumentsCentralView.DocumentCloseButton.Click("9;10");
             Delay.Milliseconds(0);
             
         }

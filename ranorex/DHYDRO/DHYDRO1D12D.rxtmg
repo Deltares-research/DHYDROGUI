@@ -299,6 +299,12 @@ rxversion="10.7">
 				</groupvariables>
 			</modulegroupdef>
 			<testmodule
+			id="38dfbb61-f7fb-4684-8eb7-fc136591020d"
+			name="MouseUpOnMap"
+			ref="3f3af7ed-e00f-4efa-89c8-8b38604f8911"
+			type="Recording">
+			</testmodule>
+			<testmodule
 			id="3f46229d-4de5-4f41-ba15-f00b55c8e060"
 			name="SelectBoundaryConditionQuantity"
 			ref="4cb70866-10ba-4e04-ac99-bd07283b4da8"
@@ -394,6 +400,68 @@ rxversion="10.7">
 			ref="ecda4d4e-4232-4dca-b667-838664544bdb"
 			type="Recording">
 			</testmodule>
+			<modulegroupdef
+			id="61a408ca-34ca-4604-ab4e-68da4572f3a4"
+			name="ZoomToSelection">
+				<groupvariables>
+					<groupvariable
+					id="3a2a68eb-f5da-488d-a5a5-dab0d4d31989"
+					name="WorldCoordinatesDown">
+						<modulevariable
+						moduleref="9869838d-2fb3-4f7c-b50b-fe75e2b32780"
+						name="WorldCoordinates"
+						variableref="5791dbb7-de89-4081-9dfb-d095c3b11af7">
+						</modulevariable>
+					</groupvariable>
+					<groupvariable
+					id="c190ebba-9aa5-4b0b-8daf-e49798b1f474"
+					name="PixelCoordinatesDown">
+						<modulevariable
+						moduleref="9869838d-2fb3-4f7c-b50b-fe75e2b32780"
+						name="PixelCoordinates"
+						variableref="e45c1351-9833-4921-aa91-a3978e36c48a">
+						</modulevariable>
+					</groupvariable>
+					<groupvariable
+					id="be91869d-0f69-4bad-8e40-c7025ea67bfe"
+					name="WorldCoordinatesUp">
+						<modulevariable
+						moduleref="38dfbb61-f7fb-4684-8eb7-fc136591020d"
+						name="WorldCoordinates"
+						variableref="f5cba0e6-4e00-440c-9df2-c310cb772580">
+						</modulevariable>
+					</groupvariable>
+					<groupvariable
+					id="c52c73d0-02b9-4da2-a332-73b7df8dc3f7"
+					name="PixelCoordinatesUp">
+						<modulevariable
+						moduleref="38dfbb61-f7fb-4684-8eb7-fc136591020d"
+						name="PixelCoordinates"
+						variableref="a9749f00-1769-4e3c-8f4d-71892b41146b">
+						</modulevariable>
+					</groupvariable>
+					<groupvariable
+					defaultvalue="300"
+					id="4407ab9c-158d-4716-b538-4de803fbfc4a"
+					name="DelayAmount">
+						<modulevariable
+						moduleref="bb150540-f624-421a-ae2e-7b0c08bbd5cf"
+						name="delayInMiliseconds"
+						variableref="9a7db6ae-dfb4-4e1f-869e-ebd323130abd">
+						</modulevariable>
+					</groupvariable>
+				</groupvariables>
+				<constantvalues>
+					<constantvalue
+					id="21f287ba-65ee-4069-aaeb-29c3e4ad8091"
+					value="PixelCoordinates">
+					</constantvalue>
+					<constantvalue
+					id="7f65ae64-54dc-4b87-914b-70e2edb1039e"
+					value="WorldCoordinates">
+					</constantvalue>
+				</constantvalues>
+			</modulegroupdef>
 			<testmodule
 			id="643b7c6b-c359-49b5-a86b-7ec3fc2f7311"
 			name="ShowContextMenuCurrentSelection"
@@ -585,6 +653,11 @@ rxversion="10.7">
 			type="Recording">
 			</testmodule>
 			<testmodule
+			id="9869838d-2fb3-4f7c-b50b-fe75e2b32780"
+			name="MouseDownOnMap"
+			ref="80528f69-6f29-40fe-8157-d456f83d1c33">
+			</testmodule>
+			<testmodule
 			id="9c3d69d2-e932-41b1-b595-d9b3ec3ea9b9"
 			name="ConfirmSelectionInDialog"
 			ref="5d494e8a-e2bb-4f38-ad20-ec0f78377792"
@@ -736,6 +809,12 @@ rxversion="10.7">
 			type="Recording">
 			</testmodule>
 			<testmodule
+			id="b39b318d-6e84-437a-af35-1ece960900fe"
+			name="StartZoomToSelection"
+			ref="c47d2565-79e7-4527-9680-1fa8a33877c1"
+			type="Recording">
+			</testmodule>
+			<testmodule
 			id="b3de3a21-330f-49c5-ac99-06b86ed22b0e"
 			name="SetFileNameAndProceed"
 			ref="ba263c4c-3957-4c8a-b837-86d2bcf6e994"
@@ -745,6 +824,12 @@ rxversion="10.7">
 			id="b9973777-6a14-4518-8b5c-768807414b68"
 			name="SelectContextMenuItem"
 			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
+			type="Recording">
+			</testmodule>
+			<testmodule
+			id="bb150540-f624-421a-ae2e-7b0c08bbd5cf"
+			name="DelayXMiliseconds"
+			ref="64309eeb-f439-41a7-98a7-fc1d63e0015d"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -1351,6 +1436,26 @@ rxversion="10.7">
 					<testmodule
 					id="4f46e047-1580-4e28-9c2f-b83638d3ebbe"
 					name="CheckValidationResult">
+					</testmodule>
+				</modulegroupdef>
+				<modulegroupdef
+				id="61a408ca-34ca-4604-ab4e-68da4572f3a4"
+				name="ZoomToSelection">
+					<testmodule
+					id="b39b318d-6e84-437a-af35-1ece960900fe"
+					name="StartZoomToSelection">
+					</testmodule>
+					<testmodule
+					id="9869838d-2fb3-4f7c-b50b-fe75e2b32780"
+					name="MouseDownOnMap">
+					</testmodule>
+					<testmodule
+					id="38dfbb61-f7fb-4684-8eb7-fc136591020d"
+					name="MouseUpOnMap">
+					</testmodule>
+					<testmodule
+					id="bb150540-f624-421a-ae2e-7b0c08bbd5cf"
+					name="DelayXMiliseconds">
 					</testmodule>
 				</modulegroupdef>
 				<modulegroupdef

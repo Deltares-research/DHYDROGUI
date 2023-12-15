@@ -20,33 +20,33 @@ using Ranorex.Core;
 using Ranorex.Core.Testing;
 using Ranorex.Core.Repository;
 
-namespace DHYDRO.Modules.Application
+namespace DHYDRO.Modules.Map
 {
 #pragma warning disable 0436 //(CS0436) The type 'type' in 'assembly' conflicts with the imported type 'type2' in 'assembly'. Using the type defined in 'assembly'.
     /// <summary>
-    ///The AddWmsLayer recording.
+    ///The MakeOutputMapVariableVisible2D recording.
     /// </summary>
-    [TestModule("3991aa22-d888-4b92-9bd0-c66dd1ec1041", ModuleType.Recording, 1)]
-    public partial class AddWmsLayer : ITestModule
+    [TestModule("ca3eeb8a-6166-4e23-be36-1c1d6ae8a4fa", ModuleType.Recording, 1)]
+    public partial class MakeOutputMapVariableVisible2D : ITestModule
     {
         /// <summary>
         /// Holds an instance of the global::DHYDRO.DHYDRO1D2DRepository repository.
         /// </summary>
         public static global::DHYDRO.DHYDRO1D2DRepository repo = global::DHYDRO.DHYDRO1D2DRepository.Instance;
 
-        static AddWmsLayer instance = new AddWmsLayer();
+        static MakeOutputMapVariableVisible2D instance = new MakeOutputMapVariableVisible2D();
 
         /// <summary>
         /// Constructs a new instance.
         /// </summary>
-        public AddWmsLayer()
+        public MakeOutputMapVariableVisible2D()
         {
         }
 
         /// <summary>
         /// Gets a static instance of this recording.
         /// </summary>
-        public static AddWmsLayer Instance
+        public static MakeOutputMapVariableVisible2D Instance
         {
             get { return instance; }
         }
@@ -54,13 +54,13 @@ namespace DHYDRO.Modules.Application
 #region Variables
 
         /// <summary>
-        /// Gets or sets the value of variable NameWmsLayer.
+        /// Gets or sets the value of variable variableName.
         /// </summary>
-        [TestVariable("beb100b1-338a-40cb-88d7-c0742d11d276")]
-        public string NameWmsLayer
+        [TestVariable("1cb541ff-ae3e-4222-ac48-5c0cd23f7914")]
+        public string variableName
         {
-            get { return repo.NameWmsLayer; }
-            set { repo.NameWmsLayer = value; }
+            get { return repo.variableName; }
+            set { repo.variableName = value; }
         }
 
 #endregion
@@ -89,29 +89,12 @@ namespace DHYDRO.Modules.Application
 
             Init();
 
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'DSWindow.ListView.AddNewWmsLayerButton' at Center.", repo.DSWindow.ListView.AddNewWmsLayerButtonInfo, new RecordItemIndex(0));
-            repo.DSWindow.ListView.AddNewWmsLayerButton.Click();
+            Report.Log(ReportLevel.Info, "Set value", "Setting attribute Checked to 'True' on item 'DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableCheckBox2D'.", repo.DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableCheckBox2DInfo, new RecordItemIndex(0));
+            repo.DSWindow.ListView.OutputMapTreeItem2D.OutputMapFileTreeItem2D.OutputMapVariableTreeItem2D.OutputMapVariableCheckBox2D.Element.SetAttributeValue("Checked", "True");
             Delay.Milliseconds(0);
             
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'OpenUrlDialog.ExpandDropDownMenu' at Center.", repo.OpenUrlDialog.ExpandDropDownMenuInfo, new RecordItemIndex(1));
-            repo.OpenUrlDialog.ExpandDropDownMenu.Click();
-            Delay.Milliseconds(0);
-            
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Focus() on item 'ComboBoxList.OpenStreetMap'.", repo.ComboBoxList.OpenStreetMapInfo, new RecordItemIndex(2));
-            repo.ComboBoxList.OpenStreetMap.Focus();
-            Delay.Milliseconds(0);
-            
-            Report.Log(ReportLevel.Info, "Invoke action", "Invoking Select() on item 'ComboBoxList.OpenStreetMap'.", repo.ComboBoxList.OpenStreetMapInfo, new RecordItemIndex(3));
-            repo.ComboBoxList.OpenStreetMap.Select();
-            Delay.Milliseconds(0);
-            
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'ComboBoxList.OpenStreetMap' at Center.", repo.ComboBoxList.OpenStreetMapInfo, new RecordItemIndex(4));
-            repo.ComboBoxList.OpenStreetMap.Click();
-            Delay.Milliseconds(0);
-            
-            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'OpenUrlDialog.OkButton' at Center.", repo.OpenUrlDialog.OkButtonInfo, new RecordItemIndex(5));
-            repo.OpenUrlDialog.OkButton.Click();
-            Delay.Milliseconds(0);
+            Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(1));
+            Delay.Duration(300, false);
             
         }
 

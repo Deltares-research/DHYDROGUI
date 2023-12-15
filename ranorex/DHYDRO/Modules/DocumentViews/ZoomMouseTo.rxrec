@@ -70,7 +70,7 @@ mode="Global">
 		<mouseitem
 		action="Move"
 		button="Left"
-		duration="10ms"
+		duration="5597ms"
 		enabled="True"
 		loc="261;70"
 		movetime="10ms"

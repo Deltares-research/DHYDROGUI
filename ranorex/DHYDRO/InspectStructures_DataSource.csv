@@ -1,0 +1,4 @@
+﻿variableName,fullPathToTreeItem,NameQueryTimeSeriesCell,HeaderPanelText,WorldCoordinates
+Discharge through pump (pump_structure_discharge),Integrated Model>FlowFM>Output>His File>Pumps>Discharge through pump (pump_structure_discharge),Discharge through pump (pump_structure_discharge),Discharge through pump,85884;444670
+Discharge through orifice (orifice_discharge),Integrated Model>FlowFM>Output>His File>Orifices>Discharge through orifice (orifice_discharge),Discharge through orifice (orifice_discharge),Discharge through orifice,85909;444611
+Discharge through weir (weirgen_discharge),Integrated Model>FlowFM>Output>His File>Weirs + general structures>Discharge through weir (weirgen_discharge),Discharge through weir (weirgen_discharge),Discharge through weir,85920;444473

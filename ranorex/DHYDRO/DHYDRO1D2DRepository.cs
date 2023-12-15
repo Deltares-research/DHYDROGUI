@@ -48,6 +48,11 @@ namespace DHYDRO
         DHYDRO1D2DRepositoryFolders.OverwriteCurrentProjectAppFolder _overwritecurrentproject;
         DHYDRO1D2DRepositoryFolders.LegendPropertiesFolder _legendproperties;
         DHYDRO1D2DRepositoryFolders.ProgressBarWindowAppFolder _progressbarwindow;
+        DHYDRO1D2DRepositoryFolders.ContextMenuInMapTreeAppFolder _contextmenuinmaptree;
+        DHYDRO1D2DRepositoryFolders.DeltaShellGuiAppFolder _deltashellgui;
+        DHYDRO1D2DRepositoryFolders.BoundaryEditorContainerFolder _boundaryeditorcontainer;
+        RepoItemInfo _propertyitemtreeInfo;
+        RepoItemInfo _generictextboxInfo;
 
         /// <summary>
         /// Gets the singleton class instance representing the DHYDRO1D2DRepository element repository.
@@ -85,6 +90,11 @@ namespace DHYDRO
             _overwritecurrentproject = new DHYDRO1D2DRepositoryFolders.OverwriteCurrentProjectAppFolder(this);
             _legendproperties = new DHYDRO1D2DRepositoryFolders.LegendPropertiesFolder(this);
             _progressbarwindow = new DHYDRO1D2DRepositoryFolders.ProgressBarWindowAppFolder(this);
+            _contextmenuinmaptree = new DHYDRO1D2DRepositoryFolders.ContextMenuInMapTreeAppFolder(this);
+            _deltashellgui = new DHYDRO1D2DRepositoryFolders.DeltaShellGuiAppFolder(this);
+            _boundaryeditorcontainer = new DHYDRO1D2DRepositoryFolders.BoundaryEditorContainerFolder(this);
+            _propertyitemtreeInfo = new RepoItemInfo(this, "PropertyItemTree", "/form[@title~'Delta Shell']/list[@automationid='ListView']/container/container[@caption='']/container[@controlname='PropertyGrid']/container[@controlname='splitContainer1']/container[@controlname='panel2']/container[@controlname='propertyGrid1']/element[@controlname='gridView']/table[@accessiblename='Properties Window']/row[@accessiblename=$PropertyItem]", 30000, null, "56806a57-af65-4e10-86c5-5ad41f1a55e0");
+            _generictextboxInfo = new RepoItemInfo(this, "GenericTextBox", "/form/list/container?/container?/container?/container?/container?/tabpagelist/tabpage/container?/container?/container?/container/container[$ContainerNumber]/container?/container?/text[$TextContainer]", 30000, null, "436b89da-f70d-45df-909e-357442adcfbf");
         }
 
 #region Variables
@@ -413,6 +423,354 @@ namespace DHYDRO
             set { _ProjectTreeItem = value; }
         }
 
+        string _NameDutchLayer = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable NameDutchLayer.
+        /// </summary>
+        [TestVariable("521e8477-e541-477c-b19f-f6b6052feaec")]
+        public string NameDutchLayer
+        {
+            get { return _NameDutchLayer; }
+            set { _NameDutchLayer = value; }
+        }
+
+        string _GenericMapTreeItemName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable GenericMapTreeItemName.
+        /// </summary>
+        [TestVariable("c69b2d8d-f90b-4b8c-b8b9-9982880c76dd")]
+        public string GenericMapTreeItemName
+        {
+            get { return _GenericMapTreeItemName; }
+            set { _GenericMapTreeItemName = value; }
+        }
+
+        string _NameMapTreeItemNode = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable NameMapTreeItemNode.
+        /// </summary>
+        [TestVariable("262e6ddb-2d48-4d24-9526-d036d5b2ab44")]
+        public string NameMapTreeItemNode
+        {
+            get { return _NameMapTreeItemNode; }
+            set { _NameMapTreeItemNode = value; }
+        }
+
+        string _ColumnNamerRowNumber = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ColumnNamerRowNumber.
+        /// </summary>
+        [TestVariable("79b30c5e-13b7-46a0-b5e6-cc321399548b")]
+        public string ColumnNamerRowNumber
+        {
+            get { return _ColumnNamerRowNumber; }
+            set { _ColumnNamerRowNumber = value; }
+        }
+
+        string _ColumnNameRowNumber = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ColumnNameRowNumber.
+        /// </summary>
+        [TestVariable("41c81139-bd1d-49a2-882a-da6342bb0259")]
+        public string ColumnNameRowNumber
+        {
+            get { return _ColumnNameRowNumber; }
+            set { _ColumnNameRowNumber = value; }
+        }
+
+        string _CellText = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable CellText.
+        /// </summary>
+        [TestVariable("ab114dbb-0453-4c86-88fb-9156e4797c61")]
+        public string CellText
+        {
+            get { return _CellText; }
+            set { _CellText = value; }
+        }
+
+        string _MenuItemName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable MenuItemName.
+        /// </summary>
+        [TestVariable("614b7f5f-27d0-4639-a637-b89db75c6519")]
+        public string MenuItemName
+        {
+            get { return _MenuItemName; }
+            set { _MenuItemName = value; }
+        }
+
+        string _Container = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable Container.
+        /// </summary>
+        [TestVariable("744308fc-c37e-4d3d-9410-abb45d1efdca")]
+        public string Container
+        {
+            get { return _Container; }
+            set { _Container = value; }
+        }
+
+        string _Text = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable Text.
+        /// </summary>
+        [TestVariable("383fc721-9d49-4711-91a0-4c103cb6cd70")]
+        public string Text
+        {
+            get { return _Text; }
+            set { _Text = value; }
+        }
+
+        string _ContainerNumber = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ContainerNumber.
+        /// </summary>
+        [TestVariable("5058835a-0156-4675-b74e-b2fbcd497f26")]
+        public string ContainerNumber
+        {
+            get { return _ContainerNumber; }
+            set { _ContainerNumber = value; }
+        }
+
+        string _TextNumber = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable TextNumber.
+        /// </summary>
+        [TestVariable("7ff42a71-c3ab-4cff-b05e-d7a2c3ef6a26")]
+        public string TextNumber
+        {
+            get { return _TextNumber; }
+            set { _TextNumber = value; }
+        }
+
+        string _ColumnNumber = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ColumnNumber.
+        /// </summary>
+        [TestVariable("30a85af4-a76a-456d-8d70-14bc7274106b")]
+        public string ColumnNumber
+        {
+            get { return _ColumnNumber; }
+            set { _ColumnNumber = value; }
+        }
+
+        string _ScrollBarButton = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ScrollBarButton.
+        /// </summary>
+        [TestVariable("67b68b72-ba19-4249-815c-f206609d8f94")]
+        public string ScrollBarButton
+        {
+            get { return _ScrollBarButton; }
+            set { _ScrollBarButton = value; }
+        }
+
+        string _ScrollButton = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ScrollButton.
+        /// </summary>
+        [TestVariable("2d26f5e3-acda-4488-9be1-78868703a23e")]
+        public string ScrollButton
+        {
+            get { return _ScrollButton; }
+            set { _ScrollButton = value; }
+        }
+
+        string _Textcontainer = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable Textcontainer.
+        /// </summary>
+        [TestVariable("a0965845-f5e3-4565-8014-b7c933662195")]
+        public string Textcontainer
+        {
+            get { return _Textcontainer; }
+            set { _Textcontainer = value; }
+        }
+
+        string _ControlName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ControlName.
+        /// </summary>
+        [TestVariable("cbd57f61-9468-48ea-bdf9-4b61b01155a8")]
+        public string ControlName
+        {
+            get { return _ControlName; }
+            set { _ControlName = value; }
+        }
+
+        string _checkboxName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable checkboxName.
+        /// </summary>
+        [TestVariable("5e6042df-4abb-4a99-afd7-4efe26548dc0")]
+        public string checkboxName
+        {
+            get { return _checkboxName; }
+            set { _checkboxName = value; }
+        }
+
+        string _ButtonText = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ButtonText.
+        /// </summary>
+        [TestVariable("16236e7b-884a-443b-b48c-dcfbebc34c68")]
+        public string ButtonText
+        {
+            get { return _ButtonText; }
+            set { _ButtonText = value; }
+        }
+
+        string _InputFieldTimeSpan = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable InputFieldTimeSpan.
+        /// </summary>
+        [TestVariable("070351a9-939a-417c-bdf0-3b52b470e3a9")]
+        public string InputFieldTimeSpan
+        {
+            get { return _InputFieldTimeSpan; }
+            set { _InputFieldTimeSpan = value; }
+        }
+
+        string _InputFieldTimeStep = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable InputFieldTimeStep.
+        /// </summary>
+        [TestVariable("d3988ed7-1c56-448c-8061-0f82b7d3a813")]
+        public string InputFieldTimeStep
+        {
+            get { return _InputFieldTimeStep; }
+            set { _InputFieldTimeStep = value; }
+        }
+
+        string _WorkflowName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable WorkflowName.
+        /// </summary>
+        [TestVariable("59a90467-cb69-4af3-9be4-76e6b0b38e12")]
+        public string WorkflowName
+        {
+            get { return _WorkflowName; }
+            set { _WorkflowName = value; }
+        }
+
+        string _ListNumber = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ListNumber.
+        /// </summary>
+        [TestVariable("75f205f7-6b98-4d43-a77f-7cd7ba1974d9")]
+        public string ListNumber
+        {
+            get { return _ListNumber; }
+            set { _ListNumber = value; }
+        }
+
+        string _HeaderPanelText = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable HeaderPanelText.
+        /// </summary>
+        [TestVariable("c59b92c8-da08-43b9-af0d-b0842c2d175b")]
+        public string HeaderPanelText
+        {
+            get { return _HeaderPanelText; }
+            set { _HeaderPanelText = value; }
+        }
+
+        string _ButtonName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ButtonName.
+        /// </summary>
+        [TestVariable("04ae600e-63f5-44da-975d-818cfc4071fd")]
+        public string ButtonName
+        {
+            get { return _ButtonName; }
+            set { _ButtonName = value; }
+        }
+
+        string _ParentNodeName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable ParentNodeName.
+        /// </summary>
+        [TestVariable("9e6a3a27-7f5d-4299-8d76-e9ca67d2ea3e")]
+        public string ParentNodeName
+        {
+            get { return _ParentNodeName; }
+            set { _ParentNodeName = value; }
+        }
+
+        string _NameQueryTimeSeriesCell = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable NameQueryTimeSeriesCell.
+        /// </summary>
+        [TestVariable("39062ae9-f6ff-445c-8185-18ce296904b9")]
+        public string NameQueryTimeSeriesCell
+        {
+            get { return _NameQueryTimeSeriesCell; }
+            set { _NameQueryTimeSeriesCell = value; }
+        }
+
+        string _HeaderName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable HeaderName.
+        /// </summary>
+        [TestVariable("5e32df41-bc7f-4a62-ac7a-a3011c286b25")]
+        public string HeaderName
+        {
+            get { return _HeaderName; }
+            set { _HeaderName = value; }
+        }
+
+        string _HeanerPanelName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable HeanerPanelName.
+        /// </summary>
+        [TestVariable("5300a3ef-6760-4b89-af6a-c4eec33d0fb2")]
+        public string HeanerPanelName
+        {
+            get { return _HeanerPanelName; }
+            set { _HeanerPanelName = value; }
+        }
+
+        string _AttributeTableName = "";
+
+        /// <summary>
+        /// Gets or sets the value of variable AttributeTableName.
+        /// </summary>
+        [TestVariable("3702f5ef-f369-4d0e-b6c1-9ea92f70a752")]
+        public string AttributeTableName
+        {
+            get { return _AttributeTableName; }
+            set { _AttributeTableName = value; }
+        }
+
 #endregion
 
         /// <summary>
@@ -424,6 +782,54 @@ namespace DHYDRO
             get
             {
                 return _selfInfo;
+            }
+        }
+
+        /// <summary>
+        /// The PropertyItemTree item.
+        /// </summary>
+        [RepositoryItem("56806a57-af65-4e10-86c5-5ad41f1a55e0")]
+        public virtual Ranorex.Row PropertyItemTree
+        {
+            get
+            {
+                 return _propertyitemtreeInfo.CreateAdapter<Ranorex.Row>(true);
+            }
+        }
+
+        /// <summary>
+        /// The PropertyItemTree item info.
+        /// </summary>
+        [RepositoryItemInfo("56806a57-af65-4e10-86c5-5ad41f1a55e0")]
+        public virtual RepoItemInfo PropertyItemTreeInfo
+        {
+            get
+            {
+                return _propertyitemtreeInfo;
+            }
+        }
+
+        /// <summary>
+        /// The GenericTextBox item.
+        /// </summary>
+        [RepositoryItem("436b89da-f70d-45df-909e-357442adcfbf")]
+        public virtual Ranorex.Text GenericTextBox
+        {
+            get
+            {
+                 return _generictextboxInfo.CreateAdapter<Ranorex.Text>(true);
+            }
+        }
+
+        /// <summary>
+        /// The GenericTextBox item info.
+        /// </summary>
+        [RepositoryItemInfo("436b89da-f70d-45df-909e-357442adcfbf")]
+        public virtual RepoItemInfo GenericTextBoxInfo
+        {
+            get
+            {
+                return _generictextboxInfo;
             }
         }
 
@@ -615,6 +1021,33 @@ namespace DHYDRO
         {
             get { return _progressbarwindow; }
         }
+
+        /// <summary>
+        /// The ContextMenuInMapTree folder.
+        /// </summary>
+        [RepositoryFolder("451a3a81-ab54-49f5-93e7-2c905d714314")]
+        public virtual DHYDRO1D2DRepositoryFolders.ContextMenuInMapTreeAppFolder ContextMenuInMapTree
+        {
+            get { return _contextmenuinmaptree; }
+        }
+
+        /// <summary>
+        /// The DeltaShellGui folder.
+        /// </summary>
+        [RepositoryFolder("b278adb8-8ec1-464f-9784-2e82e7dd87bf")]
+        public virtual DHYDRO1D2DRepositoryFolders.DeltaShellGuiAppFolder DeltaShellGui
+        {
+            get { return _deltashellgui; }
+        }
+
+        /// <summary>
+        /// The BoundaryEditorContainer folder.
+        /// </summary>
+        [RepositoryFolder("b969a557-35f9-48d2-b4f2-e71497aaf824")]
+        public virtual DHYDRO1D2DRepositoryFolders.BoundaryEditorContainerFolder BoundaryEditorContainer
+        {
+            get { return _boundaryeditorcontainer; }
+        }
     }
 
     /// <summary>
@@ -630,6 +1063,7 @@ namespace DHYDRO
         public partial class DSWindowAppFolder : RepoGenBaseFolder
         {
             DHYDRO1D2DRepositoryFolders.ListViewFolder _listview;
+            RepoItemInfo _genericscrollbarbuttonInfo;
 
             /// <summary>
             /// Creates a new DSWindow  folder.
@@ -638,6 +1072,7 @@ namespace DHYDRO
                     base("DSWindow", "/form[@title~'Delta Shell']", parentFolder, 120000, null, false, "5f493879-0a9c-4803-868d-30588b52aa76", "")
             {
                 _listview = new DHYDRO1D2DRepositoryFolders.ListViewFolder(this);
+                _genericscrollbarbuttonInfo = new RepoItemInfo(this, "GenericScrollBarButton", "list[@automationid='ListView']/container?/container/container/container/container/element?/tabpagelist?/tabpage?/container?/container?/container?/container?/element?/element?/scrollbar/button[@text=$ScrollButton]", "", 30000, null, "3b6f8cec-95ed-479c-a73b-e440fbe1478c");
             }
 
             /// <summary>
@@ -665,6 +1100,30 @@ namespace DHYDRO
             }
 
             /// <summary>
+            /// The GenericScrollBarButton item.
+            /// </summary>
+            [RepositoryItem("3b6f8cec-95ed-479c-a73b-e440fbe1478c")]
+            public virtual Ranorex.Button GenericScrollBarButton
+            {
+                get
+                {
+                    return _genericscrollbarbuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericScrollBarButton item info.
+            /// </summary>
+            [RepositoryItemInfo("3b6f8cec-95ed-479c-a73b-e440fbe1478c")]
+            public virtual RepoItemInfo GenericScrollBarButtonInfo
+            {
+                get
+                {
+                    return _genericscrollbarbuttonInfo;
+                }
+            }
+
+            /// <summary>
             /// The ListView folder.
             /// </summary>
             [RepositoryFolder("91ac1b1a-67de-4128-a0a4-1ff79a82b484")]
@@ -684,20 +1143,31 @@ namespace DHYDRO
             DHYDRO1D2DRepositoryFolders.CentralMapContainerFolder _centralmapcontainer;
             DHYDRO1D2DRepositoryFolders.MenuBarFolder _menubar;
             DHYDRO1D2DRepositoryFolders.ProjectTreeFolder _projecttree;
-            DHYDRO1D2DRepositoryFolders.OperationTreeFolder _operationtree;
             DHYDRO1D2DRepositoryFolders.MainTabControlFolder _maintabcontrol;
             DHYDRO1D2DRepositoryFolders.PropertyPanelFolder _propertypanel;
             DHYDRO1D2DRepositoryFolders.PropertiesPanelFolder _propertiespanel;
             DHYDRO1D2DRepositoryFolders.TabsDocumentsCentralViewFolder _tabsdocumentscentralview;
-            DHYDRO1D2DRepositoryFolders.TabPageListFolder _tabpagelist;
+            DHYDRO1D2DRepositoryFolders.OperationTreeFolder _operationtree;
             DHYDRO1D2DRepositoryFolders.WinFormsAdapterFolder _winformsadapter;
-            DHYDRO1D2DRepositoryFolders.OutputMapTreeItemFolder _outputmaptreeitem;
+            DHYDRO1D2DRepositoryFolders.OutputMapTreeItem2DFolder _outputmaptreeitem2d;
+            DHYDRO1D2DRepositoryFolders.OutputMapTreeItem1DFolder _outputmaptreeitem1d;
             DHYDRO1D2DRepositoryFolders.MessagePanelFolder _messagepanel;
-            DHYDRO1D2DRepositoryFolders.BoundaryEditorContainerFolder _boundaryeditorcontainer;
-            RepoItemInfo _maptabInfo;
+            DHYDRO1D2DRepositoryFolders.MapTreeFolder _maptree;
+            DHYDRO1D2DRepositoryFolders.TabPageListRightFolder _tabpagelistright;
+            DHYDRO1D2DRepositoryFolders.HeaderPanelFolder1 _headerpanel;
+            RepoItemInfo _generictablecellInfo;
             RepoItemInfo _addnewwmslayerbuttonInfo;
             RepoItemInfo _statusbarInfo;
-            RepoItemInfo _propertyitemtreeInfo;
+            RepoItemInfo _btneditInfo;
+            RepoItemInfo _btnnewshareddefinitionInfo;
+            RepoItemInfo _standaardInfo;
+            RepoItemInfo _textboxheightInfo;
+            RepoItemInfo _textboxwidthInfo;
+            RepoItemInfo _genericbuttontextInfo;
+            RepoItemInfo _comboboxshareddefinitionInfo;
+            RepoItemInfo _maptappanelInfo;
+            RepoItemInfo _timenavigatortabpageInfo;
+            RepoItemInfo _attributetablecellInfo;
 
             /// <summary>
             /// Creates a new ListView  folder.
@@ -709,20 +1179,31 @@ namespace DHYDRO
                 _centralmapcontainer = new DHYDRO1D2DRepositoryFolders.CentralMapContainerFolder(this);
                 _menubar = new DHYDRO1D2DRepositoryFolders.MenuBarFolder(this);
                 _projecttree = new DHYDRO1D2DRepositoryFolders.ProjectTreeFolder(this);
-                _operationtree = new DHYDRO1D2DRepositoryFolders.OperationTreeFolder(this);
                 _maintabcontrol = new DHYDRO1D2DRepositoryFolders.MainTabControlFolder(this);
                 _propertypanel = new DHYDRO1D2DRepositoryFolders.PropertyPanelFolder(this);
                 _propertiespanel = new DHYDRO1D2DRepositoryFolders.PropertiesPanelFolder(this);
                 _tabsdocumentscentralview = new DHYDRO1D2DRepositoryFolders.TabsDocumentsCentralViewFolder(this);
-                _tabpagelist = new DHYDRO1D2DRepositoryFolders.TabPageListFolder(this);
+                _operationtree = new DHYDRO1D2DRepositoryFolders.OperationTreeFolder(this);
                 _winformsadapter = new DHYDRO1D2DRepositoryFolders.WinFormsAdapterFolder(this);
-                _outputmaptreeitem = new DHYDRO1D2DRepositoryFolders.OutputMapTreeItemFolder(this);
+                _outputmaptreeitem2d = new DHYDRO1D2DRepositoryFolders.OutputMapTreeItem2DFolder(this);
+                _outputmaptreeitem1d = new DHYDRO1D2DRepositoryFolders.OutputMapTreeItem1DFolder(this);
                 _messagepanel = new DHYDRO1D2DRepositoryFolders.MessagePanelFolder(this);
-                _boundaryeditorcontainer = new DHYDRO1D2DRepositoryFolders.BoundaryEditorContainerFolder(this);
-                _maptabInfo = new RepoItemInfo(this, "MapTab", "container/tabpagelist/container/tabpage/container/text[@text='Map']", "", 30000, null, "a40a6408-0a72-4c67-a1ba-2f8bfc13cd7a");
+                _maptree = new DHYDRO1D2DRepositoryFolders.MapTreeFolder(this);
+                _tabpagelistright = new DHYDRO1D2DRepositoryFolders.TabPageListRightFolder(this);
+                _headerpanel = new DHYDRO1D2DRepositoryFolders.HeaderPanelFolder1(this);
+                _generictablecellInfo = new RepoItemInfo(this, "GenericTableCell", "container/container?/container[@controltypename='WinFormsAdapter']/container[@controlname=$HeanerPanelName]/container/container?/container?/element[@controlname='dxGridControl']/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[$RowNumber]/cell[$ColumnNumber]", "", 30000, null, "1f4b826a-7767-4600-99e9-db6108815ea6");
                 _addnewwmslayerbuttonInfo = new RepoItemInfo(this, "AddNewWmsLayerButton", "tree/container[2]/button[2]", "", 30000, null, "68ffbb56-69e5-4f83-8042-51c644ba1f0b");
                 _statusbarInfo = new RepoItemInfo(this, "StatusBar", "statusbar/listitem", "", 30000, null, "87c2038d-508d-4607-91e9-b91dc7bfc239");
-                _propertyitemtreeInfo = new RepoItemInfo(this, "PropertyItemTree", "container/container[@caption='']/container[@controlname='PropertyGrid']/container[@controlname='splitContainer1']/container[@controlname='panel2']/container[@controlname='propertyGrid1']/element[@controlname='gridView']/table[@accessiblename='Properties Window']/row[@accessiblename=$PropertyItem]", "", 30000, null, "56806a57-af65-4e10-86c5-5ad41f1a55e0");
+                _btneditInfo = new RepoItemInfo(this, "BtnEdit", "container/button/container/container/container/container/button[@controlname='btnEdit']", "", 30000, null, "1a021cbd-b677-4426-95e8-17a0746d329b");
+                _btnnewshareddefinitionInfo = new RepoItemInfo(this, "BtnNewSharedDefinition", "container/button/container/container/container/container/button[@controlname='btnNewSharedDefinition']", "", 30000, null, "0dec05bf-6400-49d2-a171-d4e3900d8a6b");
+                _standaardInfo = new RepoItemInfo(this, "Standaard", "tree/treeitem/container[@automationid='ItemsHost']/treeitem[2]/container[@automationid='ItemsHost']/treeitem[1]/text[@caption='standaard']", "", 30000, null, "d4695166-3cd2-4f48-90fe-ace02f90e801");
+                _textboxheightInfo = new RepoItemInfo(this, "TextBoxHeight", "container/container/container/container/container/container/container/container/container/container/container/container/container/text[@controlname='textBoxHeight']", "", 30000, null, "51915702-9fd8-4830-8301-4f6873f4e1d2");
+                _textboxwidthInfo = new RepoItemInfo(this, "TextBoxWidth", "container/container/container/container/container/container/container/container/container/container/container/container/container/text[@controlname='textBoxWidth']", "", 30000, null, "14830c7b-c534-4e05-8ac6-890ffa5d1e40");
+                _genericbuttontextInfo = new RepoItemInfo(this, "GenericButtonText", "container?/text?/container?/button?/container?/text[@caption=$ButtonText]", "", 30000, null, "ecc2bef3-9ce3-4bac-b985-15c0ed2f75a5");
+                _comboboxshareddefinitionInfo = new RepoItemInfo(this, "ComboBoxSharedDefinition", "container[@automationid='UserControl']/button[@automationid='HeaderSite']/container[1]/container[@controltypename='WinFormsAdapter']/container/container/combobox", "", 30000, null, "d8604b5a-1b74-4368-8d91-5cca1b72d5bc");
+                _maptappanelInfo = new RepoItemInfo(this, "MapTapPanel", "container/tabpagelist/container[@automationid='HeaderPanel']/tabpage/container/picture[@automationid='icon']/parent::container/text[@text='Map']", "", 30000, null, "21af3cc1-a8a6-4716-9e5d-58842cc546ea");
+                _timenavigatortabpageInfo = new RepoItemInfo(this, "TimeNavigatorTabPage", "container[6]/container[2]/tabpagelist[2]/container[@automationid='HeaderPanel']/tabpage[@index='1']", "", 30000, null, "0f07e436-a447-4cb5-835e-a5cb4b85341f");
+                _attributetablecellInfo = new RepoItemInfo(this, "AttributeTableCell", "container/container[@controltypename='WinFormsAdapter']/container[@controlname='ProjectItemMapView']/container[@controlname='MapView']/container[@controlname='MapViewTabControl']/element[@controlname='elementHost']/tabpagelist[@instance='0']/container/container[@controltypename='WinFormsAdapter']/container[@controltext=$AttributeTableName]/container[@controlname='TableView']//row[$rowNumber]/cell[$columnNumber]", "", 30000, null, "befe169b-b3cb-4d94-9c03-18bfb15c8b31");
             }
 
             /// <summary>
@@ -750,26 +1231,26 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The MapTab item.
+            /// The GenericTableCell item.
             /// </summary>
-            [RepositoryItem("a40a6408-0a72-4c67-a1ba-2f8bfc13cd7a")]
-            public virtual Ranorex.Text MapTab
+            [RepositoryItem("1f4b826a-7767-4600-99e9-db6108815ea6")]
+            public virtual Ranorex.Cell GenericTableCell
             {
                 get
                 {
-                    return _maptabInfo.CreateAdapter<Ranorex.Text>(true);
+                    return _generictablecellInfo.CreateAdapter<Ranorex.Cell>(true);
                 }
             }
 
             /// <summary>
-            /// The MapTab item info.
+            /// The GenericTableCell item info.
             /// </summary>
-            [RepositoryItemInfo("a40a6408-0a72-4c67-a1ba-2f8bfc13cd7a")]
-            public virtual RepoItemInfo MapTabInfo
+            [RepositoryItemInfo("1f4b826a-7767-4600-99e9-db6108815ea6")]
+            public virtual RepoItemInfo GenericTableCellInfo
             {
                 get
                 {
-                    return _maptabInfo;
+                    return _generictablecellInfo;
                 }
             }
 
@@ -822,26 +1303,242 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The PropertyItemTree item.
+            /// The BtnEdit item.
             /// </summary>
-            [RepositoryItem("56806a57-af65-4e10-86c5-5ad41f1a55e0")]
-            public virtual Ranorex.Row PropertyItemTree
+            [RepositoryItem("1a021cbd-b677-4426-95e8-17a0746d329b")]
+            public virtual Ranorex.Button BtnEdit
             {
                 get
                 {
-                    return _propertyitemtreeInfo.CreateAdapter<Ranorex.Row>(true);
+                    return _btneditInfo.CreateAdapter<Ranorex.Button>(true);
                 }
             }
 
             /// <summary>
-            /// The PropertyItemTree item info.
+            /// The BtnEdit item info.
             /// </summary>
-            [RepositoryItemInfo("56806a57-af65-4e10-86c5-5ad41f1a55e0")]
-            public virtual RepoItemInfo PropertyItemTreeInfo
+            [RepositoryItemInfo("1a021cbd-b677-4426-95e8-17a0746d329b")]
+            public virtual RepoItemInfo BtnEditInfo
             {
                 get
                 {
-                    return _propertyitemtreeInfo;
+                    return _btneditInfo;
+                }
+            }
+
+            /// <summary>
+            /// The BtnNewSharedDefinition item.
+            /// </summary>
+            [RepositoryItem("0dec05bf-6400-49d2-a171-d4e3900d8a6b")]
+            public virtual Ranorex.Button BtnNewSharedDefinition
+            {
+                get
+                {
+                    return _btnnewshareddefinitionInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The BtnNewSharedDefinition item info.
+            /// </summary>
+            [RepositoryItemInfo("0dec05bf-6400-49d2-a171-d4e3900d8a6b")]
+            public virtual RepoItemInfo BtnNewSharedDefinitionInfo
+            {
+                get
+                {
+                    return _btnnewshareddefinitionInfo;
+                }
+            }
+
+            /// <summary>
+            /// The Standaard item.
+            /// </summary>
+            [RepositoryItem("d4695166-3cd2-4f48-90fe-ace02f90e801")]
+            public virtual Ranorex.Text Standaard
+            {
+                get
+                {
+                    return _standaardInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Standaard item info.
+            /// </summary>
+            [RepositoryItemInfo("d4695166-3cd2-4f48-90fe-ace02f90e801")]
+            public virtual RepoItemInfo StandaardInfo
+            {
+                get
+                {
+                    return _standaardInfo;
+                }
+            }
+
+            /// <summary>
+            /// The TextBoxHeight item.
+            /// </summary>
+            [RepositoryItem("51915702-9fd8-4830-8301-4f6873f4e1d2")]
+            public virtual Ranorex.Text TextBoxHeight
+            {
+                get
+                {
+                    return _textboxheightInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The TextBoxHeight item info.
+            /// </summary>
+            [RepositoryItemInfo("51915702-9fd8-4830-8301-4f6873f4e1d2")]
+            public virtual RepoItemInfo TextBoxHeightInfo
+            {
+                get
+                {
+                    return _textboxheightInfo;
+                }
+            }
+
+            /// <summary>
+            /// The TextBoxWidth item.
+            /// </summary>
+            [RepositoryItem("14830c7b-c534-4e05-8ac6-890ffa5d1e40")]
+            public virtual Ranorex.Text TextBoxWidth
+            {
+                get
+                {
+                    return _textboxwidthInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The TextBoxWidth item info.
+            /// </summary>
+            [RepositoryItemInfo("14830c7b-c534-4e05-8ac6-890ffa5d1e40")]
+            public virtual RepoItemInfo TextBoxWidthInfo
+            {
+                get
+                {
+                    return _textboxwidthInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericButtonText item.
+            /// </summary>
+            [RepositoryItem("ecc2bef3-9ce3-4bac-b985-15c0ed2f75a5")]
+            public virtual Ranorex.Text GenericButtonText
+            {
+                get
+                {
+                    return _genericbuttontextInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericButtonText item info.
+            /// </summary>
+            [RepositoryItemInfo("ecc2bef3-9ce3-4bac-b985-15c0ed2f75a5")]
+            public virtual RepoItemInfo GenericButtonTextInfo
+            {
+                get
+                {
+                    return _genericbuttontextInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ComboBoxSharedDefinition item.
+            /// </summary>
+            [RepositoryItem("d8604b5a-1b74-4368-8d91-5cca1b72d5bc")]
+            public virtual Ranorex.ComboBox ComboBoxSharedDefinition
+            {
+                get
+                {
+                    return _comboboxshareddefinitionInfo.CreateAdapter<Ranorex.ComboBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ComboBoxSharedDefinition item info.
+            /// </summary>
+            [RepositoryItemInfo("d8604b5a-1b74-4368-8d91-5cca1b72d5bc")]
+            public virtual RepoItemInfo ComboBoxSharedDefinitionInfo
+            {
+                get
+                {
+                    return _comboboxshareddefinitionInfo;
+                }
+            }
+
+            /// <summary>
+            /// The MapTapPanel item.
+            /// </summary>
+            [RepositoryItem("21af3cc1-a8a6-4716-9e5d-58842cc546ea")]
+            public virtual Ranorex.Text MapTapPanel
+            {
+                get
+                {
+                    return _maptappanelInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The MapTapPanel item info.
+            /// </summary>
+            [RepositoryItemInfo("21af3cc1-a8a6-4716-9e5d-58842cc546ea")]
+            public virtual RepoItemInfo MapTapPanelInfo
+            {
+                get
+                {
+                    return _maptappanelInfo;
+                }
+            }
+
+            /// <summary>
+            /// The TimeNavigatorTabPage item.
+            /// </summary>
+            [RepositoryItem("0f07e436-a447-4cb5-835e-a5cb4b85341f")]
+            public virtual Ranorex.TabPage TimeNavigatorTabPage
+            {
+                get
+                {
+                    return _timenavigatortabpageInfo.CreateAdapter<Ranorex.TabPage>(true);
+                }
+            }
+
+            /// <summary>
+            /// The TimeNavigatorTabPage item info.
+            /// </summary>
+            [RepositoryItemInfo("0f07e436-a447-4cb5-835e-a5cb4b85341f")]
+            public virtual RepoItemInfo TimeNavigatorTabPageInfo
+            {
+                get
+                {
+                    return _timenavigatortabpageInfo;
+                }
+            }
+
+            /// <summary>
+            /// The AttributeTableCell item.
+            /// </summary>
+            [RepositoryItem("befe169b-b3cb-4d94-9c03-18bfb15c8b31")]
+            public virtual Ranorex.Cell AttributeTableCell
+            {
+                get
+                {
+                    return _attributetablecellInfo.CreateAdapter<Ranorex.Cell>(true);
+                }
+            }
+
+            /// <summary>
+            /// The AttributeTableCell item info.
+            /// </summary>
+            [RepositoryItemInfo("befe169b-b3cb-4d94-9c03-18bfb15c8b31")]
+            public virtual RepoItemInfo AttributeTableCellInfo
+            {
+                get
+                {
+                    return _attributetablecellInfo;
                 }
             }
 
@@ -882,15 +1579,6 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The OperationTree folder.
-            /// </summary>
-            [RepositoryFolder("e882bcc2-2787-47d4-b645-fbe938ac842b")]
-            public virtual DHYDRO1D2DRepositoryFolders.OperationTreeFolder OperationTree
-            {
-                get { return _operationtree; }
-            }
-
-            /// <summary>
             /// The MainTabControl folder.
             /// </summary>
             [RepositoryFolder("d3a2f2a5-5af3-4efa-a3ac-f56dc54ecef0")]
@@ -927,12 +1615,12 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The TabPageList folder.
+            /// The OperationTree folder.
             /// </summary>
-            [RepositoryFolder("d7fdfecc-098a-47e3-bad8-a049fa034455")]
-            public virtual DHYDRO1D2DRepositoryFolders.TabPageListFolder TabPageList
+            [RepositoryFolder("e882bcc2-2787-47d4-b645-fbe938ac842b")]
+            public virtual DHYDRO1D2DRepositoryFolders.OperationTreeFolder OperationTree
             {
-                get { return _tabpagelist; }
+                get { return _operationtree; }
             }
 
             /// <summary>
@@ -945,12 +1633,21 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The OutputMapTreeItem folder.
+            /// The OutputMapTreeItem2D folder.
             /// </summary>
             [RepositoryFolder("db53fc2d-0702-479a-8a30-0be27f21b5f3")]
-            public virtual DHYDRO1D2DRepositoryFolders.OutputMapTreeItemFolder OutputMapTreeItem
+            public virtual DHYDRO1D2DRepositoryFolders.OutputMapTreeItem2DFolder OutputMapTreeItem2D
             {
-                get { return _outputmaptreeitem; }
+                get { return _outputmaptreeitem2d; }
+            }
+
+            /// <summary>
+            /// The OutputMapTreeItem1D folder.
+            /// </summary>
+            [RepositoryFolder("7aea68f8-cfac-4492-8879-a6abe90cfd64")]
+            public virtual DHYDRO1D2DRepositoryFolders.OutputMapTreeItem1DFolder OutputMapTreeItem1D
+            {
+                get { return _outputmaptreeitem1d; }
             }
 
             /// <summary>
@@ -963,12 +1660,30 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The BoundaryEditorContainer folder.
+            /// The MapTree folder.
             /// </summary>
-            [RepositoryFolder("b969a557-35f9-48d2-b4f2-e71497aaf824")]
-            public virtual DHYDRO1D2DRepositoryFolders.BoundaryEditorContainerFolder BoundaryEditorContainer
+            [RepositoryFolder("50ad9820-e430-4c87-9dfd-3470e3a03d83")]
+            public virtual DHYDRO1D2DRepositoryFolders.MapTreeFolder MapTree
             {
-                get { return _boundaryeditorcontainer; }
+                get { return _maptree; }
+            }
+
+            /// <summary>
+            /// The TabPageListRight folder.
+            /// </summary>
+            [RepositoryFolder("ad534c00-e78f-48b6-b113-1c85a38e87bd")]
+            public virtual DHYDRO1D2DRepositoryFolders.TabPageListRightFolder TabPageListRight
+            {
+                get { return _tabpagelistright; }
+            }
+
+            /// <summary>
+            /// The HeaderPanel folder.
+            /// </summary>
+            [RepositoryFolder("29221779-e90d-4656-9864-04cde11555b3")]
+            public virtual DHYDRO1D2DRepositoryFolders.HeaderPanelFolder1 HeaderPanel
+            {
+                get { return _headerpanel; }
             }
         }
 
@@ -1482,7 +2197,9 @@ namespace DHYDRO
         public partial class AttributeTableTabFolder : RepoGenBaseFolder
         {
             DHYDRO1D2DRepositoryFolders.AttributeTableDataFolder _attributetabledata;
+            DHYDRO1D2DRepositoryFolders.WorkflowsContainerFolder _workflowscontainer;
             RepoItemInfo _buttondocumentcloseInfo;
+            RepoItemInfo _genericinputfieldInfo;
 
             /// <summary>
             /// Creates a new AttributeTableTab  folder.
@@ -1491,7 +2208,9 @@ namespace DHYDRO
                     base("AttributeTableTab", "container/element/tabpagelist", parentFolder, 30000, null, false, "687aa761-e846-4028-9104-221eac220923", "")
             {
                 _attributetabledata = new DHYDRO1D2DRepositoryFolders.AttributeTableDataFolder(this);
+                _workflowscontainer = new DHYDRO1D2DRepositoryFolders.WorkflowsContainerFolder(this);
                 _buttondocumentcloseInfo = new RepoItemInfo(this, "ButtonDocumentClose", "button/container?/tabpage/text[@caption=$TextAttributeTable]/../button", "", 30000, null, "145b8214-90f4-47a6-95c4-bce87c9aa5d5");
+                _genericinputfieldInfo = new RepoItemInfo(this, "GenericInputField", "container/container/container/element/container/text/form/container/text[@automationid=$InputFieldTimeStep]", "", 30000, null, "1f1d4917-015b-4f35-8bd2-7d751b075e00");
             }
 
             /// <summary>
@@ -1543,12 +2262,45 @@ namespace DHYDRO
             }
 
             /// <summary>
+            /// The GenericInputField item.
+            /// </summary>
+            [RepositoryItem("1f1d4917-015b-4f35-8bd2-7d751b075e00")]
+            public virtual Ranorex.Text GenericInputField
+            {
+                get
+                {
+                    return _genericinputfieldInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericInputField item info.
+            /// </summary>
+            [RepositoryItemInfo("1f1d4917-015b-4f35-8bd2-7d751b075e00")]
+            public virtual RepoItemInfo GenericInputFieldInfo
+            {
+                get
+                {
+                    return _genericinputfieldInfo;
+                }
+            }
+
+            /// <summary>
             /// The AttributeTableData folder.
             /// </summary>
             [RepositoryFolder("bcd833fa-4784-4471-a004-3d5726f8c748")]
             public virtual DHYDRO1D2DRepositoryFolders.AttributeTableDataFolder AttributeTableData
             {
                 get { return _attributetabledata; }
+            }
+
+            /// <summary>
+            /// The WorkflowsContainer folder.
+            /// </summary>
+            [RepositoryFolder("143197bf-3772-4bb3-b314-c730d6d63c9e")]
+            public virtual DHYDRO1D2DRepositoryFolders.WorkflowsContainerFolder WorkflowsContainer
+            {
+                get { return _workflowscontainer; }
             }
         }
 
@@ -1558,15 +2310,15 @@ namespace DHYDRO
         [RepositoryFolder("bcd833fa-4784-4471-a004-3d5726f8c748")]
         public partial class AttributeTableDataFolder : RepoGenBaseFolder
         {
-            RepoItemInfo _attributetablecellInfo;
+            RepoItemInfo _genericboundarydatacellInfo;
 
             /// <summary>
             /// Creates a new AttributeTableData  folder.
             /// </summary>
             public AttributeTableDataFolder(RepoGenBaseFolder parentFolder) :
-                    base("AttributeTableData", ".//table/container", parentFolder, 30000, null, false, "bcd833fa-4784-4471-a004-3d5726f8c748", "")
+                    base("AttributeTableData", "container?/container?/container?/container?/element?/table/container", parentFolder, 30000, null, false, "bcd833fa-4784-4471-a004-3d5726f8c748", "")
             {
-                _attributetablecellInfo = new RepoItemInfo(this, "AttributeTableCell", "row[$rowNumber]/cell[@accessiblename>$columnName]", "", 30000, null, "befe169b-b3cb-4d94-9c03-18bfb15c8b31");
+                _genericboundarydatacellInfo = new RepoItemInfo(this, "GenericBoundaryDataCell", "row[$RowNumber]/cell[@text=$CellText]", "", 30000, null, "5941dfd8-a6be-4796-bc87-825d662ef119");
             }
 
             /// <summary>
@@ -1594,26 +2346,118 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The AttributeTableCell item.
+            /// The GenericBoundaryDataCell item.
             /// </summary>
-            [RepositoryItem("befe169b-b3cb-4d94-9c03-18bfb15c8b31")]
-            public virtual Ranorex.Cell AttributeTableCell
+            [RepositoryItem("5941dfd8-a6be-4796-bc87-825d662ef119")]
+            public virtual Ranorex.Cell GenericBoundaryDataCell
             {
                 get
                 {
-                    return _attributetablecellInfo.CreateAdapter<Ranorex.Cell>(true);
+                    return _genericboundarydatacellInfo.CreateAdapter<Ranorex.Cell>(true);
                 }
             }
 
             /// <summary>
-            /// The AttributeTableCell item info.
+            /// The GenericBoundaryDataCell item info.
             /// </summary>
-            [RepositoryItemInfo("befe169b-b3cb-4d94-9c03-18bfb15c8b31")]
-            public virtual RepoItemInfo AttributeTableCellInfo
+            [RepositoryItemInfo("5941dfd8-a6be-4796-bc87-825d662ef119")]
+            public virtual RepoItemInfo GenericBoundaryDataCellInfo
             {
                 get
                 {
-                    return _attributetablecellInfo;
+                    return _genericboundarydatacellInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The WorkflowsContainerFolder folder.
+        /// </summary>
+        [RepositoryFolder("143197bf-3772-4bb3-b314-c730d6d63c9e")]
+        public partial class WorkflowsContainerFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _genericworkflowslistitemInfo;
+            RepoItemInfo _buttonrunInfo;
+
+            /// <summary>
+            /// Creates a new WorkflowsContainer  folder.
+            /// </summary>
+            public WorkflowsContainerFolder(RepoGenBaseFolder parentFolder) :
+                    base("WorkflowsContainer", "container/container/container/element/container/text[@caption='Workflows']/container", parentFolder, 30000, null, false, "143197bf-3772-4bb3-b314-c730d6d63c9e", "")
+            {
+                _genericworkflowslistitemInfo = new RepoItemInfo(this, "GenericWorkflowsListItem", "list/listitem[@text='(RR + FlowFM)']", "", 30000, null, "c7233e28-f258-4ac7-88fa-9d9d5e8d16df");
+                _buttonrunInfo = new RepoItemInfo(this, "ButtonRun", "button[@text='Run']", "", 30000, null, "c73928fc-8e02-477b-976d-d9f7fffd01c6");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("143197bf-3772-4bb3-b314-c730d6d63c9e")]
+            public virtual Ranorex.Container Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.Container>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("143197bf-3772-4bb3-b314-c730d6d63c9e")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericWorkflowsListItem item.
+            /// </summary>
+            [RepositoryItem("c7233e28-f258-4ac7-88fa-9d9d5e8d16df")]
+            public virtual Ranorex.ListItem GenericWorkflowsListItem
+            {
+                get
+                {
+                    return _genericworkflowslistitemInfo.CreateAdapter<Ranorex.ListItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericWorkflowsListItem item info.
+            /// </summary>
+            [RepositoryItemInfo("c7233e28-f258-4ac7-88fa-9d9d5e8d16df")]
+            public virtual RepoItemInfo GenericWorkflowsListItemInfo
+            {
+                get
+                {
+                    return _genericworkflowslistitemInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonRun item.
+            /// </summary>
+            [RepositoryItem("c73928fc-8e02-477b-976d-d9f7fffd01c6")]
+            public virtual Ranorex.Button ButtonRun
+            {
+                get
+                {
+                    return _buttonrunInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonRun item info.
+            /// </summary>
+            [RepositoryItemInfo("c73928fc-8e02-477b-976d-d9f7fffd01c6")]
+            public virtual RepoItemInfo ButtonRunInfo
+            {
+                get
+                {
+                    return _buttonrunInfo;
                 }
             }
         }
@@ -1843,25 +2687,31 @@ namespace DHYDRO
         {
             DHYDRO1D2DRepositoryFolders.AddFolder _add;
             DHYDRO1D2DRepositoryFolders.SpatialOperationsGroupFolder _spatialoperationsgroup;
-            DHYDRO1D2DRepositoryFolders.AreaFolder _area;
+            DHYDRO1D2DRepositoryFolders.Region2DFolder _region2d;
+            DHYDRO1D2DRepositoryFolders.Area2DFolder _area2d;
             DHYDRO1D2DRepositoryFolders.ToolsFolder _tools;
-            RepoItemInfo _addboundarybuttonInfo;
-            RepoItemInfo _legendebuttonInfo;
-            RepoItemInfo _spatiallayercomboboxInfo;
+            DHYDRO1D2DRepositoryFolders.Network1DFolder _network1d;
+            DHYDRO1D2DRepositoryFolders.NetworkCoverageFolder _networkcoverage;
+            DHYDRO1D2DRepositoryFolders.DecorationsFolder _decorations;
+            DHYDRO1D2DRepositoryFolders.EditFolder _edit;
+            RepoItemInfo _adddutchlayersInfo;
 
             /// <summary>
             /// Creates a new Ribbon  folder.
             /// </summary>
             public RibbonFolder(RepoGenBaseFolder parentFolder) :
-                    base("Ribbon", "container[@basetype<'ScrollViewer']", parentFolder, 30000, null, false, "8be4c1eb-e483-44e0-9434-9d3c82fbd519", "")
+                    base("Ribbon", "container", parentFolder, 30000, null, false, "8be4c1eb-e483-44e0-9434-9d3c82fbd519", "")
             {
                 _add = new DHYDRO1D2DRepositoryFolders.AddFolder(this);
                 _spatialoperationsgroup = new DHYDRO1D2DRepositoryFolders.SpatialOperationsGroupFolder(this);
-                _area = new DHYDRO1D2DRepositoryFolders.AreaFolder(this);
+                _region2d = new DHYDRO1D2DRepositoryFolders.Region2DFolder(this);
+                _area2d = new DHYDRO1D2DRepositoryFolders.Area2DFolder(this);
                 _tools = new DHYDRO1D2DRepositoryFolders.ToolsFolder(this);
-                _addboundarybuttonInfo = new RepoItemInfo(this, "AddBoundaryButton", "list[@automationid='Region2D']/button[@automationid='ButtonAddBoundary']", "", 30000, null, "cf3a87ac-0a92-4e3a-8b8c-d4f294c230a5");
-                _legendebuttonInfo = new RepoItemInfo(this, "LegendeButton", "list[@header='Decorations']/button[@header='Legend']", "", 30000, null, "b8295716-abb4-47fd-8213-0a02952d4ac7");
-                _spatiallayercomboboxInfo = new RepoItemInfo(this, "SpatialLayerCombobox", "list[@header='Edit']//combobox", "", 30000, null, "abbc5b90-1546-4cf4-b2b9-f5d1c4f633a0");
+                _network1d = new DHYDRO1D2DRepositoryFolders.Network1DFolder(this);
+                _networkcoverage = new DHYDRO1D2DRepositoryFolders.NetworkCoverageFolder(this);
+                _decorations = new DHYDRO1D2DRepositoryFolders.DecorationsFolder(this);
+                _edit = new DHYDRO1D2DRepositoryFolders.EditFolder(this);
+                _adddutchlayersInfo = new RepoItemInfo(this, "AddDutchLayers", "container?/list/button[@text='Add dutch layers']", "", 30000, null, "f6cd34ff-8599-4723-a235-ee758cf7299f");
             }
 
             /// <summary>
@@ -1889,74 +2739,26 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The AddBoundaryButton item.
+            /// The AddDutchLayers item.
             /// </summary>
-            [RepositoryItem("cf3a87ac-0a92-4e3a-8b8c-d4f294c230a5")]
-            public virtual Ranorex.Button AddBoundaryButton
+            [RepositoryItem("f6cd34ff-8599-4723-a235-ee758cf7299f")]
+            public virtual Ranorex.Button AddDutchLayers
             {
                 get
                 {
-                    return _addboundarybuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                    return _adddutchlayersInfo.CreateAdapter<Ranorex.Button>(true);
                 }
             }
 
             /// <summary>
-            /// The AddBoundaryButton item info.
+            /// The AddDutchLayers item info.
             /// </summary>
-            [RepositoryItemInfo("cf3a87ac-0a92-4e3a-8b8c-d4f294c230a5")]
-            public virtual RepoItemInfo AddBoundaryButtonInfo
+            [RepositoryItemInfo("f6cd34ff-8599-4723-a235-ee758cf7299f")]
+            public virtual RepoItemInfo AddDutchLayersInfo
             {
                 get
                 {
-                    return _addboundarybuttonInfo;
-                }
-            }
-
-            /// <summary>
-            /// The LegendeButton item.
-            /// </summary>
-            [RepositoryItem("b8295716-abb4-47fd-8213-0a02952d4ac7")]
-            public virtual Ranorex.Button LegendeButton
-            {
-                get
-                {
-                    return _legendebuttonInfo.CreateAdapter<Ranorex.Button>(true);
-                }
-            }
-
-            /// <summary>
-            /// The LegendeButton item info.
-            /// </summary>
-            [RepositoryItemInfo("b8295716-abb4-47fd-8213-0a02952d4ac7")]
-            public virtual RepoItemInfo LegendeButtonInfo
-            {
-                get
-                {
-                    return _legendebuttonInfo;
-                }
-            }
-
-            /// <summary>
-            /// The SpatialLayerCombobox item.
-            /// </summary>
-            [RepositoryItem("abbc5b90-1546-4cf4-b2b9-f5d1c4f633a0")]
-            public virtual Ranorex.ComboBox SpatialLayerCombobox
-            {
-                get
-                {
-                    return _spatiallayercomboboxInfo.CreateAdapter<Ranorex.ComboBox>(true);
-                }
-            }
-
-            /// <summary>
-            /// The SpatialLayerCombobox item info.
-            /// </summary>
-            [RepositoryItemInfo("abbc5b90-1546-4cf4-b2b9-f5d1c4f633a0")]
-            public virtual RepoItemInfo SpatialLayerComboboxInfo
-            {
-                get
-                {
-                    return _spatiallayercomboboxInfo;
+                    return _adddutchlayersInfo;
                 }
             }
 
@@ -1979,12 +2781,21 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The Area folder.
+            /// The Region2D folder.
+            /// </summary>
+            [RepositoryFolder("dbe79188-f765-4c81-808b-e4469af11988")]
+            public virtual DHYDRO1D2DRepositoryFolders.Region2DFolder Region2D
+            {
+                get { return _region2d; }
+            }
+
+            /// <summary>
+            /// The Area2D folder.
             /// </summary>
             [RepositoryFolder("5b61846c-63ea-42bf-ad55-873c0e54542b")]
-            public virtual DHYDRO1D2DRepositoryFolders.AreaFolder Area
+            public virtual DHYDRO1D2DRepositoryFolders.Area2DFolder Area2D
             {
-                get { return _area; }
+                get { return _area2d; }
             }
 
             /// <summary>
@@ -1994,6 +2805,42 @@ namespace DHYDRO
             public virtual DHYDRO1D2DRepositoryFolders.ToolsFolder Tools
             {
                 get { return _tools; }
+            }
+
+            /// <summary>
+            /// The Network1D folder.
+            /// </summary>
+            [RepositoryFolder("a2eda5cf-00e3-4804-875c-3c1b1c7f2074")]
+            public virtual DHYDRO1D2DRepositoryFolders.Network1DFolder Network1D
+            {
+                get { return _network1d; }
+            }
+
+            /// <summary>
+            /// The NetworkCoverage folder.
+            /// </summary>
+            [RepositoryFolder("304eedf0-a7ac-429a-a05e-7a2740cc5a98")]
+            public virtual DHYDRO1D2DRepositoryFolders.NetworkCoverageFolder NetworkCoverage
+            {
+                get { return _networkcoverage; }
+            }
+
+            /// <summary>
+            /// The Decorations folder.
+            /// </summary>
+            [RepositoryFolder("f5c28706-0d12-44ea-a22c-8ad72550a1f8")]
+            public virtual DHYDRO1D2DRepositoryFolders.DecorationsFolder Decorations
+            {
+                get { return _decorations; }
+            }
+
+            /// <summary>
+            /// The Edit folder.
+            /// </summary>
+            [RepositoryFolder("911d1be8-0f85-4576-b9af-ad559d06ce84")]
+            public virtual DHYDRO1D2DRepositoryFolders.EditFolder Edit
+            {
+                get { return _edit; }
             }
         }
 
@@ -2234,19 +3081,85 @@ namespace DHYDRO
         }
 
         /// <summary>
-        /// The AreaFolder folder.
+        /// The Region2DFolder folder.
+        /// </summary>
+        [RepositoryFolder("dbe79188-f765-4c81-808b-e4469af11988")]
+        public partial class Region2DFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _addboundarybuttonInfo;
+
+            /// <summary>
+            /// Creates a new Region2D  folder.
+            /// </summary>
+            public Region2DFolder(RepoGenBaseFolder parentFolder) :
+                    base("Region2D", "list[@automationid='Region2D']", parentFolder, 30000, null, false, "dbe79188-f765-4c81-808b-e4469af11988", "")
+            {
+                _addboundarybuttonInfo = new RepoItemInfo(this, "AddBoundaryButton", "button[@automationid='ButtonAddBoundary']", "", 30000, null, "cf3a87ac-0a92-4e3a-8b8c-d4f294c230a5");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("dbe79188-f765-4c81-808b-e4469af11988")]
+            public virtual Ranorex.List Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.List>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("dbe79188-f765-4c81-808b-e4469af11988")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The AddBoundaryButton item.
+            /// </summary>
+            [RepositoryItem("cf3a87ac-0a92-4e3a-8b8c-d4f294c230a5")]
+            public virtual Ranorex.Button AddBoundaryButton
+            {
+                get
+                {
+                    return _addboundarybuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The AddBoundaryButton item info.
+            /// </summary>
+            [RepositoryItemInfo("cf3a87ac-0a92-4e3a-8b8c-d4f294c230a5")]
+            public virtual RepoItemInfo AddBoundaryButtonInfo
+            {
+                get
+                {
+                    return _addboundarybuttonInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Area2DFolder folder.
         /// </summary>
         [RepositoryFolder("5b61846c-63ea-42bf-ad55-873c0e54542b")]
-        public partial class AreaFolder : RepoGenBaseFolder
+        public partial class Area2DFolder : RepoGenBaseFolder
         {
             RepoItemInfo _addobservationcrosssectionbuttonInfo;
             RepoItemInfo _addobservationpointbuttonInfo;
 
             /// <summary>
-            /// Creates a new Area  folder.
+            /// Creates a new Area2D  folder.
             /// </summary>
-            public AreaFolder(RepoGenBaseFolder parentFolder) :
-                    base("Area", "list[@header='2D Area']", parentFolder, 30000, null, false, "5b61846c-63ea-42bf-ad55-873c0e54542b", "")
+            public Area2DFolder(RepoGenBaseFolder parentFolder) :
+                    base("Area2D", "list[@header='2D Area']", parentFolder, 30000, null, false, "5b61846c-63ea-42bf-ad55-873c0e54542b", "")
             {
                 _addobservationcrosssectionbuttonInfo = new RepoItemInfo(this, "AddObservationCrossSectionButton", "button[@automationid='ButtonAddNewObsCs2D']", "", 30000, null, "9c6f8de4-a19e-47d0-b5cc-af7794df9c56");
                 _addobservationpointbuttonInfo = new RepoItemInfo(this, "AddObservationPointButton", "button[@automationid='ButtonAddNewObsPoint2D']", "", 30000, null, "b4c03b6b-e716-4ec6-b4de-88bf12bed252");
@@ -2331,8 +3244,9 @@ namespace DHYDRO
         [RepositoryFolder("ae76ad76-d4bd-4ec6-b9da-f3c0db4b39f4")]
         public partial class ToolsFolder : RepoGenBaseFolder
         {
-            RepoItemInfo _selectbuttonInfo;
             RepoItemInfo _querytimeseriesInfo;
+            RepoItemInfo _buttonmapzoomusingrectangleInfo;
+            RepoItemInfo _buttonmapselectInfo;
 
             /// <summary>
             /// Creates a new Tools  folder.
@@ -2340,8 +3254,9 @@ namespace DHYDRO
             public ToolsFolder(RepoGenBaseFolder parentFolder) :
                     base("Tools", "list[@header='Tools']", parentFolder, 30000, null, false, "ae76ad76-d4bd-4ec6-b9da-f3c0db4b39f4", "")
             {
-                _selectbuttonInfo = new RepoItemInfo(this, "SelectButton", "button[@header='Select']", "", 30000, null, "adda2eda-1125-4082-a3e7-ac9dbab5c7e5");
                 _querytimeseriesInfo = new RepoItemInfo(this, "QueryTimeSeries", "button[@header='Query Time Series']", "", 30000, null, "a0d39bda-0b34-4cce-9eee-5a71b11de28b");
+                _buttonmapzoomusingrectangleInfo = new RepoItemInfo(this, "ButtonMapZoomUsingRectangle", "button[@automationid='ButtonMapZoomUsingRectangle']", "element", 30000, null, "5d4e9790-4712-48d4-a308-807646b1547d");
+                _buttonmapselectInfo = new RepoItemInfo(this, "ButtonMapSelect", "button[@automationid='ButtonMapSelect']", "element", 30000, null, "1b9a7e5d-461b-47f9-8b00-257182667fbb");
             }
 
             /// <summary>
@@ -2369,30 +3284,6 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The SelectButton item.
-            /// </summary>
-            [RepositoryItem("adda2eda-1125-4082-a3e7-ac9dbab5c7e5")]
-            public virtual Ranorex.Button SelectButton
-            {
-                get
-                {
-                    return _selectbuttonInfo.CreateAdapter<Ranorex.Button>(true);
-                }
-            }
-
-            /// <summary>
-            /// The SelectButton item info.
-            /// </summary>
-            [RepositoryItemInfo("adda2eda-1125-4082-a3e7-ac9dbab5c7e5")]
-            public virtual RepoItemInfo SelectButtonInfo
-            {
-                get
-                {
-                    return _selectbuttonInfo;
-                }
-            }
-
-            /// <summary>
             /// The QueryTimeSeries item.
             /// </summary>
             [RepositoryItem("a0d39bda-0b34-4cce-9eee-5a71b11de28b")]
@@ -2413,6 +3304,448 @@ namespace DHYDRO
                 get
                 {
                     return _querytimeseriesInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonMapZoomUsingRectangle item.
+            /// </summary>
+            [RepositoryItem("5d4e9790-4712-48d4-a308-807646b1547d")]
+            public virtual Ranorex.Button ButtonMapZoomUsingRectangle
+            {
+                get
+                {
+                    return _buttonmapzoomusingrectangleInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonMapZoomUsingRectangle item info.
+            /// </summary>
+            [RepositoryItemInfo("5d4e9790-4712-48d4-a308-807646b1547d")]
+            public virtual RepoItemInfo ButtonMapZoomUsingRectangleInfo
+            {
+                get
+                {
+                    return _buttonmapzoomusingrectangleInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonMapSelect item.
+            /// </summary>
+            [RepositoryItem("1b9a7e5d-461b-47f9-8b00-257182667fbb")]
+            public virtual Ranorex.Button ButtonMapSelect
+            {
+                get
+                {
+                    return _buttonmapselectInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonMapSelect item info.
+            /// </summary>
+            [RepositoryItemInfo("1b9a7e5d-461b-47f9-8b00-257182667fbb")]
+            public virtual RepoItemInfo ButtonMapSelectInfo
+            {
+                get
+                {
+                    return _buttonmapselectInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Network1DFolder folder.
+        /// </summary>
+        [RepositoryFolder("a2eda5cf-00e3-4804-875c-3c1b1c7f2074")]
+        public partial class Network1DFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _buttonaddnewsewerconnectionInfo;
+            RepoItemInfo _buttonaddnewpipeInfo;
+            RepoItemInfo _buttonaddnewpumpInfo;
+            RepoItemInfo _buttonaddnewweirInfo;
+            RepoItemInfo _buttonaddneworificeInfo;
+
+            /// <summary>
+            /// Creates a new Network1D  folder.
+            /// </summary>
+            public Network1DFolder(RepoGenBaseFolder parentFolder) :
+                    base("Network1D", "list[@automationid='Network1D']", parentFolder, 30000, null, false, "a2eda5cf-00e3-4804-875c-3c1b1c7f2074", "")
+            {
+                _buttonaddnewsewerconnectionInfo = new RepoItemInfo(this, "ButtonAddNewSewerConnection", "button[@automationid='ButtonAddNewSewerConnection']", "", 30000, null, "ff2d1301-c673-4aea-97cd-253a2a45f810");
+                _buttonaddnewpipeInfo = new RepoItemInfo(this, "ButtonAddNewPipe", "button[@automationid='ButtonAddNewPipe']", "", 30000, null, "02667b01-c2ad-47bb-b3aa-0e7d56c87b5b");
+                _buttonaddnewpumpInfo = new RepoItemInfo(this, "ButtonAddNewPump", "button[@automationid='ButtonAddNewPump']", "", 30000, null, "63f1effe-5595-485a-babf-d0adc2f37e24");
+                _buttonaddnewweirInfo = new RepoItemInfo(this, "ButtonAddNewWeir", "button[@automationid='ButtonAddNewWeir']", "", 30000, null, "5339db22-8876-46f5-a69c-b74903813bb1");
+                _buttonaddneworificeInfo = new RepoItemInfo(this, "ButtonAddNewOrifice", "button[@automationid='ButtonAddNewOrifice']", "", 30000, null, "da83233e-0ba0-4191-a514-f13d15d7bba0");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("a2eda5cf-00e3-4804-875c-3c1b1c7f2074")]
+            public virtual Ranorex.List Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.List>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("a2eda5cf-00e3-4804-875c-3c1b1c7f2074")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewSewerConnection item.
+            /// </summary>
+            [RepositoryItem("ff2d1301-c673-4aea-97cd-253a2a45f810")]
+            public virtual Ranorex.Button ButtonAddNewSewerConnection
+            {
+                get
+                {
+                    return _buttonaddnewsewerconnectionInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewSewerConnection item info.
+            /// </summary>
+            [RepositoryItemInfo("ff2d1301-c673-4aea-97cd-253a2a45f810")]
+            public virtual RepoItemInfo ButtonAddNewSewerConnectionInfo
+            {
+                get
+                {
+                    return _buttonaddnewsewerconnectionInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewPipe item.
+            /// </summary>
+            [RepositoryItem("02667b01-c2ad-47bb-b3aa-0e7d56c87b5b")]
+            public virtual Ranorex.Button ButtonAddNewPipe
+            {
+                get
+                {
+                    return _buttonaddnewpipeInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewPipe item info.
+            /// </summary>
+            [RepositoryItemInfo("02667b01-c2ad-47bb-b3aa-0e7d56c87b5b")]
+            public virtual RepoItemInfo ButtonAddNewPipeInfo
+            {
+                get
+                {
+                    return _buttonaddnewpipeInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewPump item.
+            /// </summary>
+            [RepositoryItem("63f1effe-5595-485a-babf-d0adc2f37e24")]
+            public virtual Ranorex.Button ButtonAddNewPump
+            {
+                get
+                {
+                    return _buttonaddnewpumpInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewPump item info.
+            /// </summary>
+            [RepositoryItemInfo("63f1effe-5595-485a-babf-d0adc2f37e24")]
+            public virtual RepoItemInfo ButtonAddNewPumpInfo
+            {
+                get
+                {
+                    return _buttonaddnewpumpInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewWeir item.
+            /// </summary>
+            [RepositoryItem("5339db22-8876-46f5-a69c-b74903813bb1")]
+            public virtual Ranorex.Button ButtonAddNewWeir
+            {
+                get
+                {
+                    return _buttonaddnewweirInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewWeir item info.
+            /// </summary>
+            [RepositoryItemInfo("5339db22-8876-46f5-a69c-b74903813bb1")]
+            public virtual RepoItemInfo ButtonAddNewWeirInfo
+            {
+                get
+                {
+                    return _buttonaddnewweirInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewOrifice item.
+            /// </summary>
+            [RepositoryItem("da83233e-0ba0-4191-a514-f13d15d7bba0")]
+            public virtual Ranorex.Button ButtonAddNewOrifice
+            {
+                get
+                {
+                    return _buttonaddneworificeInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewOrifice item info.
+            /// </summary>
+            [RepositoryItemInfo("da83233e-0ba0-4191-a514-f13d15d7bba0")]
+            public virtual RepoItemInfo ButtonAddNewOrificeInfo
+            {
+                get
+                {
+                    return _buttonaddneworificeInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The NetworkCoverageFolder folder.
+        /// </summary>
+        [RepositoryFolder("304eedf0-a7ac-429a-a05e-7a2740cc5a98")]
+        public partial class NetworkCoverageFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _buttonaddnewrouteInfo;
+            RepoItemInfo _buttonshowsideviewInfo;
+
+            /// <summary>
+            /// Creates a new NetworkCoverage  folder.
+            /// </summary>
+            public NetworkCoverageFolder(RepoGenBaseFolder parentFolder) :
+                    base("NetworkCoverage", "list[@automationid='NetworkCoverage']", parentFolder, 30000, null, false, "304eedf0-a7ac-429a-a05e-7a2740cc5a98", "")
+            {
+                _buttonaddnewrouteInfo = new RepoItemInfo(this, "ButtonAddNewRoute", "button[@automationid='ButtonAddNewRoute']", "", 30000, null, "6acbd19f-6fe4-4538-9022-f3748b23cbc9");
+                _buttonshowsideviewInfo = new RepoItemInfo(this, "ButtonShowSideView", "button[@automationid='ButtonShowSideView']", "", 30000, null, "0718994f-7746-4942-bcb1-0a68df76503f");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("304eedf0-a7ac-429a-a05e-7a2740cc5a98")]
+            public virtual Ranorex.List Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.List>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("304eedf0-a7ac-429a-a05e-7a2740cc5a98")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewRoute item.
+            /// </summary>
+            [RepositoryItem("6acbd19f-6fe4-4538-9022-f3748b23cbc9")]
+            public virtual Ranorex.Button ButtonAddNewRoute
+            {
+                get
+                {
+                    return _buttonaddnewrouteInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonAddNewRoute item info.
+            /// </summary>
+            [RepositoryItemInfo("6acbd19f-6fe4-4538-9022-f3748b23cbc9")]
+            public virtual RepoItemInfo ButtonAddNewRouteInfo
+            {
+                get
+                {
+                    return _buttonaddnewrouteInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ButtonShowSideView item.
+            /// </summary>
+            [RepositoryItem("0718994f-7746-4942-bcb1-0a68df76503f")]
+            public virtual Ranorex.Button ButtonShowSideView
+            {
+                get
+                {
+                    return _buttonshowsideviewInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ButtonShowSideView item info.
+            /// </summary>
+            [RepositoryItemInfo("0718994f-7746-4942-bcb1-0a68df76503f")]
+            public virtual RepoItemInfo ButtonShowSideViewInfo
+            {
+                get
+                {
+                    return _buttonshowsideviewInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The DecorationsFolder folder.
+        /// </summary>
+        [RepositoryFolder("f5c28706-0d12-44ea-a22c-8ad72550a1f8")]
+        public partial class DecorationsFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _legendbuttonInfo;
+
+            /// <summary>
+            /// Creates a new Decorations  folder.
+            /// </summary>
+            public DecorationsFolder(RepoGenBaseFolder parentFolder) :
+                    base("Decorations", "list[@header='Decorations']", parentFolder, 30000, null, false, "f5c28706-0d12-44ea-a22c-8ad72550a1f8", "")
+            {
+                _legendbuttonInfo = new RepoItemInfo(this, "LegendButton", "button[@header='Legend']", "", 30000, null, "b8295716-abb4-47fd-8213-0a02952d4ac7");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("f5c28706-0d12-44ea-a22c-8ad72550a1f8")]
+            public virtual Ranorex.List Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.List>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("f5c28706-0d12-44ea-a22c-8ad72550a1f8")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The LegendButton item.
+            /// </summary>
+            [RepositoryItem("b8295716-abb4-47fd-8213-0a02952d4ac7")]
+            public virtual Ranorex.Button LegendButton
+            {
+                get
+                {
+                    return _legendbuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The LegendButton item info.
+            /// </summary>
+            [RepositoryItemInfo("b8295716-abb4-47fd-8213-0a02952d4ac7")]
+            public virtual RepoItemInfo LegendButtonInfo
+            {
+                get
+                {
+                    return _legendbuttonInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The EditFolder folder.
+        /// </summary>
+        [RepositoryFolder("911d1be8-0f85-4576-b9af-ad559d06ce84")]
+        public partial class EditFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _spatiallayercomboboxInfo;
+
+            /// <summary>
+            /// Creates a new Edit  folder.
+            /// </summary>
+            public EditFolder(RepoGenBaseFolder parentFolder) :
+                    base("Edit", "list[@header='Edit']", parentFolder, 30000, null, false, "911d1be8-0f85-4576-b9af-ad559d06ce84", "")
+            {
+                _spatiallayercomboboxInfo = new RepoItemInfo(this, "SpatialLayerCombobox", ".//combobox", "", 30000, null, "abbc5b90-1546-4cf4-b2b9-f5d1c4f633a0");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("911d1be8-0f85-4576-b9af-ad559d06ce84")]
+            public virtual Ranorex.List Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.List>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("911d1be8-0f85-4576-b9af-ad559d06ce84")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The SpatialLayerCombobox item.
+            /// </summary>
+            [RepositoryItem("abbc5b90-1546-4cf4-b2b9-f5d1c4f633a0")]
+            public virtual Ranorex.ComboBox SpatialLayerCombobox
+            {
+                get
+                {
+                    return _spatiallayercomboboxInfo.CreateAdapter<Ranorex.ComboBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The SpatialLayerCombobox item info.
+            /// </summary>
+            [RepositoryItemInfo("abbc5b90-1546-4cf4-b2b9-f5d1c4f633a0")]
+            public virtual RepoItemInfo SpatialLayerComboboxInfo
+            {
+                get
+                {
+                    return _spatiallayercomboboxInfo;
                 }
             }
         }
@@ -2904,149 +4237,6 @@ namespace DHYDRO
                 get
                 {
                     return _boundaryInfo;
-                }
-            }
-        }
-
-        /// <summary>
-        /// The OperationTreeFolder folder.
-        /// </summary>
-        [RepositoryFolder("e882bcc2-2787-47d4-b645-fbe938ac842b")]
-        public partial class OperationTreeFolder : RepoGenBaseFolder
-        {
-            DHYDRO1D2DRepositoryFolders.RootItemFolder _rootitem;
-
-            /// <summary>
-            /// Creates a new OperationTree  folder.
-            /// </summary>
-            public OperationTreeFolder(RepoGenBaseFolder parentFolder) :
-                    base("OperationTree", "container/container/container[@controlname='SpatialOperationSetLayerView']/tree[@controlname='treeView']/tree[@accessiblerole='Outline']", parentFolder, 30000, null, false, "e882bcc2-2787-47d4-b645-fbe938ac842b", "")
-            {
-                _rootitem = new DHYDRO1D2DRepositoryFolders.RootItemFolder(this);
-            }
-
-            /// <summary>
-            /// The Self item.
-            /// </summary>
-            [RepositoryItem("e882bcc2-2787-47d4-b645-fbe938ac842b")]
-            public virtual Ranorex.Tree Self
-            {
-                get
-                {
-                    return _selfInfo.CreateAdapter<Ranorex.Tree>(true);
-                }
-            }
-
-            /// <summary>
-            /// The Self item info.
-            /// </summary>
-            [RepositoryItemInfo("e882bcc2-2787-47d4-b645-fbe938ac842b")]
-            public virtual RepoItemInfo SelfInfo
-            {
-                get
-                {
-                    return _selfInfo;
-                }
-            }
-
-            /// <summary>
-            /// The RootItem folder.
-            /// </summary>
-            [RepositoryFolder("01e729e0-6c41-433a-a1ab-cdcc0b428142")]
-            public virtual DHYDRO1D2DRepositoryFolders.RootItemFolder RootItem
-            {
-                get { return _rootitem; }
-            }
-        }
-
-        /// <summary>
-        /// The RootItemFolder folder.
-        /// </summary>
-        [RepositoryFolder("01e729e0-6c41-433a-a1ab-cdcc0b428142")]
-        public partial class RootItemFolder : RepoGenBaseFolder
-        {
-            RepoItemInfo _importsampleInfo;
-            RepoItemInfo _interpolateInfo;
-
-            /// <summary>
-            /// Creates a new RootItem  folder.
-            /// </summary>
-            public RootItemFolder(RepoGenBaseFolder parentFolder) :
-                    base("RootItem", "treeitem", parentFolder, 30000, null, false, "01e729e0-6c41-433a-a1ab-cdcc0b428142", "")
-            {
-                _importsampleInfo = new RepoItemInfo(this, "ImportSample", "treeitem[@accessiblename>'set']/treeitem[@accessiblename>'Import samples']", "", 120000, null, "6600559d-abdd-40d5-b1df-9d5c2cdf87fd");
-                _interpolateInfo = new RepoItemInfo(this, "Interpolate", "treeitem[@accessiblename>'Interpolate']", "", 30000, null, "f0343b84-e854-46be-afff-3f39b849de18");
-            }
-
-            /// <summary>
-            /// The Self item.
-            /// </summary>
-            [RepositoryItem("01e729e0-6c41-433a-a1ab-cdcc0b428142")]
-            public virtual Ranorex.TreeItem Self
-            {
-                get
-                {
-                    return _selfInfo.CreateAdapter<Ranorex.TreeItem>(true);
-                }
-            }
-
-            /// <summary>
-            /// The Self item info.
-            /// </summary>
-            [RepositoryItemInfo("01e729e0-6c41-433a-a1ab-cdcc0b428142")]
-            public virtual RepoItemInfo SelfInfo
-            {
-                get
-                {
-                    return _selfInfo;
-                }
-            }
-
-            /// <summary>
-            /// The ImportSample item.
-            /// </summary>
-            [RepositoryItem("6600559d-abdd-40d5-b1df-9d5c2cdf87fd")]
-            public virtual Ranorex.TreeItem ImportSample
-            {
-                get
-                {
-                    return _importsampleInfo.CreateAdapter<Ranorex.TreeItem>(true);
-                }
-            }
-
-            /// <summary>
-            /// The ImportSample item info.
-            /// </summary>
-            [RepositoryItemInfo("6600559d-abdd-40d5-b1df-9d5c2cdf87fd")]
-            public virtual RepoItemInfo ImportSampleInfo
-            {
-                get
-                {
-                    return _importsampleInfo;
-                }
-            }
-
-            /// <summary>
-            /// The Interpolate item.
-            /// </summary>
-            [RepositoryItem("f0343b84-e854-46be-afff-3f39b849de18")]
-            public virtual Ranorex.TreeItem Interpolate
-            {
-                get
-                {
-                    return _interpolateInfo.CreateAdapter<Ranorex.TreeItem>(true);
-                }
-            }
-
-            /// <summary>
-            /// The Interpolate item info.
-            /// </summary>
-            [RepositoryItemInfo("f0343b84-e854-46be-afff-3f39b849de18")]
-            public virtual RepoItemInfo InterpolateInfo
-            {
-                get
-                {
-                    return _interpolateInfo;
                 }
             }
         }
@@ -3859,6 +5049,9 @@ namespace DHYDRO
             DHYDRO1D2DRepositoryFolders.RestartFolder _restart;
             DHYDRO1D2DRepositoryFolders.OtherFolder _other;
             DHYDRO1D2DRepositoryFolders.OutputGroupFolder _outputgroup;
+            RepoItemInfo _genericcomboboxinsettingsInfo;
+            RepoItemInfo _generictextboxinsettingsInfo;
+            RepoItemInfo _genericiconbuttonInfo;
 
             /// <summary>
             /// Creates a new ListGroupsOutputSettings  folder.
@@ -3870,6 +5063,9 @@ namespace DHYDRO
                 _restart = new DHYDRO1D2DRepositoryFolders.RestartFolder(this);
                 _other = new DHYDRO1D2DRepositoryFolders.OtherFolder(this);
                 _outputgroup = new DHYDRO1D2DRepositoryFolders.OutputGroupFolder(this);
+                _genericcomboboxinsettingsInfo = new RepoItemInfo(this, "GenericComboBoxInSettings", "list[$ListNumber]/container[$ContainerNumber]/combobox", "", 30000, null, "dca18eb0-8e70-4185-8191-fa637805478a");
+                _generictextboxinsettingsInfo = new RepoItemInfo(this, "GenericTextBoxInSettings", "list[$ListNumber]/container[$ContainerNumber]/text[$TextNumber]", "", 30000, null, "97229bdf-e9f0-4117-9974-027c3410a86d");
+                _genericiconbuttonInfo = new RepoItemInfo(this, "GenericIconButton", "list[$ListNumber]/container[$ContainerNumber]/button", "", 30000, null, "42f77c8e-2ac5-44cd-9ada-b6ace6b1c422");
             }
 
             /// <summary>
@@ -3893,6 +5089,78 @@ namespace DHYDRO
                 get
                 {
                     return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericComboBoxInSettings item.
+            /// </summary>
+            [RepositoryItem("dca18eb0-8e70-4185-8191-fa637805478a")]
+            public virtual Ranorex.ComboBox GenericComboBoxInSettings
+            {
+                get
+                {
+                    return _genericcomboboxinsettingsInfo.CreateAdapter<Ranorex.ComboBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericComboBoxInSettings item info.
+            /// </summary>
+            [RepositoryItemInfo("dca18eb0-8e70-4185-8191-fa637805478a")]
+            public virtual RepoItemInfo GenericComboBoxInSettingsInfo
+            {
+                get
+                {
+                    return _genericcomboboxinsettingsInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericTextBoxInSettings item.
+            /// </summary>
+            [RepositoryItem("97229bdf-e9f0-4117-9974-027c3410a86d")]
+            public virtual Ranorex.Text GenericTextBoxInSettings
+            {
+                get
+                {
+                    return _generictextboxinsettingsInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericTextBoxInSettings item info.
+            /// </summary>
+            [RepositoryItemInfo("97229bdf-e9f0-4117-9974-027c3410a86d")]
+            public virtual RepoItemInfo GenericTextBoxInSettingsInfo
+            {
+                get
+                {
+                    return _generictextboxinsettingsInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericIconButton item.
+            /// </summary>
+            [RepositoryItem("42f77c8e-2ac5-44cd-9ada-b6ace6b1c422")]
+            public virtual Ranorex.Button GenericIconButton
+            {
+                get
+                {
+                    return _genericiconbuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericIconButton item info.
+            /// </summary>
+            [RepositoryItemInfo("42f77c8e-2ac5-44cd-9ada-b6ace6b1c422")]
+            public virtual RepoItemInfo GenericIconButtonInfo
+            {
+                get
+                {
+                    return _genericiconbuttonInfo;
                 }
             }
 
@@ -4335,14 +5603,16 @@ namespace DHYDRO
         public partial class TabsDocumentsCentralViewFolder : RepoGenBaseFolder
         {
             RepoItemInfo _documentclosebuttonInfo;
+            RepoItemInfo _generictabInfo;
 
             /// <summary>
             /// Creates a new TabsDocumentsCentralView  folder.
             /// </summary>
             public TabsDocumentsCentralViewFolder(RepoGenBaseFolder parentFolder) :
-                    base("TabsDocumentsCentralView", "container/container/tabpagelist/button[@automationid='MenuDropDownButton']", parentFolder, 30000, null, false, "a1068127-4dd0-4fe7-8589-bec4283db94d", "")
+                    base("TabsDocumentsCentralView", "container/container/tabpagelist/button", parentFolder, 30000, null, false, "a1068127-4dd0-4fe7-8589-bec4283db94d", "")
             {
-                _documentclosebuttonInfo = new RepoItemInfo(this, "DocumentCloseButton", "container[@automationid='HeaderPanel']/tabpage[@index='1']/button[@automationid='DocumentCloseButton']", "", 30000, null, "152ed340-dd45-4a45-a040-cb8c6f94a9ef");
+                _documentclosebuttonInfo = new RepoItemInfo(this, "DocumentCloseButton", "container?/tabpage/container/text[@caption~$HeaderPanelText]/parent::container/parent::tabpage/button", "", 30000, null, "09fa9d83-1f6e-4186-b988-7e045aace5da");
+                _generictabInfo = new RepoItemInfo(this, "GenericTab", "container/tabpage/container/text[@caption=$TabName]", "", 30000, null, "e19d0df9-a851-4fce-bdf5-40a45899316a");
             }
 
             /// <summary>
@@ -4372,7 +5642,7 @@ namespace DHYDRO
             /// <summary>
             /// The DocumentCloseButton item.
             /// </summary>
-            [RepositoryItem("152ed340-dd45-4a45-a040-cb8c6f94a9ef")]
+            [RepositoryItem("09fa9d83-1f6e-4186-b988-7e045aace5da")]
             public virtual Ranorex.Button DocumentCloseButton
             {
                 get
@@ -4384,7 +5654,7 @@ namespace DHYDRO
             /// <summary>
             /// The DocumentCloseButton item info.
             /// </summary>
-            [RepositoryItemInfo("152ed340-dd45-4a45-a040-cb8c6f94a9ef")]
+            [RepositoryItemInfo("09fa9d83-1f6e-4186-b988-7e045aace5da")]
             public virtual RepoItemInfo DocumentCloseButtonInfo
             {
                 get
@@ -4392,41 +5662,65 @@ namespace DHYDRO
                     return _documentclosebuttonInfo;
                 }
             }
+
+            /// <summary>
+            /// The GenericTab item.
+            /// </summary>
+            [RepositoryItem("e19d0df9-a851-4fce-bdf5-40a45899316a")]
+            public virtual Ranorex.Text GenericTab
+            {
+                get
+                {
+                    return _generictabInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericTab item info.
+            /// </summary>
+            [RepositoryItemInfo("e19d0df9-a851-4fce-bdf5-40a45899316a")]
+            public virtual RepoItemInfo GenericTabInfo
+            {
+                get
+                {
+                    return _generictabInfo;
+                }
+            }
         }
 
         /// <summary>
-        /// The TabPageListFolder folder.
+        /// The OperationTreeFolder folder.
         /// </summary>
-        [RepositoryFolder("d7fdfecc-098a-47e3-bad8-a049fa034455")]
-        public partial class TabPageListFolder : RepoGenBaseFolder
+        [RepositoryFolder("e882bcc2-2787-47d4-b645-fbe938ac842b")]
+        public partial class OperationTreeFolder : RepoGenBaseFolder
         {
-            DHYDRO1D2DRepositoryFolders.TabPageFolder _tabpage;
+            DHYDRO1D2DRepositoryFolders.RootItemFolder _rootitem;
 
             /// <summary>
-            /// Creates a new TabPageList  folder.
+            /// Creates a new OperationTree  folder.
             /// </summary>
-            public TabPageListFolder(RepoGenBaseFolder parentFolder) :
-                    base("TabPageList", "container/container/tabpagelist", parentFolder, 30000, null, false, "d7fdfecc-098a-47e3-bad8-a049fa034455", "")
+            public OperationTreeFolder(RepoGenBaseFolder parentFolder) :
+                    base("OperationTree", "container/container/container[@controlname='SpatialOperationSetLayerView']/tree[@controlname='treeView']/tree[@accessiblerole='Outline']", parentFolder, 30000, null, false, "e882bcc2-2787-47d4-b645-fbe938ac842b", "")
             {
-                _tabpage = new DHYDRO1D2DRepositoryFolders.TabPageFolder(this);
+                _rootitem = new DHYDRO1D2DRepositoryFolders.RootItemFolder(this);
             }
 
             /// <summary>
             /// The Self item.
             /// </summary>
-            [RepositoryItem("d7fdfecc-098a-47e3-bad8-a049fa034455")]
-            public virtual Ranorex.TabPageList Self
+            [RepositoryItem("e882bcc2-2787-47d4-b645-fbe938ac842b")]
+            public virtual Ranorex.Tree Self
             {
                 get
                 {
-                    return _selfInfo.CreateAdapter<Ranorex.TabPageList>(true);
+                    return _selfInfo.CreateAdapter<Ranorex.Tree>(true);
                 }
             }
 
             /// <summary>
             /// The Self item info.
             /// </summary>
-            [RepositoryItemInfo("d7fdfecc-098a-47e3-bad8-a049fa034455")]
+            [RepositoryItemInfo("e882bcc2-2787-47d4-b645-fbe938ac842b")]
             public virtual RepoItemInfo SelfInfo
             {
                 get
@@ -4436,48 +5730,50 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The TabPage folder.
+            /// The RootItem folder.
             /// </summary>
-            [RepositoryFolder("d2db5972-46df-4c0c-b15d-417550451404")]
-            public virtual DHYDRO1D2DRepositoryFolders.TabPageFolder TabPage
+            [RepositoryFolder("01e729e0-6c41-433a-a1ab-cdcc0b428142")]
+            public virtual DHYDRO1D2DRepositoryFolders.RootItemFolder RootItem
             {
-                get { return _tabpage; }
+                get { return _rootitem; }
             }
         }
 
         /// <summary>
-        /// The TabPageFolder folder.
+        /// The RootItemFolder folder.
         /// </summary>
-        [RepositoryFolder("d2db5972-46df-4c0c-b15d-417550451404")]
-        public partial class TabPageFolder : RepoGenBaseFolder
+        [RepositoryFolder("01e729e0-6c41-433a-a1ab-cdcc0b428142")]
+        public partial class RootItemFolder : RepoGenBaseFolder
         {
-            RepoItemInfo _documentclosebuttonInfo;
+            RepoItemInfo _importsampleInfo;
+            RepoItemInfo _interpolateInfo;
 
             /// <summary>
-            /// Creates a new TabPage  folder.
+            /// Creates a new RootItem  folder.
             /// </summary>
-            public TabPageFolder(RepoGenBaseFolder parentFolder) :
-                    base("TabPage", "button/tabpage", parentFolder, 30000, null, false, "d2db5972-46df-4c0c-b15d-417550451404", "")
+            public RootItemFolder(RepoGenBaseFolder parentFolder) :
+                    base("RootItem", "treeitem", parentFolder, 30000, null, false, "01e729e0-6c41-433a-a1ab-cdcc0b428142", "")
             {
-                _documentclosebuttonInfo = new RepoItemInfo(this, "DocumentCloseButton", "button[@automationid='DocumentCloseButton']", "", 30000, null, "dbee5d78-a953-416d-a1a2-1aef3a4f68bc");
+                _importsampleInfo = new RepoItemInfo(this, "ImportSample", "treeitem[@accessiblename>'set']/treeitem[@accessiblename>'Import samples']", "", 120000, null, "6600559d-abdd-40d5-b1df-9d5c2cdf87fd");
+                _interpolateInfo = new RepoItemInfo(this, "Interpolate", "treeitem[@accessiblename>'Interpolate']", "", 30000, null, "f0343b84-e854-46be-afff-3f39b849de18");
             }
 
             /// <summary>
             /// The Self item.
             /// </summary>
-            [RepositoryItem("d2db5972-46df-4c0c-b15d-417550451404")]
-            public virtual Ranorex.TabPage Self
+            [RepositoryItem("01e729e0-6c41-433a-a1ab-cdcc0b428142")]
+            public virtual Ranorex.TreeItem Self
             {
                 get
                 {
-                    return _selfInfo.CreateAdapter<Ranorex.TabPage>(true);
+                    return _selfInfo.CreateAdapter<Ranorex.TreeItem>(true);
                 }
             }
 
             /// <summary>
             /// The Self item info.
             /// </summary>
-            [RepositoryItemInfo("d2db5972-46df-4c0c-b15d-417550451404")]
+            [RepositoryItemInfo("01e729e0-6c41-433a-a1ab-cdcc0b428142")]
             public virtual RepoItemInfo SelfInfo
             {
                 get
@@ -4487,26 +5783,50 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The DocumentCloseButton item.
+            /// The ImportSample item.
             /// </summary>
-            [RepositoryItem("dbee5d78-a953-416d-a1a2-1aef3a4f68bc")]
-            public virtual Ranorex.Button DocumentCloseButton
+            [RepositoryItem("6600559d-abdd-40d5-b1df-9d5c2cdf87fd")]
+            public virtual Ranorex.TreeItem ImportSample
             {
                 get
                 {
-                    return _documentclosebuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                    return _importsampleInfo.CreateAdapter<Ranorex.TreeItem>(true);
                 }
             }
 
             /// <summary>
-            /// The DocumentCloseButton item info.
+            /// The ImportSample item info.
             /// </summary>
-            [RepositoryItemInfo("dbee5d78-a953-416d-a1a2-1aef3a4f68bc")]
-            public virtual RepoItemInfo DocumentCloseButtonInfo
+            [RepositoryItemInfo("6600559d-abdd-40d5-b1df-9d5c2cdf87fd")]
+            public virtual RepoItemInfo ImportSampleInfo
             {
                 get
                 {
-                    return _documentclosebuttonInfo;
+                    return _importsampleInfo;
+                }
+            }
+
+            /// <summary>
+            /// The Interpolate item.
+            /// </summary>
+            [RepositoryItem("f0343b84-e854-46be-afff-3f39b849de18")]
+            public virtual Ranorex.TreeItem Interpolate
+            {
+                get
+                {
+                    return _interpolateInfo.CreateAdapter<Ranorex.TreeItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Interpolate item info.
+            /// </summary>
+            [RepositoryItemInfo("f0343b84-e854-46be-afff-3f39b849de18")]
+            public virtual RepoItemInfo InterpolateInfo
+            {
+                get
+                {
+                    return _interpolateInfo;
                 }
             }
         }
@@ -4518,6 +5838,17 @@ namespace DHYDRO
         public partial class WinFormsAdapterFolder : RepoGenBaseFolder
         {
             DHYDRO1D2DRepositoryFolders.ParametersDocumentViewFolder _parametersdocumentview;
+            RepoItemInfo _diameterInfo;
+            RepoItemInfo _comboboxshapetypeInfo;
+            RepoItemInfo _checkboxisclosedprofileInfo;
+            RepoItemInfo _genericworkflowslistitemoldInfo;
+            RepoItemInfo _labelwidthInfo;
+            RepoItemInfo _textInfo;
+            RepoItemInfo _appendInfo;
+            RepoItemInfo _canceleditInfo;
+            RepoItemInfo _startrow0Info;
+            RepoItemInfo _generictimenavigatorbuttonInfo;
+            RepoItemInfo _constantvolumeldayrow1Info;
 
             /// <summary>
             /// Creates a new WinFormsAdapter  folder.
@@ -4526,6 +5857,17 @@ namespace DHYDRO
                     base("WinFormsAdapter", "container/container[@controltypename='WinFormsAdapter']", parentFolder, 30000, null, false, "ac07df73-5932-48f4-bd59-9179c87d2c2c", "")
             {
                 _parametersdocumentview = new DHYDRO1D2DRepositoryFolders.ParametersDocumentViewFolder(this);
+                _diameterInfo = new RepoItemInfo(this, "Diameter", "container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeRoundView']/text[@controlname='textBoxDiameter']/text[@accessiblerole='Text']", "", 30000, null, "51cb294a-89fb-43de-b3b6-9fb7f7c8961a");
+                _comboboxshapetypeInfo = new RepoItemInfo(this, "ComboBoxShapeType", "container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='tableLayoutPanel1']/combobox[@controlname='comboBoxShapeType']", "", 30000, null, "4eaa0e8b-6211-42fc-939f-7c29ac191806");
+                _checkboxisclosedprofileInfo = new RepoItemInfo(this, "CheckboxIsClosedProfile", "container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeWidthHeightView']/container[@controlname='tableLayoutPanel1']/checkbox[@controlname='checkboxIsClosedProfile']", "", 30000, null, "f8952caa-c50a-4aa9-b311-a92134854a4c");
+                _genericworkflowslistitemoldInfo = new RepoItemInfo(this, "GenericWorkflowsListItemOld", "container/container/container/element/tabpagelist/container[1]/container[@controltypename='WinFormsAdapter']/container/element/container/text[@caption='Workflows']/container[@caption='']/list[1]/listitem[@text=$WorkflowName]", "", 30000, null, "3b8a01b6-2698-49db-aca9-7e6d05f72b40");
+                _labelwidthInfo = new RepoItemInfo(this, "LabelWidth", "container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeWidthHeightView']/container[@controlname='tableLayoutPanel1']/text[@controlname='labelWidth']", "", 30000, null, "24acb30f-51a1-4497-b6ff-06fc49cd7336");
+                _textInfo = new RepoItemInfo(this, "Text", "container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel1']/container[@controlname='leftSplitContainer']/container[@controlname='panel1']/container[@controlname='splitContainerCrossSectionData']/container[@controlname='panel2']/container[@controlname='crossSectionStandardDataView1']/container[@controlname='panelDataView']/container[@controlname='CrossSectionStandardShapeWidthHeightView']/container[@controlname='tableLayoutPanel1']/text[@controlname='textBoxHeight']/text[@accessiblerole='Text']", "", 30000, null, "0d61ac1d-c0d4-4627-8c53-0b6bf26c1b4a");
+                _appendInfo = new RepoItemInfo(this, "Append", "container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel2']/container[@controlname='rightSplitContainer']/container[@controlname='panel2']/container[@controlname='splitContainerSectionViews']/container[@controlname='panel1']/container[@controlname='crossSectionSectionsTable']/container[@controlname='tableViewSections']/element[@controlname='dxGridControl']/element[@controlname='_embeddedNavigator']/button[@text='Append']", "", 30000, null, "a027f363-70a4-4b97-a499-1905dfa28388");
+                _canceleditInfo = new RepoItemInfo(this, "CancelEdit", "container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel2']/container[@controlname='rightSplitContainer']/container[@controlname='panel2']/container[@controlname='splitContainerSectionViews']/container[@controlname='panel1']/container[@controlname='crossSectionSectionsTable']/container[@controlname='tableViewSections']/element[@controlname='dxGridControl']/element[@controlname='_embeddedNavigator']/button[@text='Cancel Edit']", "", 30000, null, "9f4ad95f-a330-45a1-9c56-bdc23e948e33");
+                _startrow0Info = new RepoItemInfo(this, "StartRow0", "container[@controlname='CrossSectionDefinitionView']/container[@controlname='viewSplitContainer']/container[@controlname='panel2']/container[@controlname='rightSplitContainer']/container[@controlname='panel2']/container[@controlname='splitContainerSectionViews']/container[@controlname='panel1']/container[@controlname='crossSectionSectionsTable']/container[@controlname='tableViewSections']/element[@controlname='dxGridControl']/table[@accessiblerole='Table']/container[@caption='Data Panel']/row/cell", "", 30000, null, "620a7463-fd38-4cd9-826f-678ac6f87da2");
+                _generictimenavigatorbuttonInfo = new RepoItemInfo(this, "GenericTimeNavigatorButton", "container[@controlname='TimeSeriesNavigator']/container[@controlname='panelControls']/toolbar[@controlname='toolStrip1']/button[@accessiblename=$ButtonName]", "", 30000, null, "47740fb7-4876-4a03-b478-72aded569c9b");
+                _constantvolumeldayrow1Info = new RepoItemInfo(this, "ConstantVolumeLDayRow1", "container[@controlname='NwrwDryWeatherFlowDefinitionView']/container[@controlname='tableView']/element[@controlname='dxGridControl']/table[@accessiblerole='Table']/container[@accessiblename='Data Panel']/row[@accessiblename='Row 2']/cell[@accessiblename>'Constant volume [L/day] row']", "", 30000, null, "0bed291b-d13e-434f-a686-431a7b048aaa");
             }
 
             /// <summary>
@@ -4549,6 +5891,270 @@ namespace DHYDRO
                 get
                 {
                     return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The Diameter item.
+            /// </summary>
+            [RepositoryItem("51cb294a-89fb-43de-b3b6-9fb7f7c8961a")]
+            public virtual Ranorex.Text Diameter
+            {
+                get
+                {
+                    return _diameterInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Diameter item info.
+            /// </summary>
+            [RepositoryItemInfo("51cb294a-89fb-43de-b3b6-9fb7f7c8961a")]
+            public virtual RepoItemInfo DiameterInfo
+            {
+                get
+                {
+                    return _diameterInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ComboBoxShapeType item.
+            /// </summary>
+            [RepositoryItem("4eaa0e8b-6211-42fc-939f-7c29ac191806")]
+            public virtual Ranorex.ComboBox ComboBoxShapeType
+            {
+                get
+                {
+                    return _comboboxshapetypeInfo.CreateAdapter<Ranorex.ComboBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ComboBoxShapeType item info.
+            /// </summary>
+            [RepositoryItemInfo("4eaa0e8b-6211-42fc-939f-7c29ac191806")]
+            public virtual RepoItemInfo ComboBoxShapeTypeInfo
+            {
+                get
+                {
+                    return _comboboxshapetypeInfo;
+                }
+            }
+
+            /// <summary>
+            /// The CheckboxIsClosedProfile item.
+            /// </summary>
+            [RepositoryItem("f8952caa-c50a-4aa9-b311-a92134854a4c")]
+            public virtual Ranorex.CheckBox CheckboxIsClosedProfile
+            {
+                get
+                {
+                    return _checkboxisclosedprofileInfo.CreateAdapter<Ranorex.CheckBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The CheckboxIsClosedProfile item info.
+            /// </summary>
+            [RepositoryItemInfo("f8952caa-c50a-4aa9-b311-a92134854a4c")]
+            public virtual RepoItemInfo CheckboxIsClosedProfileInfo
+            {
+                get
+                {
+                    return _checkboxisclosedprofileInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericWorkflowsListItemOld item.
+            /// </summary>
+            [RepositoryItem("3b8a01b6-2698-49db-aca9-7e6d05f72b40")]
+            public virtual Ranorex.ListItem GenericWorkflowsListItemOld
+            {
+                get
+                {
+                    return _genericworkflowslistitemoldInfo.CreateAdapter<Ranorex.ListItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericWorkflowsListItemOld item info.
+            /// </summary>
+            [RepositoryItemInfo("3b8a01b6-2698-49db-aca9-7e6d05f72b40")]
+            public virtual RepoItemInfo GenericWorkflowsListItemOldInfo
+            {
+                get
+                {
+                    return _genericworkflowslistitemoldInfo;
+                }
+            }
+
+            /// <summary>
+            /// The LabelWidth item.
+            /// </summary>
+            [RepositoryItem("24acb30f-51a1-4497-b6ff-06fc49cd7336")]
+            public virtual Ranorex.Text LabelWidth
+            {
+                get
+                {
+                    return _labelwidthInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The LabelWidth item info.
+            /// </summary>
+            [RepositoryItemInfo("24acb30f-51a1-4497-b6ff-06fc49cd7336")]
+            public virtual RepoItemInfo LabelWidthInfo
+            {
+                get
+                {
+                    return _labelwidthInfo;
+                }
+            }
+
+            /// <summary>
+            /// The Text item.
+            /// </summary>
+            [RepositoryItem("0d61ac1d-c0d4-4627-8c53-0b6bf26c1b4a")]
+            public virtual Ranorex.Text Text
+            {
+                get
+                {
+                    return _textInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Text item info.
+            /// </summary>
+            [RepositoryItemInfo("0d61ac1d-c0d4-4627-8c53-0b6bf26c1b4a")]
+            public virtual RepoItemInfo TextInfo
+            {
+                get
+                {
+                    return _textInfo;
+                }
+            }
+
+            /// <summary>
+            /// The Append item.
+            /// </summary>
+            [RepositoryItem("a027f363-70a4-4b97-a499-1905dfa28388")]
+            public virtual Ranorex.Button Append
+            {
+                get
+                {
+                    return _appendInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Append item info.
+            /// </summary>
+            [RepositoryItemInfo("a027f363-70a4-4b97-a499-1905dfa28388")]
+            public virtual RepoItemInfo AppendInfo
+            {
+                get
+                {
+                    return _appendInfo;
+                }
+            }
+
+            /// <summary>
+            /// The CancelEdit item.
+            /// </summary>
+            [RepositoryItem("9f4ad95f-a330-45a1-9c56-bdc23e948e33")]
+            public virtual Ranorex.Button CancelEdit
+            {
+                get
+                {
+                    return _canceleditInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The CancelEdit item info.
+            /// </summary>
+            [RepositoryItemInfo("9f4ad95f-a330-45a1-9c56-bdc23e948e33")]
+            public virtual RepoItemInfo CancelEditInfo
+            {
+                get
+                {
+                    return _canceleditInfo;
+                }
+            }
+
+            /// <summary>
+            /// The StartRow0 item.
+            /// </summary>
+            [RepositoryItem("620a7463-fd38-4cd9-826f-678ac6f87da2")]
+            public virtual Ranorex.Cell StartRow0
+            {
+                get
+                {
+                    return _startrow0Info.CreateAdapter<Ranorex.Cell>(true);
+                }
+            }
+
+            /// <summary>
+            /// The StartRow0 item info.
+            /// </summary>
+            [RepositoryItemInfo("620a7463-fd38-4cd9-826f-678ac6f87da2")]
+            public virtual RepoItemInfo StartRow0Info
+            {
+                get
+                {
+                    return _startrow0Info;
+                }
+            }
+
+            /// <summary>
+            /// The GenericTimeNavigatorButton item.
+            /// </summary>
+            [RepositoryItem("47740fb7-4876-4a03-b478-72aded569c9b")]
+            public virtual Ranorex.Button GenericTimeNavigatorButton
+            {
+                get
+                {
+                    return _generictimenavigatorbuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericTimeNavigatorButton item info.
+            /// </summary>
+            [RepositoryItemInfo("47740fb7-4876-4a03-b478-72aded569c9b")]
+            public virtual RepoItemInfo GenericTimeNavigatorButtonInfo
+            {
+                get
+                {
+                    return _generictimenavigatorbuttonInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ConstantVolumeLDayRow1 item.
+            /// </summary>
+            [RepositoryItem("0bed291b-d13e-434f-a686-431a7b048aaa")]
+            public virtual Ranorex.Cell ConstantVolumeLDayRow1
+            {
+                get
+                {
+                    return _constantvolumeldayrow1Info.CreateAdapter<Ranorex.Cell>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ConstantVolumeLDayRow1 item info.
+            /// </summary>
+            [RepositoryItemInfo("0bed291b-d13e-434f-a686-431a7b048aaa")]
+            public virtual RepoItemInfo ConstantVolumeLDayRow1Info
+            {
+                get
+                {
+                    return _constantvolumeldayrow1Info;
                 }
             }
 
@@ -4731,21 +6337,21 @@ namespace DHYDRO
         }
 
         /// <summary>
-        /// The OutputMapTreeItemFolder folder.
+        /// The OutputMapTreeItem2DFolder folder.
         /// </summary>
         [RepositoryFolder("db53fc2d-0702-479a-8a30-0be27f21b5f3")]
-        public partial class OutputMapTreeItemFolder : RepoGenBaseFolder
+        public partial class OutputMapTreeItem2DFolder : RepoGenBaseFolder
         {
-            DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItemFolder _outputmapfiletreeitem;
+            DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItem2DFolder _outputmapfiletreeitem2d;
             RepoItemInfo _outputmaptreeitemexpanderInfo;
 
             /// <summary>
-            /// Creates a new OutputMapTreeItem  folder.
+            /// Creates a new OutputMapTreeItem2D  folder.
             /// </summary>
-            public OutputMapTreeItemFolder(RepoGenBaseFolder parentFolder) :
-                    base("OutputMapTreeItem", "tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem", parentFolder, 30000, null, false, "db53fc2d-0702-479a-8a30-0be27f21b5f3", "")
+            public OutputMapTreeItem2DFolder(RepoGenBaseFolder parentFolder) :
+                    base("OutputMapTreeItem2D", "tree/treeitem/container/treeitem/container/treeitem/text[@caption='Output']/parent::treeitem", parentFolder, 30000, null, false, "db53fc2d-0702-479a-8a30-0be27f21b5f3", "")
             {
-                _outputmapfiletreeitem = new DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItemFolder(this);
+                _outputmapfiletreeitem2d = new DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItem2DFolder(this);
                 _outputmaptreeitemexpanderInfo = new RepoItemInfo(this, "OutputMapTreeItemExpander", "button", "", 30000, null, "d5c6da69-605f-42ba-a793-eefe1c316dac");
             }
 
@@ -4798,31 +6404,31 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The OutputMapFileTreeItem folder.
+            /// The OutputMapFileTreeItem2D folder.
             /// </summary>
             [RepositoryFolder("75306f78-f0cf-4c54-ab47-20eee31e7008")]
-            public virtual DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItemFolder OutputMapFileTreeItem
+            public virtual DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItem2DFolder OutputMapFileTreeItem2D
             {
-                get { return _outputmapfiletreeitem; }
+                get { return _outputmapfiletreeitem2d; }
             }
         }
 
         /// <summary>
-        /// The OutputMapFileTreeItemFolder folder.
+        /// The OutputMapFileTreeItem2DFolder folder.
         /// </summary>
         [RepositoryFolder("75306f78-f0cf-4c54-ab47-20eee31e7008")]
-        public partial class OutputMapFileTreeItemFolder : RepoGenBaseFolder
+        public partial class OutputMapFileTreeItem2DFolder : RepoGenBaseFolder
         {
-            DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItemFolder _outputmapvariabletreeitem;
+            DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItem2DFolder _outputmapvariabletreeitem2d;
             RepoItemInfo _outputmapfiletreeitemexpanderInfo;
 
             /// <summary>
-            /// Creates a new OutputMapFileTreeItem  folder.
+            /// Creates a new OutputMapFileTreeItem2D  folder.
             /// </summary>
-            public OutputMapFileTreeItemFolder(RepoGenBaseFolder parentFolder) :
-                    base("OutputMapFileTreeItem", "container/treeitem/text[@caption='Map File 2D']/parent::treeitem", parentFolder, 30000, null, false, "75306f78-f0cf-4c54-ab47-20eee31e7008", "")
+            public OutputMapFileTreeItem2DFolder(RepoGenBaseFolder parentFolder) :
+                    base("OutputMapFileTreeItem2D", "container/treeitem/text[@caption='Map File 2D']/parent::treeitem", parentFolder, 30000, null, false, "75306f78-f0cf-4c54-ab47-20eee31e7008", "")
             {
-                _outputmapvariabletreeitem = new DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItemFolder(this);
+                _outputmapvariabletreeitem2d = new DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItem2DFolder(this);
                 _outputmapfiletreeitemexpanderInfo = new RepoItemInfo(this, "OutputMapFileTreeItemExpander", "button", "", 30000, null, "f0297ad5-1265-4c0b-87f3-d624da343355");
             }
 
@@ -4875,32 +6481,32 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The OutputMapVariableTreeItem folder.
+            /// The OutputMapVariableTreeItem2D folder.
             /// </summary>
             [RepositoryFolder("8725183d-8432-4a72-a855-0596fd34e808")]
-            public virtual DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItemFolder OutputMapVariableTreeItem
+            public virtual DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItem2DFolder OutputMapVariableTreeItem2D
             {
-                get { return _outputmapvariabletreeitem; }
+                get { return _outputmapvariabletreeitem2d; }
             }
         }
 
         /// <summary>
-        /// The OutputMapVariableTreeItemFolder folder.
+        /// The OutputMapVariableTreeItem2DFolder folder.
         /// </summary>
         [RepositoryFolder("8725183d-8432-4a72-a855-0596fd34e808")]
-        public partial class OutputMapVariableTreeItemFolder : RepoGenBaseFolder
+        public partial class OutputMapVariableTreeItem2DFolder : RepoGenBaseFolder
         {
-            RepoItemInfo _outputmapvariablecheckboxInfo;
-            RepoItemInfo _outputmapvariabletextInfo;
+            RepoItemInfo _outputmapvariablecheckbox2dInfo;
+            RepoItemInfo _outputmapvariabletext2dInfo;
 
             /// <summary>
-            /// Creates a new OutputMapVariableTreeItem  folder.
+            /// Creates a new OutputMapVariableTreeItem2D  folder.
             /// </summary>
-            public OutputMapVariableTreeItemFolder(RepoGenBaseFolder parentFolder) :
-                    base("OutputMapVariableTreeItem", "container/treeitem/text[@text=$variableName]/parent::treeitem", parentFolder, 30000, null, false, "8725183d-8432-4a72-a855-0596fd34e808", "")
+            public OutputMapVariableTreeItem2DFolder(RepoGenBaseFolder parentFolder) :
+                    base("OutputMapVariableTreeItem2D", "container/treeitem/text[@text=$variableName]/parent::treeitem", parentFolder, 30000, null, false, "8725183d-8432-4a72-a855-0596fd34e808", "")
             {
-                _outputmapvariablecheckboxInfo = new RepoItemInfo(this, "OutputMapVariableCheckBox", "checkbox", "", 30000, null, "ed28cbfb-94cf-422c-aaf2-5659a2c0a39c");
-                _outputmapvariabletextInfo = new RepoItemInfo(this, "OutputMapVariableText", "text", "", 30000, null, "b8c23e9d-1e09-4be3-a225-d24b9801a3ad");
+                _outputmapvariablecheckbox2dInfo = new RepoItemInfo(this, "OutputMapVariableCheckBox2D", "checkbox", "", 30000, null, "ed28cbfb-94cf-422c-aaf2-5659a2c0a39c");
+                _outputmapvariabletext2dInfo = new RepoItemInfo(this, "OutputMapVariableText2D", "text", "", 30000, null, "b8c23e9d-1e09-4be3-a225-d24b9801a3ad");
             }
 
             /// <summary>
@@ -4928,50 +6534,372 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The OutputMapVariableCheckBox item.
+            /// The OutputMapVariableCheckBox2D item.
             /// </summary>
             [RepositoryItem("ed28cbfb-94cf-422c-aaf2-5659a2c0a39c")]
-            public virtual Ranorex.CheckBox OutputMapVariableCheckBox
+            public virtual Ranorex.CheckBox OutputMapVariableCheckBox2D
             {
                 get
                 {
-                    return _outputmapvariablecheckboxInfo.CreateAdapter<Ranorex.CheckBox>(true);
+                    return _outputmapvariablecheckbox2dInfo.CreateAdapter<Ranorex.CheckBox>(true);
                 }
             }
 
             /// <summary>
-            /// The OutputMapVariableCheckBox item info.
+            /// The OutputMapVariableCheckBox2D item info.
             /// </summary>
             [RepositoryItemInfo("ed28cbfb-94cf-422c-aaf2-5659a2c0a39c")]
-            public virtual RepoItemInfo OutputMapVariableCheckBoxInfo
+            public virtual RepoItemInfo OutputMapVariableCheckBox2DInfo
             {
                 get
                 {
-                    return _outputmapvariablecheckboxInfo;
+                    return _outputmapvariablecheckbox2dInfo;
                 }
             }
 
             /// <summary>
-            /// The OutputMapVariableText item.
+            /// The OutputMapVariableText2D item.
             /// </summary>
             [RepositoryItem("b8c23e9d-1e09-4be3-a225-d24b9801a3ad")]
-            public virtual Ranorex.Text OutputMapVariableText
+            public virtual Ranorex.Text OutputMapVariableText2D
             {
                 get
                 {
-                    return _outputmapvariabletextInfo.CreateAdapter<Ranorex.Text>(true);
+                    return _outputmapvariabletext2dInfo.CreateAdapter<Ranorex.Text>(true);
                 }
             }
 
             /// <summary>
-            /// The OutputMapVariableText item info.
+            /// The OutputMapVariableText2D item info.
             /// </summary>
             [RepositoryItemInfo("b8c23e9d-1e09-4be3-a225-d24b9801a3ad")]
-            public virtual RepoItemInfo OutputMapVariableTextInfo
+            public virtual RepoItemInfo OutputMapVariableText2DInfo
             {
                 get
                 {
-                    return _outputmapvariabletextInfo;
+                    return _outputmapvariabletext2dInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The OutputMapTreeItem1DFolder folder.
+        /// </summary>
+        [RepositoryFolder("7aea68f8-cfac-4492-8879-a6abe90cfd64")]
+        public partial class OutputMapTreeItem1DFolder : RepoGenBaseFolder
+        {
+            DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItem1DFolder _outputmapfiletreeitem1d;
+            DHYDRO1D2DRepositoryFolders.OutputHisHileTreeItem1DFolder _outputhishiletreeitem1d;
+
+            /// <summary>
+            /// Creates a new OutputMapTreeItem1D  folder.
+            /// </summary>
+            public OutputMapTreeItem1DFolder(RepoGenBaseFolder parentFolder) :
+                    base("OutputMapTreeItem1D", "tree/treeitem/container/treeitem/text[@caption='Integrated Model']/parent::treeitem/container/treeitem/text[@caption='FlowFM']/parent::treeitem/container/treeitem/text[@caption='Output']/parent::treeitem", parentFolder, 30000, null, false, "7aea68f8-cfac-4492-8879-a6abe90cfd64", "")
+            {
+                _outputmapfiletreeitem1d = new DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItem1DFolder(this);
+                _outputhishiletreeitem1d = new DHYDRO1D2DRepositoryFolders.OutputHisHileTreeItem1DFolder(this);
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("7aea68f8-cfac-4492-8879-a6abe90cfd64")]
+            public virtual Ranorex.TreeItem Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.TreeItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("7aea68f8-cfac-4492-8879-a6abe90cfd64")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The OutputMapFileTreeItem1D folder.
+            /// </summary>
+            [RepositoryFolder("8127d39b-0534-49bb-b53e-14b5615bb8bd")]
+            public virtual DHYDRO1D2DRepositoryFolders.OutputMapFileTreeItem1DFolder OutputMapFileTreeItem1D
+            {
+                get { return _outputmapfiletreeitem1d; }
+            }
+
+            /// <summary>
+            /// The OutputHisHileTreeItem1D folder.
+            /// </summary>
+            [RepositoryFolder("6a5bd784-e772-48d3-a133-4c26dc29525b")]
+            public virtual DHYDRO1D2DRepositoryFolders.OutputHisHileTreeItem1DFolder OutputHisHileTreeItem1D
+            {
+                get { return _outputhishiletreeitem1d; }
+            }
+        }
+
+        /// <summary>
+        /// The OutputMapFileTreeItem1DFolder folder.
+        /// </summary>
+        [RepositoryFolder("8127d39b-0534-49bb-b53e-14b5615bb8bd")]
+        public partial class OutputMapFileTreeItem1DFolder : RepoGenBaseFolder
+        {
+            DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItem1DFolder _outputmapvariabletreeitem1d;
+            RepoItemInfo _outputmapfiletreeitemexpanderInfo;
+
+            /// <summary>
+            /// Creates a new OutputMapFileTreeItem1D  folder.
+            /// </summary>
+            public OutputMapFileTreeItem1DFolder(RepoGenBaseFolder parentFolder) :
+                    base("OutputMapFileTreeItem1D", "container/treeitem/text[@caption='Map File 1D']/parent::treeitem", parentFolder, 30000, null, false, "8127d39b-0534-49bb-b53e-14b5615bb8bd", "")
+            {
+                _outputmapvariabletreeitem1d = new DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItem1DFolder(this);
+                _outputmapfiletreeitemexpanderInfo = new RepoItemInfo(this, "OutputMapFileTreeItemExpander", "button", "", 30000, null, "f06ecad2-8719-475c-b4a2-5bd50bebe254");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("8127d39b-0534-49bb-b53e-14b5615bb8bd")]
+            public virtual Ranorex.TreeItem Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.TreeItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("8127d39b-0534-49bb-b53e-14b5615bb8bd")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The OutputMapFileTreeItemExpander item.
+            /// </summary>
+            [RepositoryItem("f06ecad2-8719-475c-b4a2-5bd50bebe254")]
+            public virtual Ranorex.Button OutputMapFileTreeItemExpander
+            {
+                get
+                {
+                    return _outputmapfiletreeitemexpanderInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The OutputMapFileTreeItemExpander item info.
+            /// </summary>
+            [RepositoryItemInfo("f06ecad2-8719-475c-b4a2-5bd50bebe254")]
+            public virtual RepoItemInfo OutputMapFileTreeItemExpanderInfo
+            {
+                get
+                {
+                    return _outputmapfiletreeitemexpanderInfo;
+                }
+            }
+
+            /// <summary>
+            /// The OutputMapVariableTreeItem1D folder.
+            /// </summary>
+            [RepositoryFolder("f5e48b6d-523b-44b3-9d80-915f0c27718c")]
+            public virtual DHYDRO1D2DRepositoryFolders.OutputMapVariableTreeItem1DFolder OutputMapVariableTreeItem1D
+            {
+                get { return _outputmapvariabletreeitem1d; }
+            }
+        }
+
+        /// <summary>
+        /// The OutputMapVariableTreeItem1DFolder folder.
+        /// </summary>
+        [RepositoryFolder("f5e48b6d-523b-44b3-9d80-915f0c27718c")]
+        public partial class OutputMapVariableTreeItem1DFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _outputmapvariablecheckbox1dInfo;
+
+            /// <summary>
+            /// Creates a new OutputMapVariableTreeItem1D  folder.
+            /// </summary>
+            public OutputMapVariableTreeItem1DFolder(RepoGenBaseFolder parentFolder) :
+                    base("OutputMapVariableTreeItem1D", "container/treeitem/text[@text=$variableName]/parent::treeitem", parentFolder, 30000, null, false, "f5e48b6d-523b-44b3-9d80-915f0c27718c", "")
+            {
+                _outputmapvariablecheckbox1dInfo = new RepoItemInfo(this, "OutputMapVariableCheckBox1D", "checkbox", "", 30000, null, "71c05921-11e1-49af-ae5d-fd97ebab8bb2");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("f5e48b6d-523b-44b3-9d80-915f0c27718c")]
+            public virtual Ranorex.TreeItem Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.TreeItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("f5e48b6d-523b-44b3-9d80-915f0c27718c")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The OutputMapVariableCheckBox1D item.
+            /// </summary>
+            [RepositoryItem("71c05921-11e1-49af-ae5d-fd97ebab8bb2")]
+            public virtual Ranorex.CheckBox OutputMapVariableCheckBox1D
+            {
+                get
+                {
+                    return _outputmapvariablecheckbox1dInfo.CreateAdapter<Ranorex.CheckBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The OutputMapVariableCheckBox1D item info.
+            /// </summary>
+            [RepositoryItemInfo("71c05921-11e1-49af-ae5d-fd97ebab8bb2")]
+            public virtual RepoItemInfo OutputMapVariableCheckBox1DInfo
+            {
+                get
+                {
+                    return _outputmapvariablecheckbox1dInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The OutputHisHileTreeItem1DFolder folder.
+        /// </summary>
+        [RepositoryFolder("6a5bd784-e772-48d3-a133-4c26dc29525b")]
+        public partial class OutputHisHileTreeItem1DFolder : RepoGenBaseFolder
+        {
+            DHYDRO1D2DRepositoryFolders.OutputHisFileVariableTreeItem1DFolder _outputhisfilevariabletreeitem1d;
+
+            /// <summary>
+            /// Creates a new OutputHisHileTreeItem1D  folder.
+            /// </summary>
+            public OutputHisHileTreeItem1DFolder(RepoGenBaseFolder parentFolder) :
+                    base("OutputHisHileTreeItem1D", "container/treeitem/text[@caption='His File']/parent::treeitem", parentFolder, 30000, null, false, "6a5bd784-e772-48d3-a133-4c26dc29525b", "")
+            {
+                _outputhisfilevariabletreeitem1d = new DHYDRO1D2DRepositoryFolders.OutputHisFileVariableTreeItem1DFolder(this);
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("6a5bd784-e772-48d3-a133-4c26dc29525b")]
+            public virtual Ranorex.TreeItem Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.TreeItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("6a5bd784-e772-48d3-a133-4c26dc29525b")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The OutputHisFileVariableTreeItem1D folder.
+            /// </summary>
+            [RepositoryFolder("e6d7ef34-553e-41f1-a048-10a9c258dace")]
+            public virtual DHYDRO1D2DRepositoryFolders.OutputHisFileVariableTreeItem1DFolder OutputHisFileVariableTreeItem1D
+            {
+                get { return _outputhisfilevariabletreeitem1d; }
+            }
+        }
+
+        /// <summary>
+        /// The OutputHisFileVariableTreeItem1DFolder folder.
+        /// </summary>
+        [RepositoryFolder("e6d7ef34-553e-41f1-a048-10a9c258dace")]
+        public partial class OutputHisFileVariableTreeItem1DFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _hisfilevariablecheckbox1dInfo;
+
+            /// <summary>
+            /// Creates a new OutputHisFileVariableTreeItem1D  folder.
+            /// </summary>
+            public OutputHisFileVariableTreeItem1DFolder(RepoGenBaseFolder parentFolder) :
+                    base("OutputHisFileVariableTreeItem1D", "container/treeitem/container/treeitem/text[@text=$variableName]/parent::treeitem", parentFolder, 30000, null, false, "e6d7ef34-553e-41f1-a048-10a9c258dace", "")
+            {
+                _hisfilevariablecheckbox1dInfo = new RepoItemInfo(this, "HisFileVariableCheckBox1D", "checkbox", "", 30000, null, "22048e22-b5a1-47a6-bdbf-c48f3d09ecdb");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("e6d7ef34-553e-41f1-a048-10a9c258dace")]
+            public virtual Ranorex.TreeItem Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.TreeItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("e6d7ef34-553e-41f1-a048-10a9c258dace")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The HisFileVariableCheckBox1D item.
+            /// </summary>
+            [RepositoryItem("22048e22-b5a1-47a6-bdbf-c48f3d09ecdb")]
+            public virtual Ranorex.CheckBox HisFileVariableCheckBox1D
+            {
+                get
+                {
+                    return _hisfilevariablecheckbox1dInfo.CreateAdapter<Ranorex.CheckBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The HisFileVariableCheckBox1D item info.
+            /// </summary>
+            [RepositoryItemInfo("22048e22-b5a1-47a6-bdbf-c48f3d09ecdb")]
+            public virtual RepoItemInfo HisFileVariableCheckBox1DInfo
+            {
+                get
+                {
+                    return _hisfilevariablecheckbox1dInfo;
                 }
             }
         }
@@ -5069,26 +6997,246 @@ namespace DHYDRO
         }
 
         /// <summary>
-        /// The BoundaryEditorContainerFolder folder.
+        /// The MapTreeFolder folder.
         /// </summary>
-        [RepositoryFolder("b969a557-35f9-48d2-b4f2-e71497aaf824")]
-        public partial class BoundaryEditorContainerFolder : RepoGenBaseFolder
+        [RepositoryFolder("50ad9820-e430-4c87-9dfd-3470e3a03d83")]
+        public partial class MapTreeFolder : RepoGenBaseFolder
         {
-            RepoItemInfo _validationviewInfo;
+            DHYDRO1D2DRepositoryFolders.RootTreeItemFolder1 _roottreeitem;
+            RepoItemInfo _usefocusedlayerInfo;
 
             /// <summary>
-            /// Creates a new BoundaryEditorContainer  folder.
+            /// Creates a new MapTree  folder.
             /// </summary>
-            public BoundaryEditorContainerFolder(RepoGenBaseFolder parentFolder) :
-                    base("BoundaryEditorContainer", "container[8]", parentFolder, 30000, null, false, "b969a557-35f9-48d2-b4f2-e71497aaf824", "")
+            public MapTreeFolder(RepoGenBaseFolder parentFolder) :
+                    base("MapTree", "tree", parentFolder, 30000, null, false, "50ad9820-e430-4c87-9dfd-3470e3a03d83", "")
             {
-                _validationviewInfo = new RepoItemInfo(this, "ValidationView", "container[@caption='']/container[@controlname='ValidationView']", "", 30000, null, "1a2ee6df-b5aa-4103-8a30-a4f0111eb965");
+                _roottreeitem = new DHYDRO1D2DRepositoryFolders.RootTreeItemFolder1(this);
+                _usefocusedlayerInfo = new RepoItemInfo(this, "UseFocusedLayer", "container[2]/checkbox[@text='Use focused layer']", "", 30000, null, "6030cd71-bf6d-47a3-94d2-231673de8890");
             }
 
             /// <summary>
             /// The Self item.
             /// </summary>
-            [RepositoryItem("b969a557-35f9-48d2-b4f2-e71497aaf824")]
+            [RepositoryItem("50ad9820-e430-4c87-9dfd-3470e3a03d83")]
+            public virtual Ranorex.Tree Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.Tree>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("50ad9820-e430-4c87-9dfd-3470e3a03d83")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The UseFocusedLayer item.
+            /// </summary>
+            [RepositoryItem("6030cd71-bf6d-47a3-94d2-231673de8890")]
+            public virtual Ranorex.CheckBox UseFocusedLayer
+            {
+                get
+                {
+                    return _usefocusedlayerInfo.CreateAdapter<Ranorex.CheckBox>(true);
+                }
+            }
+
+            /// <summary>
+            /// The UseFocusedLayer item info.
+            /// </summary>
+            [RepositoryItemInfo("6030cd71-bf6d-47a3-94d2-231673de8890")]
+            public virtual RepoItemInfo UseFocusedLayerInfo
+            {
+                get
+                {
+                    return _usefocusedlayerInfo;
+                }
+            }
+
+            /// <summary>
+            /// The RootTreeItem folder.
+            /// </summary>
+            [RepositoryFolder("c1a08e6c-a457-4e5f-8a60-b10d82ec4b7d")]
+            public virtual DHYDRO1D2DRepositoryFolders.RootTreeItemFolder1 RootTreeItem
+            {
+                get { return _roottreeitem; }
+            }
+        }
+
+        /// <summary>
+        /// The RootTreeItemFolder1 folder.
+        /// </summary>
+        [RepositoryFolder("c1a08e6c-a457-4e5f-8a60-b10d82ec4b7d")]
+        public partial class RootTreeItemFolder1 : RepoGenBaseFolder
+        {
+            RepoItemInfo _genericmaptreeitemnodeInfo;
+            RepoItemInfo _genericmaptreeitemnodewithparentInfo;
+
+            /// <summary>
+            /// Creates a new RootTreeItem  folder.
+            /// </summary>
+            public RootTreeItemFolder1(RepoGenBaseFolder parentFolder) :
+                    base("RootTreeItem", "treeitem", parentFolder, 30000, null, false, "c1a08e6c-a457-4e5f-8a60-b10d82ec4b7d", "")
+            {
+                _genericmaptreeitemnodeInfo = new RepoItemInfo(this, "GenericMapTreeItemNode", "container?/treeitem?/container?/treeitem?/container?/treeitem?/container?/treeitem?/container?/treeitem?/text[@caption=$NameMapTreeItemNode]", "", 30000, null, "e1c32e82-b0fa-449e-8fb1-6fd4c66e9eb6");
+                _genericmaptreeitemnodewithparentInfo = new RepoItemInfo(this, "GenericMapTreeItemNodeWithParent", "container?/treeitem?/container?/treeitem?/container?/treeitem?/container?/treeitem?/container?/treeitem?/text[@caption~$ParentNodeName]/parent::treeitem/container?/treeitem?/text[@caption=$NameMapTreeItemNode]", "", 30000, null, "afc692af-3aad-4788-a11f-6b0695b4ad88");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("c1a08e6c-a457-4e5f-8a60-b10d82ec4b7d")]
+            public virtual Ranorex.TreeItem Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.TreeItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("c1a08e6c-a457-4e5f-8a60-b10d82ec4b7d")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericMapTreeItemNode item.
+            /// </summary>
+            [RepositoryItem("e1c32e82-b0fa-449e-8fb1-6fd4c66e9eb6")]
+            public virtual Ranorex.Text GenericMapTreeItemNode
+            {
+                get
+                {
+                    return _genericmaptreeitemnodeInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericMapTreeItemNode item info.
+            /// </summary>
+            [RepositoryItemInfo("e1c32e82-b0fa-449e-8fb1-6fd4c66e9eb6")]
+            public virtual RepoItemInfo GenericMapTreeItemNodeInfo
+            {
+                get
+                {
+                    return _genericmaptreeitemnodeInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericMapTreeItemNodeWithParent item.
+            /// </summary>
+            [RepositoryItem("afc692af-3aad-4788-a11f-6b0695b4ad88")]
+            public virtual Ranorex.Text GenericMapTreeItemNodeWithParent
+            {
+                get
+                {
+                    return _genericmaptreeitemnodewithparentInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericMapTreeItemNodeWithParent item info.
+            /// </summary>
+            [RepositoryItemInfo("afc692af-3aad-4788-a11f-6b0695b4ad88")]
+            public virtual RepoItemInfo GenericMapTreeItemNodeWithParentInfo
+            {
+                get
+                {
+                    return _genericmaptreeitemnodewithparentInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The TabPageListRightFolder folder.
+        /// </summary>
+        [RepositoryFolder("ad534c00-e78f-48b6-b113-1c85a38e87bd")]
+        public partial class TabPageListRightFolder : RepoGenBaseFolder
+        {
+            DHYDRO1D2DRepositoryFolders.HeaderPanelFolder _headerpanel;
+
+            /// <summary>
+            /// Creates a new TabPageListRight  folder.
+            /// </summary>
+            public TabPageListRightFolder(RepoGenBaseFolder parentFolder) :
+                    base("TabPageListRight", ".//tabpagelist", parentFolder, 30000, null, false, "ad534c00-e78f-48b6-b113-1c85a38e87bd", "")
+            {
+                _headerpanel = new DHYDRO1D2DRepositoryFolders.HeaderPanelFolder(this);
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("ad534c00-e78f-48b6-b113-1c85a38e87bd")]
+            public virtual Ranorex.TabPageList Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.TabPageList>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("ad534c00-e78f-48b6-b113-1c85a38e87bd")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The HeaderPanel folder.
+            /// </summary>
+            [RepositoryFolder("4297159b-63ad-438f-b0e7-390698759ecd")]
+            public virtual DHYDRO1D2DRepositoryFolders.HeaderPanelFolder HeaderPanel
+            {
+                get { return _headerpanel; }
+            }
+        }
+
+        /// <summary>
+        /// The HeaderPanelFolder folder.
+        /// </summary>
+        [RepositoryFolder("4297159b-63ad-438f-b0e7-390698759ecd")]
+        public partial class HeaderPanelFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _maptabbuttonInfo;
+
+            /// <summary>
+            /// Creates a new HeaderPanel  folder.
+            /// </summary>
+            public HeaderPanelFolder(RepoGenBaseFolder parentFolder) :
+                    base("HeaderPanel", "container[@automationid='HeaderPanel']", parentFolder, 30000, null, false, "4297159b-63ad-438f-b0e7-390698759ecd", "")
+            {
+                _maptabbuttonInfo = new RepoItemInfo(this, "MapTabButton", "tabpage/container/text[@text='Map']", "element", 30000, null, "9a4a6608-cb3c-4e0d-9860-3342496b6851");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("4297159b-63ad-438f-b0e7-390698759ecd")]
             public virtual Ranorex.Container Self
             {
                 get
@@ -5100,7 +7248,7 @@ namespace DHYDRO
             /// <summary>
             /// The Self item info.
             /// </summary>
-            [RepositoryItemInfo("b969a557-35f9-48d2-b4f2-e71497aaf824")]
+            [RepositoryItemInfo("4297159b-63ad-438f-b0e7-390698759ecd")]
             public virtual RepoItemInfo SelfInfo
             {
                 get
@@ -5110,26 +7258,92 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The ValidationView item.
+            /// The MapTabButton item.
             /// </summary>
-            [RepositoryItem("1a2ee6df-b5aa-4103-8a30-a4f0111eb965")]
-            public virtual Ranorex.Container ValidationView
+            [RepositoryItem("9a4a6608-cb3c-4e0d-9860-3342496b6851")]
+            public virtual Ranorex.Text MapTabButton
             {
                 get
                 {
-                    return _validationviewInfo.CreateAdapter<Ranorex.Container>(true);
+                    return _maptabbuttonInfo.CreateAdapter<Ranorex.Text>(true);
                 }
             }
 
             /// <summary>
-            /// The ValidationView item info.
+            /// The MapTabButton item info.
             /// </summary>
-            [RepositoryItemInfo("1a2ee6df-b5aa-4103-8a30-a4f0111eb965")]
-            public virtual RepoItemInfo ValidationViewInfo
+            [RepositoryItemInfo("9a4a6608-cb3c-4e0d-9860-3342496b6851")]
+            public virtual RepoItemInfo MapTabButtonInfo
             {
                 get
                 {
-                    return _validationviewInfo;
+                    return _maptabbuttonInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The HeaderPanelFolder1 folder.
+        /// </summary>
+        [RepositoryFolder("29221779-e90d-4656-9864-04cde11555b3")]
+        public partial class HeaderPanelFolder1 : RepoGenBaseFolder
+        {
+            RepoItemInfo _maptabbuttonInfo;
+
+            /// <summary>
+            /// Creates a new HeaderPanel  folder.
+            /// </summary>
+            public HeaderPanelFolder1(RepoGenBaseFolder parentFolder) :
+                    base("HeaderPanel", "container/tabpagelist/container[@automationid='HeaderPanel']", parentFolder, 30000, null, false, "29221779-e90d-4656-9864-04cde11555b3", "")
+            {
+                _maptabbuttonInfo = new RepoItemInfo(this, "MapTabButton", "tabpage/container/picture[@automationid='icon']/parent::container/text[@text='Map']", "", 30000, null, "a0fbeb62-75cd-4bf3-aa17-5e5c8d50681a");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("29221779-e90d-4656-9864-04cde11555b3")]
+            public virtual Ranorex.Container Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.Container>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("29221779-e90d-4656-9864-04cde11555b3")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The MapTabButton item.
+            /// </summary>
+            [RepositoryItem("a0fbeb62-75cd-4bf3-aa17-5e5c8d50681a")]
+            public virtual Ranorex.Text MapTabButton
+            {
+                get
+                {
+                    return _maptabbuttonInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The MapTabButton item info.
+            /// </summary>
+            [RepositoryItemInfo("a0fbeb62-75cd-4bf3-aa17-5e5c8d50681a")]
+            public virtual RepoItemInfo MapTabButtonInfo
+            {
+                get
+                {
+                    return _maptabbuttonInfo;
                 }
             }
         }
@@ -5147,6 +7361,8 @@ namespace DHYDRO
             RepoItemInfo _genericlistitemlayerInfo;
             RepoItemInfo _flowflexiblemeshmodelInfo;
             RepoItemInfo _genericmodeltypetoimportInfo;
+            RepoItemInfo _listitem1d2dintegratedmodelrhuInfo;
+            RepoItemInfo _genericbuttonlayerInfo;
 
             /// <summary>
             /// Creates a new ContextMenu  folder.
@@ -5156,11 +7372,13 @@ namespace DHYDRO
             {
                 _interpolateselectedsetmenuitemInfo = new RepoItemInfo(this, "InterpolateSelectedSetMenuItem", "menuitem[@text='Interpolate selected set']/text", "", 30000, null, "5f11e83f-94e4-48a2-9c49-559fff4b2cdf");
                 _legendpropertiesInfo = new RepoItemInfo(this, "LegendProperties", "menuitem[@text='Legend Properties']", "", 30000, null, "2e290a1f-6509-4176-b979-91696562d3a7");
-                _optionInfo = new RepoItemInfo(this, "Option", "menuitem[@accessiblename~$SubstringInOptionName]", "", 30000, null, "2807b26f-970f-4752-b9a6-080e851cc489");
+                _optionInfo = new RepoItemInfo(this, "Option", "menuitem[@text~$SubstringInOptionName]", "", 30000, null, "2807b26f-970f-4752-b9a6-080e851cc489");
                 _exportInfo = new RepoItemInfo(this, "Export", "menuitem[@accessiblename>'Export']", "", 30000, null, "53b2838c-c44a-436d-bd5b-ed578f195fd7");
                 _genericlistitemlayerInfo = new RepoItemInfo(this, "GenericListItemLayer", "container/listitem[@text=$NameLayer]", "", 30000, null, "4dcd1938-7010-4bf5-855f-ac6a0d94d151");
                 _flowflexiblemeshmodelInfo = new RepoItemInfo(this, "FlowFlexibleMeshModel", "list/listitem[@text='Flow Flexible Mesh Model']", "", 30000, null, "0f6c324b-253d-47a3-b420-3e6f0604311c");
                 _genericmodeltypetoimportInfo = new RepoItemInfo(this, "GenericModelTypeToImport", "list/listitem[@text~$NameModelTypeToImport]", "", 30000, null, "9742f7de-fb0c-4ab0-a8d0-07dd1a12ecba");
+                _listitem1d2dintegratedmodelrhuInfo = new RepoItemInfo(this, "ListItem1D2DIntegratedModelRHU", "list/listitem[@text>'1D-2D Integrated Model (R']", "", 30000, null, "a518f73c-329e-4bff-aa0b-de02041c2ac0");
+                _genericbuttonlayerInfo = new RepoItemInfo(this, "GenericButtonLayer", "button[@text=$NameDutchLayer]", "", 30000, null, "5dd067c9-e0ea-4e2b-9b1d-fe7c9d2676c5");
             }
 
             /// <summary>
@@ -5352,6 +7570,54 @@ namespace DHYDRO
                 get
                 {
                     return _genericmodeltypetoimportInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ListItem1D2DIntegratedModelRHU item.
+            /// </summary>
+            [RepositoryItem("a518f73c-329e-4bff-aa0b-de02041c2ac0")]
+            public virtual Ranorex.ListItem ListItem1D2DIntegratedModelRHU
+            {
+                get
+                {
+                    return _listitem1d2dintegratedmodelrhuInfo.CreateAdapter<Ranorex.ListItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ListItem1D2DIntegratedModelRHU item info.
+            /// </summary>
+            [RepositoryItemInfo("a518f73c-329e-4bff-aa0b-de02041c2ac0")]
+            public virtual RepoItemInfo ListItem1D2DIntegratedModelRHUInfo
+            {
+                get
+                {
+                    return _listitem1d2dintegratedmodelrhuInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericButtonLayer item.
+            /// </summary>
+            [RepositoryItem("5dd067c9-e0ea-4e2b-9b1d-fe7c9d2676c5")]
+            public virtual Ranorex.Button GenericButtonLayer
+            {
+                get
+                {
+                    return _genericbuttonlayerInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericButtonLayer item info.
+            /// </summary>
+            [RepositoryItemInfo("5dd067c9-e0ea-4e2b-9b1d-fe7c9d2676c5")]
+            public virtual RepoItemInfo GenericButtonLayerInfo
+            {
+                get
+                {
+                    return _genericbuttonlayerInfo;
                 }
             }
         }
@@ -6006,7 +8272,8 @@ namespace DHYDRO
         public partial class ComboBoxListAppFolder : RepoGenBaseFolder
         {
             RepoItemInfo _listitemInfo;
-            RepoItemInfo _openstreetmapInfo;
+            RepoItemInfo _genericwmslayernameInfo;
+            RepoItemInfo _rectangleInfo;
 
             /// <summary>
             /// Creates a new ComboBoxList  folder.
@@ -6015,7 +8282,8 @@ namespace DHYDRO
                     base("ComboBoxList", "/list[@controlid='1000']", parentFolder, 30000, null, false, "8373d488-f6cf-4d32-b015-ca1bc9e175b2", "")
             {
                 _listitemInfo = new RepoItemInfo(this, "ListItem", "listitem[@text=$listItemName]", "", 30000, null, "c042e912-548e-469a-a8b6-887a9a029081");
-                _openstreetmapInfo = new RepoItemInfo(this, "OpenStreetMap", "listitem[@text=$NameWmsLayer]", "", 30000, null, "5f015047-3a58-4d48-901d-84151bb6d4a1");
+                _genericwmslayernameInfo = new RepoItemInfo(this, "GenericWmsLayerName", "listitem[@text=$NameWmsLayer]", "", 30000, null, "5f015047-3a58-4d48-901d-84151bb6d4a1");
+                _rectangleInfo = new RepoItemInfo(this, "Rectangle", "listitem[@text='Rectangle']", "", 30000, null, "5860bcdb-5c29-4c52-8246-b30fa5bc2a4a");
             }
 
             /// <summary>
@@ -6067,26 +8335,50 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The OpenStreetMap item.
+            /// The GenericWmsLayerName item.
             /// </summary>
             [RepositoryItem("5f015047-3a58-4d48-901d-84151bb6d4a1")]
-            public virtual Ranorex.ListItem OpenStreetMap
+            public virtual Ranorex.ListItem GenericWmsLayerName
             {
                 get
                 {
-                    return _openstreetmapInfo.CreateAdapter<Ranorex.ListItem>(true);
+                    return _genericwmslayernameInfo.CreateAdapter<Ranorex.ListItem>(true);
                 }
             }
 
             /// <summary>
-            /// The OpenStreetMap item info.
+            /// The GenericWmsLayerName item info.
             /// </summary>
             [RepositoryItemInfo("5f015047-3a58-4d48-901d-84151bb6d4a1")]
-            public virtual RepoItemInfo OpenStreetMapInfo
+            public virtual RepoItemInfo GenericWmsLayerNameInfo
             {
                 get
                 {
-                    return _openstreetmapInfo;
+                    return _genericwmslayernameInfo;
+                }
+            }
+
+            /// <summary>
+            /// The Rectangle item.
+            /// </summary>
+            [RepositoryItem("5860bcdb-5c29-4c52-8246-b30fa5bc2a4a")]
+            public virtual Ranorex.ListItem Rectangle
+            {
+                get
+                {
+                    return _rectangleInfo.CreateAdapter<Ranorex.ListItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Rectangle item info.
+            /// </summary>
+            [RepositoryItemInfo("5860bcdb-5c29-4c52-8246-b30fa5bc2a4a")]
+            public virtual RepoItemInfo RectangleInfo
+            {
+                get
+                {
+                    return _rectangleInfo;
                 }
             }
         }
@@ -6597,7 +8889,7 @@ namespace DHYDRO
         [RepositoryFolder("79879e2f-8f01-45c2-b50e-8d2f978951b4")]
         public partial class GridBasedDialogAppFolder : RepoGenBaseFolder
         {
-            RepoItemInfo _waterlevelcellInfo;
+            RepoItemInfo _genericquerytimeseriescellInfo;
             RepoItemInfo _buttonokInfo;
 
             /// <summary>
@@ -6606,7 +8898,7 @@ namespace DHYDRO
             public GridBasedDialogAppFolder(RepoGenBaseFolder parentFolder) :
                     base("GridBasedDialog", "/form[@controlname='GridBasedDialog']", parentFolder, 30000, null, false, "79879e2f-8f01-45c2-b50e-8d2f978951b4", "")
             {
-                _waterlevelcellInfo = new RepoItemInfo(this, "WaterLevelCell", "container/container/container/table/row/cell[@text='water level (waterlevel)']", "", 30000, null, "5830b4ab-93cd-4cd4-98a3-5f1ff3e4e25c");
+                _genericquerytimeseriescellInfo = new RepoItemInfo(this, "GenericQueryTimeSeriesCell", "container/container/container/table/row/cell[@text=$NameQueryTimeSeriesCell]", "", 30000, null, "5830b4ab-93cd-4cd4-98a3-5f1ff3e4e25c");
                 _buttonokInfo = new RepoItemInfo(this, "ButtonOk", "container/container/button[@text='OK']", "", 30000, null, "a7757bef-d2af-4495-9ad0-52f44784dcab");
             }
 
@@ -6635,26 +8927,26 @@ namespace DHYDRO
             }
 
             /// <summary>
-            /// The WaterLevelCell item.
+            /// The GenericQueryTimeSeriesCell item.
             /// </summary>
             [RepositoryItem("5830b4ab-93cd-4cd4-98a3-5f1ff3e4e25c")]
-            public virtual Ranorex.Cell WaterLevelCell
+            public virtual Ranorex.Cell GenericQueryTimeSeriesCell
             {
                 get
                 {
-                    return _waterlevelcellInfo.CreateAdapter<Ranorex.Cell>(true);
+                    return _genericquerytimeseriescellInfo.CreateAdapter<Ranorex.Cell>(true);
                 }
             }
 
             /// <summary>
-            /// The WaterLevelCell item info.
+            /// The GenericQueryTimeSeriesCell item info.
             /// </summary>
             [RepositoryItemInfo("5830b4ab-93cd-4cd4-98a3-5f1ff3e4e25c")]
-            public virtual RepoItemInfo WaterLevelCellInfo
+            public virtual RepoItemInfo GenericQueryTimeSeriesCellInfo
             {
                 get
                 {
-                    return _waterlevelcellInfo;
+                    return _genericquerytimeseriescellInfo;
                 }
             }
 
@@ -7150,6 +9442,256 @@ namespace DHYDRO
                 get
                 {
                     return _progressbarbarInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The ContextMenuInMapTreeAppFolder folder.
+        /// </summary>
+        [RepositoryFolder("451a3a81-ab54-49f5-93e7-2c905d714314")]
+        public partial class ContextMenuInMapTreeAppFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _zoomtoextentsInfo;
+            RepoItemInfo _genericmenuitemInfo;
+
+            /// <summary>
+            /// Creates a new ContextMenuInMapTree  folder.
+            /// </summary>
+            public ContextMenuInMapTreeAppFolder(RepoGenBaseFolder parentFolder) :
+                    base("ContextMenuInMapTree", "/contextmenu", parentFolder, 30000, null, false, "451a3a81-ab54-49f5-93e7-2c905d714314", "")
+            {
+                _zoomtoextentsInfo = new RepoItemInfo(this, "ZoomToExtents", "menuitem[@text='Zoom to extents']/text[@caption='Zoom to extents']", "", 30000, null, "8a0c5f58-9d57-437e-9243-7e1b3acd9414");
+                _genericmenuitemInfo = new RepoItemInfo(this, "GenericMenuItem", "menuitem[@text=$MenuItemName]", "", 30000, null, "903bd53b-8b01-4140-92e8-3a554e5eb4b0");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("451a3a81-ab54-49f5-93e7-2c905d714314")]
+            public virtual Ranorex.ContextMenu Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.ContextMenu>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("451a3a81-ab54-49f5-93e7-2c905d714314")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ZoomToExtents item.
+            /// </summary>
+            [RepositoryItem("8a0c5f58-9d57-437e-9243-7e1b3acd9414")]
+            public virtual Ranorex.Text ZoomToExtents
+            {
+                get
+                {
+                    return _zoomtoextentsInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ZoomToExtents item info.
+            /// </summary>
+            [RepositoryItemInfo("8a0c5f58-9d57-437e-9243-7e1b3acd9414")]
+            public virtual RepoItemInfo ZoomToExtentsInfo
+            {
+                get
+                {
+                    return _zoomtoextentsInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericMenuItem item.
+            /// </summary>
+            [RepositoryItem("903bd53b-8b01-4140-92e8-3a554e5eb4b0")]
+            public virtual Ranorex.MenuItem GenericMenuItem
+            {
+                get
+                {
+                    return _genericmenuitemInfo.CreateAdapter<Ranorex.MenuItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericMenuItem item info.
+            /// </summary>
+            [RepositoryItemInfo("903bd53b-8b01-4140-92e8-3a554e5eb4b0")]
+            public virtual RepoItemInfo GenericMenuItemInfo
+            {
+                get
+                {
+                    return _genericmenuitemInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The DeltaShellGuiAppFolder folder.
+        /// </summary>
+        [RepositoryFolder("b278adb8-8ec1-464f-9784-2e82e7dd87bf")]
+        public partial class DeltaShellGuiAppFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _genericlistitemInfo;
+            RepoItemInfo _okbuttonInfo;
+
+            /// <summary>
+            /// Creates a new DeltaShellGui  folder.
+            /// </summary>
+            public DeltaShellGuiAppFolder(RepoGenBaseFolder parentFolder) :
+                    base("DeltaShellGui", "/form", parentFolder, 30000, null, false, "b278adb8-8ec1-464f-9784-2e82e7dd87bf", "")
+            {
+                _genericlistitemInfo = new RepoItemInfo(this, "GenericListItem", "element[@controlname='listBox']/list/listitem[@text=$ListItemName]", "", 30000, null, "a6055e32-24bb-40f1-ade0-039f9d4818dd");
+                _okbuttonInfo = new RepoItemInfo(this, "OkButton", "button[@controlname='okButton']", "", 30000, null, "471aecd5-3376-46b6-97f6-e44aabca3158");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("b278adb8-8ec1-464f-9784-2e82e7dd87bf")]
+            public virtual Ranorex.Form Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.Form>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("b278adb8-8ec1-464f-9784-2e82e7dd87bf")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The GenericListItem item.
+            /// </summary>
+            [RepositoryItem("a6055e32-24bb-40f1-ade0-039f9d4818dd")]
+            public virtual Ranorex.ListItem GenericListItem
+            {
+                get
+                {
+                    return _genericlistitemInfo.CreateAdapter<Ranorex.ListItem>(true);
+                }
+            }
+
+            /// <summary>
+            /// The GenericListItem item info.
+            /// </summary>
+            [RepositoryItemInfo("a6055e32-24bb-40f1-ade0-039f9d4818dd")]
+            public virtual RepoItemInfo GenericListItemInfo
+            {
+                get
+                {
+                    return _genericlistitemInfo;
+                }
+            }
+
+            /// <summary>
+            /// The OkButton item.
+            /// </summary>
+            [RepositoryItem("471aecd5-3376-46b6-97f6-e44aabca3158")]
+            public virtual Ranorex.Button OkButton
+            {
+                get
+                {
+                    return _okbuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The OkButton item info.
+            /// </summary>
+            [RepositoryItemInfo("471aecd5-3376-46b6-97f6-e44aabca3158")]
+            public virtual RepoItemInfo OkButtonInfo
+            {
+                get
+                {
+                    return _okbuttonInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The BoundaryEditorContainerFolder folder.
+        /// </summary>
+        [RepositoryFolder("b969a557-35f9-48d2-b4f2-e71497aaf824")]
+        public partial class BoundaryEditorContainerFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _validationviewInfo;
+
+            /// <summary>
+            /// Creates a new BoundaryEditorContainer  folder.
+            /// </summary>
+            public BoundaryEditorContainerFolder(RepoGenBaseFolder parentFolder) :
+                    base("BoundaryEditorContainer", "/form[@title~'Delta Shell']/list[@automationid='ListView']/container[8]", parentFolder, 30000, null, false, "b969a557-35f9-48d2-b4f2-e71497aaf824", "")
+            {
+                _validationviewInfo = new RepoItemInfo(this, "ValidationView", "container[@caption='']/container[@controlname='ValidationView']", "", 30000, null, "1a2ee6df-b5aa-4103-8a30-a4f0111eb965");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("b969a557-35f9-48d2-b4f2-e71497aaf824")]
+            public virtual Ranorex.Container Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.Container>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("b969a557-35f9-48d2-b4f2-e71497aaf824")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The ValidationView item.
+            /// </summary>
+            [RepositoryItem("1a2ee6df-b5aa-4103-8a30-a4f0111eb965")]
+            public virtual Ranorex.Container ValidationView
+            {
+                get
+                {
+                    return _validationviewInfo.CreateAdapter<Ranorex.Container>(true);
+                }
+            }
+
+            /// <summary>
+            /// The ValidationView item info.
+            /// </summary>
+            [RepositoryItemInfo("1a2ee6df-b5aa-4103-8a30-a4f0111eb965")]
+            public virtual RepoItemInfo ValidationViewInfo
+            {
+                get
+                {
+                    return _validationviewInfo;
                 }
             }
         }
