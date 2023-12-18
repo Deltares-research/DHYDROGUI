@@ -1261,7 +1261,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     {
                         if (line.Contains("locationFile") || line.Contains("forcingFile"))
                         {
-                            CheckIfSubFilesMentionedInBndExtForceFileAreWrittenRelativeToThisFile(line, saveBndExtFilePath);
+                            CheckIfSubFilesMentionedInBndExtForceFileAreWrittenNextToThisFile(line, saveBndExtFilePath);
                         }
                     }
 
@@ -1452,12 +1452,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             AssertPropertyLine(extFileLines[2], BndExtForceFileConstants.FileTypeKey, bndExtForceFile.FileType);
         }
 
-        private static void CheckIfSubFilesMentionedInBndExtForceFileAreWrittenRelativeToThisFile(string line, string saveBndExtFilePath)
+        private static void CheckIfSubFilesMentionedInBndExtForceFileAreWrittenNextToThisFile(string line, string saveBndExtFilePath)
         {
             string[] parts = line.Split('=');
-            string expectedSavedSubFilePath =
-                Path.Combine(Path.GetDirectoryName(saveBndExtFilePath), parts[1].Trim());
-            Assert.IsTrue(File.Exists(expectedSavedSubFilePath));
+            
+            string subFilePath = Path.GetFileName(parts[1].Trim());
+            string bndExtDir = Path.GetDirectoryName(saveBndExtFilePath);
+            string expectedPath = Path.Combine(bndExtDir, subFilePath);
+            
+            Assert.IsTrue(File.Exists(expectedPath), $"Expected path does not exist: '{expectedPath}'.");
         }
         
         private static void AssertDataLine(string fileLine, string timeValue, string dataValue)

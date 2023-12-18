@@ -21,8 +21,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
         {
             Quantity = quantity;
             LocationFile = locationFile;
-            this.forcingFiles = new HashSet<string>(forcingFiles);
             ReturnTime = returnTime;
+            
+            this.forcingFiles = new HashSet<string>(forcingFiles);
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
         /// <summary>
         /// The relative path to the location file of the boundary.
         /// </summary>
-        public string LocationFile { get; }
+        public string LocationFile { get; set; }
 
         /// <summary>
         /// The forcing files for this boundary.

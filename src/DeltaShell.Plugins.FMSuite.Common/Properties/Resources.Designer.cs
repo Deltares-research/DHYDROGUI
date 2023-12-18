@@ -169,31 +169,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replacing structure time series folder {0} with {1}... all structure time series will be written to this folder. (Line {2}).
-        /// </summary>
-        public static string StructureFile_Replacing_structure_time_series_folder__0__with__1__all_structure_time_series_will_be_written_to_this_folder_Line__2__ {
-            get {
-                return ResourceManager.GetString("StructureFile_Replacing_structure_time_series_folder__0__with__1__all_structure_t" +
-                        "ime_series_will_be_written_to_this_folder_Line__2__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Category [{0}] not supported for structures and is skipped. (Line {1}).
         /// </summary>
         public static string StructureFile_Section__0__not_supported_for_structures_and_is_skipped_Line__1__ {
             get {
                 return ResourceManager.GetString("StructureFile_Section__0__not_supported_for_structures_and_is_skipped_Line__1__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Structure time series {0} will be written to the time series folder {1}. (Line {2}).
-        /// </summary>
-        public static string StructureFile_Structure_time_series__0__will_be_written_to_the_time_series_folder__1__Line__2__ {
-            get {
-                return ResourceManager.GetString("StructureFile_Structure_time_series__0__will_be_written_to_the_time_series_folder" +
-                        "__1__Line__2__", resourceCulture);
             }
         }
         

@@ -197,8 +197,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             new IniWriter().WriteIniFile(iniData, filePath);
         }
 
-        private string TimFolder { get; set; }
-
         private void RenameBackwardsCompatibleProperties(IniSection section)
         {
             foreach (string propertyKey in section.Properties.Select(x => x.Key).ToList())
@@ -314,12 +312,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 try
                 {
                     var structureProperty = new StructureProperty(modelPropertyDefinition, property.Value);
-                    var propertyValue = structureProperty.Value as Steerable;
-                    if (propertyValue != null && propertyValue.Mode == SteerableMode.TimeSeries)
-                    {
-                        SetOrUpdateTimFolder(propertyValue.TimeSeriesFilename, property.LineNumber, logHandler);
-                    }
-
                     newStructureDataAccessObject.Properties.Add(structureProperty);
                 }
                 catch (FormatException e)
@@ -334,36 +326,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
 
             return newStructureDataAccessObject;
-        }
-
-        private void SetOrUpdateTimFolder(string timeSeriesFilename, int propertyLineNumber, ILogHandler logHandler)
-        {
-            string directory = Path.GetDirectoryName(timeSeriesFilename);
-            if (TimFolder == directory)
-            {
-                return;
-            }
-
-            if (string.IsNullOrEmpty(directory) && TimFolder != null)
-            {
-                logHandler?.ReportWarningFormat(
-                    Resources.StructureFile_Structure_time_series__0__will_be_written_to_the_time_series_folder__1__Line__2__,
-                    timeSeriesFilename, TimFolder, propertyLineNumber);
-            }
-            else
-            {
-                if (TimFolder != null)
-                {
-                    logHandler?.ReportWarningFormat(
-                        Resources.StructureFile_Replacing_structure_time_series_folder__0__with__1__all_structure_time_series_will_be_written_to_this_folder_Line__2__,
-                        TimFolder, directory, propertyLineNumber);
-                }
-
-                if (!string.IsNullOrEmpty(directory))
-                {
-                    TimFolder = directory;
-                }
-            }
         }
 
         private static object GetValueTypeDescription(Type dataType, ModelPropertyDefinition modelPropertyDefinition)
@@ -904,14 +866,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         private string ConstructTimeFilePath(INameable structure,
                                              string propertyKey)
         {
-            var filePath = $"{structure.Name}_{propertyKey}.tim";
+            return $"{structure.Name}_{propertyKey}.tim";
 
-            if (TimFolder != null)
-            {
-                filePath = Path.Combine(TimFolder, filePath);
-            }
-
-            return filePath;
         }
 
         private static void WriteTimeFile(string filePath, IFunction capacityTimeSeries, DateTime refDate)

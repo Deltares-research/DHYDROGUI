@@ -161,6 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             var extForceFileItems = new List<ExtForceFileItem>();
 
+            FlattenSubFileReferences(modelDefinition);
             ExtForceFileHelper.StartWritingSubFiles(); // hack: tracks & resolves duplicate file names
 
             if (writeBoundaryConditions)
@@ -273,6 +274,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             logHandler.LogReport();
 
             return extForceFileItems;
+        }
+
+        private void FlattenSubFileReferences(WaterFlowFMModelDefinition modelDefinition)
+        {
+            IEnumerable<ExtForceFileItem> existingFileItems = ExistingForceFileItems.Keys;
+            IEnumerable<ExtForceFileItem> unknownQuantityItems = ExtForceFileItemFactory.GetUnknownQuantitiesItems(modelDefinition).Values;
+
+            foreach (ExtForceFileItem fileItem in existingFileItems.Concat(unknownQuantityItems))
+            {
+                fileItem.FileName = GetFileName(fileItem.FileName);
+            }
+        }
+        
+        private string GetFileName(string path)
+        {
+            return !string.IsNullOrEmpty(path) && FileUtils.PathIsRelative(path) 
+                       ? Path.GetFileName(path) 
+                       : path;
         }
 
         private IEnumerable<ExtForceFileItem> WriteVelocityItems(WaterFlowFMModelDefinition modelDefinition)

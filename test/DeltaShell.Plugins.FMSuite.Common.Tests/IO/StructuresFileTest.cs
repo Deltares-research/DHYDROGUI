@@ -637,6 +637,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 CheckMessages(messages, copyOfIniInTempFilePath);
             }
         }
+        
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAStructuresFileWithFileReferencesInDifferentFolders_WhenReadingAndWriting_WritesToStructuresFileFolder()
+        {
+            var structuresFile = new StructuresFile { StructureSchema = schema };
+
+            using (var sourceDir = new TemporaryDirectory())
+            using (var targetDir = new TemporaryDirectory())
+            {
+                string testFilesDir = TestHelper.GetTestFilePath(@"structures\StructuresFileWithReferencesInDifferentFolders");
+                string sourceFilesDir = sourceDir.CopyDirectoryToTempDirectory(testFilesDir);
+
+                string sourceStructuresFilePath = Path.Combine(sourceFilesDir, @"initial_conditions\structures.ini");
+
+                IList<IStructureObject> structures = structuresFile.Read(sourceStructuresFilePath);
+
+                string targetFilesDir = targetDir.Path;
+                string targetStructuresFilePath = Path.Combine(targetFilesDir, @"Structures.ini");
+
+                structuresFile.Write(targetStructuresFilePath, structures);
+
+                Assert.That(targetStructuresFilePath, Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"Schaar.pli"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"Zedemuiden.pli"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"Schaar_CrestLevel.tim"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"Schaar_GateLowerEdgeLevel.tim"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"Schaar_GateOpeningWidth.tim"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"Zedemuiden_Capacity.tim"), Does.Exist);
+            }
+        }
 
         // Tests added in relation to DELFT3DFM
         [TestCase(false, ExpectedCrestLevelValue)]

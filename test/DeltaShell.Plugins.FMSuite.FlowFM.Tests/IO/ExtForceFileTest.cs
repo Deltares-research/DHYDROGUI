@@ -151,6 +151,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void ReadExtFileWithFileReferencesInDifferentFoldersWritesToExtFileFolder()
+        {
+            var extForceFile = new ExtForceFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            using (var sourceDir = new TemporaryDirectory())
+            using (var targetDir = new TemporaryDirectory())
+            {
+                string testFilesDir = TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileReferencesInDifferentFolders");
+                string sourceFilesDir = sourceDir.CopyDirectoryToTempDirectory(testFilesDir);
+
+                string sourceExtFilePath = Path.Combine(sourceFilesDir, @"computations\WithKnownAndUnknownQuantities.ext");
+                string sourceMduFilePath = Path.Combine(sourceFilesDir, @"computations\EmptyMduFile.mdu");
+
+                extForceFile.Read(sourceExtFilePath, modelDefinition, sourceMduFilePath);
+
+                string targetFilesDir = targetDir.Path;
+                string targetExtFilePath = Path.Combine(targetFilesDir, @"WithKnownAndUnknownQuantities.ext");
+                string targetPliFilePath = Path.Combine(targetFilesDir, @"OB_001_orgsize.pli");
+                string targetNcFilePath = Path.Combine(targetFilesDir, @"RAD_NL25_RAC_MFBS_5min.nc");
+                string targetPolFilePath = Path.Combine(targetFilesDir, @"surroundingDomain.pol");
+
+                extForceFile.Write(targetExtFilePath, modelDefinition, true, true);
+
+                Assert.That(targetExtFilePath, Does.Exist);
+                Assert.That(targetPliFilePath, Does.Exist);
+                Assert.That(targetNcFilePath, Does.Exist);
+                Assert.That(targetPolFilePath, Does.Exist);
+            }
+        }
+
+        [Test]
         public void GivenAnExtFileWithAnUnknownQuantity_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -249,7 +281,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual("ssr", unsupportedExternalForceItem.UnsupportedExtForceFileItem.VarName);
         }
 
-        
         [Test]
         public void Write_ExtFileWithVarName()
         {
