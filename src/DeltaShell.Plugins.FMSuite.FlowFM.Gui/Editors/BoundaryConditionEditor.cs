@@ -427,10 +427,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             
             Data = cachedBoundaryConditionSet;
 
-            IBoundaryCondition boundaryCondition =
-                boundaryConditionSet.BoundaryConditions.Contains(cachedBoundaryCondition)
+            IBoundaryCondition boundaryCondition = null;
+
+            if (boundaryConditionSet != null)
+            {
+
+                boundaryCondition = boundaryConditionSet.BoundaryConditions.Contains(cachedBoundaryCondition)
                     ? cachedBoundaryCondition
                     : boundaryConditionSet.BoundaryConditions.FirstOrDefault();
+            }
 
             if (boundaryCondition != null)
             {
@@ -438,10 +443,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 SelectedBoundaryCondition = boundaryCondition;
             }
 
-            SelectedSupportPointIndex = cachedSelectedSupportPoint <
-                                        boundaryConditionSet.Feature.Geometry.Coordinates.Count()
-                                            ? cachedSelectedSupportPoint
-                                            : 0;
+            if (boundaryConditionSet != null)
+            {
+                SelectedSupportPointIndex = cachedSelectedSupportPoint < boundaryConditionSet.Feature.Geometry.Coordinates.Count()
+                    ? cachedSelectedSupportPoint
+                    : 0;
+            }
 
             updatesSuspended = false;
         }
@@ -497,7 +504,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             var definitions = new List<object>();
 
-            if (Data != null && categoryComboBox.SelectedIndex != -1)
+            if (boundaryConditionSet != null && categoryComboBox.SelectedIndex != -1)
             {
                 definitions =
                     boundaryConditionSet.BoundaryConditions.Where(
@@ -563,7 +570,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void UpdateSupportPointsListBox()
         {
-            if (supportPointsListBoxUpdating || Data == null)
+            if (supportPointsListBoxUpdating || boundaryConditionSet == null)
             {
                 return;
             }
@@ -725,7 +732,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             get
             {
-                return BoundaryConditionSet;
+                return BoundaryConditionSet ?? cachedBoundaryConditionSet;
             }
             set
             {
