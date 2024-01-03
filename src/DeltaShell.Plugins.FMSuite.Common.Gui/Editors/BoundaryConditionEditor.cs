@@ -268,13 +268,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public void ResumeUpdates()
         {
-            if(cachedBoundaryConditionSet!=null)
+            if (cachedBoundaryConditionSet != null)
+            {
                 Data = cachedBoundaryConditionSet;
+            }
 
-            var boundaryCondition =
-                boundaryConditionSet.BoundaryConditions.Contains(cachedBoundaryCondition)
+            IBoundaryCondition boundaryCondition = null;
+
+            if (boundaryConditionSet != null)
+            {
+                boundaryCondition = boundaryConditionSet.BoundaryConditions.Contains(cachedBoundaryCondition)
                     ? cachedBoundaryCondition
                     : boundaryConditionSet.BoundaryConditions.FirstOrDefault();
+            }
 
             if (boundaryCondition != null)
             {
@@ -282,10 +288,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 SelectedBoundaryCondition = boundaryCondition;
             }
 
-            SelectedSupportPointIndex = cachedSelectedSupportPoint <
-                                        boundaryConditionSet.Feature.Geometry.Coordinates.Count()
-                                            ? cachedSelectedSupportPoint
-                                            : 0;
+            if (boundaryConditionSet != null)
+            {
+                SelectedSupportPointIndex = cachedSelectedSupportPoint < boundaryConditionSet.Feature.Geometry.Coordinates.Count()
+                    ? cachedSelectedSupportPoint
+                    : 0;
+            }
         }
 
         [InvokeRequired]
@@ -416,7 +424,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         {
             var definitions = new List<object>();
 
-            if (Data != null && categoryComboBox.SelectedIndex != -1)
+            if (boundaryConditionSet != null && categoryComboBox.SelectedIndex != -1)
             {
                 definitions =
                     boundaryConditionSet.BoundaryConditions.Where(
@@ -476,7 +484,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         private void UpdateSupportPointsListBox()
         {
-            if (supportPointsListBoxUpdating || Data == null)
+            if (supportPointsListBoxUpdating || boundaryConditionSet == null)
             {
                 return;
             }
@@ -599,7 +607,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object Data
         {
-            get { return BoundaryConditionSet; }
+            get
+            {
+                return BoundaryConditionSet ?? cachedBoundaryConditionSet;
+            }
             set
             {
                 BoundaryConditionSet = (BoundaryConditionSet) value;
