@@ -265,14 +265,8 @@
   <data name="RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_IntervalRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Signal" xml:space="preserve">
     <value>IntervalRule {0} time series will not be included in the DIMR XML as "Set Point Type" is "Signal"</value>
   </data>
-  <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime" xml:space="preserve">
-    <value>Series '{0}' in RTC control group '{1}' has one or more timesteps that exceed the model stop time {2}.</value>
-  </data>
-  <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime" xml:space="preserve">
-    <value>Series '{0}' in RTC control group '{1}' has one or more timesteps that precede the model start time {2}.</value>
-  </data>
-  <data name="RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep" xml:space="preserve">
-    <value>Series '{0}' in RTC control group '{1}': the amount of time steps is not a multiple of the model time step {2}.</value>
+  <data name="ControlGroupValidator_TimeSeriesNotAMultipleOfModelTimeStep" xml:space="preserve">
+    <value>Time series time step is not a multiple of the model time step.</value>
   </data>
   <data name="RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__" xml:space="preserve">
     <value>Unable to update ControlGroup name, all ControlGroup names must be unique!{0}'{1}' has been reverted back to '{2}'</value>
@@ -444,5 +438,11 @@
   </data>
   <data name="RtcLegacyLoader37_File_does_not_exist" xml:space="preserve">
     <value>File does not exist: {0}</value>
+  </data>
+  <data name="ControlGroupValidator_TimeSeriesDoesNotSpanModelRunInterval" xml:space="preserve">
+    <value>Time series does not span the model run interval.</value>
+  </data>
+  <data name="RealTimeControlModelXmlReader_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory" xml:space="preserve">
+    <value>Could not import RTC model, the settings.json file should contain an xml directory.</value>
   </data>
 </root>
