@@ -1292,7 +1292,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 "[forcing]",
                 "Name = some_id",
                 "Function = timeseries",
-                "Time-interpolation = linear",
+                "TimeInterpolation = linear",
                 "Quantity = time",
                 "Unit = seconds since 2023-07-31 00:00:00",
                 "Quantity = lateral_discharge",
@@ -1399,13 +1399,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             
             Assert.That(bcFileLines, Has.Length.EqualTo(11));
             Assert.That(bcFileLines[0], Is.EqualTo("[forcing]"));
-            AssertPropertyLine(bcFileLines[1], "Name", "some_id");
-            AssertPropertyLine(bcFileLines[2], "Function", "timeseries");
-            AssertPropertyLine(bcFileLines[3], "Time-interpolation", "linear");
-            AssertPropertyLine(bcFileLines[4], "Quantity", "time");
-            AssertPropertyLine(bcFileLines[5], "Unit", "seconds since 2023-07-31 00:00:00");
-            AssertPropertyLine(bcFileLines[6], "Quantity", "lateral_discharge");
-            AssertPropertyLine(bcFileLines[7], "Unit", "m3/s");
+            AssertPropertyLine(bcFileLines[1], "name", "some_id");
+            AssertPropertyLine(bcFileLines[2], "function", "timeseries");
+            AssertPropertyLine(bcFileLines[3], "timeInterpolation", "linear");
+            AssertPropertyLine(bcFileLines[4], "quantity", "time");
+            AssertPropertyLine(bcFileLines[5], "unit", "seconds since 2023-07-31 00:00:00");
+            AssertPropertyLine(bcFileLines[6], "quantity", "lateral_discharge");
+            AssertPropertyLine(bcFileLines[7], "unit", "m3/s");
             AssertDataLine(bcFileLines[8], "60", "1.23");
             AssertDataLine(bcFileLines[9], "120", "2.34");
             AssertDataLine(bcFileLines[10], "180", "3.45");

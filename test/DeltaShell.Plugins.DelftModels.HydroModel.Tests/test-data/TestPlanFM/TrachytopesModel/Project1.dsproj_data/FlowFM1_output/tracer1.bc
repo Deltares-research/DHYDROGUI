@@ -1,11 +1,11 @@
 [forcing]
-Name                            = Boundary02_0001
-Function                        = timeseries
-Time-interpolation              = linear
-Quantity                        = time
-Unit                            = seconds since 2001-01-01 00:00:00
-Quantity                        = tracerbndtracer1
-Unit                            = -
+name                            = Boundary02_0001
+function                        = timeseries
+timeInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2001-01-01 00:00:00
+quantity                        = tracerbndtracer1
+unit                            = -
 0      0
 300    0
 600    0

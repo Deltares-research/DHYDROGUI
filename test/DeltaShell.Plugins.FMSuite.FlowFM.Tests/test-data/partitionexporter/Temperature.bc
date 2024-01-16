@@ -1,14 +1,14 @@
 [forcing]
-Name                            = CanTho_0001
-Function                        = timeseries
-Time-interpolation              = linear
-Vertical position type          = single
-Vertical interpolation          = linear
-Quantity                        = time
-Unit                            = seconds since 2016-04-01 00:00:00
-Quantity                        = temperaturebnd
-Unit                            = °C
-Vertical position               = 1
+name                            = CanTho_0001
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2016-04-01 00:00:00
+quantity                        = temperaturebnd
+unit                            = °C
+vertPositionIndex               = 1
 0        29.4
 60       29.4
 120      29.4
@@ -20172,16 +20172,16 @@ Vertical position               = 1
 1209600  30.4
 
 [forcing]
-Name                            = CanTho_0005
-Function                        = timeseries
-Time-interpolation              = linear
-Vertical position type          = single
-Vertical interpolation          = linear
-Quantity                        = time
-Unit                            = seconds since 2016-04-01 00:00:00
-Quantity                        = temperaturebnd
-Unit                            = °C
-Vertical position               = 1
+name                            = CanTho_0005
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2016-04-01 00:00:00
+quantity                        = temperaturebnd
+unit                            = °C
+vertPositionIndex               = 1
 0        29.4
 60       29.4
 120      29.4
@@ -40345,16 +40345,16 @@ Vertical position               = 1
 1209600  30.4
 
 [forcing]
-Name                            = DaiNgai_0001
-Function                        = timeseries
-Time-interpolation              = linear
-Vertical position type          = single
-Vertical interpolation          = linear
-Quantity                        = time
-Unit                            = seconds since 2016-04-01 00:00:00
-Quantity                        = temperaturebnd
-Unit                            = °C
-Vertical position               = 1
+name                            = DaiNgai_0001
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2016-04-01 00:00:00
+quantity                        = temperaturebnd
+unit                            = °C
+vertPositionIndex               = 1
 0        29.1
 60       29.1
 120      29.1
@@ -60518,16 +60518,16 @@ Vertical position               = 1
 1209600  30.5
 
 [forcing]
-Name                            = DaiNgai_0012
-Function                        = timeseries
-Time-interpolation              = linear
-Vertical position type          = single
-Vertical interpolation          = linear
-Quantity                        = time
-Unit                            = seconds since 2016-04-01 00:00:00
-Quantity                        = temperaturebnd
-Unit                            = °C
-Vertical position               = 1
+name                            = DaiNgai_0012
+function                        = timeseries
+timeInterpolation               = linear
+vertPositionType                = single
+vertInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2016-04-01 00:00:00
+quantity                        = temperaturebnd
+unit                            = °C
+vertPositionIndex               = 1
 0        29.1
 60       29.1
 120      29.1

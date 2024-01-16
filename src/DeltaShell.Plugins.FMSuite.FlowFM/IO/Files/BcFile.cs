@@ -34,21 +34,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public const string Extension = ".bc";
 
         public const string BlockKey = "[forcing]";
-        public const string QuantityKey = "Quantity";
+        public const string QuantityKey = "quantity";
         private const string generalHeader = "[general]";
-        private const string SupportPointKey = "Name";
-        private const string ForcingTypeKey = "Function";
-        private const string SeriesIndexKey = "FunctionIndex";
-        private const string UnitKey = "Unit";
-        private const string TimeInterpolationKey = "Time-interpolation";
-        private const string VerticalIntepolationKey = "Vertical interpolation";
-        private const string VerticalPositionTypeKey = "Vertical position type";
-        private const string VerticalPositionSpecKey = "Vertical position specification";
-        private const string VerticalPositionKey = "Vertical position";
-        private const string OffsetKey = "Offset";
-        private const string FactorKey = "Factor";
+        private const string supportPointKey = "name";
+        private const string forcingTypeKey = "function";
+        private const string seriesIndexKey = "functionIndex";
+        private const string unitKey = "unit";
+        private const string oldTimeInterpolationKey = "time-interpolation";
+        private const string oldVerticalInterpolationKey = "vertical interpolation";
+        private const string oldVerticalPositionTypeKey = "vertical position type";
+        private const string oldVerticalPositionSpecKey = "vertical position specification";
+        private const string oldVerticalPositionKey = "vertical position";
+        private const string timeInterpolationKey = "timeInterpolation";
+        private const string verticalInterpolationKey = "vertInterpolation";
+        private const string verticalPositionTypeKey = "vertPositionType";
+        private const string verticalPositionSpecKey = "vertPositions";
+        private const string verticalPositionKey = "vertPositionIndex";
+        private const string offsetKey = "offset";
+        private const string factorKey = "factor";
         private const StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase;
-        protected readonly ILog log = LogManager.GetLogger(typeof(BcFile));
+        
+        private readonly ILog log = LogManager.GetLogger(typeof(BcFile));
 
         private readonly List<FlowBoundaryQuantityType> supportedProcesses = new List<FlowBoundaryQuantityType>()
         {
@@ -68,14 +74,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             FlowBoundaryQuantityType.SedimentConcentration
         };
 
-        private readonly int columnWidth = VerticalPositionSpecKey.Length;
+        private readonly int columnWidth = verticalPositionKey.Length;
 
-        public BcFile()
-        {
-            MultiFileMode = WriteMode.SingleFile;
-        }
-
-        public WriteMode MultiFileMode { get; set; }
+        public WriteMode MultiFileMode { get; set; } = WriteMode.SingleFile;
 
         public bool CorrectionFile { private get; set; }
 
@@ -248,7 +249,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             get
             {
-                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct()
+                return supportedProcesses.Select(FlowBoundaryCondition.GetProcessNameForQuantity)
+                                         .Distinct()
                                          .ToList();
             }
         }
@@ -257,43 +259,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             WriteLine(BlockKey);
 
-            WriteKeyValuePairLine(SupportPointKey, block.SupportPoint);
+            WriteKeyValuePairLine(supportPointKey, block.SupportPoint);
 
-            WriteKeyValuePairLine(ForcingTypeKey, block.FunctionType);
+            WriteKeyValuePairLine(forcingTypeKey, block.FunctionType);
 
             if (block.SeriesIndex != null)
             {
-                WriteKeyValuePairLine(SeriesIndexKey, block.SeriesIndex);
+                WriteKeyValuePairLine(seriesIndexKey, block.SeriesIndex);
             }
 
             if (block.TimeInterpolationType != null)
             {
-                WriteKeyValuePairLine(TimeInterpolationKey, block.TimeInterpolationType);
+                WriteKeyValuePairLine(timeInterpolationKey, block.TimeInterpolationType);
             }
 
             if (block.VerticalPositionType != null)
             {
-                WriteKeyValuePairLine(VerticalPositionTypeKey, block.VerticalPositionType);
+                WriteKeyValuePairLine(verticalPositionTypeKey, block.VerticalPositionType);
             }
 
             if (block.VerticalPositionDefinition != null)
             {
-                WriteKeyValuePairLine(VerticalPositionSpecKey, block.VerticalPositionDefinition);
+                WriteKeyValuePairLine(verticalPositionSpecKey, block.VerticalPositionDefinition);
             }
 
             if (block.VerticalInterpolationType != null)
             {
-                WriteKeyValuePairLine(VerticalIntepolationKey, block.VerticalInterpolationType);
+                WriteKeyValuePairLine(verticalInterpolationKey, block.VerticalInterpolationType);
             }
 
             if (block.Offset != null)
             {
-                WriteKeyValuePairLine(OffsetKey, block.Offset);
+                WriteKeyValuePairLine(offsetKey, block.Offset);
             }
 
             if (block.Factor != null)
             {
-                WriteKeyValuePairLine(FactorKey, block.Factor);
+                WriteKeyValuePairLine(factorKey, block.Factor);
             }
 
             foreach (BcQuantityData quantity in block.Quantities)
@@ -301,12 +303,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 WriteKeyValuePairLine(QuantityKey, quantity.QuantityName);
                 if (quantity.Unit != null)
                 {
-                    WriteKeyValuePairLine(UnitKey, quantity.Unit);
+                    WriteKeyValuePairLine(unitKey, quantity.Unit);
                 }
 
                 if (quantity.VerticalPosition != null)
                 {
-                    WriteKeyValuePairLine(VerticalPositionKey, quantity.VerticalPosition);
+                    WriteKeyValuePairLine(verticalPositionKey, quantity.VerticalPosition);
                 }
             }
 
@@ -422,47 +424,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
 
                 string key = split[0];
-                if (key.Equals(SupportPointKey, stringComparison))
+                if (key.Equals(supportPointKey, stringComparison))
                 {
                     supportPointName = split[1];
                 }
 
-                if (key.Equals(ForcingTypeKey, stringComparison))
+                if (key.Equals(forcingTypeKey, stringComparison))
                 {
                     forcingType = split[1];
                 }
 
-                if (key.Equals(TimeInterpolationKey, stringComparison))
+                if (key.Equals(oldTimeInterpolationKey, stringComparison) ||
+                    key.Equals(timeInterpolationKey, stringComparison))
                 {
                     timeInterpolationType = split[1];
                 }
 
-                if (key.Equals(VerticalPositionTypeKey, stringComparison))
+                if (key.Equals(oldVerticalPositionTypeKey, stringComparison) ||
+                    key.Equals(verticalPositionTypeKey, stringComparison))
                 {
                     verticalPositionType = split[1];
                 }
 
-                if (key.Equals(VerticalPositionSpecKey, stringComparison))
+                if (key.Equals(oldVerticalPositionSpecKey, stringComparison) ||
+                    key.Equals(verticalPositionSpecKey, stringComparison))
                 {
                     verticalPositionSpecification = split[1];
                 }
 
-                if (key.Equals(VerticalIntepolationKey, stringComparison))
+                if (key.Equals(oldVerticalInterpolationKey, stringComparison) ||
+                    key.Equals(verticalInterpolationKey, stringComparison))
                 {
                     verticalInterpolationType = split[1];
                 }
 
-                if (key.Equals(SeriesIndexKey, stringComparison))
+                if (key.Equals(seriesIndexKey, stringComparison))
                 {
                     seriesIndex = split[1];
                 }
 
-                if (key.Equals(OffsetKey, stringComparison))
+                if (key.Equals(offsetKey, stringComparison))
                 {
                     offset = split[1];
                 }
 
-                if (key.Equals(FactorKey, stringComparison))
+                if (key.Equals(factorKey, stringComparison))
                 {
                     factor = split[1];
                 }
@@ -480,7 +486,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     }
                 }
 
-                if (key.Equals(UnitKey, stringComparison))
+                if (key.Equals(unitKey, stringComparison))
                 {
                     if (quantityData == null)
                     {
@@ -490,7 +496,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     quantityData.Unit = split[1];
                 }
 
-                if (key.Equals(VerticalPositionKey, stringComparison))
+                if (key.Equals(oldVerticalPositionKey, stringComparison) ||
+                    key.Equals(verticalPositionKey, stringComparison))
                 {
                     if (quantityData == null)
                     {

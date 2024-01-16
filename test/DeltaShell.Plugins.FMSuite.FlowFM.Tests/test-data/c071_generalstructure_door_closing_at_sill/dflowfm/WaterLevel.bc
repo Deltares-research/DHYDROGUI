@@ -1,22 +1,22 @@
 [forcing]
-Name                            = river_boundary_0001
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = minutes
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = river_boundary_0001
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = minutes
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0  0  0
 
 [forcing]
-Name                            = river_boundary_0002
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = minutes
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = river_boundary_0002
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = minutes
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0  0  0
 

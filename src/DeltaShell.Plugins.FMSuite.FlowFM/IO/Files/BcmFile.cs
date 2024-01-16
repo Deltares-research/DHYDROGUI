@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
@@ -24,6 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private const string RecordsInTableKey = "records-in-table";
         private const string UnitKey = "unit";
         private const string TimeUnit = "minutes";
+        
+        private readonly ILog log = LogManager.GetLogger(typeof(BcmFile));
 
         private readonly List<FlowBoundaryQuantityType> supportedProcesses = new List<FlowBoundaryQuantityType>()
         {

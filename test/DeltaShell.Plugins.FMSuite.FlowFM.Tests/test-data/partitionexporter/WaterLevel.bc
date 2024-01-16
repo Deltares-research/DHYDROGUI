@@ -1,11 +1,11 @@
 [forcing]
-Name                            = CanTho_0001
-Function                        = timeseries
-Time-interpolation              = linear
-Quantity                        = time
-Unit                            = seconds since 2016-04-01 00:00:00
-Quantity                        = waterlevelbnd
-Unit                            = m
+name                            = CanTho_0001
+function                        = timeseries
+timeInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2016-04-01 00:00:00
+quantity                        = waterlevelbnd
+unit                            = m
 0        0.468
 60       0.462
 120      0.459
@@ -20169,13 +20169,13 @@ Unit                            = m
 1209600  0.398
 
 [forcing]
-Name                            = CanTho_0005
-Function                        = timeseries
-Time-interpolation              = linear
-Quantity                        = time
-Unit                            = seconds since 2016-04-01 00:00:00
-Quantity                        = waterlevelbnd
-Unit                            = m
+name                            = CanTho_0005
+function                        = timeseries
+timeInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2016-04-01 00:00:00
+quantity                        = waterlevelbnd
+unit                            = m
 0        0.468
 60       0.462
 120      0.459
@@ -40339,13 +40339,13 @@ Unit                            = m
 1209600  0.398
 
 [forcing]
-Name                            = DaiNgai_0001
-Function                        = timeseries
-Time-interpolation              = linear
-Quantity                        = time
-Unit                            = seconds since 2016-04-01 00:00:00
-Quantity                        = waterlevelbnd
-Unit                            = m
+name                            = DaiNgai_0001
+function                        = timeseries
+timeInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2016-04-01 00:00:00
+quantity                        = waterlevelbnd
+unit                            = m
 0        -0.285
 60       -0.292
 120      -0.299
@@ -60509,13 +60509,13 @@ Unit                            = m
 1209600  -0.266
 
 [forcing]
-Name                            = DaiNgai_0012
-Function                        = timeseries
-Time-interpolation              = linear
-Quantity                        = time
-Unit                            = seconds since 2016-04-01 00:00:00
-Quantity                        = waterlevelbnd
-Unit                            = m
+name                            = DaiNgai_0012
+function                        = timeseries
+timeInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2016-04-01 00:00:00
+quantity                        = waterlevelbnd
+unit                            = m
 0        -0.285
 60       -0.292
 120      -0.299

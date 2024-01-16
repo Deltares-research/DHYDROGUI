@@ -1,120 +1,120 @@
 [forcing]
-Name                            = Boundary01_0001
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0001
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0002
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0002
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0003
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0003
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0004
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0004
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0005
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0005
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0006
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0006
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0007
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0007
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0008
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0008
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0009
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0009
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 
 [forcing]
-Name                            = Boundary01_0010
-Function                        = harmonic
-Quantity                        = harmonic component
-Unit                            = deg/h
-Quantity                        = waterlevelbnd amplitude
-Unit                            = m
-Quantity                        = waterlevelbnd phase
-Unit                            = deg
+name                            = Boundary01_0010
+function                        = harmonic
+quantity                        = harmonic component
+unit                            = deg/h
+quantity                        = waterlevelbnd amplitude
+unit                            = m
+quantity                        = waterlevelbnd phase
+unit                            = deg
 0            0.5  0
 28.98410422  2    0
 

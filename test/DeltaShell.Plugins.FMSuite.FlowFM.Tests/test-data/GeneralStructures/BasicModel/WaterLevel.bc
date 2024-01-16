@@ -1,11 +1,11 @@
 [forcing]
-Name                            = Boundary02_0001
-Function                        = timeseries
-Time-interpolation              = linear
-Quantity                        = time
-Unit                            = seconds since 2001-01-01 00:00:00
-Quantity                        = waterlevelbnd
-Unit                            = m
+name                            = Boundary02_0001
+function                        = timeseries
+timeInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2001-01-01 00:00:00
+quantity                        = waterlevelbnd
+unit                            = m
 0       0
 43200   0
 86400   0
@@ -15,13 +15,13 @@ Unit                            = m
 259200  0
 
 [forcing]
-Name                            = Boundary02_0002
-Function                        = timeseries
-Time-interpolation              = linear
-Quantity                        = time
-Unit                            = seconds since 2001-01-01 00:00:00
-Quantity                        = waterlevelbnd
-Unit                            = m
+name                            = Boundary02_0002
+function                        = timeseries
+timeInterpolation               = linear
+quantity                        = time
+unit                            = seconds since 2001-01-01 00:00:00
+quantity                        = waterlevelbnd
+unit                            = m
 0       0
 43200   0
 86400   0
