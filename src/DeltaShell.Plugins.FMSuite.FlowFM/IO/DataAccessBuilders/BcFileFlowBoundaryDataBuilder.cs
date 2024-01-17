@@ -1063,24 +1063,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             try
             {
-                VerticalProfileType type = VerticalDefinitionKeys[dataBlock.VerticalPositionType];
                 var depths = new List<double>();
+                VerticalProfileType type = VerticalDefinitionKeys[dataBlock.VerticalPositionType];
+
                 if (type == VerticalProfileType.Uniform || type == VerticalProfileType.TopBottom)
                 {
                     return VerticalProfileDefinition.Create(type, depths);
                 }
 
-                depths = dataBlock.VerticalPositionDefinition.Split(null as char[], StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToList();
-                IEnumerable<double> sortedDepths = VerticalProfileDefinition.SortDepths(depths, type);
-                if (!depths.SequenceEqual(sortedDepths))
-                {
-                    Log.WarnFormat(
-                        "File {0}, block starting at line {1}: vertical profile depths not correctly ordered; omitting dataBlock block.",
-                        dataBlock.FilePath, dataBlock.LineNumber);
-                }
+                depths = dataBlock.VerticalPositionDefinition.Split(null as char[], StringSplitOptions.RemoveEmptyEntries)
+                                  .Select(double.Parse)
+                                  .ToList();
 
                 return VerticalProfileDefinition.Create(type, depths);
-
             }
             catch
             {
