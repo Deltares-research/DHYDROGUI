@@ -76,5 +76,14 @@ namespace DHYDRO.Common.Properties {
                 return ResourceManager.GetString("Key__0__is_deprecated_and_automatically_removed_from_model_", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; cannot be converted to a {1} for value: {2}. Line: {3}.
+        /// </summary>
+        public static string Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_ {
+            get {
+                return ResourceManager.GetString("Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_", resourceCulture);
+            }
+        }
     }
 }

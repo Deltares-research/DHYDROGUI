@@ -30,4 +30,7 @@
     <data name="Key__0__is_deprecated_and_automatically_removed_from_model_" xml:space="preserve">
         <value>Key {0} is deprecated and automatically removed from model.</value>
     </data>
+    <data name="Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_" xml:space="preserve">
+        <value>Property '{0}' cannot be converted to a {1} for value: {2}. Line: {3}</value>
+    </data>
 </root>

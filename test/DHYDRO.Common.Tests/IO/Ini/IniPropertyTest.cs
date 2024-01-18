@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using DHYDRO.Common.IO.Ini;
+using log4net.Core;
 using NUnit.Framework;
 
 namespace DHYDRO.Common.Tests.IO.Ini
@@ -118,10 +120,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var property = new IniProperty("TestKey", "TestValue");
 
             bool result = property.HasValue();
-            
+
             Assert.IsTrue(result);
         }
-        
+
         [Test]
         [TestCase("")]
         [TestCase(null)]
@@ -130,20 +132,20 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var property = new IniProperty("TestKey", "TestValue", comment);
 
             bool result = property.HasComment();
-            
+
             Assert.IsFalse(result);
         }
-        
+
         [Test]
         public void HasComment_ValidComment_ReturnsTrue()
         {
             var property = new IniProperty("TestKey", "TestValue", "TestComment");
 
             bool result = property.HasComment();
-            
+
             Assert.IsTrue(result);
         }
-        
+
         [Test]
         [TestCase("")]
         [TestCase(null)]
@@ -152,10 +154,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var property = new IniProperty("TestKey", value);
 
             bool result = property.HasValue();
-            
+
             Assert.IsFalse(result);
         }
-        
+
         [Test]
         [TestCase("", "")]
         [TestCase("42", 42)]
@@ -199,7 +201,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             Assert.IsFalse(result);
             Assert.AreEqual(defaultValue, convertedValue);
         }
-        
+
         [Test]
         public void TryGetConvertedValue_NullStringValue_ReturnsFalseAndDefaultValue()
         {
@@ -225,6 +227,25 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             Assert.IsFalse(result);
             Assert.AreEqual(defaultValue, convertedValue);
+        }
+
+        [Test]
+        [TestCase(default(int))]
+        [TestCase(default(float))]
+        [TestCase(default(double))]
+        [TestCase(default(DayOfWeek))]
+        public void TryGetConvertedValue_InvalidFormattedValue_LogsError<T>(T defaultValue)
+            where T : IConvertible
+        {
+            var property = new IniProperty("TestKey", "TestValue") { LineNumber = 7 }; 
+
+            void Call()
+            {
+                property.TryGetConvertedValue(out T _);
+            }
+
+            string error = Log4NetTestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
+            Assert.That(error, Is.EqualTo($"Property 'TestKey' cannot be converted to a {defaultValue.GetType().Name} for value: TestValue. Line: 7"));
         }
 
         [Test]

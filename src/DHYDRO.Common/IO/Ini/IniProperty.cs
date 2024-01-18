@@ -3,6 +3,8 @@ using System.Diagnostics;
 using DHYDRO.Common.Extensions;
 using DHYDRO.Common.Guards;
 using DHYDRO.Common.IO.Ini.Converters;
+using DHYDRO.Common.Properties;
+using log4net;
 
 namespace DHYDRO.Common.IO.Ini
 {
@@ -15,6 +17,8 @@ namespace DHYDRO.Common.IO.Ini
     [DebuggerDisplay("{Key}={Value}")]
     public sealed class IniProperty : IEquatable<IniProperty>
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(IniProperty));
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IniProperty"/> class.
         /// </summary>
@@ -94,7 +98,7 @@ namespace DHYDRO.Common.IO.Ini
         {
             return !string.IsNullOrEmpty(Value);
         }
-        
+
         /// <summary>
         /// Returns whether the property has a non-null and non-empty comment.
         /// </summary>
@@ -120,6 +124,7 @@ namespace DHYDRO.Common.IO.Ini
             }
             catch
             {
+                log.ErrorFormat(Resources.Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_, Key, typeof(T).Name, Value, LineNumber);
                 convertedValue = default;
                 return false;
             }
