@@ -48,6 +48,7 @@ geometry,VertplizFile,,,,FileName,,,,TRUE,,,,,,"Vertical layering file *_vlay.pl
 geometry,ProflocFile,,,,FileName,,,,TRUE,,,,,,"Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref"
 geometry,ProfdefFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file *_profdefinition.def with definition for all profile numbers"
 geometry,ProfdefxyzFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file _profdefinition.def with definition for all profile numbers"
+geometry,IniFieldFile,,,,FileName,,,,TRUE,,,,,,,,Initial values and parameter fields file,,,
 geometry,Uniformwidth1D,,,Default 1D channel width,Double,2,,,TRUE,,,,,,"Uniform width for channel profiles not specified by profloc"
 geometry,ManholeFile,,,,FileName,,,,TRUE,,,,,,"File *.ini containing manholes"
 geometry,WaterLevIni,initial,Water level,Initial water level,Double,0,,,FALSE,,,,,,"Initial water level at missing s0 values", m

@@ -421,12 +421,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     IniSection geometry = iniData.FindSection("geometry");
                     IniSection output = iniData.FindSection("output");
 
-                    string strExtForceFile = externalForcing.GetPropertyValue("ExtForceFile");
+                    string strIniFieldFile = geometry.GetPropertyValue("IniFieldFile");
                     string strExtForceFileNew = externalForcing.GetPropertyValue("ExtForceFileNew");
                     string strLandBoundaryFile = geometry.GetPropertyValue("LandBoundaryFile");
                     string strObsFile = output.GetPropertyValue("ObsFile");
 
-                    Assert.IsNotEmpty(strExtForceFile, $"ExtForceFile not set in {file}");
+                    Assert.IsNotEmpty(strIniFieldFile, $"IniFieldFile not set in {file}");
                     Assert.IsNotEmpty(strExtForceFileNew, $"ExtForceFileNew not set in {file}");
                     Assert.IsNotEmpty(strLandBoundaryFile, $"LandBoundaryFile not set in {file}");
                     Assert.IsNotEmpty(strObsFile, $"ObsFile not set in {file}");

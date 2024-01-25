@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
             Assert.That(bndExtForceFileDTO.ForcingFiles, Is.Empty);
             Assert.That(bndExtForceFileDTO.Boundaries, Is.Empty);
             Assert.That(bndExtForceFileDTO.Laterals, Is.Empty);
-            logHandler.Received(1).ReportWarningFormat("Section {0} has an unknown header and cannot be parsed. Line: {1}", "unknown", 5);
+            logHandler.Received(1).ReportWarningFormat("Section '{0}' has an unknown header and cannot be parsed. Line: {1}", "unknown", 5);
         }
         
         [Test]

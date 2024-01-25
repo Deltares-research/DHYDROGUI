@@ -448,6 +448,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                            StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.StructuresFile,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.IniFieldFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.PartitionFile,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ManholeFile,

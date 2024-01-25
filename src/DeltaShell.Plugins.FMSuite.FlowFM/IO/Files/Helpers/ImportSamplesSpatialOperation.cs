@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         public ImportSamplesSpatialOperation() : base(false)
         {
             RelativeSearchCellSize = 1;
+            MinSamplePoints = 1;
             AveragingMethod = GridCellAveragingMethod.ClosestPoint;
             InterpolationMethod = SpatialInterpolationMethod.Averaging;
         }
@@ -36,6 +37,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         /// Gets or sets the interpolation method.
         /// </summary>
         public SpatialInterpolationMethod InterpolationMethod { get; set; }
+        
+        /// <summary>
+        /// Minimum number of points in averaging.
+        /// </summary>
+        public int MinSamplePoints { get; set; }
+        
+        /// <summary>
+        /// The operand defining how data is added.
+        /// </summary>
+        public PointwiseOperationType Operand { get; set; }
 
         /// <summary>
         /// Creates an <see cref="ImportSamplesOperation"/> with an <see cref="InterpolateOperation"/>.
@@ -45,14 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         /// </returns>
         public Tuple<ImportSamplesOperation, InterpolateOperation> CreateOperations()
         {
-            var importSamplesOperation = new ImportSamplesOperation(false)
-            {
-                Name = Name,
-                CoordinateSystem = CoordinateSystem,
-                Dirty = true,
-                Enabled = Enabled,
-                FilePath = FilePath,
-            };
+            var importSamplesOperation = CreateImportSamplesOperation();
 
             var interpolateOperation = new InterpolateOperation
             {
@@ -61,13 +65,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 Dirty = true,
                 Enabled = Enabled,
                 RelativeSearchCellSize = RelativeSearchCellSize,
+                MinNumSamples = MinSamplePoints,
                 GridCellAveragingMethod = AveragingMethod,
-                InterpolationMethod = InterpolationMethod
+                InterpolationMethod = InterpolationMethod,
+                OperationType = Operand
             };
             interpolateOperation.Mask.Provider = new FeatureCollection(new List<Feature>(), typeof(Feature));
             interpolateOperation.LinkInput(InterpolateOperation.InputSamplesName, importSamplesOperation.Output);
             return new Tuple<ImportSamplesOperation, InterpolateOperation>(
                 importSamplesOperation, interpolateOperation);
+        }
+        
+        protected virtual ImportSamplesOperation CreateImportSamplesOperation()
+        {
+            return new ImportSamplesOperation(false)
+            {
+                Name = Name,
+                CoordinateSystem = CoordinateSystem,
+                Dirty = true,
+                Enabled = Enabled,
+                FilePath = FilePath,
+            };
         }
     }
 }

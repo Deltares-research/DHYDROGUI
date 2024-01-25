@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -11,6 +12,8 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -627,35 +630,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsNotNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName));
 
             IList<ISpatialOperation> roughnessOperations = def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
-            Assert.AreEqual(2, roughnessOperations.Count);
+            Assert.AreEqual(1, roughnessOperations.Count);
 
-            var samplesOperation = (ImportSamplesOperation) roughnessOperations[1];
+            var samplesOperation = (ImportSamplesOperation) roughnessOperations[0];
             Assert.AreEqual("chezy", samplesOperation.Name);
             Assert.AreEqual(4, samplesOperation.GetPoints().Count());
 
-            const string newPath = "local.ext";
-            string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newPath), "chezy_A.mdu");
-            extForceFile.Write(newPath, def, true, true); // write loaded definition to new location
+            using (var temp = new TemporaryDirectory())
+            {
+                string newPath =Path.Combine(temp.Path, "initialFields.ini");
+                var initialFieldFileWriter = new InitialFieldFileWriter(new FileSystem(), new SpatialDataFileWriter());
+                initialFieldFileWriter.Write(newPath, def); // write loaded definition to new location
 
-            var newExtFile = new ExtForceFile();
-            var newDef = new WaterFlowFMModelDefinition();
+                var initialFieldFileReader = new InitialFieldFileReader(new FileSystem());
+                var newDef = new WaterFlowFMModelDefinition();
 
-            newExtFile.Read(newPath, newDef, newExtSubFilesReferenceFilePath); // load written definition back
-            IList<ISpatialOperation> newRoughnessOperations = newDef.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
-            Assert.AreEqual(4, ((ImportSamplesOperation) newRoughnessOperations[1]).GetPoints().Count());
+                initialFieldFileReader.Read(newPath, newPath, newDef); // load written definition back
+                IList<ISpatialOperation> newRoughnessOperations = newDef.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
+                Assert.AreEqual(4, ((ImportSamplesOperation) newRoughnessOperations[0]).GetPoints().Count());
+            }
         }
 
         [Test]
-        public void ReadWriteSampleForcingsWaterLevel()
+        public void ReadWriteSampleForcingsInitialSalinity()
         {
             var def = new WaterFlowFMModelDefinition();
-            string extPath = TestHelper.GetTestFilePath(@"chezy_samples\waterlevel.ext");
+            string extPath = TestHelper.GetTestFilePath(@"chezy_samples\initialsalinity.ext");
             string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "waterlevel.mdu");
 
             var extForceFile = new ExtForceFile();
             extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
 
-            Assert.AreEqual(1, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
+            Assert.AreEqual(1, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Count);
 
             // add polygon
             var geometry = new Polygon(new LinearRing(new[]
@@ -673,7 +679,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }, typeof(Feature));
             var operation = new SetValueOperation {Name = "poly"};
             operation.SetInputData(SpatialOperation.MaskInputName, maskCollection);
-            def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Add(operation);
+            def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Add(operation);
 
             // add samples
             var samples = new AddSamplesOperation(false);
@@ -705,7 +711,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             });
 
-            def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Add(samples);
+            def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Add(samples);
 
             const string newExtPath = "test.ext";
             string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newExtPath), "test.mdu");
@@ -716,11 +722,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newExtFile = new ExtForceFile();
             newExtFile.Read(newExtPath, newDef, newExtSubFilesReferenceFilePath);
 
-            Assert.AreEqual(3, newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
+            Assert.AreEqual(3, newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Count);
             Assert.AreEqual(3,
                             ((ImportSamplesOperation)
-                                newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)[2]).GetPoints()
-                                                                                                                         .Count());
+                                newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName)[2]).GetPoints()
+                                                                                                                       .Count());
         }
 
         [Test]

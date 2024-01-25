@@ -191,5 +191,6 @@
     <PackageReference Include="Portable.System.DateTimeOnly" />
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="System.Threading.Tasks.Extensions" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" PrivateAssets="all" />
   </ItemGroup>
 </Project>

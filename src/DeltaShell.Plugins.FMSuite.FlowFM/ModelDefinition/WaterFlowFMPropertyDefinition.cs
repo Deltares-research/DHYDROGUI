@@ -79,6 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string FrictionType = "UnifFrictType";
         public const string WaveModelNr = "Wavemodelnr";
         public const string WaterLevIni = "WaterLevIni";
+        public const string IniFieldFile = "IniFieldFile";
         public const string COMFile = "comfile";
         public const string SolverType = "Icgsolver";
         public const string SecondaryFlow = "SecondaryFlow";

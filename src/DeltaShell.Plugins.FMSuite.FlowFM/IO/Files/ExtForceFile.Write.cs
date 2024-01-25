@@ -172,9 +172,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             extForceFileItems.AddRange(WriteSourcesAndSinks(modelDefinition).Distinct());
 
             var uniqueFileNameProvider = new UniqueFileNameProvider();
-            extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialWaterLevel,
-                                                        modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.InitialWaterLevelDataItemName), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialSalinity,
                                                         modelDefinition.GetSpatialOperations(
@@ -193,10 +190,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialTemperature,
                                                         modelDefinition.GetSpatialOperations(
                                                             WaterFlowFMModelDefinition.InitialTemperatureDataItemName), uniqueFileNameProvider).Distinct());
-
-            extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.FrictCoef,
-                                                        modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.RoughnessDataItemName), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.HorEddyViscCoef,
                                                         modelDefinition.GetSpatialOperations(

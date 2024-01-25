@@ -35,12 +35,6 @@ QUANTITY=frictioncoefficient
 FILENAME=chezy.xyz
 FILETYPE=7
 METHOD=4
-OPERAND=O
-
-QUANTITY=frictioncoefficient
-FILENAME=chezy.xyz
-FILETYPE=7
-METHOD=4
 OPERAND=A
 
 QUANTITY=waterlevelbnd

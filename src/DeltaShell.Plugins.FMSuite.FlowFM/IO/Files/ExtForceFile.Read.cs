@@ -567,6 +567,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             foreach (KeyValuePair<string, string> quantityPair in knownQuantities)
             {
                 List<ExtForceFileItem> readItems = unreadExtForceFileItems.Where(i => i.Quantity == quantityPair.Key).ToList();
+                foreach (var readItem in readItems)
+                {
+                    supportedExtForceFileItems.Add(readItem);
+                }
                 if (quantityPair.Key.Equals(ExtForceQuantNames.FrictCoef))
                 {
                     readItems = FilterByFrictionType(unreadExtForceFileItems, modelDefinition).ToList();

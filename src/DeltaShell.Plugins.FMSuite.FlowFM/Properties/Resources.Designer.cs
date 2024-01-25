@@ -60,11 +60,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; could not be parsed to a boolean for property &apos;{1}&apos;..
+        /// </summary>
+        public static string _0_could_not_be_parsed_to_a_boolean_for_property_1_ {
+            get {
+                return ResourceManager.GetString("_0_could_not_be_parsed_to_a_boolean_for_property_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; could not be parsed to a double for property &apos;{1}&apos;. Line: {2}.
         /// </summary>
         public static string _0_could_not_be_parsed_to_a_double_for_property_1_Line_2_ {
             get {
                 return ResourceManager.GetString("_0_could_not_be_parsed_to_a_double_for_property_1_Line_2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; could not be parsed to a valid &apos;{1}&apos;. Valid values: {2}..
+        /// </summary>
+        public static string _0_could_not_be_parsed_to_a_valid_1_Valid_values_2_ {
+            get {
+                return ResourceManager.GetString("_0_could_not_be_parsed_to_a_valid_1_Valid_values_2_", resourceCulture);
             }
         }
         
@@ -662,6 +680,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Initial field data file does not exist: {0}.
+        /// </summary>
+        public static string Initial_field_data_file_does_not_exist_0_ {
+            get {
+                return ResourceManager.GetString("Initial_field_data_file_does_not_exist_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial field file does not exist: {0}.
+        /// </summary>
+        public static string Initial_field_file_does_not_exist_0_ {
+            get {
+                return ResourceManager.GetString("Initial_field_file_does_not_exist_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Variables detected in imported SourceAndSink Function: {0}.
         /// </summary>
         public static string Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_ {
@@ -936,11 +972,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; can only be {1} when &apos;{2}&apos; is {3}..
+        /// </summary>
+        public static string Property_0_can_only_be_1_when_2_is_3_ {
+            get {
+                return ResourceManager.GetString("Property_0_can_only_be_1_when_2_is_3_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; contains an unsupported value. Supported values: {1}..
         /// </summary>
         public static string Property_0_contains_an_unsupported_value_Supported_values_1_ {
             get {
                 return ResourceManager.GetString("Property_0_contains_an_unsupported_value_Supported_values_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; contains unsupported value: {1}.
+        /// </summary>
+        public static string Property_0_contains_unsupported_value_1_ {
+            get {
+                return ResourceManager.GetString("Property_0_contains_unsupported_value_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; must be 1 or higher..
+        /// </summary>
+        public static string Property_0_must_be_1_or_higher {
+            get {
+                return ResourceManager.GetString("Property_0_must_be_1_or_higher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; must be provided..
+        /// </summary>
+        public static string Property_0_must_be_provided {
+            get {
+                return ResourceManager.GetString("Property_0_must_be_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; should be {1} when &apos;{2}&apos; is {3}..
+        /// </summary>
+        public static string Property_0_should_be_1_when_2_is_3_ {
+            get {
+                return ResourceManager.GetString("Property_0_should_be_1_when_2_is_3_", resourceCulture);
             }
         }
         
@@ -1020,6 +1101,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading initial field data from {0}.
+        /// </summary>
+        public static string Reading_initial_field_data_from_0_ {
+            get {
+                return ResourceManager.GetString("Reading_initial_field_data_from_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to reading the initial field file.
+        /// </summary>
+        public static string reading_the_initial_field_file {
+            get {
+                return ResourceManager.GetString("reading_the_initial_field_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No errors were reported in the diagnostics file {0}.
         /// </summary>
         public static string RemoteFlexibleMeshModelApi_No_errors_were_reported_in_the_diagnostics_file__0_ {
@@ -1048,7 +1147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Section {0} has an unknown header and cannot be parsed. Line: {1}.
+        ///   Looks up a localized string similar to Section &apos;{0}&apos; has an unknown header and cannot be parsed. Line: {1}.
         /// </summary>
         public static string Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_ {
             get {
@@ -2212,6 +2311,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WeirValidator_ValidateSnapping__0__is_not_within_grid_extend_ {
             get {
                 return ResourceManager.GetString("WeirValidator_ValidateSnapping__0__is_not_within_grid_extend_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing initial field data to {0}.
+        /// </summary>
+        public static string Writing_initial_field_data_to_0_ {
+            get {
+                return ResourceManager.GetString("Writing_initial_field_data_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to writing the initial field file.
+        /// </summary>
+        public static string writing_the_initial_field_file {
+            get {
+                return ResourceManager.GetString("writing_the_initial_field_file", resourceCulture);
             }
         }
     }
