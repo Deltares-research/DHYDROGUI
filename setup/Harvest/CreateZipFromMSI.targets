@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <PropertyGroup>
+    <INSTALL_AND_CHECK Condition=" '$(INSTALL_AND_CHECK)' == '' ">True</INSTALL_AND_CHECK>
+  </PropertyGroup>
+
   <!--
   for this to work include the following statement at top of .wixproj-file:
 
@@ -35,9 +39,7 @@
     </Task>
   </UsingTask>
 
-  <Target Name="AfterBuild">
-    <!--Condition=" '$(BUILD_NUMBER)' != '' "-->
-
+  <Target Name="AfterBuild" Condition=" '$(INSTALL_AND_CHECK)' == 'True' ">
     <WixAssignCulture
       Cultures="$(Cultures)"
       Files="@(EmbeddedResource)">
