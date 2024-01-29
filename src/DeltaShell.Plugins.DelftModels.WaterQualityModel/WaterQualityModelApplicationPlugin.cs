@@ -350,7 +350,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 var model = e.GetRemovedOrAddedItem() as WaterQualityModel;
                 if (model != null)
                 {
-                    model.SetupModelDataFolderStructure(Application.HybridProjectRepository.ProjectDataDirectory);
+                    model.SetupModelDataFolderStructure(Application.ProjectDataDirectory);
                 }
             }
         }
@@ -362,13 +362,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <param name="e"> </param>
         private void Project_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is WaterQualityModel) || e.PropertyName != "Name")
+            if (e.PropertyName == "Name" && sender is WaterQualityModel model)
             {
-                return;
+                model.SetupModelDataFolderStructure(Application.ProjectDataDirectory);
             }
-
-            ((WaterQualityModel) sender).SetupModelDataFolderStructure(
-                Application.HybridProjectRepository.ProjectDataDirectory);
         }
     }
 }

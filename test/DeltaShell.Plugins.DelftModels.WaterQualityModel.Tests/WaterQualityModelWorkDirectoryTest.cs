@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 deltaShell.Project.RootFolder.Add(model);
 
                 // assert
-                StringAssert.StartsWith(deltaShell.HybridProjectRepository.ProjectDataDirectory, model.ModelDataDirectory);
+                StringAssert.StartsWith(deltaShell.ProjectDataDirectory, model.ModelDataDirectory);
             }
         }
 

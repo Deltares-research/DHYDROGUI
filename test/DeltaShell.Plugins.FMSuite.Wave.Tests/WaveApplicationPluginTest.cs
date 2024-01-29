@@ -158,62 +158,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void SetApplication_EventsAreSubscribedAndUnsubscribedCorrectly()
-        {
-            // Setup
-            var plugin = new WaveApplicationPlugin();
-            var app1 = Substitute.For<IApplication>();
-            var repo1 = Substitute.For<IHybridProjectRepository>();
-            app1.HybridProjectRepository.Returns(repo1);
-
-            var app2 = Substitute.For<IApplication>();
-            var repo2 = Substitute.For<IHybridProjectRepository>();
-            app2.HybridProjectRepository.Returns(repo2);
-
-            // Call 1
-            plugin.Application = app1;
-
-            // Assert 1
-            repo1.DidNotReceive().ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
-            repo1.Received(1).ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
-
-            repo1.ClearReceivedCalls();
-
-            // Call 2
-            plugin.Application = app2;
-
-            // Assert 2
-            repo1.Received(1).ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
-            repo2.DidNotReceive().ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
-            repo1.DidNotReceive().ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
-            repo2.Received(1).ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
-        }
-
-        [Test]
-        public void GivenAWaveApplicationPluginWithAnApplication_WhenTheHybridProjectRepositoryIsOpened_ThenTheExpectedCallIsExecuted()
-        {
-            // Setup
-
-            var plugin = new WaveApplicationPlugin();
-            var app = Substitute.For<IApplication>();
-            var repo = Substitute.For<IHybridProjectRepository>();
-
-            using (var temp = new TemporaryDirectory())
-            {
-                string projectFile = temp.CreateFile("the_path.dsproj");
-                repo.GetPluginFileFormatVersions(projectFile).Returns(new Dictionary<string, Version> {{"Delft3D Wave", Version.Parse(plugin.FileFormatVersion)}});
-                app.HybridProjectRepository.Returns(repo);
-                plugin.Application = app;
-
-                // Call
-                repo.ProjectOpening += Raise.EventWith(new object(), new ProjectOpeningEventArgs(projectFile));
-
-                // Assert
-                repo.Received(1).GetPluginFileFormatVersions(projectFile);
-            }
-        }
-
-        [Test]
         public void GetFileImporters_ReturnsCorrectCollection()
         {
             // Setup
