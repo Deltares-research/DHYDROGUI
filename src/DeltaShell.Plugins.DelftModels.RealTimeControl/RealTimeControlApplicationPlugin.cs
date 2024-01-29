@@ -6,9 +6,7 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
@@ -43,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (Application != null)
                 {
                     Application.ProjectOpened -= ApplicationProjectOpened;
-                    Application.HybridProjectRepository.ProjectOpening -= HybridProjectRepositoryOnProjectOpening;
+                    Application.ProjectOpening -= ApplicationProjectOpening;
                 }
 
                 base.Application = value;
@@ -51,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (Application != null)
                 {
                     Application.ProjectOpened += ApplicationProjectOpened;
-                    Application.HybridProjectRepository.ProjectOpening += HybridProjectRepositoryOnProjectOpening;
+                    Application.ProjectOpening += ApplicationProjectOpening;
                 }
             }
         }
@@ -101,12 +99,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => 
             Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
 
-        private void HybridProjectRepositoryOnProjectOpening(object sender, ProjectOpeningEventArgs e)
+        private void ApplicationProjectOpening(string projectFilePath)
         {
-            Ensure.NotNull(e, nameof(e), "Empty project path is not allowed");
-
-            string projectFilePath = e.ProjectPath;
-
             if (string.IsNullOrEmpty(projectFilePath) || !File.Exists(projectFilePath))
             {
                 throw new FileNotFoundException($"File not found {projectFilePath}");
@@ -125,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <returns><c>true</c> when the version of the database provided by <paramref name="path"/> is 3.5.0.0 or lower</returns>
         private bool ShouldUpgradeDataBaseUsingSqlQueries(string path)
         {
-            IDictionary<string, Version> pluginVersions = Application.HybridProjectRepository.GetPluginFileFormatVersions(path);
+            IDictionary<string, Version> pluginVersions = Application.GetPluginFileFormatVersions(path);
 
             if (pluginVersions.TryGetValue(Name, out Version currentVersion))
             {
