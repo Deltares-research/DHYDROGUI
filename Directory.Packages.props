@@ -14,7 +14,7 @@
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="4.0.0.8" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="4.0.0.8" />
     <PackageVersion Include="DIDO" Version="7.0.0.74073" />
-    <PackageVersion Include="Dimr.Libs" Version="2.26.12" />
+    <PackageVersion Include="Dimr.Libs" Version="2.26.13" />
     <PackageVersion Include="Fare" Version="2.2.1" />
     <PackageVersion Include="FParsec" Version="1.1.1" />
     <PackageVersion Include="FParsec-Pipes" Version="1.1.1" />
