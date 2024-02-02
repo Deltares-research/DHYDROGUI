@@ -51,7 +51,7 @@ geometry,StructureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,,,"File *.ini con
 geometry,VertplizFile,,,,FileName,,,,TRUE,,,,,,,,"Vertical layering file *_vlay.pliz with rows x, y, Z, first Z, nr of layers, second Z, layer type",,,
 geometry,CrossDefFile,,,,FileName,,,,TRUE,,,,,,,,Channel profile definition file *_profdefinition.def with definition for all profile numbers,,,
 geometry,CrossLocFile,,,,FileName,,,,TRUE,,,,,,,,"Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref",,,
-geometry,FrictFile,,,,FileName,,,,TRUE,,,,,,,,Roughness files in .ini format,,,
+geometry,FrictFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,,,Roughness files in .ini format,,,
 geometry,StorageNodeFile,,,,FileName,,,,TRUE,,,,,,,,Node file that describes data for compartments in a sewer network *.ini,,,
 geometry,BranchFile,,,,FileName,,,,TRUE,,,,,,,,Branch gui file that describes data (like material) for pipes in a sewer network *.ini,,,
 geometry,RoofsFile,,,,FileName,,,,TRUE,,,,,,,,"Roof area file *.pliz, containing x- and y-coordinates that describe the shapes of these roofs",,,

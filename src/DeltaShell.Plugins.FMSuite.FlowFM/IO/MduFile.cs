@@ -894,6 +894,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_properties);
             ReadProperties(filePath, convertedFileObjectsForFMModel.ModelDefinition);
+            
+            reportProgress?.Invoke(Resources.MduFile_Read_Validating_morphology_properties);
+            ValidateProperties(filePath, convertedFileObjectsForFMModel.ModelDefinition);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_morphology_properties);
             MorphologyFile.Read(filePath, convertedFileObjectsForFMModel.ModelDefinition);
@@ -1265,6 +1268,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             return mduPropertyValue;
+        }
+
+        private static void ValidateProperties(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
+        {
+            var validator = new MduFileValidator(mduFilePath, modelDefinition);
+            validator.Validate();
         }
 
         private static void ReadFeatures<TFeat, TFile>(string mduFilePath, WaterFlowFMModelDefinition modelDefinition,

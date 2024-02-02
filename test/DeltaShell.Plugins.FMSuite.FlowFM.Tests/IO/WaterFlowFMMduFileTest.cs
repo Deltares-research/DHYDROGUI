@@ -11,7 +11,9 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -214,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test] /* Extension of the one above but directly loading an MDU File. */
-        [TestCase(KnownProperties.EnclosureFile, "Value1 Value2", "CustomPropertyTest", "Value3")]
+        [TestCase(KnownProperties.EnclosureFile, "Enc1_enc.pol Enc2_enc.pol", "CustomPropertyTest", "CustomPropertyValue")]
         public void WhenMduExpectsANewMultipleLinePropertyButItIsANewPropertyItKeepsReading(string hydroAreaFileProperty, string expectedCompositeValue, string customPropertyName, string expectedSimpleValue)
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMPropertyWithSlashAndNoNewLine.mdu");
@@ -951,7 +953,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenAnMduFileWithNonExistentReferenceToFile_WhenReadingMduFile_ThenTheUserGetsAWarningMessage()
+        public void GivenAnMduFileWithNonExistentReferenceToFile_WhenReadingMduFile_ThenTheUserGetsAnErrorMessage()
         {
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
@@ -974,14 +976,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 HydroNetwork = network,
                 AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
             };
+            
+            // Call
+            void Call() => mduFile.Read(mduPath, convertedFileObjectsForFMModel);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+            // Assert
+            List<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Error).ToList();
+
+            string[] expectedErrorMessages = new []
             {
-                mduFile.Read(mduPath, convertedFileObjectsForFMModel);
-            }, "' does not exist, but is defined in MDU file at '");
-
-            // Check if all features were read
-            Assert.That(area.ObservationPoints.Count, Is.EqualTo(0));
+                string.Format(Resources.MduFileReferenceDoesNotExist, "FlowFM_net.nc", mduPath, "NetFile", modelName),
+                string.Format(Resources.MduFileReferenceDoesNotExist, "MyObservationPoints_obs.xyn", mduPath, "ObsFile", modelName)
+            };
+                
+            Assert.That(messages, Is.EqualTo(expectedErrorMessages));
+            Assert.That(area.ObservationPoints, Is.Empty);
         }
 
         [Test]

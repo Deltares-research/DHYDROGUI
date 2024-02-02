@@ -759,6 +759,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Validating morphology properties.
+        /// </summary>
+        public static string MduFile_Read_Validating_morphology_properties {
+            get {
+                return ResourceManager.GetString("MduFile_Read_Validating_morphology_properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Multiple enclosures added to the model. Validate or run will fail if more than one enclosure is present..
         /// </summary>
         public static string MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_will_fail_if_more_than_one_enclosure_is_present_ {
@@ -835,6 +844,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists {
             get {
                 return ResourceManager.GetString("MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File at location &apos;{0}&apos; does not exist, but is defined in MDU file &apos;{1}&apos; property &apos;{2}&apos;. Information might have been lost while loading model &apos;{3}&apos;..
+        /// </summary>
+        public static string MduFileReferenceDoesNotExist {
+            get {
+                return ResourceManager.GetString("MduFileReferenceDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File path &apos;{0}&apos; contains invalid characters. MDU file &apos;{1}&apos; property &apos;{2}&apos;. Information might have been lost while loading model &apos;{3}&apos;..
+        /// </summary>
+        public static string MduFileReferencePathContainsInvalidCharacters {
+            get {
+                return ResourceManager.GetString("MduFileReferencePathContainsInvalidCharacters", resourceCulture);
             }
         }
         

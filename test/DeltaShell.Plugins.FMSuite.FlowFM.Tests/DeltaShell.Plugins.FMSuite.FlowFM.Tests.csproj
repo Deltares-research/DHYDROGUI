@@ -11,6 +11,7 @@
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="Portable.System.DateTimeOnly"/>
     <PackageReference Include="RhinoMocks" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     <PackageReference Include="System.ValueTuple" />
   </ItemGroup>
 

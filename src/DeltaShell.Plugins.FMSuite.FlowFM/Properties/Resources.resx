@@ -688,4 +688,13 @@ File import of structures file '{1}' has failed.</value>
   <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionTimeZone_Time_zone_of_boundary_condition___0___falls_outside_of_allowed_range__12_00_and__12_00" xml:space="preserve">
     <value>Time zone of boundary condition '{0}' falls outside of allowed range -12:00 and +12:00</value>
   </data>
+  <data name="MduFileReferenceDoesNotExist" xml:space="preserve">
+    <value>File at location '{0}' does not exist, but is defined in MDU file '{1}' property '{2}'. Information might have been lost while loading model '{3}'.</value>
+  </data>
+  <data name="MduFile_Read_Validating_morphology_properties" xml:space="preserve">
+    <value>Validating morphology properties</value>
+  </data>
+  <data name="MduFileReferencePathContainsInvalidCharacters" xml:space="preserve">
+    <value>File path '{0}' contains invalid characters. MDU file '{1}' property '{2}'. Information might have been lost while loading model '{3}'.</value>
+  </data>
 </root>
