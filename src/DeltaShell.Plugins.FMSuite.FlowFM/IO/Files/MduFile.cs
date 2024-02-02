@@ -73,20 +73,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             KnownProperties.StructuresFile
         };
 
-        private static readonly Dictionary<string, string> MduFilePropertyDescriptionDictionary =
-            new Dictionary<string, string>
-            {
-                {KnownProperties.DryPointsFile, "DryPointsFile"},
-                {KnownProperties.EnclosureFile, "EnclosureFile"},
-                {KnownProperties.LandBoundaryFile, "LandBoundaryFile"},
-                {KnownProperties.ThinDamFile, "ThinDamFile"},
-                {KnownProperties.FixedWeirFile, "FixedWeirFile"},
-                {KnownProperties.BridgePillarFile, "PillarFile"},
-                {KnownProperties.StructuresFile, "StructureFile"},
-                {KnownProperties.ObsFile, "ObsFile"},
-                {KnownProperties.ObsCrsFile, "CrsFile"}
-            };
-
         private int propertyKeyAlignmentLength;
         private int propertyValueAlignmentLength;
 
@@ -1137,6 +1123,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 MduFileReader.Read(fileStream, filePath, modelDefinition);
             }
 
+            var validator = new MduFileValidator(filePath, modelDefinition);
+            validator.Validate();
+
             var pathsRelativeToParent =
                 (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
 
@@ -1312,13 +1301,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             dataColumn.ValueList = loadedData.ToList();
         }
 
-        private static void ReadFeatures<TFeat, TFile>(string mduFilePath, WaterFlowFMModelDefinition modelDefinition,
-                                                       string propertyKey, IList<TFeat> features, ref TFile fileReader,
-                                                       string extension) where TFile : IFeature2DFileBase<TFeat>, new()
+        private void ReadFeatures<TFeat, TFile>(string mduFilePath, WaterFlowFMModelDefinition modelDefinition,
+                                                string propertyKey, IList<TFeat> features, ref TFile fileReader, 
+                                                string extension) where TFile : IFeature2DFileBase<TFeat>, new()
         {
             WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(propertyKey);
             IList<string> featuresFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
-            RemoveBadFilePaths(ref featuresFilePaths, mduFilePath, modelDefinition, propertyKey);
+            
+            if (propertyKey == KnownProperties.StructuresFile)
+            {
+                RemoveAllStructuresFilesWithBadReferences(modelDefinition, modelProperty, featuresFilePaths);
+            }
+            
             MduFileHelper.CopyFilesToMduFolderIfNeeded(featuresFilePaths, mduFilePath, modelDefinition, propertyKey);
 
             if (featuresFilePaths == null || featuresFilePaths.Count == 0)
@@ -1446,7 +1440,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(dryPointsPropertyKey);
             IList<string> featureFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
-            RemoveBadFilePaths(ref featureFilePaths, mduFilePath, modelDefinition, dryPointsPropertyKey);
             MduFileHelper.CopyFilesToMduFolderIfNeeded(featureFilePaths, mduFilePath, modelDefinition, dryPointsPropertyKey);
             if (!featureFilePaths.Any())
             {
@@ -1495,74 +1488,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         /// <summary>
-        /// Removes file paths from featureGroupNames List, whenever they do not exist or whenever the files contain references to
-        /// files that do not exist.
-        /// Filtering out all these file paths is important for importing an mdu file, because it will just skip over the invalid
-        /// file paths and will read
-        /// the existing ones. The corresponding ModelDefinition property is updated for all changes.
-        /// </summary>
-        /// <param name="featureFilePaths"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
-        /// <param name="mduFilePath"> The file path of the mdu file. </param>
-        /// <param name="modelDefinition"> The model definition of the FM Model. </param>
-        /// <param name="propertyKey"> The key that corresponds to the type of file that is being read. </param>
-        private static void RemoveBadFilePaths(ref IList<string> featureFilePaths, string mduFilePath,
-                                               WaterFlowFMModelDefinition modelDefinition, string propertyKey)
-        {
-            if (featureFilePaths.Count == 0)
-            {
-                return;
-            }
-
-            featureFilePaths = featureFilePaths.Select(fp =>
-            {
-                while (fp.StartsWith(@"\") || fp.StartsWith("/"))
-                {
-                    fp = fp.Remove(0, 1);
-                }
-
-                return fp;
-            }).ToList();
-
-            RemoveAllNonExistentFilePaths(featureFilePaths, mduFilePath, modelDefinition, propertyKey);
-            if (propertyKey == KnownProperties.StructuresFile)
-            {
-                RemoveAllStructuresFilesWithBadReferences(featureFilePaths, mduFilePath, modelDefinition);
-            }
-
-            modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", featureFilePaths));
-        }
-
-        /// <summary>
-        /// Removes all file paths that point to a file location that does not exist.
-        /// </summary>
-        /// <param name="featureFilePaths"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
-        /// <param name="mduFilePath"> The file path of the mdu file. </param>
-        /// <param name="modelDefinition"> The model definition of the FM Model. </param>
-        /// <param name="propertyKey"> The key that corresponds to the type of file that is being read. </param>
-        private static void RemoveAllNonExistentFilePaths(ICollection<string> featureFilePaths, string mduFilePath,
-                                                          WaterFlowFMModelDefinition modelDefinition,
-                                                          string propertyKey)
-        {
-            IEnumerable<string> nonExistentFilePaths = featureFilePaths.Where(
-                fp => fp != null &&
-                      !File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(mduFilePath), fp)));
-            foreach (string filePath in nonExistentFilePaths)
-            {
-                Log.WarnFormat(Resources.MduFile_RemoveNonExistentFilePaths_, filePath, mduFilePath,
-                               MduFilePropertyDescriptionDictionary[propertyKey], modelDefinition.ModelName);
-            }
-
-            featureFilePaths.RemoveAllWhere(gn => gn == null || nonExistentFilePaths.Contains(gn));
-        }
-
-        /// <summary>
         /// Removes all structures files that contain references to feature files that do not exist.
         /// </summary>
-        /// <param name="featureFilePaths"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
-        /// <param name="mduFilePath"> The file path of the mdu file. </param>
         /// <param name="modelDefinition"> The model definition of the FM Model. </param>
-        private static void RemoveAllStructuresFilesWithBadReferences(ICollection<string> featureFilePaths, string mduFilePath,
-                                                                      WaterFlowFMModelDefinition modelDefinition)
+        /// <param name="structureFileProperty"> The structures file property. </param>
+        /// <param name="featureFilePaths"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
+        private void RemoveAllStructuresFilesWithBadReferences(WaterFlowFMModelDefinition modelDefinition, 
+                                                               WaterFlowFMProperty structureFileProperty,
+                                                               ICollection<string> featureFilePaths)
         {
             var pathsRelativeToParent =
                 (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
@@ -1574,7 +1507,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 string structureFilePath = System.IO.Path.GetFullPath(filePath);
 
-                string structuresSubFilesReferenceFilePath = pathsRelativeToParent ? filePath : mduFilePath;
+                string structuresSubFilesReferenceFilePath = pathsRelativeToParent ? filePath : Path;
 
                 var fileReader = new StructuresFile
                 {
@@ -1607,6 +1540,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             featureFilePaths.RemoveAllWhere(gn => structureFilesWithBadReferences.Contains(gn));
+            
+            structureFileProperty.SetValueAsString(string.Join(" ", featureFilePaths));
         }
 
         #endregion

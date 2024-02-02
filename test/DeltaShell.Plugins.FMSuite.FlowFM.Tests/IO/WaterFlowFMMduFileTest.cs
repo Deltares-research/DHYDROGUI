@@ -19,9 +19,10 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Geometries;
-using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -786,22 +787,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenAnMduFileWithNonExistentReferenceToFile_WhenReadingMduFile_ThenTheUserGetsAWarningMessage()
+        public void GivenAnMduFileWithNonExistentReferenceToFile_WhenReadingMduFile_ThenTheUserGetsAnErrorMessage()
         {
             // Preparations
             string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects"));
             string mduFilePath = Path.Combine(localPath, @"MissingFileMdu\FlowFM.mdu");
-
             string modelName = Path.GetFileNameWithoutExtension(mduFilePath);
-            var area = new HydroArea();
+            
             var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
+            
+            var area = new HydroArea();
             var mduFile = new MduFile();
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties), "' does not exist, but is defined in MDU file at '");
+            // Call
+            void Call() => mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
+            
+            // Assert
+            List<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Error).ToList();
 
-            // Check if all features were read
-            Assert.That(area.ObservationPoints.Count, Is.EqualTo(0));
+            string[] expectedErrorMessages = new []
+            {
+                string.Format(Resources.MduFileReferenceDoesNotExist, "FlowFM_net.nc", mduFilePath, "NetFile", modelName),
+                string.Format(Resources.MduFileReferenceDoesNotExist, "MyObservationPoints_obs.xyn", mduFilePath, "ObsFile", modelName)
+            };
+            
+            Assert.That(messages, Is.EqualTo(expectedErrorMessages));
+            Assert.That(area.ObservationPoints, Is.Empty);
         }
 
         [Test]

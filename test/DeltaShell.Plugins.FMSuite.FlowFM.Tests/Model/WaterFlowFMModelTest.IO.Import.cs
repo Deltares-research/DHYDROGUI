@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DHYDRO.TestModels.DFlowFM;
 using log4net.Core;
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void LoadFromMdu_WithRelativeRestartFile_DoesNotExist_GivesWarning()
+        public void LoadFromMdu_WithRelativeRestartFile_DoesNotExist_GivesError()
         {
             // Setup
             string testFolder = TestHelper.GetTestFilePath("MduFileWithRelativeRestart");
@@ -80,9 +81,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var tempDir = new TemporaryDirectory())
             {
                 var model = Substitute.ForPartsOf<WaterFlowFMModel>();
+                
                 string modelFolder = tempDir.CopyDirectoryToTempDirectory(testFolder);
                 string mduFilePath = Path.Combine(modelFolder, "simplebox.mdu");
-                string restartFilePath = Path.Combine(modelFolder, "original\\simplebox_20010101_000100_rst.nc");
+
+                string restartFile = "original/simplebox_20010101_000100_rst.nc";
+                string restartFilePath = Path.Combine(modelFolder, restartFile);
 
                 File.Delete(restartFilePath);
 
@@ -90,12 +94,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 void Call() => model.LoadFromMdu(mduFilePath);
 
                 // Assert
-                List<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
+                List<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Error).ToList();
 
-                var expectedWarningMessage = $"Restart file not found: {restartFilePath}.";
-                string expectedMessage = messages.FirstOrDefault(message => message.Equals(expectedWarningMessage));
-                Assert.That(expectedMessage, Is.Not.Null);
-
+                string expectedErrorMessage = string.Format(Resources.MduFileReferenceDoesNotExist, restartFile, mduFilePath, "RestartFile", model.ModelDefinition.ModelName);
+                
+                Assert.That(messages, Does.Contain(expectedErrorMessage));
                 Assert.That(model.UseRestart, Is.False);
                 Assert.That(model.RestartInput.IsEmpty);
             }

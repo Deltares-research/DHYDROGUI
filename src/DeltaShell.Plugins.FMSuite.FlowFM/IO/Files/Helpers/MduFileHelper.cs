@@ -317,7 +317,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return filePath + (extension != null && filePath.EndsWith(extension) ? string.Empty : extension);
         }
 
-        private static string GetCombinedPath(string mduFilePath, string fileName)
+        internal static string GetCombinedPath(string mduFilePath, string fileName)
         {
             if (!string.IsNullOrEmpty(fileName))
             {
