@@ -168,7 +168,7 @@
 
   <Fragment Id="SetInstallerProperties">
     <Property Id="SetInstallerProperties" Hidden="yes"/>
-    <?if $(var.Configuration) != "Release"?>
+    <?if $(var.INCLUDE_BUILD_NUMBER)?>
       <?ifdef env.BUILD_NUMBER ?>
         <Property Id="FullProductName" Value="!(loc.ApplicationName) !(loc.PublicReleaseVersion) !(loc.DistributionName) ($(env.BUILD_NUMBER))"/>
         <Property Id="FullProductNameVersion" Value="!(loc.PublicReleaseVersion).$(env.BUILD_NUMBER)"/>

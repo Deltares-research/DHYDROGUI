@@ -73,8 +73,7 @@
   <xsl:template  match="wix:Component[key('gui-file-search', @Id)]">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
-      <xsl:comment>Added by Peelen transform</xsl:comment>
-      <xsl:processing-instruction name="if">$(var.Configuration) != "Release"</xsl:processing-instruction>
+      <xsl:processing-instruction name="if">$(var.INCLUDE_BUILD_NUMBER)</xsl:processing-instruction>
       <xsl:processing-instruction name="ifdef">env.BUILD_NUMBER</xsl:processing-instruction>
       <Shortcut
   			Id="ProgramMenuDeltaShellExeShortcut"
