@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1267
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "FM", "setup\FM\FM.wixproj", "{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}"
 EndProject
@@ -8,43 +8,18 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DefaultDeltaresDialogs", "s
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Debug|ARM = Debug|ARM
-		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
-		Release|ARM = Release|ARM
-		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|ARM.ActiveCfg = Debug|x64
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|ARM64.ActiveCfg = Debug|x64
 		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|x64.ActiveCfg = Debug|x64
 		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|x64.Build.0 = Debug|x64
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|x86.ActiveCfg = Debug|x64
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Debug|x86.Build.0 = Debug|x64
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Release|Any CPU.ActiveCfg = Release|x64
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Release|ARM.ActiveCfg = Release|x64
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Release|ARM64.ActiveCfg = Release|x64
 		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Release|x64.ActiveCfg = Release|x64
 		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Release|x64.Build.0 = Release|x64
-		{1DD62DBB-F7D3-40BE-8063-B7B80CEC8B9F}.Release|x86.ActiveCfg = Release|x64
-		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Debug|ARM.ActiveCfg = Debug|x64
-		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Debug|ARM64.ActiveCfg = Debug|x64
 		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Debug|x64.ActiveCfg = Debug|x64
 		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Debug|x64.Build.0 = Debug|x64
-		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Debug|x86.ActiveCfg = Debug|x64
-		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Release|Any CPU.ActiveCfg = Release|x64
-		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Release|ARM.ActiveCfg = Release|x64
-		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Release|ARM64.ActiveCfg = Release|x64
 		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Release|x64.ActiveCfg = Release|x64
 		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Release|x64.Build.0 = Release|x64
-		{F30C1A46-D283-484E-AABE-EF52F9168E08}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,28 +16,12 @@
     <Delete Files="@(PdbFiles)" />
     <Delete Files="@(PsSymFiles)" />
   </Target>
-
-    <Target Name="BuildDebug">
-    <MSBuild Projects="NGHS.sln" Targets="Build" Properties="Configuration=Debug;SolutionDir=$(SolutionDir);" />
-    
-    <ItemGroup>
-      <PdbFiles Include="$(BuildPath)\bin\**\*.pdb"/>
-      <PsSymFiles Include="$(BuildPath)\bin\**\*.pssym"/>
-    </ItemGroup>
-    <Delete Files="@(PdbFiles)" />
-    <Delete Files="@(PsSymFiles)" />
-  </Target>
   
   <Target Name="Doxygen" DependsOnTargets="BuildRelease">
     <RemoveDir Directories="$(DoxygenOutputDirectory)"/>
     <MakeDir Directories="$(DoxygenOutputDirectory)" />
     <Exec Command="build\doxygen\bin\doxygen.exe Nghs.doxygen" />
   </Target>   
-   
-  <!-- unsigned installer for testing purposes -->
-  <Target Name="MsiFM_1D2D" DependsOnTargets="BuildDebug">
-    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Debug;SolutionDir=$(SolutionDir);"/>
-  </Target>
   
   <!-- Creates signed assemblies and a signed installer -->
   <Target Name="MsiFM_1D2D_ReleaseOnly_NoSourcesBuild">
