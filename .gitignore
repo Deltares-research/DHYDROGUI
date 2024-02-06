@@ -57,6 +57,7 @@ $RECYCLE.BIN/
 
 # AcceptanceModels folder containing the test data for the acceptance tests
 AcceptanceModels
+AcceptanceModelsRTCFMDimrXmlBased
 
 # Automatically generated
 src/DeltaShell.Dimr/drtc_xsd/rtcRuntimeConfig.cs
