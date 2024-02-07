@@ -3,6 +3,6 @@
   <subclass name="DelftTools.Hydro.CrossSections.CrossSectionDefinitionXYZ, DelftTools.Hydro" discriminator-value="cross_section_xyz" extends="DelftTools.Hydro.CrossSections.CrossSectionDefinition, DelftTools.Hydro" batch-size="500" >
     <!-- Although the crossection is based on Geometry we still store the table because it contains delta-Z storage info -->
     <property name="XYZDataTable"/>
-    <property name="Geometry" access="field.camelcase" column="the_geom" type="NetTopologySuite.Extensions.NHibernate.GeometryUserType, NetTopologySuite.Extensions.NHibernate" />
+    <property name="Geometry" access="field.camelcase" column="the_geom" type="DeltaShell.Plugins.Data.NHibernate.Mappings.Common.GeoAPI.Extensions.Feature.GeometryUserType, DeltaShell.Plugins.Data.NHibernate" />
   </subclass>
 </hibernate-mapping>
