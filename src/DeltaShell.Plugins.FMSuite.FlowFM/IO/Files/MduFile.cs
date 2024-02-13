@@ -95,9 +95,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             fileSystem = new FileSystem();
             initialFieldFileReader = new InitialFieldFileReader(fileSystem);
             initialFieldFileWriter = new InitialFieldFileWriter(fileSystem, new SpatialDataFileWriter());
-            
-            if (FMDllVersion != null)
+
+            if (FMDllVersion != null && FMDllVersion != Resources.MduFile_MduFile_Unknown)
+            {
                 return; // do it once
+            }
 
             if (api == null) //not injected in constructor
             {
