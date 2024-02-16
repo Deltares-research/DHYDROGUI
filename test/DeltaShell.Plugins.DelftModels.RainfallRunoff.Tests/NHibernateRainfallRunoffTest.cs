@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Settings;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -30,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
     {
         #region SetUp
 
-        private NHibernateProjectRepository projectRepository;
+        private IProjectRepository projectRepository;
         private NHibernateProjectRepositoryFactory factory;
         private ISettingsManager settingsManager;
 
@@ -196,7 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             model.StartTime = new DateTime(2011, 2, 2);
             model.Basin = new DrainageBasin {Name = ""};
 
-            _hybridProjectRepository = new HybridProjectRepository(factory, settingsManager);
+            _hybridProjectRepository = new HybridProjectRepository(factory.CreateNew(), settingsManager, Substitute.For<IProjectFileBasedItemRepository>());
             project = new Project();
 
             var dataItem = new DataItem(model);

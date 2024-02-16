@@ -9,6 +9,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -16,7 +17,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.Gui;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
     [Category(TestCategory.Slow), Apartment(ApartmentState.STA)]
     public class NHibernateNetCdfFunctionStoreTest
     {
-        private NHibernateProjectRepository projectRepository;
+        private IProjectRepository projectRepository;
         private NHibernateProjectRepositoryFactory factory;
 
         [OneTimeSetUp]
