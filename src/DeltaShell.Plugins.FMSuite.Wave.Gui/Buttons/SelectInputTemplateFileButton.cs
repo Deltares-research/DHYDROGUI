@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
         {
             waveModel.ModelDefinition
                      .GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.InputTemplateFile)
-                     .SetValueAsString(fileLocation);
+                     .SetValueFromString(fileLocation);
         }
     }
 }

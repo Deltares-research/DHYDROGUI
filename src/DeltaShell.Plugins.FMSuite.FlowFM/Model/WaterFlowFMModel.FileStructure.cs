@@ -328,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (waterFlowFMProperty.Equals(ModelDefinition.GetModelProperty(KnownProperties.NetFile)))
                 {
                     string oldPath = NetFilePath;
-                    waterFlowFMProperty.SetValueAsString(subFile.Value);
+                    waterFlowFMProperty.SetValueFromString(subFile.Value);
                     string newPath = NetFilePath;
 
                     if (!File.Exists(oldPath) ||
@@ -343,7 +343,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
                 else
                 {
-                    waterFlowFMProperty.SetValueAsString(subFile.Value);
+                    waterFlowFMProperty.SetValueFromString(subFile.Value);
                 }
             }
 

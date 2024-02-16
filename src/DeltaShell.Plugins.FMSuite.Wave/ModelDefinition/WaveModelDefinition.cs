@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                                                      KnownWaveProperties.FlowBedLevelUsage).Value;
             set =>
                 GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.FlowBedLevelUsage)
-                    .SetValueAsString(((int)value).ToString());
+                    .SetValueFromString(((int)value).ToString());
         }
 
         public UsageFromFlowType DefaultWaterLevelUsage
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                                                      KnownWaveProperties.FlowWaterLevelUsage).Value;
             set =>
                 GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.FlowWaterLevelUsage)
-                    .SetValueAsString(((int)value).ToString());
+                    .SetValueFromString(((int)value).ToString());
         }
 
         public UsageFromFlowType DefaultVelocityUsage
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                                                      KnownWaveProperties.FlowVelocityUsage).Value;
             set =>
                 GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.FlowVelocityUsage)
-                    .SetValueAsString(((int)value).ToString());
+                    .SetValueFromString(((int)value).ToString());
         }
 
         public VelocityComputationType DefaultVelocityUsageType =>
@@ -224,13 +224,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                                                      KnownWaveProperties.FlowWindUsage).Value;
             set =>
                 GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.FlowWindUsage)
-                    .SetValueAsString(((int)value).ToString());
+                    .SetValueFromString(((int)value).ToString());
         }
 
         public string CommunicationsFilePath
         {
             get => GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile).GetValueAsString();
-            set => GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile).SetValueAsString(value);
+            set => GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile).SetValueFromString(value);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public string InputTemplateFilePath
         {
             get => InputTemplateFileProperty.GetValueAsString();
-            set => InputTemplateFileProperty.SetValueAsString(value);
+            set => InputTemplateFileProperty.SetValueFromString(value);
         }
 
         public bool WaveSetup

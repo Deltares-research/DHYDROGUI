@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.IsFalse(model.OutputIsEmpty);
 
                 // Act
-                model.ModelDefinition.GetModelProperty(propertyName).SetValueAsString(value);
+                model.ModelDefinition.GetModelProperty(propertyName).SetValueFromString(value);
 
                 // Assert
                 Assert.IsFalse(model.OutputOutOfSync);
@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         private static IEnumerable<TestCaseData> GetTestStepsForChangingModelDefinitionBySettingValueAsString()
         {
             TestCaseData GetTestCaseData(string propertyName, string value) =>
-                new TestCaseData(new ModelDefinitionSetValueAsStringTestSteps(propertyName, value), true)
+                new TestCaseData(new ModelDefinitionSetValueFromStringTestSteps(propertyName, value), true)
                     .SetName($"Modifying the real model definition input property '{propertyName}' should mark the output out of sync.");
 
             yield return GetTestCaseData(KnownProperties.FixedWeirScheme, "0");
@@ -382,19 +382,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             public void Act(WaterFlowFMModel model) => model.ModelDefinition.GetModelProperty(propertyName).Value = value;
         }
 
-        private class ModelDefinitionSetValueAsStringTestSteps : ITestStepsForModelOutputOutOfSync
+        private class ModelDefinitionSetValueFromStringTestSteps : ITestStepsForModelOutputOutOfSync
         {
             private readonly string propertyName;
             private readonly string value;
 
-            public ModelDefinitionSetValueAsStringTestSteps(string propertyName, string value)
+            public ModelDefinitionSetValueFromStringTestSteps(string propertyName, string value)
             {
                 this.propertyName = propertyName;
                 this.value = value;
             }
 
             public void Arrange(WaterFlowFMModel model) { }
-            public void Act(WaterFlowFMModel model) => model.ModelDefinition.GetModelProperty(propertyName).SetValueAsString(value);
+            public void Act(WaterFlowFMModel model) => model.ModelDefinition.GetModelProperty(propertyName).SetValueFromString(value);
         }
 
         private class AddingBoundaryTestSteps : ITestStepsForModelOutputOutOfSync

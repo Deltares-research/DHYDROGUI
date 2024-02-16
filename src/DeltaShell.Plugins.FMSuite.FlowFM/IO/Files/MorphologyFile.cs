@@ -310,7 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 if (!string.IsNullOrEmpty(iniProperty.Value))
                 {
-                    existingProperty.SetValueAsString(iniProperty.Value);
+                    existingProperty.SetValueFromString(iniProperty.Value);
                 }
             }
         }
@@ -346,7 +346,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             /*  We set the value now to avoid catching a 'used custom value' in the SedimentFile, or elsewhere */
             if (!string.IsNullOrEmpty(property.Value))
             {
-                modelProperty.SetValueAsString(property.Value);
+                modelProperty.SetValueFromString(property.Value);
             }
 
             return modelProperty;

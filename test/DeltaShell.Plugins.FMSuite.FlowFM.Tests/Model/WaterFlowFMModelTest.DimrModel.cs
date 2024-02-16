@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Setup
             using (var model = new WaterFlowFMModel())
             {
-                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("false");
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueFromString("false");
                 // Call
                 model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
 
@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             {
                 string runMduPath = Path.Combine(model.WorkingDirectoryPath, "dflowfm", $"{model.Name}{FileConstants.MduFileExtension}");
                 model.CacheFile.UpdatePathToMduLocation(runMduPath);
-                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("true");
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueFromString("true");
 
                 ISet<string> ignoredFilePaths = model.IgnoredFilePathsWhenCleaningWorkingDirectory;
 
@@ -234,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string runMduPath = Path.Combine(workingDir, "dflowfm", $"{model.Name}{FileConstants.MduFileExtension}");
                 model.CacheFile.UpdatePathToMduLocation(runMduPath);
                 
-                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString(useCaching.ToString());
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueFromString(useCaching.ToString());
 
                 // Call | Assert
                 Assert.That(model.IgnoredFilePathsWhenCleaningWorkingDirectory, Is.Empty);
@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 File.WriteAllText(shouldBeClearedFilePath, "test");
                 
                 model.CacheFile.UpdatePathToMduLocation(runMduPath);
-                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("true");
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueFromString("true");
 
                 model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 20, 20);
 

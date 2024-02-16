@@ -79,12 +79,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 WriteExtForceFile(extForceFileItems);
                 modelDefinition.GetModelProperty(KnownProperties.ExtForceFile)
-                               .SetValueAsString(Path.GetFileName(extFilePath));
+                               .SetValueFromString(Path.GetFileName(extFilePath));
             }
             else
             {
                 FileUtils.DeleteIfExists(extFilePath);
-                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString(string.Empty);
+                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueFromString(string.Empty);
             }
         }
         

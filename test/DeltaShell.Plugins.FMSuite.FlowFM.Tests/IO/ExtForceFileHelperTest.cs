@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         //
         //     var temperatureProperty = modelDefinition.GetModelProperty(KnownProperties.Temperature) ;
         //     Assert.NotNull(temperatureProperty);
-        //     temperatureProperty.SetValueAsString(((int)temperature).ToString());
+        //     temperatureProperty.SetValueFromString(((int)temperature).ToString());
         //
         //     var function = sourceAndSink.Function;
         //

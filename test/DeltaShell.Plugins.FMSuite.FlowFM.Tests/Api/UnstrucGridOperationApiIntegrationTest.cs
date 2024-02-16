@@ -61,8 +61,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false, false);
                 File.Copy(netFile, model.NetFilePath, true);
 
-                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(model.NetFilePath));
-                model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueAsString("Y");
+                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueFromString(Path.GetFileName(model.NetFilePath));
+                model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueFromString("Y");
 
                 var api = new UnstrucGridOperationApi(model, false);
                 var tempMduPath = (string) TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             // Morphology
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
             var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
-            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
+            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
 
             // Sediment
             model.SedimentFractions = new EventedList<ISedimentFraction> {new SedimentFraction {Name = "gloomy_sediment"}};
@@ -211,8 +211,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             {
                 string netFilePath = temporaryDirectory.CopyTestDataFileToTempDirectory(@"basicGrid\basicGrid_net.nc");
 
-                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(netFilePath));
-                model.ModelDefinition.GetModelProperty(modelPropertyName).SetValueAsString(fileName);
+                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueFromString(Path.GetFileName(netFilePath));
+                model.ModelDefinition.GetModelProperty(modelPropertyName).SetValueFromString(fileName);
                 model.ExportTo(Path.Combine(temporaryDirectory.Path, TestHelper.GetCurrentMethodName() + ".mdu"), true, false, false);
 
                 // When
@@ -256,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                                false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                     .SetValueFromString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
 
@@ -311,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                                false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                     .SetValueFromString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
 
@@ -366,7 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                                false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                     .SetValueFromString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
 
@@ -441,7 +441,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                                false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                     .SetValueFromString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
 

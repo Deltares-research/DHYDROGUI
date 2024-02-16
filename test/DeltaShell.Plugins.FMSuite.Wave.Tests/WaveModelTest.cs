@@ -326,7 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                                                                                  KnownWaveProperties.BedFrictionCoef);
 
             Assert.AreEqual("0.038", prop2.GetValueAsString());
-            prop.SetValueAsString("collins");
+            prop.SetValueFromString("collins");
             Assert.AreEqual("0.015", prop2.GetValueAsString());
         }
 
@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                                                                                  KnownWaveProperties.BedFrictionCoef);
 
             Assert.AreEqual("0.038", prop2.GetValueAsString());
-            prop.SetValueAsString("madsen et al.");
+            prop.SetValueFromString("madsen et al.");
             Assert.AreEqual("0.05", prop2.GetValueAsString());
         }
 
@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                                                                                  KnownWaveProperties.MaxIter);
 
             Assert.AreEqual("50", prop2.GetValueAsString());
-            prop.SetValueAsString("non-stationary");
+            prop.SetValueFromString("non-stationary");
             Assert.AreEqual("15", prop2.GetValueAsString());
         }
 

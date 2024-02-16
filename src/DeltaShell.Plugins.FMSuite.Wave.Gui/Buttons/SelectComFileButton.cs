@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
         {
             waveModel.ModelDefinition
                      .GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.COMFile)
-                     .SetValueAsString(fileLocation);
+                     .SetValueFromString(fileLocation);
         }
     }
 }

@@ -1917,7 +1917,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
             model.ModelDefinition.GetModelProperty(KnownProperties.Temperature)
-                 .SetValueAsString(((int) HeatFluxModelType.TransportOnly).ToString());
+                 .SetValueFromString(((int) HeatFluxModelType.TransportOnly).ToString());
         }
 
         private void AddFlowBoundaryConditionToModel(WaterFlowFMModel model)
@@ -1980,7 +1980,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
             var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
-            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
+            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
         }
 
         private void AddMorphologyBoundaryConditionToModel(WaterFlowFMModel model)
@@ -2060,10 +2060,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void SimulateUserAddingTrachytopesInMduFile(WaterFlowFMModel model)
         {
-            model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueAsString("Y");
-            model.ModelDefinition.GetModelProperty(KnownProperties.TrtDef).SetValueAsString("trachytopes.ttd");
-            model.ModelDefinition.GetModelProperty(KnownProperties.TrtL).SetValueAsString("trachytopes.arl");
-            model.ModelDefinition.GetModelProperty(KnownProperties.DtTrt).SetValueAsString("300");
+            model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueFromString("Y");
+            model.ModelDefinition.GetModelProperty(KnownProperties.TrtDef).SetValueFromString("trachytopes.ttd");
+            model.ModelDefinition.GetModelProperty(KnownProperties.TrtL).SetValueFromString("trachytopes.arl");
+            model.ModelDefinition.GetModelProperty(KnownProperties.DtTrt).SetValueFromString("300");
         }
 
         private void AdjustSettingsOutputParameters(WaterFlowFMModel model)

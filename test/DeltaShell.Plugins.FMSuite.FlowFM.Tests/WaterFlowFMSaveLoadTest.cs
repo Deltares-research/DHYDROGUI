@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel();
             app.Project.RootFolder.Add(model);
 
-            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
+            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("3");
             Assert.AreEqual(true, model.UseTemperature);
 
             app.SaveProjectAs(path);
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(HeatFluxModelType.ExcessTemperature, retrievedModel.HeatFluxModelType);
             Assert.AreEqual(true, retrievedModel.UseTemperature);
 
-            retrievedModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
+            retrievedModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("0");
             Assert.AreEqual(false, retrievedModel.UseTemperature);
 
             app.SaveProjectAs(path);
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel();
             app.Project.RootFolder.Add(model);
 
-            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
+            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("3");
             Assert.AreEqual(true, model.UseTemperature);
 
             model.ExportTo("tempexport1\\mdutemp1.mdu", false);
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(HeatFluxModelType.ExcessTemperature, retrievedModel.HeatFluxModelType);
             Assert.AreEqual(true, retrievedModel.UseTemperature);
 
-            retrievedModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
+            retrievedModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("0");
             Assert.AreEqual(false, retrievedModel.UseTemperature);
 
             retrievedModel.ExportTo("tempexport2\\mdutemp2.mdu", false);

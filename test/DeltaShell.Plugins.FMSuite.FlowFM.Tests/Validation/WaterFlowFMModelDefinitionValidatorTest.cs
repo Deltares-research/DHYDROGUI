@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             WaterFlowFMModel model = CreateValidModel();
 
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-            modelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString("4"); // This method now throws. For TOOLS-20091 this should not happen any more.
+            modelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueFromString("4"); // This method now throws. For TOOLS-20091 this should not happen any more.
             ValidationReport issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(1, issues.ErrorCount);
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             WaterFlowFMModel model = CreateValidModel();
 
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-            modelDefinition.GetModelProperty("teta0").SetValueAsString("1.1");
+            modelDefinition.GetModelProperty("teta0").SetValueFromString("1.1");
             ValidationReport issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(1, issues.ErrorCount);
@@ -104,11 +104,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             WaterFlowFMModel model = CreateValidModel();
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-            modelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueAsString("true");
+            modelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueFromString("true");
 
             // CellEdges
             var facesValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.CellEdges).ToString();
-            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);
+            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(facesValue);
             ValidationReport issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(1, issues.ErrorCount);
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // NodesMaxLev
             var nodesMaxLevValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev).ToString();
-            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(nodesMaxLevValue);
+            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(nodesMaxLevValue);
             issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(1, issues.ErrorCount);
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // FacesMeanLevFromNodes
             var nodesMaxLevAtFacesValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes).ToString();
-            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(nodesMaxLevAtFacesValue);
+            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(nodesMaxLevAtFacesValue);
             issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(1, issues.ErrorCount);
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // NodesMeanLev
             var nodesMeanLevValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev).ToString();
-            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(nodesMeanLevValue);
+            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(nodesMeanLevValue);
             issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(1, issues.ErrorCount);
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // NodesMinLev
             var nodesMinLevValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev).ToString();
-            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(nodesMinLevValue);
+            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(nodesMinLevValue);
             issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(1, issues.ErrorCount);
@@ -158,8 +158,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             WaterFlowFMModel model = CreateValidModel();
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
             var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
-            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
-            modelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueAsString("true");
+            modelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
+            modelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueFromString("true");
             ValidationReport issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(0, issues.ErrorCount);
@@ -179,8 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             WaterFlowFMModel model = CreateValidModel();
             var sedFrac = new SedimentFraction() {Name = "Frac1"};
             model.SedimentFractions.Add(sedFrac);
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueAsString("1");
-            model.ModelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString(((int) type).ToString());
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueFromString("1");
+            model.ModelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueFromString(((int) type).ToString());
             ValidationReport report = model.Validate();
             string issues = string.Join(";", report.AllErrors.Where(e => e.Severity == ValidationSeverity.Error).Select(e => e.Message));
             Assert.That(issues.Contains(Resources.WaterFlowFMModelDefinitionValidator_Validate_), Is.EqualTo(validationErrorThrown));
@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         private static void SetModelPropertyAndAssertIsEnabled(string propertyName, string valueAsString, WaterFlowFMModelDefinition modelDefinition)
         {
             WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
-            property.SetValueAsString(valueAsString);
+            property.SetValueFromString(valueAsString);
 
             Assert.That(property.IsEnabled(modelDefinition.Properties));
         }
@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             using (var model = new WaterFlowFMModel())
             {
                 // Set property to invalid value
-                model.ModelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString(invalidValue);
+                model.ModelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueFromString(invalidValue);
                 
                 // Call
                 ValidationReport report = WaterFlowFMModelDefinitionValidator.Validate(model);
@@ -415,12 +415,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         private static void SetKmxToOne(WaterFlowFMModelDefinition modelModelDefinition)
         {
-            modelModelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("1");
+            modelModelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueFromString("1");
         }
         
         private static void SetLayerTypeToAllZ(WaterFlowFMModelDefinition modelModelDefinition)
         {
-            modelModelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueAsString("2"); // 2 = all-z
+            modelModelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueFromString("2"); // 2 = all-z
         }
 
         private static WaterFlowFMModel CreateSimpleModel()

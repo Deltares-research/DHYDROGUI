@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Setup
             var modelDefinition = new WaterFlowFMModelDefinition();
-            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString(sedimentModelNumber);
+            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueFromString(sedimentModelNumber);
 
             // Call
             void Call() => MorphologyFile.Read(Arg<string>.Is.Anything, modelDefinition);
@@ -55,8 +55,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Setup
             var modelDefinition = new WaterFlowFMModelDefinition();
-            modelDefinition.GetModelProperty(KnownProperties.MorFile).SetValueAsString(morFilePath);
-            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString(sedimentModelNumber);
+            modelDefinition.GetModelProperty(KnownProperties.MorFile).SetValueFromString(morFilePath);
+            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueFromString(sedimentModelNumber);
 
             // Call
             MorphologyFile.Read(Arg<string>.Is.Anything, modelDefinition);
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
             var modelDefinition = new WaterFlowFMModelDefinition();
             modelDefinition.GetModelProperty(KnownProperties.MorFile).Value = "MorCustomProperties.mor";
-            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString("4");
+            modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueFromString("4");
 
             // When
             List<string> logMessages = TestHelper.GetAllRenderedMessages(
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string mduFilePath =
                     TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
                 var modelDefinitionRead = new WaterFlowFMModelDefinition();
-                modelDefinitionRead.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString("4");
+                modelDefinitionRead.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueFromString("4");
                 modelDefinitionRead.GetModelProperty(KnownProperties.MorFile).Value = morFilePath;
 
                 // When
@@ -360,7 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var newDefinition = new WaterFlowFMModelDefinition();
                 newDefinition.GetModelProperty(KnownProperties.MorFile).Value = morFile;
-                newDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString("4");
+                newDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueFromString("4");
                 MorphologyFile.Read(morFile, newDefinition);
                 BoundaryConditionSet readBoundaryConditionSet = newDefinition.BoundaryConditionSets.FirstOrDefault();
                 Assert.IsNotNull(readBoundaryConditionSet);

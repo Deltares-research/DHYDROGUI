@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             var model = new WaterFlowFMModel();
             ((IFileBased) model).CreateNew(Path.Combine(Path.GetTempPath(), "model"));
             model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                 .SetValueAsString(model.Name + "_net.nc");
+                 .SetValueFromString(model.Name + "_net.nc");
 
             PerformActionWithCancellationThread(MaxTimeOut, () =>
                                                     RgfGridEditor.OpenGrid(model.NetFilePath, true, new string[0]));

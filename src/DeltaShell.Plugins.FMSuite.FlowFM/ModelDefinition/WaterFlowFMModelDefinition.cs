@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 MapFormatType mapFormatValue;
                 return Enum.TryParse(mapFormatStringValue, out mapFormatValue) ? mapFormatValue : MapFormatType.Unknown;
             }
-            set => GetModelProperty(KnownProperties.MapFormat).SetValueAsString(((int)value).ToString());
+            set => GetModelProperty(KnownProperties.MapFormat).SetValueFromString(((int)value).ToString());
         }
 
         public bool WriteSnappedFeatures
@@ -237,6 +237,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             get => (bool)GetModelProperty(GuiProperties.UseMorSed).Value;
             set => GetModelProperty(GuiProperties.UseMorSed).Value = value;
         }
+
+        /// <summary>
+        /// Retrieves the properties that represent a file location.
+        /// </summary>
+        public IEnumerable<WaterFlowFMProperty> FileProperties => Properties.Where(x => x.PropertyDefinition.IsFile);
 
         public string MapFileName => GetFileNameFromProperty(MapFilePropertyName, ModelName + FileConstants.MapFileExtension);
 

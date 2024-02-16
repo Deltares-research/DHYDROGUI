@@ -1105,7 +1105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             var fmModel = new WaterFlowFMModel();
 
-            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("8");
+            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueFromString("8");
             fmModel.Area.FixedWeirs.Add(fixedWeir);
 
             IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allData = fmModel.FixedWeirsProperties;
@@ -1137,7 +1137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(modelFeatureCoordinateData.DataColumns.Count, Is.EqualTo(3));
             Assert.That(modelFeatureCoordinateData.DataColumns.First().ValueList.Count, Is.EqualTo(5));
 
-            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("9");
+            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueFromString("9");
 
             allData = fmModel.FixedWeirsProperties;
 
@@ -1154,7 +1154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(dataColumn.IsActive, Is.True);
             }
 
-            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("6");
+            fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueFromString("6");
 
             allData = fmModel.FixedWeirsProperties;
 
@@ -2027,7 +2027,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             WaterFlowFMProperty bedLevelTypeProperty = fmModel.ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
             Assert.NotNull(bedLevelTypeProperty);
 
-            bedLevelTypeProperty.SetValueAsString(((int) bedLevelLocation).ToString());
+            bedLevelTypeProperty.SetValueFromString(((int) bedLevelLocation).ToString());
 
             // execution
             TypeUtils.CallPrivateMethod(fmModel, "SetSpatialCoverages");

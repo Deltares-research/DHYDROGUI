@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                     locationFileName = modelName + ".loc";
                     modelDefinition
                         .GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.LocationFile)
-                        .SetValueAsString(locationFileName);
+                        .SetValueFromString(locationFileName);
                 }
 
                 new ObsFile<Feature2DPoint>().Write(Path.Combine(targetDir, locationFileName),
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             else
             {
                 modelDefinition.GetModelProperty(KnownWaveSections.OutputSection, KnownWaveProperties.LocationFile)
-                               .SetValueAsString(string.Empty);
+                               .SetValueFromString(string.Empty);
             }
 
             IEnumerable<IniSection> boundarySections = MdwBoundarySectionsCreator.CreateSections(modelDefinition.BoundaryContainer, filesManager);
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 if (targetFile == string.Empty)
                 {
                     targetFile = modelName + ".obt";
-                    propertyObstacleFile.SetValueAsString(targetFile);
+                    propertyObstacleFile.SetValueFromString(targetFile);
                 }
 
                 string geometryFile = modelDefinition.ObstaclePolylineFile ?? "";
@@ -220,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             }
             else
             {
-                propertyObstacleFile.SetValueAsString(string.Empty);
+                propertyObstacleFile.SetValueFromString(string.Empty);
             }
         }
 
@@ -290,9 +290,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             else
             {
                 modelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WindSpeed)
-                               .SetValueAsString("0");
+                               .SetValueFromString("0");
                 modelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WindDirection)
-                               .SetValueAsString("0");
+                               .SetValueFromString("0");
             }
         }
 
@@ -311,11 +311,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             else
             {
                 modelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterLevel)
-                               .SetValueAsString("0");
+                               .SetValueFromString("0");
                 modelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterVelocityX)
-                               .SetValueAsString("0");
+                               .SetValueFromString("0");
                 modelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.WaterVelocityY)
-                               .SetValueAsString("0");
+                               .SetValueFromString("0");
             }
         }
 
@@ -369,14 +369,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 string tSeriesFile = modelName + ".bcw";
                 modelDefinition
                     .GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeSeriesFile)
-                    .SetValueAsString(tSeriesFile);
+                    .SetValueFromString(tSeriesFile);
                 new BcwFile().Write(allTimeSeriesPerBoundary, Path.Combine(targetFile, tSeriesFile));
             }
             else
             {
                 modelDefinition
                     .GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeSeriesFile)
-                    .SetValueAsString(string.Empty);
+                    .SetValueFromString(string.Empty);
             }
         }
         

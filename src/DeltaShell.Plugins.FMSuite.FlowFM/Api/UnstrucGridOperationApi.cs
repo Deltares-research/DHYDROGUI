@@ -93,11 +93,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 var clonedProperty = (WaterFlowFMProperty)existingProperty.Clone();
                 if (propertyToClear.ToLowerInvariant() == KnownProperties.TrtRou.ToLowerInvariant())
                 {
-                    clonedProperty.SetValueAsString("N");
+                    clonedProperty.SetValueFromString("N");
                 }
                 else
                 {
-                    clonedProperty.SetValueAsString(string.Empty); //clear 
+                    clonedProperty.SetValueFromString(string.Empty); //clear 
                 }
 
                 int adjustedIndex = adjustedMduProperties.FindIndex(

@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
+                model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueFromString("7");
                 app.Project.RootFolder.Add(model);
 
                 FMGridPartitionExporter exporter = app.FileExporters.OfType<FMGridPartitionExporter>().FirstOrDefault();
@@ -290,7 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
+                model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueFromString("7");
                 app.Project.RootFolder.Add(model);
 
                 FMModelPartitionExporter exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();

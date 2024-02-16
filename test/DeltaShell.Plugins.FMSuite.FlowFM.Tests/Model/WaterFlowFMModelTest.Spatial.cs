@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                             Is.EqualTo(nodesMeanLev));
 
                 // When
-                model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(bedlevType);
+                model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(bedlevType);
 
                 // This mimics the behaviour of the FlowFMNetImporter
                 string replacementGridSourcePath = TestHelper.GetTestFilePath("WaterFlowFMModel.MorphologicalGrid/replacement_grid.nc");

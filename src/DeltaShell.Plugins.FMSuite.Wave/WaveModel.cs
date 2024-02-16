@@ -1128,7 +1128,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     KnownWaveSections.ProcessesSection,
                     KnownWaveProperties.BedFrictionCoef);
 
-                bedFrictionCoefficientProperty.SetValueAsString(
+                bedFrictionCoefficientProperty.SetValueFromString(
                     bedFrictionCoefficientProperty.PropertyDefinition.MultipleDefaultValues[
                         (int)bedFrictionProperty.Value]);
 
@@ -1148,7 +1148,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     KnownWaveSections.NumericsSection,
                     KnownWaveProperties.MaxIter);
 
-                maxNrIterationsProperty.SetValueAsString(
+                maxNrIterationsProperty.SetValueFromString(
                     maxNrIterationsProperty.PropertyDefinition.MultipleDefaultValues[
                         (int)simulationModeProperty.Value]);
 

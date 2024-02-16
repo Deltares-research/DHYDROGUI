@@ -240,9 +240,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             WaterFlowFMModel model = CreateWaterFlowFMModel();
             var sedFrac = new SedimentFraction() {Name = "Frac1"};
             model.SedimentFractions.Add(sedFrac);
-            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString("1");
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueAsString("1");
-            model.ModelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString("0");
+            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString("1");
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueFromString("1");
+            model.ModelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueFromString("0");
 
             Feature2D boundary = model.Boundaries.Last();
             var boundaryCondition = new FlowBoundaryCondition(

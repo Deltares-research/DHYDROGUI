@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             File.Copy(newGridPath, destFileName, true);
             model.ModelDefinition
                  .GetModelProperty(KnownProperties.NetFile)
-                 .SetValueAsString(Path.GetFileName(destFileName));
+                 .SetValueFromString(Path.GetFileName(destFileName));
 
             model.MarkOutputOutOfSync();
         }

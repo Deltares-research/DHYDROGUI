@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             //Validate model
             ValidationReport report = model.Validate();
             salinityProperty.Value = true;
-            temperatureProperty.SetValueAsString("1");
+            temperatureProperty.SetValueFromString("1");
 
             Assert.AreEqual(0,
                             report.GetAllIssuesRecursive()
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void CheckSolverTypeValidation()
         {
             var model = new WaterFlowFMModel {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824)};
-            model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
+            model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueFromString("7");
 
             ValidationReport report = model.Validate();
 
@@ -360,7 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             using (var model = new WaterFlowFMModel())
             {
                 string compositeHeatFluxModelType = ((int) HeatFluxModelType.Composite).ToString();
-                model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(compositeHeatFluxModelType);
+                model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString(compositeHeatFluxModelType);
                 
                 // Precondition
                 Assert.That(model.ModelDefinition.HeatFluxModel.MeteoData.GetValues<double>().Any(), Is.False);

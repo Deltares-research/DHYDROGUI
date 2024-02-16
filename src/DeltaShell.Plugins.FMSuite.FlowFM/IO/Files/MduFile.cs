@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 // Revert path substitutions
                 foreach (KeyValuePair<string, System.Tuple<string, string>> itemPair in substitutedPaths)
                 {
-                    modelDefinition.GetModelProperty(itemPair.Key).SetValueAsString(itemPair.Value.Item1);
+                    modelDefinition.GetModelProperty(itemPair.Key).SetValueFromString(itemPair.Value.Item1);
                 }
             }
         }
@@ -411,7 +411,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 if (relativeSourcePath != relativeTargetPath)
                 {
-                    fileItem.SetValueAsString(relativeTargetPath);
+                    fileItem.SetValueFromString(relativeTargetPath);
                     substitutedPaths[fileItem.PropertyDefinition.MduPropertyName] =
                         new System.Tuple<string, string>(relativeSourcePath,
                                                          relativeTargetPath);
@@ -492,7 +492,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else if (!modelDefinition.BoundaryConditions.Any())
             {
-                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString(string.Empty);
+                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueFromString(string.Empty);
             }
         }
 
@@ -732,7 +732,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             WaterFlowFMProperty waterFlowFmProperty = modelDefinition?.FirstOrDefault(
                 p => p.PropertyDefinition.MduPropertyName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            waterFlowFmProperty?.SetValueAsString(value);
+            waterFlowFmProperty?.SetValueFromString(value);
         }
 
         private static string GetPropertyValue(WaterFlowFMProperty prop, IMduFileWriteConfig config)
@@ -808,7 +808,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                waterFlowFMProperty.SetValueAsString(string.Empty);
+                waterFlowFMProperty.SetValueFromString(string.Empty);
             }
         }
 
@@ -869,7 +869,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             grouping = features.OfType<IGroupableFeature>()
                                .GroupBy(f => f.GroupName, StringComparer.InvariantCultureIgnoreCase).ToList();
 
-            waterFlowFMProperty.SetValueAsString(string.Join(
+            waterFlowFMProperty.SetValueFromString(string.Join(
                                                      " ",
                                                      writeToRelativeFilePaths.Select(
                                                          f => System.IO.Path.HasExtension(f)
@@ -896,7 +896,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (writeToRelativeFilePaths.Any())
             {
                 string currentStringValue = waterFlowFMProperty.GetValueAsString();
-                waterFlowFMProperty.SetValueAsString(currentStringValue + " " + string.Join(
+                waterFlowFMProperty.SetValueFromString(currentStringValue + " " + string.Join(
                                                          " ", writeToRelativeFilePaths.Select(
                                                              f => System.IO.Path.HasExtension(f)
                                                                       ? f
@@ -971,7 +971,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                waterFlowFMProperty.SetValueAsString(string.Empty);
+                waterFlowFMProperty.SetValueFromString(string.Empty);
             }
         }
 
@@ -1543,7 +1543,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             featureFilePaths.RemoveAllWhere(gn => structureFilesWithBadReferences.Contains(gn));
             
-            structureFileProperty.SetValueAsString(string.Join(" ", featureFilePaths));
+            structureFileProperty.SetValueFromString(string.Join(" ", featureFilePaths));
         }
 
         #endregion

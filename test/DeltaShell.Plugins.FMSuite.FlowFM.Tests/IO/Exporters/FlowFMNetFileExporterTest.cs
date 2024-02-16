@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
                 // set bed level location to faces
                 var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
-                fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
+                fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
 
                 app.Project.RootFolder.Add(fmModel);
 
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
                 // set bed level location to faces
                 var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
-                fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
+                fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueFromString(cellsValue);
 
                 app.Project.RootFolder.Add(fmModel);
 

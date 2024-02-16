@@ -48,12 +48,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (bndExtForceFileItems.Any() || lateralSections.Any())
             {
                 WriteBndExtForceFile(bndExtForceFileItems, lateralSections);
-                modelProperty.SetValueAsString(Path.GetFileName(bndExtFilePath));
+                modelProperty.SetValueFromString(Path.GetFileName(bndExtFilePath));
             }
             else
             {
                 FileUtils.DeleteIfExists(bndExtFilePath);
-                modelProperty.SetValueAsString(string.Empty);
+                modelProperty.SetValueFromString(string.Empty);
             }
         }
 

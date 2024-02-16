@@ -234,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 WaveModelProperty propertyWithMultipleDefaultValues = modelDefinition.GetModelProperty(categoryNameWithPropertyWithMultipleDefaultValues, nameOfPropertyWithMultipleDefaultValues);
 
                 var index = (int)dependentOnProperty.Value;
-                propertyWithMultipleDefaultValues.SetValueAsString(propertyWithMultipleDefaultValues.PropertyDefinition.MultipleDefaultValues[index]);
+                propertyWithMultipleDefaultValues.SetValueFromString(propertyWithMultipleDefaultValues.PropertyDefinition.MultipleDefaultValues[index]);
             }
         }
 

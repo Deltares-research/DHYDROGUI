@@ -79,17 +79,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public string MaxValueAsString { get; set; }
 
         /// <summary>
-        /// Indicated if this property should be hidden (true) or shown (false) in the UI.
+        /// Whether this property represents a file location.
         /// </summary>
         public bool IsFile { get; set; }
 
         /// <summary>
-        /// Indicated if this property should be hidden (true) or shown (false) in the UI.
+        /// Whether this property represents multiple file locations.
         /// </summary>
         public bool IsMultipleFile { get; set; }
 
         /// <summary>
-        /// Indicated if this property can or cannot be changed.
+        /// Whether this property can or cannot be changed.
         /// </summary>
         public bool ModelFileOnly { get; set; }
 

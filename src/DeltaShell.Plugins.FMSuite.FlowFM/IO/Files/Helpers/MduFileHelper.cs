@@ -267,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             featureGroupNames.RemoveAllWhere(fp => fp == null);
             IEnumerable<string> relativePaths = featureGroupNames.Select(fp => FileUtils.GetRelativePath(mduDirectory, fp, true));
-            modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", relativePaths));
+            modelDefinition.GetModelProperty(propertyKey).SetValueFromStrings(relativePaths);
         }
 
         private static void UpdateIsDefaultGroupFlag<TFeat>(IList<TFeat> features, string extension,

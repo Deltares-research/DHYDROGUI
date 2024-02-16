@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 
@@ -41,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
                 value = new Steerable();
             }
 
-            SetValueAsString(inputString);
+            SetValueFromString(inputString);
         }
 
         /// <summary>
@@ -85,6 +87,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// The description and definition of this property.
         /// </summary>
         public ModelPropertyDefinition PropertyDefinition => propertyDefinition;
+        
+        /// <summary>
+        /// Returns <see cref="Value"/> in string representation.
+        /// </summary>
+        public virtual string GetValueAsString()
+        {
+            return FMParser.ToString(value, propertyDefinition.DataType);
+        }
 
         /// <summary>
         /// Sets <see cref="Value"/> using a string representation.
@@ -95,13 +105,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// specified in <see cref="PropertyDefinition"/>. Check <see cref="System.Exception.InnerException"/> for underlying
         /// cause.
         /// </exception>
-        public void SetValueAsString(string valueAsString)
+        public void SetValueFromString(string valueAsString)
         {
             try
             {
                 if (propertyDefinition.DataType == typeof(Steerable))
                 {
-                    SetValueAsStringForSteerable(valueAsString);
+                    SetValueFromStringForSteerable(valueAsString);
                 }
                 else
                 {
@@ -112,14 +122,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 if (e is ArgumentNullException || e is FormatException)
                 {
-                    throw new FormatException($"Unexpected value string \"{valueAsString}\" for property \"{PropertyDefinition.FilePropertyKey}\"",
-                                              e);
+                    throw new FormatException($@"Unexpected value string ""{valueAsString}"" for property ""{PropertyDefinition.FilePropertyKey}""", e);
                 }
 
                 if (e is OverflowException)
                 {
-                    throw new FormatException($"Value string \"{valueAsString}\" is too large/small for property \"{PropertyDefinition.FilePropertyKey}\"",
-                                              e);
+                    throw new FormatException($@"Value string ""{valueAsString}"" is too large/small for property ""{PropertyDefinition.FilePropertyKey}""", e);
                 }
 
                 // Unexpected exception type, let it continue
@@ -128,13 +136,41 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         }
 
         /// <summary>
-        /// Returns <see cref="Value"/> in string representation.
+        /// Sets <see cref="Value"/> as a combined string representation.
         /// </summary>
-        public virtual string GetValueAsString()
+        /// <param name="valuesAsString">Collection to form the combined string representation.</param>
+        /// <exception cref="ArgumentNullException">
+        /// When <paramref name="valuesAsString"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="FormatException">
+        /// When the combined string representation does not express the <see cref="ModelPropertyDefinition.DataType"/>
+        /// specified in <see cref="PropertyDefinition"/>. Check <see cref="System.Exception.InnerException"/> for underlying
+        /// cause.
+        /// </exception>
+        public void SetValueFromStrings(IEnumerable<string> valuesAsString)
         {
-            return FMParser.ToString(value, propertyDefinition.DataType);
+            Ensure.NotNull(valuesAsString, nameof(valuesAsString));
+            
+            SetValueFromString(string.Join(" ", valuesAsString));
         }
 
+        /// <summary>
+        /// Retrieves the values representing file locations associated with this property.
+        /// </summary>
+        /// <returns>An enumerable collection of non-empty file location strings.</returns>
+        /// <exception cref="InvalidOperationException">If the property is not defined as a file property.</exception>
+        public IEnumerable<string> GetFileLocationValues()
+        {
+            if (!PropertyDefinition.IsFile)
+            {
+                throw new InvalidOperationException($@"Unable to retrieve file locations for ""{PropertyDefinition.FilePropertyKey}""; not a file property.");
+            }
+
+            IEnumerable<string> locations = PropertyDefinition.IsMultipleFile ? (IEnumerable<string>)Value : new[] { (string)Value };
+
+            return locations.Where(x => !string.IsNullOrEmpty(x));
+        }
+        
         /// <summary>
         /// Checks if <see cref="Value"/> is valid.
         /// </summary>
@@ -186,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// </summary>
         /// <param name="valueAsString"> </param>
         /// <exception cref="ArgumentException"> When <see cref="valueAsString"/> is an invalid file name. </exception>
-        private void SetValueAsStringForSteerable(string valueAsString)
+        private void SetValueFromStringForSteerable(string valueAsString)
         {
             var steerableValue = (Steerable) value;
 

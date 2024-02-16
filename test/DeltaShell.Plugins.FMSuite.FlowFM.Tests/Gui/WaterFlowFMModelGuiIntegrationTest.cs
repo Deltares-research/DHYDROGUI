@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     project.RootFolder.Add(model);
 
                     // set the heat flux model to excess temperature
-                    model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
+                    model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("3");
 
                     gui.CommandHandler.OpenView(model.ModelDefinition.HeatFluxModel);
 
@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         gui.DocumentViews.Any(v => ((HeatFluxModel) v.Data).Type == HeatFluxModelType.ExcessTemperature));
 
                     // set heat flux model to composite
-                    model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("5");
+                    model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("5");
 
                     Assert.IsFalse(
                         gui.DocumentViews.Any(v => ((HeatFluxModel) v.Data).Type == HeatFluxModelType.ExcessTemperature));

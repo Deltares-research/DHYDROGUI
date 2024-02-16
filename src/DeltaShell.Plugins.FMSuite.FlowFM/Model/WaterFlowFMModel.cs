@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         // Do not remove...used in HydroModelBuilder.py
         public void SetWaveForcing()
         {
-            ModelDefinition.GetModelProperty(KnownProperties.WaveModelNr).SetValueAsString("3");
+            ModelDefinition.GetModelProperty(KnownProperties.WaveModelNr).SetValueFromString("3");
         }
 
         public virtual string GetFeatureCategory(IFeature feature)

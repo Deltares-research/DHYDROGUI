@@ -53,6 +53,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private const string testFilePath = @"fm_files\fm_files.mdu";
 
         [Test]
+        public void FilePropertiesReturnOnlyFileBasedProperties()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            Assert.That(modelDefinition.FileProperties, Has.All.Matches<WaterFlowFMProperty>(x => x.PropertyDefinition.IsFile));
+        }
+
+        [Test]
         public void SetGuiTimePropertiesFromMduPropertiesTest()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
@@ -1120,16 +1128,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var waterFlowFMModel = new WaterFlowFMModel();
 
-            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("1");
+            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("1");
             Assert.AreEqual(HeatFluxModelType.TransportOnly, waterFlowFMModel.HeatFluxModelType);
 
-            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
+            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("3");
             Assert.AreEqual(HeatFluxModelType.ExcessTemperature, waterFlowFMModel.HeatFluxModelType);
 
-            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("5");
+            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("5");
             Assert.AreEqual(HeatFluxModelType.Composite, waterFlowFMModel.HeatFluxModelType);
 
-            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
+            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("0");
             Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
         }
 
@@ -1608,7 +1616,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // Given
             var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM1"};
-            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.ClassMapFilePropertyName).SetValueAsString(propertyValue);
+            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.ClassMapFilePropertyName).SetValueFromString(propertyValue);
 
             // When
             string resultedFileName = modelDefinition.ClassMapFileName;
@@ -1626,7 +1634,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // Given
             var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM1"};
-            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.MapFilePropertyName).SetValueAsString(propertyValue);
+            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.MapFilePropertyName).SetValueFromString(propertyValue);
 
             // When
             string resultedFileName = modelDefinition.MapFileName;
@@ -1644,7 +1652,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // Given
             var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM1"};
-            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.HisFilePropertyName).SetValueAsString(propertyValue);
+            modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.HisFilePropertyName).SetValueFromString(propertyValue);
 
             // When
             string resultedFileName = modelDefinition.HisFileName;
@@ -1706,7 +1714,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // given
             var modelDefinition = new WaterFlowFMModelDefinition();
-            modelDefinition.GetModelProperty(KnownProperties.OutputDir).SetValueAsString(propertyValue);
+            modelDefinition.GetModelProperty(KnownProperties.OutputDir).SetValueFromString(propertyValue);
 
             // When
             string resultedString = modelDefinition.OutputDirectoryName;
@@ -1848,7 +1856,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             // Call
-            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("0");
+            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueFromString("0");
             
             WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
 
@@ -1866,8 +1874,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             // Call
-            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("1");
-            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueAsString("2"); // all-z
+            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueFromString("1");
+            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueFromString("2"); // all-z
 
             WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
 
@@ -1885,8 +1893,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             // Call
-            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("1");
-            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueAsString("1"); // all-sigma
+            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueFromString("1");
+            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueFromString("1"); // all-sigma
             
             WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
 
@@ -1915,8 +1923,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             // Call
-            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("1");
-            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueAsString("2"); // all-z
+            modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueFromString("1");
+            modelDefinition.GetModelProperty(KnownProperties.LayerType).SetValueFromString("2"); // all-z
 
             WaterFlowFMProperty property = modelDefinition.GetModelProperty(propertyName);
 

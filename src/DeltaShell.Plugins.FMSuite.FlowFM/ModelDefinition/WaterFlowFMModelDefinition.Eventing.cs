@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 WaterFlowFMProperty sedimentModelNumberProperty = GetModelProperty(KnownProperties.SedimentModelNumber);
                 string newValueAsString = UseMorphologySediment ? "4" : "0";
-                sedimentModelNumberProperty.SetValueAsString(newValueAsString);
+                sedimentModelNumberProperty.SetValueFromString(newValueAsString);
 
                 SetMapFormatPropertyValue();
             }

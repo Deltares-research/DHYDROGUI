@@ -83,9 +83,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void GivenAWaveModel_WhenTScaleAndTimeStepAreIntegersAndDivisors_ThenNoValidationIssuesShouldBeGiven()
         {
             var model = new WaveModel();
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale).SetValueAsString("60");
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep).SetValueAsString("10");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode).SetValueFromString("non-stationary");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale).SetValueFromString("60");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep).SetValueFromString("10");
 
             model.TimeFrameData.WindInputDataType = WindInputDataType.Constant;
             model.TimeFrameData.WindConstantData.Speed = 10;
@@ -99,9 +99,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void GivenAWaveModel_WhenTScaleIsNotAnIntegerAndTimeStepNotADivisor_ThenAnErrorAndWarningShouldBeGiven()
         {
             var model = new WaveModel();
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale).SetValueAsString("60.1");
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep).SetValueAsString("10");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode).SetValueFromString("non-stationary");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale).SetValueFromString("60.1");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep).SetValueFromString("10");
 
             string expectedMessage1 = Resources.WavePropertiesValidator_ValidateTScale;
             string expectedMessage2 = Resources.WavePropertiesValidator_ValidateDivisor;
@@ -125,9 +125,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void GivenAWaveModel_WhenTimeStepIsNotAnIntegerAndNotADivisor_ThenAnErrorAndWarningShouldBeGiven()
         {
             var model = new WaveModel();
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale).SetValueAsString("60");
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep).SetValueAsString("9.9");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode).SetValueFromString("non-stationary");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale).SetValueFromString("60");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep).SetValueFromString("9.9");
 
             string expectedMessage1 = Resources.WavePropertiesValidator_ValidateTimeStep;
             string expectedMessage2 = Resources.WavePropertiesValidator_ValidateDivisor;
@@ -151,9 +151,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void GivenAWaveModel_WhenTimeStepIsBiggerThanTScale_ThenAnErrorShouldBeGiven()
         {
             var model = new WaveModel();
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale).SetValueAsString("60");
-            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep).SetValueAsString("65");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.SimulationMode).SetValueFromString("non-stationary");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeScale).SetValueFromString("60");
+            model.ModelDefinition.GetModelProperty(KnownWaveSections.GeneralSection, KnownWaveProperties.TimeStep).SetValueFromString("65");
 
             string expectedMessage1 = Resources.WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale;
 

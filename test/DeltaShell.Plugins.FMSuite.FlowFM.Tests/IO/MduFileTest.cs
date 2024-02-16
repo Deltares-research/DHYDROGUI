@@ -1326,7 +1326,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Precondition
                 Assert.That(expectedDefaultValue, Is.Not.EqualTo(validNonDefaultValueAsString));
                 
-                property.SetValueAsString(validNonDefaultValueAsString);
+                property.SetValueFromString(validNonDefaultValueAsString);
                 property.PropertyDefinition.IsEnabled = properties => false; // disable the property
                 
                 // Call
@@ -1356,12 +1356,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string expectedDefaultValue = property.PropertyDefinition.DefaultValueAsString;
                 const string validNonDefaultValueAsString = "2"; // value between 0 and kmx
 
-                modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueAsString("10"); // random valid number
+                modelDefinition.GetModelProperty(KnownProperties.Kmx).SetValueFromString("10"); // random valid number
                 
                 // Precondition
                 Assert.That(expectedDefaultValue, Is.Not.EqualTo(validNonDefaultValueAsString));
                 
-                property.SetValueAsString(validNonDefaultValueAsString);
+                property.SetValueFromString(validNonDefaultValueAsString);
                 property.PropertyDefinition.IsEnabled = properties => false; // disable the property
                 
                 // Call

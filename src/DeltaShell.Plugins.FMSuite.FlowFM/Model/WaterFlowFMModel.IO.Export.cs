@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 Directory.CreateDirectory(dirName);
             }
 
-            modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).SetValueAsString("1");
+            modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).SetValueFromString("1");
 
             if (switchTo)
             {
@@ -97,10 +97,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             RestartInput.CopyToDirectory(dirName, switchTo);
             ModelDefinition.GetModelProperty(KnownProperties.RestartFile)
-                           .SetValueAsString(RestartInput.Name);
+                           .SetValueFromString(RestartInput.Name);
 
             WaterFlowFMProperty restartDateTimeProperty = ModelDefinition.GetModelProperty(KnownProperties.RestartDateTime);
-            restartDateTimeProperty.SetValueAsString(FMParser.ToString(RestartInput.StartTime, typeof(DateTime)));
+            restartDateTimeProperty.SetValueFromString(FMParser.ToString(RestartInput.StartTime, typeof(DateTime)));
 
             CacheFile.Export(mduPath);
             MduFile.Write(mduPath,

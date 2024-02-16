@@ -111,7 +111,7 @@ def CleanupLandCells(fmModel, bathymetryData, maxValue):
 
 def SetModelProperty(fmModel, property, valueAsString):
     """Sets the provided property to the given value."""
-    fmModel.ModelDefinition.GetModelProperty(property).SetValueAsString(valueAsString)    
+    fmModel.ModelDefinition.GetModelProperty(property).SetValueFromString(valueAsString)    
 
 def CreateBoundary(name, startPointX, startPointY, endPointX, endPointY, numberOfSupportPoints = 2):
     spDeltaX = (endPointX - startPointX)/(numberOfSupportPoints -1)

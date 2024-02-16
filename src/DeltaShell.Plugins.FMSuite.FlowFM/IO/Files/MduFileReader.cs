@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Key);
             try
             {
-                modelProperty.SetValueAsString(property.Value);
+                modelProperty.SetValueFromString(property.Value);
             }
             catch (FormatException e) when (e.InnerException is FormatException)
             {

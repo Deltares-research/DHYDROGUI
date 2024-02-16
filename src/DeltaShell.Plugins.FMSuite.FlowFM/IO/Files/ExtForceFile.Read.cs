@@ -541,7 +541,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                        ex is IOException || ex is FormatException)
             {
                 heatFluxModel.Type = HeatFluxModelType.None;
-                modelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
+                modelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString("0");
                 log.ErrorFormat(
                     "An error occured while reading Quantity {0} of file {1}: {2} Process temperature is reset to None ",
                     forceFileItem.Quantity, extFilePath, ex.Message);
