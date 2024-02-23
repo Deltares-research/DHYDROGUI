@@ -1,8 +1,6 @@
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Deserialization;
 using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Deserialization
@@ -11,47 +9,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
     public class InitialFieldParserTest
     {
         [Test]
-        public void Constructor_LogHandlerNull_ThrowsArgumentNullException()
-        {
-            // Act
-            void Call()
-            {
-                new InitialFieldParser(null);
-            }
-
-            // Assert
-            Assert.That(Call, Throws.ArgumentNullException);
-        }
-
-        [Test]
         public void Parse_IniSectionNull_ThrowsArgumentNullException()
         {
-            // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
+            // Assert
+            Assert.That(Call, Throws.ArgumentNullException);
 
             // Act
             void Call()
             {
-                parser.Parse(null);
+                InitialFieldParser.Parse(null);
             }
-
-            // Assert
-            Assert.That(Call, Throws.ArgumentNullException);
         }
 
         [Test]
         public void Parse_UnsupportedIniSection_ThrowsArgumentException()
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("unsupported");
 
             // Act
             void Call()
             {
-                parser.Parse(iniSection);
+                InitialFieldParser.Parse(iniSection);
             }
 
             // Assert
@@ -62,12 +41,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesIniSectionWithoutValuesOrProperties_ReturnsInitialFieldWithDefaultValues()
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.Quantity, Is.EqualTo(InitialFieldQuantity.None));
@@ -103,14 +80,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesQuantityProperty(string propertyValue, InitialFieldQuantity expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.Quantity, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.Quantity, Is.EqualTo(expResult));
@@ -120,14 +95,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesDataFileProperty()
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.DataFile, "data_file.xyz");
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.DataFile, Is.EqualTo("data_file.xyz"));
@@ -147,14 +120,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesDataFileTypeProperty(string propertyValue, InitialFieldDataFileType expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.DataFileType, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.DataFileType, Is.EqualTo(expResult));
@@ -172,14 +143,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesInterpolationMethodProperty(string propertyValue, InitialFieldInterpolationMethod expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.InterpolationMethod, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.InterpolationMethod, Is.EqualTo(expResult));
@@ -203,14 +172,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesOperandProperty(string propertyValue, InitialFieldOperand expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.Operand, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.Operand, Is.EqualTo(expResult));
@@ -232,14 +199,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesAveragingTypeProperty(string propertyValue, InitialFieldAveragingType expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingType, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.AveragingType, Is.EqualTo(expResult));
@@ -253,14 +218,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesAveragingRelSizeProperty(string propertyValue, double? expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingRelSize, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.AveragingRelSize, Is.EqualTo(expResult));
@@ -274,14 +237,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesAveragingNumMinProperty(string propertyValue, int? expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingNumMin, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.AveragingNumMin, Is.EqualTo(expResult));
@@ -295,14 +256,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesAveragingPercentileProperty(string propertyValue, double? expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.AveragingPercentile, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.AveragingPercentile, Is.EqualTo(expResult));
@@ -319,14 +278,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesExtrapolationMethodProperty(string propertyValue, bool? expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.ExtrapolationMethod, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.ExtrapolationMethod, Is.EqualTo(expResult));
@@ -346,14 +303,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesLocationTypeProperty(string propertyValue, InitialFieldLocationType expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.LocationType, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.LocationType, Is.EqualTo(expResult));
@@ -367,14 +322,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile.Dese
         public void Parse_ParsesValueProperty(string propertyValue, double? expResult)
         {
             // Arrange
-            var logHandler = Substitute.For<ILogHandler>();
-            var parser = new InitialFieldParser(logHandler);
             var iniSection = new IniSection("Initial");
 
             iniSection.AddProperty(InitialFieldFileConstants.Keys.Value, propertyValue);
 
             // Act
-            InitialField result = parser.Parse(iniSection);
+            InitialField result = InitialFieldParser.Parse(iniSection);
 
             // Assert
             Assert.That(result.Value, Is.EqualTo(expResult));

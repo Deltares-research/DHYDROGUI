@@ -60,29 +60,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; could not be parsed to a boolean for property &apos;{1}&apos;..
-        /// </summary>
-        public static string _0_could_not_be_parsed_to_a_boolean_for_property_1_ {
-            get {
-                return ResourceManager.GetString("_0_could_not_be_parsed_to_a_boolean_for_property_1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; could not be parsed to a double for property &apos;{1}&apos;. Line: {2}.
         /// </summary>
         public static string _0_could_not_be_parsed_to_a_double_for_property_1_Line_2_ {
             get {
                 return ResourceManager.GetString("_0_could_not_be_parsed_to_a_double_for_property_1_Line_2_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; could not be parsed to a valid &apos;{1}&apos;. Valid values: {2}..
-        /// </summary>
-        public static string _0_could_not_be_parsed_to_a_valid_1_Valid_values_2_ {
-            get {
-                return ResourceManager.GetString("_0_could_not_be_parsed_to_a_valid_1_Valid_values_2_", resourceCulture);
             }
         }
         

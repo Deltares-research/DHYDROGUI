@@ -11,7 +11,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Deserializ
     /// </summary>
     public sealed class InitialFieldFileParser
     {
-        private readonly InitialFieldParser initialFieldParser;
         private readonly InitialFieldValidator initialFieldValidator;
         private readonly ILogHandler logHandler;
 
@@ -30,7 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Deserializ
 
             this.logHandler = logHandler;
             this.initialFieldValidator = initialFieldValidator;
-            initialFieldParser = new InitialFieldParser(logHandler);
         }
 
         /// <summary>
@@ -83,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Deserializ
 
         private void ParseParameterSection(IniSection section, InitialFieldFileData initialFieldFileData)
         {
-            InitialField initialField = initialFieldParser.Parse(section);
+            InitialField initialField = InitialFieldParser.Parse(section);
             if (initialFieldValidator.Validate(initialField, section.LineNumber))
             {
                 initialFieldFileData.AddParameter(initialField);
@@ -92,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Deserializ
 
         private void ParseInitialSection(IniSection section, InitialFieldFileData initialFieldFileData)
         {
-            InitialField initialField = initialFieldParser.Parse(section);
+            InitialField initialField = InitialFieldParser.Parse(section);
             if (initialFieldValidator.Validate(initialField, section.LineNumber))
             {
                 initialFieldFileData.AddInitialCondition(initialField);
