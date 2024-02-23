@@ -1,5 +1,5 @@
 ﻿using System;
-using DHYDRO.Common.Guards;
+using DHYDRO.Common.Extensions;
 
 namespace DHYDRO.Common.IO.Ini.Converters
 {
@@ -8,15 +8,13 @@ namespace DHYDRO.Common.IO.Ini.Converters
     /// </summary>
     internal sealed class BooleanIniValueConverter : IIniValueConverter<bool>
     {
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public string ConvertToString(bool value)
             => Convert.ToString(value);
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public bool ConvertFromString(string value)
         {
-            Ensure.NotNull(value, nameof(value));
-            
             if (bool.TryParse(value, out bool result))
             {
                 return result;
@@ -25,6 +23,16 @@ namespace DHYDRO.Common.IO.Ini.Converters
             if (int.TryParse(value, out int flag))
             {
                 return Convert.ToBoolean(flag);
+            }
+
+            if (value.EqualsCaseInsensitive("yes"))
+            {
+                return true;
+            }
+
+            if (value.EqualsCaseInsensitive("no"))
+            {
+                return false;
             }
 
             throw new FormatException($"String '{value}' was not recognized as a valid boolean.");

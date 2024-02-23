@@ -1,6 +1,7 @@
 ﻿using System;
 using DHYDRO.Common.IO.Ini.Converters;
 using NUnit.Framework;
+using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
 namespace DHYDRO.Common.Tests.IO.Ini.Converters
 {
@@ -60,11 +61,11 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [Test]
         public void ConvertToString_EnumValue_ReturnsToString()
         {
-            const DayOfWeek value = DayOfWeek.Friday;
+            const DescriptionEnum value = DescriptionEnum.Option1;
 
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual("Friday", result);
+            Assert.AreEqual("Option1", result);
         }
 
         [Test]
@@ -105,10 +106,26 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [TestCase("True", ExpectedResult = true)]
         [TestCase("TRUE", ExpectedResult = true)]
         [TestCase("false", ExpectedResult = false)]
+        [TestCase("YES", ExpectedResult = true)]
+        [TestCase("yes", ExpectedResult = true)]
+        [TestCase("no", ExpectedResult = false)]
         [TestCase("1", ExpectedResult = true)]
         [TestCase("0", ExpectedResult = false)]
         [TestCase("-1", ExpectedResult = true)]
         public bool ConvertFromString_BooleanFormattedString_ReturnsBooleanValue(string value)
+        {
+            return IniValueConverter.ConvertFromString<bool>(value);
+        }
+
+        [Test]
+        [TestCase(" True", ExpectedResult = true)]
+        [TestCase("false  ", ExpectedResult = false)]
+        [TestCase(" yes   ", ExpectedResult = true)]
+        [TestCase("no ", ExpectedResult = false)]
+        [TestCase(" 1", ExpectedResult = true)]
+        [TestCase("0 ", ExpectedResult = false)]
+        [TestCase(" -1 ", ExpectedResult = true)]
+        public bool ConvertFromString_BooleanFormattedStringWithSpaces_ReturnsBooleanValue(string value)
         {
             return IniValueConverter.ConvertFromString<bool>(value);
         }
@@ -212,26 +229,48 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [Test]
         public void ConvertFromString_NullEnumString_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<DayOfWeek>(null));
+            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<DescriptionEnum>(null));
         }
 
         [Test]
         [TestCase("")]
         [TestCase("-1")]
         [TestCase("invalid")]
-        [TestCase("DayOfWeek")]
+        [TestCase("Option")]
+        [TestCase("DescriptionEnum")]
+        [TestCase("First Option")]
+        [TestCase("Option Description")]
+        [TestCase("FirstOptionDescription")]
         public void ConvertFromString_InvalidEnumFormattedString_ThrowsFormatException(string value)
         {
-            Assert.Throws<FormatException>(() => IniValueConverter.ConvertFromString<DayOfWeek>(value));
+            Assert.Throws<FormatException>(() => IniValueConverter.ConvertFromString<DescriptionEnum>(value));
         }
 
         [Test]
-        [TestCase("0", ExpectedResult = DayOfWeek.Sunday)]
-        [TestCase("monday", ExpectedResult = DayOfWeek.Monday)]
-        [TestCase("TUESDAY", ExpectedResult = DayOfWeek.Tuesday)]
-        public DayOfWeek ConvertFromString_EnumFormattedString_ReturnsEnumValue(string value)
+        [TestCase("option1 ", ExpectedResult = DescriptionEnum.Option1)]
+        [TestCase(" option2", ExpectedResult = DescriptionEnum.Option2)]
+        [TestCase(" option3 ", ExpectedResult = DescriptionEnum.Option3)]
+        public DescriptionEnum ConvertFromString_EnumValueFormattedStringWithSpaces_ReturnsEnumValue(string value)
         {
-            return IniValueConverter.ConvertFromString<DayOfWeek>(value);
+            return IniValueConverter.ConvertFromString<DescriptionEnum>(value);
+        }
+        
+        [Test]
+        [TestCase("0", ExpectedResult = DescriptionEnum.Option1)]
+        [TestCase("option2", ExpectedResult = DescriptionEnum.Option2)]
+        [TestCase("OPTION3", ExpectedResult = DescriptionEnum.Option3)]
+        public DescriptionEnum ConvertFromString_EnumValueFormattedString_ReturnsEnumValue(string value)
+        {
+            return IniValueConverter.ConvertFromString<DescriptionEnum>(value);
+        }
+
+        [Test]
+        [TestCase("First Option Description", ExpectedResult = DescriptionEnum.Option1)]
+        [TestCase("second option description", ExpectedResult = DescriptionEnum.Option2)]
+        [TestCase("THIRD OPTION DESCRIPTION", ExpectedResult = DescriptionEnum.Option3)]
+        public DescriptionEnum ConvertFromString_EnumDescriptionFormattedString_ReturnsEnumValue(string value)
+        {
+            return IniValueConverter.ConvertFromString<DescriptionEnum>(value);
         }
 
         [Test]
@@ -248,6 +287,18 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
             var result = IniValueConverter.ConvertFromString<string>(value);
 
             Assert.AreEqual(value, result);
+        }
+
+        public enum DescriptionEnum
+        {
+            [Description("First Option Description")]
+            Option1,
+
+            [Description("Second Option Description")]
+            Option2,
+
+            [Description("Third Option Description")]
+            Option3
         }
     }
 }

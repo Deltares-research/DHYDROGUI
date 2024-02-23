@@ -21,7 +21,6 @@ namespace DHYDRO.Common.IO.Ini.Converters
         /// </summary>
         /// <param name="value">The string representation of the value.</param>
         /// <returns>The converted value of the specified type.</returns>
-        /// <exception cref="ArgumentNullException">When <paramref name="value"/> is <c>null</c>.</exception>
         /// <exception cref="FormatException">When <paramref name="value"/> does not represent a valid format.</exception>
         T ConvertFromString(string value);
     }

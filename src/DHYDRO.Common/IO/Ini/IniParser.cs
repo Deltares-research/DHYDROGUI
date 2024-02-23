@@ -221,14 +221,9 @@ namespace DHYDRO.Common.IO.Ini
                 throw new FormatException($"Error on line {lineNumber}: section name cannot be empty.");
             }
             
-            if (!Configuration.AllowDuplicateSections)
+            if (!Configuration.AllowDuplicateSections && !foundSections.Add(sectionName))
             {
-                if (foundSections.Contains(sectionName))
-                {
-                    throw new FormatException($"Error on line {lineNumber}: duplicate section with name '{sectionName}'.");
-                }
-
-                foundSections.Add(sectionName);
+                throw new FormatException($"Error on line {lineNumber}: duplicate section with name '{sectionName}'.");
             }
 
             if (!Configuration.AllowDuplicateProperties)
@@ -289,14 +284,9 @@ namespace DHYDRO.Common.IO.Ini
                 throw new FormatException($"Error on line {lineNumber}: property key cannot contain spaces.");
             }
             
-            if (!Configuration.AllowDuplicateProperties)
+            if (!Configuration.AllowDuplicateProperties && !foundProperties.Add(key))
             {
-                if (foundProperties.Contains(key))
-                {
-                    throw new FormatException($"Error on line {lineNumber}: duplicate property with key '{key}'.");
-                }
-                
-                foundProperties.Add(key);
+                throw new FormatException($"Error on line {lineNumber}: duplicate property with key '{key}'.");
             }
         }
 

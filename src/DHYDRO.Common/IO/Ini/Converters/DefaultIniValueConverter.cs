@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using DHYDRO.Common.Guards;
 
 namespace DHYDRO.Common.IO.Ini.Converters
 {
@@ -12,16 +11,12 @@ namespace DHYDRO.Common.IO.Ini.Converters
     internal sealed class DefaultIniValueConverter<T> : IIniValueConverter<T>
         where T : IConvertible
     {
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public string ConvertToString(T value)
             => Convert.ToString(value, CultureInfo.InvariantCulture);
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public T ConvertFromString(string value)
-        {
-            Ensure.NotNull(value, nameof(value));
-
-            return (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
-        }
+            => (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
     }
 }

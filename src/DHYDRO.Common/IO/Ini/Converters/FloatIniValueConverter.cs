@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using DHYDRO.Common.Guards;
 
 namespace DHYDRO.Common.IO.Ini.Converters
 {
@@ -8,16 +7,12 @@ namespace DHYDRO.Common.IO.Ini.Converters
     /// </summary>
     internal sealed class FloatIniValueConverter : IIniValueConverter<float>
     {
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public string ConvertToString(float value)
             => value.ToString("e7", CultureInfo.InvariantCulture);
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public float ConvertFromString(string value)
-        {
-            Ensure.NotNull(value, nameof(value));
-
-            return float.Parse(value, CultureInfo.InvariantCulture);
-        }
+            => float.Parse(value, CultureInfo.InvariantCulture);
     }
 }

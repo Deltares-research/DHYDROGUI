@@ -36,7 +36,7 @@ namespace DHYDRO.Common.IO.Ini.Converters
         {
             Ensure.NotNull(value, nameof(value));
 
-            return Create<T>().ConvertFromString(value);
+            return Create<T>().ConvertFromString(value.Trim());
         }
 
         private static IIniValueConverter<T> Create<T>()
@@ -62,7 +62,7 @@ namespace DHYDRO.Common.IO.Ini.Converters
             }
             else if (typeof(T).IsEnum)
             {
-                converter = ResolveConverter(typeof(EnumIniValueConverter<T>));
+                converter = ResolveConverter(typeof(EnumIniValueConverter<>).MakeGenericType(typeof(T)));
             }
             else
             {

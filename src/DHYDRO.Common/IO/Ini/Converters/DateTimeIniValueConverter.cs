@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using DHYDRO.Common.Guards;
 
 namespace DHYDRO.Common.IO.Ini.Converters
 {
@@ -9,16 +8,12 @@ namespace DHYDRO.Common.IO.Ini.Converters
     /// </summary>
     internal sealed class DateTimeIniValueConverter : IIniValueConverter<DateTime>
     {
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public string ConvertToString(DateTime value)
             => value.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public DateTime ConvertFromString(string value)
-        {
-            Ensure.NotNull(value, nameof(value));
-
-            return DateTime.Parse(value, CultureInfo.InvariantCulture);
-        }
+            => DateTime.Parse(value, CultureInfo.InvariantCulture);
     }
 }
