@@ -1178,8 +1178,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             set => throw new NotSupportedException();
         }
 
-        public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;
-
         public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
         [NoNotifyPropertyChange]
@@ -1198,10 +1196,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             runner.SetVar($"{Name}/{category}/{itemName}/{parameter}", values);
         }
-
-        public virtual bool CanRunParallel => false;
-
-        public virtual string MpiCommunicatorString => null;
 
         public virtual void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
         {

@@ -51,53 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        #region Implementation of IDimrModel
-
-        /// <summary>
-        /// Moves all content in the source directory into the target directory.
-        /// </summary>
-        /// <param name="outputPath"> The path to the output directory. </param>
-        public virtual void ConnectOutput(string outputPath)
-        {
-            currentOutputDirectoryPath = outputPath;
-            ReconnectOutputFiles(outputPath);
-            ReadDiaFile(outputPath);
-            ClearWaqOutputDirProperty();
-        }
-
-        /// <summary>
-        /// Disconnects the output.
-        /// </summary>
-        public virtual void DisconnectOutput()
-        {
-            if (HasOpenFunctionStores)
-            {
-                BeginEdit("Disconnecting from output files");
-
-                if (OutputMapFileStore != null)
-                {
-                    OutputMapFileStore.Close();
-                    OutputMapFileStore = null;
-                }
-
-                if (OutputHisFileStore != null)
-                {
-                    OutputHisFileStore.Close();
-                    OutputHisFileStore = null;
-                }
-
-                if (OutputClassMapFileStore != null)
-                {
-                    OutputClassMapFileStore.Close();
-                    OutputClassMapFileStore = null;
-                }
-
-                EndEdit();
-            }
-
-            OutputSnappedFeaturesPath = null;
-        }
-
         /// <summary>
         /// Representation of the output directory for a D-Flow FM model.
         /// </summary>
@@ -298,7 +251,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 OutputSnappedFeaturesPath = snappedOutputDirectoryPath;
             }
         }
-
-        #endregion
     }
 }

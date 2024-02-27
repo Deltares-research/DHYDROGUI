@@ -134,13 +134,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
         }
-
-        #region Implementation of IDimrModel
-
-        public virtual Type ExporterType => typeof(WaterFlowFMFileExporter);
-
-        #endregion Implementation of IDimrModel
-
         #endregion Export
     }
 }

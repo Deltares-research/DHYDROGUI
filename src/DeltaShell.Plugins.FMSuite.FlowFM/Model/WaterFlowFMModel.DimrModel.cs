@@ -9,8 +9,11 @@ using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Validation;
+using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
@@ -20,15 +23,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        #region Implementation of IDimrModel
-
         public const string CellsToFeaturesName = "CellsToFeatures";
         public const string GridPropertyName = "Grid";
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
 
+        /// <inheritdoc/>
+        public virtual string LibraryName => "dflowfm";
+
+        /// <inheritdoc/>
+        public virtual string InputFile => Path.GetFileName(MduSavePath);
+
+        /// <inheritdoc/>
+        public virtual string DirectoryName => "dflowfm";
+
+        /// <inheritdoc/>
         public virtual bool IsMasterTimeStep => true;
+
+        /// <inheritdoc/>
         public virtual string ShortName => "flow";
 
+        /// <inheritdoc/>
+        public virtual Type ExporterType => typeof(WaterFlowFMFileExporter);
+
+        /// <inheritdoc/>
+        public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllPath;
+
+        /// <inheritdoc cref="IDimrModel.CurrentTime"/>
+        [NoNotifyPropertyChange]
+        public new virtual DateTime CurrentTime
+        {
+            get => base.CurrentTime;
+            set => base.CurrentTime = value;
+        }
+
+        /// <inheritdoc cref="IDimrModel.Status"/>
+        public new virtual ActivityStatus Status
+        {
+            get => base.Status;
+            set => base.Status = value;
+        }
+
+        /// <inheritdoc/>
+        public virtual bool RunsInIntegratedModel { get; set; }
+
+        /// <inheritdoc/>
+        public virtual string DimrExportDirectoryPath => WorkingDirectoryPath;
+
+        /// <inheritdoc/>
+        public virtual string DimrModelRelativeOutputDirectory
+            => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
+
+        /// <inheritdoc/>
+        public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory =>
+            CacheFile.UseCaching && CacheFile.Path.StartsWith(WorkingDirectoryPath)
+                ? new HashSet<string> { CacheFile.Path }
+                : new HashSet<string>();
+
+        /// <inheritdoc/>
+        public virtual string GetExporterPath(string directoryName)
+            => Path.Combine(directoryName, InputFile == null ? Name + FileConstants.MduFileExtension : Path.GetFileName(InputFile));
+
+        /// <inheritdoc/>
         public virtual string GetItemString(IDataItem value)
         {
             string feature = GetFeatureCategory(value.GetFeature());
@@ -37,12 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             string parameterName = value.GetParameterName();
 
-            var concatNames = new List<string>(new[]
-            {
-                feature,
-                dataItemName,
-                parameterName
-            });
+            var concatNames = new List<string>(new[] { feature, dataItemName, parameterName });
 
             concatNames.RemoveAll(s => s == null);
 
@@ -98,21 +148,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                           parameterName, itemString));
             }
 
-            return new[]
-            {
-                dataItem
-            };
+            return new[] { dataItem };
         }
 
         private IFeature GetAreaFeature(string featureCategory, string featureName)
         {
             IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
 
-            return (IFeature) featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
+            return (IFeature)featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
         }
 
-        public virtual string MpiCommunicatorString => "DFM_COMM_DFMWORLD";
+        /// <summary>
+        /// Moves all content in the source directory into the target directory.
+        /// </summary>
+        /// <param name="outputPath"> The path to the output directory. </param>
+        public virtual void ConnectOutput(string outputPath)
+        {
+            currentOutputDirectoryPath = outputPath;
+            ReconnectOutputFiles(outputPath);
+            ReadDiaFile(outputPath);
+            ClearWaqOutputDirProperty();
+        }
 
+        /// <summary>
+        /// Disconnects the output.
+        /// </summary>
+        public virtual void DisconnectOutput()
+        {
+            if (HasOpenFunctionStores)
+            {
+                BeginEdit("Disconnecting from output files");
+
+                if (OutputMapFileStore != null)
+                {
+                    OutputMapFileStore.Close();
+                    OutputMapFileStore = null;
+                }
+
+                if (OutputHisFileStore != null)
+                {
+                    OutputHisFileStore.Close();
+                    OutputHisFileStore = null;
+                }
+
+                if (OutputClassMapFileStore != null)
+                {
+                    OutputClassMapFileStore.Close();
+                    OutputClassMapFileStore = null;
+                }
+
+                EndEdit();
+            }
+
+            OutputSnappedFeaturesPath = null;
+        }
+
+        /// <inheritdoc/>
         public virtual ValidationReport Validate()
         {
             return ValidateBeforeRun || Status != ActivityStatus.Initializing
@@ -120,13 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                        : new ValidationReport("", new List<ValidationIssue>());
         }
 
-        [NoNotifyPropertyChange]
-        public new virtual DateTime CurrentTime
-        {
-            get => base.CurrentTime;
-            set => base.CurrentTime = value;
-        }
-
+        /// <inheritdoc/>
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {
             if (category == CellsToFeaturesName)
@@ -141,10 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (category == GridPropertyName)
             {
-                return new[]
-                {
-                    grid
-                };
+                return new[] { grid };
             }
 
             return !string.IsNullOrEmpty(itemName)
@@ -154,6 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                        : runner.GetVar($"{Name}/{category}");
         }
 
+        /// <inheritdoc/>
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
             if (category == DisableFlowNodeRenumberingPropertyName)
@@ -182,9 +265,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             runner.SetVar($"{Name}/{category}", values);
         }
 
+        /// <inheritdoc/>
         public virtual void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
         {
-            if ((bool) ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value)
+            if ((bool)ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value)
             {
                 // Actions, which should be done in the IDimrModel after a successful integrated model
                 // run.
@@ -199,11 +283,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             LogWarningWriteRestartModelRun();
         }
-
-        public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory =>
-            CacheFile.UseCaching && CacheFile.Path.StartsWith(WorkingDirectoryPath)
-                ? new HashSet<string> {CacheFile.Path}
-                : new HashSet<string>();
-        #endregion
     }
 }

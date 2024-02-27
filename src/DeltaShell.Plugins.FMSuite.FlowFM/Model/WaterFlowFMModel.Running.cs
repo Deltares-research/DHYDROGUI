@@ -1,6 +1,5 @@
 using System.IO;
 using BasicModelInterface;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
@@ -104,20 +103,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 Log.Warn(Resources.WaterFlowFMModel_Save_project_after_model_run_with_write_restart);
             }
         }
-
-        #endregion
-
-        #region Implementation of IDimrModel
-
-        public virtual bool CanRunParallel => true;
-
-        public new virtual ActivityStatus Status
-        {
-            get => base.Status;
-            set => base.Status = value;
-        }
-
-        public virtual bool RunsInIntegratedModel { get; set; }
 
         #endregion
 

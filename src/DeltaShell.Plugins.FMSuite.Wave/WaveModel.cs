@@ -1551,10 +1551,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public virtual string GetExporterPath(string directoryName) =>
             Path.Combine(directoryName, InputFile);
 
-        public virtual bool CanRunParallel => true;
-
-        public virtual string MpiCommunicatorString => null;
-
         public virtual string KernelDirectoryLocation
         {
             get
@@ -1621,8 +1617,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// Thrown when this property is set, because the model should use the application's working directory.
         /// </exception>
         public virtual string DimrExportDirectoryPath => Path.Combine(WorkingDirectoryPathFunc(), Name);
-
-        public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;
 
         public virtual string DimrModelRelativeOutputDirectory => DirectoryName;
 

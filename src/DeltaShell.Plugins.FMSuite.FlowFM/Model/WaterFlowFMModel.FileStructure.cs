@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -259,9 +258,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
         }
-
-        public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllPath;
-
+        
         #region Implementation of IHydFileModel
 
         /// <summary>
@@ -349,23 +346,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             ModelDefinition.ModelName = Name;
         }
-
-        #region Implementation of IDimrModel
-
-        public virtual string LibraryName => "dflowfm";
-        public virtual string InputFile => Path.GetFileName(MduSavePath);
-        public virtual string DirectoryName => "dflowfm";
-
-        public virtual string GetExporterPath(string directoryName)
-        {
-            return Path.Combine(directoryName, InputFile == null ? Name + FileConstants.MduFileExtension : Path.GetFileName(InputFile));
-        }
-
-        public virtual string DimrExportDirectoryPath => WorkingDirectoryPath;
-
-        public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.InputDirectoryName);
-        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
-
-        #endregion Implementation of IDimrModel
     }
 }

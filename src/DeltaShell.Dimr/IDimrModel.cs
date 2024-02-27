@@ -10,7 +10,7 @@ namespace DeltaShell.Dimr
     /// <see cref="IDimrModel"/> defines the interface of a DIMR
     /// model which can be run with the <see cref="DimrRunner"/>.
     /// </summary>
-    /// <seealso cref="IModel" />
+    /// <seealso cref="IModel"/>
     public interface IDimrModel : ITimeDependentModel
     {
         /// <summary>
@@ -45,16 +45,6 @@ namespace DeltaShell.Dimr
         Type ExporterType { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="IDimrModel"/> can run parallel.
-        /// </summary>
-        bool CanRunParallel { get; }
-
-        /// <summary>
-        /// Gets the mpi communicator string.
-        /// </summary>
-        string MpiCommunicatorString { get; }
-
-        /// <summary>
         /// Gets the kernel directory location.
         /// </summary>
         string KernelDirectoryLocation { get; }
@@ -77,14 +67,24 @@ namespace DeltaShell.Dimr
         string DimrExportDirectoryPath { get; }
 
         /// <summary>
-        /// Gets the dimr model relative working directory.
-        /// </summary>
-        string DimrModelRelativeWorkingDirectory { get; }
-
-        /// <summary>
         /// Gets the dimr model relative output directory.
         /// </summary>
         string DimrModelRelativeOutputDirectory { get; }
+
+        /// <summary>
+        /// Gets the file exceptions cleaning working directory.
+        /// </summary>
+        /// <value>
+        /// The file exceptions cleaning working directory.
+        /// </value>
+        ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory { get; }
+
+        /// <summary>
+        /// Gets the exporter path.
+        /// </summary>
+        /// <param name="directoryName">Name of the directory.</param>
+        /// <returns></returns>
+        string GetExporterPath(string directoryName);
 
         /// <summary>
         /// Gets the item string.
@@ -101,22 +101,15 @@ namespace DeltaShell.Dimr
         IEnumerable<IDataItem> GetDataItemsByItemString(string itemString);
 
         /// <summary>
-        /// Gets the exporter path.
+        /// Connects the output.
         /// </summary>
-        /// <param name="directoryName">Name of the directory.</param>
-        /// <returns></returns>
-        string GetExporterPath(string directoryName);
+        /// <param name="outputPath">The output path.</param>
+        void ConnectOutput(string outputPath);
 
         /// <summary>
         /// Disconnects the output.
         /// </summary>
         void DisconnectOutput();
-
-        /// <summary>
-        /// Connects the output.
-        /// </summary>
-        /// <param name="outputPath">The output path.</param>
-        void ConnectOutput(string outputPath);
 
         /// <summary>
         /// Validates this <see cref="IDimrModel"/>.
@@ -138,13 +131,5 @@ namespace DeltaShell.Dimr
         /// Working directory path of the integrated model.
         /// </param>
         void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath);
-
-        /// <summary>
-        /// Gets the file exceptions cleaning working directory.
-        /// </summary>
-        /// <value>
-        /// The file exceptions cleaning working directory.
-        /// </value>
-        ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory { get; }
     }
 }
