@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serializat
             if (importSamplesOperation != null)
             {
                 string targetDirectory = Path.GetDirectoryName(filePath);
-                importSamplesOperation.SwitchToDirectory(targetDirectory);
+                importSamplesOperation.CopyTo(targetDirectory);
             }
 
             var polygonOperation = spatialOperation as SetValueOperation;
