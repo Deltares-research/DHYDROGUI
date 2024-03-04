@@ -592,7 +592,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 try
                 {
-                    importSamplesOperation.SwitchToDirectory(targetDirectory);
+                    importSamplesOperation.CopyTo(targetDirectory);
                 }
                 catch (Exception e)
                 {
