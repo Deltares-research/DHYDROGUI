@@ -12,21 +12,27 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class WaterFlowFMDataAccessListener : DataAccessListenerBase
+    public class WaterFlowFMDataAccessListener : IDataAccessListener
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMDataAccessListener));
 
         private static readonly IDictionary<string, string> updatedDataItemNames = new Dictionary<string, string>() {{"Bathymetry", WaterFlowFMModelDefinition.BathymetryDataItemName}};
 
-        public override object Clone()
+        public void SetProjectRepository(IProjectRepository repository)
+        {
+        }
+
+        public IDataAccessListener Clone()
         {
             return new WaterFlowFMDataAccessListener();
         }
 
-        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        public void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
         {
-            base.OnPostLoad(entity, state, propertyNames);
+        }
 
+        public void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        {
             var model = entity as WaterFlowFMModel;
             if (model != null)
             {
@@ -43,6 +49,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         (UnstructuredGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value);
                 }
             }
+        }
+
+        public bool OnPreUpdate(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public bool OnPreInsert(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostUpdate(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public void OnPostInsert(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public bool OnPreDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
         }
 
         private static void FixImportFilePaths(WaterFlowFMModel model)

@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void TestClone()
         {
             // setup
-            var listener = new WaterQualityModelDataAccessListener();
+            var listener = new WaterQualityModelDataAccessListener(null);
 
             // call
             object clone = listener.Clone();
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             // No calls should be made on mock object => Nothing should be done with mocked object.
             mocks.ReplayAll();
 
-            var listener = new WaterQualityModelDataAccessListener();
+            var listener = new WaterQualityModelDataAccessListener(null);
 
             // call
             listener.OnPostLoad(objectMock, new object[0], new string[0]);
@@ -252,8 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var projectRepoMock = mocks.Stub<IProjectRepository>();
             projectRepoMock.Stub(pr => pr.Path).Return(repoPath);
             mocks.ReplayAll();
-            var listener = new WaterQualityModelDataAccessListener {ProjectRepository = projectRepoMock};
-            return listener;
+            return new WaterQualityModelDataAccessListener(projectRepoMock);
         }
     }
 }

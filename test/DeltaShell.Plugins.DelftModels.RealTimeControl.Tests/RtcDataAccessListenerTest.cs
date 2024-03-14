@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreEqual(before, timeSeries.Time.InterpolationType);
 
             var propertyNames = new string[1];
-            var rtcDataAccessListener = new RtcDataAccessListener();
+            var rtcDataAccessListener = new RtcDataAccessListener(null);
 
             rtcDataAccessListener.OnPreLoad(entity, loadedState, propertyNames);
 

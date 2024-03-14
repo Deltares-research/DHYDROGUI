@@ -11,65 +11,63 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
 {
-    public class WaterQualityModelDataAccessListener : DataAccessListenerBase
+    public class WaterQualityModelDataAccessListener : IDataAccessListener
     {
-        private static string waterQualityModelSettingsWorkDirectory;
-        private readonly ProjectDataPathPersisterHelper projectDataPathPersisterHelper;
-        private readonly string modelDataDirPropertyName;
-        private readonly string dataTableManagerFolderPropertyName;
-        private readonly string settingsOutputDirectoryPropertyName;
-        private readonly string settingsWorkDirectoryPropertyName;
-        private readonly string hydFileDataPathPropertyName;
+        private static string waterQualityModelSettingsWorkDirectory = string.Empty;
 
-        public WaterQualityModelDataAccessListener()
+        private const string modelDataDirPropertyName = nameof(WaterQualityModel.ModelDataDirectory);
+        private const string dataTableManagerFolderPropertyName = nameof(DataTableManager.FolderPath);
+        private const string settingsOutputDirectoryPropertyName = nameof(WaterQualityModelSettings.OutputDirectory);
+        private const string settingsWorkDirectoryPropertyName = nameof(WaterQualityModelSettings.WorkDirectory);
+        private const string hydFileDataPathPropertyName = nameof(HydFileData.Path);
+
+        private IProjectRepository projectRepository;
+
+        public WaterQualityModelDataAccessListener(IProjectRepository repository)
         {
-            projectDataPathPersisterHelper = new ProjectDataPathPersisterHelper();
-            modelDataDirPropertyName = nameof(WaterQualityModel.ModelDataDirectory);
-            dataTableManagerFolderPropertyName = nameof(DataTableManager.FolderPath);
-            settingsOutputDirectoryPropertyName = nameof(WaterQualityModelSettings.OutputDirectory);
-            settingsWorkDirectoryPropertyName = nameof(WaterQualityModelSettings.WorkDirectory);
-            hydFileDataPathPropertyName = nameof(HydFileData.Path);
-            waterQualityModelSettingsWorkDirectory = string.Empty;
+            projectRepository = repository;
         }
 
-        public override IProjectRepository ProjectRepository
+        public void SetProjectRepository(IProjectRepository repository)
         {
-            get => projectDataPathPersisterHelper.ProjectRepository;
-            set => projectDataPathPersisterHelper.ProjectRepository = value;
+            projectRepository = repository;
         }
 
-        public override object Clone()
+        public IDataAccessListener Clone()
         {
-            return new WaterQualityModelDataAccessListener();
+            return new WaterQualityModelDataAccessListener(projectRepository);
         }
 
         #region Pre-Persist
 
-        public override bool OnPreUpdate(object entity, object[] state, string[] propertyNames)
+        public bool OnPreUpdate(object entity, object[] state, string[] propertyNames)
         {
-            BeforePersist(entity, state, propertyNames);
-            return false; //no veto
+            return BeforePersist(entity, state, propertyNames);
         }
 
-        public override bool OnPreInsert(object entity, object[] state, string[] propertyNames)
+        public bool OnPreInsert(object entity, object[] state, string[] propertyNames)
         {
-            BeforePersist(entity, state, propertyNames);
-            return false; //no veto
+            return BeforePersist(entity, state, propertyNames);
         }
 
-        public override bool OnPreDelete(object entity, object[] deletedState, string[] propertyNames)
+        public bool OnPreDelete(object entity, object[] deletedState, string[] propertyNames)
         {
-            BeforePersist(entity, deletedState, propertyNames); //commit the delete internally
-            return false;
+            return BeforePersist(entity, deletedState, propertyNames); //commit the delete internally
         }
 
-        private void BeforePersist(object entity, object[] state, string[] propertyNames)
+        public void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
+        {
+        }
+
+        private bool BeforePersist(object entity, object[] state, string[] propertyNames)
         {
             HandleBeforePersistWaterQualityModel(entity, state, propertyNames);
 
             HandleBeforePersistDataTableManager(entity, state, propertyNames);
 
             HandleBeforePersistWaterQualityModelSettings(entity, state, propertyNames);
+
+            return false;
         }
 
         private void HandleBeforePersistWaterQualityModelSettings(object entity, object[] state, string[] propertyNames)
@@ -112,7 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
             var originalPath = (string) propertyInfo.GetGetMethod().Invoke(instance, new object[]
                                                                                {});
 
-            string path = projectDataPathPersisterHelper.MakePathRelativeToProjectDataDirectory(originalPath);
+            string path = ProjectDataPathPersisterHelper.MakePathRelativeToProjectDataDirectory(projectRepository, originalPath);
             if (string.IsNullOrEmpty(path))
             {
                 return;
@@ -131,17 +129,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
 
         #region Post-Persist
 
-        public override void OnPostUpdate(object entity, object[] state, string[] propertyNames)
+        public void OnPostUpdate(object entity, object[] state, string[] propertyNames)
         {
             AfterPersist(entity, state, propertyNames);
         }
 
-        public override void OnPostInsert(object entity, object[] state, string[] propertyNames)
+        public void OnPostInsert(object entity, object[] state, string[] propertyNames)
         {
             AfterPersist(entity, state, propertyNames);
         }
 
-        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        public void OnPostDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
+        }
+
+        public void OnPostLoad(object entity, object[] state, string[] propertyNames)
         {
             AfterPersist(entity, state, propertyNames);
         }
@@ -183,7 +185,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
                                                          .Zip(waterQualityModelSettingsWorkDirectory,
                                                               (c1, c2) => c1 == c2).TakeWhile(b => b).Count();
             string relFilePath = filePath.Substring(startIndexWherePathsStartToBeDifferent);
-            string currentDirectoryName = Path.GetDirectoryName(ProjectRepository.Path);
+            string currentDirectoryName = Path.GetDirectoryName(projectRepository.Path);
             var newAbsPath = string.Empty;
             if (currentDirectoryName != null && !filePath.StartsWith(currentDirectoryName))
             {
@@ -271,7 +273,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
                 return;
             }
 
-            string convertedPath = projectDataPathPersisterHelper.MakePathAbsolute(originalPath);
+            string convertedPath = ProjectDataPathPersisterHelper.MakePathAbsolute(projectRepository, originalPath);
             if (Equals(convertedPath, originalPath))
             {
                 return;

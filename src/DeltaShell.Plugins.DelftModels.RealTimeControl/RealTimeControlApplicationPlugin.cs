@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
-            yield return new RtcDataAccessListener();
+            yield return new RtcDataAccessListener(null);
         }
 
         private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => 

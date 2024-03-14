@@ -5,14 +5,22 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
-    public class WaveDataAccessListener : DataAccessListenerBase
+    public class WaveDataAccessListener : IDataAccessListener
     {
-        public override object Clone()
+        public void SetProjectRepository(IProjectRepository repository)
+        {
+        }
+
+        public IDataAccessListener Clone()
         {
             return new WaveDataAccessListener();
         }
 
-        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        public void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
+        {
+        }
+
+        public void OnPostLoad(object entity, object[] state, string[] propertyNames)
         {
             var model = entity as WaveModel;
             if (model != null)
@@ -31,8 +39,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     }
                 }
             }
+        }
 
-            base.OnPostLoad(entity, state, propertyNames);
+        public bool OnPreUpdate(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public bool OnPreInsert(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostUpdate(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public void OnPostInsert(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public bool OnPreDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
         }
     }
 }

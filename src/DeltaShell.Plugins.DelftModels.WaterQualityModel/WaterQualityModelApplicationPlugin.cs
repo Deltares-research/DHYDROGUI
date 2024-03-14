@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
-            yield return new WaterQualityModelDataAccessListener();
+            yield return new WaterQualityModelDataAccessListener(null);
         }
 
         private void Application_ProjectSaveFinished(Project obj)

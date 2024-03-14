@@ -9,14 +9,25 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
-    public class RtcDataAccessListener : DataAccessListenerBase
+    public class RtcDataAccessListener : IDataAccessListener
     {
         private const string previousDischargeAtLateralDataItemTag = "Discharge (l)";
         private const string controlGroupsPropertyName = "ControlGroups";
 
         private bool firstRtcModel = true;
+        private IProjectRepository projectRepository;
 
-        public override void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
+        public RtcDataAccessListener(IProjectRepository repository)
+        {
+            projectRepository = repository;
+        }
+
+        public void SetProjectRepository(IProjectRepository repository)
+        {
+            projectRepository = repository;
+        }
+
+        public void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
         {
             if (entity is Project)
             {
@@ -24,17 +35,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
             else if (firstRtcModel && entity is RealTimeControlModel)
             {
-                ProjectRepository.PreLoad<ControlGroup>(cg => cg.Inputs);
-                ProjectRepository.PreLoad<ControlGroup>(cg => cg.Outputs);
-                ProjectRepository.PreLoad<ControlGroup>(cg => cg.Conditions);
-                ProjectRepository.PreLoad<ControlGroup>(cg => cg.Rules);
-                ProjectRepository.PreLoad<ControlGroup>(cg => cg.MathematicalExpressions);
+                projectRepository.PreLoad<ControlGroup>(cg => cg.Inputs);
+                projectRepository.PreLoad<ControlGroup>(cg => cg.Outputs);
+                projectRepository.PreLoad<ControlGroup>(cg => cg.Conditions);
+                projectRepository.PreLoad<ControlGroup>(cg => cg.Rules);
+                projectRepository.PreLoad<ControlGroup>(cg => cg.MathematicalExpressions);
 
-                ProjectRepository.PreLoad<RuleBase>(r => r.Inputs);
-                ProjectRepository.PreLoad<RuleBase>(r => r.Outputs);
+                projectRepository.PreLoad<RuleBase>(r => r.Inputs);
+                projectRepository.PreLoad<RuleBase>(r => r.Outputs);
 
-                ProjectRepository.PreLoad<Input>(i => i.Feature);
-                ProjectRepository.PreLoad<Output>(i => i.Feature);
+                projectRepository.PreLoad<Input>(i => i.Feature);
+                projectRepository.PreLoad<Output>(i => i.Feature);
 
                 firstRtcModel = false;
             }
@@ -42,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             RemovingInterpolationNoneForTimeRulesIfSetInDatabase(entity, loadedState);
         }
 
-        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        public void OnPostLoad(object entity, object[] state, string[] propertyNames)
         {
             var rtcModel = entity as IRealTimeControlModel;
             if (rtcModel == null)
@@ -76,9 +87,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public override object Clone()
+        public bool OnPreUpdate(object entity, object[] state, string[] propertyNames)
         {
-            return new RtcDataAccessListener {ProjectRepository = ProjectRepository};
+            return false;
+        }
+
+        public bool OnPreInsert(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostUpdate(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public void OnPostInsert(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public bool OnPreDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
+        }
+
+        public IDataAccessListener Clone()
+        {
+            return new RtcDataAccessListener(projectRepository);
         }
 
         private static void RemovingInterpolationNoneForTimeRulesIfSetInDatabase(object entity, object[] loadedState)
