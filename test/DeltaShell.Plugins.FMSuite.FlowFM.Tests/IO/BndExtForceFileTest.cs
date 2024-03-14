@@ -1441,6 +1441,309 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         
         [Test]
         [Category(TestCategory.DataAccess)]
+        public void Read_2DPointLateralSource_IsNotReadAndExceptionLogged()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                              " + Environment.NewLine +
+                    "    fileVersion   = 2.01               " + Environment.NewLine +
+                    "    fileType      = extForce           " + Environment.NewLine +
+                    "                                       " + Environment.NewLine +
+                    "[Lateral]                              " + Environment.NewLine +
+                    "    id            = lateral_source_id  " + Environment.NewLine +
+                    "    name          = lateral_source_name" + Environment.NewLine +
+                    "    type          = discharge          " + Environment.NewLine +
+                    "    locationType  = 2d                 " + Environment.NewLine +
+                    "    numCoordinates= 1                  " + Environment.NewLine +
+                    "    xCoordinates  = 1.4581301e+003     " + Environment.NewLine +
+                    "    yCoordinates  = 3.3556911e+003     " + Environment.NewLine +
+                    "    discharge     = 10                 ";
+                
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                var network = Substitute.For<IHydroNetwork>();
+                
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+
+                // Call
+                void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+
+                // Assert
+                var expectedLogMessage = "We do not support 2d lateral source types, cannot import lateral_source_id (lateral_source_name)";
+                TestHelper.AssertAtLeastOneLogMessagesContains(Call, expectedLogMessage);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_2DLateralSource_IsNotReadAndExceptionLogged()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                              " + Environment.NewLine +
+                    "    fileVersion   = 2.01               " + Environment.NewLine +
+                    "    fileType      = extForce           " + Environment.NewLine +
+                    "                                       " + Environment.NewLine +
+                    "[Lateral]                              " + Environment.NewLine +
+                    "    id            = lateral_source_id  " + Environment.NewLine +
+                    "    name          = lateral_source_name" + Environment.NewLine +
+                    "    type          = discharge          " + Environment.NewLine +
+                    "    locationType  = 2d                 " + Environment.NewLine +
+                    "    numCoordinates= 2                  " + Environment.NewLine +
+                    "    xCoordinates  = 3.4918699e+002 1.1987805e+003" + Environment.NewLine +
+                    "    yCoordinates  = 3.3020325e+003 2.2020325e+003" + Environment.NewLine +
+                    "    discharge     = 10                 ";
+                
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                var network = Substitute.For<IHydroNetwork>();
+                
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+
+                // Call
+                void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+
+                // Assert
+                var expectedLogMessage = "We do not support 2d lateral source types, cannot import lateral_source_id (lateral_source_name)";
+                TestHelper.AssertAtLeastOneLogMessagesContains(Call, expectedLogMessage);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_2DLateralSourceWith3OrMorePointsAnd2D_IsNotReadAndExceptionLogged()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                              " + Environment.NewLine +
+                    "    fileVersion   = 2.01               " + Environment.NewLine +
+                    "    fileType      = extForce           " + Environment.NewLine +
+                    "                                       " + Environment.NewLine +
+                    "[Lateral]                              " + Environment.NewLine +
+                    "    id            = lateral_source_id  " + Environment.NewLine +
+                    "    name          = lateral_source_name" + Environment.NewLine +
+                    "    type          = discharge          " + Environment.NewLine +
+                    "    locationType  = 2d                 " + Environment.NewLine +
+                    "    numCoordinates= 2                  " + Environment.NewLine +
+                    "    xCoordinates  = 2.5760163e+003 2.2808943e+003 3.1036585e+003" + Environment.NewLine +
+                    "    yCoordinates  = 3.2215447e+003 2.5150407e+003 2.7475610e+003" + Environment.NewLine +
+                    "    discharge     = 10                 ";
+                
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                var network = Substitute.For<IHydroNetwork>();
+                
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+
+                // Call
+                void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+
+                // Assert
+                var expectedLogMessage = "We do not support 2d lateral source types, cannot import lateral_source_id (lateral_source_name)";
+                TestHelper.AssertAtLeastOneLogMessagesContains(Call, expectedLogMessage);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_2DLateralSourceWith3OrMorePointsAndAllEnclosed_IsNotReadAndExceptionLogged()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                              " + Environment.NewLine +
+                    "    fileVersion   = 2.01               " + Environment.NewLine +
+                    "    fileType      = extForce           " + Environment.NewLine +
+                    "                                       " + Environment.NewLine +
+                    "[Lateral]                              " + Environment.NewLine +
+                    "    id            = lateral_source_id  " + Environment.NewLine +
+                    "    name          = lateral_source_name" + Environment.NewLine +
+                    "    type          = discharge          " + Environment.NewLine +
+                    "    locationType  = all                 " + Environment.NewLine +
+                    "    numCoordinates= 2                  " + Environment.NewLine +
+                    "    xCoordinates  = 2.5760163e+003 2.2808943e+003 3.1036585e+003" + Environment.NewLine +
+                    "    yCoordinates  = 3.2215447e+003 2.5150407e+003 2.7475610e+003" + Environment.NewLine +
+                    "    discharge     = 10                 ";
+                
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                var network = Substitute.For<IHydroNetwork>();
+                
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+
+                // Call
+                void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+
+                // Assert
+                var expectedLogMessage = "We do not support all lateral source types, cannot import lateral_source_id (lateral_source_name)";
+                TestHelper.AssertAtLeastOneLogMessagesContains(Call, expectedLogMessage);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_2DLateralSourceWithPolFileAndAllEnclosed_IsNotReadAndExceptionLogged()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                              " + Environment.NewLine +
+                    "    fileVersion   = 2.01               " + Environment.NewLine +
+                    "    fileType      = extForce           " + Environment.NewLine +
+                    "                                       " + Environment.NewLine +
+                    "[Lateral]                              " + Environment.NewLine +
+                    "    id            = lateral_source_id  " + Environment.NewLine +
+                    "    name          = lateral_source_name" + Environment.NewLine +
+                    "    type          = discharge          " + Environment.NewLine +
+                    "    locationType  = all                " + Environment.NewLine +
+                    "    locationFile  = FlowFM_lateralPolygon.pol " + Environment.NewLine +
+                    "    discharge     = 10                 ";
+
+                string lateralPolygonFileContent =
+                    "LateralPolygon01                  " + Environment.NewLine +
+                    "    5    2                        " + Environment.NewLine +
+                    "        0.0        0.0            " + Environment.NewLine +
+                    "        1.0        0.0            " + Environment.NewLine +
+                    "        1.0        1.0            " + Environment.NewLine +
+                    "        0.0        1.0            " + Environment.NewLine +
+                    "        0.0        0.0            ";
+
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+                temp.CreateFile("FlowFM_lateralPolygon.pol", lateralPolygonFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                var network = Substitute.For<IHydroNetwork>();
+                
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+
+                // Call
+                void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+
+                // Assert
+                var expectedLogMessage = "We do not support all lateral source types, cannot import lateral_source_id (lateral_source_name)";
+                TestHelper.AssertAtLeastOneLogMessagesContains(Call, expectedLogMessage);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_2DLateralSourceWithPolFile_IsNotReadAndExceptionLogged()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                              " + Environment.NewLine +
+                    "    fileVersion   = 2.01               " + Environment.NewLine +
+                    "    fileType      = extForce           " + Environment.NewLine +
+                    "                                       " + Environment.NewLine +
+                    "[Lateral]                              " + Environment.NewLine +
+                    "    id            = lateral_source_id  " + Environment.NewLine +
+                    "    name          = lateral_source_name" + Environment.NewLine +
+                    "    type          = discharge          " + Environment.NewLine +
+                    "    locationType  = 2d                 " + Environment.NewLine +
+                    "    locationFile  = FlowFM_lateralPolygon.pol" + Environment.NewLine +
+                    "    discharge     = 10                 ";
+
+                string lateralPolygonFileContent =
+                    "LateralPolygon01                  " + Environment.NewLine +
+                    "    5    2                        " + Environment.NewLine +
+                    "        0.0        0.0            " + Environment.NewLine +
+                    "        1.0        0.0            " + Environment.NewLine +
+                    "        1.0        1.0            " + Environment.NewLine +
+                    "        0.0        1.0            " + Environment.NewLine +
+                    "        0.0        0.0            ";
+
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+                temp.CreateFile("FlowFM_lateralPolygon.pol", lateralPolygonFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                var network = Substitute.For<IHydroNetwork>();
+                
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+
+                // Call
+                void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+
+                // Assert
+                var expectedLogMessage = "We do not support 2d lateral source types, cannot import lateral_source_id (lateral_source_name)";
+                TestHelper.AssertAtLeastOneLogMessagesContains(Call, expectedLogMessage);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_1DLateralSourceWithPolFile_IsReadAndLateralSourceDataCreated()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                              " + Environment.NewLine +
+                    "    fileVersion   = 2.01               " + Environment.NewLine +
+                    "    fileType      = extForce           " + Environment.NewLine +
+                    "                                       " + Environment.NewLine +
+                    "[Lateral]                              " + Environment.NewLine +
+                    "    id            = lateral_source_id  " + Environment.NewLine +
+                    "    name          = lateral_source_name" + Environment.NewLine +
+                    "    type          = discharge          " + Environment.NewLine +
+                    "    locationType  = 1d                 " + Environment.NewLine +
+                    "    locationFile  = FlowFM_lateralPolygon.pol" + Environment.NewLine +
+                    "    discharge     = 10                 ";
+
+                string lateralPolygonFileContent =
+                    "LateralPolygon01                  " + Environment.NewLine +
+                    "    5    2                        " + Environment.NewLine +
+                    "        0.0        0.0            " + Environment.NewLine +
+                    "        1.0        0.0            " + Environment.NewLine +
+                    "        1.0        1.0            " + Environment.NewLine +
+                    "        0.0        1.0            " + Environment.NewLine +
+                    "        0.0        0.0            ";
+
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+                temp.CreateFile("FlowFM_lateralPolygon.pol", lateralPolygonFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                var network = Substitute.For<IHydroNetwork>();
+                
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+
+                // Call
+                bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+                
+                // Assert
+                Assert.That(lateralSourcesData.Count, Is.EqualTo(1));
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCaseSource(nameof(Read_LateralSourceWithNodeIdOfPipeCases))]
         public void Read_LateralSourceWithCompartmentOfPipe_IsReadCorrectly(IPipe pipe1, IPipe pipe2, string nodeId,
                                                                             IPipe expPipe, double expChainage, ICompartment expCompartment)

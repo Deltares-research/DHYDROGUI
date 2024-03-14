@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                if (branchesByName.TryGetValue(section.BranchName, out IBranch branchForName))
+                if (section.BranchName != null && branchesByName.TryGetValue(section.BranchName, out IBranch branchForName))
                 {
                     SetLocationData(lateralSourceData, branchForName, section.Chainage);
                 }

@@ -236,7 +236,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 
                 var lateral = lateralData.Feature;
-                if (lateral == null) continue;
+                if (lateral?.Branch == null)
+                {
+                    // we don't support 2d lateral sources types yet
+                    continue;
+                }
 
                 var lateralDef = new LateralSourceForcingDefinition {Name = lateral.Name, LongName = lateral.LongName ?? lateral.Name};
                 if (Math.Abs(lateral.Chainage) < double.Epsilon)
@@ -831,7 +835,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var quantityKey = iniSection.GetPropertyValueWithOptionalDefaultValue(QuantityKey);
                 if (string.IsNullOrEmpty(quantityKey))
                 {
-                    if (iniSection.Name.EqualsCaseInsensitive(LateralHeaderKey))
+                    if (iniSection.Name.EqualsCaseInsensitive(LateralHeaderKey) && Is1DLateral(iniSection, logHandler))
                     {
                         lateralSourcesData.Add(lateralSourceParser.Parse(new LateralSourceExtSection(iniSection)));
                     }
@@ -938,7 +942,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
             logHandler.LogReport();
         }
-        
+
+        private static bool Is1DLateral(IniSection iniSection, ILogHandler logHandler)
+        {
+            var locationType = iniSection.ReadProperty(InitialConditionRegion.LocationType.Key, true, "1d");
+            if (locationType != "1d")
+            {
+                var name = iniSection.ReadProperty<string>("id");
+                var longName = iniSection.ReadProperty<string>(BoundaryRegion.Name.Key);
+                logHandler.ReportError($"We do not support {locationType} lateral source types, cannot import {name} ({longName})");
+                return false;
+            }
+            return true;
+        }
+
         private static bool IsCorrespondingMeteoBlock(BcBlockData b, IniSection iniSection)
         {
             string fileName = Path.GetFileName(iniSection.GetPropertyValueWithOptionalDefaultValue(ForcingFileKey));
