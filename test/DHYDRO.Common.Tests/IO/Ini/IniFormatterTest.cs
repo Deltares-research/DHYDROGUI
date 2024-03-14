@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.IO.Ini.Configuration;
 using NUnit.Framework;
@@ -343,11 +342,10 @@ property3             : value3              ; comment
             IniData iniData = IniDataFixture.CreateIniDataWithSingleSection();
 
             IniFormatter iniFormatter = CreateFormatter();
-            Encoding encoding = iniFormatter.Configuration.Encoding;
 
             string ini;
             using (var stream = new MemoryStream())
-            using (var streamReader = new StreamReader(stream, encoding))
+            using (var streamReader = new StreamReader(stream))
             {
                 iniFormatter.Format(iniData, stream);
                 stream.Seek(0, SeekOrigin.Begin);
@@ -371,10 +369,9 @@ property3             = value3              # comment
             IniData iniData = IniDataFixture.CreateIniDataFromProperty(key, value, string.Empty);
 
             IniFormatter iniFormatter = CreateFormatter();
-            Encoding encoding = iniFormatter.Configuration.Encoding;
             
             using (var stream = new MemoryStream())
-            using (var streamReader = new StreamReader(stream, encoding))
+            using (var streamReader = new StreamReader(stream))
             {
                 iniFormatter.Format(iniData, stream);
                 stream.Seek(0, SeekOrigin.Begin);

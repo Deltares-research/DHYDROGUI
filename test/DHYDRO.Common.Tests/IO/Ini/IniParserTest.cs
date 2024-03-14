@@ -749,13 +749,34 @@ value2 ; comment2";
         }
 
         [Test]
+        public void Parse_AnsiEncodedTextWithUnicodeCharacters_ReadsFromStream()
+        {
+            IniParser iniParser = CreateParser();
+
+            const string ini = @"
+[section]
+property1=value¹²³";
+
+            IniData iniData;
+            using (var stream = new MemoryStream(Encoding.Default.GetBytes(ini)))
+            {
+                iniData = iniParser.Parse(stream);
+            }
+
+            IniSection section = iniData.Sections.First();
+            IniProperty property = section.FindProperty("property1");
+
+            Assert.That(property, Is.Not.Null);
+            Assert.That(property.Value, Is.EqualTo("value���"));
+        }
+
+        [Test]
         [TestCaseSource(nameof(CreateSectionWithProperties))]
         public IniData Parse_SectionWithProperties_ReadsFromStream(string ini)
         {
             IniParser iniParser = CreateParser();
-            Encoding encoding = iniParser.Configuration.Encoding;
 
-            using (var stream = new MemoryStream(encoding.GetBytes(ini)))
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(ini)))
             {
                 return iniParser.Parse(stream);
             }
@@ -781,9 +802,8 @@ value2 ; comment2";
         public IniData Parse_SectionWithProperties_ReadsFromStreamReader(string ini)
         {
             IniParser iniParser = CreateParser();
-            Encoding encoding = iniParser.Configuration.Encoding;
 
-            using (var stream = new MemoryStream(encoding.GetBytes(ini)))
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(ini)))
             using (var streamReader = new StreamReader(stream))
             {
                 return iniParser.Parse(streamReader);

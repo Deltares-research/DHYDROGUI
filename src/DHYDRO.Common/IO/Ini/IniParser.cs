@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using DHYDRO.Common.Extensions;
 using DHYDRO.Common.Guards;
 using DHYDRO.Common.IO.Ini.Configuration;
@@ -19,6 +20,8 @@ namespace DHYDRO.Common.IO.Ini
     /// </remarks>
     public sealed class IniParser
     {
+        private readonly Encoding utf8NoBom;
+
         private IniScheme scheme;
         private IniParseConfiguration configuration;
 
@@ -38,6 +41,7 @@ namespace DHYDRO.Common.IO.Ini
         /// </summary>
         public IniParser()
         {
+            utf8NoBom = new UTF8Encoding(false);
             scheme = new IniScheme();
             configuration = new IniParseConfiguration();
         }
@@ -98,7 +102,7 @@ namespace DHYDRO.Common.IO.Ini
         {
             Ensure.NotNull(stream, nameof(stream));
 
-            using (var streamReader = new StreamReader(stream, Configuration.Encoding, true, 1024, true))
+            using (var streamReader = new StreamReader(stream, utf8NoBom, true, 1024, true))
             {
                 return Parse(streamReader);
             }
@@ -220,7 +224,7 @@ namespace DHYDRO.Common.IO.Ini
             {
                 throw new FormatException($"Error on line {lineNumber}: section name cannot be empty.");
             }
-            
+
             if (!Configuration.AllowDuplicateSections && !foundSections.Add(sectionName))
             {
                 throw new FormatException($"Error on line {lineNumber}: duplicate section with name '{sectionName}'.");
@@ -283,7 +287,7 @@ namespace DHYDRO.Common.IO.Ini
             {
                 throw new FormatException($"Error on line {lineNumber}: property key cannot contain spaces.");
             }
-            
+
             if (!Configuration.AllowDuplicateProperties && !foundProperties.Add(key))
             {
                 throw new FormatException($"Error on line {lineNumber}: duplicate property with key '{key}'.");

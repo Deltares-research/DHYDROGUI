@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DHYDRO.Common.Guards;
 using DHYDRO.Common.IO.Ini.Configuration;
 
@@ -20,6 +21,8 @@ namespace DHYDRO.Common.IO.Ini
     /// </remarks>
     public sealed class IniFormatter
     {
+        private readonly Encoding utf8NoBom;
+        
         private IniFormatConfiguration configuration;
         private IniScheme scheme;
         private TextWriter writer;
@@ -29,6 +32,7 @@ namespace DHYDRO.Common.IO.Ini
         /// </summary>
         public IniFormatter()
         {
+            utf8NoBom = new UTF8Encoding(false);
             configuration = new IniFormatConfiguration();
             scheme = new IniScheme();
         }
@@ -92,7 +96,7 @@ namespace DHYDRO.Common.IO.Ini
             Ensure.NotNull(iniData, nameof(iniData));
             Ensure.NotNull(stream, nameof(stream));
 
-            using (var streamWriter = new StreamWriter(stream, Configuration.Encoding, 1024, true))
+            using (var streamWriter = new StreamWriter(stream, utf8NoBom, 1024, true))
             {
                 Format(iniData, streamWriter);
             }
