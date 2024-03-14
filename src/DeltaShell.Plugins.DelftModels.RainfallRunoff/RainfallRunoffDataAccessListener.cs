@@ -5,28 +5,34 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
-    public class RainfallRunoffDataAccessListener : DataAccessListenerBase
+    public class RainfallRunoffDataAccessListener : IDataAccessListener
     {
         private readonly IBasinGeometrySerializer serializer;
         private bool firstBasin = true;
+        private IProjectRepository projectRepository;
 
-        public RainfallRunoffDataAccessListener(IBasinGeometrySerializer serializer)
+        public RainfallRunoffDataAccessListener(IBasinGeometrySerializer serializer, IProjectRepository repository)
         {
             Ensure.NotNull(serializer, nameof(serializer));
             this.serializer = serializer;
+            projectRepository = repository;
         }
 
-        public override object Clone()
+        public void SetProjectRepository(IProjectRepository repository)
         {
-            return new RainfallRunoffDataAccessListener(new BasinGeometryShapeFileSerializer()) {ProjectRepository = ProjectRepository};
+            projectRepository = repository;
+        }
+
+        public IDataAccessListener Clone()
+        {
+            return new RainfallRunoffDataAccessListener(new BasinGeometryShapeFileSerializer(), projectRepository);
         }
         
-        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        public void OnPostLoad(object entity, object[] state, string[] propertyNames)
         {
             if (!(entity is RainfallRunoffModel rainfallRunoffModel)) 
                 return;
@@ -48,7 +54,34 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }            
         }
 
-        public override void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
+        public bool OnPreUpdate(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public bool OnPreInsert(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostUpdate(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public void OnPostInsert(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public bool OnPreDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
+        }
+
+        public void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
         {
             if (entity is Project)
             {
@@ -56,8 +89,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
             else if (firstBasin && entity is DrainageBasin || entity is IDrainageBasin)
             {
-                ProjectRepository.PreLoad<RunoffBoundary>(rb => rb.Links);
-                ProjectRepository.PreLoad<WasteWaterTreatmentPlant>(wwtp => wwtp.Links);
+                projectRepository.PreLoad<RunoffBoundary>(rb => rb.Links);
+                projectRepository.PreLoad<WasteWaterTreatmentPlant>(wwtp => wwtp.Links);
                 firstBasin = false;
             }
         }

@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Arrange
             var projectRepository = Substitute.For<IProjectRepository>();
             projectRepository.IsLegacyProject(Arg.Any<string>()).ReturnsForAnyArgs(true);
-            var waterFlowFMDataAccessListener = new WaterFlowFMDataAccessListener { ProjectRepository = projectRepository };
+            var waterFlowFMDataAccessListener = new WaterFlowFMDataAccessListener(projectRepository);
             var waterFlowFMModel = new WaterFlowFMModel();
             string[] propertyNames = {};
             object[] state = {};

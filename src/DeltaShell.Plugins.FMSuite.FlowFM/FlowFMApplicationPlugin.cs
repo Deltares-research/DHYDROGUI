@@ -637,7 +637,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
-            yield return new WaterFlowFMDataAccessListener();
+            yield return new WaterFlowFMDataAccessListener(null);
         }
     }
 }

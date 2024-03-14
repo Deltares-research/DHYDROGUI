@@ -18,7 +18,7 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class WaterFlowFMDataAccessListener : DataAccessListenerBase
+    public class WaterFlowFMDataAccessListener : IDataAccessListener
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMDataAccessListener));
 
@@ -27,22 +27,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {"Bathymetry", WaterFlowFMModelDefinition.BathymetryDataItemName}
             };
 
-        public override object Clone()
+        private IProjectRepository projectRepository;
+
+        public WaterFlowFMDataAccessListener(IProjectRepository repository)
         {
-            return new WaterFlowFMDataAccessListener();
+            projectRepository = repository;
         }
 
-        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        public void SetProjectRepository(IProjectRepository repository)
         {
-            base.OnPostLoad(entity, state, propertyNames);
+            projectRepository = repository;
+        }
 
+        public IDataAccessListener Clone()
+        {
+            return new WaterFlowFMDataAccessListener(projectRepository);
+        }
+
+        public void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
+        {
+        }
+
+        public void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        {
             var model = entity as WaterFlowFMModel;
             if (model != null)
             {
                 UpdateDataItemNames(model);
                 FixImportFilePaths(model);
                 LoadSpatialData(model);
-                if (ProjectRepository.IsLegacyProject(ProjectRepository.Path))
+
+                if (projectRepository.IsLegacyProject(projectRepository.Path))
                 {
                     model.ClearOutput();
                     Log.WarnFormat(Resources.WaterFlowFMDataAccessListener_OnPostLoad_Model_output_is_removed_because_project_has_been_migrated_from_older_project_version);
@@ -57,6 +72,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if(bedLevelTypeProperty != null)
                     model.UpdateBathymetryCoverage((UGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value);
             }
+        }
+
+        public bool OnPreUpdate(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public bool OnPreInsert(object entity, object[] state, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostUpdate(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public void OnPostInsert(object entity, object[] state, string[] propertyNames)
+        {
+        }
+
+        public bool OnPreDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
+            return false;
+        }
+
+        public void OnPostDelete(object entity, object[] deletedState, string[] propertyNames)
+        {
         }
 
         private static void FixImportFilePaths(WaterFlowFMModel model)

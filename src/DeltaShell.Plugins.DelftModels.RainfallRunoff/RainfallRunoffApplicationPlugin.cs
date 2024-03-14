@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
-            yield return new RainfallRunoffDataAccessListener(new BasinGeometryShapeFileSerializer());
+            yield return new RainfallRunoffDataAccessListener(new BasinGeometryShapeFileSerializer(), null);
         }
         
         private static IEnumerable<RainfallRunoffModel> GetModels(Project project)
