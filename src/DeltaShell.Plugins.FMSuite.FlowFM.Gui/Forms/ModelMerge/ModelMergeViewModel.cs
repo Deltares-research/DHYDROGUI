@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge
                         Application.Current.Dispatcher.Invoke(() => ImportProgressText = text);
                     }
                 };
-                importer.ImportItem(fileName, NewModel);
+                newModel = importer.ImportItem(fileName) as WaterFlowFMModel;
             });
         }
 
