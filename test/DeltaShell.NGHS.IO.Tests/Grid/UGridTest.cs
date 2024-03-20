@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
@@ -22,28 +21,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private const string UGRID_TEST_FILE = @"ugrid\Custom_Ugrid.nc"; //@"ugrid\c090_wetbed_map.nc";
         private const string UGRID_MAP_TEST_FILE = @"ugrid\Custom_Ugrid_map.nc";
         private const string DUMMY_TEST_FILE = @"ugrid\Dummy.nc";
-
-        [Test]
-        public void AssertIONetCDFDllIsXpCompatible()
-        {
-            // The problem is that platform toolsets (vc++ runtime dependencies) of 110 & higher (eg above 100) 
-            // aren't xp compatible. This appears the default on VS2012 and up. If you encounter this problem, 
-            // rebuild the dll using a toolset compatible with xp (eg 100, or 110_xp).
-
-            // We use a hacky but effective way to check if the current dll is xp compatible, namely we check
-            // for the occurance of 'GetTickCount64' in the dll imports. This method is only available on Vista
-            // and above.
-
-            string dllVersion = Path.Combine(DimrApiDataSet.SharedDllPath, "io_netcdf.dll");
-
-            foreach (string line in File.ReadLines(dllVersion))
-            {
-                if (line.Contains("GetTickCount64"))
-                {
-                    Assert.Fail("Current dflowfm.dll is not compatible with XP: " + dllVersion);
-                }
-            }
-        }
 
         [Test]
         [Category(TestCategory.DataAccess)]

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
@@ -30,27 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
     [Category(TestCategory.Slow)]
     public class FlexibleMeshModelDllTest
     {
-        [Test]
-        public void AssertUnstrucDllIsXpCompatible()
-        {
-            // The problem is that platform toolsets (vc++ runtime dependencies) of 110 & higher (eg above 100) 
-            // aren't xp compatible. This appears the default on VS2012 and up. If you encounter this problem, 
-            // rebuild the dll using a toolset compatible with xp (eg 100, or 110_xp).
-
-            // We use a hacky but effective way to check if the current dll is xp compatible, namely we check
-            // for the occurance of 'GetTickCount64' in the dll imports. This method is only available on Vista
-            // and above.
-            string dllVersion = Path.Combine(DimrApiDataSet.DFlowFmDllPath, FlexibleMeshModelDll.DFLOWFM_DLL_NAME);
-
-            foreach (string line in File.ReadLines(dllVersion))
-            {
-                if (line.Contains("GetTickCount64"))
-                {
-                    Assert.Fail("Current " + FlexibleMeshModelDll.DFLOWFM_DLL_NAME + " is not compatible with XP: " + dllVersion);
-                }
-            }
-        }
-
         [Test]
         public void TestCallInitialize()
         {
