@@ -21,7 +21,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -812,12 +811,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private bool ExportHydroModel() =>
             new DHydroConfigXmlExporter().Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml"));
 
-        private void PrepareWorkingDirectory(List<string> fileExceptions)
+        private void PrepareWorkingDirectory(IEnumerable<string> fileExceptions)
         {
             if (Directory.Exists(WorkingDirectoryPath))
             {
-                CommonFileSystemActions.ClearFolder(WorkingDirectoryPath,
-                                                    new HashSet<string>(fileExceptions));
+                FileUtils.ClearDirectory(WorkingDirectoryPath, fileExceptions);
             }
             else
             {

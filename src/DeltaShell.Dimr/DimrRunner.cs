@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Schema;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
@@ -11,7 +9,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Properties;
-using DeltaShell.NGHS.Common.IO;
 using log4net;
 namespace DeltaShell.Dimr
 {
@@ -299,10 +296,11 @@ namespace DeltaShell.Dimr
             model.SuspendClearOutputOnInputChange = true;
 
             FileUtils.CreateDirectoryIfNotExists(workDirectory);
+            
             string exportDir = Path.Combine(workDirectory, model.DirectoryName);
             FileUtils.CreateDirectoryIfNotExists(exportDir);
-            CommonFileSystemActions.ClearFolder(exportDir, 
-                                                new HashSet<string>(model.IgnoredFilePathsWhenCleaningWorkingDirectory));
+            FileUtils.ClearDirectory(exportDir, model.IgnoredFilePathsWhenCleaningWorkingDirectory);
+            
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
         }
