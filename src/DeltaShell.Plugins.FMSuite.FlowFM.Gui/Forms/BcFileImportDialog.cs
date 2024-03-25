@@ -60,13 +60,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 RestoreDirectory = true
             };
             
-            string[] filePaths = fileDialogService.ShowOpenFilesDialog(fileDialogOptions);
+            string[] filePaths = fileDialogService.ShowOpenFilesDialog(fileDialogOptions).ToArray();
             if (!filePaths.Any())
             {
                 return DelftDialogResult.Cancel;
             }
 
             FilePaths = filePaths;
+            
             DelftDialogResult result = ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
             if (result == DelftDialogResult.OK && deleteDataCheckBox.Checked &&
                 quantitiesListBox.CheckedItems.Count * dataTypesListBox.CheckedItems.Count == 0)

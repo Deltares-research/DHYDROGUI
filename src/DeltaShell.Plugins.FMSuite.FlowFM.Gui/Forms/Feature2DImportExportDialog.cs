@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 var fileDialogService = new FileDialogService();
                 var fileDialogOptions = new FileDialogOptions { FileFilter = FileFilter };
                 
-                importFileNames = fileDialogService.ShowOpenFilesDialog(fileDialogOptions);
+                importFileNames = fileDialogService.ShowOpenFilesDialog(fileDialogOptions).ToArray();
                 if (!importFileNames.Any())
                 {
                     return DelftDialogResult.Cancel;

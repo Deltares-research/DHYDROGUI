@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 
@@ -18,13 +19,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public DelftDialogResult ShowModal()
         {
-            var browserDialog = new FolderBrowserDialog {ShowNewFolderButton = true};
-            if (browserDialog.ShowDialog() != DialogResult.OK)
+            var folderDialogService = new FolderDialogService();
+            var folderDialogOptions = new FolderDialogOptions();
+
+            string selectedPath = folderDialogService.ShowSelectFolderDialog(folderDialogOptions);
+            
+            if (string.IsNullOrEmpty(selectedPath))
             {
                 return DelftDialogResult.Cancel;
             }
 
-            Directory = browserDialog.SelectedPath;
+            Directory = selectedPath;
             return DelftDialogResult.OK;
         }
 
