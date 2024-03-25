@@ -2,6 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Forms;
+using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Services;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using MessageBox = System.Windows.Forms.MessageBox;
 
@@ -53,12 +55,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Views
         [ExcludeFromCodeCoverage]
         private string GetSelectedDirectory()
         {
-            var dialog = new FolderBrowserDialog
+            var folderDialogService = new FolderDialogService();
+            var folderDialogOptions = new FolderDialogOptions
             {
-                SelectedPath = Properties.Settings.Default.Last_GwswImport_FolderPath
+                InitialDirectory = Properties.Settings.Default.Last_GwswImport_FolderPath
             };
 
-            return dialog.ShowDialog() != DialogResult.OK ? null : dialog.SelectedPath;
+            return folderDialogService.ShowSelectFolderDialog(folderDialogOptions);
         }
 
         [ExcludeFromCodeCoverage]

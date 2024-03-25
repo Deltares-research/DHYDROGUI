@@ -43,6 +43,10 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
