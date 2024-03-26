@@ -23,6 +23,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
                 return data.Name;
             }
         }
+        
+        [ReadOnly(true)]
+        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesDisplayName(typeof(Resources), "OutputProperties_Location_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "OutputProperties_Location_Description")]
+        public string Location
+        {
+            get
+            {
+                return data.LocationName;
+            }
+        }
 
         [ReadOnly(true)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
@@ -33,18 +45,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             get
             {
                 return data.ParameterName;
-            }
-        }
-
-        [ReadOnly(true)]
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "OutputProperties_Location_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "OutputProperties_Location_Description")]
-        public string Location
-        {
-            get
-            {
-                return data.LocationName;
             }
         }
 

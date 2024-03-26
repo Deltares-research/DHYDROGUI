@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,8 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        #region Overrides of TimeDependentModelBase
-
+        /// <inheritdoc />
         public override DateTime StartTime
         {
             get => (DateTime) ModelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
@@ -32,6 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<IDataItem> AllDataItems
         {
             get
@@ -40,6 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
+        /// <inheritdoc />
         public override DateTime StopTime
         {
             get => (DateTime) ModelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
+        /// <inheritdoc />
         public override TimeSpan TimeStep
         {
             get => (TimeSpan) ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value;
@@ -61,7 +62,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 base.TimeStep = value;
             }
         }
+        
+        /// <summary>
+        /// Gets the input data item feature collections.
+        /// </summary>
+        private IEnumerable<IEnumerable<IFeature>> InputFeatureCollections
+        {
+            get
+            {
+                yield return Area.Pumps;
+                yield return Area.Structures;
+            }
+        }
 
+        /// <summary>
+        /// Gets the output data item feature collections.
+        /// </summary>
+        private IEnumerable<IEnumerable<IFeature>> OutputFeatureCollections
+        {
+            get
+            {
+                yield return Area.Pumps;
+                yield return Area.Structures;
+                yield return Area.ObservationPoints;
+                yield return Area.ObservationCrossSections;
+            }
+        }
+
+        /// <inheritdoc />
         public override IProjectItem DeepClone()
         {
             string tempDir = FileUtils.CreateTempDirectory();
@@ -161,21 +189,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
         {
-            if ((role & DataItemRole.Input) == DataItemRole.Input)
+            if (role.HasFlag(DataItemRole.Input))
             {
-                return InputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>());
+                return InputFeatureCollections.SelectMany(x => x);
             }
 
-            if ((role & DataItemRole.Output) == DataItemRole.Output)
+            if (role.HasFlag(DataItemRole.Output))
             {
-                return OutputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>());
+                return OutputFeatureCollections.SelectMany(x => x);
             }
 
             return Enumerable.Empty<IFeature>();
         }
 
+        /// <inheritdoc />
         public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
         {
             if (location == null)
@@ -195,27 +225,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 yield return di;
             }
         }
-
-        // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
-
-        private IEnumerable<object> InputFeatureCollections
-        {
-            get
-            {
-                yield return Area.Pumps;
-                yield return Area.Structures;
-            }
-        }
-
-        private IEnumerable<object> OutputFeatureCollections
-        {
-            get
-            {
-                yield return Area.ObservationPoints;
-                yield return Area.ObservationCrossSections;
-            }
-        }
-
-        #endregion
     }
 }

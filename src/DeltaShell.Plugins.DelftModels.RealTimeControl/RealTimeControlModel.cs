@@ -687,15 +687,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             string name = DataItem.DefaultName;
 
-            if ((role & DataItemRole.Input) == DataItemRole.Input)
+            if (role.HasFlag(DataItemRole.Input))
             {
-                int count = controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+                int count = controlGroupDataItem.Children.Count(di => di.Role.HasFlag(DataItemRole.Input));
                 name = ((IControlGroup)controlGroupDataItem.Value).Name + InputPostFix + count;
             }
 
-            if ((role & DataItemRole.Output) == DataItemRole.Output)
+            if (role.HasFlag(DataItemRole.Output))
             {
-                int count = controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+                int count = controlGroupDataItem.Children.Count(di => di.Role.HasFlag(DataItemRole.Output));
                 name = ((IControlGroup)controlGroupDataItem.Value).Name + OutputPostFix + count;
             }
 

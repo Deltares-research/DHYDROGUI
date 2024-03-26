@@ -593,9 +593,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 var fixedWeir = removedOrAddedItem as FixedWeir;
                 if (fixedWeir != null)
                 {
-                    ModelFeatureCoordinateData<FixedWeir> weirProperties = fixedWeirProperties.ContainsKey(fixedWeir)
-                                                                               ? fixedWeirProperties[fixedWeir]
-                                                                               : null;
+                    ModelFeatureCoordinateData<FixedWeir> weirProperties =
+                        fixedWeirProperties.TryGetValue(fixedWeir, out ModelFeatureCoordinateData<FixedWeir> properties)
+                            ? properties
+                            : null;
 
                     switch (e.Action)
                     {
@@ -677,34 +678,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 groupableFeature.UpdateGroupName(this);
             }
 
-            bool inputSender = removedOrAddedItem is IPump ||
-                               removedOrAddedItem is IStructure;
-            bool outputSender = removedOrAddedItem is ObservationCrossSection2D ||
-                                removedOrAddedItem is GroupableFeature2DPoint;
-
-            if (inputSender || outputSender)
+            if (removedOrAddedItem is IFeature feature && GetDataItemRole(feature) != DataItemRole.None)
             {
-                var feature = (IFeature)removedOrAddedItem;
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        AddAreaItem(feature, inputSender);
+                        AddDataItem(feature);
                         break;
                     case NotifyCollectionChangedAction.Remove:
-                        RemoveAreaFeature(feature);
+                        RemoveDataItem(feature);
                         break;
                     case NotifyCollectionChangedAction.Reset:
-                        foreach (KeyValuePair<IFeature, List<IDataItem>> areaDataItem in areaDataItems)
+                        foreach (KeyValuePair<IFeature, List<IDataItem>> item in areaDataItems)
                         {
-                            RemoveAreaFeature(areaDataItem.Key);
+                            RemoveDataItem(item.Key);
                         }
-
                         areaDataItems.Clear();
                         break;
                     case NotifyCollectionChangedAction.Replace:
                         var oldFeature = (IFeature)e.OldItems[0];
-                        RemoveAreaFeature(oldFeature);
-                        AddAreaItem(feature, inputSender);
+                        RemoveDataItem(oldFeature);
+                        AddDataItem(feature);
                         break;
                     default:
                         throw new NotImplementedException($"Action {e.Action} on feature collection not supported");
@@ -716,8 +710,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             if (sender is IStructure weir && e.PropertyName == nameof(IStructure.Formula))
             {
-                bool isInputSender = Area.Structures.Any(w => w.Name == weir.Name);
-                UpdateAreaDataItems(weir, isInputSender);
+                UpdateDataItems(weir);
             }
 
             if (updatingGroupName || Area.IsEditing)
@@ -753,7 +746,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private void RemoveAreaFeature(IFeature feature)
+        private void RemoveDataItem(IFeature feature)
         {
             if (areaDataItems.TryGetValue(feature, out List<IDataItem> dataItemsToBeRemoved))
             {
@@ -767,17 +760,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             areaDataItems.Remove(feature);
         }
 
-        private void AddAreaItem(IFeature feature, bool isInputSender)
+        private void AddDataItem(IFeature feature)
         {
-            List<IDataItem> listToAdd = GetDataItemListForFeature(feature, isInputSender);
+            List<IDataItem> listToAdd = GetDataItemListForFeature(feature);
             areaDataItems.Add(feature, listToAdd);
         }
 
-        private void UpdateAreaDataItems(IFeature feature, bool isInputSender)
+        private void UpdateDataItems(IFeature feature)
         {
             if (areaDataItems.TryGetValue(feature, out List<IDataItem> dataItemsDependentOnThisFeature))
             {
-                List<IDataItem> listToReplace = GetDataItemListForFeature(feature, isInputSender);
+                List<IDataItem> listToReplace = GetDataItemListForFeature(feature);
 
                 List<IDataItem> dataItemsLinkedToRTC =
                     dataItemsDependentOnThisFeature.Where(di => di.LinkedTo != null).ToList();
@@ -796,18 +789,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private List<IDataItem> GetDataItemListForFeature(IFeature feature, bool isInputSender)
+        private List<IDataItem> GetDataItemListForFeature(IFeature feature)
         {
             IEnumerable<string> quantities = QuantityGenerator.GetQuantitiesForFeature(feature, UseSalinity);
             return quantities.Select(quantity => new DataItem(feature)
             {
                 Name = feature.ToString(),
                 Tag = quantity,
-                Role = isInputSender ? DataItemRole.Input : DataItemRole.Output,
+                Role = GetDataItemRole(feature),
                 ValueType = typeof(double),
-                ValueConverter =
-                    new WaterFlowFMFeatureValueConverter(this, feature, quantity, string.Empty)
+                ValueConverter = new WaterFlowFMFeatureValueConverter(this, feature, quantity, string.Empty)
             }).OfType<IDataItem>().ToList();
+        }
+
+        private static DataItemRole GetDataItemRole(IFeature feature)
+        {
+            if (feature is IPump || feature is IStructure)
+            {
+                return DataItemRole.Input | DataItemRole.Output;
+            }
+
+            if (feature is ObservationCrossSection2D || feature is GroupableFeature2DPoint)
+            {
+                return DataItemRole.Output;
+            }
+
+            return DataItemRole.None;
         }
 
         #endregion
@@ -818,11 +825,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             base.OnAfterDataItemsSet();
 
-            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (areaDataItem != null)
+            IDataItem items = GetDataItemByTag(HydroAreaTag);
+            if (items != null)
             {
-                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
+                ((INotifyCollectionChange)items.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)items.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
         }
 
@@ -841,11 +848,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
         {
             // subscribe to newly linked hydro area:
-            IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
-            if (Equals(e.Target, areaDataItem) && !e.Relinking)
+            IDataItem item = GetDataItemByTag(HydroAreaTag);
+            if (Equals(e.Target, item) && !e.Relinking)
             {
-                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
+                ((INotifyCollectionChange)item.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)item.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
 
             base.OnDataItemLinked(sender, e);

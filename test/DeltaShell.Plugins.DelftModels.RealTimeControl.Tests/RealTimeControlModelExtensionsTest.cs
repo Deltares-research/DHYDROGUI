@@ -119,22 +119,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.NotNull(controlGroup3DataItem);
             Assert.AreEqual(2, controlGroup3DataItem.Children.Count);
 
-            IDataItem controlGroup1InputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            IDataItem controlGroup1InputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => di.Role.HasFlag(DataItemRole.Input));
             Assert.NotNull(controlGroup1InputDataItem);
 
-            IDataItem controlGroup1OutputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            IDataItem controlGroup1OutputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => di.Role.HasFlag(DataItemRole.Output));
             Assert.NotNull(controlGroup1OutputDataItem);
 
-            IDataItem controlGroup2InputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            IDataItem controlGroup2InputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => di.Role.HasFlag(DataItemRole.Input));
             Assert.NotNull(controlGroup2InputDataItem);
 
-            IDataItem controlGroup2OutputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            IDataItem controlGroup2OutputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => di.Role.HasFlag(DataItemRole.Output));
             Assert.NotNull(controlGroup2OutputDataItem);
 
-            IDataItem controlGroup3InputDataItem = controlGroup3DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            IDataItem controlGroup3InputDataItem = controlGroup3DataItem.Children.FirstOrDefault(di => di.Role.HasFlag(DataItemRole.Input));
             Assert.NotNull(controlGroup3InputDataItem);
 
-            IDataItem controlGroup3OutputDataItem = controlGroup3DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            IDataItem controlGroup3OutputDataItem = controlGroup3DataItem.Children.FirstOrDefault(di => di.Role.HasFlag(DataItemRole.Output));
             Assert.NotNull(controlGroup3OutputDataItem);
 
             // simulate ChildDataItem names being 'out of sync' on ControlGroups 1 and 3
@@ -274,10 +274,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.NotNull(controlGroupDataItem);
             Assert.AreEqual(2, controlGroupDataItem.Children.Count);
 
-            IDataItem controlGroupInputDataItem = controlGroupDataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            IDataItem controlGroupInputDataItem = controlGroupDataItem.Children.FirstOrDefault(di => di.Role.HasFlag(DataItemRole.Input));
             Assert.NotNull(controlGroupInputDataItem);
 
-            IDataItem controlGroupOutputDataItem = controlGroupDataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            IDataItem controlGroupOutputDataItem = controlGroupDataItem.Children.FirstOrDefault(di => di.Role.HasFlag(DataItemRole.Output));
             Assert.NotNull(controlGroupOutputDataItem);
 
             // simulate ChildDataItem names being 'out of sync'

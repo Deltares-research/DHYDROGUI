@@ -77,19 +77,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
 
                 string id = null;
-                if ((role & DataItemRole.Input) == DataItemRole.Input)
+                if (role.HasFlag(DataItemRole.Input))
                 {
                     int index =
-                        parent.Children.Where(c => (c.Role & DataItemRole.Input) == DataItemRole.Input)
+                        parent.Children.Where(c => c.Role.HasFlag(DataItemRole.Input))
                               .ToList()
                               .IndexOf(dataItem);
                     id = "input" + index;
                 }
 
-                if ((role & DataItemRole.Output) == DataItemRole.Output)
+                if (role.HasFlag(DataItemRole.Output))
                 {
                     int index =
-                        parent.Children.Where(c => (c.Role & DataItemRole.Output) == DataItemRole.Output)
+                        parent.Children.Where(c => c.Role.HasFlag(DataItemRole.Output))
                               .ToList()
                               .IndexOf(dataItem);
                     id = "output" + index;

@@ -15,7 +15,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
@@ -188,12 +187,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             if (shape.Tag is Input input)
             {
-                if ((dataItem.Role & DataItemRole.Output) == DataItemRole.Output)
+                if (dataItem.Role.HasFlag(DataItemRole.Output))
                 {
                     LinkDataItems(Model.GetDataItemByValue(input), dataItem);
                 }
             }
-            else if (shape.Tag is Output output && (dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
+            else if (shape.Tag is Output output && dataItem.Role.HasFlag(DataItemRole.Input))
             {
                 if (dataItem.LinkedTo == null)
                 {
@@ -618,13 +617,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             if (shape is OutputItemShape)
             {
                 return Model.GetChildDataItemsFromControlledModelsForLocation(feature).Any(
-                    di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+                    di => di.Role.HasFlag(DataItemRole.Input));
             }
 
             if (shape is InputItemShape)
             {
                 return Model.GetChildDataItemsFromControlledModelsForLocation(feature).Any(
-                    di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+                    di => di.Role.HasFlag(DataItemRole.Output));
             }
 
             return false;
@@ -644,12 +643,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             if (shape is OutputItemShape)
             {
                 dataItems = Model.GetChildDataItemsFromControlledModelsForLocation(location).Where(
-                    di => (di.Role & DataItemRole.Input) == DataItemRole.Input).ToList();
+                    di => di.Role.HasFlag(DataItemRole.Input)).ToList();
             }
             else if (shape is InputItemShape)
             {
                 dataItems = Model.GetChildDataItemsFromControlledModelsForLocation(location).Where(
-                    di => (di.Role & DataItemRole.Output) == DataItemRole.Output).ToList();
+                    di => di.Role.HasFlag(DataItemRole.Output)).ToList();
             }
 
             foreach (
