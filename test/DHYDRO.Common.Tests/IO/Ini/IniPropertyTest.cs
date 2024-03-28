@@ -14,7 +14,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase(null)]
         public void Constructor_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
         {
-            Assert.Throws<ArgumentException>(() => _ = new IniProperty(key));
+            Assert.That(() => _ = new IniProperty(key), Throws.ArgumentException);
         }
 
         [Test]
@@ -22,9 +22,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey");
 
-            Assert.IsEmpty(property.Value);
-            Assert.IsEmpty(property.Comment);
-            Assert.AreEqual(0, property.LineNumber);
+            Assert.That(property.Value, Is.Empty);
+            Assert.That(property.Comment, Is.Empty);
+            Assert.That(property.LineNumber, Is.EqualTo(0));
         }
 
         [Test]
@@ -35,9 +35,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty(key, value, comment);
 
-            Assert.AreEqual(key, property.Key);
-            Assert.AreEqual(value, property.Value);
-            Assert.AreEqual(comment, property.Comment);
+            Assert.That(property.Key, Is.EqualTo(key));
+            Assert.That(property.Value, Is.EqualTo(value));
+            Assert.That(property.Comment, Is.EqualTo(comment));
         }
 
         [Test]
@@ -47,13 +47,13 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey");
 
-            Assert.Throws<ArgumentException>(() => _ = new IniProperty(key, property));
+            Assert.That(() => _ = new IniProperty(key, property), Throws.ArgumentException);
         }
 
         [Test]
         public void Constructor_PropertyIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = new IniProperty("TestKey", null));
+            Assert.That(() => _ = new IniProperty("TestKey", null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -63,10 +63,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             var copiedProperty = new IniProperty("OtherKey", property);
 
-            Assert.AreEqual("OtherKey", copiedProperty.Key);
-            Assert.AreEqual("TestValue", copiedProperty.Value);
-            Assert.AreEqual("TestComment", copiedProperty.Comment);
-            Assert.AreEqual(10, copiedProperty.LineNumber);
+            Assert.That(copiedProperty.Key, Is.EqualTo("OtherKey"));
+            Assert.That(copiedProperty.Value, Is.EqualTo("TestValue"));
+            Assert.That(copiedProperty.Comment, Is.EqualTo("TestComment"));
+            Assert.That(copiedProperty.LineNumber, Is.EqualTo(10));
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase(null)]
         public void Create_KeyIsNullOrEmpty_ThrowsArgumentException(string key)
         {
-            Assert.Throws<ArgumentException>(() => IniProperty.Create(key, "TestValue"));
+            Assert.That(() => IniProperty.Create(key, "TestValue"), Throws.ArgumentException);
         }
 
         [Test]
@@ -88,9 +88,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = IniProperty.Create("TestKey", value);
 
-            Assert.IsNotNull(property);
-            Assert.AreEqual("TestKey", property.Key);
-            Assert.AreEqual(expectedValue, property.Value);
+            Assert.That(property, Is.Not.Null);
+            Assert.That(property.Key, Is.EqualTo("TestKey"));
+            Assert.That(property.Value, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -99,9 +99,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var value = new DateTime(2023, 8, 14, 12, 0, 0);
             var property = IniProperty.Create("TestKey", value);
 
-            Assert.IsNotNull(property);
-            Assert.AreEqual("TestKey", property.Key);
-            Assert.AreEqual("2023-08-14 12:00:00", property.Value);
+            Assert.That(property, Is.Not.Null);
+            Assert.That(property.Key, Is.EqualTo("TestKey"));
+            Assert.That(property.Value, Is.EqualTo("2023-08-14 12:00:00"));
         }
 
         [Test]
@@ -109,9 +109,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = IniProperty.Create<string>("TestKey", null);
 
-            Assert.IsNotNull(property);
-            Assert.AreEqual("TestKey", property.Key);
-            Assert.IsEmpty(property.Value);
+            Assert.That(property, Is.Not.Null);
+            Assert.That(property.Key, Is.EqualTo("TestKey"));
+            Assert.That(property.Value, Is.Empty);
         }
 
         [Test]
@@ -119,9 +119,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey", "TestValue");
 
-            bool result = property.HasValue();
+            bool hasValue = property.HasValue();
 
-            Assert.IsTrue(result);
+            Assert.That(hasValue, Is.True);
         }
 
         [Test]
@@ -131,9 +131,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey", "TestValue", comment);
 
-            bool result = property.HasComment();
+            bool hasComment = property.HasComment();
 
-            Assert.IsFalse(result);
+            Assert.That(hasComment, Is.False);
         }
 
         [Test]
@@ -141,9 +141,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey", "TestValue", "TestComment");
 
-            bool result = property.HasComment();
+            bool hasComment = property.HasComment();
 
-            Assert.IsTrue(result);
+            Assert.That(hasComment, Is.True);
         }
 
         [Test]
@@ -153,9 +153,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey", value);
 
-            bool result = property.HasValue();
+            bool hasValue = property.HasValue();
 
-            Assert.IsFalse(result);
+            Assert.That(hasValue, Is.False);
         }
 
         [Test]
@@ -171,8 +171,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             bool result = property.TryGetConvertedValue(out T convertedValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual(expectedValue, convertedValue);
+            Assert.That(result, Is.True);
+            Assert.That(convertedValue, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -182,8 +182,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             bool result = property.TryGetConvertedValue(out DateTime convertedValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual(new DateTime(2023, 8, 14), convertedValue);
+            Assert.That(result, Is.True);
+            Assert.That(convertedValue, Is.EqualTo(new DateTime(2023, 8, 14)));
         }
 
         [Test]
@@ -198,8 +198,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             bool result = property.TryGetConvertedValue(out T convertedValue);
 
-            Assert.IsFalse(result);
-            Assert.AreEqual(defaultValue, convertedValue);
+            Assert.That(result, Is.False);
+            Assert.That(convertedValue, Is.EqualTo(defaultValue));
         }
 
         [Test]
@@ -209,8 +209,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             bool result = property.TryGetConvertedValue(out string convertedValue);
 
-            Assert.IsFalse(result);
-            Assert.IsNull(convertedValue);
+            Assert.That(result, Is.False);
+            Assert.That(convertedValue, Is.Null);
         }
 
         [Test]
@@ -225,8 +225,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             bool result = property.TryGetConvertedValue(out T convertedValue);
 
-            Assert.IsFalse(result);
-            Assert.AreEqual(defaultValue, convertedValue);
+            Assert.That(result, Is.False);
+            Assert.That(convertedValue, Is.EqualTo(defaultValue));
         }
 
         [Test]
@@ -237,12 +237,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         public void TryGetConvertedValue_InvalidFormattedValue_LogsError<T>(T defaultValue)
             where T : IConvertible
         {
-            var property = new IniProperty("TestKey", "TestValue") { LineNumber = 7 }; 
+            var property = new IniProperty("TestKey", "TestValue") { LineNumber = 7 };
 
-            void Call()
-            {
-                property.TryGetConvertedValue(out T _);
-            }
+            void Call() => property.TryGetConvertedValue(out T _);
 
             string error = Log4NetTestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
             Assert.That(error, Is.EqualTo($"Property 'TestKey' cannot be converted to a {defaultValue.GetType().Name} for value: TestValue. Line: 7"));
@@ -262,7 +259,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             property.SetConvertedValue(value);
 
-            Assert.AreEqual(expectedValue, property.Value);
+            Assert.That(property.Value, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -273,7 +270,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             property.SetConvertedValue(value);
 
-            Assert.AreEqual("2023-08-14 12:00:00", property.Value);
+            Assert.That(property.Value, Is.EqualTo("2023-08-14 12:00:00"));
         }
 
         [Test]
@@ -283,7 +280,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             property.SetConvertedValue<string>(null);
 
-            Assert.IsEmpty(property.Value);
+            Assert.That(property.Value, Is.Empty);
         }
 
         [Test]
@@ -293,7 +290,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey");
 
-            Assert.Throws<ArgumentException>(() => property.IsKeyEqualTo(key));
+            Assert.That(() => property.IsKeyEqualTo(key), Throws.ArgumentException);
         }
 
         [Test]
@@ -304,9 +301,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey");
 
-            bool result = property.IsKeyEqualTo(key);
+            bool equalTo = property.IsKeyEqualTo(key);
 
-            Assert.IsTrue(result);
+            Assert.That(equalTo, Is.True);
         }
 
         [Test]
@@ -314,9 +311,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey");
 
-            bool result = property.IsKeyEqualTo("OtherKey");
+            bool equalTo = property.IsKeyEqualTo("OtherKey");
 
-            Assert.IsFalse(result);
+            Assert.That(equalTo, Is.False);
         }
 
         [Test]
@@ -325,9 +322,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var obj = new object();
             var property = new IniProperty("TestKey");
 
-            bool result = property.Equals(obj);
+            bool equals = property.Equals(obj);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -335,9 +332,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey");
 
-            bool result = property.Equals(null);
+            bool equals = property.Equals(null);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -345,9 +342,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var property = new IniProperty("TestKey");
 
-            bool result = property.Equals(property);
+            bool equals = property.Equals(property);
 
-            Assert.IsTrue(result);
+            Assert.That(equals, Is.True);
         }
 
         [Test]
@@ -356,9 +353,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var property1 = new IniProperty("TestKey", "TestValue", "TestComment") { LineNumber = 2 };
             var property2 = new IniProperty("TESTKEY", "TESTVALUE", "TESTCOMMENT") { LineNumber = 2 };
 
-            bool result = property1.Equals(property2);
+            bool equals = property1.Equals(property2);
 
-            Assert.IsTrue(result);
+            Assert.That(equals, Is.True);
         }
 
         [Test]
@@ -367,9 +364,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var property1 = new IniProperty("TestKey", null, null);
             var property2 = new IniProperty("testkey", null, null);
 
-            bool result = property1.Equals(property2);
+            bool equals = property1.Equals(property2);
 
-            Assert.IsTrue(result);
+            Assert.That(equals, Is.True);
         }
 
         [Test]
@@ -378,9 +375,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var property1 = new IniProperty("TestKey", "TestValue");
             var property2 = new IniProperty("TestKey", "OtherValue");
 
-            bool result = property1.Equals(property2);
+            bool equals = property1.Equals(property2);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -392,7 +389,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             int hashCode1 = property1.GetHashCode();
             int hashCode2 = property2.GetHashCode();
 
-            Assert.AreEqual(hashCode1, hashCode2);
+            Assert.That(hashCode2, Is.EqualTo(hashCode1));
         }
 
         [Test]
@@ -404,7 +401,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             int hashCode1 = property1.GetHashCode();
             int hashCode2 = property2.GetHashCode();
 
-            Assert.AreNotEqual(hashCode1, hashCode2);
+            Assert.That(hashCode2, Is.Not.EqualTo(hashCode1));
         }
     }
 }

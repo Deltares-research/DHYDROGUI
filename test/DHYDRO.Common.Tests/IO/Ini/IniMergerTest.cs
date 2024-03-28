@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.IO.Ini.Configuration;
 using NUnit.Framework;
@@ -20,23 +19,23 @@ namespace DHYDRO.Common.Tests.IO.Ini
             Assert.That(iniMerger.Configuration.RemoveRemovedSections, Is.True);
             Assert.That(iniMerger.Configuration.RemoveRemovedProperties, Is.True);
         }
-        
+
         [Test]
         public void Configuration_SetToNull_ThrowsArgumentNullException()
         {
             IniMerger iniMerger = CreateIniMerger();
 
-            Assert.Throws<ArgumentNullException>(() => iniMerger.Configuration = null);
+            Assert.That(() => iniMerger.Configuration = null, Throws.ArgumentNullException);
         }
-        
+
         [Test]
         public void Configuration_SetToValidConfiguration_ReturnsSameInstance()
         {
             IniMergeConfiguration configuration = CreateConfiguration();
             IniMerger iniMerger = CreateIniMerger();
-            
+
             iniMerger.Configuration = configuration;
-         
+
             Assert.That(configuration, Is.SameAs(iniMerger.Configuration));
         }
 
@@ -47,7 +46,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniMerger iniMerger = CreateIniMerger();
 
-            Assert.Throws<ArgumentNullException>(() => iniMerger.Merge(null, modified));
+            Assert.That(() => iniMerger.Merge(null, modified), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -57,7 +56,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniMerger iniMerger = CreateIniMerger();
 
-            Assert.Throws<ArgumentNullException>(() => iniMerger.Merge(original, null));
+            Assert.That(() => iniMerger.Merge(original, null), Throws.ArgumentNullException);
         }
 
         [Test]

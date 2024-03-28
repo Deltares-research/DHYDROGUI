@@ -14,14 +14,14 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.IsEmpty(iniData.Sections);
-            Assert.AreEqual(0, iniData.SectionCount);
+            Assert.That(iniData.Sections, Is.Empty);
+            Assert.That(iniData.SectionCount, Is.EqualTo(0));
         }
 
         [Test]
         public void Constructor_IniDataIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = new IniData(null));
+            Assert.That(() => _ = new IniData(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -35,12 +35,12 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             var copiedIniData = new IniData(iniData);
 
-            Assert.AreEqual(1, copiedIniData.SectionCount);
+            Assert.That(copiedIniData.SectionCount, Is.EqualTo(1));
 
             IniSection copiedIniSection = copiedIniData.Sections.FirstOrDefault();
-            Assert.NotNull(copiedIniSection);
-            Assert.AreNotSame(section, copiedIniSection);
-            Assert.AreEqual(section, copiedIniSection);
+            Assert.That(copiedIniSection, Is.Not.Null);
+            Assert.That(copiedIniSection, Is.Not.SameAs(section));
+            Assert.That(copiedIniSection, Is.EqualTo(section));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentException>(() => iniData.AddSection(name));
+            Assert.That(() => iniData.AddSection(name), Throws.ArgumentException);
         }
 
         [Test]
@@ -60,9 +60,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniSection section = iniData.AddSection("TestSection");
 
-            Assert.IsNotNull(section);
-            Assert.AreEqual("TestSection", section.Name);
-            Assert.IsTrue(iniData.Sections.Contains(section));
+            Assert.That(section, Is.Not.Null);
+            Assert.That(section.Name, Is.EqualTo("TestSection"));
+            Assert.That(iniData.Sections.Contains(section), Is.True);
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentNullException>(() => iniData.AddSection((IniSection)null));
+            Assert.That(() => iniData.AddSection((IniSection)null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -95,8 +95,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData.AddSection(section);
 
             IniSection addedSection = iniData.Sections.FirstOrDefault();
-            Assert.IsNotNull(addedSection);
-            Assert.AreEqual("TestSection", addedSection.Name);
+            Assert.That(addedSection, Is.Not.Null);
+            Assert.That(addedSection.Name, Is.EqualTo("TestSection"));
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentNullException>(() => iniData.AddMultipleSections(null));
+            Assert.That(() => iniData.AddMultipleSections(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentException>(() => iniData.ContainsSection(name));
+            Assert.That(() => iniData.ContainsSection(name), Throws.ArgumentException);
         }
 
         [Test]
@@ -172,9 +172,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var iniData = new IniData();
             iniData.AddSection("TestSection");
 
-            bool result = iniData.ContainsSection(name);
+            bool containsSection = iniData.ContainsSection(name);
 
-            Assert.IsTrue(result);
+            Assert.That(containsSection, Is.True);
         }
 
         [Test]
@@ -183,9 +183,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var iniData = new IniData();
             iniData.AddSection("TestSection");
 
-            bool result = iniData.ContainsSection("OtherSection");
+            bool containsSection = iniData.ContainsSection("OtherSection");
 
-            Assert.IsFalse(result);
+            Assert.That(containsSection, Is.False);
         }
 
         [Test]
@@ -195,7 +195,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentException>(() => iniData.FindSection(name));
+            Assert.That(() => iniData.FindSection(name), Throws.ArgumentException);
         }
 
         [Test]
@@ -209,8 +209,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniSection foundSection = iniData.FindSection(name);
 
-            Assert.NotNull(foundSection);
-            Assert.AreEqual("TestSection", foundSection.Name);
+            Assert.That(foundSection, Is.Not.Null);
+            Assert.That(foundSection.Name, Is.EqualTo("TestSection"));
         }
 
         [Test]
@@ -221,7 +221,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniSection foundSection = iniData.FindSection("NonExistingName");
 
-            Assert.Null(foundSection);
+            Assert.That(foundSection, Is.Null);
         }
 
         [Test]
@@ -231,7 +231,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentException>(() => iniData.GetAllSections(name));
+            Assert.That(() => iniData.GetAllSections(name), Throws.ArgumentException);
         }
 
         [Test]
@@ -247,8 +247,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IEnumerable<IniSection> foundSections = iniData.GetAllSections(name);
 
-            Assert.NotNull(foundSections);
-            Assert.AreEqual(2, foundSections.Count(s => s.Name == "Section1"));
+            Assert.That(foundSections, Has.Exactly(2).Matches<IniSection>(x => x.Name == "Section1"));
         }
 
         [Test]
@@ -259,8 +258,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IEnumerable<IniSection> foundSections = iniData.GetAllSections("NonExistingName");
 
-            Assert.NotNull(foundSections);
-            Assert.IsEmpty(foundSections);
+            Assert.That(foundSections, Is.Empty);
         }
 
         [Test]
@@ -268,7 +266,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentNullException>(() => iniData.RemoveSection(null));
+            Assert.That(() => iniData.RemoveSection(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -280,7 +278,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData.AddSection(section);
             iniData.RemoveSection(section);
 
-            Assert.IsEmpty(iniData.Sections);
+            Assert.That(iniData.Sections, Is.Empty);
         }
 
         [Test]
@@ -293,7 +291,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData.AddSection(section1);
             iniData.RemoveSection(section2);
 
-            Assert.IsEmpty(iniData.Sections);
+            Assert.That(iniData.Sections, Is.Empty);
         }
 
         [Test]
@@ -334,7 +332,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentException>(() => iniData.RemoveAllSections(name));
+            Assert.That(() => iniData.RemoveAllSections(name), Throws.ArgumentException);
         }
 
         [Test]
@@ -350,8 +348,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             iniData.RemoveAllSections(name);
 
-            Assert.AreEqual(1, iniData.SectionCount);
-            Assert.IsFalse(iniData.ContainsSection("Section1"));
+            bool containsSection = iniData.ContainsSection("Section1");
+
+            Assert.That(containsSection, Is.False);
+            Assert.That(iniData.SectionCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -362,7 +362,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             iniData.RemoveAllSections("NonExistingName");
 
-            Assert.AreEqual(1, iniData.SectionCount);
+            Assert.That(iniData.SectionCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -370,7 +370,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentNullException>(() => iniData.RemoveAllSections((Predicate<IniSection>)null));
+            Assert.That(() => iniData.RemoveAllSections((Predicate<IniSection>)null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -383,8 +383,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             iniData.RemoveAllSections(section => section.IsNameEqualTo("Section1"));
 
-            Assert.AreEqual(1, iniData.SectionCount);
-            Assert.IsFalse(iniData.ContainsSection("Section1"));
+            bool containsSection = iniData.ContainsSection("Section1");
+
+            Assert.That(iniData.SectionCount, Is.EqualTo(1));
+            Assert.That(containsSection, Is.False);
         }
 
         [Test]
@@ -395,7 +397,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             iniData.RemoveAllSections(property => false);
 
-            Assert.AreEqual(1, iniData.SectionCount);
+            Assert.That(iniData.SectionCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -407,7 +409,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             iniData.ClearSections();
 
-            Assert.IsEmpty(iniData.Sections);
+            Assert.That(iniData.Sections, Is.Empty);
         }
 
         [Test]
@@ -417,7 +419,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             iniData.ClearSections();
 
-            Assert.IsEmpty(iniData.Sections);
+            Assert.That(iniData.Sections, Is.Empty);
         }
 
         [Test]
@@ -429,7 +431,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            Assert.Throws<ArgumentException>(() => iniData.RenameSections(oldName, newName));
+            Assert.That(() => iniData.RenameSections(oldName, newName), Throws.ArgumentException);
         }
 
         [Test]
@@ -475,9 +477,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var obj = new object();
             var iniData = new IniData();
 
-            bool result = iniData.Equals(obj);
+            bool equals = iniData.Equals(obj);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -485,9 +487,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            bool result = iniData.Equals(null);
+            bool equals = iniData.Equals(null);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -495,9 +497,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var iniData = new IniData();
 
-            bool result = iniData.Equals(iniData);
+            bool equals = iniData.Equals(iniData);
 
-            Assert.IsTrue(result);
+            Assert.That(equals, Is.True);
         }
 
         [Test]
@@ -509,9 +511,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData1.AddSection("TestSection");
             iniData2.AddSection("TESTSECTION");
 
-            bool result = iniData1.Equals(iniData2);
+            bool equals = iniData1.Equals(iniData2);
 
-            Assert.IsTrue(result);
+            Assert.That(equals, Is.True);
         }
 
         [Test]
@@ -523,9 +525,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             iniData1.AddSection("TestSection");
             iniData2.AddSection("OtherSection");
 
-            bool result = iniData1.Equals(iniData2);
+            bool equals = iniData1.Equals(iniData2);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -537,7 +539,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             int hashCode1 = iniData1.GetHashCode();
             int hashCode2 = iniData2.GetHashCode();
 
-            Assert.AreEqual(hashCode1, hashCode2);
+            Assert.That(hashCode2, Is.EqualTo(hashCode1));
         }
     }
 }

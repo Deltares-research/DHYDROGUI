@@ -15,7 +15,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual("True", result);
+            Assert.That(result, Is.EqualTo("True"));
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual("42", result);
+            Assert.That(result, Is.EqualTo("42"));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual("3.1400001e+000", result);
+            Assert.That(result, Is.EqualTo("3.1400001e+000"));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual("2.7182818e+000", result);
+            Assert.That(result, Is.EqualTo("2.7182818e+000"));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual("2023-08-14 15:30:00", result);
+            Assert.That(result, Is.EqualTo("2023-08-14 15:30:00"));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual("Option1", result);
+            Assert.That(result, Is.EqualTo("Option1"));
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual("Hello, World!", result);
+            Assert.That(result, Is.EqualTo("Hello, World!"));
         }
 
         [Test]
@@ -85,13 +85,13 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         {
             string result = IniValueConverter.ConvertToString(value);
 
-            Assert.AreEqual(string.Empty, result);
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
         public void ConvertFromString_NullBooleanString_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<bool>(null));
+            Assert.That(() => IniValueConverter.ConvertFromString<bool>(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [TestCase("invalid")]
         public void ConvertFromString_InvalidBooleanFormattedString_ThrowsFormatException(string value)
         {
-            Assert.Throws<FormatException>(() => IniValueConverter.ConvertFromString<bool>(value));
+            Assert.That(() => IniValueConverter.ConvertFromString<bool>(value), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [Test]
         public void ConvertFromString_NullIntegerString_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<int>(null));
+            Assert.That(() => IniValueConverter.ConvertFromString<int>(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [TestCase("invalid")]
         public void ConvertFromString_InvalidIntegerFormattedString_ThrowsFormatException(string value)
         {
-            Assert.Throws<FormatException>(() => IniValueConverter.ConvertFromString<int>(value));
+            Assert.That(() => IniValueConverter.ConvertFromString<int>(value), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -151,13 +151,13 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             var result = IniValueConverter.ConvertFromString<int>(value);
 
-            Assert.AreEqual(42, result);
+            Assert.That(result, Is.EqualTo(42));
         }
 
         [Test]
         public void ConvertFromString_NullDoubleString_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<double>(null));
+            Assert.That(() => IniValueConverter.ConvertFromString<double>(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [TestCase("invalid")]
         public void ConvertFromString_InvalidDoubleFormattedString_ThrowsFormatException(string value)
         {
-            Assert.Throws<FormatException>(() => IniValueConverter.ConvertFromString<double>(value));
+            Assert.That(() => IniValueConverter.ConvertFromString<double>(value), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -175,13 +175,13 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             var result = IniValueConverter.ConvertFromString<double>(value);
 
-            Assert.AreEqual(3.34343d, result);
+            Assert.That(result, Is.EqualTo(3.34343d));
         }
 
         [Test]
         public void ConvertFromString_NullFloatString_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<float>(null));
+            Assert.That(() => IniValueConverter.ConvertFromString<float>(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -189,7 +189,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [TestCase("invalid")]
         public void ConvertFromString_InvalidFloatFormattedString_ThrowsFormatException(string value)
         {
-            Assert.Throws<FormatException>(() => IniValueConverter.ConvertFromString<float>(value));
+            Assert.That(() => IniValueConverter.ConvertFromString<float>(value), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -199,13 +199,13 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             var result = IniValueConverter.ConvertFromString<float>(value);
 
-            Assert.AreEqual(3.14f, result);
+            Assert.That(result, Is.EqualTo(3.14f));
         }
 
         [Test]
         public void ConvertFromString_NullDateTimeString_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<DateTime>(null));
+            Assert.That(() => IniValueConverter.ConvertFromString<DateTime>(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [TestCase("invalid")]
         public void ConvertFromString_InvalidDateTimeFormattedString_ThrowsFormatException(string value)
         {
-            Assert.Throws<FormatException>(() => IniValueConverter.ConvertFromString<DateTime>(value));
+            Assert.That(() => IniValueConverter.ConvertFromString<DateTime>(value), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -223,13 +223,13 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
 
             var result = IniValueConverter.ConvertFromString<DateTime>(value);
 
-            Assert.AreEqual(new DateTime(2023, 8, 14, 12, 0, 0), result);
+            Assert.That(result, Is.EqualTo(new DateTime(2023, 8, 14, 12, 0, 0)));
         }
 
         [Test]
         public void ConvertFromString_NullEnumString_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<DescriptionEnum>(null));
+            Assert.That(() => IniValueConverter.ConvertFromString<DescriptionEnum>(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -243,7 +243,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [TestCase("FirstOptionDescription")]
         public void ConvertFromString_InvalidEnumFormattedString_ThrowsFormatException(string value)
         {
-            Assert.Throws<FormatException>(() => IniValueConverter.ConvertFromString<DescriptionEnum>(value));
+            Assert.That(() => IniValueConverter.ConvertFromString<DescriptionEnum>(value), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -254,7 +254,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         {
             return IniValueConverter.ConvertFromString<DescriptionEnum>(value);
         }
-        
+
         [Test]
         [TestCase("0", ExpectedResult = DescriptionEnum.Option1)]
         [TestCase("option2", ExpectedResult = DescriptionEnum.Option2)]
@@ -276,7 +276,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         [Test]
         public void ConvertFromString_NullStringValue_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => IniValueConverter.ConvertFromString<string>(null));
+            Assert.That(() => IniValueConverter.ConvertFromString<string>(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -286,7 +286,7 @@ namespace DHYDRO.Common.Tests.IO.Ini.Converters
         {
             var result = IniValueConverter.ConvertFromString<string>(value);
 
-            Assert.AreEqual(value, result);
+            Assert.That(result, Is.EqualTo(value));
         }
 
         public enum DescriptionEnum

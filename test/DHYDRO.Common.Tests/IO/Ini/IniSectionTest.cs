@@ -14,7 +14,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         [TestCase(null)]
         public void Constructor_NameIsNullOrEmpty_ThrowsArgumentException(string name)
         {
-            Assert.Throws<ArgumentException>(() => _ = new IniSection(name));
+            Assert.That(() => _ = new IniSection(name), Throws.ArgumentException);
         }
 
         [Test]
@@ -22,12 +22,12 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.AreEqual("TestSection", section.Name);
-            Assert.IsEmpty(section.Properties);
-            Assert.IsEmpty(section.Comments);
-            Assert.AreEqual(0, section.LineNumber);
-            Assert.AreEqual(0, section.PropertyCount);
-            Assert.AreEqual(0, section.CommentCount);
+            Assert.That(section.Name, Is.EqualTo("TestSection"));
+            Assert.That(section.Properties, Is.Empty);
+            Assert.That(section.Comments, Is.Empty);
+            Assert.That(section.LineNumber, Is.EqualTo(0));
+            Assert.That(section.PropertyCount, Is.EqualTo(0));
+            Assert.That(section.CommentCount, Is.EqualTo(0));
         }
 
         [Test]
@@ -37,13 +37,13 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => _ = new IniSection(name, section));
+            Assert.That(() => _ = new IniSection(name, section), Throws.ArgumentException);
         }
 
         [Test]
         public void Constructor_SectionIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = new IniSection("TestSection", null));
+            Assert.That(() => _ = new IniSection("TestSection", null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -61,12 +61,12 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniProperty copiedProperty = copiedSection.Properties.FirstOrDefault();
             string copiedComment = copiedSection.Comments.FirstOrDefault();
 
-            Assert.AreEqual("OtherSection", copiedSection.Name);
-            Assert.AreEqual(2, copiedSection.LineNumber);
-            Assert.NotNull(copiedProperty);
-            Assert.AreNotSame(property, copiedProperty);
-            Assert.AreEqual(property, copiedProperty);
-            Assert.AreEqual(comment, copiedComment);
+            Assert.That(copiedSection.Name, Is.EqualTo("OtherSection"));
+            Assert.That(copiedSection.LineNumber, Is.EqualTo(2));
+            Assert.That(copiedProperty, Is.Not.Null);
+            Assert.That(copiedProperty, Is.Not.SameAs(property));
+            Assert.That(copiedProperty, Is.EqualTo(property));
+            Assert.That(copiedComment, Is.EqualTo(comment));
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.AddProperty(key, "Value"));
+            Assert.That(() => section.AddProperty(key, "Value"), Throws.ArgumentException);
         }
 
         [Test]
@@ -91,9 +91,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddProperty("TestKey", value);
 
             IniProperty addedProperty = section.Properties.FirstOrDefault();
-            Assert.IsNotNull(addedProperty);
-            Assert.AreEqual("TestKey", addedProperty.Key);
-            Assert.AreEqual(expectedValue, addedProperty.Value);
+            Assert.That(addedProperty, Is.Not.Null);
+            Assert.That(addedProperty.Key, Is.EqualTo("TestKey"));
+            Assert.That(addedProperty.Value, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -117,9 +117,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddProperty<string>("TestKey", null);
 
             IniProperty addedProperty = section.Properties.FirstOrDefault();
-            Assert.IsNotNull(addedProperty);
-            Assert.AreEqual("TestKey", addedProperty.Key);
-            Assert.IsEmpty(addedProperty.Value);
+            Assert.That(addedProperty, Is.Not.Null);
+            Assert.That(addedProperty.Key, Is.EqualTo("TestKey"));
+            Assert.That(addedProperty.Value, Is.Empty);
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentNullException>(() => section.AddProperty(null));
+            Assert.That(() => section.AddProperty(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -139,9 +139,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddProperty(property);
 
             IniProperty addedProperty = section.Properties.FirstOrDefault();
-            Assert.IsNotNull(addedProperty);
-            Assert.AreEqual("TestKey", addedProperty.Key);
-            Assert.AreEqual("TestValue", addedProperty.Value);
+            Assert.That(addedProperty, Is.Not.Null);
+            Assert.That(addedProperty.Key, Is.EqualTo("TestKey"));
+            Assert.That(addedProperty.Value, Is.EqualTo("TestValue"));
         }
 
         [Test]
@@ -181,7 +181,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentNullException>(() => section.AddMultipleProperties(null));
+            Assert.That(() => section.AddMultipleProperties(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -206,7 +206,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.AddOrUpdateProperty(key, "TestValue"));
+            Assert.That(() => section.AddOrUpdateProperty(key, "TestValue"), Throws.ArgumentException);
         }
 
         [Test]
@@ -221,9 +221,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniProperty updatedProperty = section.AddOrUpdateProperty(key, "UpdatedValue");
 
-            Assert.IsNotNull(updatedProperty);
-            Assert.AreEqual("TestKey", updatedProperty.Key);
-            Assert.AreEqual("UpdatedValue", updatedProperty.Value);
+            Assert.That(updatedProperty, Is.Not.Null);
+            Assert.That(updatedProperty.Key, Is.EqualTo("TestKey"));
+            Assert.That(updatedProperty.Value, Is.EqualTo("UpdatedValue"));
         }
 
         [Test]
@@ -233,9 +233,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniProperty addedProperty = section.AddOrUpdateProperty("TestKey", "TestValue");
 
-            Assert.IsNotNull(addedProperty);
-            Assert.AreEqual("TestKey", addedProperty.Key);
-            Assert.AreEqual("TestValue", addedProperty.Value);
+            Assert.That(addedProperty, Is.Not.Null);
+            Assert.That(addedProperty.Key, Is.EqualTo("TestKey"));
+            Assert.That(addedProperty.Value, Is.EqualTo("TestValue"));
         }
 
         [Test]
@@ -246,9 +246,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniProperty addedProperty = section.AddOrUpdateProperty<string>("TestKey", null);
 
-            Assert.IsNotNull(addedProperty);
-            Assert.IsEmpty(addedProperty.Value);
-            Assert.AreEqual("TestKey", addedProperty.Key);
+            Assert.That(addedProperty, Is.Not.Null);
+            Assert.That(addedProperty.Key, Is.EqualTo("TestKey"));
+            Assert.That(addedProperty.Value, Is.Empty);
         }
 
         [Test]
@@ -258,7 +258,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.ContainsProperty(key));
+            Assert.That(() => section.ContainsProperty(key), Throws.ArgumentException);
         }
 
         [Test]
@@ -270,9 +270,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var section = new IniSection("SectionName");
             section.AddProperty("TestKey", "TestValue");
 
-            bool result = section.ContainsProperty(key);
+            bool containsProperty = section.ContainsProperty(key);
 
-            Assert.IsTrue(result);
+            Assert.That(containsProperty, Is.True);
         }
 
         [Test]
@@ -281,9 +281,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var section = new IniSection("SectionName");
             section.AddProperty("TestKey", "TestValue");
 
-            bool result = section.ContainsProperty("OtherKey");
+            bool containsProperty = section.ContainsProperty("OtherKey");
 
-            Assert.IsFalse(result);
+            Assert.That(containsProperty, Is.False);
         }
 
         [Test]
@@ -293,7 +293,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.FindProperty(key));
+            Assert.That(() => section.FindProperty(key), Throws.ArgumentException);
         }
 
         [Test]
@@ -307,8 +307,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniProperty foundProperty = section.FindProperty(key);
 
-            Assert.NotNull(foundProperty);
-            Assert.AreEqual("TestKey", foundProperty.Key);
+            Assert.That(foundProperty, Is.Not.Null);
+            Assert.That(foundProperty.Key, Is.EqualTo("TestKey"));
         }
 
         [Test]
@@ -319,7 +319,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IniProperty foundProperty = section.FindProperty("NonExistingKey");
 
-            Assert.Null(foundProperty);
+            Assert.That(foundProperty, Is.Null);
         }
 
         [Test]
@@ -329,7 +329,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.GetAllProperties(key));
+            Assert.That(() => section.GetAllProperties(key), Throws.ArgumentException);
         }
 
         [Test]
@@ -345,8 +345,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IEnumerable<IniProperty> foundProperties = section.GetAllProperties(key);
 
-            Assert.NotNull(foundProperties);
-            Assert.AreEqual(2, foundProperties.Count(s => s.Key == "Key1"));
+            Assert.That(foundProperties, Has.Exactly(2).Matches<IniProperty>(x => x.Key == "Key1"));
         }
 
         [Test]
@@ -357,8 +356,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             IEnumerable<IniProperty> foundProperties = section.GetAllProperties("NonExistingKey");
 
-            Assert.NotNull(foundProperties);
-            Assert.IsEmpty(foundProperties);
+            Assert.That(foundProperties, Is.Empty);
         }
 
         [Test]
@@ -368,7 +366,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.GetPropertyValue(key));
+            Assert.That(() => section.GetPropertyValue(key), Throws.ArgumentException);
         }
 
         [Test]
@@ -382,7 +380,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             string value = section.GetPropertyValue(key);
 
-            Assert.AreEqual("TestValue", value);
+            Assert.That(value, Is.EqualTo("TestValue"));
         }
 
         [Test]
@@ -393,7 +391,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             string value = section.GetPropertyValue("NonExistentKey", "DefaultValue");
 
-            Assert.AreEqual("DefaultValue", value);
+            Assert.That(value, Is.EqualTo("DefaultValue"));
         }
 
         [Test]
@@ -403,7 +401,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.GetPropertyValue<string>(key));
+            Assert.That(() => section.GetPropertyValue<string>(key), Throws.ArgumentException);
         }
 
         [Test]
@@ -417,7 +415,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             var value = section.GetPropertyValue<string>(key);
 
-            Assert.AreEqual("TestValue", value);
+            Assert.That(value, Is.EqualTo("TestValue"));
         }
 
         [Test]
@@ -428,7 +426,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             var value = section.GetPropertyValue<string>("NonExistentKey", "DefaultValue");
 
-            Assert.AreEqual("DefaultValue", value);
+            Assert.That(value, Is.EqualTo("DefaultValue"));
         }
 
         [Test]
@@ -445,7 +443,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             var convertedValue = section.GetPropertyValue<T>("TestKey");
 
-            Assert.AreEqual(expectedValue, convertedValue);
+            Assert.That(convertedValue, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -461,7 +459,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             T convertedValue = section.GetPropertyValue("TestKey", defaultValue);
 
-            Assert.AreEqual(defaultValue, convertedValue);
+            Assert.That(convertedValue, Is.EqualTo(defaultValue));
         }
 
         [Test]
@@ -477,7 +475,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             T convertedValue = section.GetPropertyValue("TestKey", defaultValue);
 
-            Assert.AreEqual(defaultValue, convertedValue);
+            Assert.That(convertedValue, Is.EqualTo(defaultValue));
         }
 
         [Test]
@@ -485,7 +483,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentNullException>(() => section.RemoveProperty(null));
+            Assert.That(() => section.RemoveProperty(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -497,7 +495,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddProperty(property);
             section.RemoveProperty(property);
 
-            Assert.IsEmpty(section.Properties);
+            Assert.That(section.Properties, Is.Empty);
         }
 
         [Test]
@@ -510,7 +508,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddProperty(property1);
             section.RemoveProperty(property2);
 
-            Assert.IsEmpty(section.Properties);
+            Assert.That(section.Properties, Is.Empty);
         }
 
         [Test]
@@ -551,7 +549,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.RemoveAllProperties(key));
+            Assert.That(() => section.RemoveAllProperties(key), Throws.ArgumentException);
         }
 
         [Test]
@@ -567,8 +565,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.RemoveAllProperties(key);
 
-            Assert.AreEqual(1, section.PropertyCount);
-            Assert.IsFalse(section.ContainsProperty("Key1"));
+            bool containsProperty = section.ContainsProperty("Key1");
+
+            Assert.That(containsProperty, Is.False);
+            Assert.That(section.PropertyCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -579,7 +579,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.RemoveAllProperties("NonExistingKey");
 
-            Assert.AreEqual(1, section.PropertyCount);
+            Assert.That(section.PropertyCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -587,7 +587,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentNullException>(() => section.RemoveAllProperties((Predicate<IniProperty>)null));
+            Assert.That(() => section.RemoveAllProperties((Predicate<IniProperty>)null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -600,8 +600,10 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.RemoveAllProperties(property => property.Value == "Value1");
 
-            Assert.AreEqual(1, section.PropertyCount);
-            Assert.IsFalse(section.ContainsProperty("Key1"));
+            bool containsProperty = section.ContainsProperty("Key1");
+
+            Assert.That(containsProperty, Is.False);
+            Assert.That(section.PropertyCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -612,7 +614,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.RemoveAllProperties(property => false);
 
-            Assert.AreEqual(1, section.PropertyCount);
+            Assert.That(section.PropertyCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -624,7 +626,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.ClearProperties();
 
-            Assert.IsEmpty(section.Properties);
+            Assert.That(section.Properties, Is.Empty);
         }
 
         [Test]
@@ -634,7 +636,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.ClearProperties();
 
-            Assert.IsEmpty(section.Properties);
+            Assert.That(section.Properties, Is.Empty);
         }
 
         [Test]
@@ -646,7 +648,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.RenameProperties(oldKey, newKey));
+            Assert.That(() => section.RenameProperties(oldKey, newKey), Throws.ArgumentException);
         }
 
         [Test]
@@ -690,7 +692,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentNullException>(() => section.AddComment(null));
+            Assert.That(() => section.AddComment(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -703,8 +705,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.AddComment(comment);
 
-            Assert.AreEqual(1, section.CommentCount);
-            Assert.AreEqual(comment, section.Comments.First());
+            Assert.That(section.CommentCount, Is.EqualTo(1));
+            Assert.That(section.Comments, Has.Exactly(1).EqualTo(comment));
         }
 
         [Test]
@@ -712,7 +714,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentNullException>(() => section.AddMultipleComments(null));
+            Assert.That(() => section.AddMultipleComments(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -732,7 +734,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.RemoveComment(null));
+            Assert.That(() => section.RemoveComment(null), Throws.ArgumentException);
         }
 
         [Test]
@@ -744,7 +746,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddComment(comment);
             section.RemoveComment(comment);
 
-            Assert.IsEmpty(section.Comments);
+            Assert.That(section.Comments, Is.Empty);
         }
 
         [Test]
@@ -755,8 +757,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section.AddComment("TestComment");
             section.RemoveComment("OtherComment");
 
-            Assert.AreEqual(1, section.CommentCount);
-            Assert.AreEqual("TestComment", section.Comments.First());
+            Assert.That(section.CommentCount, Is.EqualTo(1));
+            Assert.That(section.Comments, Has.Exactly(1).EqualTo("TestComment"));
         }
 
         [Test]
@@ -768,7 +770,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.ClearComments();
 
-            Assert.IsEmpty(section.Comments);
+            Assert.That(section.Comments, Is.Empty);
         }
 
         [Test]
@@ -778,7 +780,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             section.ClearComments();
 
-            Assert.IsEmpty(section.Comments);
+            Assert.That(section.Comments, Is.Empty);
         }
 
         [Test]
@@ -788,7 +790,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            Assert.Throws<ArgumentException>(() => section.IsNameEqualTo(name));
+            Assert.That(() => section.IsNameEqualTo(name), Throws.ArgumentException);
         }
 
         [Test]
@@ -799,9 +801,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            bool result = section.IsNameEqualTo(name);
+            bool equalTo = section.IsNameEqualTo(name);
 
-            Assert.IsTrue(result);
+            Assert.That(equalTo, Is.True);
         }
 
         [Test]
@@ -809,9 +811,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            bool result = section.IsNameEqualTo("OtherSection");
+            bool equalTo = section.IsNameEqualTo("OtherSection");
 
-            Assert.IsFalse(result);
+            Assert.That(equalTo, Is.False);
         }
 
         [Test]
@@ -820,9 +822,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var obj = new object();
             var section = new IniSection("TestSection");
 
-            bool result = section.Equals(obj);
+            bool equals = section.Equals(obj);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -830,9 +832,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            bool result = section.Equals(null);
+            bool equals = section.Equals(null);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -840,9 +842,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             var section = new IniSection("TestSection");
 
-            bool result = section.Equals(section);
+            bool equals = section.Equals(section);
 
-            Assert.IsTrue(result);
+            Assert.That(equals, Is.True);
         }
 
         [Test]
@@ -857,9 +859,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section1.AddComment("TestComment");
             section2.AddComment("TESTCOMMENT");
 
-            bool result = section1.Equals(section2);
+            bool equals = section1.Equals(section2);
 
-            Assert.IsTrue(result);
+            Assert.That(equals, Is.True);
         }
 
         [Test]
@@ -868,9 +870,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var section1 = new IniSection("TestSection");
             var section2 = new IniSection("OtherSection");
 
-            bool result = section1.Equals(section2);
+            bool equals = section1.Equals(section2);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -882,9 +884,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section1.AddProperty("TestKey", "TestValue");
             section2.AddProperty("TestKey", "OtherValue");
 
-            bool result = section1.Equals(section2);
+            bool equals = section1.Equals(section2);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -896,9 +898,9 @@ namespace DHYDRO.Common.Tests.IO.Ini
             section1.AddComment("TestComment");
             section1.AddComment("OtherComment");
 
-            bool result = section1.Equals(section2);
+            bool equals = section1.Equals(section2);
 
-            Assert.IsFalse(result);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -910,7 +912,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             int hashCode1 = section1.GetHashCode();
             int hashCode2 = section2.GetHashCode();
 
-            Assert.AreEqual(hashCode1, hashCode2);
+            Assert.That(hashCode2, Is.EqualTo(hashCode1));
         }
 
         [Test]
@@ -922,7 +924,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             int hashCode1 = section1.GetHashCode();
             int hashCode2 = section2.GetHashCode();
 
-            Assert.AreNotEqual(hashCode1, hashCode2);
+            Assert.That(hashCode2, Is.Not.EqualTo(hashCode1));
         }
     }
 }

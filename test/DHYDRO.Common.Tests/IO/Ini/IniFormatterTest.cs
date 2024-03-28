@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.IO.Ini.Configuration;
@@ -24,7 +23,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniFormatter iniFormatter = CreateFormatter();
 
-            Assert.Throws<ArgumentNullException>(() => iniFormatter.Configuration = null);
+            Assert.That(() => iniFormatter.Configuration = null, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -43,7 +42,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniFormatter iniFormatter = CreateFormatter();
 
-            Assert.Throws<ArgumentNullException>(() => iniFormatter.Scheme = null);
+            Assert.That(() => iniFormatter.Scheme = null, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -62,7 +61,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniFormatter iniFormatter = CreateFormatter();
 
-            Assert.Throws<ArgumentNullException>(() => iniFormatter.Format(null));
+            Assert.That(() => iniFormatter.Format(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -71,7 +70,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             Stream stream = Stream.Null;
             IniFormatter iniFormatter = CreateFormatter();
 
-            Assert.Throws<ArgumentNullException>(() => iniFormatter.Format(null, stream));
+            Assert.That(() => iniFormatter.Format(null, stream), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -80,7 +79,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData iniData = IniDataFixture.CreateEmptyIniData();
             IniFormatter iniFormatter = CreateFormatter();
 
-            Assert.Throws<ArgumentNullException>(() => iniFormatter.Format(iniData, (Stream)null));
+            Assert.That(() => iniFormatter.Format(iniData, (Stream)null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -89,7 +88,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             TextWriter writer = TextWriter.Null;
             IniFormatter iniFormatter = CreateFormatter();
 
-            Assert.Throws<ArgumentNullException>(() => iniFormatter.Format(null, writer));
+            Assert.That(() => iniFormatter.Format(null, writer), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -98,7 +97,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
             IniData iniData = IniDataFixture.CreateEmptyIniData();
             IniFormatter iniFormatter = CreateFormatter();
 
-            Assert.Throws<ArgumentNullException>(() => iniFormatter.Format(iniData, (TextWriter)null));
+            Assert.That(() => iniFormatter.Format(iniData, (TextWriter)null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -369,7 +368,7 @@ property3             = value3              # comment
             IniData iniData = IniDataFixture.CreateIniDataFromProperty(key, value, string.Empty);
 
             IniFormatter iniFormatter = CreateFormatter();
-            
+
             using (var stream = new MemoryStream())
             using (var streamReader = new StreamReader(stream))
             {

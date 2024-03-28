@@ -26,7 +26,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<ArgumentNullException>(() => iniParser.Configuration = null);
+            Assert.That(() => iniParser.Configuration = null, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<ArgumentNullException>(() => iniParser.Scheme = null);
+            Assert.That(() => iniParser.Scheme = null, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<ArgumentNullException>(() => iniParser.Parse((string)null));
+            Assert.That(() => iniParser.Parse((string)null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<ArgumentNullException>(() => iniParser.Parse((Stream)null));
+            Assert.That(() => iniParser.Parse((Stream)null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<ArgumentNullException>(() => iniParser.Parse((TextReader)null));
+            Assert.That(() => iniParser.Parse((TextReader)null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
+            Assert.That(() => iniParser.Parse(ini), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
         {
             IniParser iniParser = CreateParser();
 
-            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
+            Assert.That(() => iniParser.Parse(ini), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 [section]
 [section]";
 
-            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
+            Assert.That(() => iniParser.Parse(ini), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -293,7 +293,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 
             const string ini = "property = value";
 
-            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
+            Assert.That(() => iniParser.Parse(ini), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -356,7 +356,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 [section]
 {propertyLine}";
 
-            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
+            Assert.That(() => iniParser.Parse(ini), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -392,7 +392,7 @@ namespace DHYDRO.Common.Tests.IO.Ini
 property=value1
 property=value2";
 
-            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
+            Assert.That(() => iniParser.Parse(ini), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -612,7 +612,7 @@ value1 \
 value2 \
 value3";
 
-            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
+            Assert.That(() => iniParser.Parse(ini), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -628,7 +628,7 @@ property=value1 \
 value2 \
 value3";
 
-            Assert.Throws<FormatException>(() => iniParser.Parse(ini));
+            Assert.That(() => iniParser.Parse(ini), Throws.TypeOf<FormatException>());
         }
 
         [Test]
