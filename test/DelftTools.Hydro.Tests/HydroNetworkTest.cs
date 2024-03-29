@@ -7,9 +7,7 @@ using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Geometries;
-using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -21,19 +19,6 @@ namespace DelftTools.Hydro.Tests
     [TestFixture]
     public class HydroNetworkTest
     {
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
-        {
-            LogHelper.ConfigureLogging();
-            LogHelper.SetLoggingLevel(Level.Info);
-        }
-
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            LogHelper.ResetLogging();
-        }
-
         [Test]
         public void DeletingDefaultCsSharedDefinitionClearsDefault()
         {

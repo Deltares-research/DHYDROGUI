@@ -15,7 +15,6 @@ using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
-using log4net;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpTestsEx;
@@ -29,14 +28,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
     [Category(TestCategory.DataAccess)]
     public class SobekNetworkImporterTest
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekNetworkImporterTest));
-
-        [SetUp]
-        public void SetUp()
-        {
-            LogHelper.ResetLogging(); // NOTE: set it back before commit! Otherwise HUGE log files are generated
-        }
-
         [Test]
         public void ReadTabulatedCrossSectionDefinition()
         {
@@ -446,7 +437,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             }
 
             Console.WriteLine("Total time required for reading network: {0}", dt);
-            log.DebugFormat("Total time required for reading network: {0}", dt);
 
             Assert.Less(dt.TotalSeconds, 35, "time to read all (sec)");
 
@@ -854,8 +844,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 IList<double> values = flowFMModel.OutputWaterLevel.GetValues<double>(
                     new VariableValueFilter<DateTime>(flowFMModel.OutputWaterLevel.Arguments[0], flowFMModel.CurrentTime)
                 );
-
-                log.Debug(new List<double>(values).ToArray());
 
                 if (flowFMModel.Status == ActivityStatus.Failed)
                 {

@@ -26,7 +26,6 @@ using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
-using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -49,8 +48,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            LogHelper.SetLoggingLevel(Level.Off);
-
             // register data types to be serialized
             factory = new NHibernateProjectRepositoryFactory();
             factory.AddPlugin(new NetCdfApplicationPlugin());

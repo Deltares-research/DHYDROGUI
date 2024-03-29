@@ -15,11 +15,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     [TestFixture]
     public class InitalFlowConditionsReaderTest
     {
-        [SetUp]
-        public void SetUp()
-        {
-            LogHelper.ConfigureLogging();
-        }
 
         [Test]
         public void IdentificationInfo()

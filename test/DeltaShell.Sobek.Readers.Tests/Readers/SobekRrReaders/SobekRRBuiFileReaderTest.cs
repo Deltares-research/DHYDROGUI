@@ -5,7 +5,6 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 using NUnit.Framework;
 
 namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
@@ -14,20 +13,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
     [Category(TestCategory.DataAccess)]
     public class SobekRRBuiFileReaderTest
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRBuiFileReaderTest));
-
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
-        {
-            LogHelper.ConfigureLogging();
-        }
-
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            LogHelper.ResetLogging();
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadBuiFile()
@@ -53,7 +38,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             var measurements = reader.ReadMeasurementData(buiFilePath).ToList();
 
             var dt = DateTime.Now.Subtract(t).TotalMilliseconds;
-            log.DebugFormat("{0} ms", dt);
 
             Assert.AreEqual(70176, measurements.Count);
             Assert.AreEqual(1955, measurements.First().TimeOfMeasurement.Year);

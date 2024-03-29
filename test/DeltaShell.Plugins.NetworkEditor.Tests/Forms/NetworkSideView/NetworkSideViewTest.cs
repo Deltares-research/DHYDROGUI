@@ -19,7 +19,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {
@@ -601,8 +600,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         [Category(TestCategory.WorkInProgress)]  // "Filter not set in networkSideViewCoverageManager.OnCoverageAddedToProject"
         public void ShowSideViewWithExtraTimeDependentCoverage()
         {
-
-            LogHelper.ConfigureLogging();
             var random = new Random();
             var value = 0.0;
             var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();

@@ -262,7 +262,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         public void Create()
         {
             SetUp();
-            //LogHelper.ConfigureLogging();
 
             InitializeTestForm();
             InitializeFunctionEditorTestForm();

@@ -14,7 +14,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui.Forms.ViewManager;
 using DeltaShell.IntegrationTestUtils;
@@ -43,7 +42,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             var dockingManager = mocks.Stub<IDockingManager>();
             mocks.ReplayAll();
 
-            LogHelper.ConfigureLogging();
             var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var compositeBranchStructure = new CompositeBranchStructure();
             var pump = new Pump("pump1") {OffsetY = 1000,StopDelivery = 18,StartDelivery = 12,StopSuction = 12,StartSuction = 15};
@@ -156,7 +154,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         [Category(TestCategory.WindowsForms)]
         public void ShowSimpleWeir()
         {
-            LogHelper.ConfigureLogging();
             var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var weir = new Weir("simpleWeir")
                            {
@@ -171,7 +168,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         [Category(TestCategory.WindowsForms)]
         public void ShowGatedWeir()
         {
-            LogHelper.ConfigureLogging();
             var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var weir = new Weir("gatedWeir")
                            {
@@ -227,7 +223,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             var dockingManager = mocks.Stub<IDockingManager>();
             mocks.ReplayAll();
 
-            LogHelper.ConfigureLogging();
             var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var fisrtCrossection = network.CrossSections.First();
             network.Branches[0].BranchFeatures.Remove(fisrtCrossection);
@@ -266,7 +261,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             var dockingManager = mocks.Stub<IDockingManager>();
             mocks.ReplayAll();
 
-            LogHelper.ConfigureLogging();
             var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var compositeBranchStructure = new CompositeBranchStructure();
             var pump = new Pump("pump1") { OffsetY = 1000, StopDelivery = 18, StartDelivery = 12, StopSuction = 12, StartSuction = 15 };
@@ -361,7 +355,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         [Category(TestCategory.WindowsForms)]
         public void AddWeirWhileShowingComposite()
         {
-            LogHelper.ConfigureLogging();
             var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var weir = new Weir("gatedWeir")
             {

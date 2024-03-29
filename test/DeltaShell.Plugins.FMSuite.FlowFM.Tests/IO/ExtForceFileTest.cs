@@ -297,7 +297,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadCorrectSpatialVaryingPropertiesShouldBeOk()
         {
-            //LogHelper.ConfigureLogging(|Level);
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
             var extForceFile = new ExtForceFile();

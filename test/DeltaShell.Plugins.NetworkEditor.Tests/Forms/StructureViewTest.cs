@@ -26,18 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
         {
             return CompositeStructureViewDataBuilder.GetCompositeStructureViewDataForStructure(structure);
         }
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
-        {
-            LogHelper.ConfigureLogging();
-        }
-
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            LogHelper.ResetLogging();
-        }
-
 
         private static HydroNetwork HydroNetwork;
         private static IChannel Branch1;

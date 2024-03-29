@@ -15,7 +15,6 @@ using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters;
-using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
@@ -357,7 +356,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void MutatingSharedDefinitionsUpdatesTreeView()
         {
-            LogHelper.ConfigureLogging(Level.Debug);
             var pluginGui = mocks.Stub<GuiPlugin>();
             var gui = mocks.Stub<IGui>();
 

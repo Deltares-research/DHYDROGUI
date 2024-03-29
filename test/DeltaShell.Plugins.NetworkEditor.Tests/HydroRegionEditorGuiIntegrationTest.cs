@@ -89,7 +89,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [TearDown]
         public void TearDown()
         {
-            LogHelper.ResetLogging();
             gui.Dispose();
             onMainWindowShown = null;
             project = null;

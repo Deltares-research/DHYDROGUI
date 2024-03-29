@@ -13,7 +13,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
-using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -25,7 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Integration),Category(TestCategory.WorkInProgress)]
         public void RunFlowFMRtc()
         {
-            LogHelper.ConfigureLogging(Level.Debug);
             var projectPath = TestHelper.GetTestFilePath(@"RtcFM\RtcFM.dsproj");
             projectPath = TestHelper.CreateLocalCopy(projectPath);
             

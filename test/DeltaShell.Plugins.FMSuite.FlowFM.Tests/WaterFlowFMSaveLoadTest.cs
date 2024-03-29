@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -685,7 +686,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.CloseProject();
 
                 // reopen
-                TestHelper.AssertLogMessageIsNotGenerated(()=>app.OpenProject(path), "Network has changed, clearing results.");
+                IEnumerable<string> logMessages = TestHelper.GetAllRenderedMessages(() => _ = app.OpenProject(path));
+                Assert.That(logMessages, Does.Not.Contain("Network has changed, clearing results."));
             }
         }
 

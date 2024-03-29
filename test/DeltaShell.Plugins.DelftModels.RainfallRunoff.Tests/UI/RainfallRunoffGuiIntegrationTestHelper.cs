@@ -15,7 +15,6 @@ using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
-using log4net.Core;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
 {
@@ -42,8 +41,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
 
         public static void RunModel(IActivity model)
         {
-            LogHelper.ConfigureLogging(Level.Error);
-
             ActivityRunner.RunActivity(model);
 
             if (model.Status == ActivityStatus.Failed)

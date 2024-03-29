@@ -18,7 +18,6 @@ using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.Scripting;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.Toolbox;
-using log4net.Core;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -32,7 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [OneTimeSetUp]
         public void TestFixture()
         {
-            LogHelper.ConfigureLogging(Level.Error);
             var standardLibPath = @"plugins\DeltaShell.Plugins.Scripting\Lib";
             var sitePackagesPath = Path.Combine(standardLibPath, "site-packages");
             var toolBoxLibPath = @"plugins\DeltaShell.Plugins.Toolbox\Scripts\";
@@ -48,7 +46,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void TestFixtureTearDown()
         {
             ScriptHost.AdditionalSearchPaths.Clear();
-            LogHelper.ResetLogging();
         }
 
         private static void SetupPluginsForGui(IGui gui)

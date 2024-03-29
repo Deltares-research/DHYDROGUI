@@ -33,11 +33,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         // [Category(TestCategory.Performance)]
         // public void RunImportedModelShouldBeFast_039b()
         // {
-        //     LogHelper.ResetLogging();
         //     Dimr.DimrApiDataSet.LogFileLevel = Level.Fatal;
         //     Dimr.DimrApiDataSet.FeedbackLevel = Level.Fatal;
-        //
-        //     // LogHelper.ConfigureLogging(Level.Info);
         //
         //     var path = TestHelper.GetTestDataDirectory() + @"\039b_000.lit\1\network.tp";
         //
@@ -58,8 +55,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         //     };
         //
         //     TestHelper.AssertIsFasterThan(250000, initializeAndRunModel);
-        //
-        //     LogHelper.ResetLogging();
         // }
         //
         // [Test]

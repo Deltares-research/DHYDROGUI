@@ -18,7 +18,6 @@ using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
-using log4net.Core;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -38,8 +37,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            LogHelper.SetLoggingLevel(Level.Off);
-
             factory = new NHibernateProjectRepositoryFactory();
             factory.AddPlugin(new RainfallRunoffApplicationPlugin());
             factory.AddPlugin(new NetworkEditorApplicationPlugin());

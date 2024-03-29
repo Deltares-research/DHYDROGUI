@@ -18,19 +18,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
         private static bool CGWUseFixedLength = false;
         private static double CGWFixedLength = 100;
 
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
-        {
-            LogHelper.ConfigureLogging();
-        }
-
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            LogHelper.ResetLogging();
-        }
-
-
         ///<summary>
         ///Show cross section view with some default data
         ///</summary>
