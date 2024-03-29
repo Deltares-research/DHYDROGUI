@@ -604,9 +604,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // When
                 IList<IStructureObject> structures = null;
 
-                IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
-                    () => structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
-                                                                                               copyOfIniInTempFilePath));
+                void ReadStructures() => structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath, copyOfIniInTempFilePath);
+                IReadOnlyList<string> messages = TestHelper.GetAllRenderedMessages(ReadStructures).ToArray();
+                
                 // Then
                 Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
                 CheckMessages(messages, copyOfIniInTempFilePath);
@@ -630,8 +630,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // When
                 IList<IStructureObject> structures = null;
 
-                IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
-                    () => structures = structureFile.Read(copyOfIniInTempFilePath));
+                void ReadStructures() => structures = structureFile.Read(copyOfIniInTempFilePath);
+                IReadOnlyList<string> messages = TestHelper.GetAllRenderedMessages(ReadStructures).ToArray();
+                
                 // Then
                 Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
                 CheckMessages(messages, copyOfIniInTempFilePath);
@@ -903,7 +904,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             });
         }
 
-        private static void CheckMessages(IEnumerable<string> messages, string copyOfIniInTempFilePath)
+        private static void CheckMessages(IReadOnlyList<string> messages, string copyOfIniInTempFilePath)
         {
             Assert.That(messages, Has.Count.EqualTo(1), "Expected a single grouped warning message:");
 

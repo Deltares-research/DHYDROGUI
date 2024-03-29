@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
@@ -49,8 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             // Assert
             IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(TestAction);
-            Assert.That(messages, Has.Count.EqualTo(0),
-                        "Zero log messages were expected when validating valid file.");
+            Assert.That(messages, Is.Empty, "No log messages were expected when validating valid file.");
         }
 
         [Test]
@@ -66,10 +66,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 WaqInitializationDataVerifier.Verify(settings);
             }
 
+            IReadOnlyList<string> messages = TestHelper.GetAllRenderedMessages(TestAction, Level.Error).ToArray();
+            string expectedWarning = string.Format(Resources.WaqInitializationDataVerifier_Grid_file_was_not_found, filePath);
+            
             // Assert
-            IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
-            string expectedWarning =
-                string.Format(Resources.WaqInitializationDataVerifier_Grid_file_was_not_found, filePath);
             Assert.That(messages, Contains.Item(expectedWarning));
         }
     }

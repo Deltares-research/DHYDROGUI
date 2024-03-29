@@ -9,7 +9,6 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
-using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
@@ -329,15 +328,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
-
-            LogHelper.ConfigureLogging(Level.Warn);
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            LogHelper.ResetLogging();
-
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalCulture;
         }

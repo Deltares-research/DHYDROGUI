@@ -217,15 +217,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
 
                 var model = new WaterFlowFMModel();
-                LogHelper.ConfigureLogging(Level.Error);
-                try
-                {
-                    TestHelper.AssertLogMessageIsGenerated(() => { SedimentFile.LoadSediments(sedFile, model); }, string.Format(@"Could not read sediment file because : Value cannot be null.{0}Parameter name: Sediment name MySedimen*tName in sediment file {1} is invalid to deltashell", Environment.NewLine, sedFile));
-                }
-                finally
-                {
-                    LogHelper.ResetLogging();
-                }
+
+                var message = $@"Could not read sediment file because : Value cannot be null.{Environment.NewLine}Parameter name: Sediment name MySedimen*tName in sediment file {sedFile} is invalid to deltashell";
+                
+                TestHelper.AssertLogMessageIsGenerated(() => SedimentFile.LoadSediments(sedFile, model), message, Level.Error);
             }
             finally
             {

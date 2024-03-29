@@ -150,11 +150,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
                 {
                     waveModel
                 });
+                
                 waveModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326);
-                TestHelper.AssertLogMessageIsNotGenerated(
-                    () => waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid),
-                    string.Format(Resources.WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_,
-                                  waveModel.CoordinateSystem));
+                
+                string message = string.Format(Resources.WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_,
+                                              waveModel.CoordinateSystem);
+                
+                IEnumerable<string> logMessages = TestHelper.GetAllRenderedMessages(() => waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid));
+
+                Assert.That(logMessages, Does.Not.Contain(message).IgnoreCase);
                 Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
                 Assert.That(waveModel.CoordinateSystem.AuthorityCode, Is.EqualTo(4326));
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);

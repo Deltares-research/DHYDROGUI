@@ -20,11 +20,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             DelwaqHisFileData[] Call() => DelwaqNetCdfHistoryFileReader.Read(invalidPath);
 
             // Assert
-            DelwaqHisFileData[] data =
-                {};
-            IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(
-                () => data = Call(),
-                Level.Error);
+            DelwaqHisFileData[] data = {};
+            IReadOnlyList<string> errorMessages = TestHelper.GetAllRenderedMessages(() => data = Call(), Level.Error).ToArray();
 
             Assert.That(data, Is.Empty);
             Assert.That(errorMessages, Has.Count.EqualTo(1));

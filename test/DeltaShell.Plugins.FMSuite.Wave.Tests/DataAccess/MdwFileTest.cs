@@ -112,12 +112,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             const string warningMessage = "Parsing error in file 'tstInvalid.obt'. Can't convert 'ThisInvalidString' to a double. The property 'Beta' has been given the default value '0'.";
 
             MdwFileDTO dto = null;
-            LogHelper.ConfigureLogging();
-            LogHelper.SetLoggingLevel(Level.Warn);
             TestHelper.AssertLogMessageIsGenerated(
-                () => dto = mdwFile.Load(mdwPath), warningMessage);
-            LogHelper.SetLoggingLevel(Level.Error);
-            LogHelper.ResetLogging();
+                () => dto = mdwFile.Load(mdwPath), warningMessage, Level.Warn);
 
             WaveModelDefinition modelDef = dto.WaveModelDefinition;
             WaveObstacle obs1 = modelDef.FeatureContainer.Obstacles[0];

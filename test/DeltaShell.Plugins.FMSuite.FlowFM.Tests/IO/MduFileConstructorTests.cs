@@ -31,7 +31,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO {
             api.GetVersionString().Returns(myVersion);
 
             // Act & Assert
-            TestHelper.AssertLogMessageIsNotGenerated(() => new MduFile(api), string.Format(Resources.MduFile_MduFile_Error_retrieving_FM_Dll_version___0_, exceptionMessage) );
+            string message = string.Format(Resources.MduFile_MduFile_Error_retrieving_FM_Dll_version___0_, exceptionMessage);
+            
+            Assert.That(TestHelper.GetAllRenderedMessages(() => _ = new MduFile(api)), Does.Not.Contain(message).IgnoreCase);
             Assert.That(TypeUtils.GetStaticField<string>(typeof(MduFile), staticFieldNameMduFileFMDllVersion), Is.EqualTo(myVersion));
         }
 
