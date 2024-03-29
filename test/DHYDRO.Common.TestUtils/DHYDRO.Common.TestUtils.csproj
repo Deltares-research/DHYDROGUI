@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputPath>$(SolutionDir)bin\$(Configuration)\tests</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="log4net"/>
+        <PackageReference Include="NUnit"/>
+    </ItemGroup>
+</Project>

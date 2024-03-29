@@ -14,5 +14,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\DHYDRO.Common\DHYDRO.Common.csproj"/>
+        <ProjectReference Include="..\DHYDRO.Common.TestUtils\DHYDRO.Common.TestUtils.csproj" />
     </ItemGroup>
 </Project>

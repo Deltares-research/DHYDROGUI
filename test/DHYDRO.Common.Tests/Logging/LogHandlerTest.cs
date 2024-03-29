@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DHYDRO.Common.Logging;
+using DHYDRO.Common.TestUtils;
 using NUnit.Framework;
 
 namespace DHYDRO.Common.Tests.Logging

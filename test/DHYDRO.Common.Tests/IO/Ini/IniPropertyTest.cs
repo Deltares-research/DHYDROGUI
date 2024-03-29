@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DHYDRO.Common.IO.Ini;
+using DHYDRO.Common.TestUtils;
 using log4net.Core;
 using NUnit.Framework;
 
@@ -240,8 +241,8 @@ namespace DHYDRO.Common.Tests.IO.Ini
             var property = new IniProperty("TestKey", "TestValue") { LineNumber = 7 };
 
             void Call() => property.TryGetConvertedValue(out T _);
-
             string error = Log4NetTestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
+
             Assert.That(error, Is.EqualTo($"Property 'TestKey' cannot be converted to a {defaultValue.GetType().Name} for value: TestValue. Line: 7"));
         }
 
