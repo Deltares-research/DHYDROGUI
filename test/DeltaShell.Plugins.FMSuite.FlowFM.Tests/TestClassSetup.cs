@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            DimrApiDataSet.FeedbackLevel = Level.All;
+            DimrLogging.FeedbackLevel = Level.All;
 
             XmlConfigurator.Configure();
         }

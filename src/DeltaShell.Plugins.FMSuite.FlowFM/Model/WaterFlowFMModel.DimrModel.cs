@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public virtual Type ExporterType => typeof(WaterFlowFMFileExporter);
 
         /// <inheritdoc/>
-        public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllPath;
+        public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllDirectory;
 
         /// <inheritdoc cref="IDimrModel.CurrentTime"/>
         [NoNotifyPropertyChange]

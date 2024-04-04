@@ -17,17 +17,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                 case WaterQualityProcessType.Sobek:
                 {
                     substanceProcessLibrary.ProcessDllFilePath = "";
-                    substanceProcessLibrary.ProcessDefinitionFilesPath =
-                        SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
+                    substanceProcessLibrary.ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
 
                     break;
                 }
                 case WaterQualityProcessType.Duflow:
                 {
-                    substanceProcessLibrary.ProcessDllFilePath =
-                        SubstanceProcessLibrary.DefaultDuflowProcessDllFilePath;
-                    substanceProcessLibrary.ProcessDefinitionFilesPath =
-                        SubstanceProcessLibrary.DefaultDuflowProcessDefinitionFilesPath;
+                    substanceProcessLibrary.ProcessDllFilePath = WaterQualityApiDataSet.WaqDuflowDllPath;
+                    substanceProcessLibrary.ProcessDefinitionFilesPath = WaterQualityApiDataSet.WaqDuflowProcessDefinitionFilesDirectory;
 
                     break;
                 }
@@ -35,16 +32,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                 {
                     if (substanceProcessLibraryWizardPage.UsingCustomProcessFiles)
                     {
-                        substanceProcessLibrary.ProcessDllFilePath =
-                            substanceProcessLibraryWizardPage.CustomProcessDllFilePath;
-                        substanceProcessLibrary.ProcessDefinitionFilesPath =
-                            substanceProcessLibraryWizardPage.CustomProcessDefinitionFilesPath;
+                        substanceProcessLibrary.ProcessDllFilePath = substanceProcessLibraryWizardPage.CustomProcessDllFilePath;
+                        substanceProcessLibrary.ProcessDefinitionFilesPath = substanceProcessLibraryWizardPage.CustomProcessDefinitionFilesPath;
                     }
                     else
                     {
                         substanceProcessLibrary.ProcessDllFilePath = "";
-                        substanceProcessLibrary.ProcessDefinitionFilesPath =
-                            SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
+                        substanceProcessLibrary.ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
                     }
 
                     break;

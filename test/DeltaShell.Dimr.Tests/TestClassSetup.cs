@@ -10,7 +10,7 @@ namespace DeltaShell.Dimr.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            DimrApiDataSet.FeedbackLevel = Level.All;
+            DimrLogging.FeedbackLevel = Level.All;
             
             XmlConfigurator.Configure();
         }

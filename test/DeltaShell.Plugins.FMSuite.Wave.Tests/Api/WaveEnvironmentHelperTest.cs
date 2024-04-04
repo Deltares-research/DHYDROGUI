@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
@@ -51,30 +50,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
                     Assert.That(Directory.GetCurrentDirectory(),
                                 Is.EqualTo(tempDir.Path));
                     environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey,
-                                                        WaveEnvironmentConstants.ArchValue,
-                                                        EnvironmentVariableTarget.Process);
+                                                        WaveEnvironmentConstants.ArchValue);
 
                     string expectedModifiedPath = string.Join(";",
-                                                              DimrApiDataSet.WaveExePath,
-                                                              DimrApiDataSet.SwanExePath,
-                                                              DimrApiDataSet.SwanScriptPath,
-                                                              DimrApiDataSet.EsmfExePath,
-                                                              DimrApiDataSet.EsmfScriptPath,
+                                                              DimrApiDataSet.WaveExeDirectory,
+                                                              DimrApiDataSet.SwanExeDirectory,
+                                                              DimrApiDataSet.EsmfExeDirectory,
                                                               expectedPath);
-                    environment.Received(1).SetVariable(EnvironmentConstants.PathKey,
-                                                        expectedModifiedPath,
-                                                        EnvironmentVariableTarget.Process);
+                    environment.Received(1).SetVariable(EnvironmentConstants.PathKey, expectedModifiedPath);
                 } // Call | Restore
 
                 // Assert | Restore
                 Assert.That(Directory.GetCurrentDirectory(),
                             Is.EqualTo(expectedDirectoryPath));
-                environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey,
-                                                    expectedArch,
-                                                    EnvironmentVariableTarget.Process);
-                environment.Received(1).SetVariable(EnvironmentConstants.PathKey,
-                                                    expectedPath,
-                                                    EnvironmentVariableTarget.Process);
+                environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey, expectedArch);
+                environment.Received(1).SetVariable(EnvironmentConstants.PathKey, expectedPath);
             }
         }
 
@@ -95,15 +85,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
                 WaveEnvironmentHelper.DimrRun = true;
 
                 // Assert | Update
-                environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey,
-                                                    WaveEnvironmentConstants.ArchValue,
-                                                    EnvironmentVariableTarget.Process);
+                environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey, WaveEnvironmentConstants.ArchValue);
             } // Call | Restore
 
             // Assert | Restore
-            environment.Received(1).SetVariable(WaveEnvironmentConstants.OldArchKey,
-                                                expectedArch,
-                                                EnvironmentVariableTarget.Process);
+            environment.Received(1).SetVariable(WaveEnvironmentConstants.OldArchKey, expectedArch);
         }
     }
 }

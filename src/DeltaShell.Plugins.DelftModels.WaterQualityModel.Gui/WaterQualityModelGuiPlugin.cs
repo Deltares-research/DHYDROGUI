@@ -157,13 +157,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         public override IRibbonCommandHandler RibbonCommandHandler => ribbon ?? (ribbon = new WaterQualityRibbon());
 
         // lazy load and read the spe file to exclude the algae parameters
-        public BloomInfo BloomInfo
-        {
-            get
-            {
-                return bloomInfo ?? (bloomInfo = BloomSpeFileReader.Read(Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(), "bloom.spe")));
-            }
-        }
+        public BloomInfo BloomInfo => bloomInfo ?? (bloomInfo = BloomSpeFileReader.Read(WaterQualityApiDataSet.DelWaqBloomSpePath));
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
@@ -515,7 +509,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 currentProcessDefinitionFilePath.EndsWith(
                     Path.Combine(newWaqProjectName, relativePathToProcessDefinitionFile)))
             {
-                newProcessDefinitionFilesPath = SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
+                newProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
             }
             else
             {

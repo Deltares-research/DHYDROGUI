@@ -37,8 +37,6 @@ namespace DeltaShell.NGHS.IO.Grid
             nf90_share = 2048
         }
 
-        public const string GRIDDLL_NAME = "io_netcdf.dll";
-
         public static class GridConstants
         {
             public const int MAXDIMS = 6;

@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -241,7 +242,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="ioncid"></param>
         /// <param name="iconvtype">The NetCDF conventions type to check for.</param>
         /// <returns>Whether or not the file adheres to the specified conventions.</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_adheresto_conventions", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_adheresto_conventions", CallingConvention = CallingConvention.Cdecl)]
         private static extern bool ionc_adheresto_conventions_dll(ref int ioncid, ref int iconvtype);
 
         /// <summary>
@@ -251,7 +252,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="iconvtype">The NetCDF conventions type of the dataset.</param>
         /// <param name="convversion"></param>
         /// <returns>Result status, ionc_noerr if successful.</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_conventions", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_inq_conventions", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_inq_conventions_dll(ref int ioncid, ref int iconvtype, ref double convversion);
 
         /// <summary>
@@ -263,7 +264,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="iconvtype">The detected conventions in the file.</param>
         /// <param name="convversion"></param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_open", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_open", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_open_dll([In] string c_path, [In] [Out] ref int mode, [In] [Out] ref int ioncid, [In] [Out] ref int iconvtype, ref double convversion);
 
         /// <summary>
@@ -271,12 +272,12 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <param name="ioncid">The io_netcdf dataset id (this is not the NetCDF ncid, which is stored in datasets(ioncid)%ncid.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_close", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_close", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_close_dll([In] ref int ioncid);
 
         #region UGRID specifics
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_var", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_def_var", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_def_var_dll(ref int ioncid, ref int meshId, ref int networkId, ref int varId, ref int type, ref int locType, string varName, string standardName, string longName, string unit, ref int fillValueInt, ref double fillValue);
 
         /// <summary>
@@ -285,7 +286,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="ioncid">The IONC data set id.</param>
         /// <param name="nmesh">Number of meshes.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_mesh_count", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_mesh_count", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_mesh_count_dll([In] [Out] ref int ioncid, [In] [Out] ref int nmesh);
 
         /// <summary>
@@ -295,7 +296,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshId">Mesh id.</param>
         /// <param name="meshName">The mesh name.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_mesh_name", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_mesh_name", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_mesh_name_dll([In] [Out] ref int ioncid, [In] [Out] ref int meshId, [MarshalAs(UnmanagedType.LPStr)] [In] [Out]
                                                          StringBuilder meshName);
 
@@ -306,7 +307,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshId">The mesh id in the specified data set.</param>
         /// <param name="nnode">Number of nodes.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_node_count", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_node_count", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_node_count_dll(ref int ioncid, ref int meshId, ref int nnode);
 
         /// <summary>
@@ -316,7 +317,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshId">The mesh id in the specified data set.</param>
         /// <param name="nedge">Number of edges.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_edge_count", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_edge_count", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_edge_count_dll(ref int ioncid, ref int meshId, ref int nedge);
 
         /// <summary>
@@ -326,7 +327,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshId">The mesh id in the specified data set.</param>
         /// <param name="nface">Number of faces.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_face_count", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_face_count", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_face_count_dll(ref int ioncid, ref int meshId, ref int nface);
 
         /// <summary>
@@ -336,7 +337,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshId">The mesh id in the specified data set.</param>
         /// <param name="nmaxfacenodes">The maximum number of nodes per face in the mesh.Number of faces.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_max_face_nodes", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_max_face_nodes", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_max_face_nodes_dll(ref int ioncid, ref int meshId, ref int nmaxfacenodes);
 
         /// <summary>
@@ -348,7 +349,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_yptr">Pointer to array for y-coordinates</param>
         /// <param name="nnode">The number of nodes in the mesh.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_node_coordinates", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_node_coordinates", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_node_coordinates_dll([In] [Out] ref int ioncid, [In] [Out] ref int meshId, [In] [Out] ref IntPtr c_xptr, [In] [Out] ref IntPtr c_yptr, [In] [Out] ref int nnode);
 
         /// <summary>
@@ -361,7 +362,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="nedge">The number of edges in the mesh.</param>
         /// <param name="startIndex"></param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_edge_nodes", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_edge_nodes", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_edge_nodes_dll(ref int ioncid, ref int meshId, ref IntPtr c_edge_nodes_ptr, ref int nedge, ref int startIndex);
 
         /// <summary>
@@ -376,28 +377,28 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="fillvalue"></param>
         /// <param name="startIndex"></param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_face_nodes", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_face_nodes", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_face_nodes_dll(ref int ioncid, ref int meshId, ref IntPtr c_face_nodes_ptr, ref int nface, ref int nmaxfacenodes, ref int fillvalue, ref int startIndex);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_write_geom_ugrid", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_write_geom_ugrid", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_write_geom_ugrid_dll(string filename);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_write_map_ugrid", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_write_map_ugrid", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_write_map_ugrid_dll(string filename);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_coordinate_system", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_coordinate_system", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_coordinate_system_dll([In] ref int ioncid, [In] [Out] ref int nmesh);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_var_count", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_var_count", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_var_count_dll([In] ref int ioncid, [In] ref int mesh, [In] ref int location, [In] [Out] ref int nCount);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varid", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_inq_varid", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_inq_varid_dll(ref int ioncid, ref int meshId, string varName, ref int varId);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varid_by_standard_name", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_inq_varid_by_standard_name", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_inq_varid_by_standard_name_dll(ref int ioncid, ref int meshId, ref int location, string standardName, ref int varId);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varids", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_inq_varids", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_inq_varids_dll(ref int ioncid, ref int meshId, ref int location, ref IntPtr ptr, ref int nVar);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -406,16 +407,16 @@ namespace DeltaShell.NGHS.IO.Grid
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void IO_NetCDF_Progress_Callback([MarshalAs(UnmanagedType.LPStr)] string message, ref double progress);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_initialize", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_initialize", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_initialize_dll(IO_NetCDF_Message_Callback c_message_callback, IO_NetCDF_Progress_Callback c_progress_callback);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_var", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_var", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_var_dll(ref int ioncid, ref int meshId, ref int location, string varname, ref IntPtr c_zptr, ref int nNode, ref double c_fillvalue);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_var", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_put_var", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_put_var_dll(ref int ioncid, ref int meshId, ref int iloctype, string c_varname, ref IntPtr c_values_ptr, ref int nVal);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_node_coordinates", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_put_node_coordinates", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_put_node_coordinates_dll(ref int ioncid, ref int meshId, ref IntPtr c_xvalues_ptr, ref IntPtr c_yvalues_ptr, ref int nNode);
 
         #endregion
@@ -430,7 +431,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshGeom"></param>
         /// <param name="includeArrays"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom",
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_meshgeom",
                    CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, [In] [Out] ref MeshGeom meshGeom, ref bool includeArrays);
 
@@ -441,7 +442,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshId"></param>
         /// <param name="meshGeomDim"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom_dim", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_meshgeom_dim", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In] [Out] ref MeshGeomDim meshGeomDim);
 
         [StructLayout(LayoutKind.Sequential)]
@@ -538,7 +539,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="ioncid"></param>
         /// <param name="metadata"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_add_global_attributes", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_add_global_attributes", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_add_global_attributes_dll([In] ref int ioncid, ref InteropMetadata metadata);
 
         /// <summary>
@@ -548,7 +549,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="mode"> The netCDF opening mode (in)</param>
         /// <param name="ioncid">The netCDF file id (out)</param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_create", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_create", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_create_dll([In] string c_path, [In] ref int mode, [In] [Out] ref int ioncid);
 
         /// <summary>
@@ -563,7 +564,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="locationType1Id">The location type for the first mesh: 0, 1, 2 for node, edge, face respectively (in)</param>
         /// <param name="locationType2Id">The location type for the second mesh (in)</param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_def_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_def_mesh_contact_dll([In] ref int ioncid, [In] [Out] ref int contactsmesh, string contactsmeshname, [In] ref int ncontacts, [In] ref int mesh1, [In] ref int mesh2, [In] ref int locationType1Id, [In] ref int locationType2Id);
 
         /// <summary>
@@ -577,7 +578,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="ncontacts">The number of contactss (in)</param>
         /// <param name="startIndex"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_put_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_put_mesh_contact_dll([In] ref int ioncid, [In] ref int contactsmesh, [In] ref IntPtr c_mesh1indexes, [In] ref IntPtr c_mesh2indexes, [In] [Out] InteropCharInfo[] contactsinfo, [In] ref int ncontacts, [In] ref int startIndex);
 
         /// <summary>
@@ -587,7 +588,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="contactsmesh">The id of the contactsmesh (in)</param>
         /// <param name="ncontacts">The number of contactss (out)</param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_contacts_count", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_contacts_count", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_contacts_count_dll([In] ref int ioncid, [In] ref int contactsmesh, [In] [Out] ref int ncontacts);
 
         /// <summary>
@@ -601,7 +602,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="ncontacts">The number of contactss (in)</param>
         /// <param name="startIndex"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_mesh_contact_dll([In] ref int ioncid, [In] ref int contactsmesh, [In] [Out] ref IntPtr c_mesh1indexes, [In] [Out] ref IntPtr c_mesh2indexes, [In] [Out] InteropCharInfo[] contactsinfo, [In] ref int ncontacts, [In] ref int startIndex);
 
         /// <summary>
@@ -613,7 +614,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshidin">The mesh id to copy (in)</param>
         /// <param name="meshidout">The id of the cloned mesh in the output file (out)</param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_clone_mesh_definition", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_clone_mesh_definition", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_clone_mesh_definition_dll([In] ref int ncidin, [In] ref int ncidout, [In] ref int meshidin, [In] [Out] ref int meshidout);
 
         /// <summary>
@@ -624,7 +625,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshidin">The mesh id to copy (in)</param>
         /// <param name="meshidout">The id of the cloned mesh in the output file (out)</param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_clone_mesh_data", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_clone_mesh_data", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_clone_mesh_data_dll([In] ref int ncidin, [In] ref int ncidout, [In] ref int meshidin, [In] ref int meshidout);
 
         /// <summary>
@@ -633,7 +634,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="ioncid"></param>
         /// <param name="nnumNetworks"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_number_of_networks", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_number_of_networks", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_number_of_networks_dll([In] ref int ioncid, [In] [Out] ref int nnumNetworks);
 
         /// <summary>
@@ -643,7 +644,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshType"> Mesh type: 0 = any type, 1 = 1D mesh, 2 = 2D mesh, 3 = 3D mesh </param>
         /// <param name="numMeshes"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_number_of_meshes", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_number_of_meshes", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_number_of_meshes_dll([In] ref int ioncid, [In] ref int meshType, [In] [Out] ref int numMeshes);
 
         /// <summary>
@@ -653,7 +654,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_networkids"></param>
         /// <param name="nnumNetworks"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_network_ids", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_network_ids", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_network_ids_dll([In] ref int ncidin, [In] [Out] ref IntPtr c_networkids, [In] ref int nnumNetworks);
 
         /// <summary>
@@ -664,11 +665,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="pointerToMeshIds"></param>
         /// <param name="nnumNetworks"></param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_ug_get_mesh_ids", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_ug_get_mesh_ids", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_ug_get_mesh_ids_dll([In] ref int ioncid, [In] ref int meshType, [In] [Out] ref IntPtr pointerToMeshIds, [In] ref int nnumNetworks);
         
         //-Get the network id for a specified mesh
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_network_id_from_mesh_id", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DimrApiDataSet.NetCdfDllName, EntryPoint = "ionc_get_network_id_from_mesh_id", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_network_id_from_mesh_id_dll([In] ref int ioncid, [In] ref int meshId, [In] [Out] ref int networkid);
         #endregion
     }

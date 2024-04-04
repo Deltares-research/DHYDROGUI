@@ -1036,25 +1036,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                string asmPath1 = DelwaqFileStructureHelper.GetDelwaq1ExePath();
-                string asmPath2 = DelwaqFileStructureHelper.GetDelwaq2ExePath();
+                string asmPath1 = WaterQualityApiDataSet.DelWaq1ExePath;
+                string asmPath2 = WaterQualityApiDataSet.DelWaq2ExePath;
 
                 var kernelVersions = "";
 
-                if (File.Exists(asmPath1))
+                if (File.Exists(WaterQualityApiDataSet.DelWaq1ExePath))
                 {
-                    kernelVersions += string.Format("Kernel: {0}  {1}",
-                                                    DelwaqFileStructureHelper.DELWAQ1_EXE,
-                                                    FileVersionInfo.GetVersionInfo(asmPath1).FileVersion) +
-                                      Environment.NewLine;
+                    kernelVersions += $"Kernel: {Path.GetFileName(asmPath1)}  {FileVersionInfo.GetVersionInfo(asmPath1).FileVersion}" + Environment.NewLine;
                 }
 
                 if (File.Exists(asmPath2))
                 {
-                    kernelVersions += string.Format("Kernel: {0}  {1}",
-                                                    DelwaqFileStructureHelper.DELWAQ2_EXE,
-                                                    FileVersionInfo.GetVersionInfo(asmPath2).FileVersion) +
-                                      Environment.NewLine;
+                    kernelVersions += $"Kernel: {Path.GetFileName(asmPath2)}  {FileVersionInfo.GetVersionInfo(asmPath2).FileVersion}" + Environment.NewLine;
                 }
 
                 return kernelVersions;

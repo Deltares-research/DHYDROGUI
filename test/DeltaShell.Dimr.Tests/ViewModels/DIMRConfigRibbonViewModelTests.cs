@@ -12,8 +12,8 @@ namespace DeltaShell.Dimr.Tests.ViewModels
         public void DIMRConfigRibbonViewModelSetDebuggerLevelsTest()
         {
             // Check default values
-            Assert.AreEqual(Level.All, DimrApiDataSet.FeedbackLevel);
-            Assert.AreEqual(Level.None, DimrApiDataSet.LogFileLevel);
+            Assert.AreEqual(Level.All, DimrLogging.FeedbackLevel);
+            Assert.AreEqual(Level.None, DimrLogging.LogFileLevel);
 
             var viewModel = new DimrConfigRibbonViewModel();
             Assert.That(viewModel.Levels.Count(), Is.GreaterThan(0));
@@ -23,8 +23,8 @@ namespace DeltaShell.Dimr.Tests.ViewModels
             viewModel.CurrentLogfileLevel = Level.Fatal;
 
             // Check values have been updated
-            Assert.AreEqual(Level.Info, DimrApiDataSet.FeedbackLevel);
-            Assert.AreEqual(Level.Fatal, DimrApiDataSet.LogFileLevel);
+            Assert.AreEqual(Level.Info, DimrLogging.FeedbackLevel);
+            Assert.AreEqual(Level.Fatal, DimrLogging.LogFileLevel);
         }
     }
 }

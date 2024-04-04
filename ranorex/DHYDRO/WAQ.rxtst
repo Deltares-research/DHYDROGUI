@@ -696,7 +696,7 @@
 					<param
 					mask="False"
 					name="RelativePathToProcessDefinitionFile"
-					value="..\..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\dwaq\resources\proc_def.def">
+					value="..\..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
 					</param>
 				</parameters>
 			</testcase>
@@ -2289,7 +2289,7 @@
 					<param
 					mask="False"
 					name="RelativePathToProcessDefinitionFile"
-					value="..\..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\dwaq\resources\proc_def.def">
+					value="..\..\..\..\bin\Release\plugins\DeltaShell.Dimr\kernels\x64\share\delft3d\proc_def.def">
 					</param>
 				</parameters>
 			</testcase>

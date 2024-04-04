@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            DimrApiDataSet.FeedbackLevel = Level.All;
+            DimrLogging.FeedbackLevel = Level.All;
         }
     }
 }

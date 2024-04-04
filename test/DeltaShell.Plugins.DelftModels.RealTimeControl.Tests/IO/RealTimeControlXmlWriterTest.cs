@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         [Test]
         public void CheckIfXsdFileAreAtCorrectLocation()
         {
-            Assert.AreEqual(13, Directory.GetFiles(DimrApiDataSet.RtcToolsDllPath).Count(f => f.EndsWith("xsd"))); // check x64
+            Assert.AreEqual(13, Directory.GetFiles(DimrApiDataSet.RtcXsdDirectory).Count(f => f.EndsWith("xsd"))); // check x64
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             mocks.ReplayAll();
 
-            XDocument result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcToolsDllPath,
+            XDocument result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcXsdDirectory,
                                                                          stubTimeDependentModel,
                                                                          new List<ControlGroup> {controlGroup},
                                                                          null);
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             ControlGroup controlGroup = CreateControlGroupWithPidRuleAndMathematicalExpression(expression);
 
             // Act
-            XDocument result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcToolsDllPath,
+            XDocument result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcXsdDirectory,
                                                                          substituteTimeDependentModel,
                                                                          new List<ControlGroup> {controlGroup}, null);
 
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             ControlGroup controlGroup = CreateControlGroupWithPidRuleAndMathematicalExpression(expression);
 
             // Act
-            XDocument result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcToolsDllPath,
+            XDocument result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcXsdDirectory,
                                                                          substituteTimeDependentModel,
                                                                          new List<ControlGroup> {controlGroup},
                                                                          null);
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             model.WriteRestart = true;
 
-            string xsdPath = DimrApiDataSet.RtcToolsDllPath;
+            string xsdPath = DimrApiDataSet.RtcXsdDirectory;
 
             // When
             XDocument resultDocument = RealTimeControlXmlWriter.GetRuntimeConfigXml(xsdPath, model, false, 0);
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             ControlGroup controlGroup = RealTimeControlTestHelper.CreateControlGroupWithTwoRulesOnOneOutput();
 
             // Call
-            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(DimrApiDataSet.RtcToolsDllPath,
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(DimrApiDataSet.RtcXsdDirectory,
                                                                              new List<ControlGroup> {controlGroup});
 
             // Assert
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             TestHelper.AssertLogMessagesAreGenerated(
                 // When
-                () => RealTimeControlXmlWriter.GetTimeSeriesXml(DimrApiDataSet.RtcToolsDllPath, model, model.ControlGroups),
+                () => RealTimeControlXmlWriter.GetTimeSeriesXml(DimrApiDataSet.RtcXsdDirectory, model, model.ControlGroups),
                 // Then
                 expectedMessages, nExpectedWarnings);
         }

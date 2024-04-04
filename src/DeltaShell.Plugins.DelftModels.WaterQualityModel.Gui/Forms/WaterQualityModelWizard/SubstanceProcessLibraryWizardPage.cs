@@ -11,7 +11,6 @@ using DelftTools.Controls.Wpf.Services;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualityModelWizard
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
             if (dataDirectory == null)
             {
-                dataDirectory = DelwaqFileStructureHelper.GetDelwaqDataFolderPath();
+                dataDirectory = WaterQualityApiDataSet.WaqDataDirectory;
             }
 
             InitializeControls(dataDirectory);

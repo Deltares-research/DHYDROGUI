@@ -146,12 +146,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             string parameters = string.Format("{0} {1} \"{2}\" -eco \"{3}\"", FileConstants.InputFileName,
                                               initSettings.Settings.ProcessesActive ? "-p" : "-np",
                                               initSettings.SubstanceProcessLibrary.ProcessDefinitionFilesPath,
-                                              Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(),
-                                                           "bloom.spe"));
+                                              WaterQualityApiDataSet.DelWaqBloomSpePath);
 
             DateTime startTime = DateTime.Now;
             Log.Info("Started delwaq1.exe.");
-            bool processSuccessful = WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq1ExePath(),
+            bool processSuccessful = WaterQualityUtils.RunProcess(WaterQualityApiDataSet.DelWaq1ExePath,
                                                                   parameters, outputWorkDirectory, () => TryToCancel, false);
             Log.InfoFormat("Done running delwaq1.exe. (Took {0})", DateTime.Now - startTime);
 

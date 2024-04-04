@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary
 {
@@ -16,15 +14,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     [Entity]
     public class SubstanceProcessLibrary : Unique<long>, INameable, ICloneable
     {
-        public static readonly string DefaultSobekProcessDefinitionFilesPath =
-            Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(), "proc_def");
-
-        public static readonly string DefaultDuflowProcessDefinitionFilesPath =
-            Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(), "proc_def_duflow");
-
-        public static readonly string DefaultDuflowProcessDllFilePath =
-            Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelPluginFolderPath(), "x64", "duflow.dll");
-
         /// <summary>
         /// Creates a substance process library without substances
         /// </summary>
@@ -41,8 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
             Parameters = new EventedList<WaterQualityParameter>();
             Processes = new EventedList<WaterQualityProcess>();
             OutputParameters = new EventedList<WaterQualityOutputParameter>();
-
-            ProcessDefinitionFilesPath = DefaultSobekProcessDefinitionFilesPath;
+            ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
         }
 
         /// <summary>
@@ -111,22 +99,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
             Parameters.Clear();
             Processes.Clear();
             OutputParameters.Clear();
-
-            ProcessDefinitionFilesPath = DefaultSobekProcessDefinitionFilesPath;
+            ProcessDefinitionFilesPath = WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory;
         }
 
         public override string ToString()
         {
             var libraryString = "";
 
-            libraryString +=
-                Substances.Aggregate("Substances\n", (current, substance) => current + substance.Name + "\n");
+            libraryString += Substances.Aggregate("Substances\n", (current, substance) => current + substance.Name + "\n");
             libraryString += Processes.Aggregate("\nProcesses\n", (current, process) => current + process.Name + "\n");
-            libraryString +=
-                Parameters.Aggregate("\nParameters\n", (current, process) => current + process.Name + "\n");
-            libraryString +=
-                OutputParameters.Aggregate("\nOutput parameters\n",
-                                           (current, process) => current + process.Name + "\n");
+            libraryString += Parameters.Aggregate("\nParameters\n", (current, process) => current + process.Name + "\n");
+            libraryString += OutputParameters.Aggregate("\nOutput parameters\n", (current, process) => current + process.Name + "\n");
 
             return libraryString;
         }

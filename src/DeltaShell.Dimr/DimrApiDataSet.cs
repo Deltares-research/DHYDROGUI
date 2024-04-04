@@ -1,129 +1,142 @@
 using System.IO;
 using System.Linq;
-using BasicModelInterface;
 using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Dimr
 {
     /// <summary>
-    /// <see cref="DimrApiDataSet"/> defines the different paths used within DIMR,
-    /// as well as the option to set the shared dll path.
+    /// Defines the different paths used within the DIMR set.
     /// </summary>
     public static class DimrApiDataSet
     {
         /// <summary>
-        /// The DIMR DLL name
+        /// The file name of the DIMR library.
         /// </summary>
-        public const string DimrDllName = "dimr_dll.dll";
+        public const string DimrDllName = "dimr.dll";
 
         /// <summary>
-        /// The feedback level key
         /// </summary>
-        public const string FeedbackLevelKey = "feedbackLevel";
+        public const string NetCdfDllName = "io_netcdf.dll";
 
         /// <summary>
-        /// The logfile level key
+        /// The file name of the D-Flow FM kernel library.
         /// </summary>
-        public const string LogFileLevelKey = "debugLevel";
-
-        private const string standardBinFolderName = "bin";
-        private const string standardScriptFolderName = "scripts";
-        private const string shareFolderName = "share";
-
-        private const string dimrFolderName = "dimr";
-        private const string waveFolderName = "dwaves";
-        private const string swanFolderName = "swan";
-        private const string esmfFolderName = "esmf";
-        private const string dflowfmFolderName = "dflowfm";
-        private const string rtcToolsFolderName = "drtc";
-
-        private const string ARCH = "x64";
+        public const string DFlowFmDllName = "dflowfm.dll";
 
         /// <summary>
-        /// Gets the kernels directory.
+        /// The file name of the Real-Time Control tools kernel library.
         /// </summary>
-        public static string KernelsDirectory => Path.Combine(Path.GetDirectoryName(typeof(DimrApi).Assembly.Location), "kernels");
+        public const string RtcToolsDllName = "FBCTools_BMI.dll";
 
         /// <summary>
-        /// Gets the shared DLL path.
+        /// The file name of the Water Quality 1 executable.
         /// </summary>
-        public static string SharedDllPath => Path.Combine(KernelsDirectory, ARCH, shareFolderName, standardBinFolderName);
+        public const string DelWaq1ExeName = "delwaq1.exe";
 
         /// <summary>
-        /// Gets the DIMR DLL path.
+        /// The file name of the Water Quality 2 executable.
         /// </summary>
-        public static string DimrDllPath => Path.Combine(KernelsDirectory, ARCH, dimrFolderName, standardBinFolderName);
+        public const string DelWaq2ExeName = "delwaq2.exe";
 
         /// <summary>
-        /// Gets the wave executable path.
+        /// The file name of the bloom substances file.
         /// </summary>
-        public static string WaveExePath => Path.Combine(KernelsDirectory, ARCH, waveFolderName, standardBinFolderName);
+        public const string DelWaqBloomSpeName = "bloom.spe";
 
         /// <summary>
-        /// Gets the swan executable path.
+        /// The directory where the DIMR API plugin is located.
         /// </summary>
-        public static string SwanExePath => Path.Combine(KernelsDirectory, ARCH, swanFolderName, standardBinFolderName);
+        private static string DimrPluginDirectory { get; } = Path.GetDirectoryName(typeof(DimrApi).Assembly.Location);
 
         /// <summary>
-        /// Gets the swan script path.
+        /// The base directory of the kernel files and folders.
         /// </summary>
-        public static string SwanScriptPath => Path.Combine(KernelsDirectory, ARCH, swanFolderName, standardScriptFolderName);
+        private static string KernelsDirectory { get; } = Path.Combine(DimrPluginDirectory, "kernels", "x64");
 
         /// <summary>
-        /// Gets the esmf executable path.
+        /// The directory that contains the executables and run scripts for the kernels.
         /// </summary>
-        public static string EsmfExePath => Path.Combine(KernelsDirectory, ARCH, esmfFolderName, standardBinFolderName);
+        public static string KernelsBinDirectory { get; } = Path.Combine(KernelsDirectory, "bin");
 
         /// <summary>
-        /// Gets the esmf script path.
+        /// The directory that contains the kernel libraries and third-party libraries.
         /// </summary>
-        public static string EsmfScriptPath => Path.Combine(KernelsDirectory, ARCH, esmfFolderName, standardScriptFolderName);
+        public static string KernelsLibDirectory { get; } = Path.Combine(KernelsDirectory, "lib");
 
         /// <summary>
-        /// Gets the D-FLOW FM DLL path.
+        /// The directory that contains the kernel resource files.
         /// </summary>
-        public static string DFlowFmDllPath => Path.Combine(KernelsDirectory, ARCH, dflowfmFolderName, standardBinFolderName);
+        public static string KernelsShareDirectory { get; } = Path.Combine(KernelsDirectory, "share");
 
         /// <summary>
-        /// Gets the RTC tools DLL path.
+        /// The directory that contains the DIMR library.
         /// </summary>
-        public static string RtcToolsDllPath => Path.Combine(KernelsDirectory, ARCH, rtcToolsFolderName, standardBinFolderName);
+        public static string DimrDllDirectory => KernelsLibDirectory;
 
         /// <summary>
-        /// The log file level
+        /// The directory that contains the D-FlowFM kernel library.
         /// </summary>
-        public static Level LogFileLevel { get; set; } = Level.None;
+        public static string DFlowFmDllDirectory => KernelsLibDirectory;
 
         /// <summary>
-        /// The feedback level
+        /// The directory that contains the Real-Time Control tools kernel library.
         /// </summary>
-        public static Level FeedbackLevel { get; set; } = Level.None;
+        public static string RtcToolsDllDirectory => KernelsLibDirectory;
 
         /// <summary>
-        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet.
+        /// The directory that contains the water quality executables.
         /// </summary>
-        public static void SetSharedPath()
+        public static string DelWaqExeDirectory => KernelsBinDirectory;
+
+        /// <summary>
+        /// The directory that contains the D-Waves executable.
+        /// </summary>
+        public static string WaveExeDirectory => KernelsBinDirectory;
+
+        /// <summary>
+        /// The directory that contains the Swan executable.
+        /// </summary>
+        public static string SwanExeDirectory => KernelsBinDirectory;
+
+        /// <summary>
+        /// The directory that contains the Esmf executable.
+        /// </summary>
+        public static string EsmfExeDirectory => KernelsBinDirectory;
+
+        /// <summary>
+        /// The directory that contains the Real-Time Control schema definitions.
+        /// </summary>
+        public static string RtcXsdDirectory { get; } = Path.Combine(KernelsShareDirectory, "drtc");
+
+        /// <summary>
+        /// The directory that contains the default water quality process definition files.
+        /// </summary>
+        public static string DelWaqResourcesDirectory { get; } = Path.Combine(KernelsShareDirectory, "delft3d");
+
+        /// <summary>
+        /// Add the kernel directory to the PATH variable, if not already present.
+        /// </summary>
+        public static void AddKernelDirToPath()
         {
-            SetSharedPath(new SystemEnvironment());
+            AddKernelDirToPath(new SystemEnvironment());
         }
 
         /// <summary>
-        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet
-        /// using the specified environment.
+        /// Add the kernel directory to the PATH variable, if not already present.
         /// </summary>
         /// <param name="environment">The environment to interact with.</param>
-        internal static void SetSharedPath(IEnvironment environment)
+        public static void AddKernelDirToPath(IEnvironment environment)
         {
             string path = environment.GetVariable(EnvironmentConstants.PathKey) ?? "";
 
-            if (path.Contains(SharedDllPath))
+            if (path.Contains(KernelsLibDirectory))
             {
                 return;
             }
 
             path = path.Any()
-                       ? string.Join(";", SharedDllPath, path)
-                       : SharedDllPath;
+                       ? string.Join(";", KernelsLibDirectory, path)
+                       : KernelsLibDirectory;
 
             environment.SetVariable(EnvironmentConstants.PathKey, path);
         }

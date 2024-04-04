@@ -51,11 +51,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         private void UpdateEnvironment()
         {
             string modifiedPath = string.Join(";",
-                                              DimrApiDataSet.WaveExePath,
-                                              DimrApiDataSet.SwanExePath,
-                                              DimrApiDataSet.SwanScriptPath,
-                                              DimrApiDataSet.EsmfExePath,
-                                              DimrApiDataSet.EsmfScriptPath,
+                                              DimrApiDataSet.WaveExeDirectory,
+                                              DimrApiDataSet.SwanExeDirectory,
+                                              DimrApiDataSet.EsmfExeDirectory,
                                               previousPath);
 
             environment.SetVariable(EnvironmentConstants.PathKey, modifiedPath);

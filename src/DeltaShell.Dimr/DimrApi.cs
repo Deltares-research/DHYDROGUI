@@ -18,8 +18,8 @@ namespace DeltaShell.Dimr
 
         static DimrApi()
         {
-            DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(DimrApiDataSet.DimrDllName, DimrApiDataSet.DimrDllPath);
+            DimrApiDataSet.AddKernelDirToPath();
+            NativeLibrary.LoadNativeDll(DimrApiDataSet.DimrDllName, DimrApiDataSet.DimrDllDirectory);
         }
 
         private readonly bool useMessagesBuffering;
@@ -40,8 +40,8 @@ namespace DeltaShell.Dimr
             dimrRefDate = DateTime.MinValue;
             this.useMessagesBuffering = useMessagesBuffering;
             messages = new List<string>();
-            SetLoggingLevel(DimrApiDataSet.FeedbackLevelKey, DimrApiDataSet.FeedbackLevel);
-            SetLoggingLevel(DimrApiDataSet.LogFileLevelKey, DimrApiDataSet.LogFileLevel);
+            SetLoggingLevel(DimrLogging.FeedbackLevelKey, DimrLogging.FeedbackLevel);
+            SetLoggingLevel(DimrLogging.LogFileLevelKey, DimrLogging.LogFileLevel);
             cMessageCallback = FeedbackLog;
             set_feedback_logger();
             Logger = BMI_Logger_function;
@@ -197,7 +197,7 @@ namespace DeltaShell.Dimr
                 string environmentPathVariable = Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey);
 
                 environmentPathVariable = KernelDirs + ";" +
-                                          DimrApiDataSet.DimrDllPath + ";" +
+                                          DimrApiDataSet.DimrDllDirectory + ";" +
                                           environmentPathVariable;
                 Environment.SetEnvironmentVariable(EnvironmentConstants.PathKey, environmentPathVariable, EnvironmentVariableTarget.Process);
 

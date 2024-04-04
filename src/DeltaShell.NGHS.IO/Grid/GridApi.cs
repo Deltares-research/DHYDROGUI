@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Grid
         static GridApi()
         {
             RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
-            NativeLibrary.LoadNativeDll(GridApiDataSet.GRIDDLL_NAME, DimrApiDataSet.SharedDllPath);
+            NativeLibrary.LoadNativeDll(DimrApiDataSet.NetCdfDllName, DimrApiDataSet.DimrDllDirectory);
         }
 
         protected int ioncId;

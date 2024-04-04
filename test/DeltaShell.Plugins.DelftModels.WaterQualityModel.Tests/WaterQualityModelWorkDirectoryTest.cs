@@ -7,12 +7,10 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.NetworkEditor;
@@ -180,7 +178,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     // As the file path ends with "DeltaShell.Plugins(.DelftModels).WaterQualityModel\waq_kernel\Data\Default\proc_def", this is the default file path to the process 
                     // definition path on another PC or DeltaShell build.
                     // Here, we check that this process definition file path is set to the one that is default on the current build of DeltaShell.
-                    Assert.That(waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath, Is.EqualTo(SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath));
+                    Assert.That(waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath, Is.EqualTo(WaterQualityApiDataSet.DelWaqProcessDefinitionFilesDirectory));
                 }
             }
             finally

@@ -1560,11 +1560,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     WaveEnvironmentHelper.DimrRun = true;
 
                     return string.Join(";",
-                                       DimrApiDataSet.WaveExePath,
-                                       DimrApiDataSet.SwanExePath,
-                                       DimrApiDataSet.SwanScriptPath,
-                                       DimrApiDataSet.EsmfExePath,
-                                       DimrApiDataSet.EsmfScriptPath);
+                                       DimrApiDataSet.WaveExeDirectory,
+                                       DimrApiDataSet.SwanExeDirectory,
+                                       DimrApiDataSet.EsmfExeDirectory);
                 }
             }
         }

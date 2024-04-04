@@ -19,13 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
     [Category(TestCategory.Integration)]
     public class ValidateSuppliedRtcXmlTests
     {
-        private string XsdPath
-        {
-            get
-            {
-                return DimrApiDataSet.RtcToolsDllPath;
-            }
-        }
+        private string XsdPath => DimrApiDataSet.RtcXsdDirectory;
 
         [Test]
         public void ValidateGeneratedXml()

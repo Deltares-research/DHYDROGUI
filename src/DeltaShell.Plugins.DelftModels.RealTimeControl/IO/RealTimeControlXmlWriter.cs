@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         public static void CopyXsds(string copyToDirectory)
         {
-            foreach (string xsdFile in Directory.GetFiles(DimrApiDataSet.RtcToolsDllPath).Where(f => f.EndsWith("xsd")))
+            foreach (string xsdFile in Directory.GetFiles(DimrApiDataSet.RtcXsdDirectory).Where(f => f.EndsWith("xsd")))
             {
                 File.Copy(xsdFile, copyToDirectory + Path.DirectorySeparatorChar + Path.GetFileName(xsdFile), true);
             }
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         {
             if (xsdPath == string.Empty)
             {
-                xsdPath = DimrApiDataSet.RtcToolsDllPath;
+                xsdPath = DimrApiDataSet.RtcXsdDirectory;
             }
 
             var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcToolsConfigXsd });
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         {
             if (xsdPath == string.Empty)
             {
-                xsdPath = DimrApiDataSet.RtcToolsDllPath;
+                xsdPath = DimrApiDataSet.RtcXsdDirectory;
             }
 
             var schemas = new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcDataConfigXsd };
