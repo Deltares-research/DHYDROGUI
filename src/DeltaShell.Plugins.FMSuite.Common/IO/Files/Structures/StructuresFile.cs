@@ -7,7 +7,6 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Ini;
@@ -26,8 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
     /// </summary>
     public class StructuresFile : NGHSFileBase, IFeature2DFileBase<IStructureObject>
     {
-        private const string StructureSectionName = "structure";
-        private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));
+        private const string structureSectionName = "structure";
+        private static readonly ILog log = LogManager.GetLogger(typeof(StructuresFile));
 
         private readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
         {
@@ -54,47 +53,57 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             {"crest_width", KnownStructureProperties.CrestWidth}
         };
 
-        public StructuresFile()
-        {
-            PropertyTypesFromIni = new List<string>();
-        }
+        private readonly Dictionary<IStructureObject, StructureDAO> originalDataObjects = new Dictionary<IStructureObject, StructureDAO>();
 
         public StructureSchema<ModelPropertyDefinition> StructureSchema { private get; set; }
 
+        public List<string> PropertyTypesFromIni { get; } = new List<string>();
+
+        /// <summary>
+        /// Reference date for the model, required for time dependent data.
+        /// </summary>
         public DateTime ReferenceDate { private get; set; }
-
-        public List<string> PropertyTypesFromIni { get; }
-
+        
+        /// <summary>
+        /// Filepath of the reference file. This is structures file or Mdu dependent on the PathsRelativeToParent option in the Mdu.
+        /// </summary>
+        public string ReferencePath { get; set; }
+        
         /// <summary>
         /// Method reads the structures file, creates temporary data access objects ("structures") and
         /// finally from these "structures" weirs with different weirformulas and pumps will be created (ConvertStructure step)
         /// </summary>
-        /// <param name="structuresFilePath"> File path of the structures file</param>
-        /// <param name="structuresSubFilesReferenceFilePath">
-        /// Filepath of the reference file. This is structures file or Mdu
-        /// dependent on the PathsRelativeToParent option in the Mdu.
-        /// </param>
+        /// <param name="filePath"> File path of the structures file</param>
         /// <returns>List with weirs with different weirformulas and pumps</returns>
-        public IList<IStructureObject> ReadStructuresFileRelativeToReferenceFile(
-            string structuresFilePath, string structuresSubFilesReferenceFilePath)
+        public IList<IStructureObject> Read(string filePath)
         {
-            var logHandler = new LogHandler($"reading the structures file ({structuresFilePath}),", Log);
+            var logHandler = new LogHandler($"reading the structures file ({filePath}),", log);
+
+            if (string.IsNullOrEmpty(ReferencePath))
+            {
+                ReferencePath = filePath;
+            }
+
             try
             {
                 List<IStructureObject> structures =
-                    ReadStructuresFromFile(structuresFilePath, logHandler)
-                        .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
+                    ReadStructuresFromFile(filePath, logHandler)
+                        .Select(ConvertStructure)
                         .Where(s => s != null)
                         .ToList();
 
-
                 logHandler.LogReport();
+
                 return structures;
             }
             catch (Exception)
             {
-                Log.ErrorFormat(Resources.StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_converting_2D_Structures_from__0_, structuresFilePath);
+                log.ErrorFormat(Resources.StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_converting_2D_Structures_from__0_, filePath);
                 throw;
+            }
+            finally
+            {
+                ReferencePath = null;
             }
         }
 
@@ -109,6 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns>List with structure data access objects. </returns>
         public IEnumerable<StructureDAO> ReadStructuresFromFile(string filePath, ILogHandler logHandler = null)
         {
+            originalDataObjects.Clear();
+            
             IniData iniData;
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -121,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             foreach (IniSection section in iniData.Sections)
             {
                 // Filter out unexpected .ini sections:
-                if (section.Name != StructureSectionName)
+                if (section.Name != structureSectionName)
                 {
                     logHandler?.ReportWarningFormat(Resources.StructureFile_Section__0__not_supported_for_structures_and_is_skipped_Line__1__,
                                                     section.Name,
@@ -165,21 +176,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             new IniWriter().WriteIniFile(iniData, path);
         }
 
-        public IList<IStructureObject> Read(string filePath)
-        {
-            var logHandler = new LogHandler($"reading the structures file ({filePath}),", Log);
-
-            List<IStructureObject> structures =
-                ReadStructuresFromFile(filePath, logHandler)
-                    .Select(s => ConvertStructure(s, filePath))
-                    .Where(s => s != null)
-                    .ToList();
-
-            logHandler.LogReport();
-
-            return structures;
-        }
-
         /// <summary>
         /// Writes the specified file path.
         /// </summary>
@@ -187,14 +183,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <param name="features">The collection of structures to write.</param>
         public void Write(string filePath, IEnumerable<IStructureObject> features)
         {
+            if (string.IsNullOrEmpty(ReferencePath))
+            {
+                ReferencePath = filePath;
+            }
+            
+            var iniWriter = new IniWriter();
             var iniData = new IniData();
+
             var sections = GetSupportedStructures(features)
-                .Select(s => CreateSection(s, filePath, ReferenceDate));
+                .Select(CreateSection);
 
             iniData.AddMultipleSections(sections);
-            
-            
-            new IniWriter().WriteIniFile(iniData, filePath);
+            iniWriter.WriteIniFile(iniData, filePath);
+
+            ReferencePath = null;
         }
 
         private void RenameBackwardsCompatibleProperties(IniSection section)
@@ -208,18 +211,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private IStructureObject ConvertStructure(StructureDAO structureDataAccessObject,
-                                                  string structuresSubFilesReferenceFilePath)
+        private IStructureObject ConvertStructure(StructureDAO structureDataAccessObject)
         {
             try
             {
-                return StructureFactory.CreateStructure(structureDataAccessObject,
-                                                        structuresSubFilesReferenceFilePath,
-                                                        ReferenceDate);
+                IStructureObject structure = StructureFactory.CreateStructure(structureDataAccessObject, ReferencePath, ReferenceDate);
+
+                originalDataObjects[structure] = structureDataAccessObject;
+
+                return structure;
             }
             catch (Exception e)
             {
-                Log.ErrorFormat(Resources.StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_, structureDataAccessObject.Name);
+                log.ErrorFormat(Resources.StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_, structureDataAccessObject.Name);
 
                 if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
                     e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
@@ -244,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 }
                 else
                 {
-                    Log.ErrorFormat("Structure '{0}' is of unsupported type and therefore skipped.", structure.Name);
+                    log.ErrorFormat("Structure '{0}' is of unsupported type and therefore skipped.", structure.Name);
                 }
             }
 
@@ -253,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private static IniSection CreateSection(StructureDAO structureDataAccessObject)
         {
-            var section = new IniSection(StructureSectionName);
+            var section = new IniSection(structureSectionName);
 
             foreach (ModelProperty property in structureDataAccessObject.Properties)
             {
@@ -280,11 +284,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return section;
         }
 
-        private IniSection CreateSection(IStructureObject structure, string filePath, DateTime refDate)
+        private IniSection CreateSection(IStructureObject structure)
         {
-            var section = new IniSection(StructureSectionName);
+            var section = new IniSection(structureSectionName);
             
-            IEnumerable<IniProperty> properties = CreateProperties(structure, filePath, refDate);
+            IEnumerable<IniProperty> properties = CreateProperties(structure);
             section.AddMultipleProperties(properties);
 
             return section;
@@ -376,9 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         #region Sobek Structure to INI related methods:
 
-        private IEnumerable<IniProperty> CreateProperties(IStructureObject structure,
-                                                          string filePath,
-                                                          DateTime refDate)
+        private IEnumerable<IniProperty> CreateProperties(IStructureObject structure)
         {
             var properties = new List<IniProperty>();
 
@@ -386,15 +388,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             properties.Add(ConstructProperty(KnownStructureProperties.Type, structureType, structureType));
             properties.Add(ConstructProperty(KnownStructureProperties.Name, structure.Name, structureType));
-            properties.AddRange(ConstructGeometryProperties(structure, structureType, filePath));
-            properties.AddRange(ConstructStructureProperties(structure, structureType, filePath, refDate));
+            properties.AddRange(ConstructGeometryProperties(structure, structureType));
+            properties.AddRange(ConstructStructureProperties(structure, structureType));
 
             return properties;
         }
 
-        private IEnumerable<IniProperty> ConstructGeometryProperties(IStructureObject structure,
-                                                                     string structureType,
-                                                                     string filePath)
+        private IEnumerable<IniProperty> ConstructGeometryProperties(IStructureObject structure, string structureType)
         {
             if (structure.Geometry is IPoint point)
             {
@@ -404,65 +404,49 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             if (structure.Geometry is ILineString)
             {
-                char[] charArray = structure.Name.Where(c => !Path.GetInvalidFileNameChars().Contains(c)).ToArray();
-                if (charArray.Any())
-                {
-                    var pliFileName = $"{new string(charArray)}.pli";
-
-                    yield return ConstructProperty(KnownStructureProperties.PolylineFile, pliFileName, structureType);
-                    WritePliFile(GetOtherFilePathInSameDirectory(filePath, pliFileName), structure);
-                }
-                else
-                {
-                    Log.ErrorFormat("Structure with invalid name {0} could not be serialized to *.pli file.",
-                                    structure.Name);
-                }
+                string pliFileName = GetPliFilePath(structure);
+                
+                yield return ConstructProperty(KnownStructureProperties.PolylineFile, pliFileName, structureType);
+                WritePliFile(GetOtherFilePathInSameDirectory(ReferencePath, GetPliFilePath(structure)), structure);
             }
 
             if (structure.Geometry != null && !(structure.Geometry is ILineString || structure.Geometry is IPoint))
             {
-                Log.ErrorFormat("Geometry type '{0}' for structure '{1}' not supported and therefore not written.",
+                log.ErrorFormat("Geometry type '{0}' for structure '{1}' not supported and therefore not written.",
                                 structure.Geometry.GetType(), structure.Name);
             }
         }
 
-        private IEnumerable<IniProperty> ConstructStructureProperties(IStructureObject structure,
-                                                                      string structureType,
-                                                                      string path,
-                                                                      DateTime refDate)
+        private IEnumerable<IniProperty> ConstructStructureProperties(IStructureObject structure, string structureType)
         {
             switch (structure)
             {
                 case IPump pump:
-                    return ConstructPumpProperties(pump, structureType, path, refDate);
+                    return ConstructPumpProperties(pump, structureType);
                 case IStructure weir:
-                    return ConstructWeirProperties(weir, structureType, path, refDate);
+                    return ConstructWeirProperties(weir, structureType);
                 default:
                     throw new NotSupportedException();
             }
         }
 
-        private IEnumerable<IniProperty> ConstructWeirProperties(IStructure structure, string structureType,
-                                                                 string path, DateTime refDate)
+        private IEnumerable<IniProperty> ConstructWeirProperties(IStructure structure, string structureType)
         {
             IStructureFormula structureFormula = structure.Formula;
             switch (structureFormula)
             {
                 case SimpleWeirFormula _:
-                    return ConstructSimpleWeirProperties(structure, path, structureType, refDate);
+                    return ConstructSimpleWeirProperties(structure, structureType);
                 case GeneralStructureFormula _:
-                    return ConstructGeneralStructureProperties(structure, path, structureType, refDate);
+                    return ConstructGeneralStructureProperties(structure, structureType);
                 case SimpleGateFormula _:
-                    return ConstructGatedWeirProperties(structure, structureType, path, refDate);
+                    return ConstructGatedWeirProperties(structure, structureType);
                 default:
                     throw new NotSupportedException();
             }
         }
 
-        private IEnumerable<IniProperty> ConstructGeneralStructureProperties(IStructure structure,
-                                                                             string path,
-                                                                             string structureType,
-                                                                             DateTime refDate)
+        private IEnumerable<IniProperty> ConstructGeneralStructureProperties(IStructure structure, string structureType)
         {
             var properties = new List<IniProperty>();
             var generalStructureFormula = (GeneralStructureFormula)structure.Formula;
@@ -497,13 +481,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             if (structure.UseCrestLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path,
-                                            properties,
+                ConstructTimeSeriesProperty(properties,
                                             structure,
                                             StructureRegion.CrestLevel.Key,
                                             structureType,
-                                            structure.CrestLevelTimeSeries,
-                                            refDate);
+                                            structure.CrestLevelTimeSeries);
             }
             else
             {
@@ -520,13 +502,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             // GateLowerEdgeLevel
             if (generalStructureFormula.UseGateLowerEdgeLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path,
-                                            properties,
+                ConstructTimeSeriesProperty(properties,
                                             structure,
                                             StructureRegion.GateLowerEdgeLevel.Key,
                                             structureType,
-                                            generalStructureFormula.GateLowerEdgeLevelTimeSeries,
-                                            refDate);
+                                            generalStructureFormula.GateLowerEdgeLevelTimeSeries);
             }
             else
             {
@@ -570,13 +550,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             // Horizontal gate opening
             if (generalStructureFormula.UseHorizontalGateOpeningWidthTimeSeries)
             {
-                ConstructTimeSeriesProperty(path,
-                                            properties,
+                ConstructTimeSeriesProperty(properties,
                                             structure,
                                             KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
                                             structureType,
-                                            generalStructureFormula.HorizontalGateOpeningWidthTimeSeries,
-                                            refDate);
+                                            generalStructureFormula.HorizontalGateOpeningWidthTimeSeries);
             }
             else
             {
@@ -596,22 +574,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return properties;
         }
 
-        private IEnumerable<IniProperty> ConstructPumpProperties(IPump pump,
-                                                                 string structureType,
-                                                                 string path,
-                                                                 DateTime refDate)
+        private IEnumerable<IniProperty> ConstructPumpProperties(IPump pump, string structureType)
         {
             var properties = new List<IniProperty>();
 
             if (pump.UseCapacityTimeSeries)
             {
-                ConstructTimeSeriesProperty(path,
-                                            properties,
+                ConstructTimeSeriesProperty(properties,
                                             pump,
                                             KnownStructureProperties.Capacity,
                                             structureType,
-                                            pump.CapacityTimeSeries,
-                                            refDate);
+                                            pump.CapacityTimeSeries);
             }
             else
             {
@@ -621,22 +594,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return properties;
         }
 
-        private IEnumerable<IniProperty> ConstructSimpleWeirProperties(IStructure structure,
-                                                                       string path,
-                                                                       string structureType,
-                                                                       DateTime refDate)
+        private IEnumerable<IniProperty> ConstructSimpleWeirProperties(IStructure structure, string structureType)
         {
             var properties = new List<IniProperty>();
 
             if (structure.UseCrestLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path,
-                                            properties,
+                ConstructTimeSeriesProperty(properties,
                                             structure,
                                             KnownStructureProperties.CrestLevel,
                                             structureType,
-                                            structure.CrestLevelTimeSeries,
-                                            refDate);
+                                            structure.CrestLevelTimeSeries);
             }
             else
             {
@@ -691,15 +659,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// </summary>
         /// <param name="structure"> The Weir </param>
         /// <param name="structureType"> </param>
-        /// <param name="path"> </param>
-        /// <param name="refDate"> </param>
         /// <returns>
         /// The set of properties which should be written to structures.ini
         /// </returns>
-        private IEnumerable<IniProperty> ConstructGatedWeirProperties(IStructure structure,
-                                                                      string structureType,
-                                                                      string path,
-                                                                      DateTime refDate)
+        private IEnumerable<IniProperty> ConstructGatedWeirProperties(IStructure structure, string structureType)
         {
             var gatedWeirFormula = (IGatedStructureFormula)structure.Formula;
 
@@ -707,13 +670,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             if (structure.UseCrestLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path,
-                                            properties,
+                ConstructTimeSeriesProperty(properties,
                                             structure,
                                             KnownStructureProperties.CrestLevel,
                                             structureType,
-                                            structure.CrestLevelTimeSeries,
-                                            refDate);
+                                            structure.CrestLevelTimeSeries);
             }
             else
             {
@@ -724,13 +685,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             if (gatedWeirFormula.UseGateLowerEdgeLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path,
-                                            properties,
+                ConstructTimeSeriesProperty(properties,
                                             structure,
                                             KnownStructureProperties.GateLowerEdgeLevel,
                                             structureType,
-                                            gatedWeirFormula.GateLowerEdgeLevelTimeSeries,
-                                            refDate);
+                                            gatedWeirFormula.GateLowerEdgeLevelTimeSeries);
             }
             else
             {
@@ -741,13 +700,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             if (gatedWeirFormula.UseHorizontalGateOpeningWidthTimeSeries)
             {
-                ConstructTimeSeriesProperty(path,
-                                            properties,
+                ConstructTimeSeriesProperty(properties,
                                             structure,
                                             KnownStructureProperties.GateOpeningWidth,
                                             structureType,
-                                            gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries,
-                                            refDate);
+                                            gatedWeirFormula.HorizontalGateOpeningWidthTimeSeries);
             }
             else
             {
@@ -789,23 +746,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private void ConstructTimeSeriesProperty(string path,
-                                                 ICollection<IniProperty> properties,
-                                                 INameable structure,
+        private void ConstructTimeSeriesProperty(ICollection<IniProperty> properties,
+                                                 IStructureObject structure,
                                                  string propertyKey,
                                                  string structureType,
-                                                 TimeSeries timeSeries,
-                                                 DateTime refDate)
+                                                 TimeSeries timeSeries)
         {
-            string timeFilePath = ConstructTimeFilePath(structure, propertyKey);
+            string timeFilePath = GetTimeFilePath(structure, propertyKey);
 
             properties.Add(ConstructProperty(propertyKey,
                                              timeFilePath,
                                              structureType));
 
-            WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath),
-                          timeSeries,
-                          refDate);
+            WriteTimeFile(GetOtherFilePathInSameDirectory(ReferencePath, timeFilePath), timeSeries);
         }
 
         private IniProperty ConstructProperty(string propertyKey, object value, string structureType)
@@ -849,6 +802,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         #region FileWriting
 
+        private string GetPliFilePath(IStructureObject structure)
+        {
+            if (originalDataObjects.TryGetValue(structure, out StructureDAO dao))
+            {
+                return dao.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
+            }
+            
+            return $"{structure.Name}.pli";
+        }
+        
         private static void WritePliFile(string pliFilePath, IStructureObject structure)
         {
             var pliFile = new PliFile<Feature2D>();
@@ -863,14 +826,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             });
         }
 
-        private string ConstructTimeFilePath(INameable structure,
-                                             string propertyKey)
+        private string GetTimeFilePath(IStructureObject structure, string propertyKey)
         {
+            if (originalDataObjects.TryGetValue(structure, out StructureDAO dao))
+            {
+                return dao.GetProperty(propertyKey).GetValueAsString();
+            }
+            
             return $"{structure.Name}_{propertyKey}.tim";
-
         }
 
-        private static void WriteTimeFile(string filePath, IFunction capacityTimeSeries, DateTime refDate)
+        private void WriteTimeFile(string filePath, IFunction capacityTimeSeries)
         {
             var timeFile = new TimFile();
             string directory = Path.GetDirectoryName(Path.GetFullPath(filePath));
@@ -879,7 +845,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 Directory.CreateDirectory(directory);
             }
 
-            timeFile.Write(filePath, capacityTimeSeries, refDate);
+            timeFile.Write(filePath, capacityTimeSeries, ReferenceDate);
         }
 
         #endregion

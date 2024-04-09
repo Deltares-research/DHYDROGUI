@@ -808,6 +808,18 @@
       <UserCode>true</UserCode>
       <id>b21996dd-9808-4660-864d-c0be373fb339</id>
     </Compile>
+    <Compile Include="Modules\IO\SpecifyDirectoryToExportTo.cs">
+      <BoundTo>f2f5bbf4-20d3-436d-89d4-f5df099a6571</BoundTo>
+      <DependentUpon>SpecifyDirectoryToExportTo.rxrec</DependentUpon>
+      <RecorderCode>true</RecorderCode>
+      <id>0f0d9b06-bd79-489f-9597-ffa14b8f880b</id>
+    </Compile>
+    <Compile Include="Modules\IO\SpecifyDirectoryToExportTo.UserCode.cs">
+      <BoundTo>f2f5bbf4-20d3-436d-89d4-f5df099a6571</BoundTo>
+      <DependentUpon>SpecifyDirectoryToExportTo.rxrec</DependentUpon>
+      <UserCode>true</UserCode>
+      <id>ef0deb80-80b3-48e9-a398-cf77613028c5</id>
+    </Compile>
     <Compile Include="Modules\IO\SpecifyFileToExportTo.cs">
       <DependentUpon>SpecifyFileToExportTo.rxrec</DependentUpon>
       <RecorderCode>true</RecorderCode>
@@ -2063,6 +2075,11 @@
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
       <id>256bb9b1-79cc-479e-8a48-992f751a2480</id>
       <recordtableid>2089c3d8-cef1-4483-9193-eca90f33f4c6</recordtableid>
+    </None>
+    <None Include="Modules\IO\SpecifyDirectoryToExportTo.rxrec">
+      <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>
+      <id>f2f5bbf4-20d3-436d-89d4-f5df099a6571</id>
+      <recordtableid>f0954594-df29-426f-929a-855967176c56</recordtableid>
     </None>
     <None Include="Modules\IO\SpecifyFileToExportTo.rxrec">
       <BoundTo>8927d33e-bec0-456c-a222-4b70043dc2eb</BoundTo>

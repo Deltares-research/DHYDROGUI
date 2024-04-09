@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,7 +12,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
@@ -44,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     [Extension(typeof(IPlugin))]
     public class FlowFMApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
-        private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
+        private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
         private IApplication application;
 
         public override string Name => "Delft3D FM";
@@ -89,9 +87,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                 },
                 AdditionalOwnerCheck = owner =>
-                    !(owner is ICompositeActivity) // Allow "standalone" flow models
-                    || !((ICompositeActivity)owner).Activities.OfType<WaterFlowFMModel>().Any() &&
-                    owner is IHydroModel, // Don't allow multiple flow models in one composite activity
+                    !(owner is ICompositeActivity activity) || // Allow "standalone" flow models
+                    !activity.Activities.OfType<WaterFlowFMModel>().Any() &&
+                    activity is IHydroModel, // Don't allow multiple flow models in one composite activity
                 CreateModel = owner => new WaterFlowFMModel { WorkingDirectoryPathFunc = () => Application.WorkDirectory }
             };
         }
@@ -110,12 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new SamplesImporter();
             yield return new GroupablePointCloudImporter
             {
-                GetBaseFolder = list =>
-                {
-                    WaterFlowFMModel model = GetWaterFlowFMModels()
-                        .FirstOrDefault(m => Equals(m.Area.DryPoints, list));
-                    return model == null ? string.Empty : Path.GetDirectoryName(model.MduFilePath);
-                }
+                GetRootDirectory = featureList => GetModelFor(featureList, a => a.DryPoints).GetModelDirectory(),
+                GetBaseDirectory = featureList => GetModelFor(featureList, a => a.DryPoints).GetMduDirectory()
             };
 
             yield return new PlizFileImporterExporter<FixedWeir, FixedWeir>
@@ -134,9 +128,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AfterImportAction = featureList =>
                 {
                     WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
-                    string scheme = waterFlowFmModel
-                                    .ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme)
-                                    .GetValueAsString();
+                    string scheme = waterFlowFmModel.ModelDefinition
+                                                    .GetModelProperty(KnownProperties.FixedWeirScheme)
+                                                    .GetValueAsString();
                     var warningMessages = new StringBuilder();
 
                     foreach (ModelFeatureCoordinateData<FixedWeir> fixedWeirsProperty in waterFlowFmModel
@@ -195,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var message = warningMessages.ToString();
                     if (!string.IsNullOrEmpty(message))
                     {
-                        Log.Warn(message);
+                        log.Warn(message);
                     }
                 },
                 AfterCreateAction = (featureList, fixedWeir) =>
@@ -209,8 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PlizFileImporterExporter<BridgePillar, BridgePillar>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateDelegate =
-                    delegate (List<Coordinate> points, string name) { return MduFile.CreateDelegateBridgePillar(name, points); },
+                CreateDelegate = (points, name) => MduFile.CreateDelegateBridgePillar(name, points),
                 EqualityComparer = new GroupableFeatureComparer<BridgePillar>(),
                 AfterCreateAction = delegate (object featureList, BridgePillar bridgePillar)
                 {
@@ -381,7 +374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
-            yield return new WaterFlowFMFileExporter();
+            yield return new FMModelFileExporter();
             yield return new Area2DStructuresExporter { GetModelForArea = GetModelForArea };
             yield return new StructuresListExporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
             yield return new StructuresListExporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };
@@ -421,8 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             IList dataColumnWithData =
                                 correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
 
-                            GeometryPointsSyncedList<double> syncedList;
-                            syncedList = new GeometryPointsSyncedList<double>
+                            var syncedList = new GeometryPointsSyncedList<double>
                             {
                                 CreationMethod = (f, i) => 0.0,
                                 Feature = fixedWeir
@@ -459,9 +451,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         return;
                     }
 
-                    IList<ModelFeatureCoordinateData<BridgePillar>> modelFeatureCoordinateDatas =
-                        waterFlowFmModel.BridgePillarsDataModel;
-                    MduFile.SetBridgePillarAttributes(bridgePillars, modelFeatureCoordinateDatas);
+                    IList<ModelFeatureCoordinateData<BridgePillar>> modelFeatureCoordinateData = waterFlowFmModel.BridgePillarsDataModel;
+                    MduFile.SetBridgePillarAttributes(bridgePillars, modelFeatureCoordinateData);
                 },
                 AfterExportActionDelegate = delegate (object featureList)
                 {
@@ -573,7 +564,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors)
-            where T : IFeature, INameable
+            where T : IFeature
         {
             return Application?.Project?.RootFolder.GetAllModelsRecursive()
                               .OfType<WaterFlowFMModel>()

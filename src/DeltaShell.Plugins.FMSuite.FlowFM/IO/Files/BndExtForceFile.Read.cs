@@ -27,22 +27,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public partial class BndExtForceFile
     {
-        private string bndExtSubFilesReferenceFilePath;
         private static readonly ILogHandler parserLogHandler = new LogHandler(Resources.The_parsing_of_the_boundary_external_forcing_file);
         private readonly BndExtForceFileParser bndExtForceFileParser = new BndExtForceFileParser(parserLogHandler);
         private readonly LateralFactory lateralFactory = new LateralFactory();
 
-        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition,
-                         string bndExtForceSubFilesReferenceFilePath)
+        public void Read(string filePath, string referenceFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
-            bndExtFilePath = bndExtForceFilePath;
-            bndExtSubFilesReferenceFilePath = bndExtForceSubFilesReferenceFilePath;
+            bndExtFilePath = filePath;
+            bndExtSubFilesReferenceFilePath = referenceFilePath;
 
             IniData iniData;
 
-            using (var fileStream = new FileStream(bndExtForceFilePath, FileMode.Open, FileAccess.ReadWrite))
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
             {
-                iniData = new MduIniReader().ReadIniFile(fileStream, bndExtForceFilePath);
+                iniData = new MduIniReader().ReadIniFile(fileStream, filePath);
                 RemoveRedundantProperties(iniData, modelDefinition);
                 UpdateLegacyNames(iniData);
             }
@@ -98,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private string GetFullPathForReading(string relativePath)
         {
-            return Path.Combine(Path.GetDirectoryName(bndExtSubFilesReferenceFilePath), relativePath);
+            return GetOtherFilePathInSameDirectory(bndExtSubFilesReferenceFilePath, relativePath);
         }
 
         private void ReadPolyLines(BndExtForceFileDTO bndExtForceFileDTO, WaterFlowFMModelDefinition modelDefinition)

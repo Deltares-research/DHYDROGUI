@@ -249,19 +249,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void ExportTo_WhenSwitchToIsTrueAndModelHasOutput_ShouldNotChangeOutOfSync(bool outOfSync)
         {
             // Setup
-            using (var tempDir = new TemporaryDirectory())
+            using (var sourceDir = new TemporaryDirectory())
+            using (var targetDir = new TemporaryDirectory())
             using (var model = new WaterFlowFMModel())
             {
-                CreateRestartFiles(tempDir).ToArray();
+                CreateRestartFiles(sourceDir).ToArray();
               
-                model.ConnectOutput(tempDir.Path);
+                model.ConnectOutput(sourceDir.Path);
                 model.OutputOutOfSync = outOfSync;
                 
                 Assert.AreEqual(outOfSync, model.OutputOutOfSync);
                 Assert.AreEqual(false, model.OutputIsEmpty);
 
                 // Call
-                model.ExportTo(Path.Combine(tempDir.Path, "export"), true, true, true);
+                model.ExportTo(Path.Combine(targetDir.Path, "export.mdu"));
 
                 // Assert
                 Assert.AreEqual(outOfSync, model.OutputOutOfSync);

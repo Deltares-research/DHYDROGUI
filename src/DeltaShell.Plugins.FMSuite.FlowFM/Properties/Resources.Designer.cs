@@ -698,27 +698,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copied file at location &apos;{0}&apos; to location &apos;{1}&apos;,
-        ///because the file existed outside of the project folder of model &apos;{2}&apos;..
-        /// </summary>
-        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder {
-            get {
-                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExis" +
-                        "tedOutsideOfTheProjectFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Copying file from location &apos;{0}&apos; to location &apos;{1}&apos; will overwrite the existing file at the new location..
-        /// </summary>
-        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation {
-            get {
-                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocati" +
-                        "on", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to File at location &apos;{0}&apos; is referenced in structures file &apos;{1}&apos;, but does not exist..
         /// </summary>
         public static string MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist {

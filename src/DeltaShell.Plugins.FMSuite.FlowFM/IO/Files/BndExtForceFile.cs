@@ -9,6 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public partial class BndExtForceFile : NGHSFileBase
     {
+        private string bndExtFilePath;
+        private string bndExtSubFilesReferenceFilePath;
+        
         /// <summary>
         /// File version of the file.
         /// </summary>

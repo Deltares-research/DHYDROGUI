@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
@@ -7,9 +6,7 @@ using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NetTopologySuite.Extensions.Coverages;
-using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 {
@@ -116,18 +113,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
         public IEventedList<IDataItem> DataItems { get; }
 
-        public void SwitchTo(string targetDir)
-        {
-            Ensure.NotNullOrEmpty(targetDir, nameof(targetDir));
-
-            foreach (ImportSamplesOperation operation in DataItems.Except(bathymetryDataItem)
-                                                                  .SelectMany(GetImportSamplesOperations))
-            {
-                string fileName = Path.GetFileName(operation.FilePath);
-                operation.FilePath = Path.Combine(targetDir, fileName);
-            }
-        }
-
         public void AddTracer(UnstructuredGridCellCoverage coverage)
         {
             Ensure.NotNull(coverage, nameof(coverage));
@@ -152,18 +137,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public void RemoveFraction(string name)
         {
             RemoveDataItem(fractionDataItems, name);
-        }
-
-        private static IEnumerable<ImportSamplesOperation> GetImportSamplesOperations(IDataItem dataItem)
-        {
-            if (dataItem.ValueConverter is SpatialOperationSetValueConverter converter)
-            {
-                foreach (ImportSamplesOperation operation in converter.SpatialOperationSet.GetOperationsRecursive()
-                                                                      .OfType<ImportSamplesOperation>())
-                {
-                    yield return operation;
-                }
-            }
         }
 
         private void RemoveDataItem(ICollection<IDataItem> dataItemSource, string name)

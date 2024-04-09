@@ -1647,7 +1647,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             string exportFilePath = Path.Combine(exportPath,
                                                  Path.GetFileName(fmModel.MduFilePath));
             IFileExporter relevantExporter = app.FileExporters
-                                                .FirstOrDefault(exporter => exporter is WaterFlowFMFileExporter);
+                                                .FirstOrDefault(exporter => exporter is FMModelFileExporter);
             Assert.That(relevantExporter, Is.Not.Null,
                         "Expected the app to contain a WaterFlowFMMileExporter.");
 

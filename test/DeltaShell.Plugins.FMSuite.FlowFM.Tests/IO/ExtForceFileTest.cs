@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extSubFilesReferenceFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+            extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
 
             //extForceFile.ImportSpatialOperations(extPath, def);
 
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extSubFilesReferenceFilePath = TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+            extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
 
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName));
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName));
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // When, Then
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => new ExtForceFile().Read(extPath, new WaterFlowFMModelDefinition(), extSubFilesReferenceFilePath),
+                () => new ExtForceFile().Read(extPath, extSubFilesReferenceFilePath, new WaterFlowFMModelDefinition()),
                 string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_,
                               "initialspatialvaryingsedimentSediment_sand_SedConc"));
 
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             string expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure");
             var extForceFile = new ExtForceFile();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def, extSubFilesReferenceFilePath), expectedMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, extSubFilesReferenceFilePath, def), expectedMessage);
         }
 
         [Test]
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var extForceFile = new ExtForceFile();
 
             Assert.IsFalse(def.BoundaryConditions.Any());
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def, extSubFilesReferenceFilePath), expectedMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, extSubFilesReferenceFilePath, def), expectedMessage);
             Assert.IsTrue(def.BoundaryConditions.Any());
 
             /* Just check the boundary has been imported. */
@@ -154,35 +154,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void ReadExtFileWithFileReferencesInDifferentFoldersWritesToExtFileFolder()
+        [TestCase(@"ExtFileTest\ReferencesRelativeToMdu\ExtFolder\WithKnownAndUnknownQuantities.ext",
+                  @"ExtFileTest\ReferencesRelativeToMdu\MduFolder\EmptyMduFile.mdu")]
+        [TestCase(@"ExtFileTest\ReferencesRelativeToExt\ExtFolder\WithKnownAndUnknownQuantities.ext",
+                  @"ExtFileTest\ReferencesRelativeToExt\ExtFolder\WithKnownAndUnknownQuantities.ext")]
+        public void GivenAnExtFileWithMultipleSubFileReferences_WhenReadingAndWritingThisFile_ThenAllSubFilesShouldBeWrittenWithRespectToParentFile(
+            string extFilePath, 
+            string extSubFilesReferenceFilePath)
         {
-            var extForceFile = new ExtForceFile();
+            string fullExtFilePath = TestHelper.GetTestFilePath(extFilePath);
+            string fullExtSubFilesReferenceFilePath = TestHelper.GetTestFilePath(extSubFilesReferenceFilePath);
+            
             var modelDefinition = new WaterFlowFMModelDefinition();
+            
+            var extForceFile = new ExtForceFile();
+            extForceFile.Read(fullExtFilePath, fullExtSubFilesReferenceFilePath, modelDefinition);
 
-            using (var sourceDir = new TemporaryDirectory())
-            using (var targetDir = new TemporaryDirectory())
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                string testFilesDir = TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileReferencesInDifferentFolders");
-                string sourceFilesDir = sourceDir.CopyDirectoryToTempDirectory(testFilesDir);
+                string saveExtFilePath = Path.Combine(tempDir, extFilePath);
+                string saveExtSubFilesReferenceFilePath = Path.Combine(tempDir, extSubFilesReferenceFilePath);
+                
+                extForceFile.Write(saveExtFilePath, saveExtSubFilesReferenceFilePath, modelDefinition, true, true);
 
-                string sourceExtFilePath = Path.Combine(sourceFilesDir, @"computations\WithKnownAndUnknownQuantities.ext");
-                string sourceMduFilePath = Path.Combine(sourceFilesDir, @"computations\EmptyMduFile.mdu");
+                Assert.True(File.Exists(saveExtFilePath));
 
-                extForceFile.Read(sourceExtFilePath, modelDefinition, sourceMduFilePath);
+                using (var file = new StreamReader(saveExtFilePath))
+                {
+                    string line;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        if (line.Contains("FILENAME"))
+                        {
+                            CheckIfSubFilesMentionedInExtForceFileAreWrittenRelativeToThisFile(line, saveExtSubFilesReferenceFilePath);
+                        }
+                    }
 
-                string targetFilesDir = targetDir.Path;
-                string targetExtFilePath = Path.Combine(targetFilesDir, @"WithKnownAndUnknownQuantities.ext");
-                string targetPliFilePath = Path.Combine(targetFilesDir, @"OB_001_orgsize.pli");
-                string targetNcFilePath = Path.Combine(targetFilesDir, @"RAD_NL25_RAC_MFBS_5min.nc");
-                string targetPolFilePath = Path.Combine(targetFilesDir, @"surroundingDomain.pol");
-
-                extForceFile.Write(targetExtFilePath, modelDefinition, true, true);
-
-                Assert.That(targetExtFilePath, Does.Exist);
-                Assert.That(targetPliFilePath, Does.Exist);
-                Assert.That(targetNcFilePath, Does.Exist);
-                Assert.That(targetPolFilePath, Does.Exist);
-            }
+                    file.Close();
+                }
+            });
         }
 
         [Test]
@@ -201,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "internaltidesfrictioncoefficient");
 
             Assert.IsFalse(def.BoundaryConditions.Any());
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def, extSubFilesReferenceFilePath), expectedMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, extSubFilesReferenceFilePath, def), expectedMessage);
             Assert.IsTrue(def.BoundaryConditions.Any());
 
             /* Just check the boundary has been imported. */
@@ -216,7 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string newPath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewExtFile");
             string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewMduFile");
 
-            extForceFile.Write(newPath, def, true, true); // write loaded definition to new location
+            extForceFile.Write(newPath, newExtSubFilesReferenceFilePath, def, true, true); // write loaded definition to new location
 
             //Check
             Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(newPath), def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
@@ -224,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newExtFile = new ExtForceFile();
             var newDef = new WaterFlowFMModelDefinition();
 
-            newExtFile.Read(newPath, newDef, newExtSubFilesReferenceFilePath); // load written definition back
+            newExtFile.Read(newPath, newExtSubFilesReferenceFilePath, newDef); // load written definition back
             ValidateUnknownQuantities(newDef);
         }
 
@@ -247,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsFalse(modelDefinition.BoundaryConditions.Any());
 
             // When
-            TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, modelDefinition, extSubFilesReferenceFilePath), expectedMessage);
+            TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, extSubFilesReferenceFilePath, modelDefinition), expectedMessage);
 
             // Then
             ValidateUnknownQuantities(modelDefinition);
@@ -274,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //action read
             var extForceFile = new ExtForceFile();
             var expectedMessage = @"Quantity 'solarradiation' detected in the external force file and will be passed to the computational core. This may affect your simulation.";
-            TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, modelDefinition, ""), expectedMessage);
+            TestHelper.AssertLogMessageIsGenerated(() => extForceFile.Read(extPath, extPath, modelDefinition), expectedMessage);
 
             // check read
             Assert.IsTrue(modelDefinition.UnsupportedFileBasedExtForceFileItems.Any());
@@ -315,12 +325,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(new UnsupportedFileBasedExtForceFileItem(writeExtPath,extForceFileItem));
 
                 //write
-                extForceFile.Write(writeExtPath, modelDefinition, false, false);
+                extForceFile.Write(writeExtPath, writeExtPath, modelDefinition, false, false);
 
                 // check written file
                 var writtenModelDefinition = new WaterFlowFMModelDefinition();
                 var writtenExtForceFile = new ExtForceFile();
-                writtenExtForceFile.Read(writeExtPath, writtenModelDefinition, "");
+                writtenExtForceFile.Read(writeExtPath, writeExtPath, writtenModelDefinition);
 
                 Assert.IsTrue(writtenModelDefinition.UnsupportedFileBasedExtForceFileItems.Any());
                 var writtenUnsupportedExternalForceItem = writtenModelDefinition.UnsupportedFileBasedExtForceFileItems.First();
@@ -338,7 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
             string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "correct_prefix.mdu");
             var extForceFile = new ExtForceFile();
-            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, def, extSubFilesReferenceFilePath), 0);
+            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, extSubFilesReferenceFilePath, def), 0);
         }
 
         [Test]
@@ -494,7 +504,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /* Save ext file */
                 var extFile = new ExtForceFile();
-                extFile.Write(extForceFile, fmModel.ModelDefinition, true, true);
+                extFile.Write(extForceFile, extForceFile, fmModel.ModelDefinition, true, true);
                 Assert.IsTrue(File.Exists(extForceFile));
 
                 /* Check SedConc has generated only one Xyz File and one entry in the Ext file
@@ -548,7 +558,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Save ext file */
                 var extFile = new ExtForceFile();
                 //Save SedFile with no fractions. No warnings should be given.
-                TestHelper.AssertLogMessagesCount(() => extFile.Write(extForceFile, fmModel.ModelDefinition, true, true), 0);
+                TestHelper.AssertLogMessagesCount(() => extFile.Write(extForceFile, extForceFile, fmModel.ModelDefinition, true, true), 0);
 
                 //Update model , we need to force it as we are not saving directly from the model but from the ModelDefinition
                 ISpatiallyVaryingSedimentProperty sedConcProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name == "SedConc");
@@ -556,7 +566,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //Add another spatially varying prop -> Warning should be given.
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
                 TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => extFile.Write(extForceFile, fmModel.ModelDefinition, true, true),
+                    () => extFile.Write(extForceFile, extForceFile, fmModel.ModelDefinition, true, true),
                     string.Format(
                         Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_,
                         sedConcProp.SpatiallyVaryingName));
@@ -601,7 +611,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
                 //New warning should be given.
                 TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => extFile.Write(extForceFile, fmModel.ModelDefinition, true, true),
+                    () => extFile.Write(extForceFile, extForceFile, fmModel.ModelDefinition, true, true),
                     string.Format(
                         Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
                         sedConcProp.SpatiallyVaryingName));
@@ -622,7 +632,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "chezy_A.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+            extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
 
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName));
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName));
@@ -638,9 +648,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             using (var temp = new TemporaryDirectory())
             {
-                string newPath =Path.Combine(temp.Path, "initialFields.ini");
+                string newPath = Path.Combine(temp.Path, "initialFields.ini");
                 var initialFieldFileWriter = new InitialFieldFileWriter(new FileSystem(), new SpatialDataFileWriter());
-                initialFieldFileWriter.Write(newPath, def); // write loaded definition to new location
+                initialFieldFileWriter.Write(newPath, newPath, false, def); // write loaded definition to new location
 
                 var initialFieldFileReader = new InitialFieldFileReader(new FileSystem());
                 var newDef = new WaterFlowFMModelDefinition();
@@ -659,7 +669,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "waterlevel.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+            extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
 
             Assert.AreEqual(1, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Count);
 
@@ -713,20 +723,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Add(samples);
 
-            const string newExtPath = "test.ext";
-            string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newExtPath), "test.mdu");
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                string newExtPath = Path.Combine(tempDir, "test.ext");
 
-            extForceFile.Write(newExtPath, def, true, true);
+                extForceFile.Write(newExtPath, newExtPath, def, true, true);
 
-            var newDef = new WaterFlowFMModelDefinition();
-            var newExtFile = new ExtForceFile();
-            newExtFile.Read(newExtPath, newDef, newExtSubFilesReferenceFilePath);
+                var newDef = new WaterFlowFMModelDefinition();
+                var newExtFile = new ExtForceFile();
+                
+                newExtFile.Read(newExtPath, newExtPath, newDef);
 
-            Assert.AreEqual(3, newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Count);
-            Assert.AreEqual(3,
-                            ((ImportSamplesOperation)
-                                newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName)[2]).GetPoints()
-                                                                                                                       .Count());
+                Assert.AreEqual(3, newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Count);
+                Assert.AreEqual(3, ((ImportSamplesOperation)newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName)[2]).GetPoints().Count());
+            });
+        }
+        
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ReadWriteSampleForcingsInitialSalinitySwitchTo(bool switchTo)
+        {
+            string extPath = TestHelper.GetTestFilePath(@"chezy_samples\initialsalinity.ext");
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var extForceFile = new ExtForceFile();
+            extForceFile.Read(extPath, extPath, modelDefinition);
+            
+            ImportSamplesOperation samplesOperation = modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName)
+                                                                     .OfType<ImportSamplesOperation>()
+                                                                     .First();
+
+            string originalSamplesPath = samplesOperation.FilePath;
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                string targetExtFilePath = Path.Combine(tempDir, @"initialsalinity.ext");
+                extForceFile.Write(targetExtFilePath, targetExtFilePath, modelDefinition, true, switchTo);
+
+                string targetSamplesPath = Path.Combine(tempDir, "chezy.xyz");
+                Assert.That(targetSamplesPath, Does.Exist);
+                Assert.That(samplesOperation.FilePath, Is.EqualTo(switchTo ? targetSamplesPath : originalSamplesPath));
+            });
         }
 
         [Test]
@@ -1018,14 +1056,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "sourcesink_2D.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+            extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
 
             Assert.AreEqual(7, def.Pipes.Count);
             Assert.AreEqual(7, def.SourcesAndSinks.Count);
 
             Assert.AreEqual(1.5d, def.SourcesAndSinks[0].Area);
 
-            extForceFile.Write("sourcesink.ext", def, true, true);
+            extForceFile.Write("sourcesink.ext", "sourcesink.ext", def, true, true);
 
             Assert.IsTrue(File.Exists("sourcesink.ext"));
 
@@ -1052,7 +1090,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var extForceFile = new ExtForceFile();
 
                 // When
-                extForceFile.Read(copyInTempOfExtFilePath, def, copyInTempOfExtFilePath);
+                extForceFile.Read(copyInTempOfExtFilePath, copyInTempOfExtFilePath, def);
 
                 // Then
                 if (heatFluxModelVersion == "gridded")
@@ -1084,7 +1122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.CreateDirectoryIfNotExists(saveDirectory);
 
                 // When
-                extForceFile.Write(savedExtFile, def, true, true);
+                extForceFile.Write(savedExtFile, savedExtFile, def, true, true);
 
                 // Then
                 foreach (string file in saveLocations)
@@ -1110,7 +1148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string dummyMduFilePath = Path.Combine(tempDirectory.Path, "nonExisting.mdu");
 
                 // When
-                extForceFile.Read(extForceFilePath, modelDefinition, dummyMduFilePath);
+                extForceFile.Read(extForceFilePath, dummyMduFilePath, modelDefinition);
 
                 // Then
                 Assert.IsNotEmpty(modelDefinition.SourcesAndSinks, "Reading source and sink was unsuccessful.");
@@ -1123,18 +1161,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Setup
             string mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            var modelDefinition = new WaterFlowFMModelDefinition(Path.GetDirectoryName(mduFilePath), Path.GetFileName(mduFilePath));
+            var modelDefinition = new WaterFlowFMModelDefinition(Path.GetFileName(mduFilePath));
 
             var extForceFile = new ExtForceFile();
             const string relativeExtForceFilePath = @"fm_files\fm_files.ext";
             string extForceFilePath = TestHelper.GetTestFilePath(relativeExtForceFilePath);
-            extForceFile.Read(extForceFilePath, modelDefinition, mduFilePath);
+            extForceFile.Read(extForceFilePath, mduFilePath, modelDefinition);
 
             using (var temporaryDirectory = new TemporaryDirectory())
             {
                 // When
                 string newExtForceFilePath = Path.Combine(temporaryDirectory.Path, Path.GetFileName(relativeExtForceFilePath));
-                extForceFile.Write(newExtForceFilePath, modelDefinition, true, true);
+                string newMduFilePath = Path.Combine(temporaryDirectory.Path, Path.GetFileName(mduFilePath));
+                extForceFile.Write(newExtForceFilePath, newMduFilePath, modelDefinition, true, true);
 
                 // Assert
                 string extForceFileContent = File.ReadAllText(newExtForceFilePath);
@@ -1155,7 +1194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extSubFilesReferenceFilePath = Path.Combine(originalTestDirectory, "FlowFM.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+            extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
 
             var supportedExtForceFileItem = extForceFile.ExistingForceFileItems.First().Key;
 
@@ -1190,7 +1229,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(new UnsupportedFileBasedExtForceFileItem(writeExtPath,extForceFileItem));
                 
                 //write
-                extForceFile.Write(writeExtPath, modelDefinition, false, false);
+                extForceFile.Write(writeExtPath, writeExtPath, modelDefinition, false, false);
 
                 // check written file
                 string extForceFileContent = File.ReadAllText(writeExtPath);
@@ -1218,7 +1257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string extSubFilesReferenceFilePath = TestHelper.GetTestFilePath(@"ExtFileTest\InitialVelocity\flowFM.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
+            extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
             
             var extForceFileItems = extForceFile.ExistingForceFileItems.ToList();
             var extForceFileItemX = extForceFileItems[0].Key;
@@ -1270,7 +1309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 extForceFile.ExistingForceFileItems[extForceFileItem] = modelDefinition.InitialVelocityX;
                 
                 //write
-                extForceFile.Write(writeExtPath, modelDefinition, false, false);
+                extForceFile.Write(writeExtPath, writeExtPath, modelDefinition, false, false);
 
                 // check written file
                 string extForceFileContent = File.ReadAllText(writeExtPath);
@@ -1285,7 +1324,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
         
-        
+        private static void CheckIfSubFilesMentionedInExtForceFileAreWrittenRelativeToThisFile(string line, string referenceFilePath)
+        {
+            string[] parts = line.Split('=');
+            
+            string subFilePath = parts[1].Trim();
+            string directoryName = Path.GetDirectoryName(referenceFilePath);
+            string expectedPath = Path.Combine(directoryName, subFilePath);
+            
+            Assert.IsTrue(File.Exists(expectedPath), $"Expected path does not exist: '{expectedPath}'.");
+        }
 
         private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)
         {

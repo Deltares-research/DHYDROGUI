@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             public string ExplicitWorkingDirectory => ModelDir + "_output";
 
-            public string OutputDir => model.PersistentOutputDirectoryPath;
+            public string OutputDir => model.GetModelOutputDirectory();
 
             public IEnumerable<string> StateFiles => SearchStateFiles(ProjectDir);
 
@@ -91,11 +91,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             public string RestartMeta => Path.Combine(InputDir, restartMeta);
 
-            private string InputDir => Path.GetDirectoryName(model.MduFilePath);
+            private string InputDir => model.GetMduDirectory();
 
             private string ProjectDir => Path.GetDirectoryName(ModelDir);
 
-            private string ModelDir => model.ModelDirectoryPath;
+            private string ModelDir => model.GetModelDirectory();
 
             private IEnumerable<string> SearchStateFiles(string dir)
             {

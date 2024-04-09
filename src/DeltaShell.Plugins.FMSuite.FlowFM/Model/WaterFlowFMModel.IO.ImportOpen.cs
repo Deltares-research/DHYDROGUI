@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private string RetrieveOutputDirectory(string mduFilePath)
         {
-            currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+            currentOutputDirectoryPath = GetModelOutputDirectory();
 
             if (ModelDefinition.ContainsProperty(KnownProperties.OutputDir))
             {
@@ -359,9 +359,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void LoadModelFromMdu(string mduFilePath)
         {
             MduFilePath = mduFilePath;
-            string mduFileDir = Path.GetDirectoryName(mduFilePath);
             Name = Path.GetFileNameWithoutExtension(mduFilePath);
-            ModelDefinition = new WaterFlowFMModelDefinition(mduFileDir, Name);
+            ModelDefinition = new WaterFlowFMModelDefinition(Name);
 
             // intialize model definition from mdu file if it exists
             if (File.Exists(mduFilePath))

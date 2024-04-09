@@ -210,11 +210,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             return propertyDefinition.IsVisible(properties);
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return $"{PropertyDefinition.Caption}: {GetValueAsString()} ({PropertyDefinition.Category})";
         }
 
+        /// <inheritdoc />
         public abstract object Clone();
 
         /// <summary>

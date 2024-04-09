@@ -80,6 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                         DefaultValueAsString = defaultField,
                         MinValueAsString = minField,
                         MaxValueAsString = maxField,
+                        IsFile = typeField.ToLower().Equals("filename"),
                         ModelFileOnly = isReadOnly.ToLower().Equals("true"),
                         Description = description,
                         IsDefinedInSchema = true

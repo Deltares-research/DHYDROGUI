@@ -25,7 +25,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
@@ -193,7 +192,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
             WindFields = ModelDefinition.WindFields;
-            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
             Pipes = ModelDefinition.Pipes;
             SourcesAndSinks = ModelDefinition.SourcesAndSinks;
             LateralFeatures = ModelDefinition.LateralFeatures;
@@ -317,8 +315,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         public IEventedList<IWindField> WindFields { get; private set; }
-
-        public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
         public HeatFluxModelType HeatFluxModelType { get; private set; }
 
@@ -783,12 +779,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 {
                     // put in everything except spatial operation sets,
                     // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-                    List<ISpatialOperation> spatialOperation = spatialOperationValueConverter
-                                                               .SpatialOperationSet.GetOperationsRecursive()
-                                                               .Where(s => !(s is ISpatialOperationSet))
-                                                               .Select(WaterFlowFMModelDefinition
-                                                                           .ConvertSpatialOperation)
-                                                               .ToList();
+                    List<ISpatialOperation> spatialOperation = spatialOperationValueConverter.SpatialOperationSet.GetOperationsRecursive()
+                                                                                             .Where(s => !(s is ISpatialOperationSet))
+                                                                                             .Select(WaterFlowFMModelDefinition.ConvertSpatialOperation)
+                                                                                             .ToList();
 
                     spatialOperationsLookupTable.Add(dataItem.Name, spatialOperation);
                 }

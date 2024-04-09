@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -27,13 +26,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private readonly BoundarySerializer boundarySerializer = new BoundarySerializer();
         private readonly LateralSerializer lateralSerializer = new LateralSerializer();
 
-        private string bndExtFilePath;
-        
         public bool WriteToDisk { get; set; }
 
-        public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition)
+        public void Write(string filePath, string referenceFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
             bndExtFilePath = filePath;
+            bndExtSubFilesReferenceFilePath = referenceFilePath;
 
             ModelProperty modelProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             IList<IniSection> bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinition);
@@ -48,7 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (bndExtForceFileItems.Any() || lateralSections.Any())
             {
                 WriteBndExtForceFile(bndExtForceFileItems, lateralSections);
-                modelProperty.SetValueFromString(Path.GetFileName(bndExtFilePath));
             }
             else
             {
@@ -61,38 +58,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             DateTime refDate = modelDefinition.GetReferenceDateAsDateTime();
 
-            FlattenSubFileReferences();
             WritePolyLines(modelDefinition.BoundaryConditionSets);
             WriteLateralBcFiles(modelDefinition.Laterals, refDate);
             
             return WriteBoundaryBcFiles(modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, refDate);
-        }
-
-        private void FlattenSubFileReferences()
-        {
-            foreach (Feature2D feature in existingPolyLineFiles.Keys.ToArray())
-            {
-                string filePath = existingPolyLineFiles[feature];
-                existingPolyLineFiles[feature] = GetFileName(filePath);
-            }
-
-            foreach (BoundaryDTO boundaryDTO in existingBndForceFileItems.Values.ToArray())
-            {
-                boundaryDTO.LocationFile = GetFileName(boundaryDTO.LocationFile);
-
-                foreach (string forcingFile in boundaryDTO.ForcingFiles.ToArray())
-                {
-                    boundaryDTO.RemoveForcingFile(forcingFile);
-                    boundaryDTO.AddForcingFile(GetFileName(forcingFile));
-                }
-            }
-        }
-
-        private string GetFileName(string path)
-        {
-            return !string.IsNullOrEmpty(path) && FileUtils.PathIsRelative(path) 
-                       ? Path.GetFileName(path) 
-                       : path;
         }
         
         private IList<IniSection> WriteBoundaryBcFiles(string modelDefinitionModelName, IList<BoundaryConditionSet> boundaryConditionSets, DateTime refDate)
@@ -147,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private string GetFullPathForWriting(string relativePath)
         {
-            return Path.Combine(Path.GetDirectoryName(bndExtFilePath), relativePath);
+            return GetOtherFilePathInSameDirectory(bndExtSubFilesReferenceFilePath, relativePath);
         }
 
         private void WriteBndExtForceFile(IEnumerable<IniSection> bndExtForceFileItems, IEnumerable<IniSection> lateralSections)

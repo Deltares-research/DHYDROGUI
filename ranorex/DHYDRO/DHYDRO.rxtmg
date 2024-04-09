@@ -4,12 +4,6 @@ rxversion="10.7">
 	<testsuiteentryhierarchy>
 		<flatlistofchildren>
 			<testmodule
-			id="028903b8-3ab2-4f06-8b57-64f992df00c7"
-			name="SpecifyFileToExportTo"
-			ref="ad658c8e-eb55-433b-853a-d480d8c125c6"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="02ac6ff8-e65f-4139-8936-5a251833bfbf"
 			name="LaunchExportGridDialog"
 			ref="162a59c8-9938-4114-b1ab-2e5d1bbe53d6"
@@ -94,6 +88,12 @@ rxversion="10.7">
 				<description>
 					<![CDATA[Wait until the file has been loaded]]>
 				</description>
+			</testmodule>
+			<testmodule
+			id="16fa82c6-7258-4f27-93f1-50098ba24818"
+			name="SpecifyDirectoryToExportTo"
+			ref="f0954594-df29-426f-929a-855967176c56"
+			type="Recording">
 			</testmodule>
 			<testmodule
 			id="179d185e-321c-4e25-98e4-67dc32dea056"
@@ -799,11 +799,11 @@ rxversion="10.7">
 				<groupvariables>
 					<groupvariable
 					id="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					name="ExportMduFilePath">
+					name="ExportMduDirectory">
 						<modulevariable
-						moduleref="028903b8-3ab2-4f06-8b57-64f992df00c7"
-						name="FileName"
-						variableref="f45d74d9-36b6-445d-a144-84af2629f2b3">
+						moduleref="16fa82c6-7258-4f27-93f1-50098ba24818"
+						name="DirectoryName"
+						variableref="62e22cf6-ae61-4f96-a7e1-7c5a7cadd8d2">
 						</modulevariable>
 					</groupvariable>
 				</groupvariables>
@@ -1106,8 +1106,8 @@ rxversion="10.7">
 					name="CloseOkDialog">
 					</testmodule>
 					<testmodule
-					id="028903b8-3ab2-4f06-8b57-64f992df00c7"
-					name="SpecifyFileToExportTo">
+					id="16fa82c6-7258-4f27-93f1-50098ba24818"
+					name="SpecifyDirectoryToExportTo">
 					</testmodule>
 					<testmodule
 					id="300efbec-4f65-49f4-aa13-25a41c5c0a45"

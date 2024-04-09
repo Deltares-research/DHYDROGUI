@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using log4net.Core;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -197,98 +194,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(features.Count(f => f.GroupName == featureName1), Is.EqualTo(1));
             Assert.That(features.Count(f => f.GroupName == featureName2), Is.EqualTo(1));
             Assert.That(features.Count(f => f.GroupName == featureName3), Is.EqualTo(1));
-        }
-
-        [Test]
-        public void GivenAPropertyWithAFileReferenceOutsideMduFolder_WhenCopyFilesToMduFolderIfNeededIsCalled_ThenFileIsCopiedToMduFolder()
-        {
-            // Given
-            const string referencedFileName = "referenced_file.txt";
-            const string propertyKey = KnownProperties.ThinDamFile;
-
-            WaterFlowFMModelDefinition modelDefinition = CreateModelDefinitionWithProperty(propertyKey, $"../{referencedFileName}");
-
-            using (var tempDir = new TemporaryDirectory())
-            {
-                string tempPath = tempDir.Path;
-                string mduDirPath = Path.Combine(tempPath, "input");
-                string mduFilePath = Path.Combine(mduDirPath, "file.mdu");
-                string sourceFilePath = Path.Combine(tempPath, referencedFileName);
-                string targetFilePath = Path.Combine(mduDirPath, referencedFileName);
-
-                Directory.CreateDirectory(mduDirPath);
-                using (File.Create(sourceFilePath)) {}
-
-                // When
-                void TestAction() => MduFileHelper.CopyFilesToMduFolderIfNeeded(
-                    new[]
-                    {
-                        sourceFilePath
-                    },
-                    mduFilePath,
-                    modelDefinition,
-                    propertyKey);
-
-                // Then
-                IEnumerable<string> renderedInfoMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Info);
-                string expectedMessage = string.Format(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
-                                                       sourceFilePath, targetFilePath, modelDefinition.ModelName);
-                Assert.That(renderedInfoMessages.Contains(expectedMessage));
-                Assert.That(File.Exists(sourceFilePath),
-                            "When importing an mdu, original referenced files should not be deleted.");
-                Assert.That(File.Exists(targetFilePath),
-                            "When importing mdu, referenced files are expected to be copied to the mdu directory.");
-                Assert.That(modelDefinition.GetModelProperty(propertyKey).GetValueAsString(), Is.EqualTo(referencedFileName),
-                            $"Relative path of the copied file should have been {referencedFileName}.");
-            }
-        }
-
-        [Test]
-        public void GivenAModelPropertyWithAFileReferenceOutsideMduFolder_WhenCopyFilesToMduFolderIfNeededIsCalled_AndTargetFileAlreadyExists_ThenFileIsCopiedAndOverwritesExistingFileInMduFolder()
-        {
-            // Given
-            const string referencedFileName = "referenced_file.txt";
-            const string propertyKey = KnownProperties.ThinDamFile;
-            const string sourceFileContent = "source";
-
-            WaterFlowFMModelDefinition modelDefinition = CreateModelDefinitionWithProperty(propertyKey, $"../{referencedFileName}");
-
-            using (var tempDir = new TemporaryDirectory())
-            {
-                string tempPath = tempDir.Path;
-                string mduDirPath = Path.Combine(tempPath, "input");
-                string mduFilePath = Path.Combine(mduDirPath, "file.mdu");
-                string sourceFilePath = Path.Combine(tempPath, referencedFileName);
-                string targetFilePath = Path.Combine(mduDirPath, referencedFileName);
-
-                Directory.CreateDirectory(mduDirPath);
-                File.WriteAllText(sourceFilePath, sourceFileContent);
-                File.WriteAllText(targetFilePath, "target");
-
-                // When
-                void TestAction() => MduFileHelper.CopyFilesToMduFolderIfNeeded(
-                    new[]
-                    {
-                        sourceFilePath
-                    },
-                    mduFilePath,
-                    modelDefinition,
-                    propertyKey);
-
-                // Then
-                IEnumerable<string> renderedLogMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Info);
-                string expectedMessage = string.Format(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation,
-                                                       sourceFilePath, targetFilePath);
-                Assert.That(renderedLogMessages.Contains(expectedMessage));
-                Assert.That(File.Exists(sourceFilePath),
-                            "When importing an mdu, original referenced files should not be deleted.");
-                Assert.That(File.Exists(targetFilePath),
-                            "When importing mdu, referenced files are expected to be copied to the mdu directory.");
-                Assert.That(modelDefinition.GetModelProperty(propertyKey).GetValueAsString(), Is.EqualTo(referencedFileName),
-                            $"Relative path of the copied file should have been {referencedFileName}.");
-                Assert.That(File.ReadAllText(targetFilePath), Is.EqualTo(sourceFileContent),
-                            $"Content of the file <{targetFilePath}> was expected to be <{sourceFileContent}>.");
-            }
         }
 
         private static WaterFlowFMModelDefinition CreateModelDefinitionWithProperty(string propertyKey, string propertyValue)

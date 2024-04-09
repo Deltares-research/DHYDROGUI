@@ -567,14 +567,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             modelAfterImport.ImportFromMdu(mduExportPath);
 
             ActivityRunner.RunActivity(modelAfterImport);
-            string mduFilePathAfterExport = modelAfterImport.MduFilePath;
 
-            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.mdu"));
-            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.mor"));
-            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.sed"));
-
-            string morFilePath = Path.Combine(exportPath, "cs.mor");
-            File.Exists(morFilePath);
+            string morFilePath = Path.Combine(exportPath, "bendprof.mor");
+            Assert.That(morFilePath, Does.Exist);
 
             //act
             IEnumerable<string> lines = File.ReadLines(morFilePath);
@@ -940,8 +935,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameEqualToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsAlwaysRelative()
         {
             // Make local copy of project
-            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
-            string mduFilePath = Path.Combine(localPath, "FlowFM.mdu");
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel();
@@ -949,47 +944,88 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Import dry points
 
-            fmModel.Area.DryPoints.Add(new GroupablePointFeature {GroupName = Path.Combine(localPath, @"SubFolder/MyDryPoints_dry.xyz")});
-            fmModel.Area.LandBoundaries.Add(new LandBoundary2D {GroupName = Path.Combine(localPath, @"SubFolder/MyLandBoundaries.ldb")});
+            fmModel.Area.DryPoints.Add(new GroupablePointFeature {GroupName = Path.Combine(localPath, @"MDU/SubFolder/MyDryPoints_dry.xyz")});
+            fmModel.Area.LandBoundaries.Add(new LandBoundary2D {GroupName = Path.Combine(localPath, @"MDU/SubFolder/MyLandBoundaries.ldb")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.DryPoints.FirstOrDefault().GroupName, Is.EqualTo(@"SubFolder/MyDryPoints_dry.xyz"));
             Assert.That(fmModel.Area.LandBoundaries.FirstOrDefault().GroupName, Is.EqualTo(@"SubFolder/MyLandBoundaries.ldb"));
+        }
+        
+        [Test]
+        public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameEqualToPathThatIsPointingToASubFolderOfModelBaseFolderOutsideMduFolder_ThenGroupNameIsAlwaysRelative()
+        {
+            // Make local copy of project
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
+
+            // Make FM model from Mdu file
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ImportFromMdu(mduFilePath);
+
+            // Import dry points
+
+            fmModel.Area.DryPoints.Add(new GroupablePointFeature {GroupName = Path.Combine(localPath, @"FeatureFiles/MyDryPoints_dry.xyz")});
+            fmModel.Area.LandBoundaries.Add(new LandBoundary2D {GroupName = Path.Combine(localPath, @"FeatureFiles/MyLandBoundaries.ldb")});
+
+            // Check that group name gives a relative path from the mdu folder
+            Assert.That(fmModel.Area.DryPoints.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/MyDryPoints_dry.xyz"));
+            Assert.That(fmModel.Area.LandBoundaries.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/MyLandBoundaries.ldb"));
         }
 
         [Test]
         public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsPointingToItsReferencingStructureFile()
         {
             // Make local copy of project
-            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
-            string mduFilePath = Path.Combine(localPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel();
             fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Pumps.Add(new Pump {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
-            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
+            fmModel.Area.Pumps.Add(new Pump {GroupName = Path.Combine(localPath, @"MDU/FeatureFiles/gate01.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MDU/FeatureFiles/gate01.pli")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
             Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
+        }
+        
+        [Test]
+        public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameToPathThatIsPointingToASubFolderOfModelBaseFolderOutsideMduFolder_ThenGroupNameIsPointingToItsReferencingStructureFile()
+        {
+            // Make local copy of project
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
+
+            // Make FM model from Mdu file
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ImportFromMdu(mduFilePath);
+
+            // Import dry points
+            fmModel.Area.Pumps.Add(new Pump {GroupName = Path.Combine(localPath, @"FeatureFiles/gate01.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"FeatureFiles/gate01.pli")});
+
+            // Check that group name gives a relative path from the mdu folder
+            Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/FlowFM_structures.ini"));
+            Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo(@"../FeatureFiles/FlowFM_structures.ini"));
         }
 
         [Test]
         public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameEqualToPathThatIsNotReferencedByAStructureFile_ThenGroupNameIsEqualToDefaultStructuresFileNameInTheSameFolder()
         {
             // Make local copy of project
-            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
-            string mduFilePath = Path.Combine(localPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel();
             fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MDU/FeatureFiles/nonReferencedGates.pli")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
@@ -999,15 +1035,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameToPathThatIsPointingToNotASubFolderOfMduFolder_ThenGroupNameIsEqualToFileName()
         {
             // Make local copy of project
-            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
-            string mduFilePath = Path.Combine(localPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects/MduFileWithoutFeatureFileReferences/FlowFM"));
+            string mduFilePath = Path.Combine(localPath, "MDU/FlowFM.mdu");
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel();
             fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
-            fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon() {GroupName = Path.Combine(localPath, @"MyDryAreas_dry.pol")});
+            fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon() {GroupName = Path.Combine(localPath, @"MDU/MyDryAreas_dry.pol")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.DryAreas.FirstOrDefault().GroupName, Is.EqualTo(@"MyDryAreas_dry.pol"));
@@ -1295,7 +1331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             const string modelName = "some_model_name";
 
             var model = new WaterFlowFMModel();
-            model.ImportFromMdu(Path.Combine("directory", modelName + ".mdu"));
+            model.ImportFromMdu(Path.Combine(modelName, "input", modelName + ".mdu"));
 
             model.Name = modelName;
             model.ModelDefinition.ModelName = modelName;
@@ -1304,7 +1340,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             string resultedPath = model.ClassMapSavePath;
 
             // Then
-            string expectedPath = Path.Combine(model.PersistentOutputDirectoryPath, modelName + FileConstants.ClassMapFileExtension);
+            string expectedPath = Path.Combine(model.GetModelOutputDirectory(), modelName + FileConstants.ClassMapFileExtension);
             Assert.AreEqual(expectedPath, resultedPath);
         }
 
@@ -1743,7 +1779,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void GivenAnMduWithoutOrZeroValueForPropertyPathsRelativeToParent_WhenImportAndExportThisModel_ThenThisPropertyShouldChangedToOneDuringAnExport()
+        public void GivenAnMduWitPropertyPathsRelativeToParentSet_WhenImportAndExportThisModel_ThenThisPropertyShouldBeTheSameDuringExport()
         {
             // Given
             string mduFilePath = TestHelper.GetTestFilePath(@"small\small.mdu");
@@ -1766,8 +1802,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             model.ExportTo(targetMduFilePath);
 
             pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
+            
             // Then
-            Assert.AreEqual("1", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 1. This is incorrect, because it should change to 1 during an export", pathsRelativeToParent);
+            Assert.AreEqual("0", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 0. This is incorrect, because it should remain 0 during an export", pathsRelativeToParent);
         }
 
         [Test]
@@ -2213,11 +2250,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(model.MduFilePath, Is.EqualTo(mduFilePath), "Precondition failed.");
 
                 // Call
-                string mduSavePath = model.MduSavePath;
+                string mduSavePath = model.GetMduSavePath();
 
                 // Assert
                 Assert.That(mduSavePath, Is.EqualTo(expectedMduSavePath),
-                            $"After renaming the model, the {nameof(model.MduSavePath)} should return the correct path.");
+                            $"After renaming the model, the {nameof(mduSavePath)} should return the correct path.");
             }
         }
 

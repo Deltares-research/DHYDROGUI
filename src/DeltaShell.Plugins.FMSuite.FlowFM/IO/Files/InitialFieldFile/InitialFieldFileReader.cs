@@ -82,8 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
 
             InitialFieldFileData fileData = ParseFile(filePath);
 
-            foreach (InitialField initialField in fileData.InitialConditions.Concat(
-                         fileData.Parameters))
+            foreach (InitialField initialField in fileData.InitialConditions.Concat(fileData.Parameters))
             {
                 ResolveDataFilePath(relativeParentPath, initialField);
                 ReadFromInitialField(modelDefinition, initialField);

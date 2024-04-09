@@ -206,17 +206,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void FileExceptionsCleaningWorkingDirectory_WhenUseCachingIsTrueAndCacheFilePathSetToWorkingDirectory_ShouldReturnCacheFilePath()
+        [TestCase(@"dflowfm")]
+        [TestCase(@"dflowfm\computations\test\JAMM\D2776")]
+        public void FileExceptionsCleaningWorkingDirectory_WhenUseCachingIsTrueAndCacheFilePathSetToWorkingDirectory_ShouldReturnCacheFilePath(string mduDirectory)
         {
             using (var model = new WaterFlowFMModel())
             {
-                string runMduPath = Path.Combine(model.WorkingDirectoryPath, "dflowfm", $"{model.Name}{FileConstants.MduFileExtension}");
+                string runMduPath = Path.Combine(model.WorkingDirectoryPath, mduDirectory, $"{model.Name}{FileConstants.MduFileExtension}");
                 model.CacheFile.UpdatePathToMduLocation(runMduPath);
                 model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueFromString("true");
 
                 ISet<string> ignoredFilePaths = model.IgnoredFilePathsWhenCleaningWorkingDirectory;
 
-                string[] expectedFileExceptions = {Path.ChangeExtension(runMduPath, FileConstants.CachingFileExtension)};
+                string[] expectedFileExceptions = { Path.ChangeExtension(runMduPath, FileConstants.CachingFileExtension) };
                 Assert.That(ignoredFilePaths, Is.EquivalentTo(expectedFileExceptions));
             }
         }
@@ -242,15 +244,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase(@"dflowfm")]
+        [TestCase(@"dflowfm\computations\test\JAMM\D2776")]
         [Category(TestCategory.Integration)]
-        public void OnInitialize_WhenCacheFilePathIsInWorkingDirectoryAndUseCachingTrue_ShouldNotRemoveThisCacheFileBeforeANewRunStarts()
+        public void OnInitialize_WhenCacheFilePathIsInWorkingDirectoryAndUseCachingTrue_ShouldNotRemoveThisCacheFileBeforeANewRunStarts(string mduDirectory)
         {
             // Arrange
             using (var tempDirectory = new TemporaryDirectory())
             using (var model = new WaterFlowFMModel())
             {
-                model.WorkingDirectoryPathFunc = () => Path.Combine(tempDirectory.Path);
-                string modelExportDirectoryPath = Path.Combine(model.WorkingDirectoryPath, "dflowfm");
+                string tempPath = tempDirectory.Path;
+                model.WorkingDirectoryPathFunc = () => tempPath;
+                
+                string modelExportDirectoryPath = Path.Combine(model.WorkingDirectoryPath, mduDirectory);
                 Directory.CreateDirectory(modelExportDirectoryPath);
                 string runMduPath = Path.Combine(modelExportDirectoryPath, $"{model.Name}{FileConstants.MduFileExtension}");
                 

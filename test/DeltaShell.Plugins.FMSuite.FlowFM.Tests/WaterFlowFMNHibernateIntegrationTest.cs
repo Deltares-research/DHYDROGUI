@@ -106,9 +106,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TypeUtils.SetPrivatePropertyValue(model, "BridgePillarsDataModel", modelFeatureCoordinateDatas);
 
                 app.SaveProjectAs(bridgepillarsDsproj);
-                Assert.IsNotNull(model.MduFile.Path);
+                Assert.IsNotNull(model.MduFilePath);
 
-                string pillarFile = model.MduFile.Path.Replace(".mdu", ".pliz");
+                string pillarFile = model.MduFilePath.Replace(".mdu", ".pliz");
                 Assert.IsTrue(File.Exists(pillarFile));
                 /*Check file contents*/
                 string[] readLines = File.ReadAllLines(pillarFile);
@@ -467,7 +467,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                string modelDir = model.ModelDefinition.ModelDirectory;
+                string modelDir = model.GetModelDirectory();
                 gui.Application.Project.RootFolder.Add(model);
 
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
@@ -478,7 +478,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 //Check if the model directory has changed
                 Assert.That(modelDir, Is.Not.Null);
-                string newModelDir = model.ModelDefinition.ModelDirectory;
+                string newModelDir = model.GetModelDirectory();
                 Assert.That(newModelDir, Is.Not.Null);
                 Assert.That(modelDir.Equals(newModelDir), Is.False);
             }

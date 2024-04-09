@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -73,6 +74,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
         /// Writes the spatial operation data from the model definition to an initial field file.
         /// </summary>
         /// <param name="filePath"> Path to the initial field file. If the file already exists, it is overwritten. </param>
+        /// <param name="relativeParentPath">
+        /// Path to which the data file references in the initial field file are relative to.
+        /// In practice, can be either the MDU file or the initial field file.
+        /// </param>
+        /// <param name="switchTo">Whether the path of the referenced files should be switched to the new file location.</param>
         /// <param name="modelDefinition">The model definition from which to write the spatial operation data.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="modelDefinition"/> is <c>null</c>.
@@ -80,23 +86,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
         /// <exception cref="System.ArgumentException">
         /// Thrown when <paramref name="filePath"/> is <c>null</c> or white space.
         /// </exception>
-        public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition)
+        public void Write(string filePath, string relativeParentPath, bool switchTo, WaterFlowFMModelDefinition modelDefinition)
         {
             Ensure.NotNull(modelDefinition, nameof(modelDefinition));
             Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
+            Ensure.NotNullOrWhiteSpace(relativeParentPath, nameof(relativeParentPath));
 
             InitialFieldFileData initialFieldFileData = initialFieldFileDataFactory.CreateFromModelDefinition(modelDefinition);
-
             IniData iniData = initialFieldFileDataConverter.Convert(initialFieldFileData);
 
             var logHandler = new LogHandler(Resources.writing_the_initial_field_file, log);
 
+            CreateIniFileDirectory(filePath);
             WriteIniFile(filePath, iniData);
 
-            string initialFieldFileDirectory = fileSystem.Path.GetDirectoryName(filePath);
-            spatialDataFileWriter.Write(initialFieldFileDirectory, initialFieldFileData, modelDefinition);
+            string spatialDataDirectory = fileSystem.Path.GetDirectoryName(relativeParentPath);
+            spatialDataFileWriter.Write(spatialDataDirectory, switchTo, initialFieldFileData, modelDefinition);
 
             logHandler.LogReport();
+        }
+
+        private void CreateIniFileDirectory(string filePath)
+        {
+            string directory = fileSystem.Path.GetDirectoryName(filePath);
+            fileSystem.CreateDirectoryIfNotExists(directory);
         }
 
         private void WriteIniFile(string targetFile, IniData iniData)

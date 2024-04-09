@@ -5,37 +5,42 @@ using DelftTools.Utils.IO;
 
 namespace DelftTools.Hydro.GroupableFeatures
 {
+    /// <summary>
+    /// Provides <see cref="IGroupableFeature"/> extension methods.
+    /// </summary>
     public static class GroupableFeatureExtensions
     {
-        public static void MakeGroupNameRelative(this IGroupableFeature groupableFeature, string mduFilePath)
+        /// <summary>
+        /// Makes the group name of the <see cref="IGroupableFeature"/> relative to the specified base directory.
+        /// If the path goes beyond the root directory, the group name is changed to just the file name.
+        /// </summary>
+        /// <param name="groupableFeature">The <see cref="IGroupableFeature"/> object whose group name is to be made relative.</param>
+        /// <param name="rootDirectory">The root directory to which the group name should be constrained.</param>
+        /// <param name="baseDirectory">The base directory used to calculate the relative path if the group name is absolute.</param>
+        public static void MakeGroupNameRelative(this IGroupableFeature groupableFeature, string rootDirectory, string baseDirectory)
         {
-            if (groupableFeature == null)
+            string groupName = groupableFeature.GroupName;
+
+            if (string.IsNullOrEmpty(groupName))
             {
                 return;
             }
-
-            string directory = Path.GetDirectoryName(mduFilePath);
-            string originalGroupName = groupableFeature.GroupName;
-
-            string relativePathToFile = FileUtils.GetRelativePath(directory, originalGroupName);
-            if (string.IsNullOrEmpty(relativePathToFile))
+            
+            if (!FileUtils.PathIsRelative(groupName))
             {
-                return;
+                groupName = FileUtils.GetRelativePath(baseDirectory, groupName);
             }
 
-            groupableFeature.GroupName = GetNewGroupName(relativePathToFile, directory, originalGroupName);
-        }
+            string normalizedRoot = Path.GetFullPath(rootDirectory);
+            string fullGroupPath = Path.GetFullPath(Path.Combine(baseDirectory, groupName));
 
-        public static string GetNewGroupName(string relativePathToFile, string directory, string originalGroupName)
-        {
-            bool isInSubDirectory = !relativePathToFile.Contains("..") &&
-                                    (!Path.IsPathRooted(originalGroupName) || Path.GetPathRoot(directory) ==
-                                     Path.GetPathRoot(originalGroupName));
-
-            return isInSubDirectory ? relativePathToFile : Path.GetFileName(relativePathToFile);
+            groupableFeature.GroupName = fullGroupPath.StartsWith(normalizedRoot) ? groupName : Path.GetFileName(groupName);
         }
     }
 
+    /// <summary>
+    /// Provides <see cref="IGroupableFeature"/> collection extension methods.
+    /// </summary>
     public static class GroupableFeaturesExtensions
     {
         public static void RemoveUngroupedItems<TFeature>(this IList<TFeature> featureList)
@@ -47,7 +52,7 @@ namespace DelftTools.Hydro.GroupableFeatures
 
             itemsToRemove.ForEach(f => featureList.Remove(f));
         }
-
+        
         public static void RemoveGroup<TFeature>(this IList<TFeature> eventedList, string group)
         {
             List<TFeature> itemsToRemove = eventedList.OfType<IGroupableFeature>()

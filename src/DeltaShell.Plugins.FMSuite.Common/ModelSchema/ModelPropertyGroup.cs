@@ -21,5 +21,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
                 PropertyDefinitions.Add(propertyDefinition);
             }
         }
+        
+        /// <inheritdoc />
+        public override string ToString() => Name;
     }
 }

@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
-using SharpMap.Api.SpatialOperations;
-using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
 {
@@ -405,26 +401,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
         }
 
         [Test]
-        public void SwitchTo_SetsCorrectFilePathOnAllImportSamplesOperations()
-        {
-            // Setup
-            var model = Substitute.For<IWaterFlowFMModel>();
-            var data = new SpatialData(model);
-
-            ImportSamplesOperation[] operations = SetImportSamplesOperationsOnDataItems(data.DataItems).ToArray();
-
-            // Call
-            data.SwitchTo(@"the\new\directory");
-
-            // Assert
-            Assert.That(operations[0].FilePath, Is.EqualTo("the\\original\\directory\\file.xyz"));
-            foreach (ImportSamplesOperation operation in operations.Skip(1))
-            {
-                Assert.That(operation.FilePath, Is.EqualTo(@"the\new\directory\file.xyz"));
-            }
-        }
-
-        [Test]
         [TestCase(null)]
         [TestCase("")]
         public void AddTracer_CoverageNameNullOrEmpty_ThrowsArgumentException(string name)
@@ -460,48 +436,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
             // Assert
             var e = Assert.Throws<ArgumentException>(Call);
             Assert.That(e.ParamName, Is.EqualTo("Name"));
-        }
-
-        [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        public void SwitchTo_ArgumentNullOrEmpty_ThrowsArgumentException(string targetDir)
-        {
-            // Setup
-            var model = Substitute.For<IWaterFlowFMModel>();
-            var data = new SpatialData(model);
-
-            // Call
-            void Call() => data.SwitchTo(targetDir);
-
-            // Assert
-            var e = Assert.Throws<ArgumentException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("targetDir"));
-        }
-
-        private static IEnumerable<ImportSamplesOperation> SetImportSamplesOperationsOnDataItems(IEnumerable<IDataItem> dataItems)
-        {
-            foreach (IDataItem dataItem in dataItems)
-            {
-                var operation = new ImportSamplesOperation(false) {FilePath = @"the\original\directory\file.xyz"};
-                dataItem.ValueConverter = GetConverterWith(operation);
-
-                yield return operation;
-            }
-        }
-
-        private static SpatialOperationSetValueConverter GetConverterWith(ISpatialOperation operation)
-        {
-            var spatialOperationSet = Substitute.For<ISpatialOperationSet>();
-            spatialOperationSet.GetOperationsRecursive().Returns(new[]
-            {
-                operation
-            });
-
-            var valueConverter = Substitute.For<SpatialOperationSetValueConverter>();
-            valueConverter.SpatialOperationSet.Returns(spatialOperationSet);
-
-            return valueConverter;
         }
     }
 }

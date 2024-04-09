@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.Guards;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Data;
@@ -18,30 +21,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serializat
     /// </summary>
     public sealed class SpatialDataFileWriter : ISpatialDataFileWriter
     {
+        private WaterFlowFMModelDefinition modelDefinition;
+        private string targetDirectory;
+        private bool switchToNewPath;
+        
         /// <summary>
         /// Write the spatial data to file in the specified directory.
         /// </summary>
-        /// <param name="targetDirectory"> The target write directory. </param>
-        /// <param name="initialFieldFileData"> The initial field file data. </param>
-        /// <param name="modelDefinition"> The model definition containing the spatial data. </param>
-        public void Write(string targetDirectory, InitialFieldFileData initialFieldFileData, WaterFlowFMModelDefinition modelDefinition)
+        /// <param name="directory"> The target write directory. </param>
+        /// <param name="switchTo">Whether the spatial operation file path be switched to the new file location.</param>
+        /// <param name="data"> The initial field file data. </param>
+        /// <param name="definition"> The model definition containing the spatial data. </param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="directory"/> is <c>null</c> or empty.
+        /// </exception>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="data"/> or <paramref name="definition"/> is <c>null</c>.
+        /// </exception>
+        public void Write(string directory, bool switchTo, InitialFieldFileData data, WaterFlowFMModelDefinition definition)
         {
-            foreach (InitialField initialField in initialFieldFileData.InitialConditions)
+            Ensure.NotNullOrWhiteSpace(directory, nameof(directory));
+            Ensure.NotNull(data, nameof(data));
+            Ensure.NotNull(definition, nameof(definition));
+
+            modelDefinition = definition;
+            targetDirectory = directory;
+            switchToNewPath = switchTo;
+
+            foreach (InitialField initialField in data.InitialConditions)
             {
-                WriteSpatialData(targetDirectory, modelDefinition, initialField);
+                WriteSpatialData(initialField);
             }
 
-            foreach (InitialField initialField in initialFieldFileData.Parameters)
+            foreach (InitialField initialField in data.Parameters)
             {
-                WriteSpatialData(targetDirectory, modelDefinition, initialField);
+                WriteSpatialData(initialField);
             }
         }
 
-        private void WriteSpatialData(string targetDirectory, WaterFlowFMModelDefinition modelDefinition, InitialField initialField)
+        private void WriteSpatialData(InitialField initialField)
         {
             IList<ISpatialOperation> spatialOperations = modelDefinition.GetSpatialOperations(initialField.SpatialOperationQuantity);
             ISpatialOperation spatialOperation = spatialOperations.Single(o => o.Name == initialField.SpatialOperationName);
+            
             string spatialDataFilePath = Path.Combine(targetDirectory, initialField.DataFile);
+            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(spatialDataFilePath));
 
             WriteSpatialData(spatialDataFilePath, spatialOperation);
         }
@@ -51,8 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serializat
             var importSamplesOperation = spatialOperation as ImportSamplesSpatialOperation;
             if (importSamplesOperation != null)
             {
-                string targetDirectory = Path.GetDirectoryName(filePath);
-                importSamplesOperation.CopyTo(targetDirectory);
+                string directoryName = Path.GetDirectoryName(filePath);
+                importSamplesOperation.CopyTo(directoryName, switchToNewPath);
             }
 
             var polygonOperation = spatialOperation as SetValueOperation;

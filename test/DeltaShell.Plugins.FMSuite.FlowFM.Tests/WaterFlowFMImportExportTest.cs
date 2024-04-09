@@ -12,7 +12,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
-using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
@@ -76,7 +75,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsTrue(lines[wavesSectionLineNr + 1].ContainsCaseInsensitive("CustomWavesProperty"));
                 Assert.IsTrue(lines[timeSectionLineNr + 1].ContainsCaseInsensitive("CustomTimeProperty"));
                 Assert.IsTrue(lines[outputSectionLineNr + 1].ContainsCaseInsensitive("CustomOutputProperty"));
-            };
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportExportHarlingenModelWithOrganizedFileStructure()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string testData = TestHelper.GetTestFilePath(@"harlingen\OrganizedModel");
+                string modelDir = tempDir.CopyDirectoryToTempDirectory(testData);
+                string mduImportPath = Path.Combine(modelDir, @"har\computations\test\har.mdu");
+                string mduExportPath = Path.Combine(tempDir.Path, @"export\computations\test\har.mdu");
+
+                var model = new WaterFlowFMModel();
+                
+                model.ImportFromMdu(mduImportPath);
+                model.ExportTo(mduExportPath);
+                
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\network_bounds_d3d.pol"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\network_bounds_d3d_add.pol"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\001.ext"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\001_bnd.ext"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\071_01.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\071_02.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\071_03.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\Discharge.bc"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\L1.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\Salinity.bc"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\boundary_conditions\test\WaterLevel.bc"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\fm_003_net.nc"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\computations\test\har.mdu"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\cross_sections\har_crs_V2_crs.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\output_locations\har_fine_V3_obs.xyn"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\fixedweir_fxw.pli"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\har_enc.pol"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\Harlingen_haven.ldb"), Does.Exist);
+                Assert.That(Path.Combine(tempDir.Path, @"export\geometry\thindam_thd.pli"), Does.Exist);
+            }
         }
         
         [Test]
@@ -312,8 +350,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         FileInfo[] morFiles = exportDirInfo.GetFiles("*.mor");
                         FileInfo[] sedFiles = exportDirInfo.GetFiles("*.sed");
 
-                        var morFileName = "exported.mor";
-                        var sedFileName = "exported.sed";
+                        var morFileName = "FlowFM.mor";
+                        var sedFileName = "FlowFM.sed";
 
                         Assert.NotNull(morFiles.FirstOrDefault(f => f.Name == morFileName));
                         Assert.NotNull(sedFiles.FirstOrDefault(f => f.Name == sedFileName));
@@ -441,35 +479,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public void ExportTo_ModelUsesRestart_SetsCorrectPropertyAndCopiesFile(bool switchTo)
+        [Test]
+        [TestCase(@"rst\restart.nc", false)]
+        [TestCase(@"rst\restart.nc", true)]
+        [TestCase(@"..\rst\restart.nc", false)]
+        [TestCase(@"..\rst\restart.nc", true)]
+        public void ExportTo_WithRelativeRestartFile_WritesCorrectRestartFile(string restartFileName, bool switchTo)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
-                var model = new WaterFlowFMModel();
-                string restartFilePath = tempDir.CreateFile("restart.file");
                 string exportDir = tempDir.CreateDirectory("export_dir");
+                
+                string sourceRestartFilePath = tempDir.CreateFile("restart.file");
+                string exportRestartFilePath = Path.GetFullPath(Path.Combine(exportDir, restartFileName));
+                string mduPath = Path.Combine(exportDir, "model.mdu");
 
-                model.RestartInput = new WaterFlowFMRestartFile(restartFilePath);
+                var model = new WaterFlowFMModel();
+                model.RestartInput = new WaterFlowFMRestartFile(sourceRestartFilePath);
 
-                // Precondition
-                Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo(string.Empty));
+                WaterFlowFMProperty restartFileProperty = model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile);
+                restartFileProperty.SetValueFromString(restartFileName);
 
                 // Call
-                model.ExportTo(Path.Combine(exportDir, "model.mdu"), switchTo, false, false);
+                model.ExportTo(mduPath, switchTo, false, false);
 
                 // Assert
-                string exportRestartFilePath = Path.Combine(exportDir, "restart.file");
-                Assert.That(restartFilePath, Does.Exist);
+                Assert.That(sourceRestartFilePath, Does.Exist);
                 Assert.That(exportRestartFilePath, Does.Exist);
-                Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo("restart.file"));
-                Assert.That(model.RestartInput.Path, Is.EqualTo(switchTo ? exportRestartFilePath : restartFilePath));
+                Assert.That(restartFileProperty.GetValueAsString(), Is.EqualTo(restartFileName));
+                Assert.That(model.RestartInput.Path, Is.EqualTo(switchTo ? exportRestartFilePath : sourceRestartFilePath));
             }
         }
-
-        private static string GetRestartFilePropertyValue(WaterFlowFMModel model) => model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
 
         [TestCase(false)]
         [TestCase(true)]

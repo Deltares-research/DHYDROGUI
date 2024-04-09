@@ -136,9 +136,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             UpdateWriteOutputSnappedFeatures();
         }
 
-        public WaterFlowFMModelDefinition(string modelDir, string modelName) : this()
+        public WaterFlowFMModelDefinition(string modelName) : this()
         {
-            ModelDirectory = modelDir;
             ModelName = modelName;
         }
 
@@ -167,7 +166,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        public string ModelDirectory { get; set; }
         public string ModelName { get; set; }
         public ICoordinateSystem CoordinateSystem { get; set; }
         public UnstructuredGridCoverage Bathymetry { get; set; }
@@ -526,12 +524,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         private static List<ISpatialOperation> GetSpatialOperations(SpatialOperationSetValueConverter spatialOperationValueConverter)
         {
             // put in everything except spatial operation sets,
-            // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-            List<ISpatialOperation> spatialOperations = spatialOperationValueConverter
-                                                        .SpatialOperationSet.Operations
-                                                        .Where(s => !(s is ISpatialOperationSet))
-                                                        .Select(ConvertSpatialOperation)
-                                                        .ToList();
+            // because we only use interpolate commands that will grab the ImportSamplesOperation via the input parameters.
+            List<ISpatialOperation> spatialOperations = spatialOperationValueConverter.SpatialOperationSet.Operations
+                                                                                      .Where(s => !(s is ISpatialOperationSet))
+                                                                                      .Select(ConvertSpatialOperation)
+                                                                                      .ToList();
 
             if (!spatialOperations.Any())
             {
@@ -583,10 +580,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
             else
             {
-                SpatialOperations.Add(name, new[]
-                {
-                    newOperation
-                });
+                SpatialOperations.Add(name, new ISpatialOperation[] { newOperation });
             }
         }
 
@@ -611,14 +605,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             var interpolateOperation = operation as InterpolateOperation;
             if (interpolateOperation != null)
             {
-                // only write interpolate operations that contain an importsamplesoperation as input samples
-                return interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation is
-                           ImportSamplesOperation;
+                // only write interpolate operations that contain an ImportSamplesOperation as input samples
+                return interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation is ImportSamplesOperation;
             }
 
-            // subsets are supported when only an importsamplesoperation is contained
-            var subSet = operation as ISpatialOperationSet;
-            if (subSet != null)
+            // subsets are supported when only an ImportSamplesOperation is contained
+            if (operation is ISpatialOperationSet subSet)
             {
                 return subSet.Operations.Count == 1 && subSet.Operations[0] is ImportSamplesOperation;
             }
@@ -629,25 +621,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public static ISpatialOperation ConvertSpatialOperation(ISpatialOperation operation)
         {
             var interpolateOperation = operation as InterpolateOperation;
-            if (interpolateOperation != null)
+            if (interpolateOperation == null)
             {
-                // only write interpolate operations that contain an importsamplesoperation as input samples
-                var importSamplesOperation =
-                    (ImportSamplesOperation)
-                    interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation;
-
-                operation = new ImportSamplesSpatialOperation
-                {
-                    Name = importSamplesOperation.Name,
-                    FilePath = importSamplesOperation.FilePath,
-                    Enabled = importSamplesOperation.Enabled,
-                    InterpolationMethod = interpolateOperation.InterpolationMethod,
-                    AveragingMethod = interpolateOperation.GridCellAveragingMethod,
-                    RelativeSearchCellSize = interpolateOperation.RelativeSearchCellSize
-                };
+                return operation;
             }
 
-            return operation;
+            return new ImportSamplesSpatialOperationAdapter(interpolateOperation);
         }
 
         /// <summary>

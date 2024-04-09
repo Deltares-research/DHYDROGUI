@@ -172,7 +172,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
                 File.WriteAllLines(filePath, fileContent);
 
-                importer.GetBaseFolder = list => temporaryDirectory.Path;
+                importer.GetRootDirectory = list => temporaryDirectory.Path;
+                importer.GetBaseDirectory = list => temporaryDirectory.Path;
 
                 // Act
                 importer.ImportItem(filePath, new List<GroupablePointFeature>());

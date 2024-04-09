@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <testsuitedoc>
 	<testsuiteentryhierarchy>
 		<flatlistofchildren>
@@ -13,20 +13,6 @@
 					datasourceid="a0397a06-b495-493f-adb6-c6b58806c3a6"
 					variableid="f2a2ee80-625d-4b18-8a0e-a8064fa26926"
 					variablename="SupportPointsToApplyTo">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
-			id="04915be7-b96a-4b5b-ba20-157cdae89c38"
-			name="SelectTypeInDialog"
-			ref="5845c792-4a69-4693-b578-b022b9740f8f"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="SubstringTypeExport"
-					datasourceid="63cf2dc3-e558-4474-bb95-74e5f9195439"
-					variableid="96fe739d-eb41-4d6c-a1b9-862eebde8bde"
-					variablename="StringInTextItemSelectDialog">
 					</var>
 				</databinding>
 			</testmodule>
@@ -76,23 +62,6 @@
 			id="081b24f2-b6ac-43b0-b091-2819b0839761"
 			name="CloseWithoutSaving">
 			</smartfoldernode>
-			<testmodule
-			id="089f61b2-7f2e-4707-a627-16a5fc95ba38"
-			name="RightClickGenericTreeItem"
-			ref="3b1738c3-58ee-4c9b-90b4-f068e2aad82a"
-			type="Recording">
-				<description>
-					<![CDATA[Right click on model]]>
-				</description>
-				<databinding>
-					<var
-					dataname="ModelName"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="28ac1b3a-9df9-4417-895a-56e7b8f06310"
-					variablename="NameTreeItemNode">
-					</var>
-				</databinding>
-			</testmodule>
 			<testmodule
 			id="093a2484-5e81-48c9-9031-b1e690908048"
 			name="SetInputFileNameAndProceed"
@@ -236,31 +205,6 @@
 			name="DrawWestBoundary">
 			</smartfoldernode>
 			<testmodule
-			id="17b1de78-3e0b-4e06-98e7-4073e7547a77"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<description>
-					<![CDATA[Select Export option in context menu]]>
-				</description>
-				<databinding>
-					<var
-					dataname="OptionContextMenuToExport"
-					datasourceid="63cf2dc3-e558-4474-bb95-74e5f9195439"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="OptionContextMenoExport"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
-			<testmodule
 			id="180d8385-f57f-4f6b-968e-18e60ea53106"
 			name="ConfigureInterpolationParameter"
 			ref="e56b1c9a-252e-4251-8321-9f2946e499cb"
@@ -352,12 +296,6 @@
 			id="1d0b86bb-66af-4402-94ba-3a7f487332a4"
 			name="DrawCrossSections">
 			</smartfoldernode>
-			<testmodule
-			id="1d0d2288-3b38-4d96-ad57-384ede029691"
-			name="ShowContextMenuCurrentSelection"
-			ref="90e50a86-496d-452f-96e2-6722c018e5fa"
-			type="Recording">
-			</testmodule>
 			<testsuite
 			ExportColumnList="None"
 			ReportTime="RelativeToTestSuiteStartTime"
@@ -461,11 +399,6 @@
 					name="ExportFilePath"
 					value="westernscheldt04_net.nc">
 					</param>
-					<param
-					mask="False"
-					name="TextTypeGridExporter"
-					value="Grid exporter">
-					</param>
 				</parameters>
 			</smartfoldernode>
 			<modulegroup
@@ -526,12 +459,6 @@
 					variablename="CloseAutProcessIDVar">
 					</var>
 				</databinding>
-			</testmodule>
-			<testmodule
-			id="2a00ef19-32f9-42e0-905b-c6e6b010fd58"
-			name="CloseOkDialog"
-			ref="d4da8175-ae96-47dc-9cd3-d7301667ef12"
-			type="Recording">
 			</testmodule>
 			<modulegroup
 			id="2a7a7e3d-1184-4756-bb84-ac9796301d3c"
@@ -662,23 +589,6 @@
 			id="330f7943-aaa8-49c8-abd6-6696cdc97f24"
 			name="SelectAstronomicalComponentsWestBC">
 			</smartfoldernode>
-			<testmodule
-			id="335f02f4-1f10-427f-be58-7bc97b56a03b"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<description>
-					<![CDATA[Select Export option from context menu]]>
-				</description>
-				<databinding>
-					<var
-					dataname="OptionContextMenoExport"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-			</testmodule>
 			<testmodule
 			id="3407916f-93f2-4abf-9558-6490104febcb"
 			name="ShowMapPanel"
@@ -894,6 +804,27 @@
 			type="Recording">
 			</testmodule>
 			<modulegroup
+			id="45d3c401-09ff-4067-9771-57e3c5051946"
+			name="ExportDFlowFMModel"
+			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
+				<databinding>
+					<var
+					dataname="ExportMduDirectory"
+					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
+					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
+					variablename="ExportMduDirectory">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ExportMduFilePath"
+					datasourceid="62915f30-0830-46cb-aa4f-33542a98f569"
+					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
+					variablename="ExportMduFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
+			<modulegroup
 			id="466b1741-1bb8-4a85-bafd-a8d57f8d3f7d"
 			name="CloseProjectWithoutSaving"
 			ref="815e7d7d-2174-499e-9a7e-e36f3ed359c0">
@@ -994,31 +925,6 @@
 			name="CloseProjectWithoutSaving"
 			ref="815e7d7d-2174-499e-9a7e-e36f3ed359c0">
 			</modulegroup>
-			<testmodule
-			id="4ec56fe2-b8e7-48c8-adaa-aebb2c50fa26"
-			name="SelectTypeInDialog"
-			ref="5845c792-4a69-4693-b578-b022b9740f8f"
-			type="Recording">
-				<description>
-					<![CDATA[Select type Flow Flexible Mesh model]]>
-				</description>
-				<databinding>
-					<var
-					dataname="SubstringExportTypeItem"
-					datasourceid="62915f30-0830-46cb-aa4f-33542a98f569"
-					variableid="96fe739d-eb41-4d6c-a1b9-862eebde8bde"
-					variablename="StringInTextItemSelectDialog">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="SubstringExportTypeItem"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="96fe739d-eb41-4d6c-a1b9-862eebde8bde"
-					variablename="StringInTextItemSelectDialog">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<testmodule
 			id="514b154e-0c71-4193-b1a8-cfa5c2e4fddc"
 			name="WaitForModelRunFinished"
@@ -1228,6 +1134,19 @@
 					</var>
 				</missingdatabinding>
 			</modulegroup>
+			<modulegroup
+			id="5a49e2bc-36c8-4d61-9659-a40806007ef4"
+			name="ExportGrid"
+			ref="1586e4d2-7105-4a9c-bc42-ed819b9120a0">
+				<databinding>
+					<var
+					dataname="ExportFilePath"
+					datasourceid="2588f9b4-c69c-4c39-bc74-a07b6e94fd4a"
+					variableid="47be2a65-3116-4042-99fe-cae9ca604855"
+					variablename="ExportGridFilePath">
+					</var>
+				</databinding>
+			</modulegroup>
 			<testmodule
 			id="5a6ad894-898c-43c7-aa84-2085942aa056"
 			name="SetInputFileNameAndProceed"
@@ -1372,20 +1291,6 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
-			<testmodule
-			id="61de0dd3-a402-4910-af33-203dd7d1905c"
-			name="SpecifyFileToExportTo"
-			ref="ad658c8e-eb55-433b-853a-d480d8c125c6"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="ExportMduFilePath"
-					datasourceid="62915f30-0830-46cb-aa4f-33542a98f569"
-					variableid="f45d74d9-36b6-445d-a144-84af2629f2b3"
-					variablename="FileName">
-					</var>
-				</databinding>
-			</testmodule>
 			<smartfoldernode
 			id="62674df1-20c5-47c7-a32f-93d93984be93"
 			name="StartUpDialogAstronomicalComponents">
@@ -1397,8 +1302,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportMduFilePath"
-					value="westernscheldt07.mdu">
+					name="ExportMduDirectory"
+					value="westernscheldt07_result">
 					</param>
 					<param
 					mask="False"
@@ -1449,8 +1354,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportMduFilePath"
-					value="westernscheldt05.mdu">
+					name="ExportMduDirectory"
+					value="westernscheldt05_result">
 					</param>
 					<param
 					mask="False"
@@ -1550,6 +1455,27 @@
 					</param>
 				</parameters>
 			</testcase>
+			<modulegroup
+			id="68c7f810-47e2-4723-9e74-3dad220ee963"
+			name="ExportDFlowFMModel"
+			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
+				<databinding>
+					<var
+					dataname="ExportMduDirectory"
+					datasourceid="62915f30-0830-46cb-aa4f-33542a98f569"
+					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
+					variablename="ExportMduDirectory">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ExportMduFilePath"
+					datasourceid="fda30f1c-f1e2-4aaa-8a1a-776b5c8029d5"
+					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
+					variablename="ExportMduFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
 			<testmodule
 			id="6b16b032-8b43-4bca-9d21-1c37a9534360"
 			name="WaitForSampleImport"
@@ -1656,8 +1582,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportMduFilePath"
-					value="westernscheldt06.mdu">
+					name="ExportMduDirectory"
+					value="westernscheldt06_result">
 					</param>
 					<param
 					mask="False"
@@ -1697,6 +1623,27 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
+			<modulegroup
+			id="79d85eba-d300-4f2d-8c08-d7cf18562ecb"
+			name="ExportDFlowFMModel"
+			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
+				<databinding>
+					<var
+					dataname="ExportMduDirectory"
+					datasourceid="63cf2dc3-e558-4474-bb95-74e5f9195439"
+					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
+					variablename="ExportMduDirectory">
+					</var>
+				</databinding>
+				<missingdatabinding>
+					<var
+					dataname="ExportMduFilePath"
+					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
+					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
+					variablename="ExportMduFilePath">
+					</var>
+				</missingdatabinding>
+			</modulegroup>
 			<smartfoldernode
 			id="7a425ff2-1fde-4d14-9faa-d02bfed82647"
 			name="ImposeEastBoundaryCondition">
@@ -1788,20 +1735,6 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
-			<testmodule
-			id="8099ab7b-6710-464f-8a8a-c02410116465"
-			name="SpecifyFileToExportTo"
-			ref="ad658c8e-eb55-433b-853a-d480d8c125c6"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="ExportFilePath"
-					datasourceid="2588f9b4-c69c-4c39-bc74-a07b6e94fd4a"
-					variableid="f45d74d9-36b6-445d-a144-84af2629f2b3"
-					variablename="FileName">
-					</var>
-				</databinding>
-			</testmodule>
 			<smartfoldernode
 			id="80fe223c-18e7-497a-8a2f-73ab67e7b5f5"
 			name="AddNewBCDefinition">
@@ -1866,48 +1799,6 @@
 			id="8748ea1e-e631-4180-ab6b-d8d7560cdf69"
 			name="Interpolate">
 			</smartfoldernode>
-			<testmodule
-			id="87faca39-58b3-4532-81ad-86ebb0bf051a"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<description>
-					<![CDATA[Select Export option from context menu]]>
-				</description>
-				<databinding>
-					<var
-					dataname="ContextMenuOptionToExport"
-					datasourceid="62915f30-0830-46cb-aa4f-33542a98f569"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="OptionContextMenoExport"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
-			<testmodule
-			id="8a4f2a4b-dbca-4f9e-9c2b-c636ec62d9e8"
-			name="WaitForMessageInPanel"
-			ref="32ec47a0-3149-4df2-af94-407b6ab2fd70"
-			type="Recording">
-				<description>
-					<![CDATA[Wait until message 'Finished exporting'  is shown in messages]]>
-				</description>
-				<databinding>
-					<var
-					dataname="messageWhenFinishedExporting"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="8e5500c4-b59b-4c0c-9417-425c3691ddd3"
-					variablename="expectedMessage1stRow">
-					</var>
-				</databinding>
-			</testmodule>
 			<testmodule
 			id="8b2cd254-955c-4a46-ac5e-0537458a1c02"
 			name="DoubleClickOnModel"
@@ -2032,12 +1923,6 @@
 			id="94d9fa4b-5987-492a-a089-801e3090fdc7"
 			name="WaitForModelImport"
 			ref="cc169b5c-9391-4fb3-adaf-26ff8228015e"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="953213c0-fa61-4ffe-9649-3705c31a9efd"
-			name="LaunchExportGridDialog"
-			ref="162a59c8-9938-4114-b1ab-2e5d1bbe53d6"
 			type="Recording">
 			</testmodule>
 			<smartfoldernode
@@ -2221,12 +2106,6 @@
 				</databinding>
 			</testmodule>
 			<testmodule
-			id="9e1e37e1-f7b5-4363-b51d-ba810a8984fe"
-			name="CloseOkDialog"
-			ref="d4da8175-ae96-47dc-9cd3-d7301667ef12"
-			type="Recording">
-			</testmodule>
-			<testmodule
 			id="9e71d22f-330a-4e69-8ccc-fc0f3b524c86"
 			name="SingleClickOnMap"
 			ref="ee5c623f-6a42-49cc-9fa1-7e2c127a2046"
@@ -2273,20 +2152,6 @@
 			id="a1f4639e-b1b4-4e30-8878-320be0dc6af4"
 			name="AddNewBCDefinition">
 			</smartfoldernode>
-			<testmodule
-			id="a219e827-3992-4b0f-9e25-beaf3a69270c"
-			name="SpecifyFileToExportTo"
-			ref="ad658c8e-eb55-433b-853a-d480d8c125c6"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="ExportMduFilePath"
-					datasourceid="63cf2dc3-e558-4474-bb95-74e5f9195439"
-					variableid="f45d74d9-36b6-445d-a144-84af2629f2b3"
-					variablename="FileName">
-					</var>
-				</databinding>
-			</testmodule>
 			<testmodule
 			id="a3545601-a118-4f9b-861a-627ac0e42016"
 			name="CloseAUT"
@@ -2516,12 +2381,6 @@
 					<![CDATA[<p>if two points have the same X coordinate (in pixels, at least), then clicking doens't work properly.</p><p>1st point is: 72342;369053</p><p>2nd point was: 72342;362143 (was not clicked)</p><p>New coords 2nd point: 71500;362143 (is clicked properly).</p>]]>
 				</description>
 			</smartfoldernode>
-			<testmodule
-			id="b514a0f4-d53a-4ecc-9f03-1678f559c680"
-			name="CloseOkDialog"
-			ref="d4da8175-ae96-47dc-9cd3-d7301667ef12"
-			type="Recording">
-			</testmodule>
 			<smartfoldernode
 			id="b5e72549-2430-4d26-9d9f-6769b118a2d2"
 			name="DrawDefiningPolygon">
@@ -2681,20 +2540,6 @@
 			name="DrawEastBoundary">
 			</smartfoldernode>
 			<testmodule
-			id="c544b1e7-e573-46cd-b87f-617538109cac"
-			name="SelectTypeInDialog"
-			ref="5845c792-4a69-4693-b578-b022b9740f8f"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="TextTypeGridExporter"
-					datasourceid="2588f9b4-c69c-4c39-bc74-a07b6e94fd4a"
-					variableid="96fe739d-eb41-4d6c-a1b9-862eebde8bde"
-					variablename="StringInTextItemSelectDialog">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
 			id="c5ed0bd8-7af8-4545-ae35-36eb112b2d20"
 			name="CloseAUT"
 			ref="7c4f813a-c9af-43c8-9eb7-b5d131eee240"
@@ -2773,12 +2618,6 @@
 			id="cb769e08-7c87-4e02-909b-915ff17b60dd"
 			name="ImposeBoundaryConditions">
 			</smartfoldernode>
-			<testmodule
-			id="cf6c14b3-f4bb-433c-b23c-8b61b24d04ef"
-			name="CloseOkDialog"
-			ref="d4da8175-ae96-47dc-9cd3-d7301667ef12"
-			type="Recording">
-			</testmodule>
 			<smartfoldernode
 			id="d008ef45-b250-4726-a3fb-7750bab5b294"
 			name="SetOutputSettings">
@@ -2867,20 +2706,6 @@
 			id="d73391df-2d1c-469f-b172-d580d015f083"
 			name="setup">
 			</setup>
-			<testmodule
-			id="d7d621a4-6a2a-426f-a484-3bd0fa369830"
-			name="WaitForMessageInPanel"
-			ref="32ec47a0-3149-4df2-af94-407b6ab2fd70"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="messageWhenFinishedExporting"
-					datasourceid="62915f30-0830-46cb-aa4f-33542a98f569"
-					variableid="8e5500c4-b59b-4c0c-9417-425c3691ddd3"
-					variablename="expectedMessage1stRow">
-					</var>
-				</databinding>
-			</testmodule>
 			<testmodule
 			id="d8377bcf-87f1-4843-bdfa-b94e34014cd1"
 			name="SingleClickOnMap"
@@ -3015,23 +2840,6 @@
 				</databinding>
 			</testmodule>
 			<testmodule
-			id="dc1f6bb5-7872-442d-8ca0-c7c9963f5566"
-			name="SelectTypeInDialog"
-			ref="5845c792-4a69-4693-b578-b022b9740f8f"
-			type="Recording">
-				<description>
-					<![CDATA[Select type Flow Flexible Mesh model]]>
-				</description>
-				<databinding>
-					<var
-					dataname="SubstringExportTypeItem"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="96fe739d-eb41-4d6c-a1b9-862eebde8bde"
-					variablename="StringInTextItemSelectDialog">
-					</var>
-				</databinding>
-			</testmodule>
-			<testmodule
 			id="dcdc9cc9-30d3-474a-b9b8-d04e7ef15f2c"
 			name="SetInputFileNameAndProceed"
 			ref="ba263c4c-3957-4c8a-b837-86d2bcf6e994"
@@ -3117,31 +2925,6 @@
 					</param>
 				</parameters>
 			</smartfoldernode>
-			<testmodule
-			id="e60e0329-33ca-4066-af14-d1833ff8c0a6"
-			name="RightClickGenericTreeItem"
-			ref="3b1738c3-58ee-4c9b-90b4-f068e2aad82a"
-			type="Recording">
-				<description>
-					<![CDATA[Right click on model]]>
-				</description>
-				<databinding>
-					<var
-					dataname="ModelName"
-					datasourceid="62915f30-0830-46cb-aa4f-33542a98f569"
-					variableid="28ac1b3a-9df9-4417-895a-56e7b8f06310"
-					variablename="NameTreeItemNode">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="ModelName"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="28ac1b3a-9df9-4417-895a-56e7b8f06310"
-					variablename="NameTreeItemNode">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<testmodule
 			id="e6824fac-a45d-4511-b745-5daf6196d54b"
 			name="WaitForOpenProject"
@@ -3367,23 +3150,6 @@
 			ref="afdf4c01-a73b-49fc-8985-3bf446d2ebcd"
 			type="Recording">
 			</testmodule>
-			<testmodule
-			id="fe6fbcef-bb1f-4cd1-b13e-2192c364081c"
-			name="SelectNodeInProjectTree"
-			ref="3ccd6609-bb39-41da-a091-205394a31109"
-			type="UserCode">
-				<description>
-					<![CDATA[select model Item]]>
-				</description>
-				<databinding>
-					<var
-					dataname="ModelName"
-					datasourceid="63cf2dc3-e558-4474-bb95-74e5f9195439"
-					variableid="62ee49d4-3df6-48c9-9539-d1c2f7388f8f"
-					variablename="fullPathToTreeItem">
-					</var>
-				</databinding>
-			</testmodule>
 			<teardown
 			id="ff045470-91c8-472a-8e04-30eec565773d"
 			name="teardown">
@@ -3418,20 +3184,6 @@
 					variablename="StringInTextItemSelectDialog">
 					</var>
 				</missingdatabinding>
-			</testmodule>
-			<testmodule
-			id="ff961b3d-01d4-42e2-8daa-1e4b1507a9bc"
-			name="SpecifyFileToExportTo"
-			ref="ad658c8e-eb55-433b-853a-d480d8c125c6"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="ExportMduFilePath"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="f45d74d9-36b6-445d-a144-84af2629f2b3"
-					variablename="FileName">
-					</var>
-				</databinding>
 			</testmodule>
 		</flatlistofchildren>
 		<childhierarchy>
@@ -3643,22 +3395,10 @@
 						<smartfoldernode
 						id="2588f9b4-c69c-4c39-bc74-a07b6e94fd4a"
 						name="ExportGrid">
-							<testmodule
-							id="953213c0-fa61-4ffe-9649-3705c31a9efd"
-							name="LaunchExportGridDialog">
-							</testmodule>
-							<testmodule
-							id="c544b1e7-e573-46cd-b87f-617538109cac"
-							name="SelectTypeInDialog">
-							</testmodule>
-							<testmodule
-							id="2a00ef19-32f9-42e0-905b-c6e6b010fd58"
-							name="CloseOkDialog">
-							</testmodule>
-							<testmodule
-							id="8099ab7b-6710-464f-8a8a-c02410116465"
-							name="SpecifyFileToExportTo">
-							</testmodule>
+							<modulegroup
+							id="5a49e2bc-36c8-4d61-9659-a40806007ef4"
+							name="ExportGrid">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
 						id="5dfa61b3-6cf6-4557-91cd-ea42bbc7c799"
@@ -3919,30 +3659,10 @@
 						<smartfoldernode
 						id="63cf2dc3-e558-4474-bb95-74e5f9195439"
 						name="ExportModel">
-							<testmodule
-							id="fe6fbcef-bb1f-4cd1-b13e-2192c364081c"
-							name="SelectNodeInProjectTree">
-							</testmodule>
-							<testmodule
-							id="1d0d2288-3b38-4d96-ad57-384ede029691"
-							name="ShowContextMenuCurrentSelection">
-							</testmodule>
-							<testmodule
-							id="17b1de78-3e0b-4e06-98e7-4073e7547a77"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="04915be7-b96a-4b5b-ba20-157cdae89c38"
-							name="SelectTypeInDialog">
-							</testmodule>
-							<testmodule
-							id="9e1e37e1-f7b5-4363-b51d-ba810a8984fe"
-							name="CloseOkDialog">
-							</testmodule>
-							<testmodule
-							id="a219e827-3992-4b0f-9e25-beaf3a69270c"
-							name="SpecifyFileToExportTo">
-							</testmodule>
+							<modulegroup
+							id="79d85eba-d300-4f2d-8c08-d7cf18562ecb"
+							name="ExportDFlowFMModel">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
 						id="57376add-25d7-4416-811a-5c8952083458"
@@ -4039,30 +3759,10 @@
 						<smartfoldernode
 						id="77159ef6-aaad-4474-b7f4-39ee2987325e"
 						name="ExportModel">
-							<testmodule
-							id="089f61b2-7f2e-4707-a627-16a5fc95ba38"
-							name="RightClickGenericTreeItem">
-							</testmodule>
-							<testmodule
-							id="335f02f4-1f10-427f-be58-7bc97b56a03b"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="dc1f6bb5-7872-442d-8ca0-c7c9963f5566"
-							name="SelectTypeInDialog">
-							</testmodule>
-							<testmodule
-							id="cf6c14b3-f4bb-433c-b23c-8b61b24d04ef"
-							name="CloseOkDialog">
-							</testmodule>
-							<testmodule
-							id="ff961b3d-01d4-42e2-8daa-1e4b1507a9bc"
-							name="SpecifyFileToExportTo">
-							</testmodule>
-							<testmodule
-							id="8a4f2a4b-dbca-4f9e-9c2b-c636ec62d9e8"
-							name="WaitForMessageInPanel">
-							</testmodule>
+							<modulegroup
+							id="45d3c401-09ff-4067-9771-57e3c5051946"
+							name="ExportDFlowFMModel">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
 						id="953e7f06-0697-469e-a053-2664110df31f"
@@ -4187,30 +3887,10 @@
 						<smartfoldernode
 						id="62915f30-0830-46cb-aa4f-33542a98f569"
 						name="ExportModel">
-							<testmodule
-							id="e60e0329-33ca-4066-af14-d1833ff8c0a6"
-							name="RightClickGenericTreeItem">
-							</testmodule>
-							<testmodule
-							id="87faca39-58b3-4532-81ad-86ebb0bf051a"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="4ec56fe2-b8e7-48c8-adaa-aebb2c50fa26"
-							name="SelectTypeInDialog">
-							</testmodule>
-							<testmodule
-							id="b514a0f4-d53a-4ecc-9f03-1678f559c680"
-							name="CloseOkDialog">
-							</testmodule>
-							<testmodule
-							id="61de0dd3-a402-4910-af33-203dd7d1905c"
-							name="SpecifyFileToExportTo">
-							</testmodule>
-							<testmodule
-							id="d7d621a4-6a2a-426f-a484-3bd0fa369830"
-							name="WaitForMessageInPanel">
-							</testmodule>
+							<modulegroup
+							id="68c7f810-47e2-4723-9e74-3dad220ee963"
+							name="ExportDFlowFMModel">
+							</modulegroup>
 						</smartfoldernode>
 						<smartfoldernode
 						id="60a77b37-4ca8-4501-b4de-e5d796d0e44f"

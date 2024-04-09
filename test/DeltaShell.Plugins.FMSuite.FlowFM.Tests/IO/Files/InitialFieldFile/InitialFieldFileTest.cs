@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile
 
                 // Calls
                 reader.Read(filePathRead, filePathRead, modelDefinition);
-                writer.Write(filePathWrite, modelDefinition);
+                writer.Write(filePathWrite, filePathWrite, false, modelDefinition);
 
                 // Assert
                 Assert.That(IsEqualInitialFieldFileData(fileSystem, filePathRead, filePathWrite));

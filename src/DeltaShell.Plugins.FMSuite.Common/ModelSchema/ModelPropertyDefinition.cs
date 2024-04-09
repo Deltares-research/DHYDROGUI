@@ -159,9 +159,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// .
         /// </param>
         /// <returns> True if this property is enabled; False when it's not. </returns>
-        private static bool IsTrue(IEnumerable<ModelProperty> modelProperties)
-        {
-            return true;
-        }
+        private static bool IsTrue(IEnumerable<ModelProperty> modelProperties) => true;
+
+        /// <inheritdoc />
+        public override string ToString() => $"{Caption} ({Category})";
     }
 }

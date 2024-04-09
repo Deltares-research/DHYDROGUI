@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string extSubFilesReferenceFilePath = Path.Combine(tempDir, mduFileName);
 
                 var extForceFile = new ExtForceFile();
-                TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(externalForcingFile, def, extSubFilesReferenceFilePath));
+                TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(externalForcingFile, extSubFilesReferenceFilePath, def));
             });
         }
     }

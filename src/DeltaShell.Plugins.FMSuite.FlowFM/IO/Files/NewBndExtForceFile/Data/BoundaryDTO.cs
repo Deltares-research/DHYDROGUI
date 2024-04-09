@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
         /// <summary>
         /// The relative path to the location file of the boundary.
         /// </summary>
-        public string LocationFile { get; set; }
+        public string LocationFile { get; }
 
         /// <summary>
         /// The forcing files for this boundary.

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -39,9 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
         /// <returns>A newly constructed initial field file data instance. </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="modelDefinition"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="filePath"/> is <c>null</c> or white space.
         /// </exception>
         public InitialFieldFileData CreateFromModelDefinition(WaterFlowFMModelDefinition modelDefinition)
         {
@@ -104,8 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
             }
 
             throw new NotSupportedException(
-                string.Format("Cannot serialize operation of type {0} to initial field file",
-                              spatialOperation.GetType()));
+                $"Cannot serialize operation of type {spatialOperation.GetType()} to initial field file");
         }
 
         private static InitialField CreateFromImportSamplesSpatialOperation(string quantityName,
@@ -180,9 +175,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
             return quantities[quantityName].GetDescription() + FileConstants.XyzFileExtension;
         }
 
-        private static InitialFieldOperand GetInitialFieldOperand(PointwiseOperationType pointwiseOperationType)
+        private static InitialFieldOperand GetInitialFieldOperand(PointwiseOperationType pointWiseOperationType)
         {
-            switch (pointwiseOperationType)
+            switch (pointWiseOperationType)
             {
                 case PointwiseOperationType.Overwrite:
                     return InitialFieldOperand.Override;
@@ -197,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
                 case PointwiseOperationType.Minimum:
                     return InitialFieldOperand.Minimum;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(pointwiseOperationType), pointwiseOperationType, null);
+                    throw new ArgumentOutOfRangeException(nameof(pointWiseOperationType), pointWiseOperationType, null);
             }
         }
 

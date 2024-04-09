@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
         [TestCase(true, "")]
         [TestCase(false, null)]
         [TestCase(false, "")]
-        public void CopyToDirectory_DirectoryPathNullOrEmpty_Returns(bool switchTo, string targetDir)
+        public void CopyTo_DestinationPathNullOrEmpty_Returns(bool switchTo, string destinationPath)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
                 var restartFile = new WaterFlowFMRestartFile(origFile);
 
                 // Call
-                restartFile.CopyToDirectory(targetDir, switchTo);
+                restartFile.CopyTo(destinationPath, switchTo);
 
                 // Assert
                 Assert.That(origFile, Does.Exist);
@@ -96,13 +96,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
         [TestCase("path/to/the.file", false)]
         [TestCase(null, true)]
         [TestCase(null, false)]
-        public void CopyToDirectory_FileDoesNotExist_Returns(string path, bool switchTo)
+        public void CopyTo_FileDoesNotExist_Returns(string path, bool switchTo)
         {
             // Setup
             var restartFile = new WaterFlowFMRestartFile(path);
 
             // Call
-            restartFile.CopyToDirectory("some/folder", switchTo);
+            restartFile.CopyTo("some.file", switchTo);
 
             // Assert
             Assert.That(restartFile.Path, Is.EqualTo(path));
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
 
         [TestCase(true)]
         [TestCase(false)]
-        public void CopyToDirectory_TargetDirDoesNotExist_CreatesTargetDir(bool switchTo)
+        public void CopyTo_TargetDirDoesNotExist_CreatesTargetDir(bool switchTo)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -119,21 +119,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
 
                 var restartFile = new WaterFlowFMRestartFile(origFile);
 
-                string targetDir = Path.Combine(tempDir.Path, "target_dir");
+                string destinationPath = Path.Combine(tempDir.Path, "target_dir", restartFile.Name);
 
                 // Call
-                restartFile.CopyToDirectory(targetDir, switchTo);
+                restartFile.CopyTo(destinationPath, switchTo);
 
                 // Assert
-                string targetFile = Path.Combine(targetDir, restartFile.Name);
-                Assert.That(targetFile, Does.Exist);
-                Assert.That(restartFile.Path, switchTo ? Is.EqualTo(targetFile) : Is.EqualTo(origFile));
+                Assert.That(destinationPath, Does.Exist);
+                Assert.That(restartFile.Path, switchTo ? Is.EqualTo(destinationPath) : Is.EqualTo(origFile));
             }
         }
 
         [TestCase(true)]
         [TestCase(false)]
-        public void CopyToDirectory_CopiesFileIntoDirectory(bool switchTo)
+        public void CopyTo_CopiesFileToDestinationPath(bool switchTo)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -143,14 +142,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Restart
                 var restartFile = new WaterFlowFMRestartFile(origFile);
 
                 string targetDir = tempDir.CreateDirectory("target_dir");
+                string destinationPath = Path.Combine(targetDir, restartFile.Name);
 
                 // Call
-                restartFile.CopyToDirectory(targetDir, switchTo);
+                restartFile.CopyTo(destinationPath, switchTo);
 
                 // Assert
-                string targetFile = Path.Combine(targetDir, restartFile.Name);
-                Assert.That(targetFile, Does.Exist);
-                Assert.That(restartFile.Path, switchTo ? Is.EqualTo(targetFile) : Is.EqualTo(origFile));
+                Assert.That(destinationPath, Does.Exist);
+                Assert.That(restartFile.Path, switchTo ? Is.EqualTo(destinationPath) : Is.EqualTo(origFile));
             }
         }
 

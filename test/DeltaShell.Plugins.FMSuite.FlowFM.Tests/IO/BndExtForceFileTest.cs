@@ -37,12 +37,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // When
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             // Then
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
@@ -83,12 +83,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FillTimeSeries(data, i => 0.75 * Math.Sin(0.6 * Math.PI * i), startTime, stopTime, 10);
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -141,12 +141,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // When
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             // Then
             Assert.AreEqual(thatcherHarlemanTimeLag,
@@ -208,12 +208,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -277,12 +277,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FillTimeSeries(data, i => 0.45 * Math.Sin(0.4 * Math.PI * i), startTime, stopTime, 12);
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -385,12 +385,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -516,12 +516,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -646,12 +646,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -840,12 +840,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             });
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, "testbnd.ext");
+            reader.Read("testbnd.ext", "testbnd.ext", newModelDefinition);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -883,7 +883,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             });
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", "testbnd.ext", modelDefinition);
             Assert.IsTrue(File.Exists(modelDefinition.ModelName + BcmFile.Extension));
         }
 
@@ -941,7 +941,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 extFileName = model.ModelDefinition.ModelName + FileConstants.ExternalForcingFileExtension;
             }
 
-            bndExtForceFile.Write(extFileName, model.ModelDefinition);
+            bndExtForceFile.Write(extFileName, extFileName, model.ModelDefinition);
 
             Assert.IsTrue(File.Exists(extFileName));
             string fileText = File.ReadAllText(extFileName);
@@ -1017,10 +1017,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 extFileName = model.ModelDefinition.ModelName + FileConstants.ExternalForcingFileExtension;
             }
 
-            bndExtForceFile.Write(extFileName, model.ModelDefinition);
-            var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(), "myModel");
+            bndExtForceFile.Write(extFileName, extFileName, model.ModelDefinition);
+            var modelDefinition = new WaterFlowFMModelDefinition("myModel");
             bndExtForceFile = new BndExtForceFile();
-            bndExtForceFile.Read(extFileName, modelDefinition, extFileName);
+            bndExtForceFile.Read(extFileName, extFileName, modelDefinition);
         }
 
         [Test]
@@ -1075,7 +1075,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             });
 
             Assert.IsFalse(File.Exists(filePath));
-            bndExtForceFile.Write(filePath, md);
+            bndExtForceFile.Write(filePath, filePath, md);
             Assert.IsTrue(File.Exists(filePath));
 
             string[] lines = File.ReadAllLines(filePath);
@@ -1193,7 +1193,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // When
             var bndExtForceFile = new BndExtForceFile();
-            bndExtForceFile.Read(absoluteBndExtFilePath, modelDefinition, absoluteBndExtSubFilesReferenceFilePath);
+            bndExtForceFile.Read(absoluteBndExtFilePath, absoluteBndExtSubFilesReferenceFilePath, modelDefinition);
 
             // Then
             Assert.AreEqual(1, modelDefinition.BoundaryConditionSets.Count);
@@ -1223,16 +1223,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }, waterlevelBoundaryCondition.GetDataAtPoint(1).GetValues<double>().ToArray());
         }
 
-        [TestCase(
-            "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\BndExtFolder\\MixedQuantities.ext",
-            "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\\MduFolder\\EmptyMduFile.mdu")]
-        [TestCase(
-            "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext",
-            "BcFiles\\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\\BndExtFolder\\MixedQuantities.ext")]
+        [TestCase(@"BcFiles\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\BndExtFolder\MixedQuantities.ext",
+                  @"BcFiles\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToMdu\MduFolder\EmptyMduFile.mdu")]
+        [TestCase(@"BcFiles\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\BndExtFolder\MixedQuantities.ext",
+                  @"BcFiles\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\BndExtFolder\MixedQuantities.ext")]
         [Category(TestCategory.DataAccess)]
-        public void
-            GivenABndExtFileWithTwoBoundaryConditionsForOneBoundary_WhenReadingAndWritingThisFile_ThenAllSubFilesShouldBeWrittenWithRespectToBndExtFile(
-                string bndExtFilePath, string bndExtSubFilesReferenceFilePath)
+        public void GivenABndExtFileWithTwoBoundaryConditionsForOneBoundary_WhenReadingAndWritingThisFile_ThenAllSubFilesShouldBeWrittenWithRespectToParentFile(
+            string bndExtFilePath, 
+            string bndExtSubFilesReferenceFilePath)
         {
             // Given
             string absoluteBndExtFilePath = TestHelper.GetTestFilePath(bndExtFilePath);
@@ -1241,16 +1239,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             var bndExtForceFile = new BndExtForceFile();
-            bndExtForceFile.Read(absoluteBndExtFilePath, modelDefinition, absoluteBndExtSubFilesReferenceFilePath);
+            bndExtForceFile.Read(absoluteBndExtFilePath, absoluteBndExtSubFilesReferenceFilePath, modelDefinition);
 
             // When
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                string saveBndExtFilePath = Path.Combine(tempDir, "MixedQuantities.ext");
+                string saveBndExtFilePath = Path.Combine(tempDir, bndExtFilePath);
+                string saveBndExtSubFilesReferenceFilePath = Path.Combine(tempDir, bndExtSubFilesReferenceFilePath);
 
-                // In one test to test that the read method relative to Ext file or Mdu file,
-                // will not influence the writing always relative to Ext force file.
-                bndExtForceFile.Write(saveBndExtFilePath, modelDefinition);
+                bndExtForceFile.Write(saveBndExtFilePath, saveBndExtSubFilesReferenceFilePath, modelDefinition);
 
                 Assert.True(File.Exists(saveBndExtFilePath));
 
@@ -1261,7 +1258,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     {
                         if (line.Contains("locationFile") || line.Contains("forcingFile"))
                         {
-                            CheckIfSubFilesMentionedInBndExtForceFileAreWrittenNextToThisFile(line, saveBndExtFilePath);
+                            CheckIfSubFilesMentionedInBndExtForceFileAreWrittenRelativeToThisFile(line, saveBndExtSubFilesReferenceFilePath);
                         }
                     }
 
@@ -1311,7 +1308,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 temp.CreateFile("lateral_discharge.bc", string.Join(Environment.NewLine, bcFileLines));
                 
                 // Call
-                bndExtForceFile.Read(extFile, modelDefinition, extFile);
+                bndExtForceFile.Read(extFile, extFile, modelDefinition);
             }
             
             // Assert
@@ -1377,7 +1374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string bcFile = Path.Combine(temp.Path,  "lateral_discharge.bc");
 
                 // Call
-                bndExtForceFile.Write(extFile, modelDefinition);
+                bndExtForceFile.Write(extFile, extFile, modelDefinition);
 
                 extFileLines = File.ReadAllLines(extFile).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
                 bcFileLines = File.ReadAllLines(bcFile).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
@@ -1437,7 +1434,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string filePath = tempDirectory.Path +@"\"+ fileName;
                 
                 //Act
-                bndExtForceFile.Write(filePath, waterFlowFMModelDefinition);
+                bndExtForceFile.Write(filePath, filePath, waterFlowFMModelDefinition);
                 
                 //Assert
                 string[] extFileLines = File.ReadAllLines(filePath);
@@ -1452,13 +1449,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             AssertPropertyLine(extFileLines[2], BndExtForceFileConstants.FileTypeKey, bndExtForceFile.FileType);
         }
 
-        private static void CheckIfSubFilesMentionedInBndExtForceFileAreWrittenNextToThisFile(string line, string saveBndExtFilePath)
+        private static void CheckIfSubFilesMentionedInBndExtForceFileAreWrittenRelativeToThisFile(string line, string referenceFilePath)
         {
             string[] parts = line.Split('=');
             
-            string subFilePath = Path.GetFileName(parts[1].Trim());
-            string bndExtDir = Path.GetDirectoryName(saveBndExtFilePath);
-            string expectedPath = Path.Combine(bndExtDir, subFilePath);
+            string subFilePath = parts[1].Trim();
+            string directoryName = Path.GetDirectoryName(referenceFilePath);
+            string expectedPath = Path.Combine(directoryName, subFilePath);
             
             Assert.IsTrue(File.Exists(expectedPath), $"Expected path does not exist: '{expectedPath}'.");
         }

@@ -37,6 +37,7 @@ namespace DHYDRO
         DHYDRORepositoryFolders.DialogSelectFileAppFolder _dialogselectfile;
         DHYDRORepositoryFolders.FormInterpolationOperationAppFolder _forminterpolationoperation;
         DHYDRORepositoryFolders.ComboBoxListAppFolder _comboboxlist;
+        DHYDRORepositoryFolders.DialogSelectFolderAppFolder _dialogselectfolder;
         DHYDRORepositoryFolders.DialogSelectAFileToExportToAppFolder _dialogselectafiletoexportto;
         DHYDRORepositoryFolders.AstroComponentSelectionAppFolder _astrocomponentselection;
         DHYDRORepositoryFolders.SupportPointSelectionFormAppFolder _supportpointselectionform;
@@ -77,6 +78,7 @@ namespace DHYDRO
             _dialogselectfile = new DHYDRORepositoryFolders.DialogSelectFileAppFolder(this);
             _forminterpolationoperation = new DHYDRORepositoryFolders.FormInterpolationOperationAppFolder(this);
             _comboboxlist = new DHYDRORepositoryFolders.ComboBoxListAppFolder(this);
+            _dialogselectfolder = new DHYDRORepositoryFolders.DialogSelectFolderAppFolder(this);
             _dialogselectafiletoexportto = new DHYDRORepositoryFolders.DialogSelectAFileToExportToAppFolder(this);
             _astrocomponentselection = new DHYDRORepositoryFolders.AstroComponentSelectionAppFolder(this);
             _supportpointselectionform = new DHYDRORepositoryFolders.SupportPointSelectionFormAppFolder(this);
@@ -533,6 +535,15 @@ namespace DHYDRO
         public virtual DHYDRORepositoryFolders.ComboBoxListAppFolder ComboBoxList
         {
             get { return _comboboxlist; }
+        }
+
+        /// <summary>
+        /// The DialogSelectFolder folder.
+        /// </summary>
+        [RepositoryFolder("1e3e1fdb-7d8e-42c9-98e1-97932512bc80")]
+        public virtual DHYDRORepositoryFolders.DialogSelectFolderAppFolder DialogSelectFolder
+        {
+            get { return _dialogselectfolder; }
         }
 
         /// <summary>
@@ -10774,6 +10785,98 @@ namespace DHYDRO
                 get
                 {
                     return _openstreetmapInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The DialogSelectFolderAppFolder folder.
+        /// </summary>
+        [RepositoryFolder("1e3e1fdb-7d8e-42c9-98e1-97932512bc80")]
+        public partial class DialogSelectFolderAppFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _directorypathInfo;
+            RepoItemInfo _selectfolderInfo;
+
+            /// <summary>
+            /// Creates a new DialogSelectFolder  folder.
+            /// </summary>
+            public DialogSelectFolderAppFolder(RepoGenBaseFolder parentFolder) :
+                    base("DialogSelectFolder", "/form[@title>'Select folder']", parentFolder, 30000, null, true, "1e3e1fdb-7d8e-42c9-98e1-97932512bc80", "")
+            {
+                _directorypathInfo = new RepoItemInfo(this, "DirectoryPath", "text[@controlid='1152']", "", 30000, null, "dd630d51-0ba0-4af4-8007-107b1b4c4874");
+                _selectfolderInfo = new RepoItemInfo(this, "SelectFolder", "button[@text='Select Folder']", "", 30000, null, "5420a916-2ecb-47ba-9d16-7f2a36bf7075");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("1e3e1fdb-7d8e-42c9-98e1-97932512bc80")]
+            public virtual Ranorex.Form Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.Form>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("1e3e1fdb-7d8e-42c9-98e1-97932512bc80")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The DirectoryPath item.
+            /// </summary>
+            [RepositoryItem("dd630d51-0ba0-4af4-8007-107b1b4c4874")]
+            public virtual Ranorex.Text DirectoryPath
+            {
+                get
+                {
+                    return _directorypathInfo.CreateAdapter<Ranorex.Text>(true);
+                }
+            }
+
+            /// <summary>
+            /// The DirectoryPath item info.
+            /// </summary>
+            [RepositoryItemInfo("dd630d51-0ba0-4af4-8007-107b1b4c4874")]
+            public virtual RepoItemInfo DirectoryPathInfo
+            {
+                get
+                {
+                    return _directorypathInfo;
+                }
+            }
+
+            /// <summary>
+            /// The SelectFolder item.
+            /// </summary>
+            [RepositoryItem("5420a916-2ecb-47ba-9d16-7f2a36bf7075")]
+            public virtual Ranorex.Button SelectFolder
+            {
+                get
+                {
+                    return _selectfolderInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The SelectFolder item info.
+            /// </summary>
+            [RepositoryItemInfo("5420a916-2ecb-47ba-9d16-7f2a36bf7075")]
+            public virtual RepoItemInfo SelectFolderInfo
+            {
+                get
+                {
+                    return _selectfolderInfo;
                 }
             }
         }

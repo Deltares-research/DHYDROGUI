@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using DelftTools.Utils.Guards;
-using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Restart;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 
@@ -114,36 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Restart
         /// </summary>
         public bool IsMapFile => Name.EndsWith(FileConstants.MapFileExtension);
 
-        /// <summary>
-        /// Copies the file in to the specified <paramref name="directoryPath"/>.
-        /// </summary>
-        /// <param name="directoryPath"> The destination directory. </param>
-        /// <param name="switchTo">Whether this instance should be switched to the new path./></param>
-        /// <exception cref="ArgumentException">
-        /// Throws when <paramref name="directoryPath"/> contains invalid characters such as ", &, or |.
-        /// </exception>
-        /// <exception cref="PathTooLongException">
-        /// Throws when the specified <paramref name="directoryPath"/> exceeds the system-defined maximum length.
-        /// </exception>
-        /// <remarks>
-        /// If <paramref name="directoryPath"/> is <c>null</c> or empty, the destination file path equals the current file path
-        /// or this <see cref="WaterFlowFMRestartFile"/> does not exist, the method returns.
-        /// </remarks>
-        /// <remarks>The <paramref name="directoryPath"/> will be created without overwriting the existing one.</remarks>
-        public void CopyToDirectory(string directoryPath, bool switchTo)
-        {
-            if (string.IsNullOrEmpty(directoryPath) || !Exists)
-            {
-                return;
-            }
-
-            var dirInfo = new DirectoryInfo(directoryPath);
-            FileUtils.CreateDirectoryIfNotExists(dirInfo.FullName);
-            string targetFilePath = System.IO.Path.Combine(dirInfo.FullName, Name);
-
-            CopyTo(targetFilePath, switchTo);
-        }
-
+        /// <inheritdoc />
         public override string ToString() => Name;
 
         /// <summary>
@@ -165,8 +135,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Restart
         /// The target directory of <paramref name="destinationPath"/> will be created without
         /// overwriting the existing one.
         /// </remarks>
-        private void CopyTo(string destinationPath, bool switchTo)
+        public void CopyTo(string destinationPath, bool switchTo)
         {
+            if (string.IsNullOrEmpty(destinationPath) || !Exists)
+            {
+                return;
+            }
+            
             var destinationFileInfo = new FileInfo(destinationPath);
 
             CreateParentDirectory(destinationFileInfo);

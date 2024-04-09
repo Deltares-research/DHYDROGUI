@@ -6,11 +6,11 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 
@@ -55,14 +55,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void UpdateGroupName(this IGroupableFeature groupableFeature, WaterFlowFMModel model)
         {
             groupableFeature.RenameStructureGroupNameToStructureFilePath(model);
-            groupableFeature.MakeGroupNameRelative(model.MduFilePath);
+            groupableFeature.MakeGroupNameRelative(model.GetModelDirectory(), model.GetMduDirectory());
         }
 
-        private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature,
-                                                                        WaterFlowFMModel model)
+        private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature, WaterFlowFMModel model)
         {
-            if (!(hydroAreaFeature is IStructure) && 
-                !(hydroAreaFeature is IPump))
+            if (!(hydroAreaFeature is IStructure) && !(hydroAreaFeature is IPump))
             {
                 return;
             }
@@ -79,17 +77,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            string strucGroupName = structure.GroupName;
-            if (string.IsNullOrEmpty(strucGroupName) || 
-                !Path.IsPathRooted(strucGroupName) ||
-                strucGroupName.EndsWith(FileConstants.IniFileExtension))
+            string groupName = structure.GroupName;
+            if (string.IsNullOrEmpty(groupName) || FileUtils.PathIsRelative(groupName) || groupName.EndsWith(FileConstants.IniFileExtension))
             {
                 return;
             }
 
-            string[] iniFiles = Directory.GetFiles(Path.GetDirectoryName(strucGroupName), $"*{FileConstants.IniFileExtension}");
+            string[] iniFiles = Directory.GetFiles(Path.GetDirectoryName(groupName), $"*{FileConstants.IniFileExtension}");
             
-            var strucFile = new StructuresFile
+            var structuresFile = new StructuresFile
             {
                 StructureSchema = model.ModelDefinition.StructureSchema,
                 ReferenceDate = model.ReferenceTime
@@ -97,9 +93,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (string file in iniFiles)
             {
-                IList<IStructureObject> structures = strucFile.Read(file);
-                int numberOfMatchingStructureNames =
-                    structures.Count(s => s.Name == Path.GetFileNameWithoutExtension(strucGroupName));
+                IList<IStructureObject> structures = structuresFile.Read(file);
+                int numberOfMatchingStructureNames = structures.Count(s => s.Name == Path.GetFileNameWithoutExtension(groupName));
 
                 if (numberOfMatchingStructureNames > 0)
                 {
@@ -108,8 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            structure.GroupName =
-                Path.Combine(Path.GetDirectoryName(structure.GroupName), model.Name + FileConstants.StructuresFileExtension);
+            structure.GroupName = Path.Combine(Path.GetDirectoryName(structure.GroupName), model.Name + FileConstants.StructuresFileExtension);
         }
     }
 }

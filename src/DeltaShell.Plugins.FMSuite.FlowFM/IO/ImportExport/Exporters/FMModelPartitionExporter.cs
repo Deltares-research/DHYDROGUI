@@ -10,27 +10,43 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 {
+    /// <summary>
+    /// Provides a D-FlowFM model file partition exporter.
+    /// </summary>
     public class FMModelPartitionExporter : FMPartitionExporterBase
     {
+        /// <inheritdoc/>
         public override string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
+
+        /// <summary>
+        /// Gets or sets the directory to export the D-FLowFM model file to.
+        /// </summary>
+        public string ExportDirectory { get; set; }
 
         public int SolverType { private get; set; }
 
+        /// <inheritdoc/>
         public override bool Export(object item, string path)
         {
-            if ((PolygonFile == null && NumDomains <= 0) ||
-                !(item is WaterFlowFMModel waterFlowFMModel))
+            if ((PolygonFile == null && NumDomains <= 0) || !(item is WaterFlowFMModel waterFlowFMModel))
+            {
+                return false;
+            }
+            
+            if (string.IsNullOrEmpty(path) && string.IsNullOrEmpty(ExportDirectory))
             {
                 return false;
             }
 
             bool originalOutputOutOfSync = waterFlowFMModel.OutputOutOfSync;
             bool success = ExportPartitionMdu(waterFlowFMModel, path);
+            
             waterFlowFMModel.OutputOutOfSync = originalOutputOutOfSync;
 
             return success;
         }
 
+        /// <inheritdoc/>
         public override IEnumerable<Type> SourceTypes()
         {
             yield return typeof(WaterFlowFMModel);
@@ -46,14 +62,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
             using (api)
             {
-                string nonzeroPath = FilePath ?? path;
+                string exportPath = ExportDirectory ?? path;
+                if (Directory.Exists(exportPath))
+                {
+                    exportPath = waterFlowFMModel.GetMduExportPath(exportPath);
+                }
 
-                string filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(nonzeroPath),
-                                                               Path.GetFileNameWithoutExtension(nonzeroPath));
+                string filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(exportPath),
+                                                               Path.GetFileNameWithoutExtension(exportPath));
 
                 string filePath = filePathWithoutExtension + FileConstants.MduFileExtension;
+                
                 WaterFlowFMModelDefinition modelDefinition = waterFlowFMModel.ModelDefinition;
                 WaterFlowFMProperty igcSolverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
+                
                 string originalSolverType = igcSolverProperty.GetValueAsString();
                 igcSolverProperty.SetValueFromString("2"); //ensure init works
 

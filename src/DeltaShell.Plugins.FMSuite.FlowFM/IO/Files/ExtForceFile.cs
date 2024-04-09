@@ -3,6 +3,7 @@ using System.Linq;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -38,6 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private string currentLine;
 
         private string extFilePath;
+        private string extSubFilesReferenceFilePath;
+        private WaterFlowFMModelDefinition modelDefinition;
 
         public ExtForceFile()
         {

@@ -11,9 +11,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serializat
         /// <summary>
         /// Write the spatial data to file in the specified directory.
         /// </summary>
-        /// <param name="targetDirectory"> The target write directory. </param>
-        /// <param name="initialFieldFileData"> The initial field file data. </param>
-        /// <param name="modelDefinition"> The model definition containing the spatial data. </param>
-        void Write(string targetDirectory, InitialFieldFileData initialFieldFileData, WaterFlowFMModelDefinition modelDefinition);
+        /// <param name="directory"> The target write directory. </param>
+        /// <param name="switchTo">Whether the spatial operation file path be switched to the new file location.</param>
+        /// <param name="data"> The initial field file data. </param>
+        /// <param name="definition"> The model definition containing the spatial data. </param>
+        void Write(string directory, bool switchTo, InitialFieldFileData data, WaterFlowFMModelDefinition definition);
     }
 }

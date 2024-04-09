@@ -335,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 remoteApi.Initialize(model.MduFilePath);
                 remoteApi.WriteNetGeometry("netgeom.nc");
 
-                Assert.IsTrue(File.Exists(Path.Combine(Path.GetDirectoryName(model.MduFilePath), "netgeom.nc")));
+                Assert.IsTrue(File.Exists(Path.Combine(model.GetMduDirectory(), "netgeom.nc")));
             }
         }
 

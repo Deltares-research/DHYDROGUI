@@ -434,24 +434,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new ViewInfo<SpiderWebWindField, GriddedWindView> { AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null };
 
             // Importers and exporters
+            yield return new ViewInfo<FMModelFileExporter, FMModelExportDialog>();
             yield return new ViewInfo<BcmFileImporter, BcmFileImportDialog>();
             yield return new ViewInfo<BcmFileExporter, BcmFileExportDialog>();
             yield return new ViewInfo<BcFileImporter, BcFileImportDialog>();
             yield return new ViewInfo<BcFileExporter, BcFileExportDialog>();
-            yield return new ViewInfo<FMModelPartitionExporter, FMPartitionExportDialog>
+            yield return new ViewInfo<FMModelPartitionExporter, FMModelPartitionExportDialog>();
+            yield return new ViewInfo<FMGridPartitionExporter, FMGridPartitionExportDialog>
             {
                 AfterCreate = (v, o) =>
                 {
-                    v.Extension = o.FileFilter;
-                    v.EnableSolverSelection = true;
-                }
-            };
-            yield return new ViewInfo<FMGridPartitionExporter, FMPartitionExportDialog>
-            {
-                AfterCreate = (v, o) =>
-                {
-                    v.Extension = o.FileFilter;
-                    v.EnableSolverSelection = false;
+                    v.FileFilter = o.FileFilter;
                 }
             };
 

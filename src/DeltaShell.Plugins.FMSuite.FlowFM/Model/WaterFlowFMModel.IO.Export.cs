@@ -6,7 +6,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
@@ -21,17 +21,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             string previousModelDir = null;
             string previousExplicitWorkingDirectory = null;
-            if (MduFilePath != MduSavePath)
+
+            string mduSavePath = GetMduSavePath();
+            
+            if (MduFilePath != mduSavePath)
             {
-                previousModelDir = RecursivelyGetModelDirectoryPathFromMduFile();
+                previousModelDir = GetModelDirectory();
                 previousExplicitWorkingDirectory = previousModelDir + postfixExplicitWorkingDirectory;
             }
 
-            if (ExportTo(MduSavePath))
-            {
-                /*Make sure the ModelDirectory gets updated when saving*/
-                ModelDefinition.ModelDirectory = RecursivelyGetModelDirectoryPathFromMduFile();
-            }
+            ExportTo(mduSavePath);
 
             if (previousModelDir == null)
             {
@@ -47,13 +46,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                      bool writeExtForcings = true,
                                      bool writeFeatures = true)
         {
-            string dirName = Path.GetDirectoryName(mduPath);
-            if (!Directory.Exists(dirName))
-            {
-                Directory.CreateDirectory(dirName);
-            }
-
-            modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).SetValueFromString("1");
+            string mduDir = Path.GetDirectoryName(mduPath);
+            
+            FileUtils.CreateDirectoryIfNotExists(mduDir);
 
             if (switchTo)
             {
@@ -76,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         .Where(p => p.IsSpatiallyVarying))
                                                               .Select(p => p.SpatiallyVaryingName).ToList());
 
-                ModelDefinition.SelectSpatialOperations(SpatialData.DataItems.ToList(), TracerDefinitions, spatVarSedPropNames);
+                ModelDefinition.SelectSpatialOperations(SpatialData.DataItems, TracerDefinitions, spatVarSedPropNames);
             }
 
             InitializeAreaDataColumns();
@@ -87,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 SetWaqOutputDirProperty();
             }
 
-            var mduFileWriteConfig = new MduFileWriteConfig()
+            var mduFileWriteConfig = new MduFileWriteConfig
             {
                 WriteExtForcings = writeExtForcings,
                 WriteFeatures = writeFeatures,
@@ -95,9 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 WriteRestartStartTime = RestartInput.IsMapFile
             };
 
-            RestartInput.CopyToDirectory(dirName, switchTo);
-            ModelDefinition.GetModelProperty(KnownProperties.RestartFile)
-                           .SetValueFromString(RestartInput.Name);
+            WriteRestartFile(mduPath, switchTo);
 
             WaterFlowFMProperty restartDateTimeProperty = ModelDefinition.GetModelProperty(KnownProperties.RestartDateTime);
             restartDateTimeProperty.SetValueFromString(FMParser.ToString(RestartInput.StartTime, typeof(DateTime)));
@@ -115,10 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (switchTo)
             {
-                MduFilePath = mduPath;
                 CacheFile.UpdatePathToMduLocation(mduPath);
-                SpatialData.SwitchTo(Path.GetDirectoryName(mduPath));
-
+                
                 SaveOutput();
             }
 
@@ -133,6 +124,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void RestoreAreaDataColumns()
         {
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
+        }
+
+        private void WriteRestartFile(string mduPath, bool switchTo)
+        {
+            WaterFlowFMProperty restartFileProperty = ModelDefinition.GetModelProperty(KnownProperties.RestartFile);
+            
+            string restartFile = restartFileProperty.GetValueAsString();
+            if (string.IsNullOrEmpty(restartFile) && !string.IsNullOrEmpty(RestartInput.Name))
+            {
+                restartFileProperty.SetValueFromString(RestartInput.Name);
+            }
+            
+            string restartFilePath = MduFileHelper.GetSubfilePath(mduPath, restartFileProperty);
+            if (string.IsNullOrEmpty(restartFilePath))
+            {
+                return;
+            }
+            
+            RestartInput.CopyTo(restartFilePath, switchTo);
         }
         #endregion Export
     }

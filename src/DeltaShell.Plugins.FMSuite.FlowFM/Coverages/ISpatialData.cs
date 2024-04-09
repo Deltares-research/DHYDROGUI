@@ -105,19 +105,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// </summary>
         /// <param name="name"> The name of the sediment fraction. </param>
         void RemoveFraction(string name);
-
-        /// <summary>
-        /// Switches each <seealso cref="SharpMap.SpatialOperations.ImportSamplesOperation"/>
-        /// to the new file path except for the bed level.
-        /// </summary>
-        /// <param name="targetDir"> The target directory to which to switch to. </param>
-        /// <exception cref="System.ArgumentException">
-        /// Thrown when <paramref name="targetDir"/> is <c>null</c> or empty.
-        /// </exception>
-        /// <remarks>
-        /// The imported samples on the bed level will not be switched, because they are not copied.
-        /// The result of the bed level spatial operations are stored in the grid file.
-        /// </remarks>
-        void SwitchTo(string targetDir);
     }
 }

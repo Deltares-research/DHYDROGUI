@@ -30,15 +30,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public partial class ExtForceFile
     {
-        private string extSubFilesReferenceFilePath;
-
-        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition,
-                         string extForceSubFilesReferenceFilePath)
+        public void Read(string filePath, string referenceFilePath, WaterFlowFMModelDefinition definition)
         {
-            extFilePath = extForceFilePath;
-            extSubFilesReferenceFilePath = extForceSubFilesReferenceFilePath;
-
-            Read(modelDefinition);
+            extFilePath = filePath;
+            extSubFilesReferenceFilePath = referenceFilePath;
+            modelDefinition = definition;
+            
+            Read();
         }
 
         protected override void CreateCommonBlock()
@@ -61,21 +59,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private void Read(WaterFlowFMModelDefinition modelDefinition)
+        private void Read()
         {
             IEnumerable<ExtForceFileItem> extForceFileItems = ParseExtForceFile();
             IList<ExtForceFileItem> forceFileItems =
                 extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
 
-            ReadPolyLineData(forceFileItems, modelDefinition);
-            ReadWindItems(forceFileItems, modelDefinition);
-            ReadHeatFluxModelData(forceFileItems, modelDefinition);
-            ReadSpatialData(forceFileItems, modelDefinition);
-            ReadInitialVelocityData(forceFileItems, modelDefinition);
-            StoreUnknownQuantities(forceFileItems, modelDefinition);
+            ReadPolyLineData(forceFileItems);
+            ReadWindItems(forceFileItems);
+            ReadHeatFluxModelData(forceFileItems);
+            ReadSpatialData(forceFileItems);
+            ReadInitialVelocityData(forceFileItems);
+            StoreUnknownQuantities(forceFileItems);
         }
 
-        private void ReadInitialVelocityData(IList<ExtForceFileItem> forceFileItems, WaterFlowFMModelDefinition modelDefinition)
+        private void ReadInitialVelocityData(IEnumerable<ExtForceFileItem> forceFileItems)
         {
             foreach (ExtForceFileItem forceFileItem in forceFileItems)
             {
@@ -93,14 +91,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void ReadSamples(ExtForceFileItem forceFileItem, Samples samples)
         {
-            string path = GetPath(forceFileItem.FileName);
+            string path = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, forceFileItem.FileName);
             IList<IPointValue> pointValues = ReadPointValues(path);
             
             samples.SetPointValues(pointValues);
             samples.ExtrapolationTolerance = forceFileItem.ExtraPolTol;
             samples.Operand = ExtForceQuantNames.ParseOperationType(forceFileItem.Operand);
             samples.InterpolationMethod = GetInterpolationMethod(forceFileItem);
-            samples.SourceFileName = Path.GetFileName(forceFileItem.FileName);
+            samples.SourceFileName = forceFileItem.FileName;
             
             if (forceFileItem.ModelData.TryGetValue(ExtForceFileConstants.AveragingTypeKey, out object value))
             {
@@ -116,12 +114,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static IList<IPointValue> ReadPointValues(string path) => XyzFile.Read(path, checkForUnsupportedSize: true);
 
-        private string GetPath(string filePath)
-        {
-            string dirPath = Path.GetDirectoryName(extFilePath);
-            return Path.Combine(dirPath, filePath);
-        }
-
         private void AddSamplesToForcingFileItems(ExtForceFileItem forceFileItem, Samples samples)
         {
             supportedExtForceFileItems.Add(forceFileItem);
@@ -131,8 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private IEnumerable<ExtForceFileItem> GetUnknownExtForceFileItems(IEnumerable<ExtForceFileItem> allExtForceFileItems) =>
             allExtForceFileItems.Except(supportedExtForceFileItems);
 
-        private void StoreUnknownQuantities(IEnumerable<ExtForceFileItem> allExtForceFileItems,
-                                            WaterFlowFMModelDefinition modelDefinition)
+        private void StoreUnknownQuantities(IEnumerable<ExtForceFileItem> allExtForceFileItems)
         {
             List<ExtForceFileItem> unknownForceFileItems = GetUnknownExtForceFileItems(allExtForceFileItems).ToList();
             foreach (ExtForceFileItem unknownForceFileItem in unknownForceFileItems)
@@ -279,8 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private void ReadPolyLineData(IEnumerable<ExtForceFileItem> extForceFileItems,
-                                      WaterFlowFMModelDefinition modelDefinition)
+        private void ReadPolyLineData(IEnumerable<ExtForceFileItem> extForceFileItems)
         {
             IEventedList<BoundaryConditionSet> boundaryConditionSets = modelDefinition.BoundaryConditionSets;
             var boundaryConditions = new List<IBoundaryCondition>();
@@ -473,8 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     Geometry = LineStringCreator.CreateLineString(points)
                 };
 
-        private void ReadHeatFluxModelData(IEnumerable<ExtForceFileItem> extForceFileItems,
-                                           WaterFlowFMModelDefinition modelDefinition)
+        private void ReadHeatFluxModelData(IEnumerable<ExtForceFileItem> extForceFileItems)
         {
             var modelReferenceDate = modelDefinition.GetReferenceDateAsDateTime();
             switch (modelDefinition.HeatFluxModel.Type)
@@ -483,13 +472,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     return;
                 case HeatFluxModelType.ExcessTemperature:
                 case HeatFluxModelType.Composite:
-                    ReadCompositeTemperatureData(extForceFileItems, modelDefinition, modelReferenceDate);
+                    ReadCompositeTemperatureData(extForceFileItems, modelReferenceDate);
                     return;
             }
         }
 
-        private void ReadCompositeTemperatureData(IEnumerable<ExtForceFileItem> extForceFileItems,
-                                                  WaterFlowFMModelDefinition modelDefinition, DateTime modelReferenceDate)
+        private void ReadCompositeTemperatureData(IEnumerable<ExtForceFileItem> extForceFileItems, DateTime modelReferenceDate)
         {
             HeatFluxModel heatFluxModel = modelDefinition.HeatFluxModel;
 
@@ -548,8 +536,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems,
-                                     WaterFlowFMModelDefinition modelDefinition)
+        private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems)
         {
             IList<ExtForceFileItem> unreadExtForceFileItems = extForceFileItems;
 
@@ -573,10 +560,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
                 if (quantityPair.Key.Equals(ExtForceQuantNames.FrictCoef))
                 {
-                    readItems = FilterByFrictionType(unreadExtForceFileItems, modelDefinition).ToList();
+                    readItems = FilterByFrictionType(unreadExtForceFileItems).ToList();
                 }
 
-                ReadSpatialOperationData(readItems, modelDefinition, quantityPair.Key, quantityPair.Value);
+                ReadSpatialOperationData(readItems, quantityPair.Key, quantityPair.Value);
 
                 //Remove read items.
                 unreadExtForceFileItems = unreadExtForceFileItems.Except(readItems).ToList();
@@ -594,7 +581,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             foreach (ExtForceFileItem tracerItem in initialTracerItems)
             {
                 string tracerName = tracerItem.Quantity.Substring(ExtForceQuantNames.InitialTracerPrefix.Length);
-                ReadSpatialOperationData(initialTracerItems, modelDefinition, tracerItem.Quantity, tracerName);
+                ReadSpatialOperationData(initialTracerItems, tracerItem.Quantity, tracerName);
             }
 
             unreadExtForceFileItems = unreadExtForceFileItems.Except(initialTracerItems).ToList();
@@ -616,14 +603,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 string spatialVaryingSedimentConcentration =
                     sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) +
                     ExtForceFileConstants.SedimentConcentrationPostfix;
-                ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity,
-                                         spatialVaryingSedimentConcentration);
+                ReadSpatialOperationData(initialSedimentItems, sedimentItem.Quantity, spatialVaryingSedimentConcentration);
             }
         }
 
-        private void ReadSpatialOperationData(IEnumerable<ExtForceFileItem> spatialForcingsItems,
-                                              WaterFlowFMModelDefinition waterFlowFMModelDefinition, string quantity,
-                                              string dataItemName)
+        private void ReadSpatialOperationData(IEnumerable<ExtForceFileItem> spatialForcingsItems, string quantity, string dataItemName)
         {
             List<ExtForceFileItem> forcingsItems = spatialForcingsItems.Where(i => i.Quantity == quantity).ToList();
 
@@ -632,14 +616,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            IList<ISpatialOperation> spatialOperations = waterFlowFMModelDefinition.GetSpatialOperations(dataItemName);
+            IList<ISpatialOperation> spatialOperations = modelDefinition.GetSpatialOperations(dataItemName);
 
             bool createOperationSet = spatialOperations == null;
 
             if (createOperationSet)
             {
                 spatialOperations = new List<ISpatialOperation>();
-                waterFlowFMModelDefinition.SpatialOperations[dataItemName] = spatialOperations;
+                modelDefinition.SpatialOperations[dataItemName] = spatialOperations;
             }
 
             spatialOperations.Clear();
@@ -734,8 +718,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private void ReadWindItems(IEnumerable<ExtForceFileItem> extForceFileItems,
-                                   WaterFlowFMModelDefinition modelDefinition)
+        private void ReadWindItems(IEnumerable<ExtForceFileItem> extForceFileItems)
         {
             var refDate = modelDefinition.GetReferenceDateAsDateTime();
             foreach (
@@ -745,10 +728,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 supportedExtForceFileItems.Add(extForceFileItem);
                 try
                 {
-                    IWindField windField = ExtForceFileHelper.CreateWindField(extForceFileItem, extFilePath);
-
-                    string windFile =
-                        GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
+                    string windFile = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
+                    
+                    IWindField windField = ExtForceFileHelper.CreateWindField(extForceFileItem, windFile);
 
                     if (!File.Exists(windFile))
                     {
@@ -961,8 +943,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             sourceAndSink.CopyValuesFromFileToSourceAndSinkAttributes(readFunction);
         }
 
-        private IEnumerable<ExtForceFileItem> FilterByFrictionType(IEnumerable<ExtForceFileItem> extForceFileItems,
-                                                                   WaterFlowFMModelDefinition modelDefinition)
+        private IEnumerable<ExtForceFileItem> FilterByFrictionType(IEnumerable<ExtForceFileItem> extForceFileItems)
         {
             WaterFlowFMProperty frictionTypeProperty = modelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == KnownProperties.FrictionType);
 

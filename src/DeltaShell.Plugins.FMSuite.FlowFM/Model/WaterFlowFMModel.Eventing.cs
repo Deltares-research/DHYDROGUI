@@ -578,7 +578,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
             WindFields = ModelDefinition.WindFields;
-            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
         }
 
         #region Coupling

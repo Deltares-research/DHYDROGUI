@@ -9,12 +9,29 @@ using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 {
+    /// <summary>
+    /// Provides a grid file partition exporter.
+    /// </summary>
     public class FMGridPartitionExporter : FMPartitionExporterBase
     {
+        /// <inheritdoc/>
+        public override string FileFilter => $"Flexible Mesh Net File|*{FileConstants.NetFileExtension}";
+
+        /// <summary>
+        /// Gets or sets the path to export the grid file to.
+        /// </summary>
+        public string FilePath { get; set; }
+
         public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { private get; set; }
+        
+        /// <inheritdoc/>
+        public override IEnumerable<Type> SourceTypes()
+        {
+            yield return typeof(UnstructuredGrid);
+            yield return typeof(ImportedFMNetFile);
+        }
 
-        #region IFileExporter
-
+        /// <inheritdoc/>
         public override bool Export(object item, string path)
         {
             if (PolygonFile == null && NumDomains <= 0)
@@ -72,15 +89,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
             return true;
         }
-
-        public override IEnumerable<Type> SourceTypes()
-        {
-            yield return typeof(UnstructuredGrid);
-            yield return typeof(ImportedFMNetFile);
-        }
-
-        public override string FileFilter => $"Flexible Mesh Net File|*{FileConstants.NetFileExtension}";
-
-        #endregion
     }
 }

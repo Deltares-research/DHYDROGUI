@@ -118,7 +118,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile
             // Act
             void Call()
             {
-                writer.Write(filePath, new WaterFlowFMModelDefinition());
+                writer.Write(filePath, "initialFields.ini", false, new WaterFlowFMModelDefinition());
+            }
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentException);
+        }
+        
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Write_RelativeParentPathNullOrEmpty_ThrowsArgumentException(string filePath)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var spatialDataFileWriter = Substitute.For<ISpatialDataFileWriter>();
+            var writer = new InitialFieldFileWriter(fileSystem, spatialDataFileWriter);
+
+            // Act
+            void Call()
+            {
+                writer.Write("initialFields.ini", filePath, false, new WaterFlowFMModelDefinition());
             }
 
             // Assert
@@ -132,11 +153,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile
             var fileSystem = new MockFileSystem();
             var spatialDataFileWriter = Substitute.For<ISpatialDataFileWriter>();
             var writer = new InitialFieldFileWriter(fileSystem, spatialDataFileWriter);
-
+            const string fileName = "initialFields.ini";
+            
             // Act
             void Call()
             {
-                writer.Write("initialFields.ini", null);
+                writer.Write(fileName, fileName, false, null);
             }
 
             // Assert
@@ -148,9 +170,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory("input");
+            
             var spatialDataFileWriter = Substitute.For<ISpatialDataFileWriter>();
             var writer = new InitialFieldFileWriter(fileSystem, spatialDataFileWriter);
+            
             var modelDefinition = new WaterFlowFMModelDefinition
             {
                 SpatialOperations =
@@ -166,10 +189,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile
                 }
             };
 
-            const string fileName = "input/initialFields.ini";
+            const string fileName = @"input\initial_conditions\initialFields.ini";
+            const string referenceFileName = @"input\computations\FlowFM.mdu";
 
             // Act
-            writer.Write(fileName, modelDefinition);
+            writer.Write(fileName, referenceFileName, false, modelDefinition);
 
             // Assert
             const string fileContentExpected = @"[General]
@@ -209,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialFieldFile
     locationType          = 2d";
 
             AssertEqualIniData(fileSystem, fileName, fileContentExpected);
-            spatialDataFileWriter.Received(1).Write("input", Arg.Any<InitialFieldFileData>(), modelDefinition);
+            spatialDataFileWriter.Received(1).Write(@"input\computations", false, Arg.Any<InitialFieldFileData>(), modelDefinition);
         }
 
         private static void AssertEqualIniData(IFileSystem fileSystem, string fileName, string fileContentExpected)

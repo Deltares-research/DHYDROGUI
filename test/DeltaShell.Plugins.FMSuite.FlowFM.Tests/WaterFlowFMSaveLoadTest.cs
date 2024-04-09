@@ -9,6 +9,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils.Validation;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -72,6 +73,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsTrue(retrievedModel.NetFilePath.EndsWith("_net.nc"));
             Assert.AreEqual(0, retrievedModel.BoundaryConditions.Count());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void SaveLoadHarlingenModelWithOrganizedFileStructure()
+        {
+            app.Run();
+            app.CreateNewProject();
+
+            using (var sourceDir = new TemporaryDirectory())
+            using (var saveDir = new TemporaryDirectory())
+            {
+                string testData = TestHelper.GetTestFilePath(@"harlingen\OrganizedModel");
+                string modelDir = sourceDir.CopyDirectoryToTempDirectory(testData);
+                string mduPath = Path.Combine(modelDir, @"har\computations\test\har.mdu");
+
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(mduPath);
+                app.Project.RootFolder.Add(model);
+
+                string projectPath = Path.Combine(saveDir.Path, "har.proj");
+
+                app.SaveProjectAs(projectPath);
+                app.CloseProject();
+                app.OpenProject(projectPath);
+
+                WaterFlowFMModel loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                Assert.IsNotNull(loadedModel);
+
+                ValidationReport validationResult = loadedModel.Validate();
+                string loadedMduFilePath = loadedModel.MduFilePath;
+                string loadedNetFilePath = loadedModel.NetFilePath;
+                string loadedExtFilePath = loadedModel.ExtFilePath;
+                string loadedBndExtFilePath = loadedModel.BndExtFilePath;
+                
+                app.CloseProject();
+                
+                Assert.That(validationResult.ErrorCount, Is.Zero, "Model validation failed after loading the saved Harlingen model.");
+                Assert.That(loadedMduFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\har.mdu")));
+                Assert.That(loadedNetFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\computations\test\fm_003_net.nc")));
+                Assert.That(loadedExtFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\001.ext")));
+                Assert.That(loadedBndExtFilePath, Is.EqualTo(Path.Combine(saveDir.Path, @"har.proj_data\har\input\boundary_conditions\test\001_bnd.ext")));
+            }
         }
 
         [Test]

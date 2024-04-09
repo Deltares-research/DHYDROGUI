@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void WriteReadUniformForcings()
         {
-            var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
+            var modelDefinition = new WaterFlowFMModelDefinition("testmodel");
             var refDate = new DateTime(1981, 8, 29);
             modelDefinition.SetReferenceDateAsDateTime(refDate);
 
@@ -105,11 +105,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.WindFields.Add(windPolarField);
 
             var writer = new ExtForceFile();
-            writer.Write("testmodel", modelDefinition, true, true);
+            writer.Write("testmodel", "testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.SetReferenceDateAsDateTime(refDate);
-            writer.Read("testmodel", loadedModelDefinition, "testmodel");
+            writer.Read("testmodel", "testmodel", loadedModelDefinition);
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void WriteReadArcInfoWindForcing()
         {
-            var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
+            var modelDefinition = new WaterFlowFMModelDefinition("testmodel");
             var refDate = new DateTime(1981, 8, 29);
             modelDefinition.SetReferenceDateAsDateTime(refDate);
 
@@ -132,11 +132,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.WindFields.Add(GriddedWindField.CreateCurviField(windCurviFile, windCurviGrid));
 
             var writer = new ExtForceFile();
-            writer.Write("testmodel", modelDefinition, true, true);
+            writer.Write("testmodel", "testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.SetReferenceDateAsDateTime(refDate);
-            writer.Read("testmodel", loadedModelDefinition, "testmodel");
+            writer.Read("testmodel", "testmodel", loadedModelDefinition);
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void WriteReadUniformForcingWithSpiderWeb()
         {
-            var modelDefinition = new WaterFlowFMModelDefinition("testmodel", "testmodel");
+            var modelDefinition = new WaterFlowFMModelDefinition("testmodel");
             var refDate = new DateTime(1981, 8, 29);
             modelDefinition.SetReferenceDateAsDateTime(refDate);
 
@@ -178,11 +178,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.WindFields.Add(SpiderWebWindField.Create(windSpwFile));
 
             var writer = new ExtForceFile();
-            writer.Write("testmodel", modelDefinition, true, true);
+            writer.Write("testmodel", "testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.SetReferenceDateAsDateTime(refDate);
-            writer.Read("testmodel", loadedModelDefinition, "testmodel");
+            writer.Read("testmodel", "testmodel", loadedModelDefinition);
 
             Assert.AreEqual(modelDefinition.WindFields.Count, loadedModelDefinition.WindFields.Count);
             for (var i = 0; i < loadedModelDefinition.WindFields.Count; ++i)

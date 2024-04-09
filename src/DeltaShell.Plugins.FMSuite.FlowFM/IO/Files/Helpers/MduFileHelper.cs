@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
@@ -49,46 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         }
 
         /// <summary>
-        /// Checks if the filePath is a valid filePath for writing a feature file. Whenever filePath contains
-        /// a navigation to a parent folder, then it is considered as not valid and this method will return false.
-        /// </summary>
-        /// <param name="filePath"> The filePath as a string to check. </param>
-        /// <returns> </returns>
-        public static bool IsValidFilePath(string filePath, string mduFilePath)
-        {
-            var wrongValues = new List<string>();
-
-            if (Path.IsPathRooted(filePath)) // Absolute path
-            {
-                filePath = FileUtils.GetRelativePath(Path.GetDirectoryName(mduFilePath), filePath, true);
-            }
-
-            var regexSlashes = new Regex("/{3,}");
-            Match matchSlashes = regexSlashes.Match(filePath);
-            if (matchSlashes.Success)
-            {
-                wrongValues.Add(matchSlashes.Value);
-            }
-
-            var regexParentFolder = new Regex(@"\.{2,}");
-            Match matchParentFolder = regexParentFolder.Match(filePath);
-            if (matchParentFolder.Success)
-            {
-                wrongValues.Add(matchParentFolder.Value);
-            }
-
-            bool valid = wrongValues.Count == 0;
-            if (!valid)
-            {
-                Log.WarnFormat(
-                    "Features are not saved to file at \'{0}\', because the group name is invalid. Remove any occurences of \'" +
-                    string.Join("\', \'", wrongValues) + "\' from these group names.", filePath);
-            }
-
-            return valid;
-        }
-
-        /// <summary>
         /// Updates the GroupName and IsDefaultGroup properties of all features where needed.
         /// </summary>
         /// <typeparam name="TFeat"> The class type of the features. </typeparam>
@@ -129,27 +88,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             // Checking for existing files in the project folder
             groupNames = groupNames.Select(gn =>
             {
-                string filePath = Path.Combine(mduDirectory,
-                                               GetFilePathWithExtension(gn, extension, alternativeExtensions));
-                string existingFilePath;
-                try
-                {
-                    existingFilePath = Directory.GetFiles(Path.GetDirectoryName(filePath))
-                                                .FirstOrDefault(
-                                                    fp => fp.ToLowerInvariant()
-                                                            .EndsWith(filePath.Replace("/", @"\")
-                                                                              .ToLowerInvariant()));
-                }
-                catch (DirectoryNotFoundException)
+                string filePath = Path.Combine(mduDirectory, GetFilePathWithExtension(gn, extension, alternativeExtensions));
+                string directory = Path.GetDirectoryName(filePath);
+
+                if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory))
                 {
                     return GetFilePathWithExtension(gn, extension, alternativeExtensions);
                 }
 
+                string existingFilePath = Directory.GetFiles(directory)
+                                                   .FirstOrDefault(fp => fp.ToLowerInvariant()
+                                                                           .EndsWith(filePath.Replace("/", @"\").ToLowerInvariant()));
+
                 if (File.Exists(filePath) && Path.GetFileName(existingFilePath) != Path.GetFileName(filePath))
                 {
                     // If a file already exists that only differs by capital letters, give a warning and return this file name as a group name.
-                    Log.WarnFormat(Resources.MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists,
-                                   existingFilePath, gn);
+                    Log.WarnFormat(Resources.MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists, existingFilePath, gn);
                     return FileUtils.GetRelativePath(mduDirectory, existingFilePath, true);
                 }
 
@@ -218,58 +172,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return property.Value is string && property.PropertyDefinition.MduPropertyName.ToLower().EndsWith("file");
         }
 
-        /// <summary>
-        /// This method copies feature files at the given <paramref name="featureGroupNames"/> to locations in the mdu folder if
-        /// the file paths point
-        /// to a location outside of the mdu folder. In case a file path has '../' in its path, the path is replaced by its
-        /// absolute path.
-        /// The corresponding ModelProperty is updated for every file path change.
-        /// If the target file already exists, the file is overwritten.
-        /// </summary>
-        /// <param name="featureGroupNames"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
-        /// <param name="mduFilePath"> The file path of the mdu file. </param>
-        /// <param name="modelDefinition"> The model definition of the FM Model. </param>
-        /// <param name="propertyKey"> The key that corresponds to the type of file that is being read. </param>
-        public static void CopyFilesToMduFolderIfNeeded(IList<string> featureGroupNames,
-                                                        string mduFilePath,
-                                                        WaterFlowFMModelDefinition modelDefinition,
-                                                        string propertyKey)
-        {
-            string mduDirectory = Path.GetDirectoryName(Path.GetFullPath(mduFilePath));
-            for (var i = 0; i < featureGroupNames.Count; i++)
-            {
-                string filePath = Path.GetFullPath(Path.Combine(mduDirectory, featureGroupNames[i]));
-                Match isOutsideMduFolderMatch = new Regex(@"\.{2,}").Match(FileUtils.GetRelativePath(mduDirectory, filePath, true));
-
-                // File is situated inside mdu-folder or in a subfolder
-                if (!isOutsideMduFolderMatch.Success || propertyKey == KnownProperties.StructuresFile)
-                {
-                    featureGroupNames[i] = filePath;
-                }
-                else // File is situated outside of mdu-folder
-                {
-                    string newFilePath = Path.Combine(mduDirectory, Path.GetFileName(filePath));
-                    if (File.Exists(newFilePath))
-                    {
-                        Log.InfoFormat(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation,
-                                       filePath, newFilePath);
-                    }
-                    else
-                    {
-                        Log.InfoFormat(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
-                                       filePath, newFilePath, modelDefinition.ModelName);
-                    }
-
-                    File.Copy(filePath, newFilePath, true);
-                    featureGroupNames[i] = newFilePath;
-                }
-            }
-
-            featureGroupNames.RemoveAllWhere(fp => fp == null);
-            IEnumerable<string> relativePaths = featureGroupNames.Select(fp => FileUtils.GetRelativePath(mduDirectory, fp, true));
-            modelDefinition.GetModelProperty(propertyKey).SetValueFromStrings(relativePaths);
-        }
-
         private static void UpdateIsDefaultGroupFlag<TFeat>(IList<TFeat> features, string extension,
                                                             string defaultGroupName)
         {
@@ -319,14 +221,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
         internal static string GetCombinedPath(string mduFilePath, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(fileName))
             {
-                return FileUtils.PathIsRelative(fileName)
-                           ? Path.GetFullPath(Path.Combine(Path.GetDirectoryName(mduFilePath), fileName))
-                           : fileName;
+                return null;
             }
 
-            return null;
+            string combinedPath = FileUtils.PathIsRelative(fileName)
+                                      ? Path.Combine(Path.GetDirectoryName(mduFilePath), fileName)
+                                      : fileName;
+
+            return Path.GetFullPath(combinedPath);
         }
     }
 }

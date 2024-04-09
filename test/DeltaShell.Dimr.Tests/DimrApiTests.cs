@@ -77,7 +77,7 @@ namespace DeltaShell.Dimr.Tests
                     return c;
                 }).ToList();
 
-                var exporter = new WaterFlowFMFileExporter();
+                var exporter = new FMModelFileExporter();
                 string exporterPath = model.GetExporterPath(Path.Combine(tmpDir, model.DirectoryName));
                 exporter.Export(model, exporterPath);
                 DimrRunner.GenerateDimrXML(model, tmpDir);

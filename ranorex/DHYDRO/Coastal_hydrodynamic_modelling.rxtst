@@ -1224,10 +1224,10 @@
 			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
 				<databinding>
 					<var
-					dataname="ExportMduFilePath"
+					dataname="ExportMduDirectory"
 					datasourceid="fda30f1c-f1e2-4aaa-8a1a-776b5c8029d5"
 					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					variablename="ExportMduFilePath">
+					variablename="ExportMduDirectory">
 					</var>
 				</databinding>
 			</modulegroup>
@@ -1326,10 +1326,10 @@
 			ref="f5c24afc-db79-4825-bf40-5ca45964d6e5">
 				<databinding>
 					<var
-					dataname="ExportMduFilePath"
+					dataname="ExportMduDirectory"
 					datasourceid="bc5c4e15-cedd-41ac-af9f-8dbe247b538d"
 					variableid="7c9e9e2b-cac3-4199-b9e2-3529957537e4"
-					variablename="ExportMduFilePath">
+					variablename="ExportMduDirectory">
 					</var>
 				</databinding>
 			</modulegroup>
@@ -1752,8 +1752,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportMduFilePath"
-					value="exercie08_result.mdu">
+					name="ExportMduDirectory"
+					value="exercie08_result">
 					</param>
 				</parameters>
 			</smartfoldernode>
@@ -2449,8 +2449,8 @@
 				<parameters>
 					<param
 					mask="False"
-					name="ExportMduFilePath"
-					value="exercise07_result.mdu">
+					name="ExportMduDirectory"
+					value="exercise07_result">
 					</param>
 				</parameters>
 			</smartfoldernode>

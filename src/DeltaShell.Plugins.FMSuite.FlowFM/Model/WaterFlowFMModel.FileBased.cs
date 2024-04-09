@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -49,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         void IFileBased.CreateNew(string path)
         {
-            OnAddedToProject(GetMduPathFromDeltaShellPath(path));
+            OnAddedToProject(GetMduSavePath(path));
             filePath = path;
             isOpen = true;
         }
@@ -66,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         void IFileBased.CopyTo(string destinationPath)
         {
-            string mduPath = GetMduPathFromDeltaShellPath(destinationPath);
+            string mduPath = GetMduSavePath(destinationPath);
 
             string dirName = Path.GetDirectoryName(mduPath);
             if (!Directory.Exists(dirName))
@@ -85,16 +84,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             filePath = newPath;
 
-            string expectedMduPath = GetMduPathFromDeltaShellPath(newPath);
+            string expectedMduPath = GetMduSavePath(newPath);
+            
             var mduFileInfo = new FileInfo(expectedMduPath);
             if (!mduFileInfo.Exists && mduFileInfo.Directory?.Parent != null)
             {
-                // [D3DFMIQ-450] Backwards compatibility: Older Models may not have 'input' folder
-                string legacyMduPath = Path.Combine(mduFileInfo.Directory.Parent.FullName, mduFileInfo.Name);
-
-                if (File.Exists(legacyMduPath))
+                // Older models may not have an 'input' folder or the MDU file might be located in a subdirectory
+                string modelDirectory = mduFileInfo.Directory.Parent.FullName;
+                string foundMduPath = Directory.GetFiles(modelDirectory, "*.mdu", SearchOption.AllDirectories).FirstOrDefault();
+                
+                if (File.Exists(foundMduPath))
                 {
-                    OnSwitchTo(legacyMduPath);
+                    OnSwitchTo(foundMduPath);
                     return;
                 }
             }
@@ -114,41 +115,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 LoadFromMdu(mduPath);
             }
-            else // else: switch from existing: only change path
+            else // switch from existing: only change path
             {
                 MduFilePath = mduPath;
-
-                if (MduFile == null)
-                {
-                    return;
-                }
-
-                MduFile.Path = mduPath;
-                SwitchFileBasedItems();
-            }
-        }
-
-        private void SwitchFileBasedItems()
-        {
-            foreach (IFileBased windField in WindFields.OfType<IFileBased>())
-            {
-                string newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(windField.Path));
-                windField.SwitchTo(newPath);
-            }
-
-            foreach (IUnsupportedFileBasedExtForceFileItem notUsedExtForceFileItem in
-                UnsupportedFileBasedExtForceFileItems)
-            {
-                string newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath),
-                                              Path.GetFileName(notUsedExtForceFileItem.Path));
-                notUsedExtForceFileItem.SwitchTo(newPath);
             }
         }
 
         private void OnAddedToProject(string mduPath)
         {
-            MduFilePath = mduPath;
-            ExportTo(MduFilePath);
+            ExportTo(mduPath);
         }
     }
 }

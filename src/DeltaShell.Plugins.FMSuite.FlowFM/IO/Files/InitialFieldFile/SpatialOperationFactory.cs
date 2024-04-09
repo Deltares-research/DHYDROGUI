@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Data;
@@ -43,8 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
                     return CreatePolygonOperation(initialField);
                 default:
                     throw new ArgumentException(
-                        string.Format("Cannot construct spatial operation for file {0} with file type {1}",
-                                      initialField.DataFile, initialField.DataFileType.GetDescription()));
+                        $"Cannot construct spatial operation for file {initialField.DataFile} with file type {initialField.DataFileType.GetDescription()}");
             }
         }
 
@@ -76,11 +74,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile
             var operation = new T
             {
                 Name = operationName,
-                FilePath = initialField.DataFile
+                FilePath = initialField.DataFile,
+                Operand = GetOperand(initialField.Operand),
+                InterpolationMethod = GetInterpolationMethod(initialField.InterpolationMethod)
             };
 
-            operation.Operand = GetOperand(initialField.Operand);
-            operation.InterpolationMethod = GetInterpolationMethod(initialField.InterpolationMethod);
             if (initialField.InterpolationMethod == InitialFieldInterpolationMethod.Averaging)
             {
                 operation.AveragingMethod = GetAveragingType(initialField.AveragingType);

@@ -3590,6 +3590,54 @@ OsYqSDz+zwAAaK/nDj2T/r4AAAAASUVORK5CYII=
 		<appfolder
 		addcaps="form,nativewindow"
 		capname="form"
+		id="1e3e1fdb-7d8e-42c9-98e1-97932512bc80"
+		isrooted="True"
+		name="DialogSelectFolder"
+		refimgid="68c41331-a67d-44d8-8457-fce054b1edeb"
+		searchtimeout="30000ms"
+		usecache="True">
+			<item
+			addcaps="text,nativewindow"
+			capname="text"
+			id="dd630d51-0ba0-4af4-8007-107b1b4c4874"
+			name="DirectoryPath"
+			refimgid="09548d9f-8105-4a8f-a4b2-38a6ddc7cbab"
+			refpath="/form[@title='Select folder']/text[@controlid='1152']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select folder']/text[@controlid='1152']
+			</item>
+			<item
+			addcaps="button,nativewindow"
+			capname="button"
+			id="5420a916-2ecb-47ba-9d16-7f2a36bf7075"
+			name="SelectFolder"
+			refimgid="ebab8726-d384-4ec0-bf3d-a9bbbdf8944c"
+			refpath="/form[@title='Select folder']/button[@text='Select Folder']"
+			robustPath=""
+			searchtimeout="30000ms">
+				/form[@title&gt;'Select folder']/button[@text='Select Folder']
+			</item>
+			<basepath>
+				/form[@title&gt;'Select folder']
+			</basepath>
+			<icon>
+				iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAHnSURBVDhPY6A6OHTmblZJVUswlEsaaO6ZJ3v+
+1qd3C1buyT9x5WX2tUc/j9x+9vfXrWd//wLxn60Hr6VAlWIHNq6e1pcf/P595dHffxj4wZ8/EXGZ
+MVCl2IGxsTErkNICMYFYWUJCxu7c3T9/zt3/+2/P6Rev5q85snbToftF9fWr2EDq8YL6vqVKh6/+
+eHzi1t9/ILx69837aXkNC128w6tkZdWloMqwg/WHXzscvPL7x/bTHz87e0c2AIU0hFRU+BSds9U0
+gtvcVDzq+SAqsYDeRcdUtpz69iE5r20+AweHvLJ7gbZ5yYEbVlUn/lpVn/gHwuqhnQuhylFB2syZ
+rPO3Pjxr4RRYIKdrI2icvmKudeXhfzBsXrjjI5+MURYDH58QVAsqiC+cEOwZktMoLy/PoepdnWpZ
+sucfMtaPn3dDzb+1DBhCTFAtqCA2b0KtjIwW2HQJ47B0s4Kt/9CxYfqKlxIGHqJgDVgAI5QGAmFe
+Nh4xfzE93yn6SYs+mGSv/QfCcvZpCxm0tAhHIwIYs0qZRvYbpCz7K22TtIKBm1sMKkEY2NvXs2iE
+9lToxE7/xC2llc3AIMgPlcIDgAEobZM6RdGt9JycQ+YudlGlRKCoIhAzg+WJBKAkzQ3EHECMFC7o
+gIEBAIuk2FMfZ8feAAAAAElFTkSuQmCC
+			</icon>
+		</appfolder>
+		<appfolder
+		addcaps="form,nativewindow"
+		capname="form"
 		id="b56acff9-1ff6-4505-92d5-c942aec0dd25"
 		isrooted="True"
 		name="DialogSelectAFileToExportTo"

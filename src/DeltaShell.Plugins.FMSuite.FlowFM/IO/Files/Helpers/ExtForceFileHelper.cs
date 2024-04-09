@@ -91,8 +91,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         {
             if (previousPaths.Contains(item.FileName))
             {
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(item.FileName);
+                string fileName = item.FileName;
                 string extension = Path.GetExtension(item.FileName);
+                string fileNameWithoutExtension = fileName.Replace(extension, string.Empty);
 
                 // search for unique filename using recognizable suffix
                 var i = 2;
@@ -134,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return list;
         }
 
-        public static IWindField CreateWindField(ExtForceFileItem extForceFileItem, string extForceFilePath)
+        public static IWindField CreateWindField(ExtForceFileItem extForceFileItem, string filePath)
         {
             if (!ExtForceQuantNames.WindQuantityNames.Values.Contains(extForceFileItem.Quantity))
             {
@@ -143,10 +144,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             WindQuantity quantity = ExtForceQuantNames
                                     .WindQuantityNames.First(kvp => kvp.Value == extForceFileItem.Quantity).Key;
-
-            string fileName = extForceFileItem.FileName == null
-                                  ? null
-                                  : Path.Combine(Path.GetDirectoryName(extForceFilePath), extForceFileItem.FileName);
 
             switch (extForceFileItem.FileType)
             {
@@ -182,50 +179,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 case ExtForceQuantNames.FileTypes.ArcInfo:
                     if (quantity == WindQuantity.VelocityX)
                     {
-                        return GriddedWindField.CreateXField(fileName);
+                        return GriddedWindField.CreateXField(filePath);
                     }
 
                     if (quantity == WindQuantity.VelocityY)
                     {
-                        return GriddedWindField.CreateYField(fileName);
+                        return GriddedWindField.CreateYField(filePath);
                     }
 
                     if (quantity == WindQuantity.AirPressure)
                     {
-                        return GriddedWindField.CreatePressureField(fileName);
+                        return GriddedWindField.CreatePressureField(filePath);
                     }
 
                     break;
                 case ExtForceQuantNames.FileTypes.SpiderWeb:
                     if (quantity == WindQuantity.VelocityVectorAirPressure)
                     {
-                        return SpiderWebWindField.Create(fileName);
+                        return SpiderWebWindField.Create(filePath);
                     }
 
                     break;
                 case ExtForceQuantNames.FileTypes.Curvi:
                     if (quantity == WindQuantity.VelocityVectorAirPressure)
                     {
-                        return GriddedWindField.CreateCurviField(fileName,
+                        return GriddedWindField.CreateCurviField(filePath,
                                                                  GriddedWindField
-                                                                     .GetCorrespondingGridFilePath(fileName));
+                                                                     .GetCorrespondingGridFilePath(filePath));
                     }
 
                     break;
                 case ExtForceQuantNames.FileTypes.NCgrid:
                     if (quantity == WindQuantity.VelocityX)
                     {
-                        return GriddedWindField.CreateXField(fileName);
+                        return GriddedWindField.CreateXField(filePath);
                     }
 
                     if (quantity == WindQuantity.VelocityY)
                     {
-                        return GriddedWindField.CreateYField(fileName);
+                        return GriddedWindField.CreateYField(filePath);
                     }
 
                     if (quantity == WindQuantity.AirPressure)
                     {
-                        return GriddedWindField.CreatePressureField(fileName);
+                        return GriddedWindField.CreatePressureField(filePath);
                     }
 
                     break;

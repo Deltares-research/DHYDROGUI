@@ -1,0 +1,18 @@
+QUANTITY     =internaltidesfrictioncoefficient
+FILENAME     =surroundingDomain.pol
+FILETYPE     =10
+METHOD       =4
+OPERAND      =*
+VALUE        =0.0125
+
+QUANTITY=rainfall_rate
+FILENAME=RAD_NL25_RAC_MFBS_5min.nc
+FILETYPE=11
+METHOD=3
+OPERAND=O
+
+QUANTITY     =waterlevelbnd
+FILENAME     =OB_001_orgsize.pli
+FILETYPE     =9
+METHOD       =3
+OPERAND      =O

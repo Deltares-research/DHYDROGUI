@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -8,7 +7,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
-using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 {
@@ -47,11 +45,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
-                string inputPath = Path.Combine(tempDir.Path, input);
-                FileUtils.CreateDirectoryIfNotExists(inputPath);
-
-                CopyInputData(inputPath);
-                string mduFilePath = Path.Combine(inputPath, mduFileName);
+                PrepareFileSystem(tempDir.Path, 
+                                  out string mduFilePath);
 
                 // Call
                 using (var model = new WaterFlowFMModel())
@@ -69,18 +64,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\test\JAMM\D2776")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAWaterFlowFMModel_WhenRun_ThenTheCacheFileIsCorrect()
+        public void GivenAWaterFlowFMModel_WhenRun_ThenTheCacheFileIsCorrect(string mduDirectory)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                string inputPath = Path.Combine(tempDir.Path, input);
-                FileUtils.CreateDirectoryIfNotExists(inputPath);
-
-                CopyInputData(inputPath);
-                string mduFilePath = Path.Combine(inputPath, mduFileName);
+                PrepareFileSystem(tempDir.Path, 
+                                  mduDirectory,
+                                  out string mduFilePath,
+                                  out string _);
 
                 using (var model = new WaterFlowFMModel())
                 {
@@ -101,14 +97,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\test\JAMM\D2776")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAWaterFlowFMModel_WhenExported_ThenTheCacheFileIsCorrect()
+        public void GivenAWaterFlowFMModel_WhenExported_ThenTheCacheFileIsCorrect(string mduDirectory)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir,
+                PrepareFileSystem(tempDir.Path,
+                                  mduDirectory,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
@@ -121,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                     // Then
                     Assert.That(model.CacheFile, Is.Not.Null, "Expected a .cache file to not be null.");
-                    Assert.That(model.CacheFile.Exists, Is.False, "Expected a .cache file to be generated.");
+                    Assert.That(model.CacheFile.Exists, Is.False, "Expected a .cache file not to be generated.");
 
                     // After running and saving the .cache file should be in the save directory.
                     string expectedPath = Path.ChangeExtension(model.MduFilePath, FileConstants.CachingFileExtension);
@@ -131,14 +130,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\hist\stormperiode_2002")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        public void GivenAWaterFlowFMModel_WhenRunAndExported_ThenTheCacheFileIsCorrect()
+        public void GivenAWaterFlowFMModel_WhenRunAndExported_ThenTheCacheFileIsCorrect(string mduDirectory)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir,
+                PrepareFileSystem(tempDir.Path,
+                                  mduDirectory,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
@@ -162,14 +164,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\hist\stormperiode_2002")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAWaterFlowFMModel_WhenExportedAndRun_ThenTheCacheFileIsCorrect()
+        public void GivenAWaterFlowFMModel_WhenExportedAndRun_ThenTheCacheFileIsCorrect(string mduDirectory)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir,
+                PrepareFileSystem(tempDir.Path,
+                                  mduDirectory,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
@@ -193,14 +198,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\test\S_2000")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAWaterFlowFMModel_WhenExportedAndRunAndExported_ThenTheCacheFileIsCorrect()
+        public void GivenAWaterFlowFMModel_WhenExportedAndRunAndExported_ThenTheCacheFileIsCorrect(string mduDirectory)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir,
+                PrepareFileSystem(tempDir.Path,
+                                  mduDirectory,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
@@ -223,16 +231,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 }
             }
         }
-
+        
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\hist\2007_metRD_zonderMD")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAWaterFlowFMModelWithoutUseCaching_WhenRunAndExported_ThenTheCacheFileIsCorrect()
+        public void GivenAWaterFlowFMModelWithoutUseCaching_WhenRunAndExported_ThenTheCacheFileIsCorrect(string mduDirectory)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir,
+                PrepareFileSystem(tempDir.Path,
+                                  mduDirectory,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
@@ -248,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                     // Then
                     Assert.That(model.CacheFile, Is.Not.Null, "Expected a .cache file to not be null.");
-                    Assert.That(model.CacheFile.Exists, Is.False, "Expected a .cache file to be generated.");
+                    Assert.That(model.CacheFile.Exists, Is.False, "Expected a .cache file not to be generated.");
 
                     // After running and saving the .cache file should be in the save directory.
                     string expectedPath = Path.ChangeExtension(model.MduFilePath, FileConstants.CachingFileExtension);
@@ -258,14 +269,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\hist\2007_metRD_zonderMD")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAWaterFlowFMModel_WhenRunAndExportedWithoutSwitch_ThenTheCacheFileIsCorrect()
+        public void GivenAWaterFlowFMModel_WhenRunAndExportedWithoutSwitchTo_ThenTheCacheFileIsCorrect(string mduDirectory)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir,
+                PrepareFileSystem(tempDir.Path,
+                                  mduDirectory,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
@@ -289,14 +303,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\test\JAMM\D2776")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        public void GivenAnExportedWaterFlowFMModelWithACacheFile_WhenOpenedAndExported_ThenTheCacheFileIsCorrectlyCopied()
+        public void GivenAnExportedWaterFlowFMModelWithACacheFile_WhenOpenedAndExported_ThenTheCacheFileIsCorrectlyCopied(string mduDirectory)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir,
+                PrepareFileSystem(tempDir.Path,
+                                  mduDirectory,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
                 CreateDummyInputCacheFileForMdu(inputMduFilePath);
@@ -322,40 +339,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase(@"computations\test\JAMM\D2776")]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        public void GivenAHydroModelWithFMModelAndCacheFile_WhenInitializeIsCalled_ThenTheCacheFileShouldBeCopiedToWorkingDirectory()
+        public void GivenAHydroModelWithFMModelAndCacheFile_WhenInitializeIsCalled_ThenTheCacheFileShouldBeCopiedToWorkingDirectory(string mduDirectory)
         {
             // Given
-            using (var tempDirectory = new TemporaryDirectory())
-            using (var model = new WaterFlowFMModel())
+            using (var tempDir = new TemporaryDirectory())
             {
-                string testTempDirectory = tempDirectory.Path;
-                string saveFolderPath = Path.Combine(testTempDirectory, "SaveLocation");
-                Directory.CreateDirectory(saveFolderPath);
-
-                string saveFolderCacheFilePath = Path.Combine(saveFolderPath, "test.cache");
-                string mduFilePath = Path.Combine(saveFolderPath, "test.mdu");
-
-                using (FileStream fs = File.Create(saveFolderCacheFilePath))
+                string tempPath = tempDir.Path;
+                
+                PrepareFileSystem(tempPath,
+                                  mduDirectory,
+                                  out string mduFilePath,
+                                  out string _);
+                CreateDummyInputCacheFileForMdu(mduFilePath);
+                
+                // When
+                using (var model = new WaterFlowFMModel())
                 {
-                    byte[] info = new UTF8Encoding(true).GetBytes("test");
-                    fs.Write(info, 0, info.Length);
+                    model.ImportFromMdu(mduFilePath);
+                    model.WorkingDirectoryPathFunc = () => tempPath;
+
+                    model.Initialize();
+
+                    // Then
+                    string expectedPath = Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, model.Name + FileConstants.CachingFileExtension);
+                    Assert.That(File.Exists(expectedPath), "Expected a different path:");
                 }
-
-                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                model.WorkingDirectoryPathFunc = () => testTempDirectory;
-                model.CacheFile.UpdatePathToMduLocation(mduFilePath);
-
-                // When 
-                model.Initialize();
-
-                // Then
-                Assert.AreEqual(saveFolderCacheFilePath, model.CacheFile.Path);
-                Assert.IsTrue(File.Exists(Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, model.Name + ".cache")));
             }
         }
 
+        private static void PrepareFileSystem(string baseDirectory, out string inputMduFilePath)
+        {
+            PrepareFileSystem(baseDirectory, string.Empty, out inputMduFilePath, out _);
+        }
+        
+        private static void PrepareFileSystem(string baseDirectory, string mduDirectory, out string inputMduFilePath, out string outputMduFilePath)
+        {
+            string modelName = Path.GetFileNameWithoutExtension(mduFileName);
+            
+            string inputPath = Path.Combine(baseDirectory, input, modelName, mduDirectory);
+            FileUtils.CreateDirectoryIfNotExists(inputPath);
+            inputMduFilePath = Path.Combine(inputPath, mduFileName);
+
+            CopyInputData(inputPath);
+
+            string outputPath = Path.Combine(baseDirectory, output, modelName, mduDirectory);
+            FileUtils.CreateDirectoryIfNotExists(outputPath);
+            outputMduFilePath = Path.Combine(outputPath, mduFileName);
+        }
+        
         private static void CopyInputData(string inputFolder)
         {
             string sourceFolder = Path.Combine(TestHelper.GetTestDataDirectory(), sourceDirectoryName);
@@ -364,21 +399,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var sourcePathInfo = new DirectoryInfo(sourceFolder);
 
             FileUtils.CopyAll(sourcePathInfo, inputPathInfo, null);
-        }
-
-        private static void PrepareFileSystem(TemporaryDirectory tempDir,
-                                              out string inputMduFilePath,
-                                              out string outputMduFilePath)
-        {
-            string inputPath = Path.Combine(tempDir.Path, input);
-            FileUtils.CreateDirectoryIfNotExists(inputPath);
-            inputMduFilePath = Path.Combine(inputPath, mduFileName);
-
-            CopyInputData(inputPath);
-
-            string outputPath = Path.Combine(tempDir.Path, output);
-            FileUtils.CreateDirectoryIfNotExists(outputPath);
-            outputMduFilePath = Path.Combine(outputPath, mduFileName);
         }
 
         private static void CreateDummyInputCacheFileForMdu(string mduPath)

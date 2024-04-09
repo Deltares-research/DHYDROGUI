@@ -76,8 +76,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
             var polyLineForceFileItems = new Dictionary<IFeatureData, ExtForceFileItem>
             {
-                {bc1, new ExtForceFileItem(ExtForceQuantNames.GetQuantityString(bc1))},
-                {bc2, new ExtForceFileItem(ExtForceQuantNames.GetQuantityString(bc2))}
+                { bc1, new ExtForceFileItem(ExtForceQuantNames.GetQuantityString(bc1)) { FileName = "bc1.pli" } },
+                { bc2, new ExtForceFileItem(ExtForceQuantNames.GetQuantityString(bc2)) { FileName = "bc2.pli" } },
             };
 
             // Call

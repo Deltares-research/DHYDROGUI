@@ -554,9 +554,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
 
                 // When
-                IList<IStructureObject> structures = 
-                    structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
-                                                                            copyOfIniInTempFilePath);
+                IList<IStructureObject> structures = structureFile.Read(copyOfIniInTempFilePath);
 
                 // Then
                 Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
@@ -604,7 +602,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // When
                 IList<IStructureObject> structures = null;
 
-                void ReadStructures() => structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath, copyOfIniInTempFilePath);
+                void ReadStructures() => structures = structureFile.Read(copyOfIniInTempFilePath);
                 IReadOnlyList<string> messages = TestHelper.GetAllRenderedMessages(ReadStructures).ToArray();
                 
                 // Then
@@ -657,17 +655,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 IList<IStructureObject> structures = structuresFile.Read(sourceStructuresFilePath);
 
                 string targetFilesDir = targetDir.Path;
-                string targetStructuresFilePath = Path.Combine(targetFilesDir, @"Structures.ini");
+                string targetStructuresFilePath = Path.Combine(targetFilesDir, @"initial_conditions\Structures.ini");
 
                 structuresFile.Write(targetStructuresFilePath, structures);
 
                 Assert.That(targetStructuresFilePath, Does.Exist);
-                Assert.That(Path.Combine(targetFilesDir, @"Schaar.pli"), Does.Exist);
-                Assert.That(Path.Combine(targetFilesDir, @"Zedemuiden.pli"), Does.Exist);
-                Assert.That(Path.Combine(targetFilesDir, @"Schaar_CrestLevel.tim"), Does.Exist);
-                Assert.That(Path.Combine(targetFilesDir, @"Schaar_GateLowerEdgeLevel.tim"), Does.Exist);
-                Assert.That(Path.Combine(targetFilesDir, @"Schaar_GateOpeningWidth.tim"), Does.Exist);
-                Assert.That(Path.Combine(targetFilesDir, @"Zedemuiden_Capacity.tim"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"geometry\Schaar.pli"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"geometry\Zedemuiden.pli"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"boundary_conditions\Schaar_CrestLevel.tim"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"boundary_conditions\Schaar_GateLowerEdgeLevel.tim"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"boundary_conditions\Schaar_GateOpeningWidth.tim"), Does.Exist);
+                Assert.That(Path.Combine(targetFilesDir, @"boundary_conditions\Zedemuiden_Capacity.tim"), Does.Exist);
             }
         }
 
