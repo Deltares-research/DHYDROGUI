@@ -313,12 +313,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                if (!File.Exists(DimrApiDataSet.RtcToolsDllPath))
-                {
-                    return "";
-                }
-
-                return "Kernel: " + RealTimeControlModelDll.RTCTOOLS_DLL_NAME + "  " + FileVersionInfo.GetVersionInfo(DimrApiDataSet.RtcToolsDllPath).FileVersion;
+                string rtcDllPath = Path.Combine(DimrApiDataSet.RtcToolsDllDirectory, DimrApiDataSet.RtcToolsDllName);
+                
+                return File.Exists(rtcDllPath) ? $"Kernel: {DimrApiDataSet.RtcToolsDllName}  {FileVersionInfo.GetVersionInfo(rtcDllPath).FileVersion}" : string.Empty;
             }
         }
 
@@ -966,7 +963,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return directoryName;
         }
 
-        public virtual string KernelDirectoryLocation => DimrApiDataSet.RtcToolsDllPath;
+        public virtual string KernelDirectoryLocation => DimrApiDataSet.RtcToolsDllDirectory;
 
         public virtual void DisconnectOutput()
         {

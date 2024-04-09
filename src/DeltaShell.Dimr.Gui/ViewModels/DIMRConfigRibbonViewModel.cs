@@ -13,11 +13,11 @@ namespace DeltaShell.Dimr.Gui.ViewModels
         {
             get
             {
-                return DimrApiDataSet.LogFileLevel;
+                return DimrLogging.LogFileLevel;
             }
             set
             {
-                DimrApiDataSet.LogFileLevel = value;
+                DimrLogging.LogFileLevel = value;
             }
         }
 
@@ -25,11 +25,11 @@ namespace DeltaShell.Dimr.Gui.ViewModels
         {
             get
             {
-                return DimrApiDataSet.FeedbackLevel;
+                return DimrLogging.FeedbackLevel;
             }
             set
             {
-                DimrApiDataSet.FeedbackLevel = value;
+                DimrLogging.FeedbackLevel = value;
             }
         }
 

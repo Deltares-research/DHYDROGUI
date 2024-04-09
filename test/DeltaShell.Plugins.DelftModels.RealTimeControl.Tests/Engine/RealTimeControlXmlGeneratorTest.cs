@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         private StandardCondition condition2;
         private StandardCondition condition3;
 
-        private string XsdPath => DimrApiDataSet.RtcToolsDllPath;
+        private string XsdPath => DimrApiDataSet.RtcXsdDirectory;
 
         private string RtcToolsConfigxsd => XsdPath + Path.DirectorySeparatorChar + "rtcToolsConfig.xsd\"";
 

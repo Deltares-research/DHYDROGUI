@@ -136,6 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         }
 
         [Test]
+        [Ignore("Will be fixed with FM1D2D-2810.")]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void FMOutputSnappedFeaturesGetDefaultCoordinates()

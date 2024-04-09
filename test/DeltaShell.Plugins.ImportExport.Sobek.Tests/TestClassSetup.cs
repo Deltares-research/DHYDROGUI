@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            DimrApiDataSet.FeedbackLevel = Level.All;
+            DimrLogging.FeedbackLevel = Level.All;
 
             XmlConfigurator.Configure();
         }

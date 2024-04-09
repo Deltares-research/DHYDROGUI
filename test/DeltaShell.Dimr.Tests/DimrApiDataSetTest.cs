@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.NGHS.Common;
+﻿using DeltaShell.NGHS.Common;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -9,64 +8,59 @@ namespace DeltaShell.Dimr.Tests
     public class DimrApiDataSetTest
     {
         [Test]
-        public void SetSharedPath_NotContained_PathContainsSharedPathAtTheEnd()
+        public void AddKernelDirToPathToPath_NotContained_PathContainsKernelDir()
         {
             // Setup
             const string somePath = "bin;more/bin;super/more/bin;dev/null";
 
             var environment = Substitute.For<IEnvironment>();
-            environment.GetVariable(EnvironmentConstants.PathKey,
-                                    EnvironmentVariableTarget.Process)
+            environment.GetVariable(EnvironmentConstants.PathKey)
                        .Returns(somePath);
 
             // Call
-            DimrApiDataSet.SetSharedPath(environment);
+            DimrApiDataSet.AddKernelDirToPath(environment);
 
             // Assert
-            var expectedValue = $"{DimrApiDataSet.SharedDllPath};{somePath}";
+            var expectedValue = $"{DimrApiDataSet.KernelsLibDirectory};{somePath}";
             environment.Received(1)
                        .SetVariable(EnvironmentConstants.PathKey,
-                                    expectedValue,
-                                    EnvironmentVariableTarget.Process);
+                                    expectedValue);
         }
 
         [Test]
-        public void SetSharedPath_Contained_DoesNotAddSecondSharedPath()
+        public void AddKernelDirToPathToPath_Contained_DoesNotAddDuplicateDir()
         {
             // Setup
-            var somePath = $"bin;more/bin;super/more/bin;{DimrApiDataSet.SharedDllPath}";
+            var somePath = $"bin;more/bin;super/more/bin;{DimrApiDataSet.KernelsLibDirectory}";
             var environment = Substitute.For<IEnvironment>();
-            environment.GetVariable(EnvironmentConstants.PathKey,
-                                    EnvironmentVariableTarget.Process)
+            environment.GetVariable(EnvironmentConstants.PathKey)
                        .Returns(somePath);
 
             // Call
-            DimrApiDataSet.SetSharedPath(environment);
+            DimrApiDataSet.AddKernelDirToPath(environment);
 
             // Assert
             environment.DidNotReceiveWithAnyArgs()
-                       .SetVariable(null, null, EnvironmentVariableTarget.Process);
+                       .SetVariable(null, null);
         }
 
         [TestCase(null)]
         [TestCase("")]
-        public void SetSharedPath_NullOrEmpty_SetsPathCorrectly(string returnValue)
+        public void AddKernelDirToPathToPath_NullOrEmpty_SetsPathCorrectly(string returnValue)
         {
             // Setup
             var environment = Substitute.For<IEnvironment>();
-            environment.GetVariable(EnvironmentConstants.PathKey,
-                                    EnvironmentVariableTarget.Process)
+            environment.GetVariable(EnvironmentConstants.PathKey)
                        .Returns(returnValue);
 
             // Call
-            DimrApiDataSet.SetSharedPath(environment);
+            DimrApiDataSet.AddKernelDirToPath(environment);
 
             // Assert
-            var expectedValue = $"{DimrApiDataSet.SharedDllPath}";
+            var expectedValue = $"{DimrApiDataSet.KernelsLibDirectory}";
             environment.Received(1)
                        .SetVariable(EnvironmentConstants.PathKey,
-                                    expectedValue,
-                                    EnvironmentVariableTarget.Process);
+                                    expectedValue);
         }
     }
 }

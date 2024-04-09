@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            DimrApiDataSet.FeedbackLevel = Level.All;
+            DimrLogging.FeedbackLevel = Level.All;
 
             XmlConfigurator.Configure();
 

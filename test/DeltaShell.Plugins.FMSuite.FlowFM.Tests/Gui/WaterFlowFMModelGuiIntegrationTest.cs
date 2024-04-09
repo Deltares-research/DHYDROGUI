@@ -78,8 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     var project = app.Project;
                     project.RootFolder.Add(model);
-                    DimrApiDataSet.LogFileLevel = Level.All;
-                    DimrApiDataSet.FeedbackLevel = Level.All;
+                    DimrLogging.LogFileLevel = Level.All;
+                    DimrLogging.FeedbackLevel = Level.All;
 
                     ActivityRunner.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);

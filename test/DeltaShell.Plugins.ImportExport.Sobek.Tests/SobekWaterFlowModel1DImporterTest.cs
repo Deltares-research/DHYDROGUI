@@ -33,8 +33,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         // [Category(TestCategory.Performance)]
         // public void RunImportedModelShouldBeFast_039b()
         // {
-        //     Dimr.DimrApiDataSet.LogFileLevel = Level.Fatal;
-        //     Dimr.DimrApiDataSet.FeedbackLevel = Level.Fatal;
+        //     Dimr.DimrLogging.LogFileLevel = Level.Fatal;
+        //     Dimr.DimrLogging.FeedbackLevel = Level.Fatal;
         //
         //     var path = TestHelper.GetTestDataDirectory() + @"\039b_000.lit\1\network.tp";
         //

@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
         {
             get
             {
-                return DimrApiDataSet.RtcToolsDllPath;
+                return DimrApiDataSet.RtcXsdDirectory;
             }
         }
 

@@ -582,18 +582,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                                                                              modelParameter.ElementSet)));
             }
         }
-        
+
         public override string KernelVersions
         {
             get
             {
-                var entryAssembly = GetType().Assembly;
-                if (entryAssembly == null) return "";
-                var file = System.IO.Path.Combine(RRModelEngineDll.RR_DLL_NAME, DimrApiDataSet.RrDllPath);
-                if (!File.Exists(DimrApiDataSet.RrDllPath))
-                    return "";
-
-                return "Kernel: " + System.IO.Path.GetFileName(RRModelEngineDll.RR_DLL_NAME) + "  " + FileVersionInfo.GetVersionInfo(file).FileVersion;
+                string rrDllPath = System.IO.Path.Combine(DimrApiDataSet.RrDllDirectory, DimrApiDataSet.RrDllName);
+                
+                return File.Exists(rrDllPath) ? $"Kernel: {DimrApiDataSet.RrDllName}  {FileVersionInfo.GetVersionInfo(rrDllPath).FileVersion}" : string.Empty;
             }
         }
         
@@ -1074,8 +1070,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public virtual string KernelDirectoryLocation
         {
-            get { return DimrApiDataSet.RrDllPath; }
+            get { return DimrApiDataSet.RrDllDirectory; }
         }
+        
         public virtual void DisconnectOutput()
         {
             ClearOutput();

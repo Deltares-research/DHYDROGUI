@@ -2860,7 +2860,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string KernelDirectoryLocation
         {
-            get { return DimrApiDataSet.DFlowFmDllPath; }
+            get { return DimrApiDataSet.DFlowFmDllDirectory; }
         }
 
         public virtual void DisconnectOutput()
