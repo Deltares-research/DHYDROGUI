@@ -487,9 +487,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void WriteInitialConditionsSamples(ImportSamplesOperation importSamplesOperation, ExtForceFileItem extForceFileItem)
         {
             string targetPath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
-            string targetDirectory = Path.GetDirectoryName(targetPath);
             
-            importSamplesOperation.CopyTo(targetDirectory, switchToNewPath);
+            importSamplesOperation.CopyTo(targetPath, switchToNewPath);
         }
 
         private void WriteInitialConditionsUnsupported(SampleSpatialOperation spatialOperation, ExtForceFileItem extForceFileItem)

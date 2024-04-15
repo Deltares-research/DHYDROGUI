@@ -75,8 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serializat
             var importSamplesOperation = spatialOperation as ImportSamplesSpatialOperation;
             if (importSamplesOperation != null)
             {
-                string directoryName = Path.GetDirectoryName(filePath);
-                importSamplesOperation.CopyTo(directoryName, switchToNewPath);
+                importSamplesOperation.CopyTo(filePath, switchToNewPath);
             }
 
             var polygonOperation = spatialOperation as SetValueOperation;
