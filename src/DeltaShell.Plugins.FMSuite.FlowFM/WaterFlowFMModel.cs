@@ -1974,13 +1974,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             /// <summary>
             /// Determines whether the output directory contains output.
             /// </summary>
-            public bool ContainsOutput => File.Exists(MapFilePath)
+            public bool ContainsOutput => File.Exists(DiaFilePath)
+                                          || File.Exists(MapFilePath)
                                           || File.Exists(HisFilePath)
                                           || File.Exists(ClassMapFilePath)
                                           || File.Exists(WaqOutputDirectoryPath)
                                           || File.Exists(SnappedOutputDirectoryPath)
                                           || RestartFilePaths.Any();
 
+            /// <summary>
+            /// The file path to the diagnostics file.
+            /// </summary>
+            /// <remarks> Returns null in case the file was not found. </remarks>
+            public string DiaFilePath => FindFileThatEndsWith(FileConstants.DiaFileExtension);
+            
             /// <summary>
             /// The file path to the map file.
             /// </summary>
@@ -2061,7 +2068,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             using (this.InEditMode(DelftTools.Hydro.Properties.Resources.Reconnect_output_files_edit_action))
             {
-                ReadDiaFile(outputDirectoryPath);
+                ReadDiaFile(outputDirectory.DiaFilePath);
                 ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
                 ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
                 ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
@@ -2895,12 +2902,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ClearWaqOutputDirProperty();
         }
 
-        private void ReadDiaFile(string outputDirectory)
+        private void ReadDiaFile(string diaFilePath)
         {
             ReportProgressText("Reading dia file");
             FireImportProgressChanged(Resources.WaterFlowFMModel_ReadDiaFile_Reading_output_files___Reading_dia_file);
-            var diaFileName = $"{Name}.dia";
-            string diaFilePath = Path.Combine(outputDirectory, diaFileName);
+            var diaFileName = Path.GetFileName(diaFilePath);
             if (File.Exists(diaFilePath))
             {
                 try

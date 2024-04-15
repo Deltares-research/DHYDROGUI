@@ -32,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM {
         public const string CachingFileExtension = ".cache";
 
         public const string NetFileExtension = "_net" + NetCdfFileExtension;
+        public const string DiaFileExtension = ".dia";
         public const string MapFileExtension = "_map" + NetCdfFileExtension;
         public const string HisFileExtension = "_his" + NetCdfFileExtension;
         public const string ComFileExtension = "_com" + NetCdfFileExtension;
