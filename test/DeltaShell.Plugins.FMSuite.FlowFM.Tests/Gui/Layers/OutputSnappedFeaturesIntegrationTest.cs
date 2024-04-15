@@ -136,7 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         }
 
         [Test]
-        [Ignore("Will be fixed with FM1D2D-2810.")]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void FMOutputSnappedFeaturesGetDefaultCoordinates()
@@ -173,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 try
                 {
                     //Set coordinate system for model (and ensure it was set)
-                    loadedModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4135);
+                    loadedModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3562);
                     Assert.IsNotNull(loadedModel.CoordinateSystem);
 
                     ActivityRunner.RunActivity(loadedModel);
