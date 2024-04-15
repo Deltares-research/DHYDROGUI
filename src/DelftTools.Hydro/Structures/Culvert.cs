@@ -364,7 +364,8 @@ namespace DelftTools.Hydro.Structures
                         new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle()
                         {
                             Width = Width,
-                            Height = Height
+                            Height = Height,
+                            Closed = Closed
                         }) { Name = Name };
                     break;
                 case CulvertGeometryType.Round:

@@ -415,10 +415,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Cross section properties")]
         [PropertyOrder(26)]
-        [DisplayName("Open or Closed profile")]
+        [DisplayName("Closed profile")]
         [DynamicVisible]
         public bool Closed
         {
+            set { data.Closed = value; }
             get { return data.Closed; }
         }
 
