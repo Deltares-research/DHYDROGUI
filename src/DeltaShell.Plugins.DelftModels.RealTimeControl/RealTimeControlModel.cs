@@ -39,6 +39,7 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
+using StringExtensions = DHYDRO.Common.Extensions.StringExtensions;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
@@ -905,6 +906,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             throw new ArgumentException($"Could not serialize data item {dataItem} to d-hydro xml");
         }
 
+        /// <inheritdoc />
+        public virtual string GetExchangeIdentifier(IDataItem dataItem)
+        {
+            return dataItem.Name;
+        }
+
         /// <inheritdoc/>
         /// <exception cref="NotSupportedException">
         /// If the string does not start with <see cref="RtcXmlTag.Input"/> or
@@ -927,6 +934,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             return dataItem;
+        }
+
+        /// <inheritdoc />
+        public virtual IEnumerable<IDataItem> GetDataItemsByExchangeIdentifier(string identifier)
+        {
+            return AllDataItems.Where(di => StringExtensions.EqualsCaseInsensitive(di.Name, identifier)).ToArray();
         }
 
         /// <summary>

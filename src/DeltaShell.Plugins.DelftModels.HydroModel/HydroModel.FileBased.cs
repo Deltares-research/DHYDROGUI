@@ -24,19 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         #region Logic for (un)linking/saving RTC-FlowFM filebased coupling
 
         /// <summary>
-        /// Save the links between models to a different file.
-        /// Only used for rtc and flow now.
-        /// </summary>
-        public virtual void SaveLinks()
-        {
-            if (TryGetFmAndRtcModel(out IModel flowModel, out IModel rtcModel))
-            {
-                modelExchangeInfos.Clear();
-                modelExchangeInfos.AddRange(GetModelExchangeInfos(flowModel, rtcModel));
-            }
-        }
-
-        /// <summary>
         /// Unlink data items and remember them in linkInfos.
         /// Can be restored after saving to the database with <see cref="RelinkDataItems"/>.
         /// </summary>
@@ -59,23 +46,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private void RelinkDataItems(ModelExchangeInfo info)
         {
             ICoupledModel sourceModel = GetCoupledModel(info.SourceModelName);
-            IDictionary<string, IDataItem> sourceItems =
-                GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output);
-
-            if (sourceItems == null || !sourceItems.Any())
-            {
-                return;
-            }
-
             ICoupledModel targetModel = GetCoupledModel(info.TargetModelName);
-            IDictionary<string, IDataItem> targetItems =
-                GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input);
-
-            if (targetItems == null || !targetItems.Any())
-            {
-                return;
-            }
-
+            
             System.Tuple<bool, bool> sourceStatus = GetModelOutputEventStatus(sourceModel as IModel);
             System.Tuple<bool, bool> targetStatus = GetModelOutputEventStatus(targetModel as IModel);
             SuspendModelOutputEvents(sourceModel as IModel);
@@ -83,42 +55,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             foreach (ModelExchange modelExchange in info.Exchanges)
             {
-                RelinkDataItemsInModelExchange(modelExchange,
-                                               sourceItems,
-                                               targetItems,
-                                               targetModel);
+                RestoreLinks(modelExchange, sourceModel, targetModel);
             }
 
             UnsuspendModelOutputEvents(sourceModel as IModel, sourceStatus);
             UnsuspendModelOutputEvents(targetModel as IModel, targetStatus);
         }
 
-        private static void RelinkDataItemsInModelExchange(ModelExchange exchange,
-                                                           IDictionary<string, IDataItem> sourceItems,
-                                                           IDictionary<string, IDataItem> targetItems,
-                                                           ICoupledModel targetModel)
+        private static void RestoreLinks(ModelExchange modelExchange, ICoupledModel sourceModel, ICoupledModel targetModel)
         {
-            if (!sourceItems.TryGetValue(exchange.SourceName, out IDataItem sourceItem))
+            IDataItem sourceDataItem = sourceModel.GetDataItemsByExchangeIdentifier(modelExchange.SourceName).FirstOrDefault();
+            
+            string targetName = targetModel.GetUpToDateDataItemName(modelExchange.TargetName);
+            IEnumerable<IDataItem> targetDataItems = targetModel.GetDataItemsByExchangeIdentifier(targetName);
+            
+            foreach (IDataItem targetDataItem in targetDataItems)
             {
-                return;
+                targetDataItem.LinkTo(sourceDataItem);
             }
-
-            string targetName = targetModel.GetUpToDateDataItemName(exchange.TargetName);
-            if (!targetItems.TryGetValue(targetName, out IDataItem targetItem))
-            {
-                return;
-            }
-
-            targetItem.LinkTo(sourceItem);
         }
 
-        private IDictionary<string, IDataItem> GetDataItemsUsedForCouplingModel(ICoupledModel model, DataItemRole role) =>
-            model?.GetDataItemsUsedForCouplingModel(role)
-                 .Where(di => di != null)
-                 .ToDictionary(ModelExchange.GetExchangeIdentifier);
-
         private ICoupledModel GetCoupledModel(string modelName) =>
-            Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), modelName)) as ICoupledModel;
+            Models.FirstOrDefault(m => Equals(m.Name, modelName)) as ICoupledModel;
 
         private static System.Tuple<bool, bool> GetModelOutputEventStatus(IModel model)
         {
@@ -179,41 +137,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         /// <summary>
-        /// Gets the collection of <see cref="ModelExchangeInfo"/> based on its input arguments.
-        /// </summary>
-        /// <param name="flowModel">The flow model to create the <see cref="ModelExchangeInfo"/> for.</param>
-        /// <param name="rtcModel">The rtc model to create the <see cref="ModelExchangeInfo"/> for.</param>
-        /// <returns>The collection of <see cref="ModelExchangeInfo"/>.</returns>
-        private static IEnumerable<ModelExchangeInfo> GetModelExchangeInfos(IModel flowModel, IModel rtcModel)
-        {
-            return new[]
-            {
-                CreateModelExchangeInfo(flowModel, rtcModel),
-                CreateModelExchangeInfo(rtcModel, flowModel)
-            };
-        }
-
-        /// <summary>
-        /// Creates a <see cref="ModelExchangeInfo"/>.
-        /// </summary>
-        /// <param name="inputModel">The <see cref="IModel"/> that serves as an input.</param>
-        /// <param name="outputModel">The <see cref="IModel"/> that serves as an output.</param>
-        /// <returns>A <see cref="ModelExchangeInfo"/>.</returns>
-        private static ModelExchangeInfo CreateModelExchangeInfo(IModel inputModel, IModel outputModel)
-        {
-            var modelExchange = new ModelExchangeInfo(outputModel, inputModel);
-
-            IEnumerable<IDataItem> inputDataItems = GetDataItemsUsedForCouplingModel(inputModel, DataItemRole.Input);
-            IEnumerable<IDataItem> outputDataItems = GetDataItemsUsedForCouplingModel(outputModel, DataItemRole.Output);
-            foreach (IDataItem linkedDataItem in GetLinkedDataInputItems(inputDataItems, outputDataItems))
-            {
-                modelExchange.Exchanges.Add(new ModelExchange(linkedDataItem.LinkedTo, linkedDataItem));
-            }
-
-            return modelExchange;
-        }
-
-        /// <summary>
         /// Gets the collection of <see cref="ModelExchangeInfo"/> based on its input arguments while breaking the linkage.
         /// </summary>
         /// <param name="flowModel">The flow model to create the <see cref="ModelExchangeInfo"/> for.</param>
@@ -250,11 +173,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             SuspendModelOutputEvents(inputModel);
             SuspendModelOutputEvents(outputModel);
 
-            var modelExchange = new ModelExchangeInfo(outputModel, inputModel);
-
             IEnumerable<IDataItem> inputDataItems = GetDataItemsUsedForCouplingModel(inputModel, DataItemRole.Input);
             IEnumerable<IDataItem> outputDataItems = GetDataItemsUsedForCouplingModel(outputModel, DataItemRole.Output);
 
+            var inputCoupledModel = (ICoupledModel)inputModel;
+            var outputCoupledModel = (ICoupledModel)outputModel;
+            var modelExchange = new ModelExchangeInfo( outputCoupledModel, inputCoupledModel);
+            
             // Cache the linked data input items as due to the unlinking, changes might occur that affects
             // the collection of linked objects.
             IEnumerable<IDataItem> linkedDataInputItems = GetLinkedDataInputItems(inputDataItems, outputDataItems).ToArray();
@@ -262,7 +187,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             foreach (IDataItem linkedInputDataItem in linkedDataInputItems)
             {
                 IDataItem dataItemToRestore = getDataItemFunc(linkedInputDataItem);
-                modelExchange.Exchanges.Add(new ModelExchange(linkedInputDataItem.LinkedTo, linkedInputDataItem));
+                modelExchange.AddExchange(linkedInputDataItem.LinkedTo, linkedInputDataItem);
                 linkedInputDataItem.Unlink();
 
                 // Restore the name of the unlinked data item to its original value to prevent 

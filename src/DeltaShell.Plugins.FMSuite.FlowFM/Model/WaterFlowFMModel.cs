@@ -12,7 +12,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.IO;
@@ -41,6 +40,7 @@ using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -868,7 +868,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public string GetUpToDateDataItemName(string oldDataItemName)
         {
-            string[] partsTargetName = oldDataItemName.Split('.');
+            string[] partsTargetName = GetPartsTargetName(oldDataItemName);
 
             if (partsTargetName.Length <= 1 ||
                 !backwardsCompatibilityMapping.TryGetValue(partsTargetName.Last(), out string newName))
@@ -878,6 +878,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             partsTargetName[partsTargetName.Length - 1] = newName;
             return string.Join(".", partsTargetName);
+        }
+
+        private static string[] GetPartsTargetName(string oldDataItemName)
+        {
+            string[] parts = oldDataItemName.Split('/');
+            if (parts.Length == 3) // DIMR string format: <type>/<name>/<parameter>
+            {
+                return parts;
+            }
+
+            return oldDataItemName.Split('.'); // Legacy format: <name>.<parameter>
+        }
+
+        /// <inheritdoc />
+        public virtual IEnumerable<IDataItem> GetDataItemsByExchangeIdentifier(string identifier)
+        {
+            if (IsDimrItemString(identifier))
+            {
+                return GetDataItemsByItemString(identifier);
+            }
+
+            return GetDataItemsByNameAndTag(identifier);
+        }
+
+        private static bool IsDimrItemString(string itemString)
+        {
+            return itemString.Split('/').Length == 3;
+        }
+
+        private IEnumerable<IDataItem> GetDataItemsByNameAndTag(string itemString)
+        {
+            string[] parts = itemString.Split('.');
+            string name = parts[0];
+            string tag = parts[1];
+
+            return AllDataItems.Where(di => di.Name.EqualsCaseInsensitive(name) && di.Tag.EqualsCaseInsensitive(tag));
+        }
+
+        /// <inheritdoc />
+        public virtual string GetExchangeIdentifier(IDataItem dataItem)
+        {
+            return GetItemString(dataItem);
         }
     }
 }

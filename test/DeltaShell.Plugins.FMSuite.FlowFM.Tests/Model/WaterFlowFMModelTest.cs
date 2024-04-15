@@ -2593,5 +2593,86 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             yield return new SedimentFraction {Name = "Fraction_2"};
             yield return new SedimentFraction {Name = "Fraction_3"};
         }
+
+        [Test]
+        public void GetDataItemsByExchangeIdentifier_UsingDIMRIdentifier_MultipleDataItemsWithSameName_ReturnsDataItemOfCorrectType()
+        {
+            // Setup
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                const string randomName = "randomName";
+                var observationCrossSection = new ObservationCrossSection2D() { Name = randomName };
+                fmModel.Area.ObservationCrossSections.Add(observationCrossSection);
+                
+                var observationPoint = new GroupableFeature2DPoint() { Name = randomName };
+                fmModel.Area.ObservationPoints.Add(observationPoint);
+
+                const string tag = "water_level";
+                var dimrItemString = $"observations/{randomName}/{tag}";
+
+                // Call
+                IDataItem dataItem = fmModel.GetDataItemsByExchangeIdentifier(dimrItemString).Single();
+                
+                // Assert
+                Assert.That(dataItem.ComposedValue, Is.TypeOf<GroupableFeature2DPoint>());
+                Assert.That(dataItem.Name, Is.EqualTo(randomName));
+                Assert.That(dataItem.Tag, Is.EqualTo(tag));
+            }
+        }
+
+        [Test]
+        public void GetDataItemsByExchangeIdentifier_UsingNameAndTagIdentifier_ReturnsExpectedDataItem()
+        {
+            // Setup
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                const string randomName = "randomName";
+                var observationCrossSection = new ObservationCrossSection2D() { Name = randomName };
+                fmModel.Area.ObservationCrossSections.Add(observationCrossSection);
+
+                const string tag = "water_level";
+                var identifier = $"{randomName}.{tag}";
+
+                // Call
+                IDataItem dataItem = fmModel.GetDataItemsByExchangeIdentifier(identifier).Single();
+                
+                // Assert
+                Assert.That(dataItem.ComposedValue, Is.TypeOf<ObservationCrossSection2D>());
+                Assert.That(dataItem.Name, Is.EqualTo(randomName));
+                Assert.That(dataItem.Tag, Is.EqualTo(tag));
+            }
+        }
+        
+        [Test]
+        public void GetDataItemsByExchangeIdentifier_UsingNameAndTagIdentifier_MultipleDataItemsWithSameName_ReturnsExpectedDataItems()
+        {
+            // Setup
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                const string randomName = "randomName";
+                var observationCrossSection = new ObservationCrossSection2D() { Name = randomName };
+                fmModel.Area.ObservationCrossSections.Add(observationCrossSection);
+                
+                var observationPoint = new GroupableFeature2DPoint() { Name = randomName };
+                fmModel.Area.ObservationPoints.Add(observationPoint);
+
+                const string tag = "water_level";
+                var identifier = $"{randomName}.{tag}";
+
+                // Call
+                IDataItem[] dataItems = fmModel.GetDataItemsByExchangeIdentifier(identifier).ToArray();
+                
+                // Assert
+                Assert.That(dataItems.Length, Is.EqualTo(2));
+                
+                Assert.That(dataItems[0].ComposedValue, Is.TypeOf<ObservationCrossSection2D>());
+                Assert.That(dataItems[0].Name, Is.EqualTo(randomName));
+                Assert.That(dataItems[0].Tag, Is.EqualTo(tag));
+                
+                Assert.That(dataItems[1].ComposedValue, Is.TypeOf<GroupableFeature2DPoint>());
+                Assert.That(dataItems[1].Name, Is.EqualTo(randomName));
+                Assert.That(dataItems[1].Tag, Is.EqualTo(tag));
+            }
+        }
     }
 }

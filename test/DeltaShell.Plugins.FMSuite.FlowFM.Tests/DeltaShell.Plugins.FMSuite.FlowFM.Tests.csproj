@@ -192,6 +192,5 @@
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     <PackageReference Include="System.Threading.Tasks.Extensions" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" PrivateAssets="all" />
   </ItemGroup>
 </Project>

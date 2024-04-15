@@ -13,6 +13,11 @@ namespace DeltaShell.NGHS.Common
     public interface ICoupledModel
     {
         /// <summary>
+        /// The name of the model.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Method for retrieving the specific data items,
         /// which can be used for model coupling.
         /// </summary>
@@ -37,5 +42,19 @@ namespace DeltaShell.NGHS.Common
         /// returned unmodified.
         /// </remarks>
         string GetUpToDateDataItemName(string oldDataItemName);
+
+        /// <summary>
+        /// Gets the data items that match the given identifier.
+        /// </summary>
+        /// <param name="identifier">The identifier to get the data item for.</param>
+        /// <returns>A collection of matching data items.</returns>
+        IEnumerable<IDataItem> GetDataItemsByExchangeIdentifier(string identifier);
+
+        /// <summary>
+        /// Gets the item string representing the given <paramref name="dataItem"/>.
+        /// </summary>
+        /// <param name="dataItem">The data item.</param>
+        /// <returns>The string representing the data item.</returns>
+        string GetExchangeIdentifier(IDataItem dataItem);
     }
 }

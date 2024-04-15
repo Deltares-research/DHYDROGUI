@@ -19,7 +19,6 @@ using DelftTools.Units.Generics;
 using DelftTools.Utils.IO;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.Restart;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -628,6 +627,46 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // Then
                 Assert.That(model.OutputOutOfSync, Is.True);
                 Assert.That(model.OutputIsEmpty, Is.False);
+            }
+        }
+
+        [Test]
+        public void GetExchangeIdentifier_ReturnsDataItemName()
+        {
+            // Setup
+            using (var model = new RealTimeControlModel())
+            {
+                var dataItem = Substitute.For<IDataItem>();
+                dataItem.Name.Returns("randomName");
+                
+                // Call
+                string identifier = ((ICoupledModel)model).GetExchangeIdentifier(dataItem);
+                
+                // Assert
+                Assert.That(identifier, Is.EqualTo(dataItem.Name));
+            }
+        }
+
+        [Test]
+        public void GetDataItemsByExchangeIdentifier_ReturnsAllDataItemsWithGivenName()
+        {
+            // Setup
+            using (var model = new RealTimeControlModel())
+            {
+                // Add some DataItems with names
+                const string randomName = "randomName";
+                const string anotherRandomName = "anotherRandomName";
+
+                model.ControlGroups.Add(new ControlGroup() { Name = randomName });
+                model.ControlGroups.Add(new ControlGroup() { Name = anotherRandomName });
+                model.ControlGroups.Add(new ControlGroup() { Name = randomName });
+
+                // Call
+                IReadOnlyList<IDataItem> dataItems = model.GetDataItemsByExchangeIdentifier(randomName).ToArray();
+
+                // Assert
+                Assert.That(dataItems, Has.Exactly(2).Items);
+                Assert.That(dataItems, Has.All.Matches<IDataItem>(dataItem => dataItem.Name == randomName));
             }
         }
 
