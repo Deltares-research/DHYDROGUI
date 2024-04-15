@@ -587,12 +587,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             string extForceFileQuantityName, ImportSamplesOperationImportData importSamplesOperation,
             ExtForceFileItem existingExtForceFileItem, bool writeToDisk, string prefix = null)
         {
-            var targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extForceFilePath));
+            string targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extForceFilePath));
             if (writeToDisk && Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
             {
                 try
                 {
-                    importSamplesOperation.CopyTo(targetDirectory);
+                    string fileName = Path.GetFileName(importSamplesOperation.FilePath);
+                    string targetPath = Path.Combine(targetDirectory, fileName);
+                    
+                    importSamplesOperation.CopyTo(targetPath);
                 }
                 catch (Exception e)
                 {

@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var importSamplesOperation = new ImportSamplesOperationImportData
             {
-                                FilePath = Path.GetFullPath(extForceFilePath + fileName),
+                FilePath = Path.GetFullPath(extForceFilePath + fileName),
             };
             ExtForceFileItem item = ExtForceFileHelper.WriteInitialConditionsSamples(extForceFilePath, "quantity", importSamplesOperation, null, true);
             Assert.AreEqual(expectedFileName, item.FileName);
