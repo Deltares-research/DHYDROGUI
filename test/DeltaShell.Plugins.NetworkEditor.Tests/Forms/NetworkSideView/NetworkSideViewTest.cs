@@ -11,14 +11,19 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Units;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap;
+using SharpMap.CoordinateSystems.Transformations;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {
@@ -813,6 +818,56 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             TestDelegate action = () => WindowsFormsTestHelper.ShowModal(sideView, viewAction, viewData.WaterLevelNetworkCoverage);
             
             Assert.That(action, Throws.Nothing);
+        }
+
+        [Test]
+        public void GivenRouteOnNetworkInBogota21818Projection_WhenCheckNetworkSideViewIsRouteValid_ThenValidationIsTrue()
+
+        { 
+            //arrange
+            if (Map.CoordinateSystemFactory == null)
+            {
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(359203.35276676994, 345909.50645773654), new Point(622768.57877548016, 1238197.7900166281));
+            network.CoordinateSystem = Map.CoordinateSystemFactory.CreateFromEPSG(21818);
+            IBranch branch = network.Branches[0];
+
+            branch.GeodeticLength = GeodeticDistance.Length(branch.Network.CoordinateSystem, branch.Geometry);
+            Route route = CreateRouteOnBranch(branch);
+            Gui.Forms.NetworkSideView.NetworkSideView sideView = GetNetworkSideViewWithRoute(route);
+            string errorMessage = "No route defined for network side view.";
+            TypeUtils.SetField(sideView, "routeChecked", false);
+
+            //act
+            var routeValidation = TypeUtils.CallPrivateMethod<bool>(sideView, "IsRouteValid", errorMessage);
+
+            //assert
+            Assert.That(routeValidation, Is.True);
+        }
+
+        private static Gui.Forms.NetworkSideView.NetworkSideView GetNetworkSideViewWithRoute(Route route)
+        {
+            var networkSideViewCoverageManager = new NetworkSideViewCoverageManager(route, null, null);
+            var sideViewDataController = new NetworkSideViewDataController(route, networkSideViewCoverageManager);
+
+            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView
+            {
+                Data = route,
+                DataController = sideViewDataController,
+                Text = "sideview"
+            };
+            return sideView;
+        }
+
+        private static Route CreateRouteOnBranch(IBranch branch)
+        {
+            double quarterGeometryLength = branch.Geometry.Length / 4;
+            var location1 = new NetworkLocation(branch, quarterGeometryLength);
+            var location2 = new NetworkLocation(branch, quarterGeometryLength * 3);
+            var locations = new[] { location1, location2 };
+            var route = RouteHelper.CreateRoute(locations);
+            return route;
         }
     }
 }

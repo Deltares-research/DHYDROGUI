@@ -558,11 +558,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 log.ErrorFormat(message);
                 return false;
             }
-            
+
             if (RouteHelper.RouteContainLoops(NetworkRoute))
             {
-                message = $"{NetworkRoute.Name} is not a valid route; it contains loops. The visualization might not be correct.";
+                message = $"{NetworkRoute.Name} is not a valid route; it contains loops.";
                 log.ErrorFormat(message);
+                return false;   
             }
 
             if (NetworkRoute.Locations.Values.Count < 2)
