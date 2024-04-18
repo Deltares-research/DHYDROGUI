@@ -541,6 +541,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Assert
             Assert.That(newUnpavedData.BoundarySettings, Is.SameAs(existingUnpavedData.BoundarySettings));
         }
+        
+        [Test]
+        public void GivenAValidIntegratedModelWithRRAndFlowCoupledWhenActivityRunOfRRModelOnlyThenRRModelInputWaterLevelFeatureIsCleared()
+        {
+            // Setup
+            HydroModel hydroModel = CreateIntegratedModel();
+            RainfallRunoffModel rrModel = hydroModel.GetActivitiesOfType<RainfallRunoffModel>().First();
+            
+            // Call
+            ActivityRunner.RunActivity(rrModel);
+
+            // Assert
+            Assert.That(rrModel.InputWaterLevel.Features, Is.Empty);
+        }
+        
+        [Test]
+
+        public void GivenAnIntegratedModelWithRRAndFlowCoupledWhenActivityRunOfAnInvalidRRModelOnlyThenRRModelInputWaterLevelFeatureIsCleared()
+        {
+            // Setup
+            HydroModel hydroModel = CreateIntegratedModelWithFmAndRr_WithOneUnpavedCatchmentLinkedToALateralSource();
+            RainfallRunoffModel rrModel = hydroModel.GetActivitiesOfType<RainfallRunoffModel>().First();
+            
+            // Call
+            ActivityRunner.RunActivity(rrModel);
+
+            // Assert
+            Assert.That(rrModel.InputWaterLevel.Features, Is.Empty);
+        }
 
         [Test]
         public void UnlinkingSecondUnpavedCatchmentFromLateralSourceRemovesSynchronizationOfBoundaryConditions()

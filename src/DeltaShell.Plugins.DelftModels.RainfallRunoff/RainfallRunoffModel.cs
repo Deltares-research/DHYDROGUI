@@ -1277,6 +1277,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
         protected override void OnCleanup()
         {
+            InputWaterLevel.Clear(); 
             runner.OnCleanup();
         }
         protected override void OnClearOutput()
