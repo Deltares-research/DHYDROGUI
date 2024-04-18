@@ -91,9 +91,16 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                 OutletLossCoefficient = IniSection.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key, true),
                 PillarWidth = IniSection.ReadProperty<double>(StructureRegion.PillarWidth.Key, true),
                 ShapeFactor = IniSection.ReadProperty<double>(StructureRegion.FormFactor.Key, true),
+                IsPillar = IsPillarDefinition(),
                 FrictionDataType = (Friction)Enum.Parse(typeof(Friction), IniSection.ReadProperty<string>(StructureRegion.FrictionType.Key), true),
                 Friction = IniSection.ReadProperty<double>(StructureRegion.Friction.Key)
             };
+        }
+
+        private bool IsPillarDefinition()
+        {
+            return IniSection.ContainsProperty(StructureRegion.PillarWidth.Key)
+                   || IniSection.ContainsProperty(StructureRegion.FormFactor.Key);
         }
 
         private CrossSectionDefinitionYZ DetermineYZCrossSectionDefinition(

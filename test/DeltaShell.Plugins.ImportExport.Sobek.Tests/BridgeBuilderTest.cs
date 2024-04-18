@@ -189,7 +189,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Ignore("not yet implemented in the kernel")]
         public void BuildPillarBridge()
         {
             var sobekBridge = new SobekBridge

@@ -97,7 +97,69 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         }
         
         [Test]
-        public void ParseStructure_CorrectlyParsesBridge()
+        public void ParseStructure_CorrectlyParsesStandardBridge()
+        {
+            // Setup
+            const string crossSectionName = "NameOfCrossSection";
+            const string name = "NameOfStructure";
+            const string longName = "LongNameOfStructure";
+            const int chainage = 123;
+            const double shift = 1.1;
+            const string allowedFlowDir = "both";
+            const FlowDirection expectedFlowDirection = FlowDirection.Both;
+            const double length = 2.2;
+            const double inletLossCoefficient = 3.3;
+            const double outletLossCoefficient = 4.4;
+            const string frictionType = "Chezy";
+            const Friction expectedFrictionType = Friction.Chezy;
+            const double friction = 7.7;
+            
+            var crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
+            crossSectionDefinitions.Add(new CrossSectionDefinitionStandard()
+            {
+                Name = crossSectionName
+            });
+
+            IBranch branch = new Channel() { Length = 999 };
+            
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
+            iniSection.AddProperty(StructureRegion.Shift.Key, shift);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.Length.Key, length);
+            iniSection.AddProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.FrictionType.Key, frictionType);
+            iniSection.AddProperty(StructureRegion.Friction.Key, friction);
+            
+            var parser = new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, branch, structuresFilename);
+
+            // Call
+            IStructure1D parsedStructure = parser.ParseStructure();
+
+            // Assert
+            Assert.That(parsedStructure, Is.TypeOf<Bridge>());
+            
+            var bridge = (Bridge)parsedStructure;
+            Assert.That(bridge.Name, Is.EqualTo(name));
+            Assert.That(bridge.LongName, Is.EqualTo(longName));
+            Assert.That(bridge.Branch, Is.EqualTo(branch));
+            Assert.That(bridge.Chainage, Is.EqualTo(chainage));
+            Assert.That(bridge.Shift, Is.EqualTo(shift));
+            Assert.That(bridge.FlowDirection, Is.EqualTo(expectedFlowDirection));
+            Assert.That(bridge.BridgeType, Is.EqualTo(BridgeType.Rectangle));
+            Assert.That(bridge.Length, Is.EqualTo(length));
+            Assert.That(bridge.InletLossCoefficient, Is.EqualTo(inletLossCoefficient));
+            Assert.That(bridge.OutletLossCoefficient, Is.EqualTo(outletLossCoefficient));
+            Assert.That(bridge.FrictionDataType, Is.EqualTo(expectedFrictionType));
+            Assert.That(bridge.Friction, Is.EqualTo(friction));
+        }
+        
+        [Test]
+        public void ParseStructure_CorrectlyParsesPillarBridge()
         {
             // Setup
             const string crossSectionName = "NameOfCrossSection";
@@ -154,7 +216,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             Assert.That(bridge.Chainage, Is.EqualTo(chainage));
             Assert.That(bridge.Shift, Is.EqualTo(shift));
             Assert.That(bridge.FlowDirection, Is.EqualTo(expectedFlowDirection));
-            Assert.That(bridge.BridgeType, Is.EqualTo(BridgeType.Rectangle));
+            Assert.That(bridge.BridgeType, Is.EqualTo(BridgeType.Pillar));
             Assert.That(bridge.Length, Is.EqualTo(length));
             Assert.That(bridge.InletLossCoefficient, Is.EqualTo(inletLossCoefficient));
             Assert.That(bridge.OutletLossCoefficient, Is.EqualTo(outletLossCoefficient));
@@ -165,7 +227,70 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
         }
         
         [Test]
-        public void ParseStructure_NoCrossSectionDefinitions_CorrectlyParsesBridgeUsingDefaultValues()
+        public void ParseStructure_NoCrossSectionDefinitions_CorrectlyParsesStandardBridgeUsingDefaultValues()
+        {
+            // Setup
+            const string crossSectionName = "NameOfCrossSection";
+            const string name = "NameOfStructure";
+            const string longName = "LongNameOfStructure";
+            const int chainage = 123;
+            const double shift = 1.1;
+            const string allowedFlowDir = "both";
+            const FlowDirection expectedFlowDirection = FlowDirection.Both;
+            const double length = 2.2;
+            const double inletLossCoefficient = 3.3;
+            const double outletLossCoefficient = 4.4;
+            const string frictionType = "Chezy";
+            const Friction expectedFrictionType = Friction.Chezy;
+            const double friction = 7.7;
+
+            const double expectedWidth = 50; // default value
+            const double expectedHeight = 3; // default value
+            
+            var crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
+
+            IBranch branch = new Channel() { Length = 999 };
+            
+            IniSection iniSection = StructureParserTestHelper.CreateStructureIniSection();
+            iniSection.AddProperty(StructureRegion.Id.Key, name);
+            iniSection.AddProperty(StructureRegion.Name.Key, longName);
+            iniSection.AddProperty(StructureRegion.Chainage.Key, chainage);
+            iniSection.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
+            iniSection.AddProperty(StructureRegion.Shift.Key, shift);
+            iniSection.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            iniSection.AddProperty(StructureRegion.Length.Key, length);
+            iniSection.AddProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
+            iniSection.AddProperty(StructureRegion.FrictionType.Key, frictionType);
+            iniSection.AddProperty(StructureRegion.Friction.Key, friction);
+            
+            var parser = new BridgeDefinitionParser(structureType, iniSection, crossSectionDefinitions, 
+                                                    branch, structuresFilename);
+
+            // Call
+            IStructure1D parsedStructure = parser.ParseStructure();
+
+            // Assert
+            Assert.That(parsedStructure, Is.TypeOf<Bridge>());
+            
+            var bridge = (Bridge)parsedStructure;
+            Assert.That(bridge.Name, Is.EqualTo(name));
+            Assert.That(bridge.LongName, Is.EqualTo(longName));
+            Assert.That(bridge.Branch, Is.EqualTo(branch));
+            Assert.That(bridge.Chainage, Is.EqualTo(chainage));
+            Assert.That(bridge.Shift, Is.EqualTo(shift));
+            Assert.That(bridge.FlowDirection, Is.EqualTo(expectedFlowDirection));
+            Assert.That(bridge.BridgeType, Is.EqualTo(BridgeType.Rectangle));
+            Assert.That(bridge.Length, Is.EqualTo(length));
+            Assert.That(bridge.InletLossCoefficient, Is.EqualTo(inletLossCoefficient));
+            Assert.That(bridge.OutletLossCoefficient, Is.EqualTo(outletLossCoefficient));
+            Assert.That(bridge.FrictionDataType, Is.EqualTo(expectedFrictionType));
+            Assert.That(bridge.Friction, Is.EqualTo(friction));
+            Assert.That(bridge.Width, Is.EqualTo(expectedWidth));
+            Assert.That(bridge.Height, Is.EqualTo(expectedHeight));
+        }
+        [Test]
+        public void ParseStructure_NoCrossSectionDefinitions_CorrectlyParsesPillarBridgeUsingDefaultValues()
         {
             // Setup
             const string crossSectionName = "NameOfCrossSection";
@@ -222,7 +347,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             Assert.That(bridge.Chainage, Is.EqualTo(chainage));
             Assert.That(bridge.Shift, Is.EqualTo(shift));
             Assert.That(bridge.FlowDirection, Is.EqualTo(expectedFlowDirection));
-            Assert.That(bridge.BridgeType, Is.EqualTo(BridgeType.Rectangle));
+            Assert.That(bridge.BridgeType, Is.EqualTo(BridgeType.Pillar));
             Assert.That(bridge.Length, Is.EqualTo(length));
             Assert.That(bridge.InletLossCoefficient, Is.EqualTo(inletLossCoefficient));
             Assert.That(bridge.OutletLossCoefficient, Is.EqualTo(outletLossCoefficient));

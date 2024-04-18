@@ -10,6 +10,38 @@ namespace DelftTools.Hydro.Tests.Structures
     public class BridgeTest
     {
         [Test]
+        public void IsPillarBridge_WhenIsPillarIsTrue_ShouldReturnTrue()
+        {
+            // Arrange
+            var bridge = new Bridge();
+            int callCount = 0;
+            ((INotifyPropertyChanged)bridge).PropertyChanged += (s, e) =>
+            {
+                Assert.AreEqual("BridgeType", e.PropertyName);// Only BridgeType update is expected not IsPillar
+                callCount++;
+            };
+            // Act
+            bridge.IsPillar = true;
+
+            // Assert
+            Assert.That(bridge.IsPillar, Is.True);
+            Assert.That(callCount, Is.EqualTo(1));//1 not 2! 
+        }
+
+        [Test]
+        public void IsPillarBridge_WhenStandardBridge_ShouldReturnFalse()
+        {
+            // Arrange
+            var bridge = new Bridge();
+
+            // Act
+            bool result = bridge.IsPillar;
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
         public void PropertyChangedForTabulatedCrossection()
         {
             var bridge = new Bridge();

@@ -14,7 +14,7 @@ namespace DelftTools.Hydro.Structures
         /// <returns>A new cross section definition instance with the bridge's shift value applied.</returns>
         public static ICrossSectionDefinition GetShiftedCrossSectionDefinition(this IBridge bridge)
         {
-            return bridge.CrossSectionDefinition.AddLevel(bridge.Shift);
+            return bridge.CrossSectionDefinition?.AddLevel(bridge.Shift);
         }
     }
 }

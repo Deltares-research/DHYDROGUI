@@ -1,24 +1,39 @@
-﻿using DelftTools.Hydro;
+﻿using System.Globalization;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Helpers;
 using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructureBridgePillar : DefinitionGeneratorStructureBridge
+    /// <summary>
+    /// Represents a definition generator for bridge pillars. This class extends the standard bridge structure definition generator.
+    /// </summary>
+    public class DefinitionGeneratorStructureBridgePillar : DefinitionGeneratorStructureBridgeStandard
     {
+        /// <summary>
+        /// Creates the structure region for a bridge pillar based on the provided hydro object.
+        /// </summary>
+        /// <param name="hydroObject">The hydro object (<see cref="IHydroObject"/>) representing the pillar bridge.</param>
+        /// <returns>The INI section containing the structure region information.</returns>
         public override IniSection CreateStructureRegion(IHydroObject hydroObject)
         {
-            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.BridgePillar);
-
+            Ensure.NotNull(hydroObject, nameof(hydroObject));
+            base.CreateStructureRegion(hydroObject);
             var bridge = hydroObject as IBridge;
-            if(bridge == null) return IniSection;
+            if (bridge == null) return IniSection;
 
-            AddCommonBridgeElements(bridge);
-
-            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.PillarWidth.Key, bridge.PillarWidth, StructureRegion.PillarWidth.Description, StructureRegion.PillarWidth.Format);
-            IniSection.AddPropertyWithOptionalCommentAndFormat(StructureRegion.FormFactor.Key, bridge.ShapeFactor, StructureRegion.FormFactor.Description, StructureRegion.FormFactor.Format);
+            var pillarWidthProperty = new IniProperty(StructureRegion.PillarWidth.Key,
+                                              bridge.PillarWidth.ToString(StructureRegion.PillarWidth.Format, CultureInfo.InvariantCulture),
+                                              StructureRegion.PillarWidth.Description);
+            IniSection.AddProperty(pillarWidthProperty);
             
+            var formFactorProperty = new IniProperty(StructureRegion.FormFactor.Key,
+                                                    bridge.ShapeFactor.ToString(StructureRegion.FormFactor.Format, CultureInfo.InvariantCulture),
+                                                    StructureRegion.FormFactor.Description);
+            IniSection.AddProperty(formFactorProperty);
+
             return IniSection;
         }
     }

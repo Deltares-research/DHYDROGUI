@@ -184,4 +184,10 @@
   <data name="SobekCrossSectionsImporter_AddCrossSections_Definition_with_the_following_ids_were_not_found__ignored__Using_default" xml:space="preserve">
     <value>Definition with the following ids were not found; ignored. Using default</value>
   </data>
+  <data name="BridgeInitializerFactory_RegisterBridgeInitializer_Already_registered_sobek2_bridge_initializer_for_type__0___Overwriting_with_new_initializer" xml:space="preserve">
+    <value>Already registered sobek2 bridge initializer for type {0}. Overwriting with new initializer</value>
+  </data>
+  <data name="DefaultBridgeInitializer_InitializeBridgeCrossSectionDefinition_Only_sobek2_bridge_geometric_profiles_of_type_tabular__0__supported_and_implemented_" xml:space="preserve">
+    <value>Only sobek2 bridge geometric profiles of type tabular {0} supported and implemented.</value>
+  </data>
 </root>

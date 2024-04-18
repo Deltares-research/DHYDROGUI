@@ -111,6 +111,7 @@ namespace DelftTools.Hydro.Structures
     {
         Rectangle,
         Tabulated,
-        YzProfile
+        YzProfile,
+        Pillar
     }
 }

@@ -61,6 +61,26 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Already registered sobek2 bridge initializer for type {0}. Overwriting with new initializer.
+        /// </summary>
+        public static string BridgeInitializerFactory_RegisterBridgeInitializer_Already_registered_sobek2_bridge_initializer_for_type__0___Overwriting_with_new_initializer {
+            get {
+                return ResourceManager.GetString("BridgeInitializerFactory_RegisterBridgeInitializer_Already_registered_sobek2_brid" +
+                        "ge_initializer_for_type__0___Overwriting_with_new_initializer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only sobek2 bridge geometric profiles of type tabular {0} supported and implemented..
+        /// </summary>
+        public static string DefaultBridgeInitializer_InitializeBridgeCrossSectionDefinition_Only_sobek2_bridge_geometric_profiles_of_type_tabular__0__supported_and_implemented_ {
+            get {
+                return ResourceManager.GetString("DefaultBridgeInitializer_InitializeBridgeCrossSectionDefinition_Only_sobek2_bridg" +
+                        "e_geometric_profiles_of_type_tabular__0__supported_and_implemented_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extra friction file &apos;{0}&apos; found, but is not supported; skipping....
         /// </summary>
         public static string Extra_friction_file_0_found_but_is_not_supported {

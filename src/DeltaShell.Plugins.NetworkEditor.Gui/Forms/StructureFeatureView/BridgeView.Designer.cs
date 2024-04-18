@@ -323,6 +323,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             // textBoxShapeFactor
             // 
+            this.textBoxShapeFactor.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceBridge, "ShapeFactor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N3"));
             this.textBoxShapeFactor.Location = new System.Drawing.Point(97, 29);
             this.textBoxShapeFactor.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxShapeFactor.Name = "textBoxShapeFactor";
@@ -332,6 +333,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             // textBoxPillarWidth
             // 
+            this.textBoxPillarWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceBridge, "PillarWidth", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N2"));
             this.textBoxPillarWidth.Location = new System.Drawing.Point(97, 6);
             this.textBoxPillarWidth.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxPillarWidth.Name = "textBoxPillarWidth";
@@ -396,6 +398,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             this.bridgeTypeCombobox.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSourceBridge, "BridgeType", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.bridgeTypeCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.bridgeTypeCombobox.DataSource = new DelftTools.Hydro.Structures.BridgeType[] {
+        DelftTools.Hydro.Structures.BridgeType.Rectangle,
+        DelftTools.Hydro.Structures.BridgeType.Tabulated,
+        DelftTools.Hydro.Structures.BridgeType.Pillar};
             this.bridgeTypeCombobox.FormattingEnabled = true;
             this.bridgeTypeCombobox.Location = new System.Drawing.Point(43, 19);
             this.bridgeTypeCombobox.Name = "bridgeTypeCombobox";

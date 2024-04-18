@@ -61,6 +61,11 @@ namespace DelftTools.Hydro.Structures
         /// <summary>
         /// Crosssection as used for model api. It does not include any level since these are passed separately
         /// </summary>
+        /// <remarks>
+        /// This property retrieves the cross-section definition for the bridge.
+        /// It may return null if no cross-section definition is available or
+        /// if the bridge type does not match any supported cross-section types.
+        /// </remarks>
         public virtual ICrossSectionDefinition CrossSectionDefinition
         {
             get
@@ -73,23 +78,28 @@ namespace DelftTools.Hydro.Structures
                 switch (value)
                 {
                     case null:
+                        // If null, update the cross-section definition based on the bridge type
                         UpdateCrossSectionDefinition(bridgeType);
                         break;
                     case CrossSectionDefinitionStandard definitionStandard:
                         if(definitionStandard.ShapeType != CrossSectionStandardShapeType.Rectangle)
+                            // If not a rectangle, update the cross-section definition based on the bridge type
                             UpdateCrossSectionDefinition(bridgeType);
                         else
                         {
+                            // If it's a rectangle, set width and height and bridge type accordingly
                             Width = ((CrossSectionStandardShapeRectangle)definitionStandard.Shape).Width;
                             Height = ((CrossSectionStandardShapeRectangle)definitionStandard.Shape).Height;
                         }
                         BridgeType = BridgeType.Rectangle;
                         break;
                     case CrossSectionDefinitionYZ definitionYz:
+                        // If the definition is of type CrossSectionDefinitionYZ, set YZ cross-section definition and bridge type
                         YZCrossSectionDefinition = definitionYz;
                         BridgeType = BridgeType.YzProfile;
                         break;
                     case CrossSectionDefinitionZW definitionZw:
+                        // If the definition is of type CrossSectionDefinitionZW, set tabulated cross-section definition and bridge type
                         TabulatedCrossSectionDefinition = definitionZw;
                         BridgeType = BridgeType.Tabulated;
                         break;
@@ -153,13 +163,13 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                return false; //return BridgeType == BridgeType.Pillar;//Not yet implemented in the kernel
+                return BridgeType == BridgeType.Pillar;
             }
             set
             {
                 if (value)
                 {
-                    //BridgeType = BridgeType.Pillar;//Not yet implemented in the kernel
+                    BridgeType = BridgeType.Pillar;
                 }
             }
         }
@@ -198,13 +208,11 @@ namespace DelftTools.Hydro.Structures
         [DynamicReadOnly]
         [DisplayName("Pillar width")]
         //[FeatureAttribute(Order = 18)]
-        [Browsable(false)]
         public virtual double PillarWidth { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Shape factor")]
         //[FeatureAttribute(Order = 19)]
-        [Browsable(false)]
         public virtual double ShapeFactor { get; set; }
 
         [DynamicReadOnly]
@@ -417,6 +425,7 @@ namespace DelftTools.Hydro.Structures
         {
             switch (type)
             {
+                case BridgeType.Pillar:
                 case BridgeType.Rectangle:
                     crossSectionDefinition =
                         new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle()

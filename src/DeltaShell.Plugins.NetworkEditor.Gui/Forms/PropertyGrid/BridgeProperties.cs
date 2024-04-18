@@ -211,7 +211,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Total width of all pillars.")]
         [PropertyOrder(1)]
         [DynamicReadOnly]
-        [Browsable(false)]//Not yet implemented in the kernel
         public double PillarWidth
         {
             get { return data.PillarWidth; }
@@ -223,7 +222,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Shape/Form factor.")]
         [PropertyOrder(2)]
         [DynamicReadOnly]
-        [Browsable(false)]//Not yet implemented in the kernel
         public double ShapeFactor
         {
             get { return data.ShapeFactor; }
