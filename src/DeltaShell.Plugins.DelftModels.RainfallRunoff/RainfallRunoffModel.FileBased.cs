@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         
         public virtual IEnumerable<string> Paths
         {
-            get { return new[] { Path }; }
+            get { return Enumerable.Empty<string>(); }
         }
 
         public virtual bool IsFileCritical
