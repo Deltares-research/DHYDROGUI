@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Validation;
+using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -37,7 +38,7 @@ namespace DeltaShell.NGHS.IO.Grid.Validation
             }
             else
             {
-                var mesh1d = discretization.CreateDisposable1DMeshGeometry();
+                Disposable1DMeshGeometry mesh1d = discretization.CreateDisposable1DMeshGeometry();
                 issues = mesh1d.ValidateMesh1DSourceLocationsOnlyExistOnce(link1D2Ds)
                                .Select(errorMessage => new ValidationIssue(link1D2Ds, ValidationSeverity.Error, errorMessage));
             }

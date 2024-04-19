@@ -295,9 +295,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// Creates a <see cref="Disposable1DMeshGeometry"/> based on the <paramref name="discretization"/>
         /// </summary>
         /// <param name="discretization">Discretization to base the mesh on</param>
-        public static Disposable1DMeshGeometry CreateDisposable1DMeshGeometry(this IDiscretization discretization)
+        /// <param name="logHandler">The log handler to write log messages to. Defaults to <c>null</c>.</param>
+        public static Disposable1DMeshGeometry CreateDisposable1DMeshGeometry(this IDiscretization discretization, ILogHandler logHandler = null)
         {
-            var logHandler = new LogHandler(Resources.HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName, typeof(HydroUGridExtensions), 100);
             var locations = discretization.Locations.Values.ToArray();
 
             var segments = discretization.Segments.Values.ToList();
@@ -373,7 +373,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][1];
             }
 
-            logHandler.LogReport();
             return mesh;
         }
 
@@ -408,7 +407,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[0] = locationIdLookup[firstLocation];
                 else
                 {
-                    logHandler.ReportWarning(
+                    logHandler?.ReportWarning(
                         string.Format(Resources.HydroUGridExtensions_Cannot_find_start_edge_node_of_section, 
                                       segment.SegmentNumber, segment.Branch.Name, segment.Chainage, segment.Branch.Name));
                     indices[0] = -1;
@@ -424,7 +423,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[1] = locationIdLookup[firstLocation];
                 else
                 {
-                    logHandler.ReportWarning(
+                    logHandler?.ReportWarning(
                         string.Format(Resources.HydroUGridExtensions_Cannot_find_end_edge_node_of_section, 
                                       segment.SegmentNumber, segment.Branch.Name, segment.EndChainage, segment.Branch.Name));
                     indices[1] = -1;

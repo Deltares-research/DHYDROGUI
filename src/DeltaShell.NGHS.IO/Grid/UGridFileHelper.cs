@@ -510,7 +510,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
                     if (networkDiscretization != null && networkDiscretization.Locations.Values.Count > 0)
                     {
-                        mesh1d = networkDiscretization.CreateDisposable1DMeshGeometry();
+                        var logHandler = new LogHandler(Resources.HydroUGridExtensions_Mesh1DGeometryLogHandlerActivityName, typeof(HydroUGridExtensions), 100);
+                        mesh1d = networkDiscretization.CreateDisposable1DMeshGeometry(logHandler);
+                        logHandler.LogReport();
                         api.WriteMesh1D(mesh1d, networkId);
                     }
                 }

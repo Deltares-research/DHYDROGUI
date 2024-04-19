@@ -4,8 +4,10 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.Grid.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NSubstitute;
@@ -116,6 +118,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                           Environment.NewLine +
                           string.Format(Properties.Resources.UGridFileHelper_ValidateMesh1DSourceLocationsOnlyExistOnce_ErrorMessage_part2, string.Join(", ", otherDiscretizationPointNames));
             Assert.That(validationIssue.Message, Is.EqualTo(message));
+        }
+
+        [Test]
+        public void WaterFlowFMModelWithJustABranchDoesNotLogMessage()
+        {
+            // Setup
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var branch = Channel.CreateDefault(fmModel.Network);
+                fmModel.Network.Branches.Add(branch);
+                
+                // Call
+                void Call() => validator.Validate(fmModel.Links, fmModel.NetworkDiscretization);
+
+                // Assert
+                TestHelper.AssertLogMessagesCount(Call, 0);
+            }
         }
     }
 }
