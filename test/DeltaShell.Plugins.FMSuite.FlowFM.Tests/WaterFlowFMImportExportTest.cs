@@ -590,5 +590,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 FileUtils.DeleteIfExists(tempDirPath);
             }
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        public void GivenMduWithoutOutputLocation_WhenImportWithDefaultDimrOutputFolderNotExisting_ThenSetOutputFolderMduOutputFolder()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                //Arrange
+                string dirPath = TestHelper.GetTestFilePath(@"ImportMDUFile\EmptyOutputFile");
+                string dirImportPath = tempDir.CopyDirectoryToTempDirectory(dirPath);
+                string mduImportPath = dirImportPath + @"\olo.mdu";
+                
+                //Act
+                var model = new WaterFlowFMModel(mduImportPath);
+
+                //Assert
+                var oloDiaFile = model.DataItems.FirstOrDefault(x => x.Name == "olo.dia");
+                Assert.That(model.OutputHisFileStore, Is.Not.Null);
+                Assert.That(model.Output1DFileStore, Is.Not.Null);
+                Assert.That(oloDiaFile, Is.Not.Null);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        public void GivenMduWithoutOutputLocation_WhenImportWithDefaultDimrOutputFolderIsExisting_ThenSetOutputFolderDefaultDimrOutputFolder()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                //Arrange
+                string dirMduPath = TestHelper.GetTestFilePath(@"ImportMDUFile\EmptyOutputFile\olo.mdu");
+                string mduImportPath = tempDir.CopyTestDataFileToTempDirectory(dirMduPath);
+                string dirPath = TestHelper.GetTestFilePath(@"ImportMDUFile\EmptyOutputFile\olo_net.nc");
+                tempDir.CopyTestDataFileToTempDirectory(dirPath);
+                
+                string outputDir = tempDir.CreateDirectory("DFM_OUTPUT_olo");
+                CopyFileToOutPutDir("olo.dia", outputDir);
+                CopyFileToOutPutDir("olo_his.nc", outputDir);
+                CopyFileToOutPutDir("olo_map.nc", outputDir);
+                
+                //Act
+                var model = new WaterFlowFMModel(mduImportPath);
+
+                //Act
+                var oloDiaFile = model.DataItems.FirstOrDefault(x => x.Name == "olo.dia");
+                Assert.That(model.OutputHisFileStore, Is.Not.Null);
+                Assert.That(model.Output1DFileStore, Is.Not.Null);
+                Assert.That(oloDiaFile, Is.Not.Null);
+            }
+        }
+
+        private static void CopyFileToOutPutDir(string fileName, string outputDir)
+        {
+            string outputDirPath = outputDir + @"\" + fileName;
+            string testFilePath = @"ImportMDUFile\EmptyOutputFile\" + fileName;
+            string dirPath = TestHelper.GetTestFilePath(testFilePath);
+            FileUtils.CopyFile(dirPath, outputDirPath);
+        }
     }
 }

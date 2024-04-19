@@ -1621,6 +1621,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         currentOutputDirectoryPath = mduOutputDirPath;
                     }
                 }
+                else
+                {
+                    // try default path
+                    string defaultName = "DFM_OUTPUT_" + modelDefinition.ModelName;
+                    string mduOutputDirPath = Path.Combine(Path.GetDirectoryName(mduFilePath), defaultName);
+                    if (Directory.Exists(mduOutputDirPath))
+                    {
+                        currentOutputDirectoryPath = mduOutputDirPath;
+                    }
+                }
             }
 
             string existingOutputDirectory = Directory.Exists(currentOutputDirectoryPath)
