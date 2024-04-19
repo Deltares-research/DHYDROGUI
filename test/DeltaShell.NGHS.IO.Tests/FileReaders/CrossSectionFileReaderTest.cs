@@ -94,5 +94,27 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 Assert.That(infoMessages.Any(m => m.Equals(expectedMessage)));
             }
         }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadFileCrossSectionDefinitions_WithoutBranchToPlaceOn_ThrowsException()
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            {
+                string locationFile = temp.CreateFile("crsloc.ini", fileContentLocations);
+                string definitionFile = temp.CreateFile("crsdef.ini", fileContentDefinitions);
+                var network = new HydroNetwork();
+                
+                // Call
+                void Call() => CrossSectionFileReader.ReadFile(locationFile, definitionFile, network, null);
+                
+
+                // Assert
+                var ex = Assert.Throws<IO.FileReaders.FileReadingException>(Call);
+                Assert.That(ex.Message, Contains.Substring("some_id_").IgnoreCase);
+                Assert.That(ex.Message, Contains.Substring("some_branch_id").IgnoreCase);
+            }
+        }
     }
 }

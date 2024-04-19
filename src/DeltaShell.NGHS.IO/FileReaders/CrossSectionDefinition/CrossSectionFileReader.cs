@@ -108,9 +108,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
             if (fileReadingExceptions.Count > 0)
             {
                 var innerExceptionMessages = fileReadingExceptions
-                    .Select(e => e?.InnerException != null
+                    .Select(e => e.InnerException != null
                                      ? e.InnerException.Message + Environment.NewLine
-                                     : string.Empty
+                                     : e.Message
                     );
 
                 throw new FileReadingException($"While reading cross sections an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
