@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition;
 using log4net.Core;
@@ -114,6 +115,53 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 var ex = Assert.Throws<IO.FileReaders.FileReadingException>(Call);
                 Assert.That(ex.Message, Contains.Substring("some_id_").IgnoreCase);
                 Assert.That(ex.Message, Contains.Substring("some_branch_id").IgnoreCase);
+            }
+        }
+
+        [Test]
+        public void ReadFile_Should_Return_Shared_Definitions()
+        {
+            // Arrange
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            {
+                string locationFile = temp.CreateFile("crsloc.ini", fileContentLocations);
+                string definitionFile = temp.CreateFile("crsdef.ini", fileContentDefinitions + Environment.NewLine + "    IsShared            = True");
+                var network = new HydroNetwork();
+                network.Branches.Add(new Branch { Name = "some_branch_id" });
+
+                // Act
+                ICrossSectionDefinition[] result = CrossSectionFileReader.ReadFile(locationFile, definitionFile, network, null);
+
+                // Assert
+                // Assert that result contains all shared definitions
+                foreach (var sharedDefinition in network.SharedCrossSectionDefinitions)
+                {
+                    Assert.Contains(sharedDefinition, result);
+                }
+            }
+        }
+        [Test]
+        public void ReadFile_Should_Return_Multiple_Used_Definitions()
+        {
+            // Arrange
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            {
+                string locationFile = temp.CreateFile("crsloc.ini", fileContentLocations);
+                string definitionFile = temp.CreateFile("crsdef.ini", fileContentDefinitions + Environment.NewLine);
+                var network = new HydroNetwork();
+                network.Branches.Add(new Branch { Name = "some_branch_id" });
+
+                // Act
+                ICrossSectionDefinition[] result = CrossSectionFileReader.ReadFile(locationFile, definitionFile, network, null);
+
+                // Assert
+                // Assert that result contains all shared definitions
+                foreach (var sharedDefinition in network.SharedCrossSectionDefinitions)
+                {
+                    Assert.Contains(sharedDefinition, result);
+                }
             }
         }
     }

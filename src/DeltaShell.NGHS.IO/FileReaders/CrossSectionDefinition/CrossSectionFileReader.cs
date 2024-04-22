@@ -116,7 +116,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
                 throw new FileReadingException($"While reading cross sections an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
             }
             
-            return unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).ToArray();
+            return unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).Union(sharedDefinitionNameLookup.Values).ToArray();
         }
 
         private static void SetFrictionType(IChannel channel, ICrossSection crossSection, ILookup<IChannel, ChannelFrictionDefinition> frictionDefinitions)
