@@ -5,6 +5,7 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -2426,5 +2427,27 @@ namespace DelftTools.Hydro.Tests.Helpers
             var weir = new Weir();
             Assert.DoesNotThrow(() => HydroNetworkHelper.RemoveStructure(weir));
         }
-    }
+
+        [Test]
+        public void SplitPipeAtNode_WithValidOffset_ReturnsNewManholeWithNoExceptions()
+        {
+            // Arrange
+            var pipe = new Pipe();
+            pipe.Source = new HydroNode { Geometry = new Point(0.0, 0.0) };
+            var mockNetwork = Substitute.For<IHydroNetwork>(); 
+            pipe.Network = mockNetwork;
+            pipe.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) });
+            var geometryOffset = 5;
+
+            // Act
+            Assert.DoesNotThrow(() =>
+            {
+                var result = HydroNetworkHelper.SplitPipeAtNode(pipe, geometryOffset);
+
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.IsInstanceOf<IManhole>(result);
+            });
+        }
+   }
 }

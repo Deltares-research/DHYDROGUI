@@ -94,17 +94,31 @@ namespace DelftTools.Hydro.Helpers
                 result.NewBranch.Name = pipe.Name + "_A";
                 pipe.Name = pipe.Name + "_B";
 
-                (result.NewBranch as IPipe)?.SetPipeProperties(pipe.Network as HydroNetwork);
+                (result.NewBranch as IPipe)?.SetPipeProperties(pipe.Network as IHydroNetwork);
                 //update the action before calling endedit..other entities might use the data.
                 channelSplitAction.SplittedBranch = pipe;
                 channelSplitAction.NewBranch = result.NewBranch;
 
                 pipe.Network.EndEdit();
-                return (IManhole) result.NewNode;
+                if (result.NewNode is IManhole manhole)
+                {
+                    return manhole;
+                }
+                IManhole node = ReplaceNodeForManhole(pipe, result);
+                return node;
             }
             return null;
         }
-        
+
+        private static IManhole ReplaceNodeForManhole(IPipe pipe, SplitResult result)
+        {
+            pipe.Network.Nodes.Remove(result.NewNode);
+            IManhole node = new Manhole(result.NewNode.Name);
+            node.Geometry = (IGeometry)result.NewNode.Geometry.Clone();
+            pipe.Network.Nodes.Add(node);
+            return node;
+        }
+
         public static Route AddNewRouteToNetwork(IHydroNetwork network)
         {
             var route = new Route

@@ -37,26 +37,26 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        public static void SetPipeProperties(this IPipe pipe, HydroNetwork hydroNetwork)
+        public static void SetPipeProperties(this IPipe pipe, IHydroNetwork hydroNetwork)
         {
             SetPhysicalProperties(pipe, hydroNetwork);
             SetPipeDefaultValues(pipe);
         }
 
-        private static void SetPhysicalProperties(ISewerConnection sewerConnection, HydroNetwork hydroNetwork)
+        private static void SetPhysicalProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork)
         {
             sewerConnection.Length = sewerConnection.Geometry.Length;
             SetSource(sewerConnection, hydroNetwork);
             SetTarget(sewerConnection, hydroNetwork);
         }
 
-        private static void SetTarget(IBranch branch, HydroNetwork hydroNetwork)
+        private static void SetTarget(IBranch branch, IHydroNetwork hydroNetwork)
         {
             if (branch.Target != null) return;
             branch.Target = GetExistingOrNewManholeFromNetwork(hydroNetwork, branch.Geometry.Coordinates.Last());
         }
 
-        private static void SetSource(IBranch branch, HydroNetwork hydroNetwork)
+        private static void SetSource(IBranch branch, IHydroNetwork hydroNetwork)
         {
             if (branch.Source != null) return;
             branch.Source = GetExistingOrNewManholeFromNetwork(hydroNetwork, branch.Geometry.Coordinates.First());
