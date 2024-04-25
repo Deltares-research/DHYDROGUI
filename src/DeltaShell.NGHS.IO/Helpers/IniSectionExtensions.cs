@@ -10,7 +10,7 @@ namespace DeltaShell.NGHS.IO.Helpers
 {
     public static class IniSectionExtensions
     {
-        private static readonly char[] StandardSeperators = new[] { ' ', '\t' };
+        private static readonly char[] StandardSeperators = new[] { ' ', '\t', '\r', '\n' };
         private static readonly ILog log = LogManager.GetLogger(typeof(IniSectionExtensions));
         
         public static T ReadProperty<T>(this IniSection iniSection, string key, bool isOptional = false, T defaultValue = default(T), bool logError = true)

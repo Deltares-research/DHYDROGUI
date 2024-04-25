@@ -72,7 +72,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
 
             IniData iniData;
             IniParser iniParser = new IniParser();
-            
+            iniParser.Configuration.AllowMultiLineValues = true;
+
             using (Stream stream = fileSystem.File.OpenRead(fileName))
             {
                 iniData = iniParser.Parse(stream);
