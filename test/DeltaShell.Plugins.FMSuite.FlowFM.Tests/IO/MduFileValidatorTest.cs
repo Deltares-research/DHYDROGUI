@@ -297,8 +297,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             string propertyName = property.PropertyDefinition.MduPropertyName;
 
-            return propertyName.EqualsCaseInsensitive(KnownProperties.HisFile__Obsolete) ||
-                   propertyName.EqualsCaseInsensitive(KnownProperties.MapFile__Obsolete);
+            return propertyName.EqualsCaseInsensitive(KnownProperties.HisFile) ||
+                   propertyName.EqualsCaseInsensitive(KnownProperties.MapFile);
         }
 
         private string CreateFileName()

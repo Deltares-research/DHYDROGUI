@@ -82,8 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static readonly string[] SupportedFiles =
         {
-            KnownProperties.NetFile, KnownProperties.ExtForceFile, KnownProperties.MapFile__Obsolete,
-            KnownProperties.HisFile__Obsolete, KnownProperties.ThinDamFile, KnownProperties.FixedWeirFile,
+            KnownProperties.NetFile, KnownProperties.ExtForceFile, KnownProperties.MapFile,
+            KnownProperties.HisFile, KnownProperties.ThinDamFile, KnownProperties.FixedWeirFile,
             KnownProperties.BridgePillarFile,
             KnownProperties.ObsFile, KnownProperties.ObsCrsFile, KnownProperties.LandBoundaryFile,
             KnownProperties.DryPointsFile, KnownProperties.RestartFile, KnownProperties.StructuresFile,
