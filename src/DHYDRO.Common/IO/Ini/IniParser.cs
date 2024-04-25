@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using DHYDRO.Common.Extensions;
 using DHYDRO.Common.Guards;
@@ -29,7 +30,10 @@ namespace DHYDRO.Common.IO.Ini
         private IniSection currentSection;
         private IniProperty currentProperty;
 
-        private List<string> commentsTemp;
+        private List<string> values;
+        private List<string> blockComments;
+        private List<string> inlineComments;
+        
         private HashSet<string> foundSections;
         private HashSet<string> foundProperties;
 
@@ -129,13 +133,17 @@ namespace DHYDRO.Common.IO.Ini
                 ParseCurrentLine();
             }
 
+            FinalizeCurrentProperty();
+
             return iniData;
         }
 
         private void InitializeParsingContext()
         {
             iniData = new IniData();
-            commentsTemp = new List<string>();
+            values = new List<string>();
+            blockComments = new List<string>();
+            inlineComments = new List<string>();
             foundSections = new HashSet<string>();
             foundProperties = new HashSet<string>();
             currentSection = null;
@@ -163,10 +171,12 @@ namespace DHYDRO.Common.IO.Ini
             }
             else if (IsSectionLine())
             {
+                FinalizeCurrentProperty();
                 ParseSectionLine();
             }
             else if (IsPropertyLine())
             {
+                FinalizeCurrentProperty();
                 ParsePropertyLine();
             }
             else if (IsMultiLineValueLine())
@@ -199,7 +209,7 @@ namespace DHYDRO.Common.IO.Ini
             int commentIndex = currentLine.IndexOf(Scheme.CommentDelimiter);
             string comment = currentLine.Substring(commentIndex + 1).Trim();
 
-            commentsTemp.Add(comment);
+            blockComments.Add(comment);
         }
 
         private bool IsSectionLine()
@@ -239,9 +249,9 @@ namespace DHYDRO.Common.IO.Ini
         private void AddNewSection(string sectionName)
         {
             currentSection = new IniSection(sectionName) { LineNumber = lineNumber };
-            currentSection.AddMultipleComments(commentsTemp);
+            currentSection.AddMultipleComments(blockComments);
             iniData.AddSection(currentSection);
-            commentsTemp.Clear();
+            blockComments.Clear();
         }
 
         private bool IsPropertyLine()
@@ -310,9 +320,12 @@ namespace DHYDRO.Common.IO.Ini
 
         private void AddNewProperty(string key, string value, string comment = "")
         {
-            currentProperty = new IniProperty(key, value, comment) { LineNumber = lineNumber };
+            currentProperty = new IniProperty(key) { LineNumber = lineNumber };
             currentSection.AddProperty(currentProperty);
-            commentsTemp.Clear();
+            
+            values.Add(value);
+            inlineComments.Add(comment);
+            blockComments.Clear();
         }
 
         private bool IsMultiLineValueLine()
@@ -338,14 +351,30 @@ namespace DHYDRO.Common.IO.Ini
                                  ? currentLine.Substring(commentIndex + 1).Trim()
                                  : string.Empty;
 
-            AppendValueAndComment(value, comment);
+            AddValueAndComment(value, comment);
         }
 
-        private void AppendValueAndComment(string value, string comment)
+        private void AddValueAndComment(string value, string comment)
         {
-            currentProperty.Value += $"{Environment.NewLine}{value}";
-            currentProperty.Comment += $"{Environment.NewLine}{comment}";
-            commentsTemp.Clear();
+            values.Add(value);
+            inlineComments.Add(comment);
+            blockComments.Clear();
+        }
+
+        private void FinalizeCurrentProperty()
+        {
+            if (currentProperty == null || !values.Any())
+            {
+                return;
+            }
+            
+            currentProperty.Value = string.Join(Environment.NewLine, values).Trim();
+            currentProperty.Comment = string.Join(Environment.NewLine, inlineComments).Trim();
+
+            values.Clear();
+            inlineComments.Clear();
+            
+            currentProperty = null;
         }
     }
 }
