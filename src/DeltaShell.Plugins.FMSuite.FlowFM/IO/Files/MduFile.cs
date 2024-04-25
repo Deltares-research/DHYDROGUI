@@ -60,8 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             KnownProperties.NetFile,
             KnownProperties.ExtForceFile,
-            KnownProperties.MapFile__Obsolete,
-            KnownProperties.HisFile__Obsolete,
+            KnownProperties.MapFile,
+            KnownProperties.HisFile,
             KnownProperties.ThinDamFile,
             KnownProperties.FixedWeirFile,
             KnownProperties.BridgePillarFile,

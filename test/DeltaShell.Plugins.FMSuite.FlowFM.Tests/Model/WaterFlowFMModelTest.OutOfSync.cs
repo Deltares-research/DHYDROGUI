@@ -60,8 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [TestCase(KnownProperties.TrtRou, "Y")]
         [TestCase(KnownProperties.TrtDef, "test")]
         [TestCase(KnownProperties.TrtL, "test")]
-        [TestCase(KnownProperties.MapFile__Obsolete, "test")]
-        [TestCase(KnownProperties.HisFile__Obsolete, "test")]
+        [TestCase(KnownProperties.MapFile, "test")]
+        [TestCase(KnownProperties.HisFile, "test")]
         public void GivenAModelDefinitionPropertyChanged_ForADataAccessInputProperty_ShouldNotMarkOutputOutOfSync(string propertyName, string value)
         {
             using (var tempDirectory = new TemporaryDirectory())

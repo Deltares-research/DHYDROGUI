@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// </summary>
         private static readonly string[] outputFileProperties = 
         {
-            KnownProperties.HisFile__Obsolete,
-            KnownProperties.MapFile__Obsolete
+            KnownProperties.HisFile,
+            KnownProperties.MapFile
         };
 
         private readonly string mduFilePath;

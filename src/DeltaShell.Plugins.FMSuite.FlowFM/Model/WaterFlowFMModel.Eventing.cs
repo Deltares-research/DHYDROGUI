@@ -466,9 +466,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                            StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TrtL,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
-            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapFile__Obsolete,
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapFile,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
-            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.HisFile__Obsolete,
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.HisFile,
                                                            StringComparison.InvariantCultureIgnoreCase);
 
         private void TriggerPropertyChanged(string defaultEditActionName, string propertyName,

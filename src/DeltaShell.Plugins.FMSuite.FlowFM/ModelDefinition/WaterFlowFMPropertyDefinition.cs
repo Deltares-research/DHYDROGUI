@@ -39,8 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string RstInterval = "rstinterval";
         public const string StatsInterVal = "statsinterval";
         public const string ThinDamFile = "thindamfile";
-        public const string MapFile__Obsolete = "mapfile";
-        public const string HisFile__Obsolete = "hisfile";
+        public const string MapFile = "mapfile";
+        public const string HisFile = "hisfile";
         public const string FixedWeirFile = "fixedweirfile";
         public const string BridgePillarFile = "pillarfile";
         public const string FixedWeirScheme = "fixedweirscheme";
