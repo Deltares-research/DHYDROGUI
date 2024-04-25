@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
@@ -15,6 +16,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
     internal sealed class MduFileValidator
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(MduFileValidator));
+
+        /// <summary>
+        /// MDU properties that represent an output file; should not be validated for existence.
+        /// </summary>
+        private static readonly string[] outputFileProperties = 
+        {
+            KnownProperties.HisFile__Obsolete,
+            KnownProperties.MapFile__Obsolete
+        };
 
         private readonly string mduFilePath;
         private readonly WaterFlowFMModelDefinition modelDefinition;
@@ -44,7 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 CleanupFileReferencePaths(property);
                 ValidateInvalidCharsInFileReferencePaths(property);
-                ValidateNotExistingFileReferences(property);
+
+                if (!IsOutputFileProperty(property))
+                {
+                    ValidateNotExistingFileReferences(property);
+                }
             }
         }
 
@@ -95,6 +109,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                           .ToArray();
 
             return path.IndexOfAny(invalidPathChars) >= 0;
+        }
+
+        private bool IsOutputFileProperty(WaterFlowFMProperty property)
+        {
+            return outputFileProperties.Contains(
+                property.PropertyDefinition.MduPropertyName, StringComparer.OrdinalIgnoreCase);
         }
 
         private bool IsExistingFileReference(string path)

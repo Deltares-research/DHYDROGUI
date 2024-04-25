@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Validate_FilePropertiesWithNotExistingFileReferences_LogsErrorMessages()
         {
-            IEnumerable<WaterFlowFMProperty> fileProperties = GetFileProperties().ToArray();
+            IEnumerable<WaterFlowFMProperty> fileProperties = GetFileProperties().Where(p => !IsOutputFileProperty(p)).ToArray();
             fileProperties.ForEach(SetNotExistingFileReference);
 
             IEnumerable<string> expected = fileProperties.Select(GetNotExistingFileReferenceMessage).ToArray();
@@ -127,6 +127,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 () => validator.Validate());
 
             Assert.That(messages, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Validate_OutputFilePropertiesWithNotExistingFileReferences_LogsNoErrorMessages()
+        {
+            IEnumerable<WaterFlowFMProperty> fileProperties = GetFileProperties().Where(IsOutputFileProperty).ToArray();
+            fileProperties.ForEach(SetNotExistingFileReference);
+
+            IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
+                () => validator.Validate());
+
+            Assert.That(messages, Is.Empty);
         }
 
         [Test]
@@ -147,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Validate_FilePropertiesWithNotExistingFileReferences_ClearsPropertyValues()
         {
-            IEnumerable<WaterFlowFMProperty> fileProperties = GetFileProperties().ToArray();
+            IEnumerable<WaterFlowFMProperty> fileProperties = GetFileProperties().Where(p => !IsOutputFileProperty(p)).ToArray();
             fileProperties.ForEach(SetNotExistingFileReference);
 
             validator.Validate();
@@ -155,6 +167,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IEnumerable<string> propertyValues = fileProperties.Select(p => p.GetValueAsString());
 
             Assert.That(propertyValues, Is.All.Empty);
+        }
+        
+        [Test]
+        public void Validate_OutputFilePropertiesWithNotExistingFileReferences_DoesNotClearPropertyValues()
+        {
+            IEnumerable<WaterFlowFMProperty> fileProperties = GetFileProperties().Where(IsOutputFileProperty).ToArray();
+            fileProperties.ForEach(SetNotExistingFileReference);
+
+            validator.Validate();
+
+            IEnumerable<string> propertyValues = fileProperties.Select(p => p.GetValueAsString());
+
+            Assert.That(propertyValues, Is.All.Not.Empty);
         }
 
         [Test]
@@ -253,6 +278,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private IEnumerable<WaterFlowFMProperty> GetFileProperties()
         {
             return modelDefinition.Properties.Where(MduFileHelper.IsFileValued);
+        }
+
+        private bool IsOutputFileProperty(WaterFlowFMProperty property)
+        {
+            string propertyName = property.PropertyDefinition.MduPropertyName;
+
+            return propertyName.EqualsCaseInsensitive(KnownProperties.HisFile__Obsolete) ||
+                   propertyName.EqualsCaseInsensitive(KnownProperties.MapFile__Obsolete);
         }
 
         private string CreateFileName()
