@@ -987,8 +987,8 @@
 
     <PropertyGroup>
       <_CheckDeltaShellGuiExeConfigSetting>publicReleaseVersion</_CheckDeltaShellGuiExeConfigSetting>
-      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">2024.02.$(BUILD_NUMBER)</_CheckDeltaShellGuiExeConfigExpectedValue>
-      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">2024.02</_CheckDeltaShellGuiExeConfigExpectedValue>
+      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' != '' AND '$(Configuration)' != 'Release'">2024.03.$(BUILD_NUMBER)</_CheckDeltaShellGuiExeConfigExpectedValue>
+      <_CheckDeltaShellGuiExeConfigExpectedValue Condition="'$(BUILD_NUMBER)' == '' OR '$(Configuration)' == 'Release'">2024.03</_CheckDeltaShellGuiExeConfigExpectedValue>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputDeltaShellExeConfigContentCheck"
