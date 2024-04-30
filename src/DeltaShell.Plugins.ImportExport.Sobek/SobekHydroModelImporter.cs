@@ -140,6 +140,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 targetObjectWasSetExternal = true;
             }
 
+            if (Application != null && Application.Project == null)
+            {
+                Application.CreateNewProject();
+            }
+
             if (Application != null && Application.GetAllModelsInProject().Contains(targetObjectInternal))
             {
                 Application.Project.RootFolder.Items.Remove((HydroModel)targetObjectInternal);

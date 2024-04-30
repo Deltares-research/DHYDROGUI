@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -13,6 +14,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
@@ -167,6 +169,38 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             List<double> writeRestartFile = (List<double>)waterFlowFmModel.ModelDefinition.GetModelProperty(KnownProperties.RstInterval).Value;
             Assert.That(writeRestartFile.Count, Is.EqualTo(1));
             Assert.That(writeRestartFile.First(), Is.Zero);
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void GivenAHydroModelWithProjectInApplicationIsNull_WhenImportingSobekModelInWaterFlowFmModel_ThenModelIsStillImported()
+        {
+            // Arrange
+            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\demo_01.lit\1\NETWORK.TP";
+            
+            HydroModel hydroModel = CreateHydroModel();
+            var application = Substitute.For<IApplication>();
+            application.Project.Returns((Project)null);
+            var project = new Project();
+            application.When(app => app.CreateNewProject()).Do(_ => application.Project.Returns(project));
+            
+            IPartialSobekImporter importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
+            var sobekModelImporter = new SobekHydroModelImporter(false)
+            {
+                TargetObject = hydroModel,
+                PartialSobekImporter = importer,
+                PathSobek = pathToSobekModel,
+                Application = application
+            };
+
+            // Call
+            sobekModelImporter.ImportItem(pathToSobekModel, hydroModel);
+
+            // Assert
+            application.Received(1).CreateNewProject();
+            IEnumerable<WaterFlowFMModel> waterFlowFmModels = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>();
+            Assert.That(waterFlowFmModels.Count(), Is.EqualTo(1));
         }
 
         [Test]
