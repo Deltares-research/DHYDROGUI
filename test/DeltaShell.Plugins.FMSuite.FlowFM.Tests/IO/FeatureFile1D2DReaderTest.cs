@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DHYDRO.Common.Extensions;
+using GeoAPI.Extensions.Coverages;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -15,6 +20,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class FeatureFile1D2DReaderTest
     {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WaterFlowFMModel_RoughnessAndFrictionSpecifications_AreCorrectlySet()
+        {
+            // Arrange
+            var mduFilePath = TestHelper.GetTestFilePath(@"roughness\globalFriction_except_channel4_onlanes\DFM.mdu");
+            
+            // Call
+            using (var model = new WaterFlowFMModel(mduFilePath))
+            {
+                // Assert
+                Assert.That(model.RoughnessSections.Count, Is.EqualTo(2));
+                Assert.That(model.RoughnessSections[0].Name, Is.EqualTo(RoughnessDataSet.MainSectionTypeName));
+
+                IMultiDimensionalArray<INetworkLocation> roughnessLocations = model.RoughnessSections[0].RoughnessNetworkCoverage.Locations.Values;
+                string[] branchNames = roughnessLocations.Select(v => v.Branch.Name).ToArray();
+                Assert.That(branchNames, Has.Exactly(1).EqualTo("Channel_1D_1"));
+                Assert.That(branchNames, Has.Exactly(1).EqualTo("Channel_1D_4"));
+
+                Assert.That(model.ChannelFrictionDefinitions, Has.Count.EqualTo(5));
+                Assert.That(model.ChannelFrictionDefinitions, Has.Exactly(1).Matches<ChannelFrictionDefinition>(
+                                cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections &&
+                                       cfd.Channel.Name.EqualsCaseInsensitive("Channel_1D_4")));
+                Assert.That(model.ChannelFrictionDefinitions, Has.Exactly(4).Matches<ChannelFrictionDefinition>(
+                                cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.ModelSettings));
+            }
+        }
+    
+
         [Test]
         [TestCaseSource(nameof(Read1D2DFeatures_ArgNull_Cases))]
         public void Read1D2DFeatures_ArgNull_ThrowsArgumentNullException(string mduFilePath,

@@ -97,7 +97,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
 
                 if (branch is IChannel channel)
                 {
-                    SetFrictionType(channel, crossSection, frictionDefinitions);
+                    SetFrictionType(channel, crossSection, csDefinitionIniSections, frictionDefinitions);
                 }
 
                 double shift = crossSectionLocation.Shift;
@@ -119,22 +119,45 @@ namespace DeltaShell.NGHS.IO.FileReaders.CrossSectionDefinition
             return unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).Union(sharedDefinitionNameLookup.Values).ToArray();
         }
 
-        private static void SetFrictionType(IChannel channel, ICrossSection crossSection, ILookup<IChannel, ChannelFrictionDefinition> frictionDefinitions)
+        private static void SetFrictionType(IChannel channel, ICrossSection crossSection, IniSection[] csDefinitionIniSections, ILookup<IChannel, ChannelFrictionDefinition> frictionDefinitions)
         {
-            if (HasNonDefaultChannelSections(crossSection) && frictionDefinitions.Contains(channel))
+            if (HasNonDefaultChannelSections(crossSection, csDefinitionIniSections) && frictionDefinitions.Contains(channel))
             {
                 frictionDefinitions[channel].ForEach(cfd => cfd.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections);
             }
         }
 
-        private static bool HasNonDefaultChannelSections(ICrossSection crossSection)
+        private static bool HasNonDefaultChannelSections(ICrossSection crossSection, IniSection[] csDefinitionIniSections)
         {
-            var sections = crossSection.Definition.Sections;
-
-            return sections.Count > 1 
-                   || sections.Count == 1 && !sections[0].IsDefaultChannelsSection;
+            return !csDefinitionIniSections
+                    .Where(iniSec => IsReferencedCrossSectionDefinition(crossSection, iniSec))
+                    .SelectMany(GetFrictionIds)
+                    .Any(IsDefaultChannelsSectionId);
         }
 
+        private static IEnumerable<string> GetFrictionIds(IniSection csDefinitionSection)
+        {
+            IList<string> frictionIds = csDefinitionSection.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds, true, ';');
+            if (frictionIds != null)
+            {
+                foreach (string id in frictionIds)
+                {
+                    yield return id;
+                }
+            }
+
+            var frictionId = csDefinitionSection.ReadProperty<string>(DefinitionPropertySettings.FrictionId, true);
+            if (frictionId != null)
+            {
+                yield return frictionId;
+            }
+        }
+
+        private static bool IsReferencedCrossSectionDefinition(ICrossSection crossSection, IniSection csDefinitionSection)
+        {
+            return csDefinitionSection.GetPropertyValue<string>(DefinitionPropertySettings.Id.Key, string.Empty)
+                                      .EqualsCaseInsensitive(crossSection.Definition.Name);
+        }
         private static bool AddCrossSectionToNetwork(IBranch branch, ICrossSection crossSection,  double shift)
         {
             switch (branch)
