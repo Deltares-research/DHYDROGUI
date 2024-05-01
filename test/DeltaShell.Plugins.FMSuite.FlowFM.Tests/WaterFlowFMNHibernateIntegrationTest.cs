@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -38,21 +39,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class WaterFlowFMNHibernateIntegrationTest
     {
-
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void Save_FlowFM_Model_With_BridgePillars_Pillars_Are_Exported()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
-
                 app.CreateNewProject();
 
                 var bridgepillarsDsproj = "bridgePillars.dsproj";
@@ -122,15 +116,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void Load_FlowFM_Model_With_BridgePillars_Pillar_Is_Imported()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
-
                 app.CreateNewProject();
 
                 var path = TestHelper.GetTestFilePath(@"ImportProjectWithBridgePillars\ProjectWithBridgePillars.dsproj");
@@ -153,15 +141,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void SaveAndLoad_FlowFM_Model_With_BridgePillars_Pillars()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
-
                 app.CreateNewProject();
 
                 var bridgepillarsDsproj = "bridgePillars.dsproj";
@@ -227,16 +209,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void ReadWriteModelWithSpatialOperationsTest()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
-
                 app.CreateNewProject();
+
                 app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
                 
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -307,15 +284,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void GivenWaterFlowFmModel_WhenEnablingMorphologyAndSpatialOperations_ThenModelShouldLoadAndRun()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
-                
                 app.CreateNewProject();
                 app.SaveProjectAs("spatial_hibernate.dsproj");
 
@@ -356,15 +327,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(WaterFlowFMNHibernateIntegrationTest)).Location);
             if (dir == null) return;
             string dsprojName = Path.Combine(dir, "FM_Only_Save_Load_Spatial_Operation.dsproj");
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
-
                 app.CreateNewProject();
 
                 var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));               
@@ -390,6 +355,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        
+        
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
@@ -398,22 +365,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(WaterFlowFMNHibernateIntegrationTest)).Location);
             if (dir == null) return;
             string dsprojName = Path.Combine(dir, "FM_Only.dsproj");
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
                 gui.Run();
-
                 app.CreateNewProject();
 
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -449,14 +404,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             string dsprojName = "FM_Only.dsproj";
             // the temporary project is required in order to set the path on the model. Else, it saves null in the Path property of the fm model.
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
                 app.Run();
                 app.CreateNewProject();
 
@@ -469,16 +418,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var pluginsToAdd = new List<IPlugin>()
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+            };
+            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 app.Run();
 
                 app.OpenProject(dsprojName);
@@ -494,20 +444,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof (WaterFlowFMNHibernateIntegrationTest)).Location);
             if (dir == null) return;
             string dsprojName = Path.Combine(dir, "FM_Only.dsproj");
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
                 gui.Run();
                 app.CreateNewProject();
 
@@ -520,22 +459,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGuiWithRTC())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                gui.Plugins.Add(new RealTimeControlGuiPlugin());
 
                 gui.Run();
 
@@ -554,23 +480,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadFlowFMModelWithLessPluginConfigurations()
         {
             string dsprojName = "FM_Only.dsproj";
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            
+            
+            using (var gui = CreateGuiWithRTC())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                gui.Plugins.Add(new RealTimeControlGuiPlugin());
-
+                
                 gui.Run();
                 app.CreateNewProject();
 
@@ -582,29 +497,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
-
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
 
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
-                
                 gui.Run();
 
                 app.OpenProject(dsprojName);
             }
         }
         
-        // <summary>
+        /// <summary>
         /// Test if an FM model can be saved in an environment with FM and Wave plugins.
         /// Then read it in an environment that contains FM, Wave and RTC.
         /// TOOLS-22951 - Work in progress & postponed
@@ -617,23 +521,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadFlowFMModelandWaveWithDifferentPluginConfigurationsGui()
         {
             string dsprojName = "FM_Wave.dsproj";
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
-                //apps : FM+Wave
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-
-                //guis : FM+Wave
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
                 
                 gui.Run();
                 app.CreateNewProject();
@@ -645,32 +536,74 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
                 
             }
-
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            
+            using (var gui = CreateGuiWithRTC())
             {
                 var app = gui.Application;
-                //apps : FM+Wave+RTC
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-               
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-
-                //guis : FM+Wave+RTC
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new RealTimeControlGuiPlugin());
 
                 gui.Run();
 
                 app.OpenProject(dsprojName);
                 app.CloseProject();
             }
+        }
+        
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+        
+        private static IGui CreateGuiWithRTC()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                //apps : FM+Wave
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),                
+                new NetworkEditorApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+
+                //guis : FM+Wave
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),                
+                new NetworkEditorGuiPlugin(),
+                new FlowFMGuiPlugin(),
+                
+                // RTC
+                new RealTimeControlApplicationPlugin(),
+                new RealTimeControlGuiPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+        
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                //apps : FM+Wave
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                
+                //guis : FM+Wave
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new FlowFMGuiPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

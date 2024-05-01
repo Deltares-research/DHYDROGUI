@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -9,7 +10,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -40,10 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
-
                     var firstCatchment = new Catchment
                         {Name = ORIGINAL_CATCHMENT_NAME, CatchmentType = CatchmentType.GreenHouse};
 
@@ -107,9 +106,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var app = DeltaShellCoreFactory.CreateApplication())
+                using (var app = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(app);
                     
                     var firstCatchment = new Catchment
                         {Name = ORIGINAL_CATCHMENT_NAME, CatchmentType = CatchmentType.Hbv};
@@ -157,9 +155,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
                     using (var model = GetRRModel())
                     {
                         application.Project.RootFolder.Add(model);
@@ -232,9 +229,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
                     using (var model = GetRRModel())
                     {
                         application.Project.RootFolder.Add(model);
@@ -304,9 +300,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
                     using (var model = GetRRModel())
                     {
                         application.Project.RootFolder.Add(model);
@@ -376,10 +371,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 unpavedData.TotalAreaForGroundWaterCalculations = 802;
                 unpavedData.UseDifferentAreaForGroundWaterCalculations = true;
 
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
-
                     application.Project.RootFolder.Items.Add(model1);
                     path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
                 
@@ -454,9 +447,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 seepageSeries[new DateTime((int) expected * 2)] = expected * 2;
                 unpavedData.SeepageSeries = seepageSeries;
 
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
                     application.Project.RootFolder.Items.Add(model1);
                     path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
 
@@ -518,10 +510,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 
 
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
-
                     SacramentoData sacramentoData;
                     var rng = new Random();
 
@@ -579,9 +569,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
                     var boundary = new RunoffBoundary {Name = "Boundary1"};
 
                     using (var model = GetRRModel())
@@ -628,9 +617,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 var expected = 555.0;
                 PavedData pavedData;
 
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
                     TimeSeries sewerPumpVariableCapacitySeries;
                     TimeSeries mixedSewerPumpVariableCapacitySeries;
                     Function variableWaterUseFunction;
@@ -753,9 +741,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             string path = null;
             try
             {
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
                     using (var model = GetRRModel())
                     {
                         model.AreaUnit = RainfallRunoffEnums.AreaUnit.ha;
@@ -963,10 +950,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 unpavedData.BoundarySettings.UseLocalBoundaryData = useLocalBoundaryData;
 
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
-
                     application.Project.RootFolder.Items.Add(rrModel);
                     path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
                 
@@ -1013,18 +998,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             return path;
         }
 
-        private void CreateRunningDeltaShellApplication(IApplication app)
+        private static IApplication CreateRunningApplication()
         {
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new HydroModelApplicationPlugin());
-            app.Plugins.Add(new NetCdfApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-            app.Plugins.Add(new SobekImportApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new RainfallRunoffApplicationPlugin(),
+                new SobekImportApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+            };
+            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             app.Run();
             app.CreateNewProject();
+            return app;
         }
 
         /// <summary>
@@ -1040,9 +1030,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             try
             {
-                using (var application = DeltaShellCoreFactory.CreateApplication())
+                using (var application = CreateRunningApplication())
                 {
-                    CreateRunningDeltaShellApplication(application);
                     using (var model = new RainfallRunoffModel())
                     {
 

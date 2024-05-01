@@ -15,7 +15,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
@@ -41,6 +41,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
     [Category(TestCategory.WindowsForms)]
     public class FlowFMMapLayerProviderIntegrationTest
     {
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new SharpMapGisApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new FlowFMGuiPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+        
         [Test]
         [TestCase("FlowFM_clm.nc")]
         [TestCase("T2_FlowFM_clm.nc")]
@@ -52,19 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             var store = new FMClassMapFileFunctionStore(flowfmClmNc);
                 
             
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 var fmModel = new WaterFlowFMModel();
                 TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputClassMapFileStore), store);
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
+                
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
 
@@ -97,19 +106,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             var store = new FMHisFileFunctionStore(network, area)
                 {Path = TestHelper.GetTestFilePath("output_hisfiles\\pump_his.nc")};
             
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 var fmModel = new WaterFlowFMModel(){Area = area,Network = network};
                 TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store);
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
 
@@ -172,19 +173,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 {Path = TestHelper.GetTestFilePath("output_hisfiles\\culvert_his.nc")};
             var featuresByCoverage =  TypeUtils.GetField<FMHisFileFunctionStore, IDictionary<string, IEnumerable<IFeature>>>(store, "FeaturesByCoverage");
             Assert.That(featuresByCoverage["culvert"].Count(), Is.EqualTo(2));
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 var fmModel = new WaterFlowFMModel(){Area = area,Network = network};
                 TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store); 
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
                 gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
                 
@@ -323,18 +316,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var fmGuiPlugin = new FlowFMGuiPlugin();
+            var plugins = new List<IPlugin>() { fmGuiPlugin };
+            using (var gui = CreateGui(plugins))
             {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
-
                 gui.Run();
 
                 app.CreateNewProject();
@@ -360,18 +346,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var networkEditorGuiPlugin = new NetworkEditorGuiPlugin();
+            var plugins = new List<IPlugin>()
+            {
+                new FlowFMGuiPlugin(), 
+                networkEditorGuiPlugin
+            };
+            using (var gui = CreateGui(plugins))
             {
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-
-                var networkEditorGuiPlugin = new NetworkEditorGuiPlugin();
-                gui.Plugins.Add(networkEditorGuiPlugin);
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
                 gui.Run();
 
                 app.CreateNewProject();
@@ -390,22 +373,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             }
         }
 
+        
         [Test]
         public void CheckFMLayerProviderGivesAWarningWithInvalidGeometryForEnclosure()
         {
             var model = new WaterFlowFMModel();
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var fmGuiPlugin = new FlowFMGuiPlugin();
+            var plugins = new List<IPlugin>() { fmGuiPlugin };
+            using (var gui = CreateGui(plugins))
             {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
 
                 gui.Run();
 
@@ -432,6 +410,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
 
                 Assert.That(areaChildren.ToList(), Has.Count.EqualTo(1));
             }
+        }
+        
+        private static IGui CreateGui(IEnumerable<IPlugin> plugins)
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new SharpMapGisApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+            };
+            pluginsToAdd.AddRange(plugins);
+            
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
         }
 
         private static IEnumerable<object> GenerateChildrenRecursively(IMapLayerProvider provider, object baseElement)

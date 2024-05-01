@@ -1,29 +1,21 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Core;
-using DeltaShell.Dimr.Gui;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis;
-using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -106,6 +98,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var temp = new TemporaryDirectory())
             using (var app = GetConfiguredApplication())
             {
+                app.Run();
+                
                 string file = temp.CopyTestDataFileAndDirectoryToTempDirectory(Path.Combine("BackwardCompatibility", "ProjectWithHydrolinksCreatedWith2022.04.dsproj"));
 
                 // Call
@@ -124,28 +118,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private IApplication GetConfiguredApplication()
+        private static IApplication GetConfiguredApplication()
         {
-            var app = DeltaShellCoreFactory.CreateApplication();
-            AddPluginsToApplication(app);
-            return app;
-        }
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                // DeltaShell plugins
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
 
-        private static void AddPluginsToApplication(IApplication app)
-        {
-            // DeltaShell plugins
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                // D-HYDRO plugins
+                new HydroModelApplicationPlugin(),
+                new RainfallRunoffApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new SobekImportApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
 
-            // D-HYDRO plugins
-            app.Plugins.Add(new HydroModelApplicationPlugin());
-            app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new SobekImportApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-            app.Run();
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

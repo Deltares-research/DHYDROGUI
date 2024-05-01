@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -10,6 +11,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -46,17 +48,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [SetUp]
         public void SetUp()
         {
-            gui = DeltaShellCoreFactory.CreateGui();
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+            };
+            gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
             var app = gui.Application;
-
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
             
-
-            gui.Plugins.Add(new SharpMapGisGuiPlugin());
-            gui.Plugins.Add(new NetworkEditorGuiPlugin());
-            gui.Plugins.Add(new CommonToolsGuiPlugin());
             gui.Run();
 
             app.CreateNewProject();

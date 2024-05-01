@@ -14,6 +14,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -1450,22 +1451,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private IApplication GetConfiguredApplication()
         {
-            var app = DeltaShellCoreFactory.CreateApplication();
-            AddPluginsToApplication(app);
+            var app = CreateApplication();
+            app.Run();
             app.SaveProjectAs(tempProjectFilePath);
             return app;
         }
-
-        private static void AddPluginsToApplication(IApplication app)
+        
+        private static IApplication CreateApplication()
         {
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Run();
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
-
+        
         private void AddFeaturesToModel(WaterFlowFMModel model)
         {
             model.Grid = CreateNewGrid(5, 10);

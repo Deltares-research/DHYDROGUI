@@ -12,6 +12,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters;
@@ -96,9 +97,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.WindowsForms)]
         public void ShowTreeViewWithBasinAndPluginGui()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
             {
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                new NetworkEditorGuiPlugin()
+            };
+            
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 gui.Run();
 
                 var basin = new DrainageBasin
@@ -419,16 +424,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.WindowsForms)]
         public void NetworkTreeViewWithDeltaShell()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NetworkEditorApplicationPlugin()
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 IApplication app = gui.Application;
 
                 app.UserSettings["autosaveWindowLayout"] = false;
 
-                // add networkeditor plugin
-                var networkEditorPlugin = new NetworkEditorApplicationPlugin { Application = app };
-                app.Plugins.Add(networkEditorPlugin);
-                
                 // run delta shell
                 gui.Run();
 

@@ -8,8 +8,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Gui;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -43,20 +42,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
         {
             const int expectedNumberOfLayers = 17;
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
+                
                 gui.Run();
 
                 WaterFlowFMModel fmModel = AddFMModelToProject(app);
@@ -227,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
@@ -240,21 +229,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, expectedLayerName));
             }
         }
+        
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new FlowFMGuiPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+        }
 
         private static IEventedList<ILayer> SnappedLayers(IGui gui, string netFile)
         {
             IApplication app = gui.Application;
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-            gui.Plugins.Add(new CommonToolsGuiPlugin());
-            gui.Plugins.Add(new SharpMapGisGuiPlugin());
-            gui.Plugins.Add(new NetworkEditorGuiPlugin());
-            gui.Plugins.Add(new FlowFMGuiPlugin());
-
+            
             gui.Run();
 
             WaterFlowFMModel fmModel = AddFMModelToProject(app);

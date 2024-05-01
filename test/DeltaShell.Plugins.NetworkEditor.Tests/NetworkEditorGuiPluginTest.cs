@@ -20,6 +20,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -58,17 +59,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             using (CultureUtils.SwitchToCulture("nl-NL"))
             {
                 clipboardMock.GetText_Returns_SetText();
-                using (var gui = DeltaShellCoreFactory.CreateGui())
+                
+                var pluginsToAdd = new List<IPlugin>()
+                {
+                    new NetworkEditorApplicationPlugin(),
+                    new SharpMapGisApplicationPlugin(),
+                    new ProjectExplorerGuiPlugin(),
+                    new SharpMapGisGuiPlugin(),
+                    new NetworkEditorGuiPlugin(),
+                };
+                using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
                 {
                     var app = gui.Application;
-
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
 
                     gui.Run();
 
@@ -111,19 +113,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 var app = gui.Application;
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
                 
                 gui.Run();
 
@@ -157,17 +160,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void SelectingSubElementOfNetworkWithNoNetworkViewOpenDoesNotCauseException()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),                
+                new ProjectExplorerGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 var app = gui.Application;
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin()); 
-                
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
                 
                 gui.Run();
 
@@ -242,17 +245,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 var app = gui.Application;
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
                 
                 gui.Run();
 
@@ -327,17 +330,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void ShowPipeViewWithSharedCrossSection()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 var app = gui.Application;
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
 
                 gui.Run();
 

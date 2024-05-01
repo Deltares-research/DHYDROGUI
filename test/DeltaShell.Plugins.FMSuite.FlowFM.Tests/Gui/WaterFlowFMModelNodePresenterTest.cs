@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -9,6 +11,7 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.NetworkEditor;
@@ -32,15 +35,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new FlowFMGuiPlugin(),
+
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
                 
                 gui.Run();
 
@@ -55,86 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
-
-/*
-        [Test]
-        public void JumpToSubTabThroughProjectExplorerWithModelViewNotYetOpen()
-        {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
-            {
-                var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
-                gui.Run();
-
-                Action mainWindowShown = delegate
-                {
-                    var model = new WaterFlowFMModel();
-
-                    var project = app.Project;
-                    project.RootFolder.Add(model);
-
-                    var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
-                    var childItems = modelNodePresenter.GetChildNodeObjects(model, null);
-
-                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "Numerical Parameters");
-                    gui.CommandHandler.OpenViewForSelection();
-
-                    Assert.IsNotNull(gui.DocumentViews.ActiveView);
-                    Assert.AreEqual("Numerical Parameters", GetSelectedTab(GetActiveFMModelView()).Text);
-                };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        [Test]
-        public void JumpToSubTabThroughProjectExplorerWithModelViewAlreadyOpenOpen()
-        {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
-            {
-                var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
-                gui.Run();
-
-                Action mainWindowShown = delegate
-                {
-                    var model = new WaterFlowFMModel();
-
-                    var project = app.Project;
-                    project.RootFolder.Add(model);
-
-                    var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
-                    var childItems = modelNodePresenter.GetChildNodeObjects(model, null);
-
-                    // open on 'Domain' tab (first tab)
-                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "General");
-                    gui.CommandHandler.OpenViewForSelection();
-
-                    // switch to 'Numerical Parameters' tab
-                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "Numerical Parameters");
-                    gui.CommandHandler.OpenViewForSelection();
-
-                    // assert the 'Numerical Parameters' tab is in front
-                    Assert.IsNotNull(gui.DocumentViews.ActiveView);
-                    Assert.AreEqual("Numerical Parameters", GetSelectedTab(GetActiveFMModelView()).Text);
-                };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-            }
-        }
-*/
 
         [Test]
         [Category("Quarantine")]

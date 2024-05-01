@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis;
@@ -41,14 +44,16 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.Slow)]
         public void PerformOperationOnCopiedItemWorksOk()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 var app = gui.Application;
-
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
 
                 gui.Run();
 

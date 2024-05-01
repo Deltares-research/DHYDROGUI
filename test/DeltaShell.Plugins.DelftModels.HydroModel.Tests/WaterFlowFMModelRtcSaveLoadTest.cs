@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -30,15 +32,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests {
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 var projectPath = Path.Combine(tempDir,"RtcFM.dsproj");
-                using (var app = DeltaShellCoreFactory.CreateApplication())
+                var pluginsToAdd = new List<IPlugin>()
                 {
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new FlowFMApplicationPlugin());
-                    app.Plugins.Add(new HydroModelApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                    new NHibernateDaoApplicationPlugin(),
+                    new CommonToolsApplicationPlugin(),
+                    new SharpMapGisApplicationPlugin(),
+                    new FlowFMApplicationPlugin(),
+                    new HydroModelApplicationPlugin(),
+                    new NetworkEditorApplicationPlugin(),
+                    new RealTimeControlApplicationPlugin(),
+                };
+                using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+                {
                     app.Run();
                     app.SaveProjectAs(projectPath); // to initialize file repository
 

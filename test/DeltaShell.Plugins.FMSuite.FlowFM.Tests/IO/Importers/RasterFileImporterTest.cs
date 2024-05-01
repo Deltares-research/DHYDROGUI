@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Controls;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
-using DeltaShell.Gui;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -36,9 +37,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             {
                 var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
                 var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
-                using (var app = DeltaShellCoreFactory.CreateApplication())
+                var pluginsToAdd = new List<IPlugin>()
                 {
-                    app.Plugins.Add(new FlowFMApplicationPlugin());
+                    new FlowFMApplicationPlugin()
+                };
+                using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+                {
                     app.Run();
                     app.CreateNewProject();
                     
@@ -222,19 +226,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\2D_bedlevels_Tutorial2.asc");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-
             
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
                 gui.Run();
 
                 app.CreateNewProject();
@@ -268,18 +263,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\2D_bedlevels_Tutorial2.asc");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-
-
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
 
@@ -307,6 +294,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
+
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new FlowFMGuiPlugin(),
+            };
+            
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+        }
         [Test]
         [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Slow)]
@@ -315,17 +318,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\2D_bedlevels_Tutorial2.asc");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
+            
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
 
                 gui.Run();
 

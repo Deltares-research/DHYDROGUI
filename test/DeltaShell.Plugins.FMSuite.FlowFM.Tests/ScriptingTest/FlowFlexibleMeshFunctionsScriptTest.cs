@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -50,9 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
         [Ignore("This sometimes hangs on the buildserver")]
         public void ExpendingGridShouldWork()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                AddPlugins(gui);
                 gui.Run();
 
                 var script = "from Libraries.FlowFlexibleMeshFunctions import *\n" +
@@ -94,26 +94,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
             }
         }
 
-        private static void AddPlugins(IGui gui)
+        private static IGui CreateGui()
         {
-            var app = gui.Application;
-
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new NetCdfApplicationPlugin());
-            app.Plugins.Add(new ToolboxApplicationPlugin());
-            app.Plugins.Add(new ScriptingApplicationPlugin());
-
-            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-            gui.Plugins.Add(new SharpMapGisGuiPlugin());
-            gui.Plugins.Add(new CommonToolsGuiPlugin());
-            gui.Plugins.Add(new NetworkEditorGuiPlugin());
-            gui.Plugins.Add(new FlowFMGuiPlugin());
-            gui.Plugins.Add(new ToolboxGuiPlugin());
-            gui.Plugins.Add(new ScriptingGuiPlugin());
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new ToolboxApplicationPlugin(),
+                new ScriptingApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new FlowFMGuiPlugin(),
+                new ToolboxGuiPlugin(),
+                new ScriptingGuiPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

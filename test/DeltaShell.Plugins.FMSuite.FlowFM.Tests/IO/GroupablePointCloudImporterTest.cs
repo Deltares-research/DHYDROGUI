@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.NetworkEditor;
@@ -35,20 +36,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             try
             {
-                using (var gui = DeltaShellCoreFactory.CreateGui())
+                var pluginsToAdd = new List<IPlugin>()
+                {
+                    new SharpMapGisApplicationPlugin(),
+                    new NetworkEditorApplicationPlugin(),
+                    new FlowFMApplicationPlugin(),
+                    new ProjectExplorerGuiPlugin(),
+                    new SharpMapGisGuiPlugin(),
+                    new FlowFMGuiPlugin(),
+                    new NetworkEditorGuiPlugin(),
+                };
+                using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
                 {
                     var app = gui.Application;
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new FlowFMApplicationPlugin());
-
-                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                    gui.Plugins.Add(new FlowFMGuiPlugin());
-                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
                     gui.Run();
-
                     app.CreateNewProject();
                     
                     Action mainWindowShown = delegate

@@ -11,6 +11,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -18,6 +19,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
@@ -734,13 +736,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveProjectNCToNetCdfNoValues()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -777,13 +774,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectUnlocksNetCdfFiles()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -826,16 +818,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectDeletesUnsavedNetCdfFiles()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 var app = gui.Application;
                 
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
                 gui.Run();
 
                 app.CreateNewProject();
@@ -871,13 +857,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectDeletesUnsavedNetCdfFilesInSourceFolder()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -917,13 +898,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveProjectDeletesDeletedNetCdfFilesInSourceFolder()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -967,13 +943,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectKeepsDeletedNetCdfFilesInSourceFolder()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -1017,13 +988,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectRollbacksDeletedNetCdfStoreInTransaction()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -1079,13 +1045,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void CloseProjectDoesNotLockDeletedNetCdfStore()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -1142,13 +1103,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void ModifyingNetCdfFunctionStoreAfterSaveShouldCreateChangesFile()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -1198,13 +1154,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectThreeTimesWithChangesInNetCdfCopiesFile()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -1247,13 +1198,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveAsProjectTwiceWithNetCdfCopiesFile()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                gui.Application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                gui.Application.Plugins.Add(new NetCdfApplicationPlugin());
-                gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
-                gui.Application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                gui.Application.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Application.Plugins.ForEach(p => p.Application = gui.Application);
                 gui.Run();
                 
@@ -1283,6 +1229,19 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Assert.AreEqual(1, Directory.GetFiles(projectPath1 + "_data", "*.nc").Length);
                 Assert.AreEqual(1, Directory.GetFiles(projectPath2 + "_data", "*.nc").Length);
             }
+        }
+
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

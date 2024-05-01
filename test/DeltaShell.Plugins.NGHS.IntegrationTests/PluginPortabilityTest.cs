@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -64,16 +67,20 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         {
             string dsprojName = "FM_FMF1dRTCRR.dsproj";
             
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var pluginsToAdd = new List<IPlugin>()
             {
                 //apps : common
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
 
                 //apps : FM
-                app.Plugins.Add(new FlowFMApplicationPlugin());
+                new FlowFMApplicationPlugin(),
+            };
+
+            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 app.Run();
 
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
@@ -89,21 +96,24 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             }
 
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var pluginsToAdd2 = new List<IPlugin>()
             {
                 //apps : common
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
 
                 //apps : FM
-                app.Plugins.Add(new FlowFMApplicationPlugin());
+                new FlowFMApplicationPlugin(),
 
                 //apps : F1d+RTC+RR
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-
+                new RealTimeControlApplicationPlugin(),
+                new RainfallRunoffApplicationPlugin(),
+            };
+            
+            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd2).Build())
+            {
                 app.Run();
 
                 app.OpenProject(dsprojName);
@@ -121,7 +131,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 ValidateModel(savedFmModel);
                 
                 app.CloseProject();
-
             }
         }
 
@@ -141,18 +150,22 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         public void ReadSimpleFlowFmModelWithRtcWithoutAndWithWaqandWavePluginsConfiguration()
         {
             string dsprojName = "FMRTC_FMRTCWAQWAVE.dsproj";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            
+            var pluginsToAdd = new List<IPlugin>()
             {
                 //apps : common
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
 
                 //apps : FM+RTC
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-
+                new FlowFMApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+            };
+            
+            using (var app =  new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 app.Run();
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
 
@@ -166,19 +179,21 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 app.CloseProject();
             }
 
-
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var pluginsToAdd2 = new List<IPlugin>()
             {
                 //apps : common
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
 
                 //apps : FM+RTC
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-
+                new FlowFMApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+            };
+            
+            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd2).Build())
+            {
                 app.Run();
 
                 app.OpenProject(dsprojName);

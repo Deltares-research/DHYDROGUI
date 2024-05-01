@@ -19,6 +19,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
@@ -371,22 +372,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.WindowsForms), Apartment(ApartmentState.STA)]
         public void CreateNewModelWithRuralAndUrbanNetworkConnectedCheckAfterSaveLoadTheyAreStillConnectedAndYouCanOpenPipeViewInTheGui()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new FlowFMGuiPlugin(),
+                new HydroModelGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new ProjectExplorerGuiPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 var app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new HydroModelGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
 
                 gui.Run();
 
@@ -1043,29 +1046,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         
         private static IApplication GetConfiguredApplication()
         {
-            IApplication app = DeltaShellCoreFactory.CreateApplication();
-            AddPluginsToApplication(app);
+            IApplication app = CreateApplication();
+            app.Run();
+            app.CreateNewProject();
             return app;
         }
 
-        private static void AddPluginsToApplication(IApplication app)
+        private static IApplication CreateApplication()
         {
-            // DeltaShell plugins
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                // DeltaShell plugins
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new RainfallRunoffApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new SobekImportApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
 
-            // D-HYDRO plugins
-            app.Plugins.Add(new HydroModelApplicationPlugin());
-            app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new SobekImportApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-            app.Run();
-            app.CreateNewProject();
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
-        
+       
         private static string ExportToDimrXml(TemporaryDirectory tempDir, HydroModel integratedModel)
         {
             string exportFilePath = Path.Combine(tempDir.Path, "dimr.xml");

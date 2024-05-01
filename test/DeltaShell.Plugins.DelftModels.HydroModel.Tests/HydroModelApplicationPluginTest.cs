@@ -4,8 +4,7 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DeltaShell.Core;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
@@ -26,28 +25,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class HydroModelApplicationPluginTest
     {
-        private void SetUpApplication(IApplication app, ApplicationPlugin appPlugin)
+        private static IApplication CreateApplication(ApplicationPlugin appPlugin)
         {
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new NetCdfApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new ScriptingApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new ToolboxApplicationPlugin());
-            app.Plugins.Add(appPlugin);
-            app.Run();
-            app.CreateNewProject();
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ScriptingApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new ToolboxApplicationPlugin(),
+                appPlugin
+            };
+            var application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            application.Run();
+            application.CreateNewProject();
+            return application;
         }
 
         [Test]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new HydroModelApplicationPlugin();
+            using (var app = CreateApplication(appPlugin))
             {
-                var appPlugin = new HydroModelApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -61,11 +63,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_RainfallRunoff()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new RainfallRunoffApplicationPlugin();
+            using (var app = CreateApplication(appPlugin))
             {
-                var appPlugin = new RainfallRunoffApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -79,11 +79,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_RealTimeControl()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new RealTimeControlApplicationPlugin();
+            using (var app = CreateApplication(appPlugin))
             {
-                var appPlugin = new RealTimeControlApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -98,11 +96,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new FlowFMApplicationPlugin();
+            using (var app = CreateApplication(appPlugin))
             {
-                var appPlugin = new FlowFMApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 

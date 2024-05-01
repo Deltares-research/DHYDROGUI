@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -71,31 +73,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             //new RunningActivityLogAppender();
             //HACK: inside this constructor singleton magic happens, this should not be required
 
-            gui = DeltaShellCoreFactory.CreateGui();
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new RainfallRunoffApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new SobekImportApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new HydroModelGuiPlugin(),
+                new RealTimeControlGuiPlugin(),
+                new RainfallRunoffGuiPlugin(),
+                new FlowFMGuiPlugin(),
+
+            };
+            gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
             app = gui.Application;
-            
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new HydroModelApplicationPlugin());
-            app.Plugins.Add(new RealTimeControlApplicationPlugin());
-            app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-            app.Plugins.Add(new NetCdfApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new SobekImportApplicationPlugin());
-
-            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-            gui.Plugins.Add(new CommonToolsGuiPlugin());
-            gui.Plugins.Add(new SharpMapGisGuiPlugin());
-            gui.Plugins.Add(new NetworkEditorGuiPlugin());
-            gui.Plugins.Add(new HydroModelGuiPlugin());
-            gui.Plugins.Add(new RealTimeControlGuiPlugin());
-            gui.Plugins.Add(new RainfallRunoffGuiPlugin());
-            gui.Plugins.Add(new FlowFMGuiPlugin());
-
             gui.Run();
-
             app.CreateNewProject();
         }
 

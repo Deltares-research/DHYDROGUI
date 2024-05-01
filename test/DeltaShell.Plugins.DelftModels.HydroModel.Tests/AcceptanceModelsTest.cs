@@ -6,12 +6,14 @@ using System.Net;
 using System.Windows.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -68,6 +70,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
         #endregion
 
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new DimrGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new FlowFMGuiPlugin(),
+                new HydroModelGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new RealTimeControlGuiPlugin(),
+                new ScriptingGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new ToolboxGuiPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new ScriptingApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new ToolboxApplicationPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+        
         #region AcceptanceModelTests
         [TestCase("c01_Noordzeemodel/Noordzeemodel.zip", @"DeltaShell_Noordzeemodel\noordzee_2d.mdu", TestName = "c01_Noordzeemodel")]
         [TestCase("c02_Maas_40m/Maas_40m.zip", @"Maas_40m.dsproj_data\Maas_j14_5-v2\Maas_j14_5-v2.mdu", TestName = "c02_Maas_40m (Maas_40m)")]
@@ -89,32 +119,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string.Format("Failed to unzip file: {0}", localZipFilePath));
 
             // Step 3: using(running GUI) add correct plugins for Delft3DFM
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                //load the plugins
-                gui.Plugins.Add(new DimrGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new HydroModelGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new RealTimeControlGuiPlugin());
-                gui.Plugins.Add(new ScriptingGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new ToolboxGuiPlugin());
-
                 var app = gui.Application;
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 gui.Run();
 
                 Action mainWindowShown = delegate
@@ -206,36 +213,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string.Format("Failed to unzip file: {0}", localZipFilePath));
 
             // Step 3: using(running GUI) add correct plugins for SOBEK3
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                //load the plugins
-                gui.Plugins.Add(new DimrGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new HydroModelGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new RainfallRunoffGuiPlugin());
-                gui.Plugins.Add(new RealTimeControlGuiPlugin());
-                gui.Plugins.Add(new ScriptingGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new SobekImportGuiPlugin());
-                gui.Plugins.Add(new ToolboxGuiPlugin());
-                    
                 var app = gui.Application;
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                app.Plugins.Add(new SobekImportApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 gui.Run();
 
                 Action mainWindowShown = delegate
