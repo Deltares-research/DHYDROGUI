@@ -9,9 +9,8 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.ViewManager;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
@@ -159,13 +158,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         private static IGui CreateDeltaShellGuiWithMonitoringOutputView()
         {
-            var gui = DeltaShellCoreFactory.CreateGui();
-
-            gui.Application.Plugins.Add(new WaterQualityModelApplicationPlugin());
-            gui.Plugins.Add(new SharpMapGisGuiPlugin());
-
             var waterQualityModel1DGuiPlugin = new WaterQualityModelGuiPlugin();
-            gui.Plugins.Add(waterQualityModel1DGuiPlugin);
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new WaterQualityModelApplicationPlugin(),
+                new SharpMapGisGuiPlugin(),
+                waterQualityModel1DGuiPlugin
+            };
+            
+            var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
 
             gui.Run();
             gui.Application.CreateNewProject();

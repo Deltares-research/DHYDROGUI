@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
@@ -17,10 +18,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModel_WhenAddingWaveModelAsOnlyActivity_ThenWaveCommunicationsFilePathIsEmpty()
         {
             // Arrange
-            using (IApplication app = DeltaShellCoreFactory.CreateApplication())
+            var pluginsToAdd = new List<IPlugin>
             {
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                new HydroModelApplicationPlugin(),
+                new WaveApplicationPlugin(),
+            };
+            using (IApplication app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 app.Run();
 
                 using (var hydroModel = new HydroModel())
@@ -41,11 +45,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModelWithWave_WhenAddingFmModel_ThenWaveCommunicationsFilePathIsSetToSpecificRelativePath()
         {
             // Arrange
-            using (IApplication app = DeltaShellCoreFactory.CreateApplication())
+            using (IApplication app = CreateApplication())
             {
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 using (var hydroModel = new HydroModel())
@@ -70,11 +71,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModelWithWaveAndFM_WhenRemovingFmModel_ThenWaveCommunicationsFilePathIsEmpty()
         {
             // Arrange
-            using (IApplication app = DeltaShellCoreFactory.CreateApplication())
+            using (IApplication app = CreateApplication())
             {
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 using (var hydroModel = new HydroModel())
@@ -100,11 +98,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenHydroModelWithWaveAndFM_WhenChangingFmModelName_ThenWaveCommunicationsFilePathIsAdjusted()
         {
             // Arrange
-            using (IApplication app = DeltaShellCoreFactory.CreateApplication())
+            using (IApplication app = CreateApplication())
             {
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 using (var hydroModel = new HydroModel())
@@ -127,6 +122,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo($"../dflowfm/output/{finalFmModelName}_com.nc"));
                 }
             }
+        }
+        
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new HydroModelApplicationPlugin(),
+                new WaveApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

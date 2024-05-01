@@ -5,9 +5,10 @@ using System.Linq;
 using System.Threading;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -133,6 +134,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsFalse(File.Exists(Path.Combine(model.ModelSettings.WorkDirectory, "deltashell-initials.map")));
         }
 
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+                new WaterQualityModelGuiPlugin(),
+            };
+
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+
         [TestCase(@"C:\DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def")]
         [TestCase(@"C:\DeltaShell.Plugins.DelftModels.WaterQualityModel\waq_kernel\Data\Default\proc_def")]
         [Category(TestCategory.Integration)]
@@ -146,14 +161,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             try
             {
-                using (var gui = DeltaShellCoreFactory.CreateGui())
+                using (var gui = CreateGui())
                 {
                     IApplication app = gui.Application;
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                    gui.Plugins.Add(new WaterQualityModelGuiPlugin());
+                    
                     gui.Run();
 
                     var waqModel = new WaterQualityModel();
@@ -282,18 +293,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             string workingDirectoryPath = Path.Combine(tempDirectoryPath, "DeltaShell_Working_Directory");
             ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
-            var app = DeltaShellCoreFactory.CreateApplication();
+            var app = CreateApplication();
             app.UserSettings = userSettings;
-
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new WaterQualityModelApplicationPlugin());
             app.Run();
             app.CreateNewProject();
 
             return app;
+        }
+
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+            };
+
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
 
         #endregion

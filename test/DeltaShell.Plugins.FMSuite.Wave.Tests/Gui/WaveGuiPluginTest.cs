@@ -9,7 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
@@ -99,13 +99,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void DoubleClickingOutputItemProjectShouldEnableMapLayer()
         {
             string mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));
-
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            
+            var guiPlugin = new WaveGuiPlugin();
+            var pluginsToAdd = new List<IPlugin>()
             {
-                var guiPlugin = new WaveGuiPlugin();
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(guiPlugin);
-
+                new SharpMapGisGuiPlugin(),
+                guiPlugin
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 gui.Run();
                 gui.Application.CreateNewProject();
 

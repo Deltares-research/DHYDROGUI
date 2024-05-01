@@ -11,7 +11,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -83,20 +83,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Performance)]
         public void ImportLargeListOfFixedWeirsInDeltaShell()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new FlowFMGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
 
                 gui.Run();
                 app.CreateNewProject();

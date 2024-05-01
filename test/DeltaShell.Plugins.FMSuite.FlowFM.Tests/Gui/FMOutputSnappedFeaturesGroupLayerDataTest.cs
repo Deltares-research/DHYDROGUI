@@ -5,9 +5,10 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -42,23 +43,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
                 IApplication app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
-
                 gui.Run();
+                
                 app.OpenProject(filePath); // save to initialize file repository..
                 var model = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 Assert.NotNull(model);
@@ -90,20 +79,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
                 gui.Run();
 
                 app.OpenProject(filePath); // save to initialize file repository..
@@ -156,23 +134,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
                 IApplication app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
-
                 gui.Run();
 
                 app.OpenProject(filePath); // save to initialize file repository..
@@ -261,16 +225,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
             ApplicationSettingsBase application = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
-
-            var app = DeltaShellCoreFactory.CreateApplication();
+            
+            var app = CreateApplication();
             app.UserSettings = application;
             using (app)
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                
                 app.Run();
 
                 app.OpenProject(filePath); // save to initialize file repository..
@@ -337,15 +297,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             ApplicationSettingsBase application =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
-            var app = DeltaShellCoreFactory.CreateApplication();
+            var app = CreateApplication();
             app.UserSettings = application;
             using (app)
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                
                 app.Run();
 
                 app.OpenProject(filePath); // save to initialize file repository..
@@ -427,16 +383,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
             ApplicationSettingsBase application =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
-
-            var app = DeltaShellCoreFactory.CreateApplication();
+            
+            var app = CreateApplication();
             app.UserSettings = application;
             using (app)
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                
                 app.Run();
 
                 app.OpenProject(filePath); // save to initialize file repository..
@@ -496,6 +448,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 Console.WriteLine(e);
             }
+        }
+
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new FlowFMGuiPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

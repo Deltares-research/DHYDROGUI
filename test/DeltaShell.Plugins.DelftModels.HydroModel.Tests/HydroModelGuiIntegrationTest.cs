@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,13 +16,11 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
-using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -251,29 +250,29 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             new RunningActivityLogAppender();
             //HACK: inside this constructor singleton magic happens, this should not be required
 
-            gui = DeltaShellCoreFactory.CreateGui();
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new WaveApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new HydroModelGuiPlugin(),
+                new RealTimeControlGuiPlugin(),
+                new FlowFMGuiPlugin(),
+                new WaveGuiPlugin(),
+            };
+            
+            gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
             app = gui.Application;
-
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new HydroModelApplicationPlugin());
-            app.Plugins.Add(new RealTimeControlApplicationPlugin());
-            app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-            app.Plugins.Add(new NetCdfApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new WaveApplicationPlugin());
-
-            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-            gui.Plugins.Add(new CommonToolsGuiPlugin());
-            gui.Plugins.Add(new SharpMapGisGuiPlugin());
-            gui.Plugins.Add(new NetworkEditorGuiPlugin());
-            gui.Plugins.Add(new HydroModelGuiPlugin());
-            gui.Plugins.Add(new RealTimeControlGuiPlugin());
-            gui.Plugins.Add(new FlowFMGuiPlugin());
-            gui.Plugins.Add(new WaveGuiPlugin());
-
             gui.Run();
             app.CreateNewProject();
         }

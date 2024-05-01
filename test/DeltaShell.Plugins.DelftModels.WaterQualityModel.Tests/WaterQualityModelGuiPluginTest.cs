@@ -9,7 +9,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExplorer;
@@ -167,17 +167,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             string hydFile = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\flow-model\westernscheldt01.hyd");
             hydFile = TestHelper.CreateLocalCopy(hydFile);
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new SharpMapGisApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new WaterQualityModelGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                var waqGuiPlugin = new WaterQualityModelGuiPlugin();
-                gui.Plugins.Add(waqGuiPlugin);
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
                 gui.Run();
 

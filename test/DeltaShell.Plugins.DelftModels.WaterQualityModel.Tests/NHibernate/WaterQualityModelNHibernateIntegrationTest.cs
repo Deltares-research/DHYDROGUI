@@ -12,7 +12,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -32,6 +32,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
     [Category(TestCategory.Slow)]
     public class WaterQualityModelNHibernateIntegrationTest
     {
+        
+        
         /// <summary>
         /// Test if a WAQ Model can be saved in an WAQ only environment.
         /// Then read it in an environment that contains extra plugins with backwards compatibility mappings.
@@ -42,12 +44,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             var dsprojName = "WAQ_Only.dsproj";
             // the temporary project is required in order to set the path on the model. Else, it saves null in the Path property of the waq model.
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -58,15 +56,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplicationWithWAQ())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
                 app.Run();
 
                 app.OpenProject(dsprojName);
@@ -78,19 +69,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             string dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(WaterQualityModelNHibernateIntegrationTest)).Location);
             string dsprojName = Path.Combine(dir, "WAQ_Only.dsproj");
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new WaterQualityModelGuiPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-
-                gui.Plugins.Add(new WaterQualityModelGuiPlugin());
 
                 gui.Run();
 
@@ -102,22 +93,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
             }
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd2 = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new CommonToolsGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new WaterQualityModelGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd2).Build())
             {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new WaterQualityModelGuiPlugin());
-
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
+                
                 gui.Run();
 
                 app.OpenProject(dsprojName);
@@ -145,14 +137,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                var app = DeltaShellCoreFactory.CreateApplication();
+                var app = CreateApplication();
                 app.UserSettings = userSettings;
                 using (app)
                 {
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
                     app.Run();
 
                     app.CreateNewProject();
@@ -474,15 +462,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             string workingDirectoryPath = Path.Combine(tempDirectoryPath, "DeltaShell_Working_Directory");
             ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
-            var application = DeltaShellCoreFactory.CreateApplication();
+            var application = CreateApplication();
             application.UserSettings = userSettings;
-            application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            application.Plugins.Add(new CommonToolsApplicationPlugin());
-            application.Plugins.Add(new SharpMapGisApplicationPlugin());
-            application.Plugins.Add(new WaterQualityModelApplicationPlugin());
             application.Run();
 
             return application;
+        }
+        
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+        }
+        
+        private static IApplication CreateApplicationWithWAQ()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

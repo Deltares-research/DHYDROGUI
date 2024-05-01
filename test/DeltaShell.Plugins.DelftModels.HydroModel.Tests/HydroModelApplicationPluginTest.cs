@@ -5,8 +5,8 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
@@ -161,14 +161,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void GivenAnApplicationWithHydroModelAndFlowFmPluginLoaded_WhenGettingFileImporters_ThenADimrImporterShouldBeReturnedThatCanImportOnWaterFlowFMModel()
         {
-            using (var application = DeltaShellCoreFactory.CreateApplication())
+            // Given
+            var hydroModelAppPlugin = new HydroModelApplicationPlugin();
+            var pluginsToAdd = new List<IPlugin>()
             {
-                // Given
-                var hydroModelAppPlugin = new HydroModelApplicationPlugin();
-
-                application.Plugins.Add(hydroModelAppPlugin);
-                application.Plugins.Add(new FlowFMApplicationPlugin());
-
+                hydroModelAppPlugin,
+                new FlowFMApplicationPlugin(),
+            };
+            using (var application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 application.Run();
 
                 // When 

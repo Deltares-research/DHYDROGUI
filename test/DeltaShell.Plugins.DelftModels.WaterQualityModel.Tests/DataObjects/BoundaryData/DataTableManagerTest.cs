@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
@@ -475,19 +478,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
         {
             const string bacteriaCopy = "bacteria(1)";
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                var waqPlugin = new WaterQualityModelApplicationPlugin();
-
-                app.Plugins.Add(waqPlugin);
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 app.Run();
                 app.CreateNewProject();
 
@@ -538,19 +530,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
         {
             const string bacteriaCopy = "bacteria(1)";
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                var waqPlugin = new WaterQualityModelApplicationPlugin();
-
-                app.Plugins.Add(waqPlugin);
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 app.Run();
                 app.CreateNewProject();
 
@@ -599,6 +580,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 //Assert row name has been incremented by one and is now bacteria2
                 Assert.AreEqual(bacteriaCopy, dataTableManager.DataTables.Select(table => table.Name).Last());
             }
+        }
+
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new WaterQualityModelApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new ScriptingApplicationPlugin(),
+                new ToolboxApplicationPlugin(),
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

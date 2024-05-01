@@ -17,7 +17,7 @@ using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
@@ -1231,10 +1231,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [NUnit.Framework.Category(TestCategory.Wpf)]
         public void RulePropertyChangedShouldRefreshTreeView()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                InitGui(gui);
-
                 Action onShown = delegate
                 {
                     IProjectExplorer projectExplorer = gui.MainWindow.ProjectExplorer;
@@ -2535,21 +2533,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.IsEmpty(retrievedConnectionPointFromRtcModel.ParameterName, "Parameter name of the connection point should have been reset");
             Assert.IsEmpty(retrievedConnectionPointFromRtcModel.UnitName, "Unit name of the connection point should have been reset");
         }
-
-        private static void InitGui(IGui gui)
+        
+        private static IGui CreateGui()
         {
-            IApplication app = gui.Application;
-
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new RealTimeControlApplicationPlugin());
-            gui.Plugins.Add(new CommonToolsGuiPlugin());
-            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-            gui.Plugins.Add(new RealTimeControlGuiPlugin());
-
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new CommonToolsApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new CommonToolsGuiPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new RealTimeControlGuiPlugin(),
+            };
+            var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+            
             gui.Run();
-            app.CreateNewProject();
+            gui.Application.CreateNewProject();
+            return gui;
         }
-
+        
         /// <summary>
         /// This class allows to invoke the protected setter for RestartInput which is called when upgrading the model to v3.9.0.0
         /// </summary>

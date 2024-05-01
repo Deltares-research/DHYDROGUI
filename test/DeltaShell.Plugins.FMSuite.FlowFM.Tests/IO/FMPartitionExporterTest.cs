@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -23,9 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionStandAloneGrid3Domains()
         {
             const string relativePath = "partition";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -62,9 +63,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionStandAloneGrid3DomainsWithPolFile()
         {
             const string relativePath = "partition";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -101,9 +101,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingenGrid3Domains()
         {
             const string relativePath = "partition";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -143,9 +142,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingenGridWithInvalidSolverShouldNotCrash()
         {
             const string relativePath = "partition";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -186,9 +184,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingenGrid3DomainsWithPolFile()
         {
             const string relativePath = "partition";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -231,9 +228,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingen3Domains()
         {
             const string relativePath = "partition";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -276,9 +272,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingenWithIncorrectSolverShouldNotCrash()
         {
             const string relativePath = "partition";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -322,9 +317,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void PartitionHarlingen3DomainsWithPolFile()
         {
             const string relativePath = "partition";
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -369,9 +363,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             const string relativePath = "partition";
             
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -494,6 +487,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 byte[] info = new UTF8Encoding(true).GetBytes(text);
                 fs.Write(info, 0, info.Length);
             }
+        }
+
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new FlowFMApplicationPlugin(),
+            };
+
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

@@ -12,8 +12,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.Gui;
-using DeltaShell.Gui;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -69,9 +68,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         string.Format("Failed to unzip file: {0}", testCaseZipFilePath));
 
             // Step 2: using(running GUI) add correct plugins for Delft3DFM
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                LoadAllPlugins(gui);
                 gui.Run();
 
                 Action mainWindowShown = delegate
@@ -149,9 +147,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 tempDirectory.CopyDirectoryToTempDirectory(fileInfo.DirectoryName);
                 
                 // Step 2: using(running GUI) add correct plugins for Delft3DFM
-                using (var gui = DeltaShellCoreFactory.CreateGui())
+                using (var gui = CreateGui())
                 {
-                    LoadAllPlugins(gui);
                     gui.Run();
 
                     Action mainWindowShown = delegate
@@ -260,34 +257,36 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static void LoadAllPlugins(IGui gui)
+        private static IGui CreateGui()
         {
-            gui.Plugins.Add(new DimrGuiPlugin());
-            gui.Plugins.Add(new CommonToolsGuiPlugin());
-            gui.Plugins.Add(new FlowFMGuiPlugin());
-            gui.Plugins.Add(new WaveGuiPlugin());
-            gui.Plugins.Add(new HydroModelGuiPlugin());
-            gui.Plugins.Add(new NetworkEditorGuiPlugin());
-            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-            gui.Plugins.Add(new RealTimeControlGuiPlugin());
-            gui.Plugins.Add(new ScriptingGuiPlugin());
-            gui.Plugins.Add(new SharpMapGisGuiPlugin());
-            gui.Plugins.Add(new ToolboxGuiPlugin());
-            gui.Plugins.Add(new WaterQualityModelGuiPlugin());
-
-            IApplication application = gui.Application;
-            application.Plugins.Add(new CommonToolsApplicationPlugin());
-            application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            application.Plugins.Add(new FlowFMApplicationPlugin());
-            application.Plugins.Add(new WaveApplicationPlugin());
-            application.Plugins.Add(new HydroModelApplicationPlugin());
-            application.Plugins.Add(new NetCdfApplicationPlugin());
-            application.Plugins.Add(new NetworkEditorApplicationPlugin());
-            application.Plugins.Add(new RealTimeControlApplicationPlugin());
-            application.Plugins.Add(new ScriptingApplicationPlugin());
-            application.Plugins.Add(new SharpMapGisApplicationPlugin());
-            application.Plugins.Add(new ToolboxApplicationPlugin());
-            application.Plugins.Add(new WaterQualityModelApplicationPlugin());
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new DimrGuiPlugin(),
+                new CommonToolsGuiPlugin(),
+                new FlowFMGuiPlugin(),
+                new WaveGuiPlugin(),
+                new HydroModelGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new RealTimeControlGuiPlugin(),
+                new ScriptingGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                new ToolboxGuiPlugin(),
+                new WaterQualityModelGuiPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new WaveApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new ScriptingApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new ToolboxApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
         }
 
         private static void CheckIfOutputHasBeenCreated(DimrXmlConfig dimrXmlConfig, IApplication app, string rootModelOriginalDimrXmlName)

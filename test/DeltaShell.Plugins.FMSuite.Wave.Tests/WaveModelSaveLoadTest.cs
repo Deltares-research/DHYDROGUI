@@ -6,7 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadEmptyWaveModel()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadCoordinateSystem()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string path = "coords.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadImportedWaveModel()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadImportedWaveModelTwiceWithoutEventLeaks()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string path = "mdw.dsproj";
                 app.SaveProjectAs(path);
@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadWaveModelPersistsCoupledStartTime()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadWaveModelPersistsCoupledStopTime()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadWaveModelPersistsCoupledTimeStep()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void ImportModelSaveAsConfirmFilesAreCopiedAlong()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string path = "mdw_grid.dsproj";
                 const string secondPath = "target_mdw_grid.dsproj";
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void WaveAddDeleteDomainsSaveLoadTest()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string projPath = "modelSaveLoadDomainsTest.dsproj";
                 app.SaveProjectAs(projPath); // save to initialize file repository..
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void WaveBathymetryDefinitionsSaveLoadTest()
         {
-            using (var app = GetRunningApplication())
+            using (var app = CreateRunningApplication())
             {
                 const string projPath = "bathySaveLoadTest.dsproj";
                 app.SaveProjectAs(projPath); // save to initialize file repository..
@@ -431,23 +431,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
-        private static IApplication GetRunningApplication()
+        private static IApplication CreateRunningApplication()
         {
-            var app = DeltaShellCoreFactory.CreateApplication();
-            LoadRequiredPlugins(app);
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new WaveApplicationPlugin(),
+            };
+            
+            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             app.Run();
             app.CreateNewProject();
             
             return app;
-        }
-
-        private static void LoadRequiredPlugins(IApplication app)
-        {
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new WaveApplicationPlugin());
         }
 
         private static void AssertReadOnlyTextFileData(IEnumerable<ReadOnlyTextFileData> files, params string[] expDocumentNames)

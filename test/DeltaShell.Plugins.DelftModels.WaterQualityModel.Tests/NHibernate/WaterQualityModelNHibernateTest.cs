@@ -10,8 +10,8 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -446,23 +446,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(1, retrievedEntity.ModelSettings.Tolerance);
             Assert.AreEqual(true, retrievedEntity.ModelSettings.WriteIterationReport);
         }
-
+        
         [Test]
         [Category(TestCategory.Slow)]
         public void SaveAndRetrieveStandAloneWaterQualityModelWithHydFileImported()
         {
             string filePath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                var waqAppPlugin = new WaterQualityModelApplicationPlugin();
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-                app.Plugins.Add(waqAppPlugin);
-
                 app.Run();
                 app.CreateNewProject();
 
@@ -706,6 +697,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 Assert.IsTrue(((UnstructuredGridCoverage) model.InitialConditions[i]).Grid.Cells.Count > 0);
             }
+        }
+        
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new ToolboxApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

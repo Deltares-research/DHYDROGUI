@@ -8,7 +8,7 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
@@ -286,10 +286,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
         private static IApplication GetRunningApplication(string savePath)
         {
-            var app = DeltaShellCoreFactory.CreateApplication();
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+            };
+            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            
             app.Run();
             app.CreateNewProject();
             app.SaveProjectAs(savePath);

@@ -6,7 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
             try
             {
-                using (var app = GetRunningApplication(savePath))
+                using (var app = CreateRunningApplication(savePath))
                 {
                     importer = new WaveGridFileImporter("Waves Model", () => app.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>());
 
@@ -300,16 +300,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
             Assert.IsTrue(succes);
         }
 
-        private static IApplication GetRunningApplication(string savePath)
+        private static IApplication CreateRunningApplication(string savePath)
         {
-            var app = DeltaShellCoreFactory.CreateApplication();
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            var app = CreateApplication();
             app.Run();
             app.CreateNewProject();
             app.SaveProjectAs(savePath);
             return app;
+        }
+
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
 
         private static CurvilinearGrid CreateCurvilinearGrid(int length, int width)

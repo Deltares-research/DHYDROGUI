@@ -16,7 +16,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
@@ -109,18 +109,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(mduPath);
-
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            
+            var fmGuiPlugin = new FlowFMGuiPlugin();
+            var pluginsToAdd = new List<IPlugin>()
             {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                fmGuiPlugin,
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
 
                 gui.Run();
                 app.CreateNewProject();
@@ -159,19 +161,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void CheckFmBridgePillarLayerIsCreated()
         {
             var model = new WaterFlowFMModel();
+            var networkEditorGuiPlugin = new NetworkEditorGuiPlugin();
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),                
+                networkEditorGuiPlugin,
+                new SharpMapGisGuiPlugin(),
+                new FlowFMGuiPlugin(),
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-
-                var networkEditorGuiPlugin = new NetworkEditorGuiPlugin();
-                gui.Plugins.Add(networkEditorGuiPlugin);
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
+                
                 gui.Run();
                 app.CreateNewProject();
 
@@ -277,19 +281,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void CheckFmLayerProviderGivesAWarningWithInvalidGeometryForEnclosure()
         {
             var model = new WaterFlowFMModel();
-
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            
+            var fmGuiPlugin = new FlowFMGuiPlugin();
+            var pluginsToAdd = new List<IPlugin>()
             {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new SharpMapGisGuiPlugin(),
+                fmGuiPlugin,
 
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 IApplication app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
-
+                
                 gui.Run();
                 app.CreateNewProject();
 

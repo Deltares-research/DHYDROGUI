@@ -5,7 +5,7 @@ using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -66,23 +66,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var applicationSettingsMock = Substitute.For<ApplicationSettingsBase>();
             applicationSettingsMock["WorkDirectory"] = workDir;
 
-            var app = DeltaShellCoreFactory.CreateApplication();
-            app.UserSettings = applicationSettingsMock;
-
-            AddPluginsToApplication(app);
-            app.Plugins.Add(new HydroModelApplicationPlugin());
+            var app = CreateApplication();
+            app.UserSettings = applicationSettingsMock;;
+            
             app.Run();
             return app;
         }
-
-        private static void AddPluginsToApplication(IApplication app)
+        private static IApplication CreateApplication()
         {
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new WaveApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new WaveApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
 
         private static void AssertExpectedFolderStructure(DirectoryInfo modelWaveFolder, DirectoryInfo expectedWaveFolder)

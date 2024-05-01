@@ -18,7 +18,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -1694,10 +1694,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             applicationSettingsMock.Replay();
 
-            var app = DeltaShellCoreFactory.CreateApplication();
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            
+            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             app.UserSettings = applicationSettingsMock;
             
-            AddPluginsToApplication(app);
             app.Run();
             app.CreateNewProject();
             return app;
@@ -1710,24 +1718,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             applicationSettingsMock.Replay();
 
-            var app = DeltaShellCoreFactory.CreateApplication();
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+            };
+            
+            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             app.UserSettings = applicationSettingsMock;
 
-            AddPluginsToApplication(app);
-            app.Plugins.Add(new HydroModelApplicationPlugin());
             app.Run();
             app.CreateNewProject();
             return app;
         }
-
-        private static void AddPluginsToApplication(IApplication app)
-        {
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-        }
+        
 
         private void AddFeaturesToModel(WaterFlowFMModel model)
         {

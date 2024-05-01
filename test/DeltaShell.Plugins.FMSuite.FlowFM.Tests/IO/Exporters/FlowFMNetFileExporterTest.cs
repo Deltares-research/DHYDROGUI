@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
@@ -56,9 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             }
 
             // get running DeltaShell application
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -155,9 +155,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             string dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("output_mapfiles", "dummy.nc"));
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -224,9 +223,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             }
 
             // get running DeltaShell application
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
                 app.CreateNewProject();
@@ -278,6 +276,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             // Delete the dummy file again
             File.Delete(dummyFilePath);
             Assert.That(File.Exists(dummyFilePath), Is.False);
+        }
+
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new FlowFMApplicationPlugin(),
+            };
+            // get running DeltaShell application
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }

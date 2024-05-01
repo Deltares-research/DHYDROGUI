@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -9,8 +10,8 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DelftTools.Utils.Validation;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -38,12 +39,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [SetUp]
         public void SetUp()
         {
-            app = DeltaShellCoreFactory.CreateApplication();
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
 
         [TearDown]

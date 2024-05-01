@@ -9,7 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -212,16 +212,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IApplication GetApplication()
         {
-            IApplication app = DeltaShellCoreFactory.CreateApplication();
-
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new RealTimeControlApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new HydroModelApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+            };
+            
+            var app= new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
             app.Run();
 
             return app;

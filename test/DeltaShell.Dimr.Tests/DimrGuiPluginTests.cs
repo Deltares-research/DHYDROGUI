@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Dimr.Gui.Properties;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -16,10 +18,13 @@ namespace DeltaShell.Dimr.Tests
         [Test]
         public void TestDimrGuiPlugin()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var dimrGuiPlugin = new DimrGuiPlugin();
+            var pluginsToAdd = new List<IPlugin>()
             {
-                var dimrGuiPlugin = new DimrGuiPlugin();
-                gui.Plugins.Add(dimrGuiPlugin);
+                dimrGuiPlugin
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
+            {
                 gui.Run();
                 Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
                 Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);

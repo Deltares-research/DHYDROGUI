@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.GroupableFeatures;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
@@ -41,18 +42,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             importPath = TestHelper.CreateLocalCopy(importPath);
             Assert.IsTrue(File.Exists(importPath));
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridge pillars in the Importer/Exporter.
 
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
-
                 app.CreateNewProject();
                 
                 //Setup new model and pillars.
@@ -264,18 +259,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
             FileUtils.DeleteIfExists(exportPath);
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridgepillars in the Importer/Exporter.
 
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
-
                 app.CreateNewProject();
 
                 //Setup new model and pillars.
@@ -369,18 +358,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
             FileUtils.DeleteIfExists(exportPath);
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridgepillars in the Importer/Exporter.
 
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Run();
-
                 app.CreateNewProject();
                 
                 //Setup new model and pillars.
@@ -508,5 +491,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         #endregion
+
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+            };
+
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+        }
     }
 }

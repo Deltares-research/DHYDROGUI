@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -47,35 +46,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             ScriptHost.AdditionalSearchPaths.Clear();
         }
-
-        private static void SetupPluginsForGui(IGui gui)
-        {
-            gui.Plugins.Add(new CommonToolsGuiPlugin()); // todo remove
-        }
-
-        private static void SetupPluginsForApp(IApplication app)
-        {
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new HydroModelApplicationPlugin());
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new NetCdfApplicationPlugin());
-            app.Plugins.Add(new ScriptingApplicationPlugin());
-            app.Plugins.Add(new RealTimeControlApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new ToolboxApplicationPlugin());
-        }
-
+        
         private static void LoadAndRunPythonScript(string path, Action<IEnumerable<KeyValuePair<string, object>>> checks, IDictionary<string, object> variables = null)
         {
             string file = TestHelper.GetTestFilePath(path);
 
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new ScriptingApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new ToolboxApplicationPlugin(),
+                new CommonToolsGuiPlugin() // todo remove
+            };
+            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
             {
                 IApplication app = gui.Application;
-                SetupPluginsForApp(app);
-                SetupPluginsForGui(gui);
                 Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
 
                 gui.Run();

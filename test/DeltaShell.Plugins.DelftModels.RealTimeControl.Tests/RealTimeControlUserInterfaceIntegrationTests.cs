@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -18,6 +20,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     [TestFixture]
     public class RealTimeControlUserInterfaceIntegrationTests
     {
+
+        private static IGui CreateGui()
+        {
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new ProjectExplorerGuiPlugin(),
+            };
+            return new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build();
+        }
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
@@ -27,28 +43,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var _ = new InputItemShape();
 
             var path = "SaveAndLoad.dsproj";
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = CreateGui())
             {
-                IApplication application = gui.Application;
-                application.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                application.Plugins.Add(new CommonToolsApplicationPlugin());
-                application.Plugins.Add(new SharpMapGisApplicationPlugin());
-                application.Plugins.Add(new NetworkEditorApplicationPlugin());
-                application.Plugins.Add(new RealTimeControlApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                IApplication app = gui.Application;
                 gui.Run();
 
-                application.CreateNewProject();
+                app.CreateNewProject();
 
-                Project project = application.Project;
+                Project project = app.Project;
 
                 project.RootFolder.Add(RealTimeControlTestHelper.GenerateTestModel(false));
 
-                application.SaveProjectAs(path);
-                application.CloseProject();
+                app.SaveProjectAs(path);
+                app.CloseProject();
 
-                application.OpenProject(path);
-                project = application.Project;
+                app.OpenProject(path);
+                project = app.Project;
 
                 IModel model = project.RootFolder.Models.First();
 

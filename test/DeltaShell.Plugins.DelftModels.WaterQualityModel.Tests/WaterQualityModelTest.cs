@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -1603,7 +1604,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.That(model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedEndTime));
             }
         }
-
+        
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
@@ -1617,19 +1618,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var expectedStartTime = "2014-01-01 00:00:00";
             var expectedEndTime = "2014-01-08 00:00:00";
 
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            using (var app = CreateApplication())
             {
-                var waqPlugin = new WaterQualityModelApplicationPlugin();
-
-                app.Plugins.Add(waqPlugin);
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 app.Run();
                 app.CreateNewProject();
 
@@ -1918,5 +1908,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         #endregion
+        
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new WaterQualityModelApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new ScriptingApplicationPlugin(),
+                new ToolboxApplicationPlugin(),
+
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+        }
     }
 }

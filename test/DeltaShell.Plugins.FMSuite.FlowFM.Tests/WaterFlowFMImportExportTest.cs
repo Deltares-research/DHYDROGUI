@@ -12,7 +12,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -687,12 +687,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private IApplication GetConfiguredApplication(string savePath)
         {
-            var app = DeltaShellCoreFactory.CreateApplication();
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            var pluginsToAdd = new List<IPlugin>()
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new FlowFMApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            
             app.Run();
             app.CreateNewProject();
             app.SaveProjectAs(Path.Combine(savePath));

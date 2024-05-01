@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
+using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -87,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.True(firstComponent.Values.OfType<Double>().Any());
             }
         }
-
+        
         [Test]
         [Category(TestCategory.Slow)]
         public void GivenValidWaqModel_WhenClearingOutput_ThenOutputDataItemsAndFilesAreNotRemovedFromModel()
@@ -117,14 +121,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             try
             {
-                using (var app = DeltaShellCoreFactory.CreateApplication())
+                using (var app = CreateApplication())
                 {
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-
                     app.Run();
                     app.CreateNewProject();
                     app.SaveProjectAs(Path.Combine(testDir, "BasicWaqProject.dsproj"));
@@ -385,6 +383,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Assert.IsNull(lazyMapFileFunctionStore.Path);
             }
+        }
+        
+        private static IApplication CreateApplication()
+        {
+            var pluginsToAdd = new List<IPlugin>
+            {
+                new NHibernateDaoApplicationPlugin(),
+                new CommonToolsApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new WaterQualityModelApplicationPlugin(),
+            };
+            return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
     }
 }
