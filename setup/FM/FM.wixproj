@@ -26,7 +26,6 @@
     <ReuseCabinetCache>True</ReuseCabinetCache>
     <SuppressValidation>True</SuppressValidation>
     <RunWixToolsOutOfProc Condition=" '$(PROCESSOR_ARCHITECTURE)'!='x86' ">true</RunWixToolsOutOfProc>
-    <INCLUDE_BUILD_NUMBER Condition="'$(INCLUDE_BUILD_NUMBER)' == ''">false</INCLUDE_BUILD_NUMBER>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -49,7 +48,7 @@
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);MyProductCode=$(MyProductCode);MyExtras=$(MyExtras);MyPluginComponents=$(MyPluginComponents);MyAdditionalFilesComponents=$(MyAdditionalFilesComponents);UtilitiesMenuShortcutsGUID=$(UtilitiesMenuShortcutsGUID);ManualsMenuDSUMShortcutGUID=$(ManualsMenuDSUMShortcutGUID);ManualsMenuShortcutGUID=$(ManualsMenuShortcutGUID);ProgramGroupMenuDir_ComponentGUID=$(ProgramGroupMenuDir_ComponentGUID);UninstallShortcutComponentGUID=$(UninstallShortcutComponentGUID);DeltaShellGuiExeConfigGUID=$(DeltaShellGuiExeConfigGUID);PluginApplicationIconGUID=$(PluginApplicationIconGUID);INCLUDE_BUILD_NUMBER=$(INCLUDE_BUILD_NUMBER)</DefineConstants>
+    <DefineConstants>$(DefineConstants);MyProductCode=$(MyProductCode);MyExtras=$(MyExtras);MyPluginComponents=$(MyPluginComponents);MyAdditionalFilesComponents=$(MyAdditionalFilesComponents);UtilitiesMenuShortcutsGUID=$(UtilitiesMenuShortcutsGUID);ManualsMenuDSUMShortcutGUID=$(ManualsMenuDSUMShortcutGUID);ManualsMenuShortcutGUID=$(ManualsMenuShortcutGUID);ProgramGroupMenuDir_ComponentGUID=$(ProgramGroupMenuDir_ComponentGUID);UninstallShortcutComponentGUID=$(UninstallShortcutComponentGUID);DeltaShellGuiExeConfigGUID=$(DeltaShellGuiExeConfigGUID);PluginApplicationIconGUID=$(PluginApplicationIconGUID)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Dimr\Manuals\DIMRManuals.wxi">

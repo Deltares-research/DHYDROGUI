@@ -74,7 +74,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
       <xsl:comment>Added by Peelen transform</xsl:comment>
-      <xsl:processing-instruction name="if">$(var.INCLUDE_BUILD_NUMBER)</xsl:processing-instruction>
+      <xsl:processing-instruction name="ifdef">env.INCLUDE_BUILD_NUMBER</xsl:processing-instruction>
       <xsl:processing-instruction name="ifdef">env.BUILD_NUMBER</xsl:processing-instruction>
       <Shortcut
   			Id="ProgramMenuDeltaShellExeShortcut"

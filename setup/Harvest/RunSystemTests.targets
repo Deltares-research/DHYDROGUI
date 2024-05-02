@@ -255,7 +255,9 @@
 
     <PropertyGroup>
       <_CheckKernelsFolder>$(_CheckPluginsFolder)\DeltaShell.Dimr\kernels\x64</_CheckKernelsFolder>
-      <_CheckDimrFolder>$(_CheckKernelsFolder)\dimr\bin</_CheckDimrFolder>
+      <_CheckKernelsBinFolder>$(_CheckKernelsFolder)\bin</_CheckKernelsBinFolder>
+      <_CheckKernelsLibFolder>$(_CheckKernelsFolder)\lib</_CheckKernelsLibFolder>
+      <_CheckKernelsShareFolder>$(_CheckKernelsFolder)\share</_CheckKernelsShareFolder>
     </PropertyGroup>
     <MsBuild Projects="$(MSBuildProjectFullPath)"
              Targets="TeamcityTemplateOutputCheckWithExpectation"
@@ -269,12 +271,28 @@
              Targets="TeamcityTemplateOutputCheckWithExpectation"
              Properties=" Package=$(_Package);
                           File=$(_File);
-                          Key=Dimr folder;
-                          KeyValue=$(_CheckDimrFolder);"
+                          Key=Kernels bin folder;
+                          KeyValue=$(_CheckKernelsBinFolder);"
+             ContinueOnError="WarnAndContinue"/>
+             
+     <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=Kernels lib folder;
+                          KeyValue=$(_CheckKernelsLibFolder);"
+             ContinueOnError="WarnAndContinue"/>
+             
+     <MsBuild Projects="$(MSBuildProjectFullPath)"
+             Targets="TeamcityTemplateOutputCheckWithExpectation"
+             Properties=" Package=$(_Package);
+                          File=$(_File);
+                          Key=Kernels share folder;
+                          KeyValue=$(_CheckKernelsShareFolder);"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
-      <_CheckDimrDllFile>dimr_dll.dll</_CheckDimrDllFile>
+      <_CheckDimrDllFile>dimr.dll</_CheckDimrDllFile>
     </PropertyGroup>
 
     <MsBuild Projects="$(MSBuildProjectFullPath)"
@@ -283,19 +301,8 @@
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckDimrDllFile);
-                          KeyValue=$(_CheckDimrFolder)\$(_CheckDimrDllFile);
+                          KeyValue=$(_CheckKernelsLibFolder)\$(_CheckDimrDllFile);
                           FileVersion=$(_CheckDimrDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>
-
-    <PropertyGroup>
-      <_CheckFmFolder>$(_CheckKernelsFolder)\dflowfm\bin</_CheckFmFolder>
-    </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithExpectation"
-             Properties=" Package=$(_Package);
-                          File=$(_File);
-                          Key=Fm kernel folder;
-                          KeyValue=$(_CheckFmFolder)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -308,19 +315,8 @@
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckFmDllFile);
-                          KeyValue=$(_CheckFmFolder)\$(_CheckFmDllFile);
+                          KeyValue=$(_CheckKernelsLibFolder)\$(_CheckFmDllFile);
                           FileVersion=$(_CheckFmDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>
-
-    <PropertyGroup>
-      <_CheckRtcFolder>$(_CheckKernelsFolder)\drtc\bin</_CheckRtcFolder>
-    </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithExpectation"
-             Properties=" Package=$(_Package);
-                          File=$(_File);
-                          Key=RTC kernel folder;
-                          KeyValue=$(_CheckRtcFolder)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -333,21 +329,8 @@
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckRtcDllFile);
-                          KeyValue=$(_CheckRtcFolder)\$(_CheckRtcDllFile);
+                          KeyValue=$(_CheckKernelsLibFolder)\$(_CheckRtcDllFile);
                           FileVersion=$(_CheckRtcDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>
-
-
-    <PropertyGroup>
-      <_CheckRrFolder>$(_CheckKernelsFolder)\drr\bin</_CheckRrFolder>
-    </PropertyGroup>
-
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithExpectation"
-             Properties=" Package=$(_Package);
-                          File=$(_File);
-                          Key=RR kernel folder;
-                          KeyValue=$(_CheckRrFolder)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
@@ -359,19 +342,8 @@
                           File=$(_VersionsFile);
                           TestTypeName=fileversion;
                           Key=$(_CheckRrDllFile);
-                          KeyValue=$(_CheckRrFolder)\$(_CheckRrDllFile);
+                          KeyValue=$(_CheckKernelsLibFolder)\$(_CheckRrDllFile);
                           FileVersion=$(_CheckRrDllFileVersion)"
-             ContinueOnError="WarnAndContinue"/>
-
-    <PropertyGroup>
-      <_CheckKernelsSharedFolder>$(_CheckKernelsFolder)\share\bin</_CheckKernelsSharedFolder>
-    </PropertyGroup>
-    <MsBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="TeamcityTemplateOutputCheckWithExpectation"
-             Properties=" Package=$(_Package);
-                          File=$(_File);
-                          Key=Kernel shared folder;
-                          KeyValue=$(_CheckKernelsSharedFolder)"
              ContinueOnError="WarnAndContinue"/>
 
     <PropertyGroup>
