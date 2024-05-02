@@ -172,7 +172,7 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
         <Directory Id="DeltaresDir" Name="Deltares">
-          <?if $(var.INCLUDE_BUILD_NUMBER)?>
+          <?ifdef env.INCLUDE_BUILD_NUMBER?>
             <?ifdef env.BUILD_NUMBER?>
               <Directory Id="INSTALLDIR" Name="!(loc.FullProductName) ($(env.BUILD_NUMBER))"/>
             <?else?>
@@ -206,7 +206,7 @@
     <DirectoryRef Id="TARGETDIR">
       <Component Id="UninstallShortcutComponent" Guid="$(var.UninstallShortcutComponentGUID)">
         <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="InstalledUninstallerShortcut" Type="integer" Value="1" />
-        <?if $(var.INCLUDE_BUILD_NUMBER)?>
+        <?ifdef env.INCLUDE_BUILD_NUMBER?>
           <?ifdef env.BUILD_NUMBER?>
           <Shortcut Id="UninstallProduct"
                     Name="Uninstall !(loc.FullProductName) ($(env.BUILD_NUMBER))"
