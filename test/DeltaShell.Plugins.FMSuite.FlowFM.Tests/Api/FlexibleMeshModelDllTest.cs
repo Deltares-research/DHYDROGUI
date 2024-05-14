@@ -246,7 +246,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Assert.IsNotNull(waterLevels);
 
-                //Assert.AreEqual(waterLevels.Length, model.Grid.Cells.Count);
                 Assert.AreEqual(1, waterLevels.Length); //dimr getvar can only get 1 value!
             }
             finally

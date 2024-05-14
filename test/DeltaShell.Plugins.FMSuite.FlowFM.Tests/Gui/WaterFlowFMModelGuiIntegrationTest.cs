@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
@@ -41,14 +40,12 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
-using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
-using SharpMap.SpatialOperations;
 using SharpMap.UI.Tools;
 using Control = System.Windows.Controls.Control;
 
@@ -574,90 +571,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        /// <summary>
-        /// Test for issue TOOLS_22977, Not working test only reproducing scenario
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Wpf)]
-        [Category(TestCategory.WorkInProgress)]
-        [Ignore("Ignored.")]
-        public void TOOLS_22977Test()
-        {
-            var sharpMapGisGuiPlugin = new SharpMapGisGuiPlugin();
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new CommonToolsGuiPlugin(),
-                new FlowFMGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                sharpMapGisGuiPlugin
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                IApplication app = gui.Application;
-                gui.Run();
-
-                app.CreateNewProject();
-
-                string testFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-                testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-
-                var model = new WaterFlowFMModel();
-                model.ImportFromMdu(testFilePath);
-
-                gui.Application.Project.RootFolder.Add(model);
-
-                Assert.IsTrue(gui.DocumentViewsResolver.OpenViewForData(model, typeof(ProjectItemMapView)));
-                var mapView = gui.DocumentViews.ActiveView as ProjectItemMapView;
-                mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.SpatialData.Bathymetry), true);
-                sharpMapGisGuiPlugin.FocusSpatialOperationView();
-
-                SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                    model.GetDataItemByValue(model.SpatialData.Bathymetry));
-
-                Assert.IsNotNull(valueConverter.SpatialOperationSet);
-
-                var sampleSet = new SpatialOperationSet();
-                valueConverter.SpatialOperationSet.AddOperation(sampleSet);
-
-                string samplesPath = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
-                var importSamples = new ImportSamplesOperation(false)
-                {
-                    FilePath = samplesPath,
-                    Name = "Test import"
-                };
-                Assert.IsNotNull(sampleSet.AddOperation(importSamples));
-
-                var interpolate = new InterpolateOperation
-                {
-                    InterpolationMethod = SpatialInterpolationMethod.Triangulation,
-                    OperationType = PointwiseOperationType.OverwriteWhereMissing
-                };
-                interpolate.LinkInput(InterpolateOperation.InputSamplesName, importSamples.Output);
-
-                valueConverter.SpatialOperationSet.AddOperation(interpolate);
-                valueConverter.SpatialOperationSet.Execute();
-                Action onShown = delegate
-                {
-                    interpolate.OperationType = PointwiseOperationType.Overwrite;
-                    var layer = (SpatialOperationSetLayer) mapView.SpatialOperationLayer;
-                    valueConverter.SpatialOperationSet.Execute();
-
-                    int beforeRefreshThreadCount = Process.GetCurrentProcess().Threads.Count;
-                    TestHelper.AssertIsFasterThan(4000, layer.ShowOutputOnly);
-                    Thread.Sleep(3000);
-                    Assert.AreEqual(beforeRefreshThreadCount, Process.GetCurrentProcess().Threads.Count);
-                };
-
-                WpfTestHelper.ShowModal((Control) gui.MainWindow, onShown);
             }
         }
 
@@ -1187,35 +1100,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     }
                 }
             }).SetName("Second boundary set empty");
-
-            // [D3DFMIQ-1276]
-            // Disabling following testcase as this causes an GDI+ exception on the build agent which cannot be easily solved. 
-            // According to sources on the internet, the exception is caused by MultiThreading access to a certain source.
-            // However, setting the test with the STAThread or Apartment(ApartmentState.STA) attribute does not resolve this issue on the agent.
-            // Locally this test runs fine.
-
-            //            var boundaryConditionSetWithoutMatchingBoundaryCondition = new BoundaryConditionSet
-            //            {
-            //                Feature = new Feature2D
-            //                {
-            //                    Name = "Second Set",
-            //                    Geometry = new LineString(new[]
-            //                    {
-            //                        new Coordinate(0, 0),
-            //                        new Coordinate(1, 0),
-            //                        new Coordinate(2, 0)
-            //                    })
-            //                }
-            //            };
-            //            boundaryConditionSetWithoutMatchingBoundaryCondition.BoundaryConditions.AddRange(new[]
-            //            {
-            //                new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
-            //            });
-            //            yield return new TestCaseData(new List<BoundaryConditionSet>
-            //            {
-            //                defaultBoundaryConditionsSet,
-            //                boundaryConditionSetWithoutMatchingBoundaryCondition
-            //            }).SetName("Second boundary set, no matching flow boundary condition");
 
             var boundaryConditionSetWithMatchingBoundaryCondition = new BoundaryConditionSet
             {

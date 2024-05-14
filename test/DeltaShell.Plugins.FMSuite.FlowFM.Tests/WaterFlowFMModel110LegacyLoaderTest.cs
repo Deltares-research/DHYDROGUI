@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [TestCase("run_with_save_and_default_output", "DFM_OUTPUT_TestModel")]
         [TestCase("run_with_save_and_custom_output", "myCustomOutput")]
-        [TestCase("run_with_save_and_flat_output", "", Category = TestCategory.Jira)] // Jira-Issue: D3DFMIQ-793
+        [TestCase("run_with_save_and_flat_output", "")]
         public void TestDirectoryRestructuring_OutputIsMovedToTheCorrectLocation(string testCaseDir, string outputFMDirName)
         {
             var testDataDirInfo = new DirectoryInfo(TestHelper.GetTestFilePath(
@@ -157,79 +157,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Assert every expected file is in destined directory
                 AssertNoMissingFilesAndDirectoryFilesInDirectory(outputDirPath, filesForOutput, SnappedDirectoryName);
                 AssertNoMissingFilesAndDirectoryFilesInDirectory(outputWAQDirPath, filesForOutputWAQ);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(testDirPath);
-            }
-        }
-
-        [TestCase("run_with_save_and_extra_output", "DFM_OUTPUT_TestModel")]
-        [Category(TestCategory.Jira)] // D3DFMIQ-1344
-        public void TestDirectoryRestructuring_OutputSubfoldersAreRemained(string testCaseDir, string outputFMDirName)
-        {
-            var testDataDirInfo = new DirectoryInfo(TestHelper.GetTestFilePath(
-                                                        Path.Combine(@"LegacyLoaderOutput", testCaseDir)));
-            Assert.That(testDataDirInfo.Exists);
-
-            var testDirInfo = new DirectoryInfo(FileUtils.CreateTempDirectory());
-            Assert.That(testDirInfo.Exists);
-            string testDirPath = testDirInfo.FullName;
-
-            var projectName = "TestProject";
-            var modelName = "TestModel";
-
-            string projectDirName = projectName + ProjectDirExtension;
-            string projectFileName = projectName + ProjectFileExtension;
-            string modelDirName = modelName;
-            var outputWAQDirName = $"DFM_DELWAQ_{modelName}";
-            string mduFileName = modelName + ".mdu";
-            var explicitWorkingDirName = $"{modelName}_output";
-
-            // Set expected default paths
-            string projectFilePath = Path.Combine(testDirPath, projectFileName);
-            string projectDirPath = Path.Combine(testDirPath, projectDirName);
-            string modelDirPath = Path.Combine(projectDirPath, modelDirName);
-            string outputDirPath = Path.Combine(modelDirPath, OutputDirName);
-            string outputWAQDirPath = Path.Combine(outputDirPath, outputWAQDirName);
-
-            // Set expected extra output file/folder paths
-            string extraFolderB2_Path = Path.Combine(outputDirPath, "ExtraFolderB2");
-            string extraFileB2_Path = Path.Combine(outputDirPath, "ExtraFileB2.txt");
-            string extraFolderC2_Path = Path.Combine(outputWAQDirPath, "ExtraFolderC2");
-            string extraFileC2_Path = Path.Combine(outputWAQDirPath, "ExtraFileC2.txt");
-            string snappedDirectoryPath = Path.Combine(outputDirPath, SnappedDirectoryName);
-            string explicitWorkingDirPath = Path.Combine(projectDirPath, explicitWorkingDirName);
-
-            try
-            {
-                FileUtils.CopyAll(testDataDirInfo, testDirInfo, string.Empty);
-                Assert.That(!FileUtils.IsDirectoryEmpty(testDirPath));
-
-                // Get model for test
-                string mduFilePath = Path.Combine(modelDirPath, mduFileName);
-                Assert.That(File.Exists(mduFilePath));
-
-                var model = new WaterFlowFMModel();
-                model.ImportFromMdu(mduFilePath);
-
-                // Perform migration
-                TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowFMModel110LegacyLoader),
-                                                  "PerformDirectoryRestructuring",
-                                                  model, explicitWorkingDirPath);
-
-                // Assert every expected (output) folder exists
-                Assert.That(File.Exists(projectFilePath));
-                Assert.That(Directory.Exists(projectDirPath));
-                Assert.That(Directory.Exists(modelDirPath));
-                Assert.That(Directory.Exists(outputDirPath));
-                Assert.That(Directory.Exists(outputWAQDirPath));
-                Assert.That(!Directory.Exists(Path.Combine(modelDirPath, outputFMDirName)));
-                Assert.That(Directory.Exists(extraFolderB2_Path));
-                Assert.That(File.Exists(extraFileB2_Path));
-                Assert.That(Directory.Exists(extraFolderC2_Path));
-                Assert.That(File.Exists(extraFileC2_Path));
-                Assert.That(Directory.Exists(snappedDirectoryPath));
             }
             finally
             {

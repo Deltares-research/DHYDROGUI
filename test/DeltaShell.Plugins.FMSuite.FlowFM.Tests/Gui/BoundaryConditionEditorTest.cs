@@ -62,50 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Ignore("Ignored.")] // not supported for now
-        public void ShowWithTimeSeriesDataAndZLayers()
-        {
-            FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.Velocity);
-
-            bc.AddPoint(0);
-            bc.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.ZFromBed, 2.5, 1.25);
-            IFunction data = bc.GetDataAtPoint(0);
-
-            data[new DateTime(2001, 1, 1)] = new[]
-            {
-                5.0,
-                5.1
-            };
-            data[new DateTime(2001, 1, 2)] = new[]
-            {
-                8.0,
-                8.1
-            };
-
-            bc.AddPoint(3);
-            data = bc.GetDataAtPoint(3);
-            data[new DateTime(2001, 1, 1)] = 6.0;
-            data[new DateTime(2001, 1, 2)] = 9.0;
-
-            var view = new BoundaryConditionEditor
-            {
-                ShowSupportPointNames = true,
-                BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
-                BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
-                Controller = new FlowBoundaryConditionEditorController(),
-                Data =
-                    new BoundaryConditionSet
-                    {
-                        Feature = bc.Feature,
-                        BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
-                    }
-            };
-
-            WindowsFormsTestHelper.ShowModal(view);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
         public void ShowWithSalinityTimeSeriesDataAndSigmaLayers()
         {
             FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.Salinity);

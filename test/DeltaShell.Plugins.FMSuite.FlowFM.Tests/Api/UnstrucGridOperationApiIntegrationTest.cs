@@ -296,7 +296,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // issue UNST-2232
         public void GivenAModelWithPointSourcesOutsideTheGrid_WhenGridSnappingIsCalled_ThenOnlyTheGeometriesOfThePointsInsideTheGridWillBeSnapped()
         {
             //Grid X-axis 0-5000, Y-axis 0-5000, steps of 100, Origin bottom left side. Point sources will snap to the cell center.
@@ -426,7 +425,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // issue UNST-2232
         public void GivenAModelWithSourcesAndSinkPointsOutsideTheGrid_WhenGridSnappingIsCalled_ThenOnlyTheGeometriesOfThePointsInsideTheGridWillBeSnapped()
         {
             //Grid X-axis 0-5000, Y-axis 0-5000, steps of 100, Origin bottom left side. Sources And Sinks will snap to the cell centers of the first and last coordinates.

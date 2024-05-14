@@ -955,8 +955,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var fraction = new SedimentFraction();
             ISedimentType sedType = fraction.AvailableSedimentTypes.ElementAtOrDefault(1);
             Assert.IsNotNull(sedType);
-            /*var sedTypeFirstDoubleProperty = sedType.Properties.OfType<SedimentProperty<double>>().FirstOrDefault();
-            Assert.IsNotNull(sedTypeFirstDoubleProperty);*/
+
             var sedTypeFirstDoubleProperty =
                 new SedimentProperty<double>("MySediment Property", 2, 1.5, false, 2.5, false, string.Empty,
                                              string.Empty, false);

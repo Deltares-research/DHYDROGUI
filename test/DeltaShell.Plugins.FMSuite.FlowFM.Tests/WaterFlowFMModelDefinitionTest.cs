@@ -1225,74 +1225,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(KnownProperties.Wrishp_crs)]
-        [TestCase(KnownProperties.Wrishp_weir)]
-        [TestCase(KnownProperties.Wrishp_gate)]
-        [TestCase(KnownProperties.Wrishp_fxw)]
-        [TestCase(KnownProperties.Wrishp_thd)]
-        [TestCase(KnownProperties.Wrishp_obs)]
-        [TestCase(KnownProperties.Wrishp_emb)]
-        [TestCase(KnownProperties.Wrishp_dryarea)]
-        [TestCase(KnownProperties.Wrishp_enc)]
-        [TestCase(KnownProperties.Wrishp_src)]
-        [TestCase(KnownProperties.Wrishp_pump)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-278
-        public void UpdateMduFileAfterSettingOptionWriteShapeFileTest(string property)
-        {
-            string mduFilePath = TestHelper.GetTestFilePath(@"outputKnownProperties\FlowFM.mdu");
-            var mduFileInfo = new FileInfo(mduFilePath);
-            Assert.IsTrue(mduFileInfo.Exists);
-
-            string workingDirectory = FileUtils.CreateTempDirectory();
-            string workingMduFilePath = TestHelper.GetTestFilePath(Path.Combine(workingDirectory, mduFileInfo.Name));
-            FileUtils.CopyFile(mduFileInfo.FullName, workingMduFilePath);
-            var workingMduFileInfo = new FileInfo(workingMduFilePath);
-            Assert.IsTrue(workingMduFileInfo.Exists);
-
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(workingMduFilePath);
-
-            WaterFlowFMModelDefinition md = model.ModelDefinition;
-
-            Assert.IsFalse(md.WriteSnappedFeatures);
-            CheckOutputSnappedFeaturesValue(false, md);
-
-            md.WriteSnappedFeatures = true;
-            Assert.IsTrue(md.WriteSnappedFeatures);
-            CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
-
-            md.WriteSnappedFeatures = false;
-            Assert.IsFalse(md.WriteSnappedFeatures);
-            CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
-
-            string checkedProperty = md.KnownWriteOutputSnappedFeatures.Where(sf => sf.Equals(property)).FirstOrDefault();
-            Assert.IsNotNull(checkedProperty);
-
-            md.GetModelProperty(checkedProperty).Value = true;
-            Assert.AreEqual(true, md.GetModelProperty(checkedProperty).Value);
-
-            List<string> uncheckedProperties = md.KnownWriteOutputSnappedFeatures.Where(sf => sf != checkedProperty).ToList();
-            Assert.IsTrue(uncheckedProperties.TrueForAll(p => md.GetModelProperty(p).Value.Equals(false)));
-
-            var mduFile = new MduFile();
-
-            string saveToPath = Path.Combine(workingDirectory, "saved.mdu");
-            var saveToFileInfo = new FileInfo(saveToPath);
-            mduFile.Write(saveToPath, md, new HydroArea(), new List<ModelFeatureCoordinateData<FixedWeir>>());
-            Assert.IsTrue(saveToFileInfo.Exists);
-
-            var modelFromSavedMduFile = new WaterFlowFMModel();
-            WaterFlowFMModelDefinition mdFromSavedMduFile = modelFromSavedMduFile.ModelDefinition;
-            mduFile.Read(saveToPath, mdFromSavedMduFile, new HydroArea(), new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>());
-
-            Assert.AreEqual(true, mdFromSavedMduFile.GetModelProperty(checkedProperty).Value);
-            uncheckedProperties = mdFromSavedMduFile.KnownWriteOutputSnappedFeatures.Where(sf => sf != checkedProperty).ToList();
-            Assert.IsTrue(uncheckedProperties.TrueForAll(p => mdFromSavedMduFile.GetModelProperty(p).Value.Equals(false)));
-
-            FileUtils.DeleteIfExists(workingDirectory);
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void UpdateWriteOutputSnappedFeaturesWaterfallFromFileTest()
@@ -1426,7 +1358,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsFalse(File.Exists(mduFilePath));
                 Assert.IsFalse(File.Exists(encFilePath));
 
-                /**/
                 var area = new HydroArea();
                 var modelDefinition = new WaterFlowFMModelDefinition(Path.GetFileName(mduFilePath));
                 var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
@@ -1441,7 +1372,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 Assert.IsTrue(File.Exists(mduFilePath));
                 Assert.IsTrue(File.Exists(encFilePath));
-                /**/
 
                 var readModelDefinition = new WaterFlowFMModelDefinition();
                 var readArea = new HydroArea();

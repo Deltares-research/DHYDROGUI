@@ -430,10 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.SedimentFractions.Add(fraction);
 
                 WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
-                /* 
-                 * SedimentFile.Save(sedFile, fmModel);
-                 * Spatially varying operations no longer get saved through this method but through ExtForceFile.cs
-                 */
+
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
 
                 string sedWritten = File.ReadAllText(sedFile);
@@ -675,10 +672,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(sedWritten, Is.Not.Contains("#mysedimentName_SedConc#"));
                 Assert.That(sedWritten, Is.Not.Contains("12.3"));
 
-                /* 
-                 * SedimentFile.Save(sedFile, fmModel);
-                 * Spatially varying operations no longer get saved through this method but through ExtForceFile.cs
-                 */
                 Assert.IsFalse(File.Exists(generatedXyzFile));
                 var extFile = new ExtForceFile();
                 extFile.Write(sedFile, sedFile, fmModel.ModelDefinition, false, false);

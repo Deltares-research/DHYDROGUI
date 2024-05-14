@@ -70,22 +70,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        [Ignore("Ignored.")]                   // no priority
-        [Category(TestCategory.WorkInProgress)] // See TOOLS-20091
-        public void Conveyance2DOutOfRangeYieldsValidationError()
-        {
-            WaterFlowFMModel model = CreateValidModel();
-
-            WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-            modelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueFromString("4"); // This method now throws. For TOOLS-20091 this should not happen any more.
-            ValidationReport issues = WaterFlowFMModelDefinitionValidator.Validate(model);
-
-            Assert.AreEqual(1, issues.ErrorCount);
-            Assert.AreEqual(0, issues.WarningCount);
-            Assert.AreEqual(0, issues.InfoCount);
-        }
-
-        [Test]
         public void Teta0OutOfRangeYieldsValidationError()
         {
             WaterFlowFMModel model = CreateValidModel();

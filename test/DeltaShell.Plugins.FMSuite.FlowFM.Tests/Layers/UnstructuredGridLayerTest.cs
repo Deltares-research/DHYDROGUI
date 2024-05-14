@@ -86,7 +86,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         }
 
         [Test]
-        [Ignore("big")]
         public void ShowHugeGridLayer()
         {
             const int ms = 1000;
