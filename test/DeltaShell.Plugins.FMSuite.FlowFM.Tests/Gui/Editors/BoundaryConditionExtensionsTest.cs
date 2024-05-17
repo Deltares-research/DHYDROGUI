@@ -5,7 +5,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;

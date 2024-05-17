@@ -4,7 +4,6 @@ using DelftTools.Hydro.GroupableFeatures;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Renderers;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Data.Providers;

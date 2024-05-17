@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.TestUtils;

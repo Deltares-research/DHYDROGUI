@@ -7,9 +7,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 {
     public class ControlledTestModelParameterValueConverter : ParameterValueConverter, IExplicitValueConverter
     {
-        public ControlledTestModelParameterValueConverter(string locationName, string parameterName) :
-            this((IFeature) new RtcFeature {Name = locationName}, parameterName) {}
-
         public ControlledTestModelParameterValueConverter(IFeature feature, string parameterName)
         {
             base.Location = feature;

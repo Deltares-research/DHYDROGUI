@@ -139,7 +139,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
         private Operator GetRandomOperator()
         {
-            // TODO use random.NextEnumValue
             Array operatorValues = Enum.GetValues(typeof(Operator));
             int randInt = random.Next(operatorValues.Length - 1);
             return (Operator) operatorValues.GetValue(randInt);
@@ -147,7 +146,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
         private string GetRandomLeafValue()
         {
-            // TODO use random.NextBool
             return random.Next(0, 1) == 0
                        ? GetRandomConstant()
                        : GetRandomParameter();

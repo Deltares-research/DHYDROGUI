@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
-using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;

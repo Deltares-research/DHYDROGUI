@@ -82,7 +82,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Project project = projectRepository.GetProject();
             project.RootFolder.Items.Add(new DataItem(function, "function"));
 
-            //TODO: nhibernate inserts path into the store resulting in a bad DB with too many functions.
             projectRepository.SaveOrUpdate(project);
 
             // retrieve 

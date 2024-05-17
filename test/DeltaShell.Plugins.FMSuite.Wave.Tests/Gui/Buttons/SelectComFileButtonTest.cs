@@ -1,7 +1,6 @@
 ﻿using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Buttons

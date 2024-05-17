@@ -86,11 +86,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             const string nameA = "A";
             var idA = $"{ControlGroupName}/{nameA}";
-            var operatorA = Operator.Subtract; // TODO random
+            var operatorA = Operator.Subtract;
 
             const string nameB = "B";
             var idB = $"{ControlGroupName}/{nameB}";
-            var operatorB = Operator.Add; // TODO random
+            var operatorB = Operator.Add;
 
             ExpressionComplexType expressionA = ExpressionComplexTypeBuilder.Create(idA, operatorA, nameA)
                                                                             .WithInputAsFirstReference(nameB)
@@ -126,10 +126,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             const string controlGroup2 = "controlgroup_B";
 
             const string expressionNameA = "A";
-            var operatorA = Operator.Subtract; // TODO random
+            var operatorA = Operator.Subtract;
 
             const string expressionNameB = "B";
-            var operatorB = Operator.Add; // TODO random
+            var operatorB = Operator.Add;
 
             var idA1 = $"{controlGroup1}/{expressionNameA}";
             var idB1 = $"{controlGroup1}/{expressionNameB}";
@@ -180,8 +180,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void ConvertToExpressionTrees_WithComplexExample_ReturnsCorrectTree()
         {
             // Setup
-            var leafInput = $"{RtcXmlTag.Input}some_input"; // TODO random : constant or param
-            var @operator = Operator.Add;                   // TODO random
+            var leafInput = $"{RtcXmlTag.Input}some_input";
+            var @operator = Operator.Add;                  
 
             const string nameA = "A";
             var idA = $"{ControlGroupName}/{nameA}";
@@ -1133,7 +1133,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                                                                                          string idD, string nameD)
         {
             var leafInput = $"{RtcXmlTag.Input}some_input";
-            var @operator = Operator.Add; // TODO random
+            var @operator = Operator.Add;
 
             return new List<ExpressionComplexType>
             {

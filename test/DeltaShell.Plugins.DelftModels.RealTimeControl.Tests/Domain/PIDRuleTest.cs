@@ -87,23 +87,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var clone = (PIDRule) pidRule.Clone();
 
             Assert.AreEqual(pidRule.Name, clone.Name);
-            //Assert.AreEqual(pidRule.IsAConstant, clone.IsAConstant);
-            //Assert.AreEqual(pidRule.ConstantValue, clone.ConstantValue);
             Assert.AreEqual(pidRule.Kp, clone.Kp);
             Assert.AreEqual(pidRule.Ki, clone.Ki);
             Assert.AreEqual(pidRule.Kd, clone.Kd);
             Assert.IsNotNull(clone.Setting);
 
             clone.Name = "";
-            //clone.IsAConstant = false;
-            //clone.ConstantValue = -1;
             clone.Kp = -1;
             clone.Ki = -1;
             clone.Kd = -1;
 
             Assert.AreNotEqual(pidRule.Name, clone.Name);
-            //Assert.AreNotEqual(pidRule.IsAConstant, clone.IsAConstant);
-            //Assert.AreNotEqual(pidRule.ConstantValue, clone.ConstantValue);
             Assert.AreNotEqual(pidRule.Kp, clone.Kp);
             Assert.AreNotEqual(pidRule.Ki, clone.Ki);
             Assert.AreNotEqual(pidRule.Kd, clone.Kd);
@@ -115,8 +109,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var pidRuleSource = new PIDRule
             {
                 Name = RuleName,
-                //IsAConstant = true,
-                //ConstantValue = 1.0,
                 Kp = Kp,
                 Ki = Ki,
                 Kd = Kd,
@@ -130,8 +122,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             pidRule.CopyFrom(pidRuleSource);
 
             Assert.AreEqual(RuleName, pidRule.Name);
-            //Assert.AreEqual(true,pidRule.IsAConstant);
-            //Assert.AreEqual(1.0d,pidRule.ConstantValue);
             Assert.AreEqual(Kp, pidRule.Kp);
             Assert.AreEqual(Ki, pidRule.Ki);
             Assert.AreEqual(Kd, pidRule.Kd);

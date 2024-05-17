@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         public void Constructor_IdNull_ThrowsArgumentNullException()
         {
             // Setup
-            var @operator = Operator.Max; // TODO: random
+            var @operator = Operator.Max;
 
             // Call
             void Call() => new ExpressionObject(null, @operator,

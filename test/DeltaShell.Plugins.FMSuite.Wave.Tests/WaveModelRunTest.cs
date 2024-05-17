@@ -115,13 +115,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 ActivityRunner.RunActivity(waveModel);
 
                 Assert.AreEqual(ActivityStatus.Cleaned, waveModel.Status);
-
-                // TODO: Add new output logic here, should be done as part of the epic D3DFMIQ-2272.
-                // WavmFileFunctionStore fileFunctionStore = waveModel.WavmFunctionStores.FirstOrDefault();
-                // Assert.IsNotNull(fileFunctionStore);
-                // IFunction function = fileFunctionStore.Functions.FirstOrDefault();
-                // Assert.IsNotNull(function);
-                // Assert.That(function.Arguments[0].Values.Count, Is.EqualTo(4));
             }
         }
     }

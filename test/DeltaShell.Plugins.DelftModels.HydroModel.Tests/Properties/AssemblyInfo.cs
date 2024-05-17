@@ -2,7 +2,6 @@
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;

@@ -178,8 +178,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             int afterManyTimes = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
 
-            // todo: check for multiple models?
-
             Assert.AreEqual(before + 4, afterFirstTime);     // first time increase by one for each event (PropChing, PropChed, CollChing, CollChed)
             Assert.AreEqual(afterFirstTime, afterManyTimes); // subseqeuent times should not increase
         }

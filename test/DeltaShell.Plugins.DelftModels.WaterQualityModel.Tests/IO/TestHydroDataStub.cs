@@ -493,7 +493,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 {"salinity", () => SalinityRelativePath},
                 {"temp", () => TemperatureRelativePath},
                 {"tau", () => ShearStressesRelativePath}
-                // TODO: Retrieve this list from WAQ model?
             };
         }
 

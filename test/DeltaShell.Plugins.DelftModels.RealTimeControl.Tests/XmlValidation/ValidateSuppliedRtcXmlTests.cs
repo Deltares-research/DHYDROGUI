@@ -13,8 +13,6 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
 {
-    // todo remove these tests? They only seem to have any purpose during initial development of 
-    // rtcmodel
     [TestFixture]
     [Category(TestCategory.Integration)]
     public class ValidateSuppliedRtcXmlTests

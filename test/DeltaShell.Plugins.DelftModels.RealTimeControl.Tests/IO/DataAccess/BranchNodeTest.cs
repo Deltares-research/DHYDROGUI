@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         public void SetFirstNode_SetsCorrectly()
         {
             // Setup
-            const Operator @operator = Operator.Add; // TODO random
+            const Operator @operator = Operator.Add;
             var branchNode = new BranchNode(@operator);
 
             var expressionNode = Substitute.For<IExpressionNode>();
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         public void GetFirstNode_GetsCorrectResult()
         {
             // Setup
-            const Operator @operator = Operator.Add; // TODO random
+            const Operator @operator = Operator.Add;
             var branchNode = new BranchNode(@operator);
 
             var expressionNode = Substitute.For<IExpressionNode>();
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         public void SetSecondNode_SetsCorrectly()
         {
             // Setup
-            const Operator @operator = Operator.Add; // TODO random
+            const Operator @operator = Operator.Add;
             var branchNode = new BranchNode(@operator);
 
             var expressionNode = Substitute.For<IExpressionNode>();
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         public void GetSecondNode_GetsCorrectResult()
         {
             // Setup
-            const Operator @operator = Operator.Add; // TODO random
+            const Operator @operator = Operator.Add;
             var branchNode = new BranchNode(@operator);
 
             var expressionNode = Substitute.For<IExpressionNode>();
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                                                         IExpressionNode[] expectedChildNodes)
         {
             // Setup
-            const Operator operatorValue = Operator.Add; // TODO random
+            const Operator operatorValue = Operator.Add;
             var branchNode = new BranchNode(operatorValue)
             {
                 FirstNode = firstNode,

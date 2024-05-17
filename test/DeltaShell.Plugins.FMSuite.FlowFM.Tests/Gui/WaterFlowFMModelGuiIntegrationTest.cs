@@ -455,7 +455,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
 
                     IEnumerable<ILayer> layers = ((ProjectItemMapView) gui.DocumentViews.ActiveView).MapView.Map.GetAllLayers(true);
-                    var i = 2;
+
                     ILayer velocityLayer =
                         layers.FirstOrDefault(
                             l => l.Name == "velocity (ucx + ucy)" && l is UnstructuredGridCellVectorCoverageLayer);

@@ -66,7 +66,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private const string SnappedDirName = "snapped";
         private const string DflowfmDirName = "dflowfm";
 
-        private const string NoordzeeModelProjectDirName = "NoordzeeModel";
         private const string TrachytopesModelProjectDirName = "TrachytopesModel";
 
         private const string customOutputFolder = "we/must/go/deeper/output";
@@ -1415,7 +1414,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [TestCase(TrachytopesModelProjectDirName)]
         [TestCase("TestModel")]
-        //[TestCase(NoordzeeModelProjectDirName)] JIRA issue: D3DFMIQ-627 | original files too big, need to be replaced before uncommenting
         //5.1 & 5.2
         public void GivenAnFMModelWithInputAndOutput_WhenOpeningTheProject_ThenDirectoryStructureShouldBeMigratedToNewVersion(
             string projectFolder)
@@ -1424,11 +1422,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             if (projectFolder == TrachytopesModelProjectDirName)
             {
                 filtersInput = filtersInputWithTrachytopes;
-            }
-
-            if (projectFolder == NoordzeeModelProjectDirName)
-            {
-                filtersInput = filtersInputWithWind;
             }
             else
             {

@@ -6,7 +6,6 @@ using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;

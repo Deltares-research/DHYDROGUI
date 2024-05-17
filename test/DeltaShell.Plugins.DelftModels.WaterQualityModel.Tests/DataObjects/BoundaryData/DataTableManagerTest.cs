@@ -9,8 +9,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -95,12 +93,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 Assert.IsFalse(dataTables[0].DataFile.ReadOnly);
                 Assert.IsTrue(dataTables[0].DataFile.IsOpen);
                 Assert.AreEqual("Table contents", dataTables[0].DataFile.Content);
-                //Assert.AreEqual(, manager.DataTables[0].DataFile.Path); // TODO: What type of path will be returned?
 
                 Assert.IsFalse(dataTables[0].SubstanceUseforFile.ReadOnly);
                 Assert.IsTrue(dataTables[0].DataFile.IsOpen);
                 Assert.AreEqual("Usefor contents", dataTables[0].SubstanceUseforFile.Content);
-                //Assert.AreEqual(, manager.DataTables[0].SubstanceUseforFile.Path); // TODO: What type of path will be returned?
 
                 string dataTableFilePath = Path.Combine(path, "A.tbl");
                 Assert.IsTrue(File.Exists(dataTableFilePath));

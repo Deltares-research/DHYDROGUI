@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = coverage,
-                RenderTechnology = PrimitivesRenderer.Software, //todo: software (for build server)
+                RenderTechnology = PrimitivesRenderer.Software,
                 RenderMode = RenderModeVertex.ColoredNumbers
             };
 

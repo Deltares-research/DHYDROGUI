@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Xml.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 {
@@ -16,19 +14,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         private const string Name = "Trigger31";
         private const string InputName = "AlarmREGEN";
         private const string InputParameterName = "DeadBandTime";
-        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
         private TimeSeries timeSeries;
         private InterpolationType interpolation = InterpolationType.Linear;
         private ExtrapolationType extrapolation = ExtrapolationType.Periodic;
 
-        private MockRepository mocks;
         private TimeCondition timeCondition;
 
         [SetUp]
         public void SetUp()
         {
-            mocks = new MockRepository();
-
             timeSeries = new TimeSeries();
             timeSeries.Components.Add(new Variable<bool> {DefaultValue = false});
             timeSeries[DateTime.Now] = true;

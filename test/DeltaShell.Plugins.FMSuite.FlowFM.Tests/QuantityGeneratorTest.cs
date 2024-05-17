@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;

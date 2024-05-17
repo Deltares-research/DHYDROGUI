@@ -76,20 +76,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [Ignore("doesn't work yet, should check with arthur van dam")]
-        [Category(TestCategory.DataAccess)]
-        public void TestCallValidateFileIsUgridWithCallToApi()
-        {
-            string testFilePath =
-                TestHelper.GetTestFilePath(UGRID_TEST_FILE);
-            string localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
-            using (var uGrid = new UGrid(localCopyOfTestFile))
-            {
-                Assert.IsTrue(uGrid.IsValid());
-            }
-        }
-
-        [Test]
         [Category(TestCategory.DataAccess)]
         public void TestCallGetDataSetConvention()
         {
@@ -495,9 +481,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     uGrid.Initialize();
                     Assert.That(uGrid.CoordinateSystem, Is.EqualTo(new OgrCoordinateSystemFactory().CreateFromEPSG(4326))); // mag dit?
                     Assert.That(uGrid.IsValid(), Is.True);
-                    //Assert.That(uGrid.IsValidViaApi(), Is.True);
                     Assert.That(uGrid.GetDataSetConvention(), Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_UGRID));
-                    //Assert.That(uGrid.GetDataSetConventionViaApi(), Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_UGRID));
                     Assert.That(uGrid.GetNumberOf2DMeshes(), Is.EqualTo(meshId));
                     Assert.That(uGrid.GetNumberOfNodesForMeshId(meshId), Is.EqualTo(5));
                     Assert.That(uGrid.GetNumberOfEdgesForMeshId(meshId), Is.EqualTo(6));
@@ -535,7 +519,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     uGrid.GetFaceNodesForMeshId(meshId);
 
                     Assert.That(uGrid.FaceNodesByMeshId[meshId - 1], Is.Not.Null);
-                    //cast from int[,] (2d int array) to int[][] (2 1d int arrays)
                     IEnumerable<int>[] faceNodesForThisMesh = uGrid.FaceNodesByMeshId[meshId - 1].ConvertToTwoOneDimensionalArrays();
                     Assert.That(faceNodesForThisMesh[0], Is.EqualTo(new[]
                     {
@@ -555,7 +538,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     uGrid.GetEdgeNodesForMeshId(meshId);
 
                     Assert.That(uGrid.EdgeNodesByMeshId, Is.Not.Null);
-                    //cast from int[,] (2d int array) to int[][] (2 1d int arrays)
                     IEnumerable<int>[] edgeNodesForThisMesh = uGrid.EdgeNodesByMeshId[meshId - 1].ConvertToTwoOneDimensionalArrays();
 
                     Assert.That(edgeNodesForThisMesh[0], Is.EqualTo(new[]

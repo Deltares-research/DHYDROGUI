@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;

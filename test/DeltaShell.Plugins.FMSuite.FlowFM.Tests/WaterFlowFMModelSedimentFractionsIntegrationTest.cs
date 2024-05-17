@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             List<ISpatiallyVaryingSedimentProperty> spatiallyVaryingProperties = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().ToList();
             Assert.IsTrue(spatiallyVaryingProperties.Any());
 
-            // TODO: delete the next two lines and uncomment the foreach-loop when Initial Condition is supported in ext-files (DELFT3DFM-996)
             ISpatiallyVaryingSedimentProperty initialConditionProperty = spatiallyVaryingProperties.FirstOrDefault();
             Assert.NotNull(initialConditionProperty);
 

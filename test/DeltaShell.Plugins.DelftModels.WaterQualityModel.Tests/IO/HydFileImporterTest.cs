@@ -344,7 +344,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 // Properties that should be updated:
                 Assert.IsTrue(model.HasHydroDataImported);
                 Assert.AreEqual(hydPath, model.HydroData.FilePath);
-                //Assert.AreEqual(new DateTime(2015,2,5, 12,14,22), hydroDataImporter.GetTimeStamp()); // TODO: Hoe kan een Timestamp te verklaren zijn op een IHydroData interface..?
                 Assert.AreNotSame(oldGrid, model.Grid);
                 Assert.AreSame(model.Grid, ((UnstructuredGridCellCoverage) model.InitialConditions[0]).Grid);
                 foreach (string oldBoundary in oldBoundaries)
@@ -545,8 +544,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.AreEqual(waqModel.TimeStep, secondModel.TimeStep);
             }
         }
-
-        // TODO TOOLS-21848: Create test to verify some boundaries with data are retained, but have their ID's updated
 
         private static void AssertFirstInitialConditionHasSetValueSpatialOperation(WaterQualityModel model, double defaultValueForCoverage)
         {

@@ -9,8 +9,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.Core;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;

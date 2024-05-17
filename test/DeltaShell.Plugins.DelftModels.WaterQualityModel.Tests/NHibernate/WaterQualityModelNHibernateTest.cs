@@ -59,12 +59,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         #endregion
 
-/*        protected override void OnPostRetrieve(Project retrievedProject)
-        {
-            base.OnPostRetrieve(retrievedProject);
-            WaterQualityModelApplicationPlugin.ExecuteAllWaterQualitySpatialOperations(retrievedProject);
-        }*/
-
         [Test]
         [Category(TestCategory.Slow)]
         public void SaveAndRetrieveDataTable()

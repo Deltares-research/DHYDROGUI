@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
-    // TODO: Move this class to another namespace so that it can be shared by WFDExplorer and WaterQualityModel1D
     [TestFixture]
     public class DelwaqHisFileDataTest
     {

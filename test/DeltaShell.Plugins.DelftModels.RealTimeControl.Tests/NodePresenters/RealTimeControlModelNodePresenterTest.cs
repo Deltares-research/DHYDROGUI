@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
-using DeltaShell.NGHS.Common.Restart;
 using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;

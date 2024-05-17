@@ -1031,7 +1031,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var temporaryDirectory = new TemporaryDirectory())
             {
                 mduFilePath = temporaryDirectory.CopyTestDataFileAndDirectoryToTempDirectory(mduFilePath);
-                string mduDirectoryPath = Path.GetDirectoryName(mduFilePath);
                 Assert.That(File.Exists(mduFilePath), $"MDU File was not found at {mduFilePath}.");
                 modelName = Path.GetFileName(mduFilePath);
 

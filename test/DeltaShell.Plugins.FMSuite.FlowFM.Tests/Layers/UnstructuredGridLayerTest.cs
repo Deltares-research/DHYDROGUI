@@ -20,7 +20,6 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
 {
-    // TODO : move to SharpMap tests
     [TestFixture]
     [Category(TestCategory.WindowsForms)]
     public class UnstructuredGridLayerTest

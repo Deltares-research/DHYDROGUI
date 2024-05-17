@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;

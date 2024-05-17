@@ -5,7 +5,6 @@ using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -194,21 +193,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(features.Count(f => f.GroupName == featureName1), Is.EqualTo(1));
             Assert.That(features.Count(f => f.GroupName == featureName2), Is.EqualTo(1));
             Assert.That(features.Count(f => f.GroupName == featureName3), Is.EqualTo(1));
-        }
-
-        private static WaterFlowFMModelDefinition CreateModelDefinitionWithProperty(string propertyKey, string propertyValue)
-        {
-            var propertyDefinition = new WaterFlowFMPropertyDefinition
-            {
-                DataType = typeof(string),
-                MduPropertyName = propertyKey
-            };
-            var property = new WaterFlowFMProperty(propertyDefinition, propertyValue);
-            var modelDefinition = new WaterFlowFMModelDefinition();
-
-            modelDefinition.Properties.Add(property);
-
-            return modelDefinition;
         }
 
         #endregion

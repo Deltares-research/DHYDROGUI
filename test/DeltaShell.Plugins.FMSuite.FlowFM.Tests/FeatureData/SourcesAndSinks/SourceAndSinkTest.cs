@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Features.Generic;

@@ -361,7 +361,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             // aliases are only written when there is a datatable specified. Else, delwaq will crash.
             Assert.AreEqual(0, settings.BoundaryAliases.Count);
         }
-
-        // TODO: Exception when missing name definition for observation area value
     }
 }

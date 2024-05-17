@@ -884,8 +884,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(expectedString, IncludeFileFactory.CreateParametersInclude(waqInitializationSettings));
         }
 
-        // TODO: For CreateParametersInclude3DTest
-
         [Test]
         public void CreateSegfunctionsIncludeTest()
         {

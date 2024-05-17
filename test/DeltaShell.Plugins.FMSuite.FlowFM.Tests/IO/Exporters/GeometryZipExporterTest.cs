@@ -28,7 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             exporter = new GeometryZipExporter();
         }
 
-        // TODO: Why are these here and shouldn't they be data access?
         [Test]
         public void TestWriteZValuesToNetFile()
         {

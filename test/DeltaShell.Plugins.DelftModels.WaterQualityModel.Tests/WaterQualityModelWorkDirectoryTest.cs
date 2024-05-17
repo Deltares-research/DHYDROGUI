@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void AddWaqModelToProject_SetsProjectDataDir()
         {
             // setup
-            using (var deltaShell = GetRunningDSApplication("path", true))
+            using (var deltaShell = GetRunningDSApplication("path"))
             {
                 WaterQualityModel model = CreateWaqModelWithData();
 
@@ -44,14 +44,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Integration)]
         public void RunModelInSavedFolderTest()
         {
-            RunModelInSavedFolderTestCore(true);
+            RunModelInSavedFolderTestCore();
         }
 
         [Test]
         [Category(TestCategory.Integration)]
         public void RunModelAndThenSave_MovesOutput()
         {
-            RunModelAndThenSave(true);
+            RunModelAndThenSave();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 string tempDirPath = tempDirectory.Path;
                 string savePath = Path.Combine(tempDirPath, "RunModel_DeleteMonFile_Save", "project1.dsproj");
-                using (var deltaShell = GetRunningDSApplication(tempDirPath, true))
+                using (var deltaShell = GetRunningDSApplication(tempDirPath))
                 {
                     string dataDir = TestHelper.GetTestDataDirectory();
                     string realHydFile = Path.Combine(dataDir, "WaterQualityDataFiles", "flow-model", "westernscheldt01.hyd");
@@ -202,14 +202,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         #region Test helpers
 
-        private static void RunModelInSavedFolderTestCore(bool createAndSaveTempProjectOnStartup)
+        private static void RunModelInSavedFolderTestCore()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
                 string tempDirPath = tempDirectory.Path;
                 string savePath = Path.Combine(tempDirPath, "RunModelInSavedFolderTest", "project1.dsproj");
 
-                using (var deltaShell = GetRunningDSApplication(tempDirPath, createAndSaveTempProjectOnStartup))
+                using (var deltaShell = GetRunningDSApplication(tempDirPath))
                 {
                     WaterQualityModel model = CreateWaqModelWithData(createFalseBoundaryData: false);
                     deltaShell.Project.RootFolder.Add(model);
@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-        private static void RunModelAndThenSave(bool saveTempProjectOnStartup)
+        private static void RunModelAndThenSave()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 string savePath = Path.Combine(tempDirPath, "RunModelAndThenSave_CopiesOutput", "project1.dsproj");
                 string projectDataDir = savePath + "_data";
 
-                using (var deltaShell = GetRunningDSApplication(tempDirPath, saveTempProjectOnStartup))
+                using (var deltaShell = GetRunningDSApplication(tempDirPath))
                 {
                     string deltaShellWorkingDirectory = deltaShell.WorkDirectory;
                     WaterQualityModel model = CreateWaqModelWithData(createFalseBoundaryData: false);
@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             return model;
         }
 
-        private static IApplication GetRunningDSApplication(string tempDirectoryPath, bool createAndSaveProjectOnStartup)
+        private static IApplication GetRunningDSApplication(string tempDirectoryPath)
         {
             string workingDirectoryPath = Path.Combine(tempDirectoryPath, "DeltaShell_Working_Directory");
             ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);

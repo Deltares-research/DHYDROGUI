@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
@@ -436,8 +435,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsNotNull(dischargeFunction);
                 Assert.AreEqual(2, dischargeFunction.Arguments[1].Values.Count);
             }
-
-            // TODO: check structure output, once we support it.
         }
 
         [Test]

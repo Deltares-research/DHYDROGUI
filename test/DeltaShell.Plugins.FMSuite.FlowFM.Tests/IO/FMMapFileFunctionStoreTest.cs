@@ -10,7 +10,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;

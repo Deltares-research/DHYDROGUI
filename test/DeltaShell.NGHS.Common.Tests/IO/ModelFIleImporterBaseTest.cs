@@ -4,10 +4,7 @@ using System.Drawing;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.IO;
-using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
-using Arg = NSubstitute.Arg;
 
 namespace DeltaShell.NGHS.Common.Tests.IO
 {
