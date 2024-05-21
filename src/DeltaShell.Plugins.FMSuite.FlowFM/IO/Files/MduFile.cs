@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
@@ -23,9 +22,8 @@ using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Data;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serialization;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -73,6 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             KnownProperties.StructuresFile
         };
 
+        private readonly InitialFieldFile initialFieldFile;
+
         private int propertyKeyAlignmentLength;
         private int propertyValueAlignmentLength;
 
@@ -86,16 +86,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;
 
-        private readonly IFileSystem fileSystem;
-        private readonly InitialFieldFileReader initialFieldFileReader;
-        private readonly InitialFieldFileWriter initialFieldFileWriter;
-
         public MduFile(IFlexibleMeshModelApi api = null)
         {
-            fileSystem = new FileSystem();
-            initialFieldFileReader = new InitialFieldFileReader(fileSystem);
-            initialFieldFileWriter = new InitialFieldFileWriter(fileSystem, new SpatialDataFileWriter());
-
+            initialFieldFile = new InitialFieldFile();
+            
             if (FMDllVersion != null && FMDllVersion != Resources.MduFile_MduFile_Unknown)
             {
                 return; // do it once
@@ -219,14 +213,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             
             string initialFieldFileReferenceFilePath = pathsRelativeToParent ? initialFieldFilePath : targetMduFilePath;
             
-            initialFieldFileWriter.Write(initialFieldFilePath, initialFieldFileReferenceFilePath, switchTo, modelDefinition);
+            initialFieldFile.Write(initialFieldFilePath, initialFieldFileReferenceFilePath, switchTo, modelDefinition);
         }
 
         private string GetInitialFieldFilePath(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
             WaterFlowFMProperty fileProperty = modelDefinition.GetModelProperty(KnownProperties.IniFieldFile);
 
-            if (!initialFieldFileWriter.ShouldWrite(modelDefinition))
+            if (!initialFieldFile.ShouldWrite(modelDefinition))
             {
                 fileProperty.Value = string.Empty;
                 return null;
@@ -238,8 +232,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             fileProperty.Value = InitialFieldFileConstants.DefaultFileName;
-            string mduFolder = fileSystem.Path.GetDirectoryName(targetMduFilePath);
-            return fileSystem.Path.Combine(mduFolder, InitialFieldFileConstants.DefaultFileName);
+            string mduFolder = Path.GetDirectoryName(targetMduFilePath) ?? string.Empty;
+            return Path.Combine(mduFolder, InitialFieldFileConstants.DefaultFileName);
         }
 
         /// <summary>
@@ -1182,8 +1176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             reportProgress("Reading boundary external forcings file", 5, totalSteps);
-            WaterFlowFMProperty bndExtForceFileProperty =
-                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
+            WaterFlowFMProperty bndExtForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             if (bndExtForceFileProperty != null)
             {
                 string forceFilePath = MduFileHelper.GetSubfilePath(filePath, bndExtForceFileProperty);
@@ -1205,9 +1198,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 if (initialFieldFilePath != null)
                 {
                     string relativeParentPath = pathsRelativeToParent ? initialFieldFilePath : filePath;
-                    initialFieldFileReader.Read(initialFieldFilePath, relativeParentPath, modelDefinition);
+                    initialFieldFile.Read(initialFieldFilePath, relativeParentPath, modelDefinition);
                 }           
-
             }
         }
 

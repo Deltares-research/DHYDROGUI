@@ -804,7 +804,7 @@ Manhole with unique id '{4}' is not imported.</value>
     <value>Reading initial field data from {0}</value>
   </data>
   <data name="Initial_field_data_file_does_not_exist_0_" xml:space="preserve">
-    <value>Initial field data file does not exist: {0}</value>
+    <value>Initial field data file does not exist: {0}.</value>
   </data>
   <data name="writing_the_initial_field_file" xml:space="preserve">
     <value>writing the initial field file</value>

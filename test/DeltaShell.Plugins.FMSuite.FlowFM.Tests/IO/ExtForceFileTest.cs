@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -12,8 +11,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialFieldFile.Serialization;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -647,14 +645,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             using (var temp = new TemporaryDirectory())
             {
+                var initialFieldFile = new InitialFieldFile();
+
                 string newPath = Path.Combine(temp.Path, "initialFields.ini");
-                var initialFieldFileWriter = new InitialFieldFileWriter(new FileSystem(), new SpatialDataFileWriter());
-                initialFieldFileWriter.Write(newPath, newPath, false, def); // write loaded definition to new location
+                initialFieldFile.Write(newPath, newPath, false, def); // write loaded definition to new location
 
-                var initialFieldFileReader = new InitialFieldFileReader(new FileSystem());
                 var newDef = new WaterFlowFMModelDefinition();
+                initialFieldFile.Read(newPath, newPath, newDef); // load written definition back
 
-                initialFieldFileReader.Read(newPath, newPath, newDef); // load written definition back
                 IList<ISpatialOperation> newRoughnessOperations = newDef.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
                 Assert.AreEqual(4, ((ImportSamplesOperation) newRoughnessOperations[0]).GetPoints().Count());
             }
