@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         
         private readonly BoundarySerializer boundarySerializer = new BoundarySerializer();
         private readonly LateralSerializer lateralSerializer = new LateralSerializer();
+        private readonly HashSet<string> bcFilesWritten = new HashSet<string>();
 
         public bool WriteToDisk { get; set; }
 
@@ -33,16 +34,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             bndExtFilePath = filePath;
             bndExtSubFilesReferenceFilePath = referenceFilePath;
 
-            ModelProperty modelProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
-            IList<IniSection> bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinition);
+            bcFilesWritten.Clear();
 
-            IList<IniSection> lateralSections = new List<IniSection>();
-            foreach (var lateral in modelDefinition.Laterals)
-            {
-                IniSection lateralSection = lateralSerializer.Serialize(lateral);
-                lateralSections.Add(lateralSection);
-                
-            }
+            ModelProperty modelProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
+
+            IList<IniSection> bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinition);
+            IList<IniSection> lateralSections = CreateLateralIniSections(modelDefinition.Laterals);
+
             if (bndExtForceFileItems.Any() || lateralSections.Any())
             {
                 WriteBndExtForceFile(bndExtForceFileItems, lateralSections);
@@ -59,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             DateTime refDate = modelDefinition.GetReferenceDateAsDateTime();
 
             WritePolyLines(modelDefinition.BoundaryConditionSets);
-            WriteLateralBcFiles(modelDefinition.Laterals, refDate);
+            WriteLateralDischargeBcFiles(modelDefinition.Laterals, refDate);
             
             return WriteBoundaryBcFiles(modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, refDate);
         }
@@ -91,32 +89,74 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             return resultingItems;
         }
-        
-        private void WriteLateralBcFiles(IEnumerable<Lateral> laterals, DateTime refDate)
-        {
-            if (!laterals.Any())
-            {
-                return;
-            }
 
-            IEnumerable<Lateral> timeDependentDischargeLaterals = laterals.Where(HasTimeSeriesDischarge);
-            WriteLateralDischargeBcFiles(refDate, timeDependentDischargeLaterals);
+        private void WriteLateralDischargeBcFiles(IEnumerable<Lateral> laterals, DateTime refDate)
+        {
+            IEnumerable<IGrouping<string, Lateral>> lateralsPerFile = GetTimeDependentLateralsPerFile(laterals);
+
+            foreach (IGrouping<string, Lateral> grouping in lateralsPerFile)
+            {
+                string filePath = GetFullPathForWriting(grouping.Key);
+
+                var bcFile = new BcFile { MultiFileMode = bcFileWriteMode };
+                var dataBuilder = new BcFileFlowBoundaryDataBuilder();
+
+                bool appendToFile = bcFilesWritten.Contains(filePath);
+
+                bcFile.WriteLateralData(grouping, filePath, dataBuilder, refDate, appendToFile);
+                bcFilesWritten.Add(filePath);
+            }
         }
 
-        private static bool HasTimeSeriesDischarge(Lateral lateral) => lateral.Data.Discharge.Type == LateralDischargeType.TimeSeries;
-
-        private void WriteLateralDischargeBcFiles(DateTime refDate, IEnumerable<Lateral> timeDependentDischargeLaterals)
+        private IEnumerable<IGrouping<string, Lateral>> GetTimeDependentLateralsPerFile(IEnumerable<Lateral> laterals)
         {
-            var fileName = $"{BcFileConstants.LateralDischargeQuantityName}.bc";
-            string filePath = GetFullPathForWriting(fileName);
+            IEnumerable<Lateral> timeDependentLaterals = laterals.Where(HasTimeSeriesDischarge);
 
-            var bcFile = new BcFile { MultiFileMode = bcFileWriteMode };
-            bcFile.WriteLateralData(timeDependentDischargeLaterals, filePath, new BcFileFlowBoundaryDataBuilder(), refDate);
+            return timeDependentLaterals.GroupBy(lateral =>
+            {
+                if (existingLateralItems.TryGetValue(lateral, out LateralDTO existingLateralData))
+                {
+                    return existingLateralData.Discharge.TimeSeriesFilename;
+                }
+
+                return $"{BcFileConstants.LateralDischargeQuantityName}.bc";
+            });
+        }
+        
+        private static bool HasTimeSeriesDischarge(Lateral lateral)
+        {
+            return lateral.Data.Discharge.Type == LateralDischargeType.TimeSeries;
         }
 
         private string GetFullPathForWriting(string relativePath)
         {
             return GetOtherFilePathInSameDirectory(bndExtSubFilesReferenceFilePath, relativePath);
+        }
+
+        private IList<IniSection> CreateLateralIniSections(IEnumerable<Lateral> laterals)
+        {
+            var lateralSections = new List<IniSection>();
+            
+            foreach (Lateral lateral in laterals)
+            {
+                IniSection lateralSection = lateralSerializer.Serialize(lateral);
+                lateralSections.Add(lateralSection);
+                
+                if (HasTimeSeriesDischarge(lateral))
+                {
+                    RestoreTimeDependentLateralFileName(lateral, lateralSection);
+                }
+            }
+
+            return lateralSections;
+        }
+
+        private void RestoreTimeDependentLateralFileName(Lateral lateral, IniSection section)
+        {
+            if (existingLateralItems.TryGetValue(lateral, out LateralDTO existingLateralData))
+            {
+                section.AddOrUpdateProperty(BndExtForceFileConstants.DischargeKey, existingLateralData.Discharge.TimeSeriesFilename);
+            }
         }
 
         private void WriteBndExtForceFile(IEnumerable<IniSection> bndExtForceFileItems, IEnumerable<IniSection> lateralSections)
@@ -261,7 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 foreach (Tuple<IBoundaryCondition, BoundaryConditionSet> tuple in group.Where(t => t.Item1 is FlowBoundaryCondition))
                 {
-                    existingBndForceFileItems.TryGetValue(tuple.Item1, out BoundaryDTO existingBlock);
+                    existingBoundaryItems.TryGetValue(tuple.Item1, out BoundaryDTO existingBlock);
 
                     List<string> existingPaths = existingBlock != null
                                                      ? existingBlock.ForcingFiles.ToList()
@@ -339,13 +379,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                              fileNamesToBoundaryCondition in fileNamesToBoundaryConditions)
                 {
                     string fullPath = GetFullPathForWriting(fileNamesToBoundaryCondition.Key);
+                    bool appendToFile = bcFilesWritten.Contains(fullPath);
 
                     bcFile.CorrectionFile = fullPath.EndsWith("_corr.bc");
 
                     bcFile.Write(fileNamesToBoundaryCondition.Value.ToDictionary(t => t.Item1, t => t.Item2),
-                                 fullPath, boundaryDataBuilder, refDate);
-
+                                 fullPath, boundaryDataBuilder, refDate, appendToFile);
+                    
                     bcFile.CorrectionFile = false;
+                    bcFilesWritten.Add(fullPath);
                 }
             }
 

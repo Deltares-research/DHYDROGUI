@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         public void Write(IEnumerable<BoundaryConditionSet> boundaryConditionSets, string filePath,
-                          BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
+                          BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null, bool appendToFile = false)
         {
             IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> grouping =
                 GroupBoundaryConditions(boundaryConditionSets.ToList());
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             foreach (IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>> group in grouping)
             {
                 string subFile = string.IsNullOrEmpty(group.Key) ? filePath : AppendToFile(filePath, "_" + group.Key);
-                Write(group.ToDictionary(t => t.Item1, t => t.Item2), subFile, boundaryDataBuilder, refDate);
+                Write(group.ToDictionary(t => t.Item1, t => t.Item2), subFile, boundaryDataBuilder, refDate, appendToFile);
             }
         }
 
@@ -114,9 +114,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public virtual void Write(
             IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
-            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
+            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null, bool appendToFile = false)
         {
-            OpenOutputFile(filePath);
+            OpenOutputFile(filePath, appendToFile);
             try
             {
                 foreach (KeyValuePair<IBoundaryCondition, BoundaryConditionSet> boundaryConditionKeyValuePair in
@@ -167,6 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="filePath"> The target bc file path. </param>
         /// <param name="boundaryDataBuilder"> The bc file flow boundary data builder. </param>
         /// <param name="refDate"> The reference date. </param>
+        /// <param name="appendToFile">Whether to append data to the file; <c>false</c> to overwrite the file.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="laterals"/> or <paramref name="boundaryDataBuilder"/> is <c>null</c>.
         /// </exception>
@@ -175,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// </exception>
         public void WriteLateralData(
             IEnumerable<Lateral> laterals,
-            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
+            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null, bool appendToFile = false)
         {
             Ensure.NotNull(laterals, nameof(laterals));
             Ensure.NotNullOrWhiteSpace(filePath, nameof(filePath));
@@ -188,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 blocks.Add(block);
             }
             
-            OpenOutputFile(filePath);
+            OpenOutputFile(filePath, appendToFile);
             try
             {
                 WriteBlocks(blocks);

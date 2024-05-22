@@ -62,6 +62,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             foreach (LateralDTO lateralDTO in bndExtForceFileDTO.Laterals)
             {
                 Lateral lateral = lateralFactory.CreateLateral(lateralDTO, lateralTimeSeriesSetter);
+
+                existingLateralItems[lateral] = lateralDTO;
+                
                 modelDefinition.Laterals.Add(lateral);
                 modelDefinition.LateralFeatures.Add(lateral.Feature);
             }
@@ -190,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     bcSets.SelectMany(bcs => bcs.BoundaryConditions).FirstOrDefault();
                 if (newBoundaryCondition != null)
                 {
-                    existingBndForceFileItems[newBoundaryCondition] = boundaryDTO;
+                    existingBoundaryItems[newBoundaryCondition] = boundaryDTO;
                 }
 
                 RemoveUsedDataBlocks(usedDataBlocks, signalBlocks, correctionBlocks);

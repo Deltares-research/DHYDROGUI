@@ -47,7 +47,10 @@ namespace DeltaShell.NGHS.IO
         {
             if (FileUtils.PathIsRelative(relativePath))
             {
-                return Path.Combine(Path.GetDirectoryName(absolutePath), relativePath);
+                string directoryName = Path.GetDirectoryName(absolutePath) ?? string.Empty;
+                string combinedPath = Path.Combine(directoryName, relativePath);
+
+                return Path.GetFullPath(combinedPath);
             }
 
             return relativePath;
@@ -100,6 +103,7 @@ namespace DeltaShell.NGHS.IO
         /// Opens the file writer to a given destination.
         /// </summary>
         /// <param name="filePath">File path to write to.</param>
+        /// <param name="appendToFile">Whether to append data to the file; <c>false</c> to overwrite the file.</param>
         /// <exception cref="UnauthorizedAccessException">Access is denied</exception>
         /// <exception cref="ArgumentException">
         /// <paramref name="filePath"/> is an empty string ("") or contains the name of a
@@ -117,7 +121,7 @@ namespace DeltaShell.NGHS.IO
         /// label syntax.
         /// </exception>
         /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
-        protected void OpenOutputFile(string filePath)
+        protected void OpenOutputFile(string filePath, bool appendToFile = false)
         {
             storedCurrentCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -128,7 +132,7 @@ namespace DeltaShell.NGHS.IO
                 Directory.CreateDirectory(directory);
             }
 
-            writer = new StreamWriter(OutputFilePath);
+            writer = new StreamWriter(OutputFilePath, appendToFile);
             fileContentHasStarted = false;
             LineNumber = 0;
         }

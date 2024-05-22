@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -27,12 +28,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         // items that existed in the file when the file was read
         private readonly IDictionary<Feature2D, string> existingPolyLineFiles;
-        private readonly IDictionary<IBoundaryCondition, BoundaryDTO> existingBndForceFileItems;
+        private readonly IDictionary<IBoundaryCondition, BoundaryDTO> existingBoundaryItems;
+        private readonly IDictionary<Lateral, LateralDTO> existingLateralItems;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BndExtForceFile"/> class.
+        /// </summary>
         public BndExtForceFile()
         {
             existingPolyLineFiles = new Dictionary<Feature2D, string>();
-            existingBndForceFileItems = new Dictionary<IBoundaryCondition, BoundaryDTO>();
+            existingBoundaryItems = new Dictionary<IBoundaryCondition, BoundaryDTO>();
+            existingLateralItems = new Dictionary<Lateral, LateralDTO>();
             WriteToDisk = true;
         }
     }

@@ -1228,7 +1228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase(@"BcFiles\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\BndExtFolder\MixedQuantities.ext",
                   @"BcFiles\ModelBndExtForceFileAndMduInDifferentFoldersPathsRelativeToBndExt\BndExtFolder\MixedQuantities.ext")]
         [Category(TestCategory.DataAccess)]
-        public void GivenABndExtFileWithTwoBoundaryConditionsForOneBoundary_WhenReadingAndWritingThisFile_ThenAllSubFilesShouldBeWrittenWithRespectToParentFile(
+        public void GivenABndExtFileWithBoundaryConditionsAndLaterals_WhenReadingAndWritingThisFile_ThenAllSubFilesShouldBeWrittenWithRespectToParentFile(
             string bndExtFilePath, 
             string bndExtSubFilesReferenceFilePath)
         {
@@ -1238,7 +1238,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var bndExtForceFile = new BndExtForceFile();
+            var bndExtForceFile = new BndExtForceFile();    
             bndExtForceFile.Read(absoluteBndExtFilePath, absoluteBndExtSubFilesReferenceFilePath, modelDefinition);
 
             // When
@@ -1256,7 +1256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     string line;
                     while ((line = file.ReadLine()) != null)
                     {
-                        if (line.Contains("locationFile") || line.Contains("forcingFile"))
+                        if (line.StartsWith("locationFile") || line.StartsWith("forcingFile") || line.StartsWith("discharge"))
                         {
                             CheckIfSubFilesMentionedInBndExtForceFileAreWrittenRelativeToThisFile(line, saveBndExtSubFilesReferenceFilePath);
                         }
@@ -1264,6 +1264,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     file.Close();
                 }
+            });
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenBoundaryConditionsAndLateralsInTheSameFile_WhenReadingAndWritingThisFile_ShouldBeWrittenToTheSameFile()
+        {
+            string bndExtFilePath = TestHelper.GetTestFilePath(@"BcFiles\BoundariesAndLateralsInSameFile\MixedQuantities.ext");
+
+            var bndExtForceFile = new BndExtForceFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            bndExtForceFile.Read(bndExtFilePath, bndExtFilePath, modelDefinition);
+            
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                string saveBndExtFilePath = Path.Combine(tempDir, "MixedQuantities.ext");
+                string saveBndBcFilePath = Path.Combine(tempDir, "MixedQuantities.bc");
+
+                bndExtForceFile.Write(saveBndExtFilePath, saveBndExtFilePath, modelDefinition);
+
+                string[] saveBndExtFileContents = File.ReadAllLines(saveBndBcFilePath);
+                Assert.That(saveBndExtFileContents, Has.One.Matches<string>(x => x.Contains("Boundary1_0001")));
+                Assert.That(saveBndExtFileContents, Has.One.Matches<string>(x => x.Contains("LateralDischarge")));
             });
         }
 
