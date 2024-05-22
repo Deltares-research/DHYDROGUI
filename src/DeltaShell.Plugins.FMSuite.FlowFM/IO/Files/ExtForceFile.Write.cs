@@ -487,6 +487,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void WriteInitialConditionsSamples(ImportSamplesOperation importSamplesOperation, ExtForceFileItem extForceFileItem)
         {
             string targetPath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
+            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(targetPath));
             
             importSamplesOperation.CopyTo(targetPath, switchToNewPath);
         }
@@ -494,6 +495,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void WriteInitialConditionsUnsupported(SampleSpatialOperation spatialOperation, ExtForceFileItem extForceFileItem)
         {
             string xyzFilePath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
+            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(xyzFilePath));
 
             XyzFile.Write(xyzFilePath, spatialOperation.GetPoints());
         }
@@ -501,16 +503,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void WriteInitialConditionsPolygon(SpatialOperation spatialOperation, ExtForceFileItem extForceFileItem)
         {
             string polFilePath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
-            string directoryName = Path.GetDirectoryName(polFilePath);
-
-            if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
-            {
-                Directory.CreateDirectory(directoryName);
-            }
+            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(polFilePath));
             
             new PolFile<Feature2DPolygon>().Write(polFilePath, spatialOperation.Mask.Provider.Features.OfType<IFeature>());
         }
-
+        
         private IEnumerable<ExtForceFileItem> WriteWindItems()
         {
             var referenceTime = modelDefinition.GetReferenceDateAsDateTime();

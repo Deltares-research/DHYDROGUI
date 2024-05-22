@@ -192,6 +192,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             });
         }
+        
+        [Test]
+        public void GivenAnExtFileWithMultipleSubFileReferences_WhenReadingAndWritingThisFile_ThenAllSubFilesShouldBeWrittenToOriginalLocation()
+        {
+            string extReadPath = TestHelper.GetTestFilePath(@"ExtFileTest\ReadWrite\ext\ReadWrite.ext");
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var extForceFile = new ExtForceFile();
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                string extWritePath = Path.Combine(tempDir, @"ReadWrite\ext\ReadWrite.ext");
+                
+                extForceFile.Read(extReadPath, extReadPath, modelDefinition);
+                extForceFile.Write(extWritePath, extWritePath, modelDefinition, true, true);
+
+                string expectedFileContents = File.ReadAllText(extReadPath);
+                string actualFileContents = File.ReadAllText(extWritePath);
+                
+                Assert.That(actualFileContents, Is.EqualTo(expectedFileContents));
+            });
+        }
 
         [Test]
         public void GivenAnExtFileWithAnUnknownQuantity_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()

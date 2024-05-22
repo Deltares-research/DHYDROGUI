@@ -369,7 +369,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 throw new ArgumentNullException(nameof(existingForceFileItems));
             }
 
-            ExtForceFileItem existingItem = GetExistingItem(spatialOperation, existingForceFileItems);
+            ExtForceFileItem existingItem =
+                existingForceFileItems.Where(item => item.Value is ImportSamplesSpatialOperation operation && operation.Name == spatialOperation.Name)
+                                      .Select(item => item.Key)
+                                      .FirstOrDefault();
 
             string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
             string fileName = Path.GetFileName(spatialOperation.FilePath);
@@ -379,6 +382,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 FileType = 7,
                 Method = GetImportSamplesSpatialOperationMethod(spatialOperation.InterpolationMethod)
             };
+            extForceFileItem.Quantity = quantityName;
+            
             if (spatialOperation.InterpolationMethod == SpatialInterpolationMethod.Averaging)
             {
                 extForceFileItem.ModelData[ExtForceFileConstants.AveragingTypeKey] =

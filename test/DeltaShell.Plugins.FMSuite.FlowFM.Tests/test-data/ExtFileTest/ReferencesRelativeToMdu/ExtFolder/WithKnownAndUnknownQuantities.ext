@@ -1,18 +1,76 @@
-QUANTITY     =internaltidesfrictioncoefficient
-FILENAME     =surroundingDomain.pol
-FILETYPE     =10
-METHOD       =4
-OPERAND      =*
-VALUE        =0.0125
+QUANTITY        =windxy
+FILENAME        =windxy.tim
+FILETYPE        =2
+METHOD          =1
+OPERAND         =+
 
-QUANTITY=rainfall_rate
-FILENAME=RAD_NL25_RAC_MFBS_5min.nc
-FILETYPE=11
-METHOD=3
-OPERAND=O
+QUANTITY        =initialwaterlevel
+FILENAME        =initialwaterlevel.xyz
+FILETYPE        =7
+METHOD          =6
+OPERAND         =O
+AVERAGINGTYPE   =2
 
-QUANTITY     =waterlevelbnd
-FILENAME     =OB_001_orgsize.pli
-FILETYPE     =9
-METHOD       =3
-OPERAND      =O
+QUANTITY        =initialtemperature
+FILENAME        =initialtemperature.xyz
+FILETYPE        =7
+METHOD          =5
+OPERAND         =O
+
+QUANTITY        =internaltidesfrictioncoefficient
+FILENAME        =internaltidesfrictioncoefficient.pol
+FILETYPE        =10
+METHOD          =4
+OPERAND         =*
+VALUE           =0.0125
+
+QUANTITY        =frictioncoefficient
+FILENAME        =frictioncoefficient.pol
+FILETYPE        =10
+METHOD          =4
+OPERAND         =O
+VALUE           =0.028
+    
+QUANTITY        =frictioncoefficient
+FILENAME        =frictioncoefficient.xyz
+FILETYPE        =7
+METHOD          =5
+OPERAND         =*
+
+QUANTITY        =horizontaleddyviscositycoefficient
+FILENAME        =horizontaleddyviscositycoefficient.pol
+FILETYPE        =10
+METHOD          =4
+OPERAND         =O
+VALUE           =0.1
+
+QUANTITY        =horizontaleddydiffusivitycoefficient
+FILENAME        =horizontaleddydiffusivitycoefficient.pol
+FILETYPE        =10
+METHOD          =4
+OPERAND         =O
+VALUE           =0.1
+    
+QUANTITY        =rainfall_rate
+FILENAME        =rainfall_rate.nc
+FILETYPE        =11
+METHOD          =3
+OPERAND         =O
+    
+QUANTITY        =waterlevelbnd
+FILENAME        =waterlevelbnd.pli
+FILETYPE        =9
+METHOD          =3
+OPERAND         =O
+    
+QUANTITY        =initialsalinity
+FILENAME        =initialsalinity.xyz
+FILETYPE        =7
+METHOD          =5
+OPERAND         =O   
+    
+QUANTITY        =initialsalinitytop
+FILENAME        =initialsalinitytop.xyz
+FILETYPE        =7
+METHOD          =5
+OPERAND         =O
