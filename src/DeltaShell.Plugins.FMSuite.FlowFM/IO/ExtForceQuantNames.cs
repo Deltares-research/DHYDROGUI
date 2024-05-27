@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string AdvectionType = "advectiontype";
         public const string InitialWaterLevel = "initialwaterlevel";
         public const string InitialSalinity = "initialsalinity";
-        public const string InitialSalinityTop = "initialsalinitytop";
         public const string InitialTemperature = "initialtemperature";
         public const string initialVelocityXQuantity = "initialvelocityx";
         public const string initialVelocityYQuantity = "initialvelocityy";

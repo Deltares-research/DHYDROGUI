@@ -184,16 +184,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                         modelDefinition.GetSpatialOperations(
                                                             WaterFlowFMModelDefinition.InitialSalinityDataItemName), uniqueFileNameProvider).Distinct());
 
-            extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialSalinity,
-                                                        modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.InitialSalinityDataItemName +
-                                                            " (layer 1)"), uniqueFileNameProvider).Distinct());
-
-            extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialSalinityTop,
-                                                        modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.InitialSalinityDataItemName +
-                                                            " (layer 2)"), uniqueFileNameProvider).Distinct());
-
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialTemperature,
                                                         modelDefinition.GetSpatialOperations(
                                                             WaterFlowFMModelDefinition.InitialTemperatureDataItemName), uniqueFileNameProvider).Distinct());

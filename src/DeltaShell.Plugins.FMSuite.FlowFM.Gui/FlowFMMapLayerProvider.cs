@@ -260,7 +260,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is IEventedList<BoundaryConditionSet> && parentData is WaterFlowFMModel
                    || data is FMSnappedFeaturesGroupLayerData
                    || data is FMOutputSnappedFeaturesGroupLayerData
-                   || data is CoverageDepthLayersList
                    || data is IEventedList<Feature2D> // Boundaries and sources&sinks
                    || data is Samples;
         }
@@ -375,14 +374,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 if (model.OutputClassMapFileStore != null)
                 {
                     yield return model.OutputClassMapFileStore;
-                }
-            }
-
-            if (data is CoverageDepthLayersList coverageDepthLayersList)
-            {
-                foreach (ICoverage coverage in coverageDepthLayersList.Coverages)
-                {
-                    yield return coverage;
                 }
             }
 
