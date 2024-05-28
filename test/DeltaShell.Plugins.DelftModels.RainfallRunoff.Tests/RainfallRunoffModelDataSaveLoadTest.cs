@@ -35,7 +35,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         private const string ORIGINAL_CATCHMENT_NAME = "MyFirstCatchment";
 
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadGreenHouseData()
         {
             string path = null;
@@ -100,7 +99,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadHbvData()
         {
             string path = null;
@@ -149,7 +147,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
 
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadMeteorogicalDataPerStation()
         {
             string path = null;
@@ -222,139 +219,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
             }
         }
-        [Test]
-        [Ignore("kan niet met sobek rr files inlezen of goed wegschrijven")]
-        public void SaveAndLoadMeteorogicalDataPerFeature()
-        {
-            string path = null;
-            try
-            {
-                using (var application = CreateRunningApplication())
-                {
-                    using (var model = GetRRModel())
-                    {
-                        application.Project.RootFolder.Add(model);
-                        var catchment = Catchment.CreateDefault();
-                        catchment.Name = "c1";
-                        catchment.CatchmentType = CatchmentType.Paved;
-                        model.Basin.Catchments.Add(catchment);
-                        var catchment2 = Catchment.CreateDefault();
-                        catchment2.Name = "c2";
-                        catchment2.CatchmentType = CatchmentType.Unpaved;
-                        model.Basin.Catchments.Add(catchment2);
-                        model.Precipitation.DataDistributionType = MeteoDataDistributionType.PerFeature;
-                        model.Evaporation.DataDistributionType = MeteoDataDistributionType.PerFeature;
-                        model.Temperature.DataDistributionType = MeteoDataDistributionType.PerFeature;
-                        
-                        model.Precipitation.Data[new DateTime(2001, 2, 3), catchment] = 12.0;
-                        model.Precipitation.Data[new DateTime(2001, 2, 4), catchment2] = 2.0;
-                        model.Evaporation.Data[new DateTime(2001, 2, 3), catchment] = 80.1;
-                        model.Evaporation.Data[new DateTime(2001, 2, 4), catchment2] = 80.2;
-                        model.Temperature.Data[new DateTime(2001, 2, 3), catchment] = 18.1;
-                        model.Temperature.Data[new DateTime(2001, 2, 4), catchment2] = 27.3;
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
-                    }
-
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
-                    var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
-                        .OfType<RainfallRunoffModel>()
-                        .FirstOrDefault();
-                    Assert.NotNull(retrievedModel);
-                    var retrievedCatchment = retrievedModel.Basin.Catchments.FirstOrDefault();
-                    Assert.IsNotNull(retrievedCatchment);
-
-                    Assert.AreEqual(MeteoDataDistributionType.PerFeature,
-                        retrievedModel.Precipitation.DataDistributionType);
-
-                    Assert.AreEqual(12, retrievedModel.Precipitation.Data[new DateTime(2001, 2, 3), retrievedCatchment]);
-                    Assert.AreEqual(2, retrievedModel.Precipitation.Data[new DateTime(2001, 2, 4), retrievedCatchment]);
-                    Assert.AreEqual(1, retrievedModel.Precipitation.Data.Arguments[1].Values.Count);
-                    Assert.AreEqual(retrievedCatchment, retrievedModel.Precipitation.Data.Arguments[1].Values[0]);
-                    
-                    Assert.AreEqual(MeteoDataDistributionType.PerFeature,
-                        retrievedModel.Evaporation.DataDistributionType);
-                    Assert.AreEqual(80.1, retrievedModel.Evaporation.Data[new DateTime(2001, 2, 3), retrievedCatchment]);
-                    Assert.AreEqual(80.2, retrievedModel.Evaporation.Data[new DateTime(2001, 2, 4), retrievedCatchment]);
-                    Assert.AreEqual(1, retrievedModel.Evaporation.Data.Arguments[1].Values.Count);
-                    Assert.AreEqual(retrievedCatchment, retrievedModel.Evaporation.Data.Arguments[1].Values[0]);
-                    
-                    Assert.AreEqual(MeteoDataDistributionType.PerFeature,
-                        retrievedModel.Temperature.DataDistributionType);
-                    Assert.AreEqual(18.1, retrievedModel.Temperature.Data[new DateTime(2001, 2, 3), retrievedCatchment]);
-                    Assert.AreEqual(27.3, retrievedModel.Temperature.Data[new DateTime(2001, 2, 4), retrievedCatchment]);
-                    Assert.AreEqual(1, retrievedModel.Temperature.Data.Arguments[1].Values.Count);
-                    Assert.AreEqual(retrievedCatchment, retrievedModel.Temperature.Data.Arguments[1].Values[0]);
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
-            }
-        }
-
-        [Ignore("kan niet met sobek rr files inlezen of goed wegschrijven")]
-        [Test]
-        public void SaveAndLoadMeteorogicalDataGlobal()
-        {
-            string path = null;
-            try
-            {
-                using (var application = CreateRunningApplication())
-                {
-                    using (var model = GetRRModel())
-                    {
-                        application.Project.RootFolder.Add(model);
-                        model.Precipitation.DataDistributionType = MeteoDataDistributionType.Global;
-                        model.Evaporation.DataDistributionType = MeteoDataDistributionType.Global;
-                        model.Temperature.DataDistributionType = MeteoDataDistributionType.Global;
-                        
-                        model.Precipitation.Data[new DateTime(2001, 2, 3)] = 12.0;
-                        model.Precipitation.Data[new DateTime(2001, 2, 4)] = 2.0;
-                        model.Evaporation.Data.Clear();//remove the stupid auto generated 0 values.
-                        model.Evaporation.Data[new DateTime(2001, 2, 3)] = 80.1;
-                        model.Evaporation.Data[new DateTime(2001, 2, 4)] = 80.2;
-                        model.Temperature.Data[new DateTime(2001, 2, 3)] = 18.1;
-                        model.Temperature.Data[new DateTime(2001, 2, 4)] = 27.3;
-                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
-                    }
-
-                    application.OpenProject(path);
-                    var retrievedProject = application.Project;
-                    var retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
-                        .OfType<RainfallRunoffModel>()
-                        .FirstOrDefault();
-                    Assert.NotNull(retrievedModel);
-                    
-                    Assert.AreEqual(MeteoDataDistributionType.Global,
-                        retrievedModel.Precipitation.DataDistributionType);
-
-                    Assert.AreEqual(12, retrievedModel.Precipitation.Data[new DateTime(2001, 2, 3)]);
-                    Assert.AreEqual(2, retrievedModel.Precipitation.Data[new DateTime(2001, 2, 4)]);
-                    Assert.AreEqual(2, retrievedModel.Precipitation.Data.Arguments[0].Values.Count);
-                    
-                    Assert.AreEqual(MeteoDataDistributionType.Global,
-                        retrievedModel.Evaporation.DataDistributionType);
-                    Assert.AreEqual(80.1, retrievedModel.Evaporation.Data[new DateTime(2001, 2, 3)]);
-                    Assert.AreEqual(80.2, retrievedModel.Evaporation.Data[new DateTime(2001, 2, 4)]);
-                    Assert.AreEqual(2, retrievedModel.Evaporation.Data.Arguments[0].Values.Count);
-                    
-
-                    Assert.AreEqual(MeteoDataDistributionType.Global,
-                        retrievedModel.Temperature.DataDistributionType);
-                    Assert.AreEqual(18.1, retrievedModel.Temperature.Data[new DateTime(2001, 2, 3)]);
-                    Assert.AreEqual(27.3, retrievedModel.Temperature.Data[new DateTime(2001, 2, 4)]);
-                    Assert.AreEqual(2, retrievedModel.Temperature.Data.Arguments[0].Values.Count);
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
-            }
-        }
 
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadUnpavedSimple()
         {
             string path = null;
@@ -398,7 +264,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
         
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadUnpavedData()
         {
             string path = null;
@@ -476,8 +341,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                     retrievedUnpaved.TemperatureStationName = unpavedData.TemperatureStationName;
                     retrievedUnpaved.AreaAdjustmentFactor = unpavedData.AreaAdjustmentFactor;
 
-                    //var retrievedSeries = retrievedUnpaved.SeepageSeries;
-                    //Assert.IsNotNull(retrievedSeries);
                     var retrievedDrainageFormula = retrievedUnpaved.DrainageFormula as ErnstDrainageFormula;
                     Assert.IsNotNull(retrievedDrainageFormula);
                     ReflectionTestHelper.AssertPublicPropertiesAreEqual(unpavedData, retrievedUnpaved);
@@ -487,7 +350,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                     Assert.AreEqual(unpavedData.SoilType, retrievedUnpaved.SoilType);
                     Assert.AreEqual(unpavedData.SoilTypeCapsim, retrievedUnpaved.SoilTypeCapsim);
                     Assert.AreEqual(expected, unpavedData.AreaPerCrop[UnpavedEnums.CropType.Grass]);
-                    //Assert.AreEqual(seepageSeries.Components.First().Values, retrievedSeries.Components.First().Values);
 
                     ReflectionTestHelper.AssertPublicPropertiesAreEqual(drainageFormula, retrievedDrainageFormula);
                 }
@@ -499,7 +361,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
         
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadSacramentoData()
         {
             string path = null;
@@ -606,7 +467,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveAndLoadPavedData()
         {
             string path = null;
@@ -735,7 +595,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
         
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadModel()
         {
             string path = null;
@@ -809,7 +668,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadCatchment()
         {
             var catchment = new Catchment
@@ -851,7 +709,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadDefaultGeometryCatchment()
         {
             // add catchment
@@ -877,43 +734,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             Assert.AreNotEqual(oldArea, retrievedCatchment.Geometry.Area); //check if change in area, changes geometry (when IsGeometryDerivedFromAreaSize)
         }
-
-        [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
-        public void SaveLoadHydroLink()
-        {
-            var catchment = new Catchment()
-            {
-                CatchmentType = CatchmentType.Paved,
-                Geometry =
-                    new Polygon(
-                        new LinearRing(new[]
-                        {
-                            new Coordinate(0, 0), new Coordinate(10, 0),
-                            new Coordinate(10, 10), new Coordinate(0, 0)
-                        })),
-
-            };
-            var wwtp = new WasteWaterTreatmentPlant();
-            var basin = new DrainageBasin { Catchments = { catchment }, WasteWaterTreatmentPlants = { wwtp } };
-
-            catchment.LinkTo(wwtp);
-
-            var retrievedBasin = SaveLoadObject(basin, "basin");
-
-            Assert.AreEqual(1, retrievedBasin.Links.Count);
-
-            var retrievedLink = retrievedBasin.Links.First();
-            var retrievedCatchment = (Catchment)retrievedLink.Source;
-            var retrievedWwtp = (WasteWaterTreatmentPlant)retrievedLink.Target;
-
-            Assert.AreEqual(1, retrievedCatchment.Links.Count);
-            Assert.AreEqual(1, retrievedWwtp.Links.Count);
-            Assert.AreSame(retrievedLink, retrievedWwtp.Links.First());
-        }
         
         [Test]
-        [Category(TestCategory.Jira)] // FM1D2D-2198
         public void SaveLoadWasteWaterTreatmentPlant()
         {
             var wwtp = new WasteWaterTreatmentPlant { Name = "testName", Description = "testDescr", Geometry = new Point(55, 33) };
@@ -928,7 +750,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             Assert.AreEqual(wwtp.Geometry, retrievedWwtp.Geometry);
             Assert.AreEqual(wwtp.Name, retrievedWwtp.Name);
             Assert.AreEqual(basin, retrievedWwtp.Basin);
-            //Assert.AreEqual(wwtp.Description, retrievedWwtp.Description);
         }
         
         [Test]
@@ -978,8 +799,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         private RainfallRunoffModel GetRRModel()
         {
             var model = new RainfallRunoffModel { Name = "rr" };
-            //model.Evaporation[new DateTime(2011, 1, 1)] = 99.0;
-            //model.Precipitation[new DateTime(2011, 3, 3)] = 22.0;
             model.StartTime = new DateTime(2011, 2, 2);
             model.Basin = new DrainageBasin { Name = "" };
             return model;

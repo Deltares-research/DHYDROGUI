@@ -42,46 +42,32 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [Ignore("TODO: not working anymore due to refactoring; re-enable later")]
-        public void AddCrossSectionToBranchUsingCollections()
-        {
-            var crossSection = new CrossSection(null);
-            var branch = new Channel(new HydroNode("from"), new HydroNode("To"));
-
-            //NetworkHelper.AddBranchFeatureToBranch(branch, crossSection, crossSection.Offset);
-            branch.BranchFeatures.Add(crossSection);
-
-            Assert.AreEqual(branch, crossSection.Branch);
-
-            branch.BranchFeatures.Clear();
-            Assert.IsNull(crossSection.Branch);
-        }
-
-        [Test]
         [Category(TestCategory.Performance)]
         public void AddManyBranchesWithCrossSections()
         {
-            TestHelper.AssertIsFasterThan(2500,() =>
-                                                     {
-                                                         const int count = 10000;
-                                                         var network = new HydroNetwork();
-                                                         for (int i = 0; i < count; i++)
-                                                         {
-                                                             var from = new HydroNode();
-                                                             var to = new HydroNode();
+            TestHelper.AssertIsFasterThan(2500, () =>
+            {
+                const int count = 10000;
+                var network = new HydroNetwork();
+                for (var i = 0; i < count; i++)
+                {
+                    var from = new HydroNode();
+                    var to = new HydroNode();
 
-                                                             network.Nodes.Add(from);
-                                                             network.Nodes.Add(to);
+                    network.Nodes.Add(from);
+                    network.Nodes.Add(to);
 
-                                                             var channel = new Channel {Source = from, Target = to};
-                                                             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel,
-                                                                                                    new CrossSectionDefinitionXYZ(),
-                                                                                                    0);
-                                                         }
+                    var channel = new Channel
+                    {
+                        Source = from,
+                        Target = to
+                    };
+                    HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, new CrossSectionDefinitionXYZ(), 0);
+                }
 
-                                                         // access all CrossSections should be also fast
-                                                         network.CrossSections.ToArray();
-                                                     });
+                // access all CrossSections should be also fast
+                network.CrossSections.ToArray();
+            });
         }
 
         [Test]
@@ -89,31 +75,35 @@ namespace DelftTools.Hydro.Tests
         public void AddManyBranchesWithSimpleBranchFeature()
         {
             const int count = 10000;
-            int weirCount = 0;
+            var weirCount = 0;
 
             Action action = delegate // TODO: what are we testing here? Test only add.
-                                {
-                                    var network = new HydroNetwork();
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        var from = new HydroNode();
-                                        var to = new HydroNode();
+            {
+                var network = new HydroNetwork();
+                for (var i = 0; i < count; i++)
+                {
+                    var from = new HydroNode();
+                    var to = new HydroNode();
 
-                                        network.Nodes.Add(from);
-                                        network.Nodes.Add(to);
+                    network.Nodes.Add(from);
+                    network.Nodes.Add(to);
 
-                                        var channel = new Channel {Source = from, Target = to};
+                    var channel = new Channel
+                    {
+                        Source = from,
+                        Target = to
+                    };
 
-                                        var compositeBranchStructure = new CompositeBranchStructure();
-                                        NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
-                                        HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Weir());
+                    var compositeBranchStructure = new CompositeBranchStructure();
+                    NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
+                    HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Weir());
 
-                                        network.Branches.Add(channel);
-                                    }
+                    network.Branches.Add(channel);
+                }
 
-                                    // access all Weirs should be also fast
-                                    weirCount = network.Weirs.Count();
-                                };
+                // access all Weirs should be also fast
+                weirCount = network.Weirs.Count();
+            };
 
             TestHelper.AssertIsFasterThan(2750, string.Format("Added {0} branches with {1} weirs", count, weirCount), action);
         }

@@ -18,7 +18,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.Export;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.CommonTools;

@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
     public class SobekRRPolderConceptImporterTest
     {
         RainfallRunoffModel tholenModel;
-        RainfallRunoffModel zboModel;
         
         private static HydroModel CreateHydroModelWithRR()
         {
@@ -32,7 +31,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             return hydroModel;
         }
 
-        public void SetUpTholen()
+        private void SetUpTholen()
         {
             if (tholenModel != null)
                 return; //already loaded: speeds up tests
@@ -40,18 +39,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             string file = TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP";
             var hydroModel = CreateHydroModelWithRR();
             tholenModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, hydroModel);
-            importer.Import();
-        }
-
-        public void SetUpZBOtest()
-        {
-            if (zboModel != null)
-                return;
-
-            string file = TestHelper.GetTestDataDirectory() + @"\ZBOtest.lit\7\NETWORK.TP";
-            var hydroModel = CreateHydroModelWithRR();
-            zboModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(file, hydroModel);
             importer.Import();
         }
@@ -333,50 +320,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(2.5, pavedData.VariableWaterUseFunction[21]);
             Assert.AreEqual(2.0, pavedData.VariableWaterUseFunction[22]);
             Assert.AreEqual(2.0, pavedData.VariableWaterUseFunction[23]);
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        [Ignore("Sobek RR is not implemented yet.")]
-        public void ImportZBOtestCheckGreenhouseDataCount()
-        {
-            SetUpZBOtest();
-            Assert.AreEqual(11, zboModel.GetAllModelData().OfType<GreenhouseData>().Count());
-        }
-        
-        [Test]
-        [Category("Quarantine")]
-        [Ignore("Sobek RR is not implemented yet.")]
-        public void ImportZBOtestCheckGreenhouseDataOfSeventhItem()
-        {
-            // GRHS id 'GH3_GFE1224' na 10 ar 0 334051 0 0 0 0 0 0 0 0 sl 0.94 as 0 sd 'STOR1' si '1' ms 'GFE1224' aaf 1 is 50 grhs
-
-            // STDF id 'STOR1' nm 'STOR1' mk 0 ik 0 stdf
-
-            // SILO id '1' nm 'SILO1' sc 0 pc 0 silo
-
-            SetUpZBOtest();
-
-            var greenhouseData = zboModel.GetAllModelData().OfType<GreenhouseData>().ToList()[6];
-
-            // greenhouse
-            Assert.AreEqual(new[] {0.0, 334051.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, greenhouseData.AreaPerGreenhouse.Values.ToArray());
-            Assert.AreEqual(0.94, greenhouseData.SurfaceLevel);
-            Assert.AreEqual(0.0, greenhouseData.SubSoilStorageArea); //?
-            // initial salt not supported in GreenhouseData object
-
-            // roof storage
-            Assert.AreEqual(0.0, greenhouseData.MaximumRoofStorage);
-            Assert.AreEqual(0.0, greenhouseData.InitialRoofStorage); // not read, default zero
-
-            // silo definition
-            Assert.AreEqual(0.0, greenhouseData.SiloCapacity);
-            Assert.AreEqual(0.0, greenhouseData.PumpCapacity);
-
-            // unmapped: ???
-            //greenhouseData.RoofStorageUnit;
-            //greenhouseData.TotalSurfaceArea;
-            //greenhouseData.UseSubsoilStorage;
         }
     }
 }

@@ -11,7 +11,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -114,61 +113,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     }
                 }
             }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void OpenBoundaryToleranceIsOnlyWrittenForEmbankments()
-        {
-            var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
-            var embankment = new Embankment()
-            {
-                Geometry =
-                    new LineString(
-                        Enumerable.Range(2, 4).Select(i => new Coordinate(2, 4.0*i)).ToArray()),
-                Name = "embankment1"
-            };
-            modelDefinition.Embankments.Add(embankment);
-
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition,Enumerable.Empty<Model1DBoundaryNodeData>(), Enumerable.Empty<Model1DLateralSourceData>());
-
-            int boundaryCounter = 0;
-            int openBoundaryToleranceCounter = 0;
-
-            using (var file = new StreamReader("testbnd.ext"))
-            {
-                string line;
-                while ((line = file.ReadLine()) != null)
-                {
-                    if (line.Contains(BndExtForceFile.BoundaryBlockKey)) boundaryCounter++;
-                    if (line.Contains("OpenBoundaryTolerance")) openBoundaryToleranceCounter++;
-                }
-                file.Close();
-            }
-
-            Assert.AreEqual(3, boundaryCounter, "File testbnd.ext should contain 3 boundaries");
-            Assert.AreEqual(1, openBoundaryToleranceCounter, "File testbnd.ext should only contain an OpenBoundaryTolerance for each embankment");
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void WriteReadEmptyBoundaries()
-        {
-            var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
-
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition, Enumerable.Empty<Model1DBoundaryNodeData>(), Enumerable.Empty<Model1DLateralSourceData>());
-
-            var newModelDefinition = new WaterFlowFMModelDefinition();
-
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
-
-            Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
-            Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
         }
 
         [Test]
@@ -885,53 +829,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(string.Empty, new List<BoundaryConditionSet>{ bcSet}, DateTime.Today);
 
             Assert.IsFalse(resultingItems.Any());
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void WriteBndExtForceFileSubFilesReturnsItemsWhenNameIsNotMissing()
-        {
-            var bndExtForceFile = new BndExtForceFile();
-            var testFolder = Path.GetDirectoryName(Path.GetDirectoryName(TestHelper.GetTestDataDirectory())); //This will place it under /debug
-            Assert.IsNotNull(testFolder);
-
-            var fileDirectory = Path.Combine(testFolder, "WriteBndExtForceFileSubFilesReturnsItemsWhenNameIsNotMissing");
-            FileUtils.DeleteIfExists(fileDirectory);
-
-            var filePath = Path.Combine(fileDirectory, "file.ext");
-            FileUtils.DeleteIfExists(filePath);
-
-            var firstBoundary = new Feature2D
-            {
-                Name = "TestName",
-                Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
-            };
-            var secondBoundary = new Feature2D
-            {
-                Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
-            };
-            Assert.IsTrue(string.IsNullOrEmpty(secondBoundary.Name));
-
-            var bcSetOne = new BoundaryConditionSet { Feature = firstBoundary };
-            var bcSetTwo = new BoundaryConditionSet { Feature = secondBoundary };
-
-            var md = new WaterFlowFMModelDefinition();
-            md.BoundaryConditionSets.AddRange(new[]{bcSetOne, bcSetTwo});
-
-            Assert.IsFalse(File.Exists(filePath));
-            bndExtForceFile.Write(filePath, md);
-            Assert.IsTrue(File.Exists(filePath));
-
-            var lines = File.ReadAllLines(filePath);
-            Assert.IsNotNull(lines);
-
-            //Make sure only one boundary has been added (double check from the test WriteBndExtForceFileSubFilesReturnsNoItemsIfMissingName above)
-            Assert.AreEqual(1, lines.Count( l => l.Contains("[boundary]")));
-            Assert.IsTrue(lines.Any( l => l.Contains("TestName.pli")));
-
-            
-
-            FileUtils.DeleteIfExists(filePath);
         }
 
         [Test]

@@ -21,5 +21,10 @@ namespace DeltaShell.NGHS.IO.Helpers
         {
             return Importers.Where(kvp => kvp.Key.IsAssignableFrom(targetType)).Select(kvp => kvp.Value());
         }
+
+        public static void ClearRegisteredImporters()
+        {
+            Importers.Clear();
+        }
     }
 }

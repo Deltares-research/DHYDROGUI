@@ -69,7 +69,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             culvertViewWpf.Data = culvert;
             WpfTestHelper.ShowModal(culvertViewWpf, () =>
             {
-                //Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Visible));// not yet implemented in the kernel
                 Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Collapsed));
             });
 

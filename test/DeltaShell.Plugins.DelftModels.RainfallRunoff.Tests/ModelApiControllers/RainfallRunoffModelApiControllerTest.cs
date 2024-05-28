@@ -12,7 +12,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
@@ -26,14 +25,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
     [Category(TestCategory.Integration)]
     public class RainfallRunoffModelApiControllerTest
     {
-        
         [OneTimeSetUp]
         public void AssemblySetUp()
         {
             TestHelper.SetDeltaresLicenseToEnvironmentVariable();
         }
 
-        [OneTimeTearDownAttribute]
+        [OneTimeTearDown]
         public void TearDown()
         {
             Directory.GetDirectories(TestHelper.GetTestWorkingDirectory(), nameof(RainfallRunoffModelApiControllerTest) + "*").ForEach(FileUtils.DeleteIfExists);
@@ -54,70 +52,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             }
 
             return model;
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
-        [Ignore("Sobek RR is not implemented yet.")]
-        public void RunModelAndTakeInitialConditions()
-        {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
-            {
-                var model = CreateModel();
-                // no ground water level
-                model.OutputSettings.AggregationOption = AggregationOptions.Current;
-                model.OutputSettings.GetEngineParameter(QuantityType.Storage_mm, ElementSet.UnpavedElmSet).
-                    IsEnabled = true;
-                model.OutputSettings.GetEngineParameter(QuantityType.StorageStreet_mm, ElementSet.PavedElmSet).
-                      IsEnabled = true;
-                model.OutputSettings.GetEngineParameter(QuantityType.Storage_m3, ElementSet.GreenhouseElmSet).
-                      IsEnabled = true;
-
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
-
-                var catchment = new Catchment { Name = "c1", IsGeometryDerivedFromAreaSize = true, CatchmentType = CatchmentType.Unpaved };
-                catchment.SetAreaSize(3000000);
-                model.Basin.Catchments.Add(catchment);
-
-                var runoffBoundary = new RunoffBoundary();
-                model.Basin.Boundaries.Add(runoffBoundary);
-
-                catchment.LinkTo(runoffBoundary);
-                
-
-                var catchment2 = new Catchment { Name = "c2", IsGeometryDerivedFromAreaSize = true, CatchmentType = CatchmentType.Paved };
-                catchment2.SetAreaSize(3000000);
-                model.Basin.Catchments.Add(catchment2);
-
-                catchment2.LinkTo(runoffBoundary);
-
-                var pavedData = (PavedData) model.GetCatchmentModelData(catchment2);
-                pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-
-                var catchment3 = new Catchment { Name = "c3",  IsGeometryDerivedFromAreaSize = true, CatchmentType = CatchmentType.GreenHouse };
-                catchment3.SetAreaSize(3000000);
-                model.Basin.Catchments.Add(catchment3);
-                catchment3.LinkTo(runoffBoundary); //We no longer accept catchments without HydroLinks.
-
-                SetGlobalMeteoDataForTesting(model);
-
-                ActivityRunner.RunActivity(model);
-
-                var sampleTime = model.StopTime - model.OutputTimeStep;
-                TestHelper.AssertLogMessageIsGenerated(
-                    () => model.SetInitialConditionsFromPreviousOutput(sampleTime),
-                    "Cannot take initial condition 'Unpaved Initial Groundwater Level' from output; output not available");
-                
-                var landStorageCoverage = model.OutputCoverages.First(o => o.Components[0].Name ==
-                                                     model.OutputSettings.GetEngineParameter(
-                                                         QuantityType.Storage_mm, ElementSet.UnpavedElmSet)
-                                                          .Name);
-
-                var unpaved = (UnpavedData) model.GetCatchmentModelData(catchment);
-                Assert.AreEqual(landStorageCoverage[sampleTime, catchment], unpaved.InitialLandStorage);
-            }
         }
 
         [Test]
@@ -313,49 +247,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
-        [Category("Quarantine")] // Check what to do with this test after the fix for FM1D2D-1629
-                                     // (No bound3b.3b and bound3b.tbl files written any more)
-        public void RunModelForOpenWaterCatchmentsAndGetOutputCoverage()
-        {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
-            {
-                var model = CreateModel();
-                model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.OpenWaterElmSet).IsEnabled = true;
-                model.OutputSettings.GetEngineParameter(QuantityType.EvaporationSurface, ElementSet.OpenWaterElmSet).IsEnabled = true;
-                model.OutputSettings.AggregationOption = AggregationOptions.Current;
-                
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
-
-                model.StartTime = new DateTime(2000, 1, 1);
-                model.StopTime = new DateTime(2000, 1, 2, 0, 0, 0);
-
-                // create two catchments
-                var catchment = new Catchment { Name = "c1", IsGeometryDerivedFromAreaSize = true, CatchmentType = CatchmentType.OpenWater };
-                catchment.SetAreaSize(3000000);
-                model.Basin.Catchments.Add(catchment);
-                var catchment2 = new Catchment { Name = "c2", IsGeometryDerivedFromAreaSize = true, CatchmentType = CatchmentType.OpenWater };
-                catchment2.SetAreaSize(9000000);
-                model.Basin.Catchments.Add(catchment2);
-
-                SetGlobalMeteoDataForTesting(model);
-
-                ActivityRunner.RunActivity(model);
-                System.Threading.Thread.Sleep(15); // Give kernel a chance to die and release file handles
-
-                var coverage = (IFeatureCoverage) model.OutputCoverages.First(c => c.Name.StartsWith(RainfallRunoffModelParameterNames.OpenWaterRainfall));
-                Assert.AreEqual(25 * 2, coverage.Components[0].Values.Count);
-
-                foreach (var time in coverage.Time.Values.Skip(1))
-                {
-                    Console.WriteLine(coverage[time, catchment] + " - " + coverage[time, catchment2]);
-                    Assert.AreNotEqual(coverage[time, catchment], coverage[time, catchment2]);
-                }
-            }
-        }
-
-        [Test]
         public void RunModelWithWWTPAndGetOutputCoverage()
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
@@ -464,59 +355,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 {
                     Console.WriteLine(coverage[time, boundary]);
                 }
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        [Ignore("Time aggregation should be done by kernel not deltashell")]
-        [Category("ToCheck")]
-        public void RunModelTestAggregation()
-        {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())            
-            {
-                var model = CreateModel();
-                model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).IsEnabled = true;
-                model.OutputSettings.AggregationOption = AggregationOptions.Average;
-
-                app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
-                app.Project.RootFolder.Add(model);
-
-                ConfigureSimpleModel(model);
-
-                model.Basin.Catchments[1].CatchmentType = CatchmentType.Paved; //disables it
-
-                ActivityRunner.RunActivity(model);
-
-                var rainfallUnp = RainfallRunoffModelParameterNames.UnpavedRainfall;
-                var coverage = model.OutputCoverages.First(c => c.Name.StartsWith(rainfallUnp)) as IFeatureCoverage;
-                var catchmentValues = coverage.Components[0].Values.OfType<double>().ToList();
-                Assert.AreEqual(25, catchmentValues.Count);
-
-                model.OutputTimeStep = new TimeSpan(model.TimeStep.Ticks * 5);
-
-                ActivityRunner.RunActivity(model);
-
-                var aggregatedCatchmentValues = coverage.Components[0].Values.OfType<double>().ToList();
-                Assert.AreEqual(6, aggregatedCatchmentValues.Count);
-
-                Assert.AreEqual(catchmentValues[0], aggregatedCatchmentValues[0]); //initial timestep
-
-                Assert.AreEqual(
-                    (catchmentValues[1] + catchmentValues[2] + catchmentValues[3] +
-                     catchmentValues[4] + catchmentValues[5])/5.0, 
-                     aggregatedCatchmentValues[1]);
-
-                Assert.AreEqual(
-                    (catchmentValues[16] + catchmentValues[17] + catchmentValues[18] +
-                     catchmentValues[19] + catchmentValues[20]) / 5.0,
-                     aggregatedCatchmentValues[4]);
-                
-                Assert.AreEqual(
-                    (catchmentValues[21] + catchmentValues[22] + catchmentValues[23] +
-                     catchmentValues[24])/4.0,
-                    aggregatedCatchmentValues[5]);
-                //note: last few timesteps are aggregated partly because it's not a full output timestep
             }
         }
 

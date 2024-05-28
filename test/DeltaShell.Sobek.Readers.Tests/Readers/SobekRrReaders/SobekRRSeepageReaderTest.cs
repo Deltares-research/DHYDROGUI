@@ -79,7 +79,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             var seepageData = new SobekRRSeepageReader().Parse(line).First();
             Assert.AreEqual("GFE978", seepageData.Id);
             Assert.AreEqual("Kwel GFE978", seepageData.Name);
-            //Assert.AreEqual(5, (int)seepageData.ComputationOption);
             Assert.IsNotNull(seepageData.SaltTableConcentration);
             Assert.Greater(seepageData.SaltTableConcentration.Rows.Count,0);
 
@@ -108,7 +107,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.Slow)]
         public void ReadSeepageFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Tholen.lit\29\Unpaved.sep");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Tholen.lit\29\Unpaved.sep");
             var lstSeepage = new SobekRRSeepageReader().Read(path);
             Assert.AreEqual(274, lstSeepage.Count());
         }

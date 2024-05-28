@@ -91,7 +91,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadFrom212File()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ndb_controllertriggerfiles\STRUCT.DAT");
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ndb_controllertriggerfiles\STRUCT.DAT");
             var structureMappings = new SobekStructureDatFileReader().Read(pathToSobekNetwork).ToArray();
 
             Assert.AreEqual(41, structureMappings.Length);
@@ -102,7 +102,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadFromREFile()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ndb_controllertriggerfiles\DEFSTR.2");
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ndb_controllertriggerfiles\DEFSTR.2");
             var structureMappings = new SobekStructureDatFileReader().Read(pathToSobekNetwork).ToArray();
 
             Assert.AreEqual(41, structureMappings.Length);

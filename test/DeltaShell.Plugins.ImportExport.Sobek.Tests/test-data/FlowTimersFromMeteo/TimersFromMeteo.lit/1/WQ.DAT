@@ -1,8 +1,0 @@
- 1   ; file option for initial values in this file
- 2   ; default option
-11*1.0 ; scale factors for substances, fixed at 1.0
-;* active substances:  CWTOT POCW SSW DOCW AOCW
- .00008 1.5 10 .5 1 ; initial values of active substances
-;* passive substances:  DOCB POCB DOCSUB POCSUB CBTOT CSUBT
- 70 47500 70 47500 2.18 2.18 ; initial values of passive substances
- 0 ; number of overrides

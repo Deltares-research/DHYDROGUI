@@ -251,62 +251,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void MduFileReadsFromMultipleFilesAnAssignsGroupNamesToIGroupableFeatures()
-        {
-            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");
-            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
-            try
-            {
-                var area = new HydroArea();
-                var network = new HydroNetwork();
-                var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-                var mduFile = new MduFile();
-                var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-                {
-                    ModelDefinition = modelDefinition,
-                    HydroArea = area,
-                    HydroNetwork = network,
-                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-                };
-
-                mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
-
-                //  2 groups per each feature
-                CheckFeatureWasReadCorrectly(area.ObservationPoints, "ObservationPoints", new List<string> { "ObsGroup1_obs.xyn", "ObsGroup2_obs.xyn" });
-                CheckFeatureWasReadCorrectly(area.Enclosures, "Enclosures", new List<string> { "EncGroup1_enc.pol", "EncGroup2_enc.pol" });
-                /* Dry Points and dry areas are exclusive  XyzFile dryPointFile;*/
-                CheckFeatureWasReadCorrectly(area.DryAreas, "DryAreas", new List<string> { "DryGroup1_dry.pol", "DryGroup2_dry.pol" });
-                CheckFeatureWasReadCorrectly(area.ThinDams, "ThinDams", new List<string> { "ThdGroup1_thd.pli", "ThdGroup2_thd.pli" });
-                CheckFeatureWasReadCorrectly(area.FixedWeirs, "FixedWeirs", new List<string> { "FxwGroup1_fxw.pli", "FxwGroup2_fxw.pli" });
-                CheckFeatureWasReadCorrectly(area.ObservationCrossSections, "ObservationCrossSections", new List<string> { "CrsGroup1_crs.pli", "CrsGroup2_crs.pli" });
-                CheckFeatureWasReadCorrectly(area.LandBoundaries, "LandBoundaries", new List<string> { "LdbGroup1.ldb", "LdbGroup2.ldb" });
-
-                Assert.AreEqual(2, area.Embankments.Count);
-                var embankmentsList = area.Embankments.Select(e => e.Name).ToList();
-                var expectedEmbankments = new List<string> {"Embankment01", "Embankment02"};
-                Assert.IsFalse(embankmentsList.Any( e => !expectedEmbankments.Contains(e)));
-                Assert.IsFalse(expectedEmbankments.Any(e => !embankmentsList.Contains(e)));
-               
-                /* StructuresFile 
-                 * We CAN read from multiple structures files, however these structures will not get the GroupName due to its implementation nature.
-                 */
-                var structuresGroupNames =
-                    new List<string> { "StructuresGroup1_structures.ini", "StructuresGroup2_structures.ini" };
-                CheckFeatureWasReadCorrectly(area.Gates, "Gates", structuresGroupNames);
-                CheckFeatureWasReadCorrectly(area.Pumps, "Pumps", structuresGroupNames);
-                CheckFeatureWasReadCorrectly(area.Weirs, "Weirs", structuresGroupNames);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(mduFilePath);
-            }
-        }
-
-        [Test]
         public void MduFileReadsFromMultipleFilesAnAssignsGroupNamesToXyZFileDryPointFeature()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryPointsMdu.mdu");
@@ -504,92 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsEmpty(area.DryPoints); //Check this, because dry areas and dry points are read in the same method (MduFile.ReadDryPointsAndDryAreas)
             Assert.That(area.DryAreas.Count, Is.EqualTo(1));
         }
-
-        [Test, Ignore("We are not able to read 1D2D-models at the moment, so this test will fail at the moment.")] /* Roundtrip test */
-        [Category("ToCheck")]
-        public void MduFileReadsAndWritesIGroupableFeatures()
-        {
-            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");
-            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            Assert.NotNull(mduDir);
-            var modelName = Path.GetFileName(mduFilePath);
-
-            var saveDirectory = Path.Combine(mduDir, "MduFileReadsAndWritesTest");
-            Directory.CreateDirectory(saveDirectory);
-            var savePath = Path.Combine(saveDirectory, "SaveFlowFM.mdu");
-            var newMduDir = Path.GetDirectoryName(savePath);
-            var newMduName = Path.GetFileName(savePath);
-            try
-            {
-                var mduFile = new MduFile();
-
-                var originalArea = new HydroArea();
-                var originalNetwork = new HydroNetwork();
-                var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-                var convertedFileObjectsForFMModelOriginal = new ConvertedFileObjectsForFMModel
-                {
-                    ModelDefinition = originalMD,
-                    HydroArea = originalArea,
-                    HydroNetwork = originalNetwork,
-                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-                };
-
-                mduFile.Read(mduFilePath, convertedFileObjectsForFMModelOriginal);
-                mduFile.Write(savePath, originalMD, originalArea, null, null, null, null, null, null, allFixedWeirsAndCorrespondingProperties, switchTo: false);
-
-                var savedArea = new HydroArea();
-                var savedNetwork = new HydroNetwork();
-                var savedMD = new WaterFlowFMModelDefinition(newMduDir, newMduName);
-
-                var convertedFileObjectsForFMModelSaved = new ConvertedFileObjectsForFMModel
-                {
-                    ModelDefinition = savedMD,
-                    HydroArea = savedArea,
-                    HydroNetwork = savedNetwork,
-                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-                };
-
-                mduFile.Read(savePath, convertedFileObjectsForFMModelSaved);
-
-                //Check MDU property.
-                var listOfProperties = new List<string>()
-                {
-                    KnownProperties.EnclosureFile,
-                    KnownProperties.ObsFile,
-                    KnownProperties.LandBoundaryFile,
-                    KnownProperties.ThinDamFile,
-                    KnownProperties.FixedWeirFile,
-                    KnownProperties.StructuresFile,
-                    KnownProperties.ObsCrsFile,
-                    KnownProperties.DryPointsFile,
-                    KnownProperties.StructuresFile
-                };
-
-                foreach (var property in listOfProperties)
-                {
-                    CompareHydroAreaModelProperties(property, savePath, originalMD, savedMD);
-                }
-
-                CompareHydroAreaFeatures(originalArea, savedArea);
-
-                /* Embankments */
-                Assert.AreEqual(originalArea.Embankments.Count, savedArea.Embankments.Count);
-                var expectedEmbankments = originalArea.Embankments.Select(e => e.Name).ToList();
-                var savedEmbankments = savedArea.Embankments.Select(e => e.Name).ToList();
-                Assert.IsFalse(savedEmbankments.Any(e => !expectedEmbankments.Contains(e)));
-                Assert.IsFalse(expectedEmbankments.Any(e => !savedEmbankments.Contains(e)));
-
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(mduFilePath);
-                FileUtils.DeleteIfExists(savePath);
-                FileUtils.DeleteIfExists(saveDirectory);
-            }
-        }
-
+        
         [Test]
         public void MduFileReadsAndWritesXyzFileDryPointFeature()
         {
@@ -648,87 +507,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        [Test, Ignore("We are not able to read 1D2D-models at the moment, so this test will fail at the moment.")] /* Roundtrip test */
-        [Category("ToCheck")]
-        public void MduFileWritesDefaultValueForIGroupableFeatures()
-        {
-            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");
-            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            Assert.NotNull(mduDir);
-            var modelName = Path.GetFileName(mduFilePath);
-
-            var saveDirectory = Path.Combine(mduDir, "MduFileReadsAndWritesTest");
-            Directory.CreateDirectory(saveDirectory);
-            var savePath = Path.Combine(saveDirectory, "SaveFlowFM.mdu");
-            var newMduDir = Path.GetDirectoryName(savePath);
-            var newMduName = Path.GetFileName(savePath);
-            try
-            {
-                var mduFile = new MduFile();
-
-                var originalArea = new HydroArea();
-                var network = new HydroNetwork();
-                var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-                var convertedFileObjectsForFMModelOriginal = new ConvertedFileObjectsForFMModel
-                {
-                    ModelDefinition = originalMD,
-                    HydroArea = originalArea,
-                    HydroNetwork = network,
-                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-                };
-                mduFile.Read(mduFilePath, convertedFileObjectsForFMModelOriginal);
-
-                //Remove one of the selected group names to make it ' default' .
-                RemoveGroupNameFromGroupableFeature(originalArea.ObservationPoints);
-                RemoveGroupNameFromGroupableFeature(originalArea.Enclosures);
-                RemoveGroupNameFromGroupableFeature(originalArea.DryAreas);
-                RemoveGroupNameFromGroupableFeature(originalArea.ThinDams);
-                RemoveGroupNameFromGroupableFeature(originalArea.FixedWeirs);
-                RemoveGroupNameFromGroupableFeature(originalArea.ObservationCrossSections);
-                RemoveGroupNameFromGroupableFeature(originalArea.LandBoundaries);
-                RemoveGroupNameFromGroupableFeature(originalArea.Gates);
-                RemoveGroupNameFromGroupableFeature(originalArea.Pumps);
-                RemoveGroupNameFromGroupableFeature(originalArea.Weirs);
-
-                mduFile.Write(savePath, originalMD, originalArea, null, null, null, null,null, null, allFixedWeirsAndCorrespondingProperties, switchTo: false);
-
-                var savedArea = new HydroArea();
-                var savedNetwork = new HydroNetwork();
-                var savedMD = new WaterFlowFMModelDefinition(newMduDir, newMduName);
-                var convertedFileObjectsForFMModelSaved = new ConvertedFileObjectsForFMModel
-                {
-                    ModelDefinition = savedMD,
-                    HydroArea = savedArea,
-                    HydroNetwork = savedNetwork,
-                    AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-                }; 
-                mduFile.Read(savePath, convertedFileObjectsForFMModelSaved);
-
-                CompareHydroAreaFeatures(originalArea, savedArea);
-                //Check default group was created.
-                var mduPathName = Path.GetFileNameWithoutExtension(savePath);
-                CheckDefaultGroupIsInFeature("LandBoundaries", originalArea.LandBoundaries, mduPathName, MduFile.LandBoundariesExtension);
-                CheckDefaultGroupIsInFeature("FixedWeirs", originalArea.FixedWeirs, mduPathName, MduFile.FixedWeirExtension);
-                CheckDefaultGroupIsInFeature("ObservationPoints", originalArea.ObservationPoints, mduPathName, MduFile.ObsExtension);
-                CheckDefaultGroupIsInFeature("ObservationCrossSections", originalArea.ObservationCrossSections, mduPathName, MduFile.ObsCrossExtension);
-                CheckDefaultGroupIsInFeature("DryAreas", originalArea.DryAreas, mduPathName, MduFile.DryAreaExtension);
-                CheckDefaultGroupIsInFeature("Enclosures", originalArea.Enclosures, mduPathName, MduFile.EnclosureExtension);
-                CheckDefaultGroupIsInFeature("Gates", originalArea.Gates, mduPathName, MduFile.StructuresExtension);
-                CheckDefaultGroupIsInFeature("Pumps", originalArea.Pumps, mduPathName, MduFile.StructuresExtension);
-                CheckDefaultGroupIsInFeature("Weirs", originalArea.Weirs, mduPathName, MduFile.StructuresExtension);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(mduFilePath);
-                FileUtils.DeleteIfExists(savePath);
-                FileUtils.DeleteIfExists(saveDirectory);
-            }
-        }
-
         [Test]
-        [Category(TestCategory.WorkInProgress)]
         public void MduFileWritesDefaultValuesForDryPointFeature()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryPointsMdu.mdu");
@@ -827,98 +606,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FileUtils.DeleteIfExists(mduFilePath);
             }
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void GivenAProjectFolderWithFeatureFilesOutsideOfTheMduFolder_WhenReadingMdu_ThenAllFilesAreCopiedAndRead()
-        {
-            // Preparations
-            const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var relativeMduFilePath = @"FilesOutsideMduFolderProject.dsproj_data\FlowFM\FlowFM.mdu";
-            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
-
-            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
-            
-            var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
-            var mduPath = Path.Combine(testWorkingFolder, relativeMduFilePath);
-
-            CheckIfFilesWereCopied(originalFolderPath, testWorkingFolder);
-
-            var modelName = Path.GetFileNameWithoutExtension(mduPath);
-            var area = new HydroArea();
-            var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
-            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = modelDefinition,
-                HydroArea = area,
-                HydroNetwork = network,
-                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-            };
-
-            mduFile.Read(mduPath, convertedFileObjectsForFMModel);
-
-            // Check if all features were read
-            Assert.That(area.DryPoints.Count, Is.EqualTo(2));
-            Assert.That(area.Enclosures.Count, Is.EqualTo(1));
-            Assert.That(area.FixedWeirs.Count, Is.EqualTo(1));
-            Assert.That(area.Gates.Count, Is.EqualTo(1));
-            Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
-            Assert.That(area.Pumps.Count, Is.EqualTo(1));
-            Assert.That(area.ThinDams.Count, Is.EqualTo(1));
-            Assert.That(area.Weirs.Count, Is.EqualTo(1));
-            Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
-            Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
-
-            CheckIfFilesWereCopied(originalFolderPath, testWorkingFolder);
-        }
-
-        [Test]
-        [TestCase(@"FilesInsideMduSubFolderProject.dsproj_data\FlowFM\FlowFM.mdu")]
-        [TestCase(@"FilesInsideMduSubFolderButWithRelativePathsProject.dsproj_data\FlowFM\FlowFM.mdu")]
-        [Category("Quarantine")]
-        public void GivenAProjectFolderWithFeatureFilesInsideOfAnMduSubFolder_WhenReadingMdu_ThenAllFilesAreRead(string mduProjectFilePath)
-        {
-            // Preparations
-            const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
-
-            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
-            var mduPath = Path.Combine(originalFolderPath, mduProjectFilePath);
-            var featureFileDirectory = Path.Combine(testDir, baseFolderPath, @"FeatureFiles");
-
-            var modelName = Path.GetFileNameWithoutExtension(mduPath);
-            var area = new HydroArea();
-            var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
-            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = modelDefinition,
-                HydroArea = area,
-                HydroNetwork = network,
-                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-            };
-
-            mduFile.Read(mduPath, convertedFileObjectsForFMModel);
-
-            // Check if all features were read
-            Assert.That(area.DryPoints.Count, Is.EqualTo(2));
-            Assert.That(area.Enclosures.Count, Is.EqualTo(1));
-            Assert.That(area.FixedWeirs.Count, Is.EqualTo(1));
-            Assert.That(area.Gates.Count, Is.EqualTo(1));
-            Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
-            Assert.That(area.Pumps.Count, Is.EqualTo(1));
-            Assert.That(area.ThinDams.Count, Is.EqualTo(1));
-            Assert.That(area.Weirs.Count, Is.EqualTo(1));
-            Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
-            Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
-
-            CheckIfFilesWereCopied(featureFileDirectory, Path.GetDirectoryName(mduPath));
         }
 
         [Test]
@@ -1559,37 +1246,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void GivenStructuresFileWithReferenceToNonExsistentFile_WhenReadingMdu_ThenStructuresFileIsIgnoredAndDeltaShellGivesWarning()
-        {
-            // Preparations
-            const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
-
-            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
-            var relativePath = @"StructuresFileWithoutReferences\FlowFM\FlowFM.mdu";
-
-            var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
-            var mduPath = Path.Combine(testWorkingFolder, relativePath);
-
-            var area = new HydroArea();
-            var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, Path.GetFileNameWithoutExtension(mduPath));
-            var mduFile = new MduFile();
-            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = modelDefinition,
-                HydroArea = area,
-                HydroNetwork = network,
-                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-            };
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => mduFile.Read(mduPath, convertedFileObjectsForFMModel), "' is referenced in structures file '");
-            Assert.IsFalse(File.Exists(Path.Combine(testWorkingFolder, "FlowFM_structures.ini")));
-            Assert.That(modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString(), Is.EqualTo(""));
-        }
-
-        [Test]
         public void GivenMduFileWithReferencesThatIsSituatedInAFolderWithSpacesInItsName_WhenReadingMduFile_ThenNoProblemsOccur()
         {
             // Preparations
@@ -1709,43 +1365,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         #region TestHelpers
 
-        private void CompareHydroAreaFeatures(HydroArea originalArea, HydroArea savedArea)
-        {
-            //Check features
-            CompareHydroAreaFeatureCollections("ObservationPoints", originalArea.ObservationPoints,
-                originalArea.ObservationPoints.Select(op => op.Name), savedArea.ObservationPoints,
-                savedArea.ObservationPoints.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("Enclosures", originalArea.Enclosures,
-                originalArea.Enclosures.Select(op => op.Name), savedArea.Enclosures,
-                savedArea.Enclosures.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("DryAreas", originalArea.DryAreas,
-                originalArea.DryAreas.Select(op => op.Name), savedArea.DryAreas,
-                savedArea.DryAreas.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("ThinDams", originalArea.ThinDams,
-                originalArea.ThinDams.Select(op => op.Name), savedArea.ThinDams,
-                savedArea.ThinDams.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("FixedWeirs", originalArea.FixedWeirs,
-                originalArea.FixedWeirs.Select(op => op.Name), savedArea.FixedWeirs,
-                savedArea.FixedWeirs.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("ObservationCrossSections", originalArea.ObservationCrossSections,
-                originalArea.ObservationCrossSections.Select(op => op.Name), savedArea.ObservationCrossSections,
-                savedArea.ObservationCrossSections.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("LandBoundaries", originalArea.LandBoundaries,
-                originalArea.LandBoundaries.Select(op => op.Name), savedArea.LandBoundaries,
-                savedArea.LandBoundaries.Select(op => op.Name));
-
-            /* Check structures */
-            CompareHydroAreaFeatureCollections("Gates", originalArea.Gates,
-                originalArea.Gates.Select(op => op.Name), savedArea.Gates,
-                savedArea.Gates.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("Pumps", originalArea.Pumps,
-                originalArea.Pumps.Select(op => op.Name), savedArea.Pumps,
-                savedArea.Pumps.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("Weirs", originalArea.Weirs,
-                originalArea.Weirs.Select(op => op.Name), savedArea.Weirs,
-                savedArea.Weirs.Select(op => op.Name));
-        }
-
         private void CompareHydroAreaModelProperties(string propertyName, string saveMduFilePath, WaterFlowFMModelDefinition expectedMD,
             WaterFlowFMModelDefinition savedMD)
         {
@@ -1756,25 +1375,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.AreEqual(expectedProp.GetValueAsString(), savedProp.GetValueAsString());
             CheckFeatureFilesWereCreated(saveMduFilePath, propertyName, savedMD);
-        }
-
-        private void CompareHydroAreaFeatureCollections(string featureName, IEnumerable<IGroupableFeature> expectedFeature, IEnumerable<string> expectedAreaFeatureNames, IEnumerable<IGroupableFeature> savedFeature, IEnumerable<string> savedAreaFeatureNames)
-        {
-            var expectedList = expectedFeature.ToList();
-            var savedList = savedFeature.ToList();
-            Assert.AreEqual(expectedList.Count, savedList.Count, 
-                "{0} Saved features differ from the original read ones.", featureName);
-
-            var expectedGroups = expectedList.GroupBy(g => g.GroupName).ToList();
-            var expectedGroupNames = expectedGroups.Select(g => g.Key).ToList();
-            var savedGroups = savedList.GroupBy(g => g.GroupName).ToList();
-            var savedGroupNames = savedGroups.Select(g => g.Key).ToList();
-            Assert.AreEqual(expectedGroupNames.Count, savedGroupNames.Count,
-                "{0} Group names differ from the original read ones. Original: {1}, Saved {2}", featureName, expectedGroupNames, savedGroupNames);
-
-            Assert.IsTrue(Enumerable.SequenceEqual(
-                expectedAreaFeatureNames.OrderBy(fElement => fElement),
-                savedAreaFeatureNames.OrderBy(sElement => sElement)));
         }
 
         private void CheckFeatureFilesWereCreated(string mduFilePath, string propertyName, WaterFlowFMModelDefinition modelDefinition)
@@ -1872,19 +1472,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 dir.Delete();
             }
         }
-
-        private static void CheckIfFilesWereCopied(string fromFolder, string toFolder)
-        {
-            var toFolderFileNames = new DirectoryInfo(toFolder).GetFiles().Select(f => f.Name);
-            var fromFolderFileNames = new DirectoryInfo(fromFolder).GetFiles().Select(f => f.Name);
-
-            var missing = fromFolderFileNames.Except(toFolderFileNames).ToArray();
-            if (missing.Any())
-            {
-                Assert.Fail($"Missing files {string.Join(",", missing)}");
-            }
-        }
-
+        
         private static string GetExpectedFileText(string mduPropertyName, string fileNameWithExtension)
         {
             return string.Format("{0,-18}= {1,-20}", mduPropertyName, string.Join(" ", fileNameWithExtension)).Trim();

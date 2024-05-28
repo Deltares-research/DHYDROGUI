@@ -50,7 +50,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.Slow)]
         public void ReadBuiFileTholen()
         {
-            string buiFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"FIXED\THOL2010.BUI");
+            string buiFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"FIXED\THOL2010.BUI");
             var reader = new SobekRRBuiFileReader();
 
             reader.ReadMeasurementData(buiFilePath).ToList();
@@ -62,7 +62,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.DataAccess)]
         public void ReadMultipleStationsBuiFileAndCheckData()
         {
-            string buiFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"FIXED\Test2Stations4TimeSteps.BUI");
+            string buiFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"FIXED\Test2Stations4TimeSteps.BUI");
             var reader = new SobekRRBuiFileReader();
             var measurements = reader.ReadMeasurementData(buiFilePath).ToList();
 

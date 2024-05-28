@@ -4,13 +4,11 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -330,83 +328,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsTrue(File.Exists(Path.Combine(exportDir, "har_0001.mdu")));
                 Assert.IsTrue(File.Exists(Path.Combine(exportDir, "har_0002.mdu")));
             }
-            if (Directory.Exists(relativePath))
-            {
-                Directory.Delete(relativePath, true);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.VerySlow)]
-        [Category("Quarantine")]
-        public void PartitionExporterShouldNotLoseValues()
-        {
-            const string relativePath = "partition";
-            
-            using (var app = CreateApplication())
-            {
-                app.Run();
-
-                app.CreateNewProject();
-                app.SaveProjectAs("partition.dsproj"); // save to initialize file repository..
-
-                var mduPath = TestHelper.GetTestFilePath(@"partitionexporter\SongHau.mdu");
-                var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
-
-                var model = new WaterFlowFMModel(mduFilePath);
-                app.Project.RootFolder.Add(model);
-
-                var exporter = app.FileExporters.OfType<FMModelPartitionExporter>().FirstOrDefault();
-                Assert.IsNotNull(exporter);
-                
-                exporter.NumDomains = 4;
-                exporter.IsContiguous = true;
-                
-                if (!Directory.Exists(relativePath))
-                {
-                    Directory.CreateDirectory(relativePath);
-                }
-
-                string exportDir = Path.GetFullPath(relativePath);
-                exporter.Export(model, Path.Combine(exportDir, "SongHau.mdu"));
-                
-                var outputFiles = new[]
-                {
-                    "SongHau_0000.mdu",
-                    "SongHau_0001.mdu",
-                    "SongHau_0002.mdu",
-                    "SongHau_0003.mdu"
-                };
-                
-                foreach (string file in outputFiles)
-                {
-                    string path = Path.Combine(exportDir, file);
-                    Assert.IsTrue(File.Exists(path));
-
-                    var parser = new IniParser();
-                    
-                    string ini = File.ReadAllText(path);
-                    IniData iniData = parser.Parse(ini);
-                    
-                    IniSection externalForcing = iniData.FindSection("external forcing");
-                    IniSection geometry = iniData.FindSection("geometry");
-                    IniSection output = iniData.FindSection("output");
-
-                    string strExtForceFile = externalForcing.GetPropertyValue("ExtForceFile");
-                    string strExtForceFileNew = externalForcing.GetPropertyValue("ExtForceFileNew");
-                    string strLandBoundaryFile = geometry.GetPropertyValue("LandBoundaryFile");
-                    string strObsFile = output.GetPropertyValue("ObsFile");
-
-                    Assert.IsNotEmpty(strExtForceFile, $"ExtForceFile not set in {file}");
-                    Assert.IsNotEmpty(strExtForceFileNew, $"ExtForceFileNew not set in {file}");
-                    Assert.IsNotEmpty(strLandBoundaryFile, $"LandBoundaryFile not set in {file}");
-                    Assert.IsNotEmpty(strObsFile, $"ObsFile not set in {file}");
-
-                    string partitionFile = geometry.GetPropertyValue("PartitionFile");
-                    Assert.Null(partitionFile, $"PartitionFile present in {file} - this is not valid.");
-                }
-            }
-
             if (Directory.Exists(relativePath))
             {
                 Directory.Delete(relativePath, true);

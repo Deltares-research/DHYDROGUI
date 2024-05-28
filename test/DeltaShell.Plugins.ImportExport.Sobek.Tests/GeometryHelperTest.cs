@@ -99,31 +99,5 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(400, geometry.Length, 1.0e-2);
             Assert.AreEqual(4, geometry.Coordinates.Length);
         }
-
-        [Test]
-        [Ignore("In progress update to SobekRE")]
-        [Category("ToCheck")]
-        public void Rijn301BranchRT2_001()
-        {
-            var branchGeometry = new BranchGeometry();
-            // BRCH id 'RT2_001' nm 'RT2_Bovenryn' bn 'RT2_001' en 'RT2_002' al 4814 brch
-            // NODE id 'RT2_001' nm 'RT2_Lobith' px 3296910.0 py 5746115.0 node
-            // NODE id 'RT2_002' nm 'RT2_PankopMSW' px 3292803.0 py 5748587.0 node
-            INode startNode = new HydroNode { Geometry = new Point(3296910.0, 5746115.0) };
-            INode endNode = new HydroNode { Geometry = new Point(3292803.0, 5748587.0) };
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(0, 285));
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(706, 298));
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(1293, 307));
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(1880, 312));
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(2467, 308));
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(3053, 304));
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(3640, 299));
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(4227, 295));
-            branchGeometry.CurvingPoints.Add(new CurvingPoint(4814, 294));
-
-            var geometry = GeometryHelper.CalculateGeometry(false, branchGeometry, startNode, endNode);
-            Assert.AreEqual(4814, geometry.Length, 1.0e-6);
-            Assert.AreEqual(9, geometry.Coordinates.Length);
-        }
     }
 }

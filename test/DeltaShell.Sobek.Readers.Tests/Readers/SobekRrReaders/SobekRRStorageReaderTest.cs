@@ -97,7 +97,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.DataAccess)]
         public void ReadStorageFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Tholen.lit\29\Unpaved.sto");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Tholen.lit\29\Unpaved.sto");
             var lstStorage = new SobekRRStorageReader().Read(path);
             Assert.AreEqual(1, lstStorage.Count());
         }

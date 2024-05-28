@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -191,28 +190,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
-        public void OpenLeveeBreachHisFileInModelContextAndExpectFeaturesToBeSameInstance()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"bommelerwaard\testcrop_breach_2.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(localMduFilePath);
-
-            ActivityRunner.RunActivity(model);
-            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
-            var leveeBrachDepthFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_breach_depth");
-            Assert.IsNotNull(leveeBrachDepthFunction);
-            Assert.AreSame(model.Area.LeveeBreaches.First(),
-                           leveeBrachDepthFunction.Arguments[1].Values.OfType<IFeature>().First(), "dambreak_breach_depth");
-            Assert.AreSame(model.Area.LeveeBreaches.First(),
-                           leveeBrachDepthFunction.Features.First(), "dambreak_breach_depth");
-
-         }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
         public void RunModelDeleteObservationPointsRunAgain()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -273,70 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(numEventsAfter <= numEventsBefore + 2);
         }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
-        public void RunFMModelWithStructuresReadHisFile()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(localMduFilePath);
-
-            var weir = new Weir2D("weir", true)
-            {
-                Geometry = new LineString(new[] {new Coordinate(51.0, -180.0), new Coordinate(150.0, -180.0)}),
-                CrestWidth = 0.0,
-                UseCrestLevelTimeSeries = true
-            };
-            weir.CrestLevelTimeSeries[model.StartTime] = 10.0;
-            weir.CrestLevelTimeSeries[model.StartTime.AddHours(1)] = 7.5;
-            weir.CrestLevelTimeSeries[model.StartTime.AddHours(2)] = 2.5;
-            weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
-            model.Area.Weirs.Add(weir);
-
-            var gate = new Gate2D("gate")
-            {
-                Geometry = new LineString(new[] {new Coordinate(-149.1, -180.0), new Coordinate(-50.1, -180.0)}),
-                SillWidth = 102.0,
-                UseOpeningWidthTimeSeries = true,
-                UseLowerEdgeLevelTimeSeries = true
-            };
-            gate.OpeningWidthTimeSeries[model.StartTime] = 0.0;
-            gate.OpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
-            gate.OpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
-            gate.OpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
-
-            gate.LowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
-            gate.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
-            gate.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
-            gate.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
-            model.Area.Gates.Add(gate);
-
-            var pump = new Pump2D("pump", true)
-            {
-                Geometry = new LineString(new[] {new Coordinate(0.0, 51.5), new Coordinate(0.0, 81.2)}),
-                UseCapacityTimeSeries = true
-            };
-            pump.CapacityTimeSeries[model.StartTime] = 5.0;
-            pump.CapacityTimeSeries[model.StartTime.AddHours(1)] = 20.0;
-            pump.CapacityTimeSeries[model.StartTime.AddHours(2)] = 10.4;
-            pump.CapacityTimeSeries[model.StopTime.AddSeconds(1)] = 0.0;
-            model.Area.Pumps.Add(pump);
-
-            ActivityRunner.RunActivity(model);
-
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-            var dischargeFunction =
-                model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge") as
-                    FeatureCoverage;
-            Assert.IsNotNull(dischargeFunction);
-            Assert.AreEqual(2, dischargeFunction.Arguments[1].Values.Count);
-
-            // TODO: check structure output, once we support it.
-        }
+        
         [Test]
         public void OpenHisFileCheckFunctions_Grouped() // Issue #: FM1D2D-1825
         {

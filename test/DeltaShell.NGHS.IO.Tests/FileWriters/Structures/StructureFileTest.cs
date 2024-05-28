@@ -18,7 +18,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     [TestFixture]
     public class StructureFileTest
     {
-        private const string expectedStructureFileName = "FlowFM_structures.bc";
         private const string expectedIniSectionName = "Structure";
         private static readonly DateTime referenceTime = new DateTime(2018, 8, 25);
 

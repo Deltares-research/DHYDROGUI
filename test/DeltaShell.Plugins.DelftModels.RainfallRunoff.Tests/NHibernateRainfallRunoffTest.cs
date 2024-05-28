@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
@@ -13,12 +12,10 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
-using GeoAPI.Extensions.Coverages;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -65,89 +62,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         #endregion
-        
-        [Test(Description = "See RainfallRunoffModelDataSaveLoadTest.SaveAndLoadMeteorogicalDataGlobal")]
-        [Category("Quarantine")]
-        public void SaveAndLoadGlobalMeteorogicalData()
-        {
-            var now = new DateTime(2000, 1, 2);
-            var value = 123.45;
-
-            Project project;
-            HybridProjectRepository hybridProjectRepository;
-            RainfallRunoffModel model = GetRRModel(out project, out hybridProjectRepository);
-
-            Assert.AreEqual(MeteoDataDistributionType.Global, model.Precipitation.DataDistributionType);
-            model.Precipitation.Data[now] = value;
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            hybridProjectRepository.SaveProjectAs(project, path);
-            hybridProjectRepository.Close(project);
-            hybridProjectRepository.Dispose();
-
-            using (projectRepository = factory.CreateNew())
-            {
-                projectRepository.Open(path);
-                var retrievedProject = projectRepository.GetProject();
-                var retrievedModel = (RainfallRunoffModel) retrievedProject.RootFolder.DataItems.First().Value;
-
-                Assert.AreEqual(MeteoDataDistributionType.Global, retrievedModel.Precipitation.DataDistributionType);
-
-                //Assert.IsTrue(retrievedModel.Precipitation.Data is ITimeSeries);
-
-                Assert.IsTrue(((TimeSeries) retrievedModel.Precipitation.Data).Time.Values.Contains(now),
-                              "Timestep of precipitation has not been saved/load.");
-
-                Assert.AreEqual(value, retrievedModel.Precipitation.Data[now],
-                                "Value of precipitation has not been saved/load.");
-            }
-        }
-
-        [Test(Description = "See RainfallRunoffModelDataSaveLoadTest.SaveAndLoadMeteorogicalDataPerFeature")]
-        [Category("Quarantine")]
-        public void SaveAndLoadMeteorogicalDataPerFeature()
-        {
-            var now = new DateTime(2000, 1, 2);
-            var value = 123.45;
-
-            Project project;
-            HybridProjectRepository hybridProjectRepository;
-            RainfallRunoffModel model = GetRRModel(out project, out hybridProjectRepository);
-
-            model.Precipitation.DataDistributionType = MeteoDataDistributionType.PerFeature;
-
-            var catchment = Catchment.CreateDefault();
-            model.Basin.Catchments.Add(catchment);
-
-            model.Precipitation.Data[now, catchment] = value;
-
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            hybridProjectRepository.SaveProjectAs(project, path);
-            hybridProjectRepository.Close(project);
-            hybridProjectRepository.Dispose();
-
-            using (projectRepository = factory.CreateNew())
-            {
-                projectRepository.Open(path);
-                var retrievedProject = projectRepository.GetProject();
-                var retrievedModel = (RainfallRunoffModel) retrievedProject.RootFolder.DataItems.First().Value;
-
-                Assert.AreEqual(MeteoDataDistributionType.PerFeature,
-                                retrievedModel.Precipitation.DataDistributionType);
-
-                Assert.IsTrue(retrievedModel.Precipitation.Data is IFeatureCoverage);
-
-                Assert.IsTrue(((IFeatureCoverage) retrievedModel.Precipitation.Data).Time.Values.Contains(now),
-                              "Timestep of precipitation has not been saved/load.");
-
-                Assert.AreEqual(value, retrievedModel.Precipitation.Data[now, catchment],
-                                "Value of precipitation has not been saved/load.");
-            }
-        }
-        
         
         [Test]
         public void SaveLoadModelOutputSettingsEvent()

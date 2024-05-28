@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
         }
 
         [Test]
-        //[ExpectedException(typeof(ArgumentException), ExpectedMessage = "Change of level would change internal ordering of crossection values, which is not supported.")]
         public void SetFlowProfileWithOutOfRangeHeightThrowsException()
         {
             var crossSection = new CrossSectionDefinitionZW();

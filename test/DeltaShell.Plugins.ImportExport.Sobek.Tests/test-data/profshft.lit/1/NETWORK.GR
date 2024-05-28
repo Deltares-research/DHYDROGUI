@@ -1,7 +1,0 @@
-GR_1.2
-GRID id '1' ci '1' re 0 dc 0 gr gr 
-'GridPoint Table' PDIN 0 0 '' pdin CLTT 'Location' '1/R' cltt CLID '' '' clid
-TBLE
-0 0 '' '1' '1' 67111.8099790987 438407.540684247 '' '' '' <
-8554.55181464151 0 '2' '2' '' 74487.7815354609 434074.481678288 '' '' '' <
-tble grid

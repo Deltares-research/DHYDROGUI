@@ -115,7 +115,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.DataAccess)]
         public void ReadPavedFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Tholen.lit\29\Paved.3B");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Tholen.lit\29\Paved.3B");
             var lstPavedData = new SobekRRPavedReader().Read(path);
             Assert.AreEqual(48, lstPavedData.Count()); 
         }

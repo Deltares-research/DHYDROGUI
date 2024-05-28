@@ -96,9 +96,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [TestCase("myFile.pli", "FlowFM_structures.ini")]
-        [TestCase("FeatureFiles/gate01.pli", "MyFile_structures.ini")]
+        [TestCase("FeatureFiles/gate01.pli", "FlowFM_structures.ini")]
         [TestCase("FeatureFiles/gate02.pli", "FlowFM_structures.ini")]
-        [Category("Quarantine")]
         public void GivenStructureWithGroupNameThatIsNotInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheStructureFileName(string fileName, string expectedGroupName)
         {
             var parentDir = Directory.GetParent(Directory.GetParent(mduFilePath).FullName).FullName;

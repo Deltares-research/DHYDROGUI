@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.SteerableProperties;
-using DelftTools.TestUtils;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.Structures
@@ -106,37 +104,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(20, culvert.CrossSectionDefinitionAtInletAbsolute.ZWDataTable[1].Width);
             Assert.AreEqual(20, culvert.CrossSectionDefinitionAtInletAbsolute.ZWDataTable[0].Width);
         }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.WorkInProgress)]
-        public void PropertyChangedForTabulatedCrossection()
-        {
-            //TS: CrossSection is no longer sending property changed. It does have a manual property, but this would
-            //require some hacking in Culvert to propogate this event through PostSharp. Since this seems only used
-            //by the view, for now it has been solved there.
-
-            //since structureview only listens to changes in the structure itself a change in the crossection 
-            //should cause a PC in the Culvert itself
-
-            int callCount = 0;
-            //use a default 
-            var culvert = new Culvert();
-            culvert.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(0, 0, 0);
-
-            ((INotifyPropertyChanged)culvert).PropertyChanged += (s, e) =>
-            {
-                Assert.AreEqual(
-                    culvert.TabulatedCrossSectionDefinition.
-                        ZWDataTable[0], s);
-                Assert.AreEqual("Width", e.PropertyName);
-                callCount++;
-            };
-
-            culvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Width = 22;
-
-            Assert.AreEqual(1, callCount);
-        }
-
+        
         [Test]
         public void CopyInto()
         {

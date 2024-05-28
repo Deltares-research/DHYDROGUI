@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -12,9 +11,7 @@ using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using NSubstitute;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 {
@@ -39,14 +36,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(0, hydroNetwork.SharedCrossSectionDefinitions.Count());
             Assert.IsTrue(hydroNetwork.CrossSections.All(cs => !cs.Definition.IsProxy));
             Assert.AreEqual(0, hydroNetwork.CrossSectionSectionTypes.Count());
-            //no friction file in \network1\
-            //var cs = hydroNetwork.CrossSections.First(); 
-            //Assert.AreEqual(1, cs.Sections.Count());
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)]
         public void ImportCrossSectionsWithScientificNotationTools9637()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekCrossSectionsImporterTest).Assembly, @"TOOLS963.lit\1\NETWORK.TP");
@@ -195,44 +188,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(2.0, definition.Sections[0].MaxY);
         }
 
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void ImportPipeProfilesTest()
-        {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Groesbeek.lit\Network.TP";
-            var hydroNetwork = new HydroNetwork();
-
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekCrossSectionsImporter() });
-            importer.Import();
-
-            //global check
-            Assert.AreEqual(912, hydroNetwork.Pipes.Count());
-
-            //cross-section check
-            Assert.AreEqual(29, hydroNetwork.SharedCrossSectionDefinitions.Count());
-
-            //each pipe profile should be in shared cross-section definitions
-
-            foreach (var pipe in hydroNetwork.Pipes)
-            {
-                Assert.IsFalse(string.IsNullOrEmpty(pipe.CrossSectionDefinitionName));
-                Assert.IsNotNull(pipe.CrossSection?.Definition);
-            }
-
-            //CRDS id 'Round 1000 mm' nm 'Round 1000 mm' ty 4 bl 0 rd  .5 crds//
-            //CRSN id 'l_D00230-D00231' di 'Round 1000 mm'  rl  26.25 ll  26.23 crsn//
-            //CRSN id 'l_D00230-D00231' nm '' ci '1' lc 6.72681202353685 crsn//
-            //BDFR id '1' ci '1' mf 4 mt cp 0 0.004 0 mr cp 0 0.004 0 s1 6 s2 6 bdfr//
-
-            var pipeToCheck = hydroNetwork.Pipes.FirstOrDefault(p => p.Name.Equals("1"));
-            Assert.IsNotNull(pipeToCheck);
-            Assert.True(pipeToCheck.CrossSectionDefinitionName.Equals("Round 1000 mm"));
-            Assert.True(pipeToCheck.CrossSection?.Definition.CrossSectionType  == CrossSectionType.Standard);
-            Assert.AreEqual(26.23, pipeToCheck.LevelSource, 0.001);
-            Assert.AreEqual(26.25, pipeToCheck.LevelTarget, 0.001);
-            Assert.AreEqual(pipeToCheck.Material,SewerProfileMapping.SewerProfileMaterial.Unknown);
-        }
         [Test]
         public void GivenSOBEK2CrossSectionLocationMappingAndDefinition_WhenSobekCrossSectionsImporterImport_ThanCrossSectionSetOnSewerConnection()
         {

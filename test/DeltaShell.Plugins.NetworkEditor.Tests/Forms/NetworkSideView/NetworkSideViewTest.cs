@@ -602,54 +602,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.WorkInProgress)]  // "Filter not set in networkSideViewCoverageManager.OnCoverageAddedToProject"
-        public void ShowSideViewWithExtraTimeDependentCoverage()
-        {
-            var random = new Random();
-            var value = 0.0;
-            var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
-            var timeDependendWaterLevelCoverage =
-                NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 20);
-            var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, timeDependendWaterLevelCoverage);
-
-            var timeDependendCoverage = new NetworkCoverage("other", true);
-            timeDependendCoverage.Network = timeDependendWaterLevelCoverage.Network;
-            foreach (var location in timeDependendWaterLevelCoverage.Locations.Values)
-            {
-                foreach (var time in timeDependendWaterLevelCoverage.Time.Values)
-                {
-                    timeDependendCoverage[time, location] = value;
-                    value += random.Next(10) - 5;
-                }
-                value = 0;
-            }
-
-            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView
-                               {
-                                   Dock = DockStyle.Fill,
-                                   Data = viewData.NetworkRoute,
-                                   DataController = viewData
-                               };
-
-
-            var navigationControl = new TimeSeriesNavigator
-                                        {
-                                            Data = sideView,
-                                            Dock = DockStyle.Bottom
-                                        };
-
-
-
-            var firstTime = timeDependendCoverage.Time.Values.First();
-            timeDependendCoverage.Filters.Add(new VariableValueFilter<DateTime>(timeDependendCoverage.Time, firstTime));
-            viewData.AllNetworkCoverages = new[] { timeDependendCoverage };
-            viewData.AddRenderedCoverage(timeDependendCoverage);
-
-            WindowsFormsTestHelper.ShowModal(new List<Control> {sideView, navigationControl});
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
         public void ShowSideViewWithoutContextMenu()
         {
             var viewData = NetworkSideViewTestHelper.CreateDefaultViewData();

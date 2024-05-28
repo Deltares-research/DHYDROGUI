@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
@@ -21,7 +20,6 @@ using NetTopologySuite.IO;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api.Enums;
-using SharpMap.Converters.WellKnownText;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 
@@ -93,66 +91,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void SaveLoadHydroNetworkWithRoutes()
-        {
-            var network = CreateDummyHydroNetwork();
-
-            var routeName = "NewRoute";
-
-            var route = new Route {Name = routeName};
-            network.Routes.Add(route);
-
-            route.Locations.AddValues(new[]
-                                          {
-                                              new NetworkLocation(network.Branches[0], 0),
-                                              new NetworkLocation(network.Branches[1], 5)
-                                          });
-
-            var routeLength = RouteHelper.GetRouteLength(route);
-            
-            Assert.AreEqual(105, routeLength);
-
-            var retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
-
-            Assert.AreEqual(1, retrievedNetwork.Routes.Count);
-            var retrievedRoute = retrievedNetwork.Routes[0];
-            Assert.AreEqual(routeName, retrievedRoute.Name);
-            Assert.AreEqual(routeLength, RouteHelper.GetRouteLength(retrievedRoute));
-        }
-
-        private static IHydroNetwork CreateDummyHydroNetwork()
-        {
-            // create network
-            var network = new HydroNetwork();
-
-            var node1 = new HydroNode("node1");
-            var node2 = new HydroNode("node2");
-            var node3 = new HydroNode("node3");
-
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-            network.Nodes.Add(node3);
-
-            var branch1 = new Channel("branch1", node1, node2)
-            {
-                Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
-            };
-            var branch2 = new Channel("branch2", node2, node3)
-            {
-                Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)")
-            };
-
-            node1.Geometry = new Point(0, 0);
-            node2.Geometry = new Point(100, 0);
-            node3.Geometry = new Point(300, 0);
-
-            network.Branches.Add(branch1);
-            network.Branches.Add(branch2);
-            return network;
-        }
-
-        [Test]
         public void SaveGeneratedMapLayerInfo()
         {
             var layerInfo = new GeneratedMapLayerInfo
@@ -207,52 +145,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(ShapeType.Diamond, ((VectorStyle)savedTheme.ThemeItems[0].Style).Shape);
             Assert.AreEqual(ShapeType.Rectangle, ((VectorStyle)savedTheme.ThemeItems[1].Style).Shape);
             Assert.AreEqual(ShapeType.Triangle, ((VectorStyle)savedTheme.ThemeItems[2].Style).Shape);
-        }
-
-        [Test]
-        [Ignore("Does not work since NetworkLocation is not a branchfeature in the mapping")]
-        [Category("ToCheck")]
-        public void WriteAndReadNetworkWithNetworkLocation()
-        {
-            var network = new global::DelftTools.Hydro.HydroNetwork();
-
-            INode fromNode = new HydroNode { Name = "From", Network = network, Geometry = new Point(1000, 1000) };
-            INode toNode = new HydroNode { Name = "To", Network = network, Geometry = new Point(1000, 1500) };
-            network.Nodes.Add(fromNode);
-            network.Nodes.Add(toNode);
-
-            var branch = CreateChannel(fromNode, toNode);
-            network.Branches.Add(branch);
-            var networkLocation = new NetworkLocation(branch, 10);
-
-            networkLocation.Geometry = new WKTReader().Read("LINESTRING(20 20,20 30,30 30,30 20,40 20)");
-
-            branch.BranchFeatures.Add(networkLocation);
-            var crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
-                                                            {
-                                                                new Coordinate(1.0, 1.0, 0.0),
-                                                                new Coordinate(2.0, 1.0, 0.1),
-                                                                new Coordinate(3.0, 1.0, 0.1),
-                                                                new Coordinate(4.0, 1.0, 0.1)
-                                                            });
-            branch.BranchFeatures.Add(crossSection);
-
-            var project = new Project();
-            project.RootFolder.Add(new DataItem(network));
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            ProjectRepository.Create(path);
-            ProjectRepository.SaveOrUpdate(project);
-            ProjectRepository.Close();
-
-            var retrievedProject = ProjectRepository.Open(path);
-            var retrievedNetwork = (IHydroNetwork)retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
-            var retrievedNetworkLocation = retrievedNetwork.BranchFeatures.First();
-
-            //TODO add assert for geometry etc
-            Assert.AreEqual(networkLocation.Chainage, retrievedNetworkLocation.Chainage);
-            Assert.AreEqual(networkLocation.Geometry, retrievedNetworkLocation.Geometry);
         }
 
         [Test]

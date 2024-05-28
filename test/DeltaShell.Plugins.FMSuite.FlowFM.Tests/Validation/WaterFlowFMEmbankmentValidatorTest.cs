@@ -243,52 +243,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.NotNull(report);
             Assert.AreEqual(0, report.ErrorCount);
         }
-
-        [Test]
-        [Category("Quarantine")]
-        public void EmbankmentChannelIntersectionTest()
-        {
-            // Create Waterflow Network
-            var node1 = new HydroNode("Node1") { Geometry = new Point(20, 20) };
-            var node2 = new HydroNode("Node2") { Geometry = new Point(70, 70) };
-
-            var channel1 = new Channel(node1, node2)
-            {
-                Name = "Channel1",
-                Geometry = new LineString(new[] { node1.Geometry.Coordinate, node2.Geometry.Coordinate })
-            };
-
-            var network = new HydroNetwork();
-            network.Branches.AddRange(new[] { channel1 });
-            network.Nodes.AddRange(new[] { node1, node2 });
-
-            // Create Embankments
-            var pointList1 = new List<Coordinate>
-            {
-                new Coordinate {X = 30, Y = -70},
-                new Coordinate {X = 70, Y = 20},
-                new Coordinate {X = -10, Y = 40},
-                new Coordinate {X = 60, Y = 80},
-            };
-
-            var testEmbankment = new Embankment
-            {
-                Geometry = new LineString(pointList1.ToArray()),
-                Name = "Embankment01"
-            };
-
-            var fmmodel = new WaterFlowFMModel();
-            fmmodel.Area.Embankments.Clear();
-            fmmodel.Area.Embankments.Add(testEmbankment);
-
-            fmmodel.Region.SubRegions.Add(network);
-
-            var report = WaterFlowFMEmbankmentValidator.Validate(fmmodel);
-
-            Assert.NotNull(report);
-            Assert.AreEqual(1, report.ErrorCount);
-            Assert.AreEqual("Channel Channel1 intersects with the embankments", report.Issues.First().Message);
-        }
-
     }
 }

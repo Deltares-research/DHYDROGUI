@@ -6,9 +6,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
-using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -225,48 +223,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.That(wasteWaterTreatmentPlant.Geometry.ToString(), Is.EqualTo("POINT (5 5)"));
 
             Assert.That(drainageBasin.Links.Single().Geometry.ToString(), Is.EqualTo("LINESTRING (5 9 0, 5 5)"));
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void AddExampleHydroRegionDataTest()
-        {
-            var mocks = new MockRepository();
-            var hydroRegion = mocks.DynamicMock<IRegion>();
-
-            var subRegions = new EventedList<IRegion>();
-
-            var hydroNetwork = mocks.DynamicMock<IHydroNetwork>();
-            hydroNetwork.Expect(n => n.Nodes).Return(new EventedList<INode>()).Repeat.Once();
-            hydroNetwork.Expect(n => n.Branches).Return(new EventedList<IBranch>()).Repeat.Once();
-
-            hydroNetwork.Expect(n => n.LateralSources).Return(new EventedList<ILateralSource>()).Repeat.Once();
-            subRegions.Add(hydroNetwork);
-
-            var drainageBasin = mocks.DynamicMock<IDrainageBasin>();
-            drainageBasin.Expect(n => n.Catchments).Return(new EventedList<Catchment>()).Repeat.Once();
-            var wasteWaterTreatmentPlant = mocks.DynamicMock<WasteWaterTreatmentPlant>();
-            var wasteWaterTreatmentPlants = new EventedList<WasteWaterTreatmentPlant>() {wasteWaterTreatmentPlant};
-            drainageBasin.Expect(n => n.WasteWaterTreatmentPlants).Return(wasteWaterTreatmentPlants).Repeat.Twice();
-            subRegions.Add(drainageBasin);
-
-            hydroRegion.Expect(n => n.SubRegions).Return(subRegions).Repeat.Twice();
-
-            var link = new HydroLink(Substitute.For<IHydroObject>(), Substitute.For<IHydroObject>());
-            Expect.Call(drainageBasin.AddNewLink(null, null)).IgnoreArguments().Return(link).Repeat.Once();
-            Expect.Call(wasteWaterTreatmentPlant.LinkTo(null)).IgnoreArguments().Return(link).Repeat.Once();
-
-            mocks.ReplayAll();
-
-            TypeUtils.CallPrivateStaticMethod(typeof(NetworkEditorApplicationPlugin), "AddExampleHydroRegionData",
-                hydroRegion);
-
-            mocks.VerifyAll();
-
-            Assert.That(link.Geometry.ToString(), Is.EqualTo("LINESTRING (5 5, 5 0)"));
-
-
-
         }
 
         [Test]

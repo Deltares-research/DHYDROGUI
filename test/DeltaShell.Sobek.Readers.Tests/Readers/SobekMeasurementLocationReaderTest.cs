@@ -110,7 +110,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadFromSobek212File()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ndb_controllertriggerfiles\NETWORK.ME");
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ndb_controllertriggerfiles\NETWORK.ME");
             var measurementLocations = new SobekMeasurementLocationReader().Read(pathToSobekNetwork).ToArray();
 
             Assert.AreEqual(4, measurementLocations.Length);
@@ -124,7 +124,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadFromSobekREFileDEFSTR4()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ndb_controllertriggerfiles\DEFSTR.4");
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ndb_controllertriggerfiles\DEFSTR.4");
             var measurementLocations = new SobekMeasurementLocationReader().Read(pathToSobekNetwork).ToArray();
 
             Assert.AreEqual(19, measurementLocations.Length);
@@ -136,7 +136,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadFromSobekREFileDEFSTR5()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ndb_controllertriggerfiles\DEFSTR.5");
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ndb_controllertriggerfiles\DEFSTR.5");
             var measurementLocations = new SobekMeasurementLocationReader().Read(pathToSobekNetwork).ToArray();
 
             Assert.AreEqual(28, measurementLocations.Length);

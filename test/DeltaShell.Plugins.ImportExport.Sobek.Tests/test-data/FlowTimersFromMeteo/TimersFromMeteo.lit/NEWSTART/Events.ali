@@ -1,7 +1,0 @@
-event.*   \SBKRiver\fixed\default.bui
-evapor.*  \SBKRiver\fixed\3b\evapor.gem
-wind.*    \SBKRiver\fixed\default.wdc
-delwaq.*  \SBKRiver\fixed\default.qsc
-wq_wind.* \SBKRiver\fixed\default.qwc
-temp.*    \SBKRiver\fixed\default.tmp
-rnff.*    \SBKRiver\fixed\default.rnf

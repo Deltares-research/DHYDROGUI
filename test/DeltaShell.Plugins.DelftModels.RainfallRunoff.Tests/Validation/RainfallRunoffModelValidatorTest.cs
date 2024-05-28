@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.CommonTools.Functions;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
-using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
@@ -169,32 +165,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
                                          new TimeSpan(0, 1, 0, 0));
             generator.GenerateTimeSeries(model.Evaporation.Data, model.StartTime, model.StopTime,
                                          new TimeSpan(1, 0, 0, 0));
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        [Ignore("Sobek RR is not implemented yet.")]
-        public void ValidateRainfallRunoffWithoutHydroLinkReportError()
-        {
-            var model = CreateValidMiniModel();
-
-            var unpavedDatas = model.GetAllModelData().OfType<UnpavedData>().ToList();
-            unpavedDatas.ForEach( ud => ud.Catchment.Links.Clear());
-            Assert.IsFalse( unpavedDatas.Any( ud => ud.Catchment.Links.Any()));
-            var report = new UnpavedDataValidator().Validate(model, unpavedDatas);
-            var errMssg =
-                string.Format("No runoff target has been defined (concept: {0}); an implicit boundary will be used.",
-                    unpavedDatas[0].GetType().Name);
-            Assert.IsTrue(report.AllErrors.Any( err => err.Severity == ValidationSeverity.Error 
-                                                        && err.Message == errMssg));
-        }
-
-
-        private RainfallRunoffModel CreateValidMiniModel()
-        {
-            var file = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"RRMiniTestModels\DRRSA.lit\2\NETWORK.TP");
-            var composite = RainfallRunoffIntegrationTestHelper.ImportModel(file);
-            return composite.Activities.OfType<RainfallRunoffModel>().First();
         }
     }
 }

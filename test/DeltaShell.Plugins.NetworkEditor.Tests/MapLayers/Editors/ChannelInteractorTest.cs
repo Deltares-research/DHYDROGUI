@@ -278,13 +278,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(20, compositeStructure.Geometry.Coordinates[0].X);
         }
 
-
-        //[Test]
-        //[Category(TestCategory.Integration)]
-        //public void MoveBranchWithDiscretisationNoFallOfPolicy()
-        //{
-        //}
-
         [Test]
         [Category(TestCategory.Integration)]
         public void DeleteBranchIncludingNodes()

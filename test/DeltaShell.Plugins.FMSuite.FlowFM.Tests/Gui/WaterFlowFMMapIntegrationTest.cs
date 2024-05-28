@@ -5,12 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DelftTools.Utils.Reflection;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -23,7 +21,6 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
-using SharpMap.Layers;
 using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -144,61 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.WorkInProgress)] // fails on build server
-        public void OpenCloseCentralMapForFMModelCheckLayerDoesNotLinger()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
-
-            using (var gui = CreateGuiMinimal())
-            {
-                var app = gui.Application;
-
-                gui.Run();
-
-                app.CreateNewProject();
-
-                Action mainWindowShown = delegate
-                {
-                    var project = app.Project;
-                    project.RootFolder.Add(model);
-                    
-                    // open central map
-                    gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView)); //open central map
-                    
-                    // get a weak reference to a layer
-                    var layerRef = GetWeakLayerRef(FlowFMGuiPlugin.ActiveMapView);
-                    
-                    // close central map
-                    gui.CommandHandler.RemoveAllViewsForItem(model); // close central map
-                    
-                    // make sure selection is not set to map
-                    gui.Selection = null;
-                    TypeUtils.CallPrivateMethod(gui.MainWindow.PropertyGrid, "GuiSelectionChanged",
-                                                new[] {null, EventArgs.Empty});
-                    
-                    // Garbage collect and check layer is no longer in memory
-                    GC.Collect(2, GCCollectionMode.Forced);
-                    GC.WaitForPendingFinalizers();
-
-                    Assert.IsFalse(layerRef.IsAlive, "not gc collected");
-                };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        private static WeakReference GetWeakLayerRef(MapView mapview)
-        {
-            var layer = mapview.Map.GetAllVisibleLayers(false).OfType<UnstructuredBaseLayer>().First();
-            return new WeakReference(layer);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.WorkInProgress)]
         public void ReloadCentralMapAfterModelWithOutputSaved()
         {
             var mduPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"harlingen\har.mdu"));
@@ -240,132 +183,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.WorkInProgress)] // about 7 paths hold references the model after it is deleted
-        public void ShowCentralMapForFMModelRemoveModelCheckMemoryLeaks()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            using (var gui = CreateGuiMinimal())
-            {
-                var app = gui.Application;
-
-                gui.Run();
-
-                app.CreateNewProject();
-
-                Action mainWindowShown = delegate
-                    {
-                        var project = app.Project;
-
-                        var weakRef = AddMduToProject(project, mduPath);
-
-                        gui.CommandHandler.OpenView(project.RootFolder.Items[0], typeof (ProjectItemMapView));
-                        gui.Selection = project.RootFolder.Items[0];
-                        gui.CommandHandler.DeleteCurrentProjectItem();
-                        gui.SelectedProjectItem = null;
-
-                        Application.DoEvents(); // give invokes time to process
-                        Thread.Sleep(500);
-                        gui.MainWindow.ProjectExplorer.TreeView.WaitUntilAllEventsAreProcessed();
-                        Application.DoEvents();
-
-                        GC.Collect(2, GCCollectionMode.Forced);
-                        GC.WaitForPendingFinalizers();
-
-                        //MessageBox.Show("Done");
-
-                        Assert.IsFalse(weakRef.IsAlive, "model removed from memory");
-                    };
-
-                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
-        public void ImportHarlingenShowVelocityOutput()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            using (var gui = CreateGuiMinimal())
-            {
-                var app = gui.Application;
-
-                gui.Run();
-
-                app.CreateNewProject();
-
-                Action mainWindowShown = () =>
-                {
-                    var project = app.Project;
-                    var model = new WaterFlowFMModel(mduPath);
-                    project.RootFolder.Add(model);
-                    gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
-                    var view = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                    var outputGroupLayer =
-                        view.MapView.Map.GetAllLayers(true).OfType<GroupLayer>().FirstOrDefault(l=>l.Name=="Output (map)");
-                    Assert.IsNotNull(outputGroupLayer);
-                    var flowLinkCoverageLayer =
-                        outputGroupLayer.GetAllLayers(false).OfType<UnstructuredGridFlowLinkCoverageLayer>().First();
-                    flowLinkCoverageLayer.Visible = true;
-                    view.MapView.MapControl.Refresh();
-                    gui.DocumentViews.Remove(gui.DocumentViews.ActiveView); // close view
-                };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
-        public void ImportHarlingenRunShowVelocityOutput()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            using (var gui = CreateGuiMinimal())
-            {
-                var app = gui.Application;
-
-                gui.Run();
-
-                app.CreateNewProject();
-
-                Action mainWindowShown = () =>
-                {
-                    var project = app.Project;
-                    var model = new WaterFlowFMModel(mduPath);
-                    ActivityRunner.RunActivity(model);
-                    project.RootFolder.Add(model);
-                    gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
-                    var view = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                    var outputGroupLayer =
-                        view.MapView.Map.GetAllLayers(true).OfType<GroupLayer>().FirstOrDefault(l => l.Name == "Output (map)");
-                    Assert.IsNotNull(outputGroupLayer);
-                    var flowLinkCoverageLayer =
-                        outputGroupLayer.GetAllLayers(false).OfType<UnstructuredGridFlowLinkCoverageLayer>().First();
-                    flowLinkCoverageLayer.Visible = true;
-                    view.MapView.MapControl.Refresh();
-                    gui.DocumentViews.Remove(gui.DocumentViews.ActiveView); // close view
-                };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        private static WeakReference AddMduToProject(Project project, string mduPath)
-        {
-            var model = new WaterFlowFMModel(mduPath);
-            var weakRef = new WeakReference(model);
-            project.RootFolder.Add(model);
-            return weakRef;
         }
         
         private static IGui CreateGuiMinimal()

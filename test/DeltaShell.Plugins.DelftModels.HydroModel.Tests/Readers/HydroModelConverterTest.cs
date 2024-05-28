@@ -72,7 +72,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ConvertRtcModelAndAddToHydroModel()
         {
             string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
@@ -90,7 +89,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void GivenRtcModelWithMultipleInputsConnectedToTheSameParameter_WhenImported_ThenAllInputsCorrectlyLinked()
         {
             string dimrPath = TestHelper.GetTestFilePath(Path.Combine(nameof(HydroModelConverterTest), "dimr.xml"));
@@ -172,7 +170,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
-        [Category("Quarantine")]
         public void GivenValidDimrXmlObject_WhenConvertingToHydroModelWithAnImporterThatReturnsAnActivityWithADifferentName_ThenMessageIsLoggedAndTheReturnedModelDoesNotHaveSubModels()
         {
             // Given
@@ -210,7 +207,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
-        [Category("Quarantine")]
         public void GivenDimrXmlObject_WhenConvertingToHydroModelWithNoneMatchingImportedSourceOrTargetModel_ThenLogMessageIsReturned()
         {
             // Given
@@ -372,7 +368,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
-        [Category("Quarantine")]
         public void ConvertingDimrXmlOfAHydroModelWithSubModelRegionIsNull_ThenTheHydroModelShouldBeReturnedAndRegionOfSubModelIsNotAddedToRegionOfHydroModel()
         {
             // Given

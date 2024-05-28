@@ -10,20 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     public class WaterFlowFMGuiPropertyExtractorTest
     {
         [Test]
-        [Category("Quarantine")]
-        public void CheckExtraction()
-        {
-            var model = new WaterFlowFMModel();
-
-            var extractor = new WaterFlowFMGuiPropertyExtractor(model);
-            var objectDescription = extractor.ExtractObjectDescription(new string[0]);
-
-            Assert.Greater(objectDescription.FieldDescriptions.Count, 65);
-            Assert.IsNotNull(objectDescription.FieldDescriptions.FirstOrDefault(f => f.Name == "Icgsolver"));
-            Assert.IsNotNull(objectDescription.FieldDescriptions.FirstOrDefault(f => f.Label == "Sediment/Morphology [Beta]"));
-        }
-        
-        [Test]
         public void CheckTooltips()
         {
             var model = new WaterFlowFMModel();

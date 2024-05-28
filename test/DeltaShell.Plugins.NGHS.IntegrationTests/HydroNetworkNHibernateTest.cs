@@ -119,10 +119,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 //reload
                 var retrievedProject = projectRepository.Open(path);
                 var retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
-                //var retrievedFeatureCoverage = retrievedProject.GetAllItemsRecursive().OfType<IFeatureCoverage>().FirstOrDefault();
 
-                //check the crossection was really removed from the coverage
-                //Assert.AreEqual(0,retrievedFeatureCoverage.Features.Count);
                 //check the crossection is still network
                 Assert.AreEqual(1, retrievedNetwork.BranchFeatures.Count());
             }

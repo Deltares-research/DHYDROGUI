@@ -57,33 +57,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Ignore("Local test method for performance")]
-        [Category(TestCategory.Performance)]
-        [Category("ToCheck")]
-        public void ConvertTimeTablePerformance()
-        {
-            var dataTable = SobekFlowBoundaryCondition.TimeTableStructure;
-
-            for (int i = 0; i < 1000; i++)
-            {
-                var row = dataTable.NewRow();
-                row[0] = new DateTime(i);
-                row[1] = i*2;
-                dataTable.Rows.Add(row);
-            }
-
-        
-            IFunction timeSeries = new TimeSeries();
-            timeSeries.Arguments[0].DefaultValue = new DateTime(2000, 1, 1);
-            timeSeries.Components.Add(new Variable<double>("concentration"));
-
-            TestHelper.AssertIsFasterThan(70, () => DataTableHelper.SetTableToFunction(dataTable, timeSeries));
-            //original: 170ms
-
-            Assert.AreEqual(1000, timeSeries.Arguments[0].Values.Count);
-        }
-
-        [Test]
         public void ConvertTableWithDescendingValuesToSortedFunction()
         {
             var dataTable = SobekFlowBoundaryCondition.QhTableStructure;

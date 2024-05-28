@@ -2,8 +2,6 @@
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
-using DelftTools.TestUtils;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -88,30 +86,6 @@ namespace DelftTools.Hydro.Tests
             Assert.AreEqual(profileZ, crossSection.GetProfile().Select(c => c.Y).ToArray());
             Assert.AreEqual(flowProfileY, crossSection.FlowProfile.Select(c => c.X).ToArray());
             Assert.AreEqual(flowProfileZ, crossSection.FlowProfile.Select(c => c.Y).ToArray());
-        }
-
-        [Test]
-        [Category(TestCategory.WorkInProgress)]
-        public void AutoClone()
-        {
-            var crossSection = new CrossSectionDefinitionYZ();
-            //simple V profile
-            crossSection.YZDataTable.AddCrossSectionYZRow(0, 10);
-            crossSection.YZDataTable.AddCrossSectionYZRow(5, 0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(10, 10);
-
-            var csClone = TypeUtils.DeepClone(crossSection);
-
-            var profileY = new double[] { 0, 5, 10 };
-            var profileZ = new double[] { 10, 0, 10 };
-
-            var flowProfileY = new double[] { 0, 5, 10 };
-            var flowProfileZ = new double[] { 12, 1, 12 };
-
-            Assert.AreEqual(profileY, csClone.GetProfile().Select(c => c.X).ToArray());
-            Assert.AreEqual(profileZ, csClone.GetProfile().Select(c => c.Y).ToArray());
-            Assert.AreEqual(flowProfileY, csClone.FlowProfile.Select(c => c.X).ToArray());
-            Assert.AreEqual(flowProfileZ, csClone.FlowProfile.Select(c => c.Y).ToArray());
         }
 
         [Test]

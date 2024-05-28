@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
-using DelftTools.TestUtils;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -181,9 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         /// r = r(nl), nl = (b, l)
         /// yb = yb(nl), nl = (b, l)
         /// </summary>
-
         [Test]
-        [Category(TestCategory.Jira)]
         public void ChangingBranchGeometryShouldUpdateCovarageLocationsCorrectlyTools7439()
         {
             // create network

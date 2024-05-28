@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using BasicModelInterface;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
@@ -14,16 +12,12 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
-using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
@@ -32,13 +26,10 @@ using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
-using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Layers;
-using SharpMap.SpatialOperations;
 using SharpMap.UI.Tools;
 using Control = System.Windows.Controls.Control;
 using Ribbon = Fluent.Ribbon;
@@ -48,67 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     [TestFixture, Apartment(ApartmentState.STA)]
     public class WaterFlowFMModelGuiIntegrationTest
     {
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category("Quarantine")]
-        [Ignore("Crashes other tests, ignoring for now.")]
-        public void RunModelShouldNotCrashWithOldOutputOpen()
-        {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(mduPath);
-
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                var app = gui.Application;
-
-                gui.Run();
-
-                app.CreateNewProject();
-
-                Action mainWindowShown = delegate
-                {
-                    var project = app.Project;
-                    project.RootFolder.Add(model);
-                    DimrLogging.LogFileLevel = Level.All;
-                    DimrLogging.FeedbackLevel = Level.All;
-
-                    ActivityRunner.RunActivity(model);
-                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-                    // open standalone editor for his feature coverage
-                    gui.CommandHandler.OpenView(model.OutputHisFileStore.Functions.First(), typeof (CoverageView));
-
-                    Assert.AreEqual(1, gui.DocumentViews.Count);
-                    model.ShowModelRunConsole = true;
-                    model.Area.ObservationCrossSections.Add(new ObservationCrossSection2D
-                    {
-                        Name = "newobj",
-                        Geometry = new LineString(new[]
-                        {
-                            new Coordinate(100, 100), new Coordinate(150, 100)
-                        })
-                    });
-                    ActivityRunner.RunActivity(model);
-                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-                    Assert.IsNull(gui.DocumentViews.ActiveView);
-                };
-                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
-            }
-        }
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void FmModelShouldBeReplacedWhenImportedInRootFolder()
@@ -255,106 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category("Quarantine")]
-        public void DoubleClickingOnMapOutputCoverageShouldEnableLayerInCentralMap()
-        {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(mduPath);
-
-            using (var gui = CreateGuiMinimal())
-            {
-                var app = gui.Application;
-
-                gui.Run();
-
-                app.CreateNewProject();
-
-                Action mainWindowShown = delegate
-                {
-                    var project = app.Project;
-                    project.RootFolder.Add(model);
-
-                    ActivityRunner.RunActivity(model);
-                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-                    // try from scratch:
-                    DoubleClickOutputItemAndAssertLayerIsOn(model, gui, "s1");
-
-                    // close all views:
-                    gui.DocumentViews.Clear();
-                    Assert.AreEqual(0, gui.DocumentViews.Count);
-
-                    // open central map view
-                    gui.CommandHandler.OpenView(model, typeof (ProjectItemMapView));
-
-                    // try with already open view:
-                    DoubleClickOutputItemAndAssertLayerIsOn(model, gui, "s1");
-                };
-                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category("Quarantine")]
-        [Ignore("Crashes other tests, ignoring for now.")]
-        public void DoubleClickingOnHisOutputCoverageShouldEnableLayerInCentralMap()
-        {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(mduPath) {ShowModelRunConsole = true};
-            
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new SharpMapGisApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new CommonToolsGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new SharpMapGisGuiPlugin(),
-                new FlowFMGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                var app = gui.Application;
-                
-                gui.Run();
-
-                app.CreateNewProject();
-
-                Action mainWindowShown = delegate
-                {
-                    var project = app.Project;
-                    project.RootFolder.Add(model);
-
-                    ActivityRunner.RunActivity(model);
-                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-                    
-                    // try from scratch:
-                    DoubleClickOutputItemAndAssertLayerIsOn(model, gui, "cross_section_discharge");
-
-                    // close all views:
-                    gui.DocumentViews.Clear();
-                    Assert.AreEqual(0, gui.DocumentViews.Count);
-
-                    // open central map view
-                    gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
-
-                    // try with already open view:
-                    DoubleClickOutputItemAndAssertLayerIsOn(model, gui, "cross_section_discharge");
-                };
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-            }
-        }
-
+        
         [Test]
         [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Slow)]
@@ -435,114 +266,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static void DoubleClickOutputItemAndAssertLayerIsOn(WaterFlowFMModel model, IGui gui, string itemName)
-        {
-            // retrieve the data object for the output waterlevel through the node 
-            // presenter (to make sure we use the path double clicking would follow):
-            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
-            var childItems = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>();
-            var outputFolder = childItems.Last();
-            var outputItemNode =
-                outputFolder.ChildItems.OfType<object>().First(i => i.ToString().Contains(itemName));
-
-            // mimic double click:
-            gui.Selection = outputItemNode;
-            gui.CommandHandler.OpenViewForSelection(typeof (ProjectItemMapView));
-
-            Assert.AreEqual(1, gui.DocumentViews.Count);
-            var activeMapView = FlowFMGuiPlugin.ActiveMapView;
-            Assert.IsNotNull(activeMapView, "fm active map view");
-
-            var coverageLayer = activeMapView.Map.GetAllLayers(false).FirstOrDefault(l => l.Name.Contains(itemName));
-
-            Assert.IsNotNull(coverageLayer, "coverage layer not found");
-            Assert.IsTrue(coverageLayer.Visible, "not visible");
-        }
-
-        /// <summary>
-        /// Test for issue TOOLS_22977, Not working test only reproducing scenario
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.WorkInProgress)]
-        [Ignore("Needs to be checked")]
-        public void TOOLS_22977Test()
-        {
-            var sharpMapGisGuiPlugin = new SharpMapGisGuiPlugin();
-            
-            var pluginsToAdd = new List<IPlugin>()
-            {
-                new NHibernateDaoApplicationPlugin(),
-                new CommonToolsApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new FlowFMApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new CommonToolsGuiPlugin(),                
-                sharpMapGisGuiPlugin,
-                new FlowFMGuiPlugin(),
-                new NetworkEditorGuiPlugin(),
-                new ProjectExplorerGuiPlugin(),
-            };
-            using (var gui = new DeltaShellGuiBuilder().WithPlugins(pluginsToAdd).Build())
-            {
-                var app = gui.Application;
-                
-                gui.Run();
-                
-                app.CreateNewProject();
-                
-                var testFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-                testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-
-                var model = new WaterFlowFMModel(testFilePath);
-
-                gui.Application.Project.RootFolder.Add(model);
-
-                Assert.IsTrue(gui.DocumentViewsResolver.OpenViewForData(model, typeof (ProjectItemMapView)));
-                var mapView = gui.DocumentViews.ActiveView as ProjectItemMapView;
-                mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.Bathymetry), true);
-                sharpMapGisGuiPlugin.FocusSpatialOperationView();
-
-                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                    model.GetDataItemByValue(model.Bathymetry));
-
-                Assert.IsNotNull(valueConverter.SpatialOperationSet);
-
-                var sampleSet = new SpatialOperationSet();
-                valueConverter.SpatialOperationSet.AddOperation(sampleSet);
-
-                var samplesPath = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
-                var importSamples = new ImportSamplesOperation(false) {FilePath = samplesPath, Name = "Test import"};
-                Assert.IsNotNull(sampleSet.AddOperation(importSamples));
-
-                var interpolate = new InterpolateOperation
-                {
-                    InterpolationMethod = SpatialInterpolationMethod.Triangulation,
-                    OperationType = PointwiseOperationType.OverwriteWhereMissing
-                };
-                interpolate.LinkInput(InterpolateOperation.InputSamplesName, importSamples.Output);
-
-                valueConverter.SpatialOperationSet.AddOperation(interpolate);
-                valueConverter.SpatialOperationSet.Execute();
-                Action onShown = delegate
-                {
-
-                    interpolate.OperationType = PointwiseOperationType.Overwrite;
-                    var layer = (SpatialOperationSetLayer) mapView.SpatialOperationLayer;
-                    valueConverter.SpatialOperationSet.Execute();
-
-                    var beforeRefreshThreadCount = Process.GetCurrentProcess().Threads.Count;
-                    TestHelper.AssertIsFasterThan(4000, layer.ShowOutputOnly);
-                    Thread.Sleep(3000);
-                    Assert.AreEqual(beforeRefreshThreadCount, Process.GetCurrentProcess().Threads.Count);
-
-                };
-
-                WpfTestHelper.ShowModal((Control) gui.MainWindow, onShown);
-            }
-        }
-        
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]

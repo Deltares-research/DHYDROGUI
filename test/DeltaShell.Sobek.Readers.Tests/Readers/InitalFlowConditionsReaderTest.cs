@@ -393,7 +393,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Performance)]
         public void ReadNationalModel()
         {
-            string structureDefinitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"initial\NATSOBEKINITIAL.DAT");
+            string structureDefinitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"initial\NATSOBEKINITIAL.DAT");
 
             InitalFlowConditionsReader initalFlowConditionsReader = new InitalFlowConditionsReader();
 

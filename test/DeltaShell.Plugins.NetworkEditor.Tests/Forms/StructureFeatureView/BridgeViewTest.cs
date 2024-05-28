@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 var control = f.Controls.GetAllControlsRecursive().SingleOrDefault(c => c.Name == "groupBox2");
                 Assert.IsNotNull(control);
-                //Assert.True(control.Visible);// not yet implemented in the kernel
                 Assert.False(control.Visible);
             });
         }

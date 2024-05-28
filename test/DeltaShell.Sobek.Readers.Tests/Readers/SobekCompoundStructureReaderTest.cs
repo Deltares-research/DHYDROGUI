@@ -29,7 +29,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadCompoundStructures()
         {
-            var compoundStructureFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"compound.lit\2\struct.cmp");
+            var compoundStructureFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"compound.lit\2\struct.cmp");
             var compoundStructures = new SobekCompoundStructureReader().Read(compoundStructureFile);
             // the demo network has 1 of each of the 11 main structure types
             Assert.AreEqual(1, compoundStructures.Count());
@@ -40,7 +40,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadCompoundFromRe()
         {
-            var compoundStructureFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\RIJN301.SBK\8\defstr.7");
+            var compoundStructureFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ReModels\RIJN301.SBK\8\defstr.7");
             var compoundStructures = new SobekCompoundStructureReader().Read(compoundStructureFile);
             // the demo network has 1 of each of the 11 main structure types
             Assert.AreEqual(14, compoundStructures.Count());

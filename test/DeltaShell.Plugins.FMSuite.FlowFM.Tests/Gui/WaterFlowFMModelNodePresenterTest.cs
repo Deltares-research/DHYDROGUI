@@ -4,13 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
-using DelftTools.TestUtils.TestReferenceHelper;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
@@ -61,83 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void CheckEventLeaksThroughDataItemWrappers()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
-            
-            var outputFunction = model.OutputHisFileStore.Functions.First();
-
-            Console.WriteLine("Before:");
-            int before = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
-
-            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
-            var outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().Last();
-
-            // ask first time
-            outputFolder.ChildItems.OfType<object>().ToList();
-
-            int afterFirstTime = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
-
-            for (int i = 0; i < 5; i++)
-            {
-                // ask for output items
-                outputFolder.ChildItems.OfType<object>().ToList();
-            }
-
-            int afterManyTimes = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
-
-            // todo: check for multiple models?
-
-            Assert.AreEqual(before + 4, afterFirstTime); // first time increase by one for each event (PropChing, PropChed, CollChing, CollChed)
-            Assert.AreEqual(afterFirstTime, afterManyTimes); // subseqeuent times should not increase
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
-        public void CheckEventLeaksThroughDataItemAfterModelRun()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
-
-            var outputFunction = model.OutputHisFileStore.Functions.FirstOrDefault();
-            
-            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
-            var outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().LastOrDefault();
-
-            // ask first time before run; dataitems are filled with output functions
-            outputFolder.ChildItems.OfType<object>().ToList();
-
-            Console.WriteLine("Before run:");
-            int before = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
-
-            ActivityRunner.RunActivity(model);
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-            //dataitems are filled with new output functions
-            outputFolder.ChildItems.OfType<object>().ToList();
-
-            var di = outputFolder.ChildItems.OfType<IDataItem>().ToList().FirstOrDefault(d => d.Tag == outputFunction.Name);
-            Assert.That(di.Value, Is.Not.EqualTo(outputFunction));
-
-            Assert.That(TestReferenceHelper.FindEventSubscriptions(outputFunction, true), Is.EqualTo(before-4));// check if old events of dataitem are removed.
-
-            //Filestore was closed and re-openen, so we need to retrieve a new output function.
-            outputFunction = model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Name == outputFunction.Name);
-            Assert.That(di.Value, Is.EqualTo(outputFunction));
-
-            Console.WriteLine("After run:");
-            var after = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
-
-            Assert.AreEqual(before, after);
         }
         
         [Test]

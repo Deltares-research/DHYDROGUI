@@ -89,7 +89,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [Category(DelftTools.TestUtils.TestCategory.WorkInProgress)] // crashes from time to time
         public void ChangeOfInnerDefinitionProfileUpdatesGeometryOfCrossSection()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);

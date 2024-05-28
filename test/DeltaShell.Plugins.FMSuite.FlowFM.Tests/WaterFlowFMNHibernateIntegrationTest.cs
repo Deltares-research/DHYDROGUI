@@ -19,12 +19,10 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -273,9 +271,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 var loadedDi = loadedModel.GetDataItemByValue(loadedModel.Bathymetry);
-                var loadedOperations = ((SpatialOperationSetValueConverter)loadedDi.ValueConverter).SpatialOperationSet.Operations;
-
-                //Assert.AreEqual(2, loadedOperations.Count);
             }
         }
 
@@ -505,46 +500,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 gui.Run();
 
                 app.OpenProject(dsprojName);
-            }
-        }
-        
-        /// <summary>
-        /// Test if an FM model can be saved in an environment with FM and Wave plugins.
-        /// Then read it in an environment that contains FM, Wave and RTC.
-        /// TOOLS-22951 - Work in progress & postponed
-        /// </summary>
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        [Category(TestCategory.WorkInProgress)]
-        public void ReadFlowFMModelandWaveWithDifferentPluginConfigurationsGui()
-        {
-            string dsprojName = "FM_Wave.dsproj";
-            
-            using (var gui = CreateGui())
-            {
-                var app = gui.Application;
-                
-                gui.Run();
-                app.CreateNewProject();
-
-                var model = WaterFlowFMModelDefinitionValidatorTest.CreateValidModel();
-                gui.Application.Project.RootFolder.Add(model);
-                NetFile.Write(model.NetFilePath, model.Grid);
-               
-                app.SaveProjectAs(dsprojName); // save to initialize file repository..
-                
-            }
-            
-            using (var gui = CreateGuiWithRTC())
-            {
-                var app = gui.Application;
-
-                gui.Run();
-
-                app.OpenProject(dsprojName);
-                app.CloseProject();
             }
         }
         

@@ -131,9 +131,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
             var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network,filteredWaterLevelCoverage);
 
-            //max of 19 is not reached in the first time step. Hence all times are included
-            //Assert.AreEqual(19, viewData.ZMaxValue);
-            
             //should be above (19) but now we cannot interpolatei becaus too slow
             Assert.AreEqual(18, viewData.ZMaxValue);
             Assert.AreEqual(8, viewData.ZMinValue);
@@ -153,14 +150,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             PreInitializeQuickGraph(network, filteredCoverage); // required to analyze single test, otherwise very strange results are obtained
             
             TestHelper.AssertIsFasterThan(19, ()=>
-                                                   {
-                                                       //should be 31
-                                                       //Assert.AreEqual(31, viewData.ZMaxValue);
-                                                       Assert.AreEqual(18,viewData.ZMaxValue);
-                                                       Assert.AreEqual(8, viewData.ZMinValue);
-                                                   });
-            
-            //max of 19 is not reached in the first time step. Hence all times are included
+            {
+                Assert.AreEqual(18, viewData.ZMaxValue);
+                Assert.AreEqual(8, viewData.ZMinValue);
+            });
         }
 
         private void PreInitializeQuickGraph(HydroNetwork network, INetworkCoverage coverage)

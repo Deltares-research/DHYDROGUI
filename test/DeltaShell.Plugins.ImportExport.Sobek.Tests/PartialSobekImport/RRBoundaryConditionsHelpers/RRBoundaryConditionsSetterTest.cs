@@ -109,12 +109,5 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport.RRBound
             //Assert
             logHandler.Received(1).ReportWarning(string.Format(Resources.RRBoundaryConditionsSetter_Set_Could_not_find__0__linked_to_boundary_, name));
         }
-
-        private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
-        {
-            yield return new TestCaseData(null, new Dictionary<string, UnpavedData>(), new Dictionary<string, SobekRRLink[]>());
-            yield return new TestCaseData(new Dictionary<string, RainfallRunoffBoundaryData>(), null, new Dictionary<string, SobekRRLink[]>());
-            yield return new TestCaseData(new Dictionary<string, RainfallRunoffBoundaryData>(), new Dictionary<string, UnpavedData>(), null);
-        }
     }
 }

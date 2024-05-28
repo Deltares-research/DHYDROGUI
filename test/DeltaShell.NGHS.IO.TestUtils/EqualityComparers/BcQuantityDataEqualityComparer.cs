@@ -9,8 +9,6 @@ namespace DeltaShell.NGHS.IO.TestUtils.EqualityComparers
     /// </summary>
     public class BcQuantityDataEqualityComparer : IEqualityComparer<IBcQuantityData>
     {
-        private static readonly IniPropertyEqualityComparer propertyComparer = new IniPropertyEqualityComparer();
-
         /// <summary>
         /// Determines whether the specified Delft BC quantity data objects are equal.
         /// </summary>

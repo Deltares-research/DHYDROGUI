@@ -8,7 +8,6 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
@@ -97,7 +96,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         }
         
         [Test]
-        [Category(TestCategory.Jira)] //TOOLS-6594
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void DeleteLocationFromCoverageWithoutSegmentLayerDoesNotCauseCrash()

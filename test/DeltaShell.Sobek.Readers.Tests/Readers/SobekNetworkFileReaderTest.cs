@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using DelftTools.TestUtils;
 using DeltaShell.Sobek.Readers.Readers;
 using NUnit.Framework;
 
@@ -51,7 +50,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         }
 
         [Test]
-        [Category(TestCategory.WorkInProgress)] // see TOOLS-9074
         public void ReadBranchWithKindOfSearchKeyInName()
         {
             const string source = @"BRCH id 'Onl_DM1062' nm 'Stadskanaal - 5e verlaat' bn 'Onl_DM1140' en 'Onl_DM1137' al 7608.51 vc_opt 1 vc_equi -1 vc_len 3000 brch";

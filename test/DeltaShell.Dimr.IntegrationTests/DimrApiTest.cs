@@ -9,7 +9,9 @@ namespace DeltaShell.Dimr.IntegrationTests
     {
         private readonly string dimrConfig = Path.Combine(tmpDir, "dimr.xml");
         private static readonly string tmpDir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
-        static DimrApiTest()
+        
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             Directory.CreateDirectory(tmpDir);
         }
@@ -46,45 +48,5 @@ namespace DeltaShell.Dimr.IntegrationTests
                 }
             }
         }
-
-        [Ignore("Needs to be checked")]
-        [Test]
-        public void GivenDimrApiWhenUpdateThenNoExceptionThrown()
-        {
-            using (var dimrApi = new DimrApiFactory().CreateNew())
-            {
-                try
-                {
-                    dimrApi.set_feedback_logger();
-                    dimrApi.Initialize(dimrConfig);
-                    dimrApi.Update(0.1d);
-                }
-                catch (Exception ex)
-                {
-                    Assert.Fail("Expected no exception, but got: " + ex.Message);
-                }
-            }
-        }
-
-        [Ignore("Needs to be checked")]
-        [Test]
-        public void GivenDimrApiWhenFinalizeThenNoExceptionThrown()
-        {
-            using (var dimrApi = new DimrApiFactory().CreateNew())
-            {
-                try
-                {
-                    dimrApi.set_feedback_logger();
-                    dimrApi.Initialize(dimrConfig);
-                    dimrApi.Update(0.1d);
-                    dimrApi.Finish();
-                }
-                catch (Exception ex)
-                {
-                    Assert.Fail("Expected no exception, but got: " + ex.Message);
-                }
-            }
-        }
-         
     }
 }

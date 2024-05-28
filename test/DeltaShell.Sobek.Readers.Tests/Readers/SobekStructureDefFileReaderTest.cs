@@ -19,7 +19,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         public void ReadSobekWeirs()
         {
             //def file contains 6 different weirs
-            string structureDefinitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Weir\struct.def");
+            string structureDefinitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Weir\struct.def");
             var reader = new SobekStructureDefFileReader(SobekType.Sobek212);
 
             //regular sobek weir
@@ -57,7 +57,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         public void ReadSobekPumps()
         {
             //def file contains 6 different weirs
-            string structureDefinitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Pump\TLS-1610litSTRUCT.DEF");
+            string structureDefinitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Pump\TLS-1610litSTRUCT.DEF");
             var reader = new SobekStructureDefFileReader(SobekType.Sobek212);
 
             //regular sobek weir
@@ -70,7 +70,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadNetworkWithStructure()
         {
-            string structureDefinitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"NetworkWithStructures\struct.def");
+            string structureDefinitionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"NetworkWithStructures\struct.def");
             var reader = new SobekStructureDefFileReader(SobekType.Sobek212);
 
             //75 structures
@@ -96,7 +96,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         public void ReadAllDefFilesShouldNeverCrash()
         {
             var reader = new SobekStructureDefFileReader(SobekType.Unknown);
-            string dataDir = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly);
+            string dataDir = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly);
             string[] defFiles = Directory.GetFiles(dataDir, "*.def", SearchOption.AllDirectories);
             //string[] defFiles = Directory.GetFiles(dataDir, "struct.def", SearchOption.AllDirectories);
             foreach (string defFile in defFiles)

@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
@@ -14,9 +12,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Gui.Forms.ViewManager;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
@@ -26,7 +22,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 {
@@ -95,7 +90,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Jira)]
         public void ShowTabulatedGatedCulvertWithEmptyGeometryShouldNotThrow_TOOLS10076()
         {
             var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
@@ -177,44 +171,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                            };
             CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(weir,network);
         }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Jira)]
-        [Ignore("Not a test, used to find out how CompositeStructureView works in combination with DotNetBar")]
-        public void ShowCulvertViewInMainWindowTools7333()
-        {
-            using(var gui = DeltaShellCoreFactory.CreateGui())
-            {
-                gui.Run();
-
-                var culvertView = new CulvertViewWpf() { Data = new Culvert("culvert1") };
-                var controlHost = new ElementHost { Child = culvertView };
-                controlHost.Dock = DockStyle.Fill;
-
-                var mocks = new MockRepository();
-                var presenter = mocks.Stub<CompositeStructureViewPresenter>();
-
-                var compositeStructureView = new Gui.Forms.CompositeStructureView.CompositeStructureView { Presenter = presenter };
-                var tabControl = (TabControl)TypeUtils.GetField(compositeStructureView, "tabControl1");
-
-                var tabPage = new TabPage("culvert")
-                                  {
-                                      Name = "culvert",
-                                      AutoScroll = true,
-                                      AutoScrollMinSize = new Size((int) (culvertView.Width * 1.2), (int) (culvertView.Height * 1.2))
-                                  };
-                tabPage.Controls.Add(controlHost);
-                tabControl.TabPages.Add(tabPage);
-
-                tabControl.PerformLayout();
-
-                gui.ToolWindowViews.Add(compositeStructureView);
-
-                WpfTestHelper.ShowModal((Control) gui.MainWindow);
-            }
-        }
-
+        
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowCompositeViewWithWeirAndOnlyOneCrossSection()

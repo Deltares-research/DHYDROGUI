@@ -244,7 +244,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadReGridFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly,  @"ReModels\RIJN301.SBK\8\DEFGRD.1");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly,  @"ReModels\RIJN301.SBK\8\DEFGRD.1");
             var calcGrids = new SobekGridPointsReader().Read(path).ToList();
             Assert.AreEqual(38, calcGrids.Count);
 

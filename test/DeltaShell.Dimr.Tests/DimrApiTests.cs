@@ -1,12 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using NUnit.Framework;
 
 namespace DeltaShell.Dimr.Tests
@@ -52,59 +48,6 @@ namespace DeltaShell.Dimr.Tests
             {
                 var useMessagesBuffering = (bool) TypeUtils.GetField(api, "useMessagesBuffering");
                 Assert.False(useMessagesBuffering);
-            }
-        }
-
-        [Test]
-        [Ignore("Crashes build server")]
-        [Category("ToCheck")]
-        public void TestInitializeUpdateFinishAndGetValues()
-        {
-            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            string localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            using (var model = new WaterFlowFMModel(localCopy))
-            {
-                // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
-                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
-                // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
-                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                model.Area.Weirs.Select(c =>
-                {
-                    c.CrestWidth = 1.0;
-                    return c;
-                }).ToList();
-
-                var exporter = new WaterFlowFMFileExporter();
-                string exporterPath = model.GetExporterPath(Path.Combine(tmpDir, model.DirectoryName));
-                exporter.Export(model, exporterPath);
-                DimrRunner.GenerateDimrXML(model, tmpDir);
-
-                using (var dimrApi = new DimrApi())
-                {
-                    dimrApi.KernelDirs = model.KernelDirectoryLocation;
-                    ValidationReport report = model.Validate();
-                    Assert.AreEqual(0, report.ErrorCount, "Errors found during model validation");
-                    dimrApi.Initialize(dimrConfig);
-                    TestHelper.AssertAtLeastOneLogMessagesContains(dimrApi.ProcessMessages, "Run");
-                    dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
-                    Array waterLevels = dimrApi.GetValues(model.Name + "/s0");
-                    Assert.AreEqual(0.0, (double) waterLevels.GetValue(0), 0.1);
-                    dimrApi.SetValues(model.Name + "/s0", null);
-                    waterLevels = dimrApi.GetValues(model.Name + "/s0");
-                    Assert.AreEqual(0.0d, (double) waterLevels.GetValue(0), 0.01);
-                    dimrApi.SetValuesDouble(model.Name + "/s0", null);
-                    waterLevels = dimrApi.GetValues(model.Name + "/s0");
-                    Assert.AreEqual(0.0d, (double) waterLevels.GetValue(0), 0.01);
-                    var newValues = new[]
-                    {
-                        80.1d
-                    };
-                    dimrApi.SetValues(model.Name + "/s0", newValues);
-                    waterLevels = dimrApi.GetValues(model.Name + "/s0");
-                    Assert.AreEqual(80.1d, (double) waterLevels.GetValue(0), 0.01);
-                    dimrApi.Finish();
-                }
             }
         }
 

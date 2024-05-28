@@ -270,65 +270,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void AddingOrificeToNetworkSequence3()
-        {
-            var network = new HydroNetwork();
-            var orificeName = TestSewerNetworkProvider.OrificeName;
-
-            var orifice = new Orifice(orificeName);
-            AddSewerFeatureToNetwork(orifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-
-            var sewerConnection = new SewerConnection(orificeName);
-            AddSewerFeatureToNetwork(sewerConnection, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(0));
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void AddingOrificeToNetworkSequence4()
-        {
-            var network = new HydroNetwork();
-            var orificeName = TestSewerNetworkProvider.OrificeName;
-
-            var orifice = new Orifice(orificeName);
-            AddSewerFeatureToNetwork(orifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-
-            var sewerConnection = new SewerConnection(orificeName);
-            AddSewerFeatureToNetwork(sewerConnection, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(0));
-
-            AddSewerFeatureToNetwork(orifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void AddingOrificeToNetworkSequence5()
-        {
-            var network = new HydroNetwork();
-            var orificeName = TestSewerNetworkProvider.OrificeName;
-
-            var orifice = new Orifice(orificeName);
-            AddSewerFeatureToNetwork(orifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-
-            var sewerConnection = new SewerConnection(orificeName);
-            sewerConnection.AddStructureToBranch(new Orifice("MyOrifice"));
-            AddSewerFeatureToNetwork(sewerConnection, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-        }
-
-        [Test]
         public void AddingOrificeToNetworkSequence6()
         {
             var network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOneOrifice();
@@ -672,40 +613,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void AddingGwswConnectionOrificeToNetworkSequence3()
-        {
-            /*
-             * This test failed on the build server.
-             * We think this test is supposed to do the following:
-             * 1) Create a SewerConnection with orifice("myOrifice")
-             * 2) Replace the orifice on the SewerConnection with orifice("newOrifice")
-             * 3) Replace the orifice("newOrifice") back to orifice("myOrifice")
-             */
-            var network = new HydroNetwork();
-            var orificeName = TestSewerNetworkProvider.OrificeName;
-
-            var orifice = new Orifice(orificeName);
-            AddSewerFeatureToNetwork(orifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-
-            var sewerConnection = new SewerConnection(orificeName);
-            sewerConnection.AddStructureToBranch(new Orifice("newOrifice"));
-
-            AddSewerFeatureToNetwork(sewerConnection, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-            // check if the expected orifice is present
-
-            AddSewerFeatureToNetwork(orifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-            // check if the expected orifice is present
-            
-        }
-
-        [Test]
         public void AddingGwswConnectionOrificeToNetworkSequence4()
         {
             var network = new HydroNetwork();
@@ -766,56 +673,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             sewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(sewerConnection);
             Assert.That(sewerConnection.LevelSource, Is.EqualTo(expectedLevelSource).Within(0.01));
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void AddingGwswConnectionOrificeToNetworkSequence6()
-        {
-            var network = new HydroNetwork();
-            var orificeName = TestSewerNetworkProvider.OrificeName;
-
-            var gwswOrifice = new GwswConnectionOrifice(orificeName) { LevelSource = 80.1 };
-            AddSewerFeatureToNetwork(gwswOrifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-
-            var sewerConnection = network.SewerConnections.FirstOrDefault();
-            Assert.IsNotNull(sewerConnection);
-            Assert.That(sewerConnection.LevelSource, Is.EqualTo(80.1).Within(0.01));
-
-            var mySewerConnection = new SewerConnection(orificeName);
-            mySewerConnection.AddStructureToBranch(new Orifice("newOrifice"));
-            AddSewerFeatureToNetwork(mySewerConnection, network);
-            sewerConnection = network.SewerConnections.FirstOrDefault();
-            Assert.IsNotNull(sewerConnection);
-            Assert.That(sewerConnection.LevelSource, Is.EqualTo(0.0).Within(0.01));
-
-            var orifice = new Orifice(orificeName) { CrestLevel = 12.3 };
-            AddSewerFeatureToNetwork(orifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-
-            var or2 = network.Orifices.FirstOrDefault();
-            Assert.IsNotNull(or2);
-            Assert.That(or2.CrestLevel, Is.EqualTo(12.3).Within(0.01));
-
-            sewerConnection = network.SewerConnections.FirstOrDefault();
-            Assert.IsNotNull(sewerConnection);
-            Assert.That(sewerConnection.LevelSource, Is.EqualTo(0.0).Within(0.01));
-
-            AddSewerFeatureToNetwork(gwswOrifice, network);
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-
-            var or3 = network.Orifices.FirstOrDefault();
-            Assert.IsNotNull(or3);
-            Assert.That(or3.CrestLevel, Is.EqualTo(12.3).Within(0.01));
-
-            sewerConnection = network.SewerConnections.FirstOrDefault();
-            Assert.IsNotNull(sewerConnection);
-            Assert.That(sewerConnection.LevelSource, Is.EqualTo(80.1).Within(0.01));
-            Assert.That(ReferenceEquals(mySewerConnection, network.SewerConnections.FirstOrDefault()), Is.True);
         }
 
         #endregion

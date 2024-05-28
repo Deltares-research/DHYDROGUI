@@ -54,29 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void GivenFmModelWithSewerNetworkWithoutCompartments_WhenWritingMduFile_ThenNodeFileIsNotWrittenAndMduFileDoesNotReferenceANodeFile()
-        {
-            var tempFolder = FileUtils.CreateTempDirectory();
-            var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, NodeFileName);
-
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath
-            };
-            fmModel.ModelDefinition.SetModelProperty(KnownProperties.NodeFile, "someText");
-
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
-
-            Assert.IsFalse(File.Exists(nodeFilePath));
-
-            var nodeFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.NodeFile);
-            Assert.That(nodeFileProperty.GetValueAsString(), Is.EqualTo(string.Empty));
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenFmModelWithSewerNetworkWithoutCompartments_WhenWritingMduFileWithNodeFileAlreadyExisting_ThenExistingNodeFileIsDeleted()
         {
             var tempFolder = FileUtils.CreateTempDirectory();

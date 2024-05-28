@@ -216,7 +216,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\Bed_Levels_SOBEK2.tif");
             var bedLevels = RasterFile.ReadPointValues(testFilePath).ToList();
             Assert.IsNotNull(bedLevels);
-            //Assert.AreEqual(33 * 46, bedLevels.Count);
             Assert.AreEqual(876, bedLevels.Count); //876 points with value others are nodatavalue  
         }
         [Test]

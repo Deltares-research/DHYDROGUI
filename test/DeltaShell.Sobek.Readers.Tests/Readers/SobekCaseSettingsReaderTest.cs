@@ -21,7 +21,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadCaseSettings()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\SETTINGS.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"SW_max_1.lit\3\SETTINGS.DAT");
 
             var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadCaseSettingsPoorMansFloat()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"QHBound.lit\1\SETTINGS.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"QHBound.lit\1\SETTINGS.DAT");
 
             var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
@@ -65,7 +65,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadCorruptFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\NETWORK.TP"); 
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"SW_max_1.lit\3\NETWORK.TP"); 
             Assert.Throws<FormatException>(() =>
             {
                 settingsReader.GetSobekCaseSettings(path);
@@ -76,7 +76,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadCaseSettingsSteadyViaSettingsDatFile()
         {
-            var path =TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"steady.lit\2\SETTINGS.DAT");
+            var path =TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"steady.lit\2\SETTINGS.DAT");
 
             var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
             //ramdon samples
@@ -160,7 +160,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadCaseSettingsWithout_Iadvec1D_Limtyphu1D_Momdilution1D()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"steady.lit\2\SETTINGS.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"steady.lit\2\SETTINGS.DAT");
 
             var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 
@@ -187,7 +187,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test, Category(TestCategory.DataAccess)]
         public void ReadCaseSettingsWithWaterQualitySettings()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SobekModelWithWaterQualityData\Sobek212\Test\1\SETTINGS.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"SobekModelWithWaterQualityData\Sobek212\Test\1\SETTINGS.DAT");
 
             var sobekCaseSettings = settingsReader.GetSobekCaseSettings(path);
 

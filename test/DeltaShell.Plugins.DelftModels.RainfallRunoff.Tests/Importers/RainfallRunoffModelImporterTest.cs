@@ -13,6 +13,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
     [TestFixture]
     public class RainfallRunoffModelImporterTest
     {
+        [TearDown]
+        public void TearDown()
+        {
+            Sobek2ModelImporters.ClearRegisteredImporters();
+        }
+        
         [Test]
         public void Constructor_ExpectedResults()
         {

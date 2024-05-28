@@ -27,7 +27,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Integration)]
         public void ParseDefRun1File()
         {
-            var settingsFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\RIJN301.SBK\8\defrun.1");
+            var settingsFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ReModels\RIJN301.SBK\8\defrun.1");
             var settings = new SobekReDefRun1Reader().Read(settingsFile).First();
             Assert.AreEqual(new DateTime(2000, 1, 1, 0, 0, 0), settings.StartTime);
             Assert.AreEqual(new DateTime(2000, 2, 1, 0, 0, 0), settings.StopTime);

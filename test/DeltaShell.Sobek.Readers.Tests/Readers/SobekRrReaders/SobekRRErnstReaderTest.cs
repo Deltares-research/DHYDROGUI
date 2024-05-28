@@ -75,24 +75,11 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.DataAccess)]
         public void ReadErnstAlfaFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Tholen.lit\29\Unpaved.Alf");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Tholen.lit\29\Unpaved.Alf");
             var lstErnst = new SobekRRErnstReader().Read(path);
             Assert.AreEqual(205, lstErnst.Count());
         }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void ReadErnstAlfaFileLandelijkSobekModel()
-        {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"LSM1_0.lit\12\Unpaved.Alf");
-            var lstErnst = new SobekRRErnstReader().Read(path).ToList();
-
-            Assert.IsNotNull(lstErnst.FirstOrDefault(e => e.Id == "P15_Drain1"));
-            Assert.AreEqual(6610, lstErnst.Count);
-            Assert.IsFalse(lstErnst.Any(e => e.Id == null));
-        }
-
+        
         [Test]
         public void ReadAlternatingRecords()
         {

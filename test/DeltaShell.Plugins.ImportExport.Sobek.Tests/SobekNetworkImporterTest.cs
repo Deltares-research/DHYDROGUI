@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -168,22 +164,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
-            //ICrossSection trapeziumProfile = network.CrossSections.Where(cs => cs.Name == "4").First();
-            //// trapzium not supported; will be default GeometryBased cross section
-            //Assert.AreEqual(CrossSectionType.GeometryBased, trapeziumProfile.CrossSectionType);
-
-            //ICrossSection circleProfile = network.CrossSections.Where(cs => cs.Name == "30").First();
-            //// circle not supported; will be default GeometryBased cross section
-            //Assert.AreEqual(CrossSectionType.GeometryBased, circleProfile.CrossSectionType);
-
             ICrossSection yzProfile = network.CrossSections.Where(cs => cs.Name == "33").First();
             // yz profile supported; will be default cross section
             Assert.AreEqual(CrossSectionType.YZ, yzProfile.CrossSectionType);
-
-            //ICrossSection tabulatedProfile = network.CrossSections.Where(cs => cs.Name == "32").First();
-            // definition name is r_Default -> closed rectangle in disguise
-            //// tabulated profile supported; will be default cross section
-            //Assert.AreEqual(CrossSectionType.ZW, tabulatedProfile.CrossSectionType);
         }
 
         [Test]
@@ -197,7 +180,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(4, network.CrossSectionSectionTypes.Count());
             // first 3 sections are reserved for tabulated
             CrossSectionSectionType mainSection = network.CrossSectionSectionTypes[0];
-            //network.CrossSections.All(cs => Assert.AreEqual(mainSection, cs.CrossSectionType));
 
             IEnumerable<ICrossSection> tabulatedProfiles =
                 network.CrossSections.Where(cs => cs.CrossSectionType == CrossSectionType.ZW);
@@ -345,7 +327,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             string structureMappingFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\struct.dat";
             List<SobekStructureMapping> structureMappings = new SobekStructureDatFileReader().Read(structureMappingFile).ToList();
             Assert.AreEqual(62, structureMappings.Count);
-            //Assert.Fail();
             string structureDefinitionFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\struct.def";
 
             var reader = new SobekStructureDefFileReader(SobekType.Sobek212);
@@ -394,12 +375,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(1, network.Branches.Count);
             Assert.AreEqual(6, network.Structures.Count()); // not reading river weirs yet, not available in the kernel
             Assert.AreEqual(3, network.Structures.Where(s => s is ICompositeBranchStructure).Count());
-            // not reading river weirs yet, not available in the kernel so not multiple in the compound
-            //ICompositeBranchStructure compound = (ICompositeBranchStructure) network.Structures.Where(
-            //        s => s is ICompositeBranchStructure && ((ICompositeBranchStructure) s).Structures.Count() > 1)
-            //                                                                     .FirstOrDefault();
-            //Assert.IsNotNull(compound);
-            //Assert.AreEqual(2, compound.Structures.Count);
         }
 
         [Test]
@@ -451,58 +426,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
-        public void ImportTwenteModelAndCheckInitialConditions()
-        {
-            var modelImporter = new SobekHydroModelImporter(false);
-            string pathToSobekNetwork = TestHelper.GetTestFilePath(@"TwenteKanaal.lit\3\network.tp");
-            var hydroModel = (HydroModel) modelImporter.ImportItem(pathToSobekNetwork);
-
-            WaterFlowFMModel flowModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
-
-            //not a requirement per-se, but otherwise our other asserts will fail
-            // Assert.AreEqual(RRInitialConditionsWrapper.InitialConditionsType.Depth, flowModel.InitialConditionsType);
-            //
-            // var bedLevelCoverage = BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(flowModel.Network);
-            // var initialDepth = flowModel.InitialConditions;
-            // var branch = flowModel.Network.Branches[0];
-            //
-            // var beginningOfBranch = new NetworkLocation(branch, 0);
-            // var centerOfBranch = new NetworkLocation(branch, branch.Length / 2.0);
-            // var endOfBranch = new NetworkLocation(branch, branch.Length);
-            //
-            // var bedLevel1 = bedLevelCoverage.Evaluate(beginningOfBranch);
-            // var depth1 = initialDepth.Evaluate(beginningOfBranch);
-            // var bedLevel2 = bedLevelCoverage.Evaluate(centerOfBranch);
-            // var depth2 = initialDepth.Evaluate(centerOfBranch);
-            // var bedLevel3 = bedLevelCoverage.Evaluate(endOfBranch);
-            // var depth3 = initialDepth.Evaluate(endOfBranch);
-            //
-            // //assert we have a constant water level but a non-constant water depth!
-            // Assert.AreNotEqual(depth1, depth2);
-            // Assert.AreEqual(25.0, depth1 + bedLevel1);
-            // Assert.AreEqual(25.0, depth2 + bedLevel2);
-            // Assert.AreEqual(25.0, depth3 + bedLevel3);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        [Ignore("Should be fixed by issue SOBEK3-1644")]
-        [Category("ToCheck")]
-        public void RunZwolleModelWithAddedCrossSection()
-        {
-            InitializeSobekLicense();
-
-            //runs the test with a altered version of the sw_max model.
-            //in this version the crossection on branch '4' is replaced by a YZ-crossection (this was a rectangle)
-            var modelImporter = new SobekNetworkImporter();
-            string pathToSobekNetwork = TestHelper.GetTestFilePath(@"SW_zRect.lit\3\network.tp");
-            var importedModel = (WaterFlowFMModel) modelImporter.ImportItem(pathToSobekNetwork);
-            RunModel(importedModel);
-        }
-
-        [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ReadNetworkWithChineseNames()
@@ -546,17 +469,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork) importer.ImportItem(path);
         }
-
-        //[Test]
-        //[Category(TestCategory.Performance)]
-        //public void ImportElbeNetwork()
-        //{
-        //    string path = TestHelper.GetTestDataDirectory() + @"\elbe\NETWORK.TP";
-
-        //    //import existing network and model + default boundary conditions
-        //    SobekNetworkBranchFileReader reader = new SobekNetworkBranchFileReader(path);
-        //    reader.Read();
-        //}
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -796,19 +708,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(1, sobekCrossSectionDefinitions.Count(cs => cs.ID == "17"));
             SobekCrossSectionDefinition profileDefinition = sobekCrossSectionDefinitions.First(cs => cs.ID == "17");
             Assert.AreEqual("r_DuikerLemmelerveld", profileDefinition.Name);
-            // profile.def 17 = profile.dat 18
-
-            //Ignored since tests of the sobek testbank are based on rectangle cross-section
-            //Assert.AreEqual(0, network.CrossSections.Where(cs => cs.Name == "18").Count());
 
             // check if other cross section definitions are processed.
             Assert.AreEqual(1, sobekCrossSectionDefinitions.Count(cs => cs.ID == "prof_D20061011-DP-144"));
             Assert.AreEqual(1, network.CrossSections.Count(cs => cs.Name == "prof_D20061011-DP-144"));
-        }
-
-        private void InitializeSobekLicense()
-        {
-            TestHelper.SetDeltaresLicenseToEnvironmentVariable();
         }
 
         private IHydroNetwork GetNetwork(string path)
@@ -816,56 +719,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork) importer.ImportItem(path);
             return network;
-        }
-
-        private static void RunModel(WaterFlowFMModel flowFMModel)
-        {
-            // fix for added validation (cross section definition sections total width should not be less than total cross section width
-            flowFMModel.Network.CrossSections.Select(cs => cs.Definition)
-                       .OfType<CrossSectionDefinition>()
-                       .Union
-                       (
-                           flowFMModel.Network.CrossSections.Select(cs => cs.Definition)
-                                      .OfType<CrossSectionDefinitionProxy>()
-                                      .Select(csdp => csdp.InnerDefinition)
-                                      .OfType<CrossSectionDefinition>()
-                       )
-                       .ForEach(csd => csd.RefreshSectionsWidths());
-
-            flowFMModel.Initialize();
-
-            Assert.AreEqual(ActivityStatus.Initialized, flowFMModel.Status, "Model should be in initialized state after it is created.");
-
-            while (flowFMModel.Status != ActivityStatus.Done)
-            {
-                flowFMModel.Execute();
-
-                // get values from model for the last time step
-                IList<double> values = flowFMModel.OutputWaterLevel.GetValues<double>(
-                    new VariableValueFilter<DateTime>(flowFMModel.OutputWaterLevel.Arguments[0], flowFMModel.CurrentTime)
-                );
-
-                if (flowFMModel.Status == ActivityStatus.Failed)
-                {
-                    Assert.Fail("Model run has failed");
-                }
-            }
-
-            flowFMModel.Finish();
-
-            if (flowFMModel.Status == ActivityStatus.Failed)
-            {
-                Assert.Fail("Model run has failed");
-            }
-
-            flowFMModel.Cleanup();
-
-            if (flowFMModel.Status == ActivityStatus.Failed)
-            {
-                Assert.Fail("Model run has failed");
-            }
-
-            Assert.AreEqual(ActivityStatus.Cleaned, flowFMModel.Status);
         }
     }
 }

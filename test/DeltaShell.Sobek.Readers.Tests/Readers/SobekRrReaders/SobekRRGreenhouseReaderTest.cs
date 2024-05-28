@@ -84,7 +84,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.DataAccess)]
         public void ReadGreenhouseFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Greenhouse\Greenhse.3B");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Greenhouse\Greenhse.3B");
             var lstGreenhouse = new SobekRRGreenhouseReader().Read(path);
             Assert.AreEqual(3, lstGreenhouse.Count()); 
         }

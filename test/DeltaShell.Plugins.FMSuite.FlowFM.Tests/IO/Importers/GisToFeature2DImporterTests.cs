@@ -26,21 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        [Ignore("Just 2 points are imported, id 3 and 5, ToDo: Why?")]
-        [Category("ToCheck")]
-        public void PointGMLImport()
-        {
-            var filePath = TestHelper.GetTestFilePath(@"gisFiles\points.gml");
-            filePath = TestHelper.CreateLocalCopy(filePath);
-
-            var importer = new GisToFeature2DImporter<IPoint, Feature2D>();
-            var importedFeatures = importer.ImportItem(filePath, new List<Feature2D>()) as IList<Feature2D>;
-
-            Assert.IsNotNull(importedFeatures);
-            Assert.AreEqual(6, importedFeatures.Count);
-        }
-
-        [Test]
         public void PointGeoJSONImport()
         {
             var filePath = TestHelper.GetTestFilePath(@"gisFiles\points.geojson");

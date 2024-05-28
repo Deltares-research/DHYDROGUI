@@ -136,49 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void TestCallGetValuePumpCapacity()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            DoWithLocalModelVersion(mduPath, (model) =>
-            {
-                model.Initialize();
-                var pump = model.Area.Pumps.First(o => o.Name == "pump01");
-
-                var cat = model.GetFeatureCategory(pump);
-                var result = model.GetVar(cat, pump.Name, "capacity");
-
-                Assert.AreEqual(100.0, ((double[])result)[0]);
-
-                model.Execute();
-                result = model.GetVar(cat, pump.Name, "capacity");
-                Assert.AreEqual(95.0, ((double[])result)[0], 0.1);
-            });
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void TestCallSetValueWeirCrestLevel()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            DoWithLocalModelVersion(mduPath, (model) =>
-            {
-                model.Initialize();
-                // get weir02
-                var weir = model.Area.Weirs.First(o => o.Name == "weir02");
-
-                var cat = model.GetFeatureCategory(weir);
-                var result = model.GetVar(cat, weir.Name, "crest_level");
-
-                Assert.AreEqual(3.0, ((double[])result)[0]);
-
-                model.SetVar(new[] { -3.0 }, cat, weir.Name, "crest_level");
-                result = model.GetVar(cat, weir.Name, "crest_level");
-                Assert.AreEqual(-3.0, ((double[])result)[0]);
-            });
-        }
-
-        [Test]
         public void TestCallGetValuesWaterLevelsCount()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
@@ -189,8 +146,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var waterLevels = model.GetVar("s0") as double[];
 
                 Assert.IsNotNull(waterLevels);
-
-                //Assert.AreEqual(waterLevels.Length, model.Grid.Cells.Count);
                 Assert.AreEqual(1, waterLevels.Length); //dimr getvar can only get 1 value!
             });
         }
@@ -252,66 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }
             });
         }
-
-        [Test]
-        [Category("Quarantine")]
-        public void TestGetSnappedFeatures()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            DoWithLocalModelVersion(mduPath, (model) =>
-            {
-                using (var api = new RemoteFlexibleMeshModelApi())
-                {
-
-                    api.Initialize(model.MduFilePath);
-
-                    var gridExtent = model.GridExtent;
-
-                    var center = gridExtent.Centre;
-                    var snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
-                    var snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                    var snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                    var snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                    var snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                    var snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                    var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                    var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-
-                    var snappedWaterLevelBnd =
-                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
-                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-                    var snappedVelocityBnd =
-                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
-                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-                    var snappedDischargeBnd =
-                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
-                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-
-                    Assert.IsTrue(model.SnapsToGrid(snappedPoint));
-                    Assert.IsTrue(model.SnapsToGrid(snappedThinDam));
-                    Assert.IsTrue(model.SnapsToGrid(snappedFixedWeir));
-                    Assert.IsTrue(model.SnapsToGrid(snappedCrossSection));
-                    Assert.IsTrue(model.SnapsToGrid(snappedWeir));
-                    Assert.IsTrue(model.SnapsToGrid(snappedGate));
-                    Assert.IsTrue(model.SnapsToGrid(snappedPump));
-                    Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
-                    Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
-                    Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
-                    Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
-                }
-            });
-        }
-
+        
         [Test]
         public void TestGetSnappedFeaturesWorksAfterFailure()
         {
@@ -517,29 +413,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }
             });
         }
-
-        [Test]
-        [Category("Quarantine")]
-        public void TestGetSnappedEmbankmentFeature()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            DoWithLocalModelVersion(mduPath, (model) =>
-            {
-                using (var api = new RemoteFlexibleMeshModelApi())
-                {
-                    api.Initialize(model.MduFilePath);
-
-                    var gridExtent = model.GridExtent;
-
-                    var center = gridExtent.Centre;
-                    var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-
-                    Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
-                }
-            });
-        }
-
+        
         [Test]
         public void TestGetSnappedObservationPointFeature()
         {
@@ -643,67 +517,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                             model.SourcesAndSinks.First().Feature.Geometry);
 
                     Assert.IsTrue(model.SnapsToGrid(snappedSourceAndSink));
-                }
-            });
-        }
-
-        /// <summary>
-        /// E-mail from dam_ar:
-        /// Na 3 minuten moet station ‘9_040.seg_9’ waterstand 0.0 hebben
-        /// Na 3 minuten moet cross sectie ‘weir02’ een discharge van 0.0 hebben
-        /// Na 4:100 moet station ‘9_040.seg_9’ waterstand > 0.01 hebben
-        /// Na 4:100 moet cross sectie ‘weir02’ een discharge >70 hebben
-        /// </summary>
-        [Test]
-        [Category("Quarantine")]
-        public void TestRunHarlingen()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            DoWithLocalModelVersion(mduPath, (model) =>
-            {
-                var obsSeg9 = model.Area.ObservationPoints.First(o => o.Name == "9_040.seg_9");
-                var obCrWeir02 = model.Area.ObservationCrossSections.First(o => o.Name == "weir02");
-
-                var obsPointCat = model.GetFeatureCategory(obsSeg9);
-                var obsCrossCat = model.GetFeatureCategory(obCrWeir02);
-
-                var report = model.Validate();
-
-                var errorReport = report.ToString();
-
-                Assert.AreEqual(0, report.ErrorCount, errorReport);
-                model.Initialize();
-
-                var startTime = model.BMIEngine.StartTime;
-                var currentTime = model.BMIEngine.CurrentTime;
-
-                var diffTime = currentTime - startTime;
-
-                var threeMinutesChecked = false;
-
-                // keep updating until 5 minutes are reached
-                while (diffTime.TotalMinutes < 5)
-                {
-                    model.Execute();
-
-                    if (diffTime.TotalMinutes >= 4.5)
-                    {
-                        Assert.GreaterOrEqual(0.01, ((double[])model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0]);
-                        Assert.GreaterOrEqual(70, ((double[])model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0]);
-                        break;
-                    }
-                    else if (!threeMinutesChecked && diffTime.TotalMinutes >= 3)
-                    {
-                        var waterLevel = ((double[])model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0];
-                        Assert.AreEqual(0.0, waterLevel);
-                        var discharge = ((double[])model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0];
-                        Assert.AreEqual(0.0, discharge);
-
-                        threeMinutesChecked = true;
-                    }
-
-                    currentTime = model.BMIEngine.CurrentTime;
-                    diffTime = currentTime - startTime;
                 }
             });
         }

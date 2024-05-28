@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using NUnit.Framework;
 using SharpMap;
@@ -49,40 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any());
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void InitializeUnstrucGridOperationApi_DoesNotWrite_StructureProperty()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"GridOperationApi\FlowFM\FlowFM.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(mduPath);
-
-            try
-            {
-                using (var api = new UnstrucGridOperationApi(model, false))
-                {
-                    var pump = model.Area.Pumps.FirstOrDefault();
-                    Assert.IsNotNull(pump);
-                    try
-                    {
-                        api.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump, pump.Geometry);
-                    }
-                    catch (Exception e)
-                    {
-                        Assert.Fail("It should have not thrown the following exception: {0}", e.Message);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("It should have not thrown the following exception: {0}", e.Message);
-            }
-            
-
-            FileUtils.DeleteIfExists(mduPath);
         }
     }
 }

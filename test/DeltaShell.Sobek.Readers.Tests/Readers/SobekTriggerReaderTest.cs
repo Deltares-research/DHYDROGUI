@@ -135,7 +135,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadFromSobek212File()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ndb_controllertriggerfiles\Trigger.def");
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ndb_controllertriggerfiles\Trigger.def");
             var sobekTriggers = new SobekTriggerReader().Read(pathToSobekNetwork).ToArray();
 
             Assert.AreEqual(28, sobekTriggers.Length);
@@ -145,7 +145,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadFromSobekREFile()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ndb_controllertriggerfiles\DEFSTR.5");
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"ndb_controllertriggerfiles\DEFSTR.5");
             var sobekTriggers = new SobekTriggerReader().Read(pathToSobekNetwork).ToArray();
 
             Assert.AreEqual(28, sobekTriggers.Length);

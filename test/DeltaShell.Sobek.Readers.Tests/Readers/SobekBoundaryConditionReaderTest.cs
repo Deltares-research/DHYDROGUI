@@ -292,7 +292,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Integration)]
         public void FileReaderTest()
         {
-            string boundaryConditionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"NetworkWithStructures\BOUNDARY.DAT");
+            string boundaryConditionFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"NetworkWithStructures\BOUNDARY.DAT");
             var sobekBoundaryConditionReader = new SobekBoundaryConditionReader();
 
             var boundaryConditions = sobekBoundaryConditionReader.Read(boundaryConditionFile);

@@ -34,10 +34,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             app.Project.RootFolder.Add(hydroModel);
 
             // [Precondition]
-            // Disabled until issues FM1D2D-1183, FM1D2D-1184 and FM1D2D-1325 are fixed.
-            //Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the GWSW model:{Environment.NewLine}{errorMessages}");
-
-            // [Precondition]
             IHydroNetwork hydroNetwork = hydroModel.Region.SubRegions.OfType<IHydroNetwork>().Single();
             Assert.AreEqual(preconditionExpectedBranchFeaturesCount, hydroNetwork.BranchFeatures.Count(), "[Precondition failure] Unexpected number of branch features");
 

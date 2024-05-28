@@ -8,7 +8,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -153,24 +152,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 }
             }
         };
-
-        /// <summary>
-        /// Mapping of FlowFM filenames to a collection of strings indicating lines to be ignored if they start with this string.
-        /// </summary>
-        /// <param name="mduFileName">The name of the mdu file.</param>
-        /// <returns>The mapping of filenames to a collection of lines to ignore.</returns>
-        public static IReadOnlyDictionary<string, IEnumerable<string>> GetFlowFmLinesToIgnore(string mduFileName)
-        {
-            return new Dictionary<string, IEnumerable<string>>(StringComparer.InvariantCultureIgnoreCase)
-            {
-                {
-                    $"{mduFileName}", new[]
-                    {
-                        "HisInterval", "MapInterval", "DtUser"
-                    }
-                }
-            };
-        }
         
         /// <summary>
         /// Given a collection of filepaths, returns only input files.
@@ -180,16 +161,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         public static IEnumerable<string> FilterInputFiles(IEnumerable<string> filepaths)
         {
             return filepaths.Where(fp => !IsRainfallRunoffOutputFile(fp));
-        }
-        
-        /// <summary>
-        /// Given a collection of filepaths, returns only output files.
-        /// </summary>
-        /// <param name="filepaths">The filepaths to filter.</param>
-        /// <returns>A collection of output files.</returns>
-        public static IEnumerable<string> FilterOutputFiles(IEnumerable<string> filepaths)
-        {
-            return filepaths.Where(IsRainfallRunoffOutputFile);
         }
 
         private static bool IsRainfallRunoffOutputFile(string fp)
@@ -209,28 +180,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                    || string.Equals(fileExtension, logExtension, StringComparison.InvariantCultureIgnoreCase)
                    || string.Equals(fileExtension, rtnExtension, StringComparison.InvariantCultureIgnoreCase)
                    || string.Equals(fileExtension, outExtension, StringComparison.InvariantCultureIgnoreCase);
-        }
-        
-        /// <summary>
-        /// Given a filepath, returns true if the file is a .nc file.
-        /// </summary>
-        /// <param name="filePath">The filepath to check.</param>
-        /// <returns><c>True</c> if the file is a netcdf file.</returns>
-        public static bool IsNetcdfFile(string filePath)
-        {
-            return filePath.EndsWith(ncExtension, StringComparison.InvariantCultureIgnoreCase);
-        }
-        
-        /// <summary>
-        /// Given a filepath, returns true if the file is a valid Rainfall Runoff output file.
-        /// </summary>
-        /// <param name="filePath">The filepath to check.</param>
-        /// <returns><c>True</c> if the file is a valid Rainfall Runoff file.</returns>
-        public static bool IsSupportedRainfallRunoffOutputFile(string filePath)
-        {
-            return filePath.EndsWith(ncExtension, StringComparison.InvariantCultureIgnoreCase)
-                   || filePath.EndsWith(hisExtension, StringComparison.InvariantCultureIgnoreCase)
-                   || filePath.EndsWith(mapExtension, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>

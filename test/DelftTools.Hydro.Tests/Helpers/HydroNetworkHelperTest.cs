@@ -88,7 +88,6 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
-        [Category("Quarantine")]
         public void GenerateCalculationPointsShouldWorkWellWithFixedPointsTools8709()
         {
             var network = CreateTestNetwork();
@@ -115,7 +114,6 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
-        [Category("Quarantine")]
         public void GenerateCalculationPointsShouldWorkWellWithFixedPointsAtBeginOfBranchTools8709()
         {
             var network = CreateTestNetwork();
@@ -1300,7 +1298,6 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, epsilon);
             Assert.AreEqual(98.3, networkCoverage.Locations.Values[1].Chainage, epsilon);
             Assert.AreEqual(99.0, networkCoverage.Locations.Values[2].Chainage, epsilon);
-            //Assert.AreEqual(99.6, networkCoverage.Locations.Values[3].Offset, epsilon);
             Assert.AreEqual(100.0, networkCoverage.Locations.Values[3].Chainage, epsilon);
         }
 
@@ -2224,7 +2221,6 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void MultipleBranchReversalsShouldNotMoveNetworkCoverageLocationsDueToRoundingTools6878()
         {
             var from = new Node();
@@ -2421,7 +2417,6 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void RemoveStructureOnDisconnectedStructureShouldNotCrashTools9784()
         {
             var weir = new Weir();

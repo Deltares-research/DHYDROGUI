@@ -10,7 +10,6 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using GeoAPI.Geometries;
@@ -128,7 +127,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void PreventDeletionOfRowIfMinimumViolatedFiltered()
         {
             EventedList<CrossSectionSectionType> sectionTypes = GetSectionTypesList(new[] { "Main", "FloodPlain1", "FloodPlain2" });
@@ -592,19 +590,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 
             WindowsFormsTestHelper.ShowModal(crossSectionView);
         }
-
-        //[Test] wait for implementation closed branch
-        //public void ShowWithStandardCrossSection()
-        //{
-        //    var circle = new CrossSectionStandardShapeCircle {Diameter = 10.0};
-        //    var crossSectionDefinitionStandard = new CrossSectionDefinitionStandard(circle);
-
-        //    var crossSectionView = new CrossSectionDefinitionView();
-            
-        //    crossSectionView.SetDataInView(crossSectionDefinitionStandard, CrossSectionDefinitionViewModelProvider.GetViewModel(crossSectionDefinitionStandard));
-
-        //    WindowsFormsTestHelper.ShowModal(crossSectionView);
-        //}
 
         [Test]
         [Category(TestCategory.WindowsForms)]

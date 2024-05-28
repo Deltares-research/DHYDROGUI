@@ -38,36 +38,14 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("FailsLocally")]
         public void ReadFrictionAdige()
         {
             // source: P:\sobek\maintenance\Jira\18001-19000\18131\DBS2SBK\Ars-7864\1\ADIGE.lit\6\
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"friction\friction.dat");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"friction\friction.dat");
             string defFileText = File.ReadAllText(path, Encoding.Default);
             SobekFriction sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(defFileText);
             Assert.AreEqual(199, sobekFriction.CrossSectionFrictionList.Count);
             SobekCrossSectionFriction crossSectionFriction = sobekFriction.CrossSectionFrictionList[198];
-
-            // read in the last cross section friction record of the file:
-            // * record open field, id of friction record, name, id of cross section
-            // CRFR id '374' nm 'Ponte Trento Centro' cs '374'
-            // * table with y values of segments: 1 segment from 91.048 to 314.246
-            // lt ys
-            // TBLE
-            //     91.048    314.246    <
-            // tble
-            // ft ys
-            // * table with positive friction values 1 segment type 1 = Manning, value = 0.03
-            // TBLE
-            //     1    0.03    <
-            // tble
-            // fr ys
-            // * table with negative friction values 1 segment type 1 = Manning, value = 0.03
-            // TBLE
-            //     1    0.03    <
-            // tble
-            // * close record field
-            // crfr
 
             Assert.AreEqual("374", crossSectionFriction.CrossSectionID);
             Assert.AreEqual("374", crossSectionFriction.ID);
@@ -85,22 +63,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual("1", sobekBedFriction.Id);
             Assert.AreEqual("1", sobekBedFriction.BranchId);
             Assert.AreEqual(SobekBedFrictionType.Mannning /*1*/, sobekBedFriction.MainFriction.FrictionType);
-
-
-            //    Assert.AreEqual(1, sobekFriction.EngelundFrictionList.Count);
-            //    EngelundBedFriction engelundBedFriction = sobekFriction.EngelundFrictionList[0];
-            //    Assert.AreEqual(0.0005,engelundBedFriction.Alpha1,1e-8);
-            //    Assert.AreEqual(6e-5, engelundBedFriction.Alpha2, 1e-8);
-            //    Assert.AreEqual(-6, engelundBedFriction.As11, 1e-8);
-            //    Assert.AreEqual(2.75, engelundBedFriction.As12, 1e-8);
-            //    Assert.AreEqual(5.5, engelundBedFriction.As21, 1e-8);
-            //    Assert.AreEqual(4.125, engelundBedFriction.As22, 1e-8);
-            //    Assert.AreEqual(-0.2, engelundBedFriction.As31, 1e-8);
-            //    Assert.AreEqual(2.447, engelundBedFriction.As32, 1e-8);
-            //    Assert.AreEqual(1.65, engelundBedFriction.DeltaD, 1e-8);
-            //    Assert.AreEqual(1, engelundBedFriction.RhoAir, 1e-8);
-            //    Assert.AreEqual(0.474, engelundBedFriction.Sigma1, 1e-8);
-            //    Assert.AreEqual(0.55, engelundBedFriction.Sigma2, 1e-8);
         }
 
         [Test]
@@ -239,7 +201,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void SobekFrictionOfSW_MAXTest()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\FRICTION.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"SW_max_1.lit\3\FRICTION.DAT");
             string defFileText = File.ReadAllText(path);
             SobekFriction sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(defFileText);
             Assert.AreEqual(12, sobekFriction.SobekBedFrictionList.Count());
@@ -368,11 +330,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual(110.0, (double)sobekBedFriction.FloodPlain2Friction.Negative.LocationTable.Rows[0][1], 1.0e-6);
             Assert.AreEqual(161125.0, (double)sobekBedFriction.FloodPlain2Friction.Negative.LocationTable.Rows[2][0], 1.0e-6);
             Assert.AreEqual(15.0, (double)sobekBedFriction.FloodPlain2Friction.Negative.LocationTable.Rows[2][1], 1.0e-6);
-            ////Assert.AreEqual(SobekBedFrictionType.StricklerKs, sobekBedFriction.MainFrictionType);
-            //Assert.AreEqual(SobekBedFrictionType.StricklerKs, sobekBedFriction.FloodPlain1FrictionType);
-            ////Assert.AreEqual(SobekBedFriction.SobekFrictionDefaultValue, sobekBedFriction.FloodPlain2FrictionValue);
-            //Assert.AreEqual(SobekBedFrictionType.WhiteColebrook, sobekBedFriction.FloodPlain2FrictionType);
-            ////Assert.AreEqual(SobekBedFriction.SobekFrictionDefaultValue, sobekBedFriction.FloodPlain2FrictionValue);
         }
 
         [Test]
@@ -477,7 +434,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadMultipleFrictionDefinitionsFromFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"friction\friction.dat");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"friction\friction.dat");
 
             var sobekFriction = new SobekFrictionDatFileReader().ReadSobekFriction(path);
 

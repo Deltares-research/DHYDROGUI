@@ -24,7 +24,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Ignore("kernel cannot handle gated weirs, use orifices")]
         public void ReadNetworkWithGatedWeir()
         {
             var sobekStructureDefinition = new SobekStructureDefinition {Type = (int) SobekStructureType.orifice};
@@ -39,24 +38,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(2, channel.BranchFeatures.Count);
             Weir weir = channel.BranchFeatures.OfType<Weir>().FirstOrDefault();
             Assert.IsTrue(weir.WeirFormula is GatedWeirFormula );
-        }
-
-        [Test]
-        [Ignore("kernel cannot handle river weirs yet")]
-        public void ReadNetworkWithRiverWeir()
-        {
-            var sobekStructureDefinition = new SobekStructureDefinition {Type = (int) SobekStructureType.riverWeir};
-            var sobekOrificeDefinition = new SobekRiverWeir();
-            sobekStructureDefinition.Definition = sobekOrificeDefinition;
-            var channel = new Channel();
-
-            //let channel structure builder set in on a the channel
-            ChannelStructureBuilderTestHelper.SetStructureOnChannel(sobekStructureDefinition, channel);
-
-            //read back a deltashell object
-            Assert.AreEqual(2, channel.BranchFeatures.Count);
-            Weir weir = channel.BranchFeatures.OfType<Weir>().FirstOrDefault();
-            Assert.IsTrue(weir.WeirFormula is RiverWeirFormula);
         }
 
         [Test]

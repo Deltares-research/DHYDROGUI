@@ -529,41 +529,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        [Test(Description = "fails because we are reading roughness 2d via new method, using parameter in initial conditions file")]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        
-        public void CheckReadWriteOfSampleForcingsWithAOperator()
-        {
-            var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy_A.ext");
-
-            var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def);
-
-            Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName));
-            Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName));
-            Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName));
-            Assert.IsNotNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName));
-
-            var roughnessOperations = def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
-            Assert.AreEqual(2, roughnessOperations.Count);
-
-            var samplesOperation = (ImportSamplesOperation)roughnessOperations[1];
-            Assert.AreEqual("chezy", samplesOperation.Name);
-            Assert.AreEqual(4, samplesOperation.GetPoints().Count());
-
-            const string newPath = "local.ext";
-            extForceFile.Write(newPath, def); // write loaded definition to new location
-
-            var newExtFile = new ExtForceFile();
-            var newDef = new WaterFlowFMModelDefinition();
-            
-            newExtFile.Read(newPath, newDef); // load written definition back
-            var newRoughnessOperations = newDef.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
-            Assert.AreEqual(4, ((ImportSamplesOperation)newRoughnessOperations[1]).GetPoints().Count());
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadWriteSampleForcingsWaterLevel()
@@ -800,18 +765,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var path = model.BndExtFilePath;
             var blocks = new IniReader().ReadIniFile(path);
             Assert.AreEqual(2+1, blocks.Count()); // 2 boundaries plus a general block
-        }
-
-        [Test]
-        [Category(TestCategory.Performance)]
-        [Category("Quarantine")]
-        public void ReadExtForcingsShouldBeFast()
-        {
-            var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"dcsm\dcsmv6.ext");
-
-            var extForceFile = new ExtForceFile();
-            TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(extPath, def));
         }
 
         [Test]

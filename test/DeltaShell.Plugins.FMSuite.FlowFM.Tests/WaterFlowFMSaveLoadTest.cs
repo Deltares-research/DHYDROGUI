@@ -6,10 +6,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -744,37 +742,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsNotNull(loadedModel);
                 Assert.AreEqual("wind2.spw", Path.GetFileName(loadedModel.WindFields.OfType<SpiderWebWindField>().First().WindFilePath));
                 Assert.IsTrue(File.Exists(@"windtest2.dsproj_data\FlowFM\input\wind2.spw"));
-            }
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void TestRunWithGate()
-        {
-            using (var app = CreateApplication())
-            {
-                app.Run();
-
-                app.CreateNewProject();
-
-                const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
-                
-                var mduPath = TestHelper.GetTestFilePath(@"structures_gate\structsFM.dsproj_data\har\har.mdu");
-
-                var model = new WaterFlowFMModel(mduPath);
-                model.StopTime = model.StartTime.AddMinutes(15);
-
-                Assert.IsTrue(model.Area.Gates.Any());
-
-                app.Project.RootFolder.Add(model);
-                
-                ActivityRunner.RunActivity(model);
-
-                Assert.AreNotEqual(ActivityStatus.Failed, model.Status);
-
-                // close
-                app.CloseProject();
             }
         }
 

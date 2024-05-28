@@ -83,7 +83,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             //The fraction does no longer imply an initial value
             // TODO: delete the next line and uncomment the zero-check when Initial Condition is supported in ext-files (DELFT3DFM-996)
             Assert.AreEqual(2, model.InitialFractions.Count);
-            //Assert.AreEqual(0, model.InitialFractions.Count);
 
             //add sediment bc
 
@@ -127,7 +126,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             //The fraction does no longer imply an initial value
             // TODO: delete the next line and uncomment the zero-check when Initial Condition is supported in ext-files (DELFT3DFM-996)
             Assert.AreEqual(2, model.InitialFractions.Count);
-            //Assert.AreEqual(0, model.InitialFractions.Count);
 
             //add sediment bc
             model.BoundaryConditionSets[0].BoundaryConditions.Add(

@@ -473,15 +473,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
             return bridge;
         }
 
-        public static void AddBridgePillar(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double bedLevel, long crossSectionId,
-                                           double pillarWidth, double formFactor)
-        {
-            var bridge = AddBridge(branch, id, name, chainage, flowDirection, bedLevel, crossSectionId);
-            bridge.PillarWidth = pillarWidth;
-            bridge.ShapeFactor = formFactor;
-            bridge.IsPillar = true;
-        }
-
         public static void AddBridgeStandard(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double bedLevel, long crossSectionId,
                                              double length, double inletLossCoeff, double outletLossCoeff, double friction, double groundFriction, bool enableGroundLayer = false)
         {

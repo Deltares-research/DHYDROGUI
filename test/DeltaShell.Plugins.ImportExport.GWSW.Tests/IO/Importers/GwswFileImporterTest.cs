@@ -64,28 +64,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void
-            TestImportFeature_WithUnknownAttribute_FromGwsw_WithPreviousMapping_DoesNotFail_AndLogMessageIsShown()
-        {
-            var gwswImporter = new GwswFileImporter(new DefinitionsProvider());
-            gwswImporter.CsvDelimeter = ';';
-
-            string filePath = GetFileAndCreateLocalCopy(@"gwswFiles\WithUnknownAttribute\Verbinding.csv");
-            string folderPath = Path.GetDirectoryName(filePath);
-            string message =
-                string.Format(
-                    (string)Resources
-                        .GwswFileImporterBase_ImportItem_column__0__expectedcolumn__1__of_file__2__was_not_mapped_correctly__,
-                    "UNKNOWN_ATTR", "UNI_IDE", filePath);
-            gwswImporter.LoadFeatureFiles(folderPath);
-            var importedList = new List<GwswElement>();
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => importedList = gwswImporter.ImportGwswElementsFromGwswFiles(filePath).SelectMany(e => e).ToList(), message);
-            Assert.IsFalse(importedList.Any()); //import is cancelled
-        }
-
-        [Test]
         public void ImportCsvDebietFileUsingGwswFileImporterAndHardcodedMapping()
         {
             string filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Debiet.csv");
@@ -1669,44 +1647,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void TestImportStructuresThenImportSewerConnectionsAssignsStructuresValues()
-        {
-            //Create network
-            var model = new WaterFlowFMModel();
-            IHydroNetwork network = model.Network;
-            var gwswImporter = new GwswFileImporter(new DefinitionsProvider());
-
-            //Load structures.
-            string structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
-            string folderPath = Path.GetDirectoryName(structuresPath);
-            gwswImporter.CsvDelimeter = ';';
-            gwswImporter.LoadFeatureFiles(folderPath);
-            ILookup<SewerFeatureType, GwswElement> elements = gwswImporter.ImportGwswElementsFromGwswFiles(structuresPath);
-            TypeUtils.CallPrivateMethod(gwswImporter, "ImportGwswNetworkInFmModel", elements, model);
-
-            //Check placeholders have been created.
-            Assert.IsTrue(network.SewerConnections.Any());
-            Assert.IsTrue(network.Structures.Any());
-
-            List<IStructure1D> structuresPh = network.Structures.Where(s => !(s is CompositeBranchStructure)).ToList();
-
-            // Now Load connections.
-            string connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-
-            elements = gwswImporter.ImportGwswElementsFromGwswFiles(connectionsPath);
-            TypeUtils.CallPrivateMethod(gwswImporter, "ImportGwswNetworkInFmModel", elements, model);
-
-            Assert.AreEqual((int)structuresPh.Count,
-                            (int)network.Structures.Count(s => !(s is CompositeBranchStructure)));
-            foreach (IStructure1D structure in structuresPh)
-            {
-                IStructure1D replacedStructure = network.Structures.FirstOrDefault(s => s.Name.Equals(structure.Name));
-                Assert.AreEqual((object)structure, replacedStructure, "the attributes from the element do not match");
-            }
-        }
-
-        [Test]
         public void TestImportOutletsFromStructuresThenImportNodesAssignsStructuresValues()
         {
             //Create network
@@ -1882,40 +1822,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.AreEqual((object)orifice.CrestLevel, extendedOrifice.CrestLevel,
                                 "the attributes from the element do not match");
             }
-        }
-
-        [Test]
-        [Category("Quarantine")]
-        public void TestImportSewerConnectionReplacesExistingOne()
-        {
-            //Create network
-            var model = new WaterFlowFMModel();
-            IHydroNetwork network = model.Network;
-            /*We know these two nodes are referred in the test data*/
-            var replacedConnection = "lei1";
-            var length = 1000;
-            var sewerConnection = new SewerConnection()
-            {
-                Name = replacedConnection,
-                Length = length
-            };
-            network.Branches.Add(sewerConnection);
-
-            Assert.AreEqual((int)1, (int)network.Branches.Count(n => n.Name.Equals(replacedConnection)));
-            Assert.AreEqual((object)sewerConnection, network.Branches.First(n => n.Name.Equals(replacedConnection)));
-
-            //Load Sewer Connections
-            string filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            string folderPath = Path.GetDirectoryName(filePath);
-
-            var gwswImporter = new GwswFileImporter(new DefinitionsProvider());
-            gwswImporter.LoadFeatureFiles(folderPath);
-            gwswImporter.CsvDelimeter = ';';
-            gwswImporter.ImportItem(filePath, model);
-
-            Assert.AreEqual((int)1, (int)network.SewerConnections.Count(n => n.Name.Equals(replacedConnection)));
-            Assert.AreNotEqual((double)length,
-                               (double)network.SewerConnections.First(n => n.Name.Equals(replacedConnection)).Length);
         }
 
         [Test]

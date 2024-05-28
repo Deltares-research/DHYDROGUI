@@ -25,7 +25,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadLocations()
         {
-            var structureLocationFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"StrTest.lit\1\network.st");
+            var structureLocationFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"StrTest.lit\1\network.st");
             var structures = new SobekNetworkStructureReader().Read(structureLocationFile);
             // the demo network has 1 of each of the 11 main structure types
             Assert.AreEqual(11, structures.Count());
@@ -39,7 +39,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ExtraResistanceLocations()
         {
-            var structureLocationFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"TestXRST.lit\4\network.st");
+            var structureLocationFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"TestXRST.lit\4\network.st");
             var structures = new SobekNetworkStructureReader().Read(structureLocationFile);
             Assert.AreEqual(1, structures.Count());
             var sobekStructureLocation = structures.FirstOrDefault();
@@ -50,7 +50,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadCompoundStructureLocations()
         {
-            var structureLocationFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"compound.lit\2\network.st");
+            var structureLocationFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"compound.lit\2\network.st");
             var structures = new SobekNetworkStructureReader().Read(structureLocationFile);
             // the demo network has 1 of each of the 11 main structure types
             Assert.AreEqual(3, structures.Count());

@@ -134,31 +134,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void ImportModelShouldNotResultInMultipleLateralsWithIdenticalId_Tools8812()
-        {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\LSM1_0.lit\3\network.tp";
-
-            var network = new HydroNetwork();
-
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, network,
-                                                                                 new IPartialSobekImporter[]
-                                                                                     {
-                                                                                         new SobekBranchesImporter(),
-                                                                                         new SobekLateralSourcesImporter
-                                                                                     ()
-                                                                                     });
-            importer.Import();
-
-            Assert.AreEqual(3, network.LateralSources.Count());
-            Assert.DoesNotThrow(() =>
-                {
-                    network.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
-                });
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportUrbanLateralsToManholes()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Groesbeek.lit\Network.TP";

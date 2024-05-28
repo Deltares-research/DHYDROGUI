@@ -34,7 +34,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Category(TestCategory.DataAccess)]
         public void ReadWWTPFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Tholen.lit\29\WWTP.3B");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Tholen.lit\29\WWTP.3B");
             var lstWWTP = new SobekRRWasteWaterTreatmentPlantReader().Read(path);
             Assert.AreEqual(2, lstWWTP.Count());
         }

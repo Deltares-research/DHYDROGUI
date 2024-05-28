@@ -140,7 +140,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Jira)] // TOOLS-3668
         public void ShowRiverWeirViewShouldNotChangeValues()
         {
             var weir = new Weir("TestWeir")
@@ -183,7 +182,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
                 Assert.That(tableView, Is.Not.Null);
                 Assert.That(tableView.Columns.Select(c => c.Name), Contains.Item(nameof(WeirRow.Formula)));
-                //Assert.That(tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirRow.Formula)].ReadOnly, Is.True);
             });
         }
         [Test]
@@ -204,7 +202,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
                 Assert.That(tableView, Is.Not.Null);
                 Assert.That(tableView.Columns.Select(c => c.Name), Contains.Item(nameof(WeirRow.Formula)));
-                //Assert.That(tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirRow.Formula)].Visible, Is.False);
             });
         }
         [Test]

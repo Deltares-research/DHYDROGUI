@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.ImportExport.Sobek.Wizard;
 using NUnit.Framework;
 
@@ -115,41 +113,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
             Assert.IsTrue(viewmodel.IsCaseList);
             Assert.AreEqual("2 'compound'", viewmodel.SelectedCase);
             Assert.AreEqual(1, viewmodel.Cases.Length);
-        }
-
-        [Test, Apartment(ApartmentState.MTA), Ignore("Hangs on buildserver")]
-        public void GivenSobekImportWizardControlViewModel_ExecuteCommand_ShouldCallExecuteProjectTemplate()
-        {
-            //Arrange
-            var path = TestHelper.GetTestFilePath(@"ReducedModel\3\NETWORK.TP");
-            bool startingImportCalled = false;
-            bool finishedImportCalled = false;
-            bool executeProjectTemplateCalled = false;
-
-            var viewmodel = new SobekImportWizardControlViewModel
-            {
-                StartingImport = ()=> startingImportCalled = true,
-                FinishedImport = ()=> finishedImportCalled = true,
-                ExecuteProjectTemplate = m =>
-                {
-                    executeProjectTemplateCalled = true;
-                    Assert.IsInstanceOf<HydroModel>(m);
-                },
-                FilePath = path
-            };
-
-            // Act
-            viewmodel.ExecuteCommand.Execute(null);
-
-            // Assert
-            while (viewmodel.IsRunning)
-            {
-                Thread.Sleep(50);
-            }
-
-            Assert.IsTrue(startingImportCalled, "StartingImport not called");
-            Assert.IsTrue(finishedImportCalled, "FinishedImport not called");
-            Assert.IsTrue(executeProjectTemplateCalled, "ExecuteProjectTemplate not called");
         }
 
         [Test]

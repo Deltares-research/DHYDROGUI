@@ -12,7 +12,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
         [Test]
         public void ImportSettingsTholen()
         {
-            string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"Tholen.lit\29\DELFT_3B.INI");
+            string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekNetworkImporterTest).Assembly, @"Tholen.lit\29\DELFT_3B.INI");
             SobekRRIniSettings settings = new SobekRRIniSettingsReader().GetSobekRRIniSettings(path);
 
             // General settings

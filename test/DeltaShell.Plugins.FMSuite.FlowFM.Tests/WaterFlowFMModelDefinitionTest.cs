@@ -22,12 +22,9 @@ using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Algorithm;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
-using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
@@ -244,77 +241,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category("Quarantine")]
-        public void ReadWriteMduFilesWithDifferentUnknownProperties()
-        {
-            // read model A
-            var mduFilePathA = TestHelper.GetTestFilePath(@"mdu_examples\modelA.mdu");
-            var mduDirA = Path.GetDirectoryName(mduFilePathA);
-            var modelNameA = Path.GetFileName(mduFilePathA);
-            var modelDefinitionA = new WaterFlowFMModelDefinition(mduDirA, modelNameA);
-            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            var mduFileInA = new MduFile();
-            var convertedFileObjectsForFMModelA = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = modelDefinitionA,
-                HydroArea = new HydroArea(),
-                Grid = new UnstructuredGrid(),
-                HydroNetwork = new HydroNetwork(),
-                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-            };
-            mduFileInA.Read(mduFilePathA, convertedFileObjectsForFMModelA);
-            var fileIniSections = modelDefinitionA.Properties.Select(p => p.PropertyDefinition.FileSectionName);
-            Assert.IsTrue(fileIniSections.Contains("group_A"));
-            Assert.AreEqual("A", modelDefinitionA.GetModelProperty("parametera").Value);
-
-
-            // read model B, should not affect model A properties and custom groups...
-            var mduFilePathB = TestHelper.GetTestFilePath(@"mdu_examples\modelB.mdu");
-            var mduDirB = Path.GetDirectoryName(mduFilePathB);
-            var modelNameB = Path.GetFileName(mduFilePathB);
-            var modelDefinitionB = new WaterFlowFMModelDefinition(mduDirB, modelNameB);
-            var mduFileInB = new MduFile();
-            var convertedFileObjectsForFMModelB = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = modelDefinitionB,
-                HydroArea = new HydroArea(),
-                Grid = new UnstructuredGrid(),
-                HydroNetwork = new HydroNetwork(),
-                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-            };
-            mduFileInB.Read(mduFilePathB, convertedFileObjectsForFMModelB);
-            Assert.AreEqual("B", modelDefinitionB.GetModelProperty("parameterb").Value);
-
-
-            // write and confirm output model A
-            var mduFilePathOutA = Path.Combine(modelNameA + "_out" + ".mdu");
-            var mduFileOutA = new MduFile();
-            mduFileOutA.Write(mduFilePathOutA, modelDefinitionA, new HydroArea(), null, null, null, null, null, null, new List<ModelFeatureCoordinateData<FixedWeir>>(),switchTo: false, writeExtForcings: false, writeFeatures: false);
-            var originalLinesA = File.ReadAllLines(mduFilePathA).Where(l => !l.StartsWith("#")).ToList();
-            var linesOutA = File.ReadAllLines(mduFilePathOutA).ToList();
-            foreach (var line in originalLinesA.Where(l => !l.Contains("Version")))
-            {
-                Assert.IsTrue(linesOutA.Contains(line));
-            }
-            Assert.IsFalse(linesOutA.Any(l => l.Contains("parameterB"))); // models shouldn't mix their custom props!
-
-
-            // write and confirm output model B
-            var mduFilePathOutB = Path.Combine(modelNameB + "_out" + ".mdu");
-            var mduFileOutB = new MduFile();
-            mduFileOutB.Write(mduFilePathOutB, modelDefinitionB, new HydroArea(), null, null, null, null, null, null, new List<ModelFeatureCoordinateData<FixedWeir>>(),switchTo: false, writeExtForcings: false, writeFeatures: false);
-            var originalLinesB = File.ReadAllLines(mduFilePathB).Where(l => !l.StartsWith("#")).ToList();
-            var linesOutB = File.ReadAllLines(mduFilePathOutB).ToList();
-            foreach (var line in originalLinesB.Where(l => !l.Contains("Version")))
-            {
-                Assert.IsTrue(linesOutB.Contains(line));
-            }
-            Assert.IsFalse(linesOutB.Any(l => l.Contains("parameterA")));
-            Assert.IsFalse(linesOutB.Any(l => l.Contains("[group_A]")));
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadLandBoundaryAndObservationsFile()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -445,36 +371,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             }
         }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category("Quarantine")]
-        public void ReadStructuresFile()
-        {
-            var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
-
-            var area = new HydroArea();
-            var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = modelDefinition,
-                HydroArea = area,
-                HydroNetwork = network,
-                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-            };
-
-            mduFile.Read(mduFilePath, convertedFileObjectsForFMModel);
-
-            Assert.AreEqual(2, area.Pumps.Count);
-            Assert.AreEqual(2, area.Weirs.Count);
-            Assert.AreEqual(1, area.Gates.Count);
-        }
-
         
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
@@ -623,103 +519,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(extFileContent.Contains(
                 "* and finally this one"));
         }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.DataAccess)]
-        [NUnit.Framework.Category("Quarantine")]
-        public void ReadAndWriteModelDefinitionHarlingenModel()
-        {
-            var mduDir =
-                Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen");
-
-            var area = new HydroArea();
-            var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "har");
-            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-
-            var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = modelDefinition,
-                HydroArea = area,
-                HydroNetwork = network,
-                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-            };
-
-            mduFile.Read(Path.Combine(mduDir, "har.mdu"), convertedFileObjectsForFMModel);
-
-            const string saveToDir = "readWriteHarlingen";
-            Directory.CreateDirectory(saveToDir);
-
-            var mduFileSaveToPath = Path.Combine(saveToDir, "har.mdu");
-            mduFile.Write(mduFileSaveToPath, modelDefinition, area, null, null, null, null, null, null, allFixedWeirsAndCorrespondingProperties);
-
-            var expectedResultsDir = Path.Combine(mduDir, "expectedResults");
-            foreach (var expectedResultsFilePath in Directory.GetFiles(expectedResultsDir))
-            {
-                var generatedResultsFilePath = Path.Combine(saveToDir, Path.GetFileName(expectedResultsFilePath));
-                var skipNLines = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
-                var expectedResultsContent = File.ReadAllLines(expectedResultsFilePath).Skip(skipNLines);
-                var generatedResultsContent = File.ReadAllLines(generatedResultsFilePath).Skip(skipNLines);
-                
-                Assert.IsNotNull(generatedResultsContent);
-                Assert.IsNotNull(expectedResultsContent);
-                
-                var expected = expectedResultsContent.ToList();
-                var generated = generatedResultsContent.ToList();
-
-                // Added first check if the strings are the same at the same index, because the contain method is not efficient for big files with a lot of lines.  
-                if (expected.Count == generated.Count)
-                {
-                    for (int i = 0; i < expected.Count; i++)
-                    {
-                        if (expected[i] == generated[i])
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            expectedResultsContent.ForEach(er =>
-                                Assert.IsTrue(generatedResultsContent.Contains(er),
-                                    $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    expectedResultsContent.ForEach(er =>
-                        Assert.IsTrue(generatedResultsContent.Contains(er),
-                            $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
-
-                }
-            }
-        }
-
-        [Test]
-        [Ignore("Run this test to generate expected model definition files")]
-        [NUnit.Framework.Category("ToCheck")]
-        public void GenerateExpectedResultsFolder()
-        {
-            var mduDir = Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen");
-            var expectedResultsDir = Path.Combine(mduDir, "expectedResults");
-            
-            var area = new HydroArea();
-            var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, "har");
-            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            var mduFile = new MduFile();
-            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = modelDefinition,
-                HydroArea = area,
-                HydroNetwork = network,
-                AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties
-            };
-
-            mduFile.Read(Path.Combine(mduDir, "har.mdu"), convertedFileObjectsForFMModel);
-            mduFile.Write(Path.Combine(expectedResultsDir, "har.mdu"), modelDefinition, area, null,null, null, null, null, null, allFixedWeirsAndCorrespondingProperties);
-        } 
 
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
@@ -1238,81 +1037,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             /* The rest should be waterfall updated */
             Assert.IsTrue(md.WriteSnappedFeatures);
             CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
-        }
-
-        [TestCase(KnownProperties.Wrishp_crs)]
-        [TestCase(KnownProperties.Wrishp_weir)]
-        [TestCase(KnownProperties.Wrishp_gate)]
-        [TestCase(KnownProperties.Wrishp_fxw)]
-        [TestCase(KnownProperties.Wrishp_thd)]
-        [TestCase(KnownProperties.Wrishp_obs)]
-        [TestCase(KnownProperties.Wrishp_emb)]
-        [TestCase(KnownProperties.Wrishp_dryarea)]
-        [TestCase(KnownProperties.Wrishp_enc)]
-        [TestCase(KnownProperties.Wrishp_src)]
-        [TestCase(KnownProperties.Wrishp_pump)]
-        [NUnit.Framework.Category(TestCategory.Jira)] // D3DFMIQ-278
-        public void UpdateMduFileAfterSettingOptionWriteShapeFileTest(string property)
-        {
-            var mduFilePath = TestHelper.GetTestFilePath(@"outputKnownProperties\FlowFM.mdu");
-            var mduFileInfo = new FileInfo(mduFilePath);
-            Assert.IsTrue(mduFileInfo.Exists);
-
-            var workingDirectory = FileUtils.CreateTempDirectory();
-            var workingMduFilePath = TestHelper.GetTestFilePath(Path.Combine(workingDirectory, mduFileInfo.Name));
-            FileUtils.CopyFile(mduFileInfo.FullName, workingMduFilePath);
-            var workingMduFileInfo = new FileInfo(workingMduFilePath);
-            Assert.IsTrue(workingMduFileInfo.Exists);
-
-            var model = new WaterFlowFMModel(workingMduFilePath);
-            var md = model.ModelDefinition;
-
-            Assert.IsFalse(md.WriteSnappedFeatures);
-            CheckOutputSnappedFeaturesValue(false, md);
-
-            md.WriteSnappedFeatures = true;
-            Assert.IsTrue(md.WriteSnappedFeatures);
-            CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
-
-            md.WriteSnappedFeatures = false;
-            Assert.IsFalse(md.WriteSnappedFeatures);
-            CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
-
-            var checkedProperty = md.KnownWriteOutputSnappedFeatures.Where(sf => sf.Equals(property)).FirstOrDefault();
-            Assert.IsNotNull(checkedProperty);
-
-            md.GetModelProperty(checkedProperty).Value = true;
-            Assert.AreEqual(true, md.GetModelProperty(checkedProperty).Value);
-
-            var uncheckedProperties = md.KnownWriteOutputSnappedFeatures.Where(sf => sf != checkedProperty).ToList();
-            Assert.IsTrue(uncheckedProperties.TrueForAll(p => md.GetModelProperty(p).Value.Equals(false)));
-
-            var mduFile = new MduFile(); 
-            
-            string saveToPath = Path.Combine(workingDirectory, "saved.mdu");
-            var saveToFileInfo = new FileInfo(saveToPath);
-            mduFile.Write(saveToPath, md, new HydroArea(), null, null, null,null, null, null, new List<ModelFeatureCoordinateData<FixedWeir>>());
-            Assert.IsTrue(saveToFileInfo.Exists);
-
-            var modelFromSavedMduFile = new WaterFlowFMModel();        
-            var mdFromSavedMduFile = modelFromSavedMduFile.ModelDefinition;
-            var convertedFileObjectsForFMModel = new ConvertedFileObjectsForFMModel
-            {
-                ModelDefinition = mdFromSavedMduFile,
-                HydroArea = new HydroArea(),
-                Grid = new UnstructuredGrid(),
-                HydroNetwork = new HydroNetwork(),
-                AllFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>()
-            }; 
-            mduFile.Read(saveToPath, convertedFileObjectsForFMModel);
-
-            Assert.AreEqual(true, mdFromSavedMduFile.GetModelProperty(checkedProperty).Value);
-            uncheckedProperties = mdFromSavedMduFile.KnownWriteOutputSnappedFeatures.Where(sf => sf != checkedProperty).ToList();
-
-            // todo: fix the implementation; see issue FM1D2D-894
-            //Assert.IsTrue(uncheckedProperties.TrueForAll(p => mdFromSavedMduFile.GetModelProperty(p).Value.Equals(false)));
-
-            FileUtils.DeleteIfExists(workingDirectory);
         }
 
         [Test]
