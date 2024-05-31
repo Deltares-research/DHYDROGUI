@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
-using DelftTools.Shell.Core;
 using DelftTools.Utils.Guards;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
     /// <summary>
     /// Provides an exporter for a D-FlowFM model file.
     /// </summary>
-    public class FMModelFileExporter : IFileExporter
+    public class FMModelFileExporter : IDimrModelFileExporter
     {
         /// <inheritdoc/>
         public string Name => "Flow Flexible Mesh model";

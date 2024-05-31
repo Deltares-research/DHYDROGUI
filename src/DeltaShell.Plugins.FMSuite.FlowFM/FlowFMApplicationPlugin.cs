@@ -63,6 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (application != null)
                 {
                     application.ProjectOpened -= Application_ProjectOpened;
+                    Application.ProjectClosing -= Application_ProjectClosing;
                 }
 
                 application = value;
@@ -70,6 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (application != null)
                 {
                     application.ProjectOpened += Application_ProjectOpened;
+                    Application.ProjectClosing += Application_ProjectClosing;
                 }
             }
         }
@@ -466,8 +468,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             };
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> { Mode = Feature2DImportExportMode.Export };
-            yield return
-                new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D> { Mode = Feature2DImportExportMode.Export };
+            yield return new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D> { Mode = Feature2DImportExportMode.Export };
             yield return new PliFileImporterExporter<Structure, Structure>
             {
                 Mode = Feature2DImportExportMode.Export,
@@ -509,22 +510,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PolFileImporterExporter { Mode = Feature2DImportExportMode.Export };
             yield return new LdbFileImporterExporter { Mode = Feature2DImportExportMode.Export };
             yield return new FlowFMNetFileExporter { GetModelForGrid = GetModelForGrid };
-            yield return
-                new FMModelPartitionExporter
-                {
-                    PolygonFile = null,
-                    IsContiguous = true,
-                    NumDomains = 1,
-                    SolverType = 7
-                };
-            yield return
-                new FMGridPartitionExporter
-                {
-                    GetModelForGrid = GetModelForGrid,
-                    PolygonFile = null,
-                    IsContiguous = true,
-                    NumDomains = 1
-                };
+            yield return new FMModelPartitionExporter
+            {
+                PolygonFile = null,
+                IsContiguous = true,
+                NumDomains = 1,
+                SolverType = 7
+            };
+            yield return new FMGridPartitionExporter
+            {
+                GetModelForGrid = GetModelForGrid,
+                PolygonFile = null,
+                IsContiguous = true,
+                NumDomains = 1
+            };
             yield return new GeometryZipExporter { GetModelForGrid = GetModelForGrid };
             yield return new TimFileExporter
             {
@@ -558,9 +557,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void Application_ProjectOpened(Project project)
         {
-            project?.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().ForEach(
-                m => m.WorkingDirectoryPathFunc =
-                         () => application.WorkDirectory);
+            Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().ForEach(m =>
+            {
+                m.WorkingDirectoryPathFunc = () => application.WorkDirectory;
+                m.DimrRunner.FileExportService = Application.FileExportService;
+            });
+            
+            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+        }
+
+        private void Application_ProjectClosing(Project project)
+        {
+            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
         }
 
         private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors)
@@ -624,5 +632,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private IEnumerable<WaterFlowFMModel> GetWaterFlowFMModels() => Application.GetAllModelsInProject().OfType<WaterFlowFMModel>();
+        
+        private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add && e.Item is WaterFlowFMModel model)
+            {
+                model.DimrRunner.FileExportService = Application.FileExportService;
+            }
+        }
     }
 }

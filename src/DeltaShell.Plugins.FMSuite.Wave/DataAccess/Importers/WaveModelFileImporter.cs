@@ -10,6 +10,7 @@ using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DHYDRO.Common.Extensions;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
@@ -56,6 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
         }
 
         public override bool OpenViewAfterImport => true;
+        
+        public bool CanImportDimrFile(string path) => Path.GetExtension(path).EqualsCaseInsensitive(".mdw");
 
         public override bool CanImportOnRootLevel => true;
 
@@ -66,13 +69,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
         public override bool ShouldCancel { get; set; }
 
         public override ImportProgressChangedDelegate ProgressChanged { get; set; }
-
-        /// <summary>
-        /// MasterFileExtension needed for dimr xml import for
-        /// retrieving the correct file importer based on the
-        /// input file mentioned.
-        /// </summary>
-        public string MasterFileExtension => "mdw";
 
         public override bool CanImportOn(object targetObject)
         {

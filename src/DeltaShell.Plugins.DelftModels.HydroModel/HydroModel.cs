@@ -66,6 +66,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         public virtual bool CopyFromWorkingDirectory { get; }
 
+        /// <summary>
+        /// Gets the configuration exporter used for this model.
+        /// </summary>
+        public virtual DHydroConfigXmlExporter HydroModelExporter { get; }
+
         public override bool CanRun => Models.Any() && Models.Any(m => m.CanRun);
 
         #endregion
@@ -80,6 +85,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             Workflows = new EventedList<ICompositeActivity>();
 
+            HydroModelExporter = new DHydroConfigXmlExporter();
+            
             Activities = new EventedList<IActivity>();
             RefreshDefaultModelWorkflows();
 
@@ -809,7 +816,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         private bool ExportHydroModel() =>
-            new DHydroConfigXmlExporter().Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml"));
+            HydroModelExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml"));
 
         private void PrepareWorkingDirectory(IEnumerable<string> fileExceptions)
         {

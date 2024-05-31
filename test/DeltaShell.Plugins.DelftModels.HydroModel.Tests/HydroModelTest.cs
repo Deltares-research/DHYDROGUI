@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -13,11 +13,13 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
+using DeltaShell.Core.Services;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NSubstitute;
 using NUnit.Framework;
@@ -547,7 +549,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string saveFolderPath = Path.Combine(testTempDirectory, "SaveLocation");
                 Directory.CreateDirectory(saveFolderPath);
 
+                var fileExportService = new FileExportService();
+                fileExportService.RegisterFileExporter(new FMModelFileExporter());
+                
                 hydroModel.WorkingDirectoryPathFunc = () => testTempDirectory;
+                hydroModel.HydroModelExporter.FileExportService = fileExportService;
+                
                 string cacheFilePath = Path.Combine(saveFolderPath, "test.cache");
                 string mduFilePath = Path.Combine(saveFolderPath, "test.mdu");
 
@@ -942,7 +949,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             modelMduFileName = "fm.mdu";
 
             activity.Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
-            activity.ExporterType.Returns(typeof(SimpleFileExporter));
 
             string modelDirectory = Path.Combine(hydroModel.WorkingDirectoryPath, modelDirectoryName);
 
@@ -958,11 +964,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             var workflow = new SequentialActivity { Activities = { activity } };
 
+            var fileExporter = new SimpleFileExporter();
+            var fileExportService = Substitute.For<IFileExportService>();
+            fileExportService.GetFileExportersFor(activity).Returns(new[] { fileExporter });
+
             hydroModel.Activities.Add(activity);
             hydroModel.CurrentWorkflow = workflow;
+            hydroModel.HydroModelExporter.FileExportService = fileExportService;
         }
 
-        private class SimpleFileExporter : IFileExporter
+        private class SimpleFileExporter : IDimrModelFileExporter
         {
             public string Name { get; }
 

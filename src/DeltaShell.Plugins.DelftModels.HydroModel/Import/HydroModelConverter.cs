@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
@@ -21,27 +22,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelConverter));
 
         private readonly ILogHandler logHandler;
+        private readonly IFileImportService fileImportService;
 
-        public HydroModelConverter(ILogHandler logHandler)
+        public HydroModelConverter(ILogHandler logHandler, IFileImportService fileImportService)
         {
             this.logHandler = logHandler;
+            this.fileImportService = fileImportService;
         }
 
         /// <summary>
-        /// Converts <see cref="dimrObject"/> to a <see cref="HydroModel"/> using the
-        /// <param name="fileImporters"/>
-        /// for importing sub-models
+        /// Converts <see cref="dimrObject"/> to a <see cref="HydroModel"/> using the file importers.
         /// </summary>
         /// <param name="dimrObject">Parsed <see cref="dimrXML"/> object</param>
         /// <param name="path">Path to dimr.xml (used for finding sub-model folders)</param>
-        /// <param name="fileImporters">List of file importers for importing sub-models</param>
         /// <returns>Converted <see cref="HydroModel"/></returns>
         /// <exception cref="ArgumentException">
         /// When
         /// <param name="dimrObject"/>
         /// is null
         /// </exception>
-        public HydroModel Convert(dimrXML dimrObject, string path, IList<IDimrModelFileImporter> fileImporters)
+        public HydroModel Convert(dimrXML dimrObject, string path)
         {
             if (dimrObject == null)
             {
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             hydroModel.BeginEdit(new ImportingFullModelAction("Importing full Dimr model"));
             try
             {
-                IDimrModel[] subModels = GetSubModels(fileImporters, dimrObject, rootFolder).ToArray();
+                IDimrModel[] subModels = GetSubModels(dimrObject, rootFolder).ToArray();
 
                 foreach (IDimrModel subModel in subModels)
                 {
@@ -97,23 +97,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return null;
         }
 
-        private IEnumerable<IDimrModel> GetSubModels(ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
+        private IEnumerable<IDimrModel> GetSubModels(dimrXML dimrObject, string rootFolder)
         {
             foreach (dimrComponentXML component in dimrObject.component)
             {
                 ValidateComponent(component);
             }
 
-            IEnumerable<IGrouping<string, dimrComponentXML>> componentGroups = dimrObject.component
-                                                                                         .GroupBy(component => Path.GetExtension(component.inputFile)?.TrimStart('.'));
+            IEnumerable<IGrouping<string, dimrComponentXML>> componentGroups = dimrObject.component.GroupBy(component => component.inputFile);
 
             foreach (IGrouping<string, dimrComponentXML> componentGroup in componentGroups)
             {
-                string extension = GetExtension(componentGroup);
-                IDimrModelFileImporter importer = fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
+                IDimrModelFileImporter importer = GetFileImporterFor(componentGroup.Key);
                 if (importer == null)
                 {
-                    LogUnknownImporter(extension);
+                    logHandler.ReportError($"No importer found for input file: {componentGroup.Key}");
                     continue;
                 }
 
@@ -139,6 +137,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
         }
 
+        private IDimrModelFileImporter GetFileImporterFor(string inputFile)
+        {
+            return fileImportService.FileImporters
+                                    .OfType<IDimrModelFileImporter>()
+                                    .FirstOrDefault(importer => importer.CanImportDimrFile(inputFile));
+        }
+
         private static void ValidateComponent(dimrComponentXML component)
         {
             if (string.IsNullOrEmpty(component.workingDir))
@@ -152,23 +157,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 throw new ArgumentException(string.Format(Resources.HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_,
                                                           component.name));
             }
-        }
-
-        private string GetExtension(IGrouping<string, dimrComponentXML> componentGroup)
-        {
-            string extension = componentGroup.Key;
-
-            if (string.IsNullOrEmpty(extension))
-            {
-                extension = "json";
-            }
-
-            return extension;
-        }
-
-        private void LogUnknownImporter(string extension)
-        {
-            logHandler.ReportInfo($"No importer found for extension: {extension}");
         }
 
         private void RenameSubModelWhenNeeded(IDimrModel subModel, string componentName)

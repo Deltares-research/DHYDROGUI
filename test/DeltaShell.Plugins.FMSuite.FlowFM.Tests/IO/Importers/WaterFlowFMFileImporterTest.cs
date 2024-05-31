@@ -39,8 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importer.ShouldCancel, Is.False);
             Assert.That(importer.ProgressChanged, Is.Null);
             Assert.That(importer.OpenViewAfterImport, Is.True);
-
-            Assert.That(importer.MasterFileExtension, Is.EqualTo("mdu"));
         }
 
         [Test]
@@ -64,6 +62,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             yield return new TestCaseData(new WaterFlowFMModel(), true);
             yield return new TestCaseData(new object(), false);
             yield return new TestCaseData(null, false);
+        }
+        
+        [Test]
+        [TestCase(null, ExpectedResult = false)]
+        [TestCase("", ExpectedResult = false)]
+        [TestCase(".", ExpectedResult = false)]
+        [TestCase("settings.json", ExpectedResult = false)]
+        [TestCase("settings.xml", ExpectedResult = false)]
+        [TestCase("flowfm.mdu", ExpectedResult = true)]
+        [TestCase("FLOWFM.MDU", ExpectedResult = true)]
+        [TestCase("waves.mdw", ExpectedResult = false)]
+        public bool GivenARealTimeControlModelImporter_WithInputFile_ThenExpectedIsReturned(string path)
+        {
+            // Setup
+            var importer = new WaterFlowFMFileImporter(null);
+
+            // Call
+            return importer.CanImportDimrFile(path);
         }
 
         [Test]

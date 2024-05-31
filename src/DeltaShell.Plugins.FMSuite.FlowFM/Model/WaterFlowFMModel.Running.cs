@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private string progressText;
 
         public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
-        public override IBasicModelInterface BMIEngine => runner.Api;
+        public override IBasicModelInterface BMIEngine => DimrRunner.Api;
 
         protected override void OnReset()
         {
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
             }
 
-            runner.OnInitialize();
+            DimrRunner.OnInitialize();
 
             ReportProgressText();
         }
@@ -52,19 +52,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             snapApiInErrorMode = false;
             base.OnCleanup();
-            runner.OnCleanup();
+            DimrRunner.OnCleanup();
 
             ReportProgressText();
         }
 
         protected override void OnExecute()
         {
-            runner.OnExecute();
+            DimrRunner.OnExecute();
         }
 
         protected override void OnFinish()
         {
-            runner.OnFinish();
+            DimrRunner.OnFinish();
             currentOutputDirectoryPath = WorkingOutputDirectoryPath;
 
             // We know the cache file will either exist at the runMduPath because it 
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
 
             previousProgress = ProgressPercentage;
-            runner.OnProgressChanged();
+            DimrRunner.OnProgressChanged();
             base.OnProgressChanged();
         }
 

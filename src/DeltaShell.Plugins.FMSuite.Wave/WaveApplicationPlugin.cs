@@ -5,7 +5,6 @@ using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -22,8 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     [Extension(typeof(IPlugin))]
     public class WaveApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
-        private IApplication application;
-
         public override string Name => "Delft3D Wave";
 
         public override string DisplayName => "D-Waves Plugin";
@@ -36,21 +33,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override IApplication Application
         {
-            get => application;
+            get => base.Application;
             set
             {
-                if (application != null)
+                if (Application != null)
                 {
-                    application.ProjectOpened -= Application_ProjectOpened;
-                    application.ProjectOpening -= Application_ProjectOpening;
+                    Application.ProjectOpened -= Application_ProjectOpened;
+                    Application.ProjectOpening -= Application_ProjectOpening;
+                    Application.ProjectClosing -= Application_ProjectClosing;
                 }
 
-                application = value;
+                base.Application = value;
 
-                if (application != null)
+                if (Application != null)
                 {
-                    application.ProjectOpened += Application_ProjectOpened;
-                    application.ProjectOpening += Application_ProjectOpening;
+                    Application.ProjectOpened += Application_ProjectOpened;
+                    Application.ProjectOpening += Application_ProjectOpening;
+                    Application.ProjectClosing += Application_ProjectClosing;
                 }
             }
         }
@@ -114,8 +113,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void Application_ProjectOpened(Project project)
         {
-            project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>()
-                   .ForEach(m => m.WorkingDirectoryPathFunc = () => application.WorkDirectory);
+            Application.GetAllModelsInProject().OfType<WaveModel>().ForEach(m =>
+            {
+                m.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
+                m.DimrRunner.FileExportService = Application.FileExportService;
+            });
+            
+            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+        }
+        
+        private void Application_ProjectClosing(Project project)
+        {
+            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+        }
+        
+        private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add && e.Item is WaveModel model)
+            {
+                model.DimrRunner.FileExportService = Application.FileExportService;
+            }
         }
     }
 }

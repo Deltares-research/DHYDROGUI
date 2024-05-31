@@ -18,6 +18,8 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
+using DeltaShell.Core.Services;
+using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
@@ -589,7 +591,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
                     Assert.IsTrue(Directory.Exists(exportDimrDirPath));
 
-                    new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
+                    DHydroConfigXmlExporter exporter = GetDimrFileExporter();
+                    exporter.Export(model, exportDimrFilePath);
 
                     app.CloseProject();
 
@@ -645,7 +648,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
                     Assert.IsTrue(Directory.Exists(exportDimrDirPath));
 
-                    new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
+                    DHydroConfigXmlExporter exporter = GetDimrFileExporter();
+                    exporter.Export(model, exportDimrFilePath);
 
                     app.CloseProject();
 
@@ -700,7 +704,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
                     Assert.IsTrue(Directory.Exists(exportDimrDirPath));
 
-                    new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
+                    DHydroConfigXmlExporter exporter = GetDimrFileExporter();
+                    exporter.Export(model, exportDimrFilePath);
 
                     Assert.IsTrue(File.Exists(exportDimrFilePath));
                     var expectedFileCount = 1;
@@ -1742,6 +1747,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             model.Area.ObservationCrossSections.Add(CreateObservationCrossSection());
             AddFlowBoundaryConditionToModel(model);
             AddTracer(model);
+        }
+
+        private static DHydroConfigXmlExporter GetDimrFileExporter()
+        {
+            var fileExportService = new FileExportService();
+            fileExportService.RegisterFileExporter(new FMModelFileExporter());
+            return new DHydroConfigXmlExporter(fileExportService);
         }
 
         private static void CopyTestDataFileToTemp(string fileName)

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
@@ -11,22 +13,30 @@ using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
 {
     [TestFixture]
     public class DHydroExporterDialogTest
     {
-        private readonly MockRepository mocks = new MockRepository();
-
-        [TearDown]
-        public void TearDown()
+        [Test]
+        public void GivenIntegratedModelWithDimrModelAsActivityAndNoFileExporterRegistered_WhenShowingModal_ThenWarningMessageIsShownToUser()
         {
-            mocks.VerifyAll();
-        }
+            // Given
+            IDimrModel dimrModel = GetMockedDimrModel();
+            ICompositeActivity currentWorkFlow = GetMockedCurrentWorkFlow(dimrModel);
+            IHydroModel integratedModel = GetMockedIntegratedModel(currentWorkFlow, dimrModel);
 
+            var fileExporters = new List<IFileExporter> { GetDHydroConfigXmlExporter() };
+            DHydroExporterDialogStub hydroExporterDialog = GetDHydroExporterDialog(integratedModel, fileExporters);
+
+            // When - Then
+            string expectedWarningMessage = string.Format(Resources.DHydroExporterDialog_DimrSubModelsExportDialogResult_No_file_exporter_found_for_model___0___, dimrModel.Name);
+            TestHelper.AssertLogMessageIsGenerated(() => hydroExporterDialog.ShowModal(), expectedWarningMessage, 1);
+        }
+        
         [Test]
         public void GivenIntegratedModelWithDimrModelAsActivity_WhenShowingModal_ThenNoWarningMessageIsShownToUser()
         {
@@ -35,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             ICompositeActivity currentWorkFlow = GetMockedCurrentWorkFlow(dimrModel);
             IHydroModel integratedModel = GetMockedIntegratedModel(currentWorkFlow, dimrModel);
 
-            var fileExporters = new List<IFileExporter> {new DHydroConfigXmlExporter()};
+            var fileExporters = new List<IFileExporter> { GetDHydroConfigXmlExporter(), GetDimrModelFileExporter() };
             DHydroExporterDialogStub hydroExporterDialog = GetDHydroExporterDialog(integratedModel, fileExporters);
 
             // When - Then
@@ -47,11 +57,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         {
             // Given
             IDimrModel dimrModel = GetMockedDimrModel();
-            var nonDimrModel = mocks.DynamicMock<IModel>();
+            var nonDimrModel = Substitute.For<IModel>();
             ICompositeActivity currentWorkFlow = GetMockedCurrentWorkFlow(dimrModel, nonDimrModel);
             IHydroModel integratedModel = GetMockedIntegratedModel(currentWorkFlow, dimrModel, nonDimrModel);
 
-            var fileExporters = new List<IFileExporter> {new DHydroConfigXmlExporter()};
+            var fileExporters = new List<IFileExporter> { GetDHydroConfigXmlExporter(), GetDimrModelFileExporter() };
             DHydroExporterDialogStub hydroExporterDialog = GetDHydroExporterDialog(integratedModel, fileExporters);
 
             // When - Then
@@ -64,11 +74,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         public void GivenNonDimrOrIntegratedModelAsSelectedModel_WhenShowingModal_ThenDialogResultIsEqualToCancel()
         {
             // Given
-            var selectedModel = mocks.DynamicMock<IModel>();
-            var fileExporters = new IFileExporter[]
-            {
-                new DHydroConfigXmlExporter()
-            };
+            var selectedModel = Substitute.For<IModel>();
+            var fileExporters = new IFileExporter[] { GetDHydroConfigXmlExporter(), GetDimrModelFileExporter() };
             DHydroExporterDialogStub hydroExporterDialog = GetDHydroExporterDialog(selectedModel, fileExporters);
 
             // When
@@ -82,8 +89,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         public void GivenIDimrModelAsSelectedModel_WhenShowingModalWithoutDHydroConfigXmlExporter_ThenDialogResultIsEqualToCancel()
         {
             // Given
-            var selectedModel = mocks.DynamicMock<IDimrModel>();
-            var fileExporters = new IFileExporter[0];
+            var selectedModel = Substitute.For<IDimrModel>();
+            IFileExporter[] fileExporters = Array.Empty<IFileExporter>();
             DHydroExporterDialogStub hydroExporterDialog = GetDHydroExporterDialog(selectedModel, fileExporters);
 
             // When
@@ -97,10 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
         public void GivenWithoutSelectedModel_WhenShowingModalWithoutDHydroConfigXmlExporter_ThenDialogResultIsEqualToCancel()
         {
             // Given
-            var fileExporters = new IFileExporter[]
-            {
-                new DHydroConfigXmlExporter()
-            };
+            var fileExporters = new IFileExporter[] { GetDHydroConfigXmlExporter(), GetDimrModelFileExporter() };
             DHydroExporterDialogStub hydroExporterDialog = GetDHydroExporterDialog(null, fileExporters);
 
             // When
@@ -110,52 +114,64 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             Assert.That(dialogResult, Is.EqualTo(DelftDialogResult.Cancel));
         }
 
+        private static IDimrModel GetMockedDimrModel()
+        {
+            var waterFlowModel1D = Substitute.For<IDimrModel>();
+            return waterFlowModel1D;
+        }
+
+        private static ICompositeActivity GetMockedCurrentWorkFlow(params IModel[] models)
+        {
+            var currentWorkFlow = Substitute.For<ICompositeActivity>();
+            currentWorkFlow.Activities.Returns(new EventedList<IActivity>(models));
+            return currentWorkFlow;
+        }
+
+        private static IHydroModel GetMockedIntegratedModel(ICompositeActivity currentWorkFlow, params IActivity[] modelActivities)
+        {
+            IHydroModel integratedModel = Substitute.For<IHydroModel, ICompositeActivity>();
+            ((ICompositeActivity)integratedModel).Activities.Returns(new EventedList<IActivity>(modelActivities));
+            ((ICompositeActivity)integratedModel).CurrentWorkflow.Returns(currentWorkFlow);
+
+            return integratedModel;
+        }
+
+        private static DHydroConfigXmlExporter GetDHydroConfigXmlExporter()
+        {
+            var fileExportService = Substitute.For<IFileExportService>();
+            return new DHydroConfigXmlExporter(fileExportService);
+        }
+
+        private static IDimrModelFileExporter GetDimrModelFileExporter()
+        {
+            return Substitute.For<IDimrModelFileExporter>();
+        }
+
+        private static DHydroExporterDialogStub GetDHydroExporterDialog(IModel selectedModel, IReadOnlyList<IFileExporter> fileExporters)
+        {
+            var gui = Substitute.For<IGui>();
+            var application = Substitute.For<IApplication>();
+            var viewResolver = Substitute.For<IViewResolver>();
+            var fileExportService = Substitute.For<IFileExportService>();
+
+            gui.SelectedModel.Returns(selectedModel);
+            gui.Application.Returns(application);
+            gui.DocumentViewsResolver.Returns(viewResolver);
+
+            fileExportService.FileExporters.Returns(fileExporters);
+            fileExportService.GetFileExportersFor(Arg.Any<IDimrModel>()).Returns(fileExporters);
+            application.FileExportService.Returns(fileExportService);
+
+            var hydroExporterDialog = new DHydroExporterDialogStub { Gui = gui };
+            return hydroExporterDialog;
+        }
+
         private class DHydroExporterDialogStub : DHydroExporterDialog
         {
             protected override DialogResult ShowSaveFileDialog()
             {
                 return DialogResult.OK;
             }
-        }
-
-        private IDimrModel GetMockedDimrModel()
-        {
-            var waterFlowModel1D = mocks.DynamicMock<IDimrModel>();
-            waterFlowModel1D.Expect(m => m.ExporterType).Return(typeof(DHydroConfigXmlExporter)).Repeat.Any();
-            return waterFlowModel1D;
-        }
-
-        private ICompositeActivity GetMockedCurrentWorkFlow(params IModel[] models)
-        {
-            var currentWorkFlow = mocks.DynamicMock<ICompositeActivity>();
-            currentWorkFlow.Expect(w => w.Activities).Return(new EventedList<IActivity>(models)).Repeat.Any();
-            return currentWorkFlow;
-        }
-
-        private IHydroModel GetMockedIntegratedModel(ICompositeActivity currentWorkFlow, params IActivity[] modelActivities)
-        {
-            var integratedModel = mocks.DynamicMultiMock<IHydroModel>(typeof(ICompositeActivity));
-            integratedModel.Expect(m => ((ICompositeActivity) m).Activities).Return(new EventedList<IActivity>(modelActivities)).Repeat.Any();
-            integratedModel.Expect(m => ((ICompositeActivity) m).CurrentWorkflow).Return(currentWorkFlow).Repeat.Any();
-
-            return integratedModel;
-        }
-
-        private DHydroExporterDialogStub GetDHydroExporterDialog(IModel selectedModel, IEnumerable<IFileExporter> fileExporters)
-        {
-            var gui = mocks.DynamicMock<IGui>();
-            var application = mocks.DynamicMock<IApplication>();
-            var viewResolver = mocks.DynamicMock<IViewResolver>();
-
-            gui.Expect(g => g.SelectedModel).Return(selectedModel).Repeat.Any();
-            gui.Expect(g => g.Application).Return(application).Repeat.Any();
-            gui.Expect(g => g.DocumentViewsResolver).Return(viewResolver).Repeat.Any();
-            application.Expect(a => a.FileExporters).Return(fileExporters).Repeat.Any();
-
-            mocks.ReplayAll();
-
-            var hydroExporterDialog = new DHydroExporterDialogStub {Gui = gui};
-            return hydroExporterDialog;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils;
@@ -27,8 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void Constructor_DefaultsCorrectlyInitialized()
         {
-            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
-            
+            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin { Application = Substitute.For<IApplication>() };
+
             StringAssert.AreEqualIgnoringCase("Hydro Model",hydroModelApplicationPlugin.Name);
             StringAssert.AreEqualIgnoringCase("Hydro Model Plugin",hydroModelApplicationPlugin.DisplayName);
             StringAssert.AreEqualIgnoringCase(hydroModelApplicationPlugin.Description,"Provides functionality to create and run integrated models.");
@@ -157,6 +158,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
             ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(hydroModelApplicationPlugin);
         }
+        
+        [Test]
+        public void GivenAnApplicationWithHydroModelPluginLoaded_WhenAHydroModelIsAdded_ThenTheRegisteredFileExportersShouldBeSet()
+        {
+            // Setup
+            var hydroModelAppPlugin = new HydroModelApplicationPlugin();
+            var plugins = new List<IPlugin> { hydroModelAppPlugin };
+            
+            using (var application = new DeltaShellApplicationBuilder().WithPlugins(plugins).Build())
+            {
+                // Given
+                var model = new HydroModel();
+
+                application.Run();
+                application.CreateNewProject();
+
+                // Call
+                application.Project.RootFolder.Add(model);
+
+                // Assert
+                IFileExportService fileExportService = model.HydroModelExporter.FileExportService;
+                Assert.That(fileExportService.FileExporters, Has.One.InstanceOf<DHydroConfigXmlExporter>());
+            }
+        }
 
         [Test]
         public void GivenAnApplicationWithHydroModelAndFlowFmPluginLoaded_WhenGettingFileImporters_ThenADimrImporterShouldBeReturnedThatCanImportOnWaterFlowFMModel()
@@ -177,8 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 int fileImportersCounter = applicationFileImporters.Count();
 
                 // Then
-                Assert.AreEqual(1, fileImportersCounter,
-                                $"Expected only 1 Dimr Importer, but {fileImportersCounter} importers were found");
+                Assert.AreEqual(1, fileImportersCounter, $"Expected only 1 Dimr Importer, but {fileImportersCounter} importers were found");
                 var dimrImporter = applicationFileImporters.First() as DHydroConfigXmlImporter;
                 Assert.IsNotNull(dimrImporter, "The retrieved importer is not a Dimr Importer");
                 Assert.IsTrue(dimrImporter.CanImportOn(new WaterFlowFMModel()), "The Dimr importer is missing the WaterFlowFMFileImporter");

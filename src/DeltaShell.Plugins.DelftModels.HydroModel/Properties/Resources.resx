@@ -242,4 +242,7 @@
   <data name="HydroModelApplicationPlugin_Name_Hydro_Model" xml:space="preserve">
     <value>Hydro Model</value>
   </data>
+  <data name="DHydroExporterDialog_DimrSubModelsExportDialogResult_No_file_exporter_found_for_model___0___" xml:space="preserve">
+    <value>No file exporter found for model '{0}'.</value>
+  </data>
 </root>

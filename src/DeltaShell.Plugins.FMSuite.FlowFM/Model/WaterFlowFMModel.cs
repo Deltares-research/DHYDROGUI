@@ -25,6 +25,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
@@ -62,7 +63,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
 
         private readonly FileSystem fileSystem;
-        private readonly DimrRunner runner;
         
         private WaterFlowFMModelDefinition modelDefinition;
 
@@ -72,7 +72,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public WaterFlowFMModel() : base("FlowFM")
         {
             fileSystem = new FileSystem();
-            runner = new DimrRunner(this, new DimrApiFactory());
 
             // Create sediment model data item
             SedimentModelDataItem = new SedimentModelDataItem();
@@ -91,6 +90,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             var area = new HydroArea();
             AddDataItem(area, DataItemRole.Input, HydroAreaTag);
             areaDataItem = GetDataItemByTag(HydroAreaTag);
+
+            DimrRunner = new DimrRunner(this);
+            DimrRunner.FileExportService.RegisterFileExporter(new FMModelFileExporter());
 
             ((INotifyCollectionChanged)area).CollectionChanged += HydroAreaCollectionChanged;
             ((INotifyPropertyChanged)area).PropertyChanged += HydroAreaPropertyChanged;
@@ -844,7 +846,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
                 Grid = null;
                 DisposeSnapApi();
-                runner?.Dispose();
+                DimrRunner?.Dispose();
                 ClearSyncers();
 
                 fixedWeirProperties.Values.ForEach(d => d.Dispose());

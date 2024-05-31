@@ -133,6 +133,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
             // Assert
             Assert.That(result, Is.True);
         }
+        
+        [Test]
+        [TestCase(null, ExpectedResult = false)]
+        [TestCase("", ExpectedResult = false)]
+        [TestCase(".", ExpectedResult = false)]
+        [TestCase("settings.json", ExpectedResult = false)]
+        [TestCase("settings.xml", ExpectedResult = false)]
+        [TestCase("flowfm.mdu", ExpectedResult = false)]
+        [TestCase("waves.mdw", ExpectedResult = true)]
+        [TestCase("WAVES.MDW", ExpectedResult = true)]
+        public bool CanImportDimrFile_ReturnsExpected(string path)
+        {
+            // Setup
+            var importer = new WaveModelFileImporter(() => null);
+
+            // Call
+            return importer.CanImportDimrFile(path);
+        }
 
         [Test]
         public void GetFileFilter_ReturnsCorrectFileFilter()

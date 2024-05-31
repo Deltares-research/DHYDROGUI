@@ -6,15 +6,20 @@ using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Core.Services;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -22,17 +27,49 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
     public class DHydroConfigXmlExporterTest
     {
         [Test]
+        public void Constructor_FileExportServiceIsNull_ThrowsArgumentNullException()
+        {
+            Assert.That(() => new DHydroConfigXmlExporter(null), Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        public void FileExportService_SetToNull_ThrowsArgumentNullException()
+        {
+            DHydroConfigXmlExporter exporter = CreateExporter(string.Empty);
+            
+            Assert.That(() => exporter.FileExportService = null, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Export_NoFileExporterFound_LogsErrorMessage()
+        {
+            string dirPath = Path.GetFullPath("fmdimr");
+            if (Directory.Exists(dirPath))
+            {
+                Directory.Delete(dirPath, true);
+            }
+
+            DirectoryInfo dirInfo = Directory.CreateDirectory("fmdimr");
+            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
+            exporter.FileExportService = new FileExportService();
+            
+            WaterFlowFMModel waterFlowFmModel = SetupWaterFlowFmModel();
+            
+            var expectedMessage = $"Export failed: No file exporter found for model '{waterFlowFmModel.Name}'.";
+            TestHelper.AssertLogMessageIsGenerated(() => exporter.Export(waterFlowFmModel, null), expectedMessage, Level.Error);
+        }
+        
+        [Test]
         [Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
         public void ExportCoupledFmModelToRtc()
         {
             var hydroModelBuilder = new HydroModelBuilder();
             HydroModel hydroModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels);
-            hydroModel.CurrentWorkflow =
-                hydroModel.Workflows.First(w => w.Activities.Count == 2 && !w.Activities.OfType<WaveModel>().Any());
+            hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 2 && !w.Activities.OfType<WaveModel>().Any());
             WaterFlowFMModel fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
             Assert.NotNull(fmModel);
             var vertices = new[]
@@ -45,26 +82,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
 
             var edges = new int[,]
             {
-                {
-                    1,
-                    2
-                },
-                {
-                    2,
-                    3
-                },
-                {
-                    3,
-                    4
-                },
-                {
-                    4,
-                    1
-                },
-                {
-                    1,
-                    3
-                }
+                { 1, 2 },
+                { 2, 3 },
+                { 3, 4 },
+                { 4, 1 },
+                { 1, 3 }
             };
 
             fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
@@ -127,9 +149,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             {
                 Directory.Delete(dirPath, true);
             }
-
+            
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmrtc");
-            var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml") };
+            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
             exporter.Export(hydroModel, null);
 
             Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
@@ -140,12 +162,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ExportCoupledFmModelToRtcAndWave()
         {
             var hydroModelBuilder = new HydroModelBuilder();
             HydroModel hydroModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels);
-            hydroModel.CurrentWorkflow =
-                hydroModel.Workflows.First(w => w.Activities.Count == 3);
+            hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 3);
             WaveModel waveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
             Assert.NotNull(waveModel);
             var mSize = 2;
@@ -203,26 +225,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
 
             var edges = new int[,]
             {
-                {
-                    1,
-                    2
-                },
-                {
-                    2,
-                    3
-                },
-                {
-                    3,
-                    4
-                },
-                {
-                    4,
-                    1
-                },
-                {
-                    1,
-                    3
-                }
+                { 1, 2 },
+                { 2, 3 },
+                { 3, 4 },
+                { 4, 1 },
+                { 1, 3 }
             };
             fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
@@ -285,7 +292,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmrtcwave");
-            var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml") };
+            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
             exporter.Export(hydroModel, null);
 
             Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
@@ -298,6 +305,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ExportStandAloneFm()
         {
             string dirPath = Path.GetFullPath("fmdimr");
@@ -307,9 +315,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmdimr");
-            var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml") };
+            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
+
+            WaterFlowFMModel waterFlowFmModel = SetupWaterFlowFmModel();
+            exporter.Export(waterFlowFmModel, null);
+
+            Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu"), Does.Exist);
+        }
+
+        private WaterFlowFMModel SetupWaterFlowFmModel()
+        {
             var waterFlowFmModel = new WaterFlowFMModel();
-            Assert.NotNull(waterFlowFmModel);
 
             var vertices = new[]
             {
@@ -321,33 +339,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
 
             var edges = new int[,]
             {
-                {
-                    1,
-                    2
-                },
-                {
-                    2,
-                    3
-                },
-                {
-                    3,
-                    4
-                },
-                {
-                    4,
-                    1
-                },
-                {
-                    1,
-                    3
-                }
+                { 1, 2 },
+                { 2, 3 },
+                { 3, 4 },
+                { 4, 1 },
+                { 1, 3 }
             };
             waterFlowFmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
-            exporter.Export(waterFlowFmModel, null);
 
-            Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
-            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
-            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu"), Does.Exist);
+            return waterFlowFmModel;
         }
 
         [Test]
@@ -360,6 +360,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
 
             var dimrModels = (IEnumerable<IDimrModel>)TypeUtils.CallPrivateStaticMethod(typeof(DHydroConfigXmlExporter), "GetDimrModelsFromItem", hydroModel);
             Assert.IsEmpty(dimrModels);
+        }
+
+        private static DHydroConfigXmlExporter CreateExporter(string exportPath)
+        {
+            var fileExportService = new FileExportService();
+            fileExportService.RegisterFileExporter(new FMModelFileExporter());
+            fileExportService.RegisterFileExporter(new RealTimeControlModelExporter());
+            fileExportService.RegisterFileExporter(new WaveModelFileExporter());
+
+            return new DHydroConfigXmlExporter(fileExportService) { ExportFilePath = exportPath };
         }
     }
 }

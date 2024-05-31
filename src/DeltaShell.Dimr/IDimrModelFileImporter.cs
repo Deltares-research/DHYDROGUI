@@ -2,11 +2,16 @@
 
 namespace DeltaShell.Dimr
 {
+    /// <summary>
+    /// Interface for importing DIMR model data from external formats.
+    /// </summary>
     public interface IDimrModelFileImporter : IFileImporter
     {
         /// <summary>
-        /// Extension (without dot) of the master definition file for this importer
+        /// Returns whether the specified file in the DIMR configuration can be imported.
         /// </summary>
-        string MasterFileExtension { get; }
+        /// <param name="path">The file path specified in the DIMR configuration.</param>
+        /// <returns><c>true</c> if the specified file can be imported; <c>false</c> otherwise.</returns>
+        bool CanImportDimrFile(string path);
     }
 }

@@ -4,9 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using NSubstitute;
 using NUnit.Framework;
@@ -93,6 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             // Setup
             var plugin = new WaveApplicationPlugin();
             var model = new WaveModel();
+            
             Project project = GetProject(model);
             IApplication application = GetApplication(project, "application_working_directory");
 
@@ -107,6 +112,55 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             string appWorkingDir = model.WorkingDirectoryPathFunc();
             Assert.That(appWorkingDir, Is.Not.EqualTo(defaultWorkingDir));
             Assert.That(appWorkingDir, Is.EqualTo("application_working_directory"));
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenWaveApplicationPluginWithAnApplication_WhenProjectCollectionChangingEventIsRaised_FileExportersIsSetOnDimrRunner()
+        {
+            // Setup
+            var plugin = new WaveApplicationPlugin();
+            var project = new Project();
+            var model = new WaveModel();
+
+            IApplication application = GetApplication(project, "application_working_directory");
+            plugin.Application = application;
+
+            application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
+            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+            // Call
+            project.RootFolder.Add(model);
+
+            // Assert
+            IFileExportService fileExportService = model.DimrRunner.FileExportService;
+            Assert.That(fileExportService.FileExporters, Has.One.InstanceOf<WaveModelFileExporter>().And
+                                                            .One.InstanceOf<Delft3DDepthFileExporter>().And
+                                                            .One.InstanceOf<Delft3DGridFileExporter>());
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenWaveApplicationPluginWithAnApplication_WhenProjectOpenedEventIsRaised_FileExportersIsSetOnDimrRunner()
+        {
+            // Setup
+            var plugin = new WaveApplicationPlugin();
+            var model = new WaveModel();
+            
+            Project project = GetProject(model);
+            IApplication application = GetApplication(project, "application_working_directory");
+            
+            application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
+            plugin.Application = application;
+
+            // Call
+            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+            // Assert
+            IFileExportService fileExportService = model.DimrRunner.FileExportService;
+            Assert.That(fileExportService.FileExporters, Has.One.InstanceOf<WaveModelFileExporter>().And
+                                                            .One.InstanceOf<Delft3DDepthFileExporter>().And
+                                                            .One.InstanceOf<Delft3DGridFileExporter>());
         }
 
         [Test]
@@ -226,6 +280,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             var application = Substitute.For<IApplication>();
             application.Project.Returns(project);
+            application.GetAllModelsInProject().Returns(project.RootFolder.GetAllModelsRecursive());
             application.WorkDirectory.Returns(workingDir);
 
             return application;

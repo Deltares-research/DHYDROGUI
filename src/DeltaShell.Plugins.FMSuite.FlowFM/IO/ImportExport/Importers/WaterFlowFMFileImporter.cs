@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
@@ -10,6 +11,7 @@ using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.Extensions;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
@@ -47,6 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public override bool OpenViewAfterImport => true;
 
+        public bool CanImportDimrFile(string path) => Path.GetExtension(path).EqualsCaseInsensitive(".mdu");
+
         public override bool CanImportOnRootLevel => true;
 
         public override string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
@@ -56,8 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public override bool ShouldCancel { get; set; }
 
         public override ImportProgressChangedDelegate ProgressChanged { get; set; }
-
-        public string MasterFileExtension => "mdu";
 
         public override bool CanImportOn(object targetObject)
         {

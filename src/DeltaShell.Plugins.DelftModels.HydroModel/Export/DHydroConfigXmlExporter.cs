@@ -7,18 +7,60 @@ using System.Text;
 using System.Xml.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
+using DeltaShell.Core.Services;
 using DeltaShell.Dimr;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {
+    /// <summary>
+    /// Provides an exporter for DIMR configuration files (*.xml).
+    /// </summary>
     public class DHydroConfigXmlExporter : IFileExporter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DHydroConfigXmlExporter));
+        
+        private IFileExportService fileExportService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DHydroConfigXmlExporter"/> class.
+        /// </summary>
+        public DHydroConfigXmlExporter()
+            : this(new FileExportService())
+        {
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DHydroConfigXmlExporter"/> class.
+        /// </summary>
+        /// <param name="fileExportService">Service for retrieving the registered DIMR model file exporters.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="fileExportService"/> is <c>null</c>.</exception>
+        public DHydroConfigXmlExporter(IFileExportService fileExportService)
+        {
+            Ensure.NotNull(fileExportService, nameof(fileExportService));
+            
+            this.fileExportService = fileExportService;
+        }
+
+        /// <summary>
+        /// Gets or sets the service for retrieving the registered DIMR model file exporters.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="value"/> is <c>null</c>.</exception>
+        public IFileExportService FileExportService
+        {
+            get => fileExportService;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                fileExportService = value;
+            }
+        }
 
         public IDictionary<IDimrModel, int> CoreCountDictionary { get; set; }
 
@@ -101,7 +143,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                     string exportSubDirectory = Path.Combine(exportDirectory, dimrModel.DirectoryName);
                     FileUtils.CreateDirectoryIfNotExists(exportSubDirectory);
 
-                    var dimrModelExporter = (IFileExporter) Activator.CreateInstance(dimrModel.ExporterType);
+                    var dimrModelExporter = GetDimrModelFileExporter(dimrModel);
+                    if (dimrModelExporter == null)
+                    {
+                        throw new InvalidOperationException($"No file exporter found for model '{dimrModel.Name}'.");
+                    }
+                    
                     if (!dimrModelExporter.Export(dimrModel, dimrModel.GetExporterPath(exportSubDirectory)))
                     {
                         string formattedError = $"Export failed for model {dimrModel.Name}{Environment.NewLine}";
@@ -133,6 +180,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             configDocument.Save(exportPath);
             return true;
         }
+        
+        private IDimrModelFileExporter GetDimrModelFileExporter(IDimrModel dimrModel) 
+            => FileExportService.GetFileExportersFor(dimrModel).OfType<IDimrModelFileExporter>().FirstOrDefault();
 
         public IEnumerable<Type> SourceTypes()
         {

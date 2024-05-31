@@ -73,7 +73,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
         private readonly BoundaryContainerSyncService boundaryContainerSyncService;
 
-        private readonly DimrRunner runner;
         private ICoordinateSystem coordinateSystem;
         private string progressText;
 
@@ -100,7 +99,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private WaveModel(Action<WaveModel> creationCode, bool connectToOutput) : base("Waves")
         {
-            runner = new DimrRunner(this, new DimrApiFactory());
             TimeFrameData = new TimeFrameData();
 
             creationCode(this);
@@ -117,7 +115,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             ((INotifyPropertyChanged)this).PropertyChanged += (s, e) => MarkDirty();
             ((INotifyCollectionChanged)this).CollectionChanged += (s, e) => MarkDirty();
-
+            
+            DimrRunner = new DimrRunner(this);
+            DimrRunner.FileExportService.RegisterFileExporter(new WaveModelFileExporter());
+            
             InitializeCouplingTime();
 
             if (connectToOutput)
@@ -532,7 +533,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public override IBasicModelInterface BMIEngine => runner.Api;
+        public override IBasicModelInterface BMIEngine => DimrRunner.Api;
 
         public void AddSubDomain(IWaveDomainData domain, IWaveDomainData subDomain)
         {
@@ -764,7 +765,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             if (disposing)
             {
                 RestoreEnvironment();
-                runner?.Dispose();
+                DimrRunner?.Dispose();
             }
         }
 
@@ -882,26 +883,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 FileUtils.CreateDirectoryIfNotExists(DimrExportDirectoryPath, true);
             }
 
-            runner.OnInitialize();
+            DimrRunner.OnInitialize();
 
             ReportProgressText();
         }
 
         protected override void OnExecute()
         {
-            runner.OnExecute();
+            DimrRunner.OnExecute();
         }
 
         protected override void OnFinish()
         {
             base.OnFinish();
-            runner.OnFinish();
+            DimrRunner.OnFinish();
         }
 
         protected override void OnCleanup()
         {
             base.OnCleanup();
-            runner.OnCleanup();
+            DimrRunner.OnCleanup();
 
             ReportProgressText();
         }
@@ -915,7 +916,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             previousProgress = ProgressPercentage;
-            runner.OnProgressChanged();
+            DimrRunner.OnProgressChanged();
             base.OnProgressChanged();
         }
 
@@ -1546,8 +1547,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             throw new NotImplementedException();
         }
 
-        public virtual Type ExporterType => typeof(WaveModelFileExporter);
-
         public virtual string GetExporterPath(string directoryName) =>
             Path.Combine(directoryName, InputFile);
 
@@ -1607,6 +1606,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         public virtual bool RunsInIntegratedModel { get; set; }
+
+        /// <inheritdoc />
+        public virtual DimrRunner DimrRunner { get; }
 
         /// <summary>
         /// Gets the dimr export directory path.

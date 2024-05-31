@@ -10,7 +10,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
@@ -52,7 +51,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened -= ApplicationProjectOpened;
                     Application.ProjectClosing -= ApplicationProjectClosing;
-                    Application.AfterRun -= ApplicationRemoveProjectExporter;
                 }
 
                 base.Application = value;
@@ -65,7 +63,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaved += ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened += ApplicationProjectOpened;
                     Application.ProjectClosing += ApplicationProjectClosing;
-                    Application.AfterRun += ApplicationRemoveProjectExporter;
                 }
             }
         }
@@ -122,24 +119,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
-            yield return new DHydroConfigXmlExporter();
+            yield return new DHydroConfigXmlExporter(Application.FileExportService);
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(),
-                                                     () => Application.WorkDirectory);
+            yield return new DHydroConfigXmlImporter(Application.FileImportService, new HydroModelReader(Application.FileImportService), () => Application.WorkDirectory);
         }
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             return Enumerable.Empty<IDataAccessListener>();
-        }
-
-        private void ApplicationRemoveProjectExporter()
-        {
-            var exporters = (List<IFileExporter>) Application.FileExporters;
-            exporters.RemoveAll(e => e is IProjectItemExporter);
         }
 
         private void ApplicationProjectClosing(Project project)
@@ -154,8 +144,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
             {
                 hm.RelinkDataItems();
-                hm.WorkingDirectoryPathFunc =
-                    () => Application.WorkDirectory;
+                hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
+                hm.HydroModelExporter.FileExportService = Application.FileExportService;
             });
 
             Application.Project.CollectionChanging += OnProjectCollectionChanging;
@@ -173,13 +163,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangeAction.Add && e.Item is IModel addedModel)
+            if (e.Action == NotifyCollectionChangeAction.Add)
             {
-                TrimAllModelNames(addedModel);
-                MakeAllModelNamesUnique(addedModel);
+                if (e.Item is IModel model)
+                {
+                    TrimAllModelNames(model);
+                    MakeAllModelNamesUnique(model);
+                }
+
+                if (e.Item is HydroModel hydroModel)
+                {
+                    hydroModel.HydroModelExporter.FileExportService = Application.FileExportService;
+                }
             }
         }
-
+        
         private static void TrimAllModelNames(IModel model)
         {
             TrimModelName(model);
@@ -209,7 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 MakeAllModelNamesUnique(subModel);
             }
         }
-
+        
         private void MakeModelNameUnique(IModel model)
         {
             IModel[] allModels = Application.Project.GetAllItemsRecursive()

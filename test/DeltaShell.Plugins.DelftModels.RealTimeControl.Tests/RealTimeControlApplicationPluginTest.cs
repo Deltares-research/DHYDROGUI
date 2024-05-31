@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
@@ -48,6 +52,85 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // Assert
             Assert.NotNull(exporters.SingleOrDefault(e => e.GetType() == exporterType));
+        }
+
+        [Test]
+        [TestCase(typeof(RealTimeControlModelImporter))]
+        [TestCase(typeof(RealTimeControlRestartFileImporter))]
+        public void GetFileImporters_ContainsExpectedImporter(Type importerType)
+        {
+            // Setup
+            var plugin = new RealTimeControlApplicationPlugin();
+
+            // Call
+            IEnumerable<IFileImporter> importers = plugin.GetFileImporters();
+
+            // Assert
+            Assert.NotNull(importers.SingleOrDefault(e => e.GetType() == importerType));
+        }
+
+        [Test]
+        public void OnProjectCollectionChangingEventIsRaised_FileExportersIsSetOnDimrRunner()
+        {
+            // Setup
+            var plugin = new RealTimeControlApplicationPlugin();
+            var model = new RealTimeControlModel();
+            var project = new Project();
+
+            IApplication application = GetApplication(project);
+            plugin.Application = application;
+
+            application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
+            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+            // Call
+            project.RootFolder.Add(model);
+
+            // Assert
+            IFileExportService fileExportService = model.DimrRunner.FileExportService;
+            Assert.That(fileExportService.FileExporters, Has.One.InstanceOf<RealTimeControlModelExporter>().And
+                                                            .One.InstanceOf<RealTimeControlRestartFileExporter>());
+        }
+
+        [Test]
+        public void OnProjectOpenedEventIsRaised_FileExportersIsSetOnDimrRunner()
+        {
+            // Setup
+            var plugin = new RealTimeControlApplicationPlugin();
+            var model = new RealTimeControlModel();
+
+            Project project = GetProject(model);
+            IApplication application = GetApplication(project);
+
+            application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
+            plugin.Application = application;
+
+            // Call
+            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+            // Assert
+            IFileExportService fileExportService = model.DimrRunner.FileExportService;
+            Assert.That(fileExportService.FileExporters, Has.One.InstanceOf<RealTimeControlModelExporter>().And
+                                                            .One.InstanceOf<RealTimeControlRestartFileExporter>());
+        }
+
+        private static IApplication GetApplication(Project project)
+        {
+            var application = Substitute.For<IApplication>();
+            application.Project.Returns(project);
+            application.GetAllModelsInProject().Returns(project.RootFolder.GetAllModelsRecursive());
+
+            return application;
+        }
+
+        private static Project GetProject(RealTimeControlModel model)
+        {
+            var project = new Project();
+            var folder = new Folder();
+            project.RootFolder = folder;
+            folder.Items.Add(model);
+
+            return project;
         }
     }
 }

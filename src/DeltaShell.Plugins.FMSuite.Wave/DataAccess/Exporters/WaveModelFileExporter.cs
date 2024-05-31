@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using DelftTools.Shell.Core;
+using DeltaShell.Dimr;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters
 {
     /// <summary>
-    /// <see cref="WaveModelFileExporter"/> implements the <see cref="IFileExporter"/>
+    /// <see cref="WaveModelFileExporter"/> implements the <see cref="DelftTools.Shell.Core.IFileExporter"/>
     /// to export <see cref="WaveModel"/> as a .mdw file.
     /// </summary>
-    /// <seealso cref="IFileExporter" />
-    public class WaveModelFileExporter : IFileExporter
+    /// <seealso cref="DelftTools.Shell.Core.IFileExporter" />
+    public class WaveModelFileExporter : IDimrModelFileExporter
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileExporter));
 

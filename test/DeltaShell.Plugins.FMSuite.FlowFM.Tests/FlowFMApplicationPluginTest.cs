@@ -5,19 +5,20 @@ using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Gui;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     {
         private FlowFMApplicationPlugin plugin;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUp()
         {
             plugin = new FlowFMApplicationPlugin();
@@ -47,18 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GetFileExporters_ContainsExpectedExporterForFixedWeirs()
-        {
-            // Call
-            IEnumerable<IFileExporter> exporters = plugin.GetFileExporters();
-
-            // Assert
-            Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
-            Assert.NotNull(exporters.SingleOrDefault(e => e.GetType() == expectedType),
-                           $"An exporter of type {expectedType} was expected to be returned.");
-        }
-
-        [Test]
         public void GetFileImporters_ContainsExpectedImporters()
         {
             // Call
@@ -66,43 +55,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Assert
             Assert.That(importers, Has.Length.EqualTo(36));
-            Contains<WaterFlowFMFileImporter>(importers);
-            Contains<Area2DStructuresImporter>(importers);
-            Contains<StructuresListImporter>(importers, 2);
-            Contains<FMMapFileImporter>(importers);
-            Contains<FMHisFileImporter>(importers);
-            Contains<FMRestartFileImporter>(importers);
-            Contains<BcFileImporter>(importers);
-            Contains<BcmFileImporter>(importers);
-            Contains<GroupablePointCloudImporter>(importers);
-            Contains<PlizFileImporterExporter<FixedWeir, FixedWeir>>(importers);
-            Contains<PlizFileImporterExporter<BridgePillar, BridgePillar>>(importers);
-            Contains<PliFileImporterExporter<ThinDam2D, ThinDam2D>>(importers);
-            Contains<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>(importers);
-            Contains<PliFileImporterExporter<Structure, Structure>>(importers);
-            Contains<PliFileImporterExporter<Pump, Pump>>(importers);
-            Contains<PliFileImporterExporter<SourceAndSink, Feature2D>>(importers);
-            Contains<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>(importers);
-            Contains<PointFileImporterExporter>(importers);
-            Contains<ObsFileImporterExporter<GroupableFeature2DPoint>>(importers);
-            Contains<PolFileImporterExporter>(importers);
-            Contains<LdbFileImporterExporter>(importers);
-            Contains<FlowFMNetFileImporter>(importers);
-            Contains<TimFileImporter>(importers, 2);
-            Contains<ShapeFileImporter<ILineString, LandBoundary2D>>(importers);
-            Contains<ShapeFileImporter<IPoint, GroupablePointFeature>>(importers);
-            Contains<ShapeFileImporter<IPolygon, GroupableFeature2DPolygon>>(importers);
-            Contains<ShapeFileImporter<ILineString, ThinDam2D>>(importers);
-            Contains<ShapeFileImporter<ILineString, FixedWeir>>(importers);
-            Contains<ShapeFileImporter<IPoint, GroupableFeature2DPoint>>(importers);
-            Contains<ShapeFileImporter<ILineString, ObservationCrossSection2D>>(importers);
-            Contains<ShapeFileImporter<ILineString, BridgePillar>>(importers);
-            Contains<ShapeFileImporter<ILineString, Pump>>(importers);
-            Contains<ShapeFileImporter<ILineString, Structure>>(importers);
-            Contains<SamplesImporter>(importers);
+            ContainsImporter<WaterFlowFMFileImporter>(importers);
+            ContainsImporter<Area2DStructuresImporter>(importers);
+            ContainsImporter<StructuresListImporter>(importers, 2);
+            ContainsImporter<FMMapFileImporter>(importers);
+            ContainsImporter<FMHisFileImporter>(importers);
+            ContainsImporter<FMRestartFileImporter>(importers);
+            ContainsImporter<BcFileImporter>(importers);
+            ContainsImporter<BcmFileImporter>(importers);
+            ContainsImporter<GroupablePointCloudImporter>(importers);
+            ContainsImporter<PlizFileImporterExporter<FixedWeir, FixedWeir>>(importers);
+            ContainsImporter<PlizFileImporterExporter<BridgePillar, BridgePillar>>(importers);
+            ContainsImporter<PliFileImporterExporter<ThinDam2D, ThinDam2D>>(importers);
+            ContainsImporter<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>(importers);
+            ContainsImporter<PliFileImporterExporter<Structure, Structure>>(importers);
+            ContainsImporter<PliFileImporterExporter<Pump, Pump>>(importers);
+            ContainsImporter<PliFileImporterExporter<SourceAndSink, Feature2D>>(importers);
+            ContainsImporter<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>(importers);
+            ContainsImporter<PointFileImporterExporter>(importers);
+            ContainsImporter<ObsFileImporterExporter<GroupableFeature2DPoint>>(importers);
+            ContainsImporter<PolFileImporterExporter>(importers);
+            ContainsImporter<LdbFileImporterExporter>(importers);
+            ContainsImporter<FlowFMNetFileImporter>(importers);
+            ContainsImporter<TimFileImporter>(importers, 2);
+            ContainsImporter<ShapeFileImporter<ILineString, LandBoundary2D>>(importers);
+            ContainsImporter<ShapeFileImporter<IPoint, GroupablePointFeature>>(importers);
+            ContainsImporter<ShapeFileImporter<IPolygon, GroupableFeature2DPolygon>>(importers);
+            ContainsImporter<ShapeFileImporter<ILineString, ThinDam2D>>(importers);
+            ContainsImporter<ShapeFileImporter<ILineString, FixedWeir>>(importers);
+            ContainsImporter<ShapeFileImporter<IPoint, GroupableFeature2DPoint>>(importers);
+            ContainsImporter<ShapeFileImporter<ILineString, ObservationCrossSection2D>>(importers);
+            ContainsImporter<ShapeFileImporter<ILineString, BridgePillar>>(importers);
+            ContainsImporter<ShapeFileImporter<ILineString, Pump>>(importers);
+            ContainsImporter<ShapeFileImporter<ILineString, Structure>>(importers);
+            ContainsImporter<SamplesImporter>(importers);
         }
 
-        private static void Contains<T>(IFileImporter[] source, int n = 1)
+        private static void ContainsImporter<T>(IFileImporter[] source, int n = 1)
         {
             Assert.That(source.OfType<T>().ToList(), Has.Count.EqualTo(n),
                         $"Collection should contain {n} of {typeof(T).Name}");
@@ -115,67 +104,103 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IFileExporter[] exporters = plugin.GetFileExporters().ToArray();
 
             // Assert
-            Contains<SamplesExporter>(exporters);
+            AssertContainsExpectedFileExporters(exporters);
         }
-        
-        private static void Contains<T>(IFileExporter[] source, int n = 1)
+
+        private void AssertContainsExpectedFileExporters(IFileExporter[] exporters)
+        {
+            ContainsExporter<FMModelFileExporter>(exporters);
+            ContainsExporter<Area2DStructuresExporter>(exporters);
+            ContainsExporter<StructuresListExporter>(exporters, 2);
+            ContainsExporter<BcFileExporter>(exporters);
+            ContainsExporter<BcmFileExporter>(exporters);
+            ContainsExporter<SamplesExporter>(exporters);
+            ContainsExporter<PlizFileImporterExporter<FixedWeir, FixedWeir>>(exporters);
+            ContainsExporter<PlizFileImporterExporter<BridgePillar, BridgePillar>>(exporters);
+            ContainsExporter<PliFileImporterExporter<ThinDam2D, ThinDam2D>>(exporters);
+            ContainsExporter<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>(exporters);
+            ContainsExporter<PliFileImporterExporter<Structure, Structure>>(exporters);
+            ContainsExporter<PliFileImporterExporter<Pump, Pump>>(exporters);
+            ContainsExporter<PliFileImporterExporter<SourceAndSink, Feature2D>>(exporters);
+            ContainsExporter<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>(exporters);
+            ContainsExporter<PointFileImporterExporter>(exporters);
+            ContainsExporter<ObsFileImporterExporter<GroupableFeature2DPoint>>(exporters);
+            ContainsExporter<PolFileImporterExporter>(exporters);
+            ContainsExporter<LdbFileImporterExporter>(exporters);
+            ContainsExporter<FlowFMNetFileExporter>(exporters);
+            ContainsExporter<FMModelPartitionExporter>(exporters);
+            ContainsExporter<FMGridPartitionExporter>(exporters);
+            ContainsExporter<GeometryZipExporter>(exporters);
+            ContainsExporter<TimFileExporter>(exporters);
+            ContainsExporter<ImportedNetFileXyzExporter>(exporters, 2);
+            ContainsExporter<WindItemExporter>(exporters, 6);
+        }
+
+        private static void ContainsExporter<T>(IFileExporter[] source, int n = 1)
         {
             Assert.That(source.OfType<T>().ToList(), Has.Count.EqualTo(n),
                         $"Collection should contain {n} of {typeof(T).Name}");
         }
-
-        /// <summary>
-        /// GIVEN a FlowFMApplicationPlugin
-        /// AND an EventedList of Weir2Ds
-        /// WHEN GetExporters is called
-        /// AND GetSupportedExporterForItemIsCalled for these exporter and the EventedList
-        /// THEN there exists a PliImporterExporter within the result
-        /// </summary>
-        [TestCase(typeof(Structure))]
-        [TestCase(typeof(Pump))]
-        public void GivenAFlowFMApplicationPlugin_WhenGetExportersIsCalledAndGetSupportedExporterForItemIsCalled_ThenThereExistsAPliImporterExporterWithinTheResult(Type t)
+        
+                
+        [Test]
+        public void OnProjectCollectionChangingEventIsRaised_FileExportersIsSetOnDimrRunner()
         {
-            // Given
-            var fileExportersGetterMock =
-                MockRepository.GenerateStrictMock<Func<object, IEnumerable<IFileExporter>>>();
+            // Setup
+            var model = new WaterFlowFMModel();
+            var project = new Project();
 
-            fileExportersGetterMock.Expect(o => o.Invoke(Arg<object>.Is.Anything))
-                                   .Return(plugin.GetFileExporters())
-                                   .IgnoreArguments()
-                                   .Repeat.Once();
+            IApplication application = GetApplication(project);
+            plugin.Application = application;
 
-            fileExportersGetterMock.Replay();
+            application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
+            application.ProjectOpened += Raise.Event<Action<Project>>(project);
 
-            Type eventedListType = typeof(EventedList<>).MakeGenericType(t);
-            object eventedList = Activator.CreateInstance(eventedListType);
+            // Call
+            project.RootFolder.Add(model);
 
-            // When
-            var exportHandler = new GuiExportHandler(fileExportersGetterMock, null);
-            IList<IFileExporter> filteredExporters = exportHandler.GetSupportedExportersForItem(eventedList).ToList();
-
-            // Then
-            fileExportersGetterMock.VerifyAllExpectations();
-
-            // We only check for the GenericType to ensure a PliFileImporterExporter
-            // exists for t. We assume that GuiExportHandler.GetSupportedExportersForItem
-            // is correct, and thus will produce the right PliFileImporterExporter when
-            // it produces a PliFileImporterExporter.
-            IFileExporter relevantExporter =
-                filteredExporters.FirstOrDefault(e => IsOfGenericType(e, typeof(PliFileImporterExporter<,>)));
-
-            Assert.That(relevantExporter, Is.Not.Null,
-                        "Expected a PliFileImporterExporter within the list of exporters, but found none.");
+            // Assert
+            IFileExportService fileExportService = model.DimrRunner.FileExportService;
+            AssertContainsExpectedFileExporters(fileExportService.FileExporters.ToArray());
         }
 
-        /// <summary>
-        /// Determines whether [Obj] is of the specified [GenericType].
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <param name="GenericType">Type of the generic.</param>
-        /// <returns><c>true</c> if [the specified object] [is of generic type]; otherwise, <c>false</c>.</returns>
-        private static bool IsOfGenericType(object obj, Type GenericType)
+        [Test]
+        public void OnProjectOpenedEventIsRaised_FileExportersIsSetOnDimrRunner()
         {
-            return obj?.GetType().GetGenericTypeDefinition() == GenericType;
+            // Setup
+            var model = new WaterFlowFMModel();
+
+            Project project = GetProject(model);
+            IApplication application = GetApplication(project);
+
+            application.FileExportService.FileExporters.Returns(plugin.GetFileExporters());
+            plugin.Application = application;
+
+            // Call
+            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+            // Assert
+            IFileExportService fileExportService = model.DimrRunner.FileExportService;
+            AssertContainsExpectedFileExporters(fileExportService.FileExporters.ToArray());
+        }
+        
+        private static IApplication GetApplication(Project project)
+        {
+            var application = Substitute.For<IApplication>();
+            application.Project.Returns(project);
+            application.GetAllModelsInProject().Returns(project.RootFolder.GetAllModelsRecursive());
+
+            return application;
+        }
+
+        private static Project GetProject(WaterFlowFMModel model)
+        {
+            var project = new Project();
+            var folder = new Folder();
+            project.RootFolder = folder;
+            folder.Items.Add(model);
+
+            return project;
         }
     }
 }

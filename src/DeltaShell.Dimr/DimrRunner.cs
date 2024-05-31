@@ -2,16 +2,23 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
+using DeltaShell.Core.Services;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Properties;
 using log4net;
 namespace DeltaShell.Dimr
 {
+    /// <summary>
+    /// Provides a runner for DIMR models.
+
+    /// </summary>
     public class DimrRunner : IDisposable
     {
         private const decimal fileVersion = 1;
@@ -26,6 +33,8 @@ namespace DeltaShell.Dimr
 
         private readonly IDimrModel model;
         private readonly IDimrApiFactory dimrApiFactory;
+        private IFileExportService fileExportService;
+
         protected bool runLocal;
         private bool disposed;
         private string dimrFile;
@@ -33,13 +42,56 @@ namespace DeltaShell.Dimr
         private double timeStep;
         private DateTime stopTime;
 
-        public DimrRunner(IDimrModel model, IDimrApiFactory dimrApiFactory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DimrRunner"/> class.
+        /// </summary>
+        /// <param name="model">The DIMR model to run.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="model"/> is <c>null</c>.
+        /// </exception>
+        public DimrRunner(IDimrModel model)
+            : this(model, new DimrApiFactory(), new FileExportService())
         {
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DimrRunner"/> class.
+        /// </summary>
+        /// <param name="model">The DIMR model to run.</param>
+        /// <param name="dimrApiFactory">Factory for creating the DIMR Api instance.</param>
+        /// <param name="fileExportService">Service for retrieving the registered DIMR model file exporters.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="model"/>, <paramref name="dimrApiFactory"/> or <paramref name="fileExportService"/> is <c>null</c>.
+        /// </exception>
+        public DimrRunner(IDimrModel model, IDimrApiFactory dimrApiFactory, IFileExportService fileExportService)
+        {
+            Ensure.NotNull(model, nameof(model));
+            Ensure.NotNull(dimrApiFactory, nameof(dimrApiFactory));
+            Ensure.NotNull(fileExportService, nameof(fileExportService));
+            
             this.model = model;
             this.dimrApiFactory = dimrApiFactory;
+            this.fileExportService = fileExportService;
         }
 
+        /// <summary>
+        /// Gets the DIMR Api instance.
+        /// </summary>
         public IDimrApi Api { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the service for retrieving the registered DIMR model file exporters.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="value"/> is <c>null</c>.</exception>
+        public IFileExportService FileExportService
+        {
+            get => fileExportService;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                fileExportService = value;
+            }
+        }
 
         public void OnInitialize()
         {
@@ -259,7 +311,11 @@ namespace DeltaShell.Dimr
             }
 
             // export this model
-            var exporter = (IFileExporter) Activator.CreateInstance(model.ExporterType);
+            IDimrModelFileExporter exporter = GetDimrModelFileExporter(model);
+            if (exporter == null)
+            {
+                throw new InvalidOperationException($"No file exporter found for model '{model.Name}'.");
+            }
 
             string exportPath = model.DimrExportDirectoryPath;
 
@@ -289,6 +345,9 @@ namespace DeltaShell.Dimr
             timeStep = Api.TimeStep.TotalSeconds;
             stopTime = Api.StopTime;
         }
+
+        private IDimrModelFileExporter GetDimrModelFileExporter(IDimrModel dimrModel) 
+            => FileExportService.GetFileExportersFor(dimrModel).OfType<IDimrModelFileExporter>().FirstOrDefault();
 
         private void ExportDimrModel(string workDirectory, object modelObject, IFileExporter exporter)
         {

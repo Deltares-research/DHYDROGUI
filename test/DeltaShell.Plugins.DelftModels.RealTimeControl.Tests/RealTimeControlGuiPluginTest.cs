@@ -12,6 +12,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
@@ -135,6 +136,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.That(items, Has.Count.EqualTo(1), $"Collection should contain one {typeof(T).Name}");
 
             return items[0];
+        }
+
+        [Test]
+        public void CanExport_ReturnsFalseForRealTimeControlModel()
+        {
+            // Given
+            var guiPlugin = new RealTimeControlGuiPlugin();
+            var model = new RealTimeControlModel();
+            
+            // When
+            bool canExport = guiPlugin.CanExport(model);
+            
+            // Then
+            Assert.That(canExport, Is.False);
+        }
+        
+        [Test]
+        public void CanExport_ReturnsFalseForOtherThanRealTimeControlModel()
+        {
+            // Given
+            var guiPlugin = new RealTimeControlGuiPlugin();
+            var model = Substitute.For<IProjectItem>();
+            
+            // When
+            bool canExport = guiPlugin.CanExport(model);
+            
+            // Then
+            Assert.That(canExport, Is.True);
         }
     }
 }

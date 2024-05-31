@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     // Step 7: Dimr Export of FM model
                     string dimrExportPath = Path.Combine(tempDir.Path, "Dimr_Export", "dimr.xml");
-                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(dimrExportPath, rootModel)), $"Failed to export dimr configuration for model: {rootModel.Name}");
+                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(dimrExportPath, app, rootModel)), $"Failed to export dimr configuration for model: {rootModel.Name}");
 
                     // Step 8: Adjust Time Settings (10 time steps)
                     Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModel)), $"Failed to adjust time settings for model: {rootModel.Name}");
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     // Step 10: Dimr Export of FM model
                     string dimrExportPath = Path.Combine(tempDir.Path, "Dimr_Export", "dimr.xml");
-                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(dimrExportPath, rootModelOriginalDimrXml)), $"Failed to export dimr configuration for model: {rootModelOriginalDimrXml.Name}");
+                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(dimrExportPath, app, rootModelOriginalDimrXml)), $"Failed to export dimr configuration for model: {rootModelOriginalDimrXml.Name}");
 
                     // Step 11: Close Project
                     Assert.True(TryPerformAction(() => app.CloseProject()), $"Failed to close project after dimr import: {projectPathWithOutput}");
@@ -530,9 +530,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static void ExportDimrConfiguration(string dimrExportPath, IModel model)
+        private static void ExportDimrConfiguration(string dimrExportPath, IApplication app, IModel model)
         {
-            var exporter = new DHydroConfigXmlExporter { ExportFilePath = dimrExportPath };
+            var exporter = new DHydroConfigXmlExporter(app.FileExportService)
+            {
+                ExportFilePath = dimrExportPath
+            };
+
             if (!exporter.Export(model, null))
             {
                 throw new AssertionException($"Dimr export failed for model: '{model.Name}'.");
@@ -552,7 +556,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             public bool FMModelIncluded { get; }
             public bool RtcModelIncluded { get; }
-
             public bool WavesModelIncluded { get; }
         }
     }

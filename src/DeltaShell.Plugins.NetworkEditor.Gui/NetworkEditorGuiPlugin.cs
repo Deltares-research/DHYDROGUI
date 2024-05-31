@@ -29,7 +29,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api;
@@ -108,11 +107,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (gui != null)
                 {
                     gui.SelectionChanged += GuiSelectionChanged;
-
-                    if (!gui.Application.FileExporters.Any(e => e is HydroRegionShapeFileExporter))
-                    {
-                        ((List<IFileExporter>)gui.Application.FileExporters).Add(new HydroRegionShapeFileExporter(Gui));
-                    }
                 }
             }
         }
@@ -154,6 +148,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationCrossSections);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Enclosures);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.BridgePillars);
+        }
+
+        public override IEnumerable<IFileExporter> GetFileExporters()
+        {
+            yield return new HydroRegionShapeFileExporter(Gui);
         }
 
         public override void Activate()

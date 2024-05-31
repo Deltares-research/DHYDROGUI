@@ -13,7 +13,6 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
@@ -50,9 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public virtual string ShortName => "flow";
 
         /// <inheritdoc/>
-        public virtual Type ExporterType => typeof(FMModelFileExporter);
-
-        /// <inheritdoc/>
         public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllDirectory;
 
         /// <inheritdoc cref="IDimrModel.CurrentTime"/>
@@ -72,6 +68,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         /// <inheritdoc/>
         public virtual bool RunsInIntegratedModel { get; set; }
+        
+        /// <inheritdoc/>
+        public virtual DimrRunner DimrRunner { get; }
 
         /// <inheritdoc/>
         public virtual string DimrExportDirectoryPath => WorkingDirectoryPath;
@@ -238,9 +237,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             return !string.IsNullOrEmpty(itemName)
                        ? !string.IsNullOrEmpty(parameter)
-                             ? runner.GetVar($"{Name}/{category}/{itemName}/{parameter}")
-                             : runner.GetVar($"{Name}/{category}/{itemName}")
-                       : runner.GetVar($"{Name}/{category}");
+                             ? DimrRunner.GetVar($"{Name}/{category}/{itemName}/{parameter}")
+                             : DimrRunner.GetVar($"{Name}/{category}/{itemName}")
+                       : DimrRunner.GetVar($"{Name}/{category}");
         }
 
         /// <inheritdoc/>
@@ -261,15 +260,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (!string.IsNullOrEmpty(parameter))
                 {
-                    runner.SetVar($"{Name}/{category}/{itemName}/{parameter}", values);
+                    DimrRunner.SetVar($"{Name}/{category}/{itemName}/{parameter}", values);
                     return;
                 }
 
-                runner.SetVar($"{Name}/{category}/{itemName}", values);
+                DimrRunner.SetVar($"{Name}/{category}/{itemName}", values);
                 return;
             }
 
-            runner.SetVar($"{Name}/{category}", values);
+            DimrRunner.SetVar($"{Name}/{category}", values);
         }
 
         /// <inheritdoc/>

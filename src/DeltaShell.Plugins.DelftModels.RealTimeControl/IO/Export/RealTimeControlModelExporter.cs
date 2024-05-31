@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Xml.Linq;
-using DelftTools.Shell.Core;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
 {
-    public class RealTimeControlModelExporter : IFileExporter
+    public class RealTimeControlModelExporter : IDimrModelFileExporter
     {
         private const string settingsString = "{\r\n\r\n\t\"xmlDir\": \".\",\r\n\t\"schemaDir\": \".\"\r\n\r\n}";
 
@@ -69,12 +69,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield break;
+            yield return typeof(RealTimeControlModel);
         }
 
         public bool CanExportFor(object item)
         {
-            return false;
+            return true;
         }
 
         private static void WriteEngineXmlFiles(RealTimeControlModel model, string path)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Controls;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -10,6 +11,7 @@ using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -20,11 +22,25 @@ using SharpTestsEx;
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
     [TestFixture]
-    [Category(TestCategory.Wpf)]
-    [Category(TestCategory.Slow)]
+
     public class NetworkEditorGuiPluginTest
     {
         [Test]
+        public void GetFileExporters_ContainsExpectedExporterForShapes()
+        {
+            // Arrange
+            var plugin = new NetworkEditorGuiPlugin();
+            
+            // Act
+            IEnumerable<IFileExporter> exporters = plugin.GetFileExporters();
+
+            // Assert
+            Assert.That(exporters, Has.Exactly(1).TypeOf<HydroRegionShapeFileExporter>());
+        }
+        
+        [Test]
+        [Category(TestCategory.Wpf)]
+        [Category(TestCategory.Slow)]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
             var pluginsToAdd = new List<IPlugin>()

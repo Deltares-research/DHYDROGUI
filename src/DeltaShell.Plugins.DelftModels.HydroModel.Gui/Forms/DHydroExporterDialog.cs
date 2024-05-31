@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Controls.Swf;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
@@ -66,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                     return ExportSubDimrModels(integratedModel);
                 case IDimrModel dimrModel:
                 {
-                    var dimrModelExporter = (IFileExporter) Activator.CreateInstance(dimrModel.ExporterType);
+                    IDimrModelFileExporter dimrModelExporter = GetDimrModelExporter(dimrModel);
                     return DimrSubModelsExportDialogResult(dimrModelExporter, dimrModel);
                 }
                 default:
@@ -100,13 +99,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         private IModel SelectedModel => Gui?.SelectedModel;
 
+        private IFileExportService FileExportService
+            => Gui.Application.FileExportService;
+
         private DHydroConfigXmlExporter Exporter
-        {
-            get
-            {
-                return Gui?.Application.FileExporters.OfType<DHydroConfigXmlExporter>().FirstOrDefault();
-            }
-        }
+            => FileExportService.FileExporters.OfType<DHydroConfigXmlExporter>().FirstOrDefault();
+
+        private IDimrModelFileExporter GetDimrModelExporter(IDimrModel dimrModel)
+            => FileExportService.GetFileExportersFor(dimrModel).OfType<IDimrModelFileExporter>().FirstOrDefault();
 
         private DelftDialogResult ExportSubDimrModels(ICompositeActivity hydroModel)
         {
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
             foreach (IDimrModel dimrModel in dimrModels)
             {
-                var dimrModelExporter = (IFileExporter) Activator.CreateInstance(dimrModel.ExporterType);
+                IDimrModelFileExporter dimrModelExporter = GetDimrModelExporter(dimrModel);
                 DelftDialogResult resultOfSubModelExportDialog = DimrSubModelsExportDialogResult(dimrModelExporter, dimrModel);
                 if (resultOfSubModelExportDialog == DelftDialogResult.Cancel)
                 {
@@ -141,8 +141,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         private DelftDialogResult DimrSubModelsExportDialogResult(IFileExporter dimrModelExporter, IDimrModel dimrModel)
         {
-            var configureDialog = Gui.DocumentViewsResolver.CreateViewForData(dimrModelExporter) as IPartitionDialog;
-            if (configureDialog != null)
+            if (dimrModelExporter == null)
+            {
+                Log.WarnFormat(Resources.DHydroExporterDialog_DimrSubModelsExportDialogResult_No_file_exporter_found_for_model___0___, dimrModel.Name);
+                return DelftDialogResult.Cancel;
+            }
+
+            if (Gui.DocumentViewsResolver.CreateViewForData(dimrModelExporter) is IPartitionDialog configureDialog)
             {
                 if (configureDialog.ShowPartitionModal() == DelftDialogResult.OK)
                 {

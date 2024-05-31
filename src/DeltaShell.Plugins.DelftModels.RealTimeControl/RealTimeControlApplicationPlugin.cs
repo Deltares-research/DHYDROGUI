@@ -7,6 +7,7 @@ using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
@@ -42,6 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     Application.ProjectOpened -= ApplicationProjectOpened;
                     Application.ProjectOpening -= ApplicationProjectOpening;
+                    Application.ProjectClosing -= ApplicationProjectClosing;
                 }
 
                 base.Application = value;
@@ -50,6 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     Application.ProjectOpened += ApplicationProjectOpened;
                     Application.ProjectOpening += ApplicationProjectOpening;
+                    Application.ProjectClosing += ApplicationProjectClosing;
                 }
             }
         }
@@ -184,14 +187,17 @@ PRAGMA foreign_keys = on;
 
         private void ApplicationProjectOpened(Project project)
         {
+            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+
             /*
                 Note: it was not possible to do this in RtcDataAccessListener.OnPostLoad() 
                 DataItems for Inputs and Outputs are not re-linked until the whole HydroModel has been imported
              */
 
-            List<RealTimeControlModel> rtcModelsWithControlGroups = Application.GetAllModelsInProject()
-                                                                               .OfType<RealTimeControlModel>().Where(m => m.ControlGroups.Any()).ToList();
-
+            List<RealTimeControlModel> rtcModels = Application.GetAllModelsInProject().OfType<RealTimeControlModel>().ToList();
+            rtcModels.ForEach(m => m.DimrRunner.FileExportService = Application.FileExportService);
+                
+            List<RealTimeControlModel> rtcModelsWithControlGroups = rtcModels.Where(m => m.ControlGroups.Any()).ToList();
             if (!rtcModelsWithControlGroups.Any())
             {
                 return;
@@ -202,6 +208,19 @@ PRAGMA foreign_keys = on;
 
             // DELFT3DFM-1441: Existing projects can have ControlGroup DataItems with ChildDataItems without the correct ControlGroup Name (as a prefix)
             rtcModelsWithControlGroups.ForEach(m => m.SyncControlGroupDataItemNames());
+        }
+        
+        private void ApplicationProjectClosing(Project project)
+        {
+            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+        }
+        
+        private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add && e.Item is RealTimeControlModel model)
+            {
+                model.DimrRunner.FileExportService = Application.FileExportService;
+            }
         }
     }
 }

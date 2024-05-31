@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
 using DelftTools.Shell.Core;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DHYDRO.Common.Extensions;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
 {
@@ -44,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
 
         public override bool OpenViewAfterImport => false;
 
-        public string MasterFileExtension => "json";
+        public bool CanImportDimrFile(string path) => path == "." || Path.GetExtension(path).EqualsCaseInsensitive(".json");
 
         [ExcludeFromCodeCoverage]
         public override bool CanImportOn(object targetObject)
