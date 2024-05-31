@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:rtc="http://www.wldelft.nl/fews" targetNamespace="http://www.wldelft.nl/fews" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+    <element name="rtcShapesConfig" type="rtc:ShapesConfigComplexType"/>
+    <complexType name="ShapesConfigComplexType">
+        <sequence>
+            <element name="groups" type="rtc:ShapeGroupListComplexType" minOccurs="1"/>
+        </sequence>
+    </complexType>
+    <complexType name="ShapeGroupListComplexType">
+        <sequence>
+            <element name="group" type="rtc:ShapeGroupComplexType" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <complexType name="ShapeGroupComplexType">
+        <sequence>
+            <element name="groupId" type="string" minOccurs="1"/>
+            <element name="shapes" type="rtc:ShapeListComplexType" minOccurs="1"/>
+        </sequence>
+    </complexType>
+    <complexType name="ShapeListComplexType">
+        <sequence>
+            <element name="shape" type="rtc:ShapeComplexType" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <complexType name="ShapeComplexType">
+        <sequence>
+            <element name="type" type="rtc:ShapeEnumStringType" minOccurs="1"/>
+            <element name="x" type="float" minOccurs="1"/>
+            <element name="y" type="float" minOccurs="1"/>
+            <element name="width" type="float" minOccurs="1"/>
+            <element name="height" type="float" minOccurs="1"/>
+            <element name="title" type="string" minOccurs="1"/>
+        </sequence>
+    </complexType>
+    <simpleType name="ShapeEnumStringType">
+        <restriction base="string">
+            <enumeration value="input"/>
+            <enumeration value="output"/>
+            <enumeration value="expression"/>
+            <enumeration value="condition"/>
+            <enumeration value="rule"/>
+            <enumeration value="signal"/>
+        </restriction>
+    </simpleType>
+</schema>

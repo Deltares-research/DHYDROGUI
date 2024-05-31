@@ -33,15 +33,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             RelativeTimeRule rule1 = CreateRelativeTimeRule("rule1", output);
             var condition1 = new StandardCondition {Name = "condition1"};
             condition1.TrueOutputs.Add(rule1);
-            var input1 = new Input();
+            var input1 = new Input { Name = "input1", ParameterName = "quantity1" };
             condition1.Input = input1;
 
             RelativeTimeRule rule2 = CreateRelativeTimeRule("rule2", output);
             var condition2 = new StandardCondition {Name = "condition2"};
             condition2.TrueOutputs.Add(rule2);
-            var input2 = new Input();
+            var input2 = new Input { Name = "input2", ParameterName = "quantity2" };
             condition2.Input = input2;
 
+            controlGroup.Inputs.Add(input1);
+            controlGroup.Inputs.Add(input2);
             controlGroup.Outputs.Add(output);
             controlGroup.Rules.Add(rule1);
             controlGroup.Rules.Add(rule2);
@@ -57,7 +59,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             {
                 Name = name,
                 FromValue = false,
-                Id = 6L,
                 Interpolation = InterpolationType.Constant,
                 MinimumPeriod = 3,
                 LongName = "relative_time_rule_long_name"

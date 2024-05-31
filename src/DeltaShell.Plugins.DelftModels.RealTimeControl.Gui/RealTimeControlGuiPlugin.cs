@@ -23,6 +23,8 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
+using DeltaShell.Plugins.DelftModels.RTCShapes.IO;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
@@ -75,6 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             {
                 if (base.Gui != null)
                 {
+                    Gui.Application.ProjectOpened -= ApplicationProjectOpened;
                     Gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
                 }
 
@@ -84,6 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                     return;
                 }
 
+                Gui.Application.ProjectOpened += ApplicationProjectOpened;
                 Gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
             }
         }
@@ -218,6 +222,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         {
             yield return GetType().Assembly;
             yield return typeof(ShapeBase).Assembly;
+        }
+        
+        private void ApplicationProjectOpened(Project obj)
+        {
+            RealTimeControlModelExporter exporter = Gui.Application.FileExporters.OfType<RealTimeControlModelExporter>().First();
+            RealTimeControlModelImporter importer = Gui.Application.FileImporters.OfType<RealTimeControlModelImporter>().First();
+
+            exporter.XmlWriters.RemoveAllWhere(x => x is ShapesXmlWriter);
+            importer.XmlReaders.RemoveAllWhere(x => x is ShapesXmlReader);
+
+            var controller = new ControlGroupShapeController(Gui.ViewContextManager);
+
+            exporter.XmlWriters.Add(new ShapesXmlWriter(controller));
+            importer.XmlReaders.Add(new ShapesXmlReader(controller));
         }
         
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
@@ -461,9 +479,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         {
             return Gui.Application.GetAllModelsInProject()
                       .OfType<RealTimeControlModel>()
-                      .FirstOrDefault(m =>
-                                          m.OutputFileFunctionStore != null &&
-                                          m.OutputFileFunctionStore.Functions.Contains(featureCoverage));
+                      .FirstOrDefault(m => m.OutputFileFunctionStore != null &&
+                                           m.OutputFileFunctionStore.Functions.Contains(featureCoverage));
         }
     }
 }

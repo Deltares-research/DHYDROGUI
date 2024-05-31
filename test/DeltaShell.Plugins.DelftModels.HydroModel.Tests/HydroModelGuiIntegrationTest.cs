@@ -9,16 +9,12 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
-using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -40,7 +36,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
@@ -133,33 +128,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.ExportProjectItem(hydroModel, filename + "_1.dsproj", true);
 
             app.SaveProjectAs("_2.dsproj"); //bang, exception!
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void ShowFMModelRunCoupledToRTC()
-        {
-            WaterFlowFMModel flow;
-            var hydroModel = CreateFMRTCModel(out flow, app);
-
-            // wait until gui starts
-            Action mainWindowShown = delegate
-            {
-                ActivityRunner.RunActivity(hydroModel);
-                gui.Selection = flow;
-                gui.CommandHandler.OpenViewForSelection(typeof(ProjectItemMapView));
-                var view = gui.DocumentViews.ActiveView as ProjectItemMapView;
-                var velocityLayer = view.MapView.Map.GetAllLayers(true).FirstOrDefault(l => l.Name.Contains("x-component"));
-                Assert.IsNotNull(velocityLayer);
-                velocityLayer.Visible = true;
-                var timeSeriesNavigator = gui.ToolWindowViews.OfType<TimeSeriesNavigator>().First();
-                for (var i = 0; i < 20; ++i)
-                {
-                    timeSeriesNavigator.SelectNextTime();
-                }
-                Console.WriteLine("1");
-            };
-            WpfTestHelper.ShowModal((MainWindow)gui.MainWindow, mainWindowShown);
         }
 
         [Test]

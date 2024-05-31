@@ -10,6 +10,7 @@ using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DHYDRO.Common.Logging;
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         public void ConvertRtcModelAndAddToHydroModel()
         {
             string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
-            var fileImporters = new List<IDimrModelFileImporter> { new RealTimeControlModelImporter() };
+            var fileImporters = new List<IDimrModelFileImporter> { CreateRtcModelImporter() };
             fileImportService.FileImporters.Returns(fileImporters);
 
             var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
@@ -84,11 +85,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         public void GivenRtcModelWithMultipleInputsConnectedToTheSameParameter_WhenImported_ThenAllInputsCorrectlyLinked()
         {
             string dimrPath = TestHelper.GetTestFilePath(Path.Combine(nameof(HydroModelConverterTest), "dimr.xml"));
+            string workingDir = TestHelper.GetTestFilePath(nameof(HydroModelConverterTest));
 
             var fileImporters = new List<IDimrModelFileImporter>
             {
-                new RealTimeControlModelImporter(),
-                new WaterFlowFMFileImporter(() => TestHelper.GetTestFilePath(nameof(HydroModelConverterTest)))
+                CreateRtcModelImporter(),
+                CreateFmModelImporter(workingDir)
             };
 
             fileImportService.FileImporters.Returns(fileImporters);
@@ -433,6 +435,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             dimrFileImporter.CanImportDimrFile(Arg.Is<string>(x => x.EndsWith(xmlExtension))).Returns(true);
 
             return dimrFileImporter;
+        }
+        
+        private static RealTimeControlModelImporter CreateRtcModelImporter()
+        {
+            return new RealTimeControlModelImporter { XmlReaders = { new RealTimeControlModelXmlReader() } };
+        }
+
+        private static WaterFlowFMFileImporter CreateFmModelImporter(string workingDir)
+        {
+            return new WaterFlowFMFileImporter(() => workingDir);
         }
     }
 }

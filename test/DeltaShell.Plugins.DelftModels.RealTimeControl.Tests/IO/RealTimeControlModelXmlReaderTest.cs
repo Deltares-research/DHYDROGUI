@@ -15,67 +15,63 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
     [TestFixture]
     public class RealTimeControlModelXmlReaderTest
     {
-        private readonly string directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "SimpleModel"));
-        private RealTimeControlModel rtcModel;
-
-        [SetUp]
-        public void SetUp()
+        [Test]
+        public void ReadFromXml_RtcModelIsNull_ThrowsArgumentNullException()
         {
-            Assert.IsTrue(Directory.Exists(directoryPath));
-        }
+            // Given
+            string directoryPath = GetSimpleModelTestDataDirectory();
 
-        [TearDown]
-        public void TearDown()
-        {
-            rtcModel = null;
+            RealTimeControlModelXmlReader reader = CreateReader();
+
+            // When
+            // Then
+            Assert.That(() => reader.ReadFromXml(null, directoryPath), Throws.ArgumentNullException);
         }
 
         [Test]
-        public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenExpectedErrorMessageIsGiven()
+        [TestCase(null)]
+        [TestCase("")]
+        public void ReadFromXml_DirectoryIsNullOrEmpty_ThrowsArgumentException(string directoryPath)
+        {
+            // Given
+            RealTimeControlModel rtcModel = CreateModel();
+            RealTimeControlModelXmlReader reader = CreateReader();
+
+            // When
+            // Then
+            Assert.That(() => reader.ReadFromXml(rtcModel, directoryPath), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void ReadFromXml_DirectoryDoesNotExist_ThrowsDirectoryNotFoundException()
         {
             // Given
             const string invalidPath = "InvalidPath";
             Assert.That(!Directory.Exists(invalidPath));
-            rtcModel = new RealTimeControlModel();
+
+            RealTimeControlModel rtcModel = CreateModel();
+            RealTimeControlModelXmlReader reader = CreateReader();
 
             // When
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => rtcModel = RealTimeControlModelXmlReader.Read(invalidPath),
-                                                           string.Format(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_,
-                                                                         invalidPath));
-
             // Then
-            Assert.IsNull(rtcModel);
-        }
-
-        [Test]
-        public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndNullIsReturned()
-        {
-            // Given
-            const string invalidPath = "InvalidPath";
-            Assert.That(!Directory.Exists(invalidPath));
-            rtcModel = new RealTimeControlModel();
-
-            // When
-            Assert.DoesNotThrow(
-                () => rtcModel = RealTimeControlModelXmlReader.Read(invalidPath),
-                "While reading from a non existing path, an unexpected exception was thrown");
-
-            // Then
-            Assert.Null(rtcModel);
+            Assert.That(() => reader.ReadFromXml(rtcModel, invalidPath), Throws.InstanceOf<DirectoryNotFoundException>());
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_TheExpectedRtcModelIsReturned_SimpleModel()
+        public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_TheExpectedRtcModelIsRead_SimpleModel()
         {
+            // Given
+            string directoryPath = GetSimpleModelTestDataDirectory();
+
+            RealTimeControlModel rtcModel = CreateModel();
+            RealTimeControlModelXmlReader reader = CreateReader();
+
             // When
-            rtcModel = RealTimeControlModelXmlReader.Read(directoryPath);
+            reader.ReadFromXml(rtcModel, directoryPath);
 
             // Then
-            Assert.NotNull(rtcModel,
-                           "Returned model was not expected to be null after reading from an existing path.");
-            Assert.AreEqual(true, rtcModel.LimitMemory,
-                            "Option 'limit memory' was expected to be true.");
+            Assert.AreEqual(true, rtcModel.LimitMemory, "Option 'limit memory' was expected to be true.");
 
             CheckSimpleModelTimeSettings(rtcModel);
             CheckSimpleModelControlGroupValidity(rtcModel);
@@ -83,53 +79,67 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_ThenNoExceptionIsThrown()
-        {
-            // When
-            Assert.DoesNotThrow(() => rtcModel = RealTimeControlModelXmlReader.Read(directoryPath),
-                                "While reading from a existing path, an unexpected exception was thrown");
-
-            // Then
-            Assert.NotNull(rtcModel,
-                           "Returned model was not expected to be null after reading from an existing path.");
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenAValidRtcDirectoryPathWithUseRestartSetToFalse_WhenReadingAllTheFiles_TheExpectedWarningMessageIsGiven()
         {
+            // Given
+            string directoryPath = GetSimpleModelTestDataDirectory();
+
+            RealTimeControlModel rtcModel = CreateModel();
+            RealTimeControlModelXmlReader reader = CreateReader();
+
             // When
-            rtcModel = RealTimeControlModelXmlReader.Read(directoryPath);
-
             // Then
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => rtcModel = RealTimeControlModelXmlReader.Read(directoryPath),
-                                                           string.Format(Resources.RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D_RTC_is_set_to_False,
-                                                                         directoryPath));
+            string expectedPartOfMessage = string.Format(Resources.RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D_RTC_is_set_to_False, directoryPath);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.ReadFromXml(rtcModel, directoryPath), expectedPartOfMessage);
         }
-
+        
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadingRTCModel_WhenIntervalRuleWithFixedSetpointHasBeenDefined_ThenTimeSeriesFileShouldCorrectSetpointTypeAfterReadingToolsConfigFile()
+        public void ReadingRTCModel_WhenIntervalRuleWithFixedSetPointHasBeenDefined_ThenTimeSeriesFileShouldCorrectSetpointTypeAfterReadingToolsConfigFile()
         {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string directoryTemp = tempDirectory.CopyDirectoryToTempDirectory(TestHelper.GetTestFilePath(Path.Combine("ImportExport", "IntervalRuleFixedSetpoint")));
-                RealTimeControlModel model = RealTimeControlModelXmlReader.Read(directoryTemp);
+            // Given
+            string directoryPath = GetIntervalRuleFixedSetPointTestDataDirectory();
 
-                Assert.AreEqual(1, model.ControlGroups.Count);
-                ControlGroup controlGroup = model.ControlGroups[0];
-                Assert.AreEqual(1, controlGroup.Rules.Count);
-                var intervalRule = model.ControlGroups[0].Rules[0] as IntervalRule;
-                Assert.NotNull(intervalRule);
+            RealTimeControlModel rtcModel = CreateModel();
+            RealTimeControlModelXmlReader reader = CreateReader();
+            
+            // When
+            reader.ReadFromXml(rtcModel, directoryPath);
+            
+            // Then
+            Assert.AreEqual(1, rtcModel.ControlGroups.Count);
+            ControlGroup controlGroup = rtcModel.ControlGroups[0];
+            Assert.AreEqual(1, controlGroup.Rules.Count);
+            var intervalRule = rtcModel.ControlGroups[0].Rules[0] as IntervalRule;
+            Assert.NotNull(intervalRule);
                 
-                Assert.AreEqual(IntervalRule.IntervalRuleSetPointType.Fixed, intervalRule.SetPointType);
-                Assert.AreEqual(5, intervalRule.ConstantValue);
-                Assert.AreEqual(IntervalRule.IntervalRuleIntervalType.Fixed, intervalRule.IntervalType);
-                Assert.AreEqual(3, intervalRule.FixedInterval);
-                Assert.AreEqual(1, intervalRule.Setting.Below);
-                Assert.AreEqual(2, intervalRule.Setting.Above);
-                Assert.AreEqual(4, intervalRule.DeadbandAroundSetpoint);
-            }
+            Assert.AreEqual(IntervalRule.IntervalRuleSetPointType.Fixed, intervalRule.SetPointType);
+            Assert.AreEqual(5, intervalRule.ConstantValue);
+            Assert.AreEqual(IntervalRule.IntervalRuleIntervalType.Fixed, intervalRule.IntervalType);
+            Assert.AreEqual(3, intervalRule.FixedInterval);
+            Assert.AreEqual(1, intervalRule.Setting.Below);
+            Assert.AreEqual(2, intervalRule.Setting.Above);
+            Assert.AreEqual(4, intervalRule.DeadbandAroundSetpoint);
+        }
+
+        private static RealTimeControlModelXmlReader CreateReader()
+        {
+            return new RealTimeControlModelXmlReader();
+        }
+
+        private static RealTimeControlModel CreateModel()
+        {
+            return new RealTimeControlModel();
+        }
+
+        private static string GetSimpleModelTestDataDirectory()
+        {
+            return TestHelper.GetTestFilePath(Path.Combine("ImportExport", "SimpleModel"));
+        }
+
+        private static string GetIntervalRuleFixedSetPointTestDataDirectory()
+        {
+            return TestHelper.GetTestFilePath(Path.Combine("ImportExport", "IntervalRuleFixedSetpoint"));
         }
 
         private static void CheckSimpleModelTimeSettings(ITimeDependentModel rtcModel)

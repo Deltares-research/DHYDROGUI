@@ -137,25 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
                 toolStripButtonResize.Checked = context.AutoSize;
 
-                List<ShapeBase> graphControlShapes = graphControl.GetShapes<ShapeBase>().ToList();
-                if (graphControlShapes.Count == context.ShapeList.Count)
-                {
-                    // copy shape locations from view context to graph control
-                    var i = 0;
-                    foreach (ShapeBase contextShape in context.ShapeList)
-                    {
-                        graphControlShapes[i].Location = new PointF(contextShape.X, contextShape.Y);
-                        graphControlShapes[i].AutoResize = context.AutoSize;
-
-                        if (!contextShape.Rectangle.IsEmpty)
-                        {
-                            graphControlShapes[i].Rectangle =
-                                new RectangleF(contextShape.Rectangle.Location, contextShape.Rectangle.Size);
-                        }
-
-                        i++;
-                    }
-                }
+                RestoreShapeGeometryFromViewContext();
 
                 UpdateShapesInViewContext();
 
@@ -289,6 +271,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             toolStripButtonMakeSameWidth.Enabled = canAlign;
         }
 
+        private void RestoreShapeGeometryFromViewContext()
+        {
+            IList<ShapeBase> graphControlShapes = graphControl.GetShapes<ShapeBase>().ToList();
+
+            if (graphControlShapes.Count != context.ShapeList.Count)
+            {
+                return;
+            }
+
+            for (var index = 0; index < context.ShapeList.Count; index++)
+            {
+                ShapeBase contextShape = context.ShapeList[index];
+                ShapeBase graphControlShape = graphControlShapes.FirstOrDefault(shape => shape.Title == contextShape.Title) ?? graphControlShapes[index];
+
+                graphControlShape.Location = new PointF(contextShape.X, contextShape.Y);
+                graphControlShape.AutoResize = context.AutoSize;
+
+                if (!contextShape.Rectangle.IsEmpty)
+                {
+                    graphControlShape.Rectangle = new RectangleF(contextShape.Rectangle.Location, contextShape.Rectangle.Size);
+                }
+            }
+        }
+        
         private void UpdateShapesInViewContext()
         {
             context.ShapeList.Clear();

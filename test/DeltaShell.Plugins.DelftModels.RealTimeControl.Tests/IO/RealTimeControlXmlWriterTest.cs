@@ -18,8 +18,36 @@ using Rhino.Mocks;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 {
     [TestFixture]
-    internal class RealTimeControlXmlWriterTest
+    public class RealTimeControlXmlWriterTest
     {
+        [Test]
+        public void WriteToXml_ModelIsNull_ThrowsArgumentNullException()
+        {
+            RealTimeControlXmlWriter writer = new RealTimeControlXmlWriter();
+
+            Assert.That(() => writer.WriteToXml(null, "dir"), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void WriteToXml_DirectoryIsNullOrEmpty_ThrowsArgumentException(string directory)
+        {
+            RealTimeControlModel model = new RealTimeControlModel();
+            RealTimeControlXmlWriter writer = new RealTimeControlXmlWriter();
+
+            Assert.That(() => writer.WriteToXml(model, directory), Throws.ArgumentException);
+        }
+        
+        [Test]
+        public void WriteToXml_DirectoryDoesNotExist_ThrowsDirectoryNotFoundException()
+        {
+            RealTimeControlModel model = new RealTimeControlModel();
+            RealTimeControlXmlWriter writer = new RealTimeControlXmlWriter();
+
+            Assert.That(() => writer.WriteToXml(model, "dir"), Throws.InstanceOf<DirectoryNotFoundException>());
+        }
+        
         [Test]
         public void CheckIfXsdFileAreAtCorrectLocation()
         {

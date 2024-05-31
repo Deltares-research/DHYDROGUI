@@ -508,6 +508,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find settings.json, importing from RTC model from {0}..
+        /// </summary>
+        public static string RealTimeControlModelImporter_GetXmlDirectory_Could_not_find_settings_json__importing_from_RTC_model_from__0__ {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelImporter_GetXmlDirectory_Could_not_find_settings_json__import" +
+                        "ing_from_RTC_model_from__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not import RTC model, the settings. json file should contain an xml directory..
+        /// </summary>
+        public static string RealTimeControlModelImporter_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelImporter_GetXmlDirectory_Could_not_import_RTC_model_the_setti" +
+                        "ngs_json_file_should_contain_an_xml_directory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Null is expected, because target argument is unused..
         /// </summary>
         public static string RealTimeControlModelImporter_OnImportItem_Target_null_expected {
@@ -753,16 +773,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not import RTC model, the settings.json file should contain an xml directory..
-        /// </summary>
-        public static string RealTimeControlModelXmlReader_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory {
-            get {
-                return ResourceManager.GetString("RealTimeControlModelXmlReader_GetXmlDirectory_Could_not_import_RTC_model_the_sett" +
-                        "ings_json_file_should_contain_an_xml_directory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Please note that Use Restart option in D-RTC is set to False..
         /// </summary>
         public static string RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D_RTC_is_set_to_False {
@@ -773,11 +783,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Directory &apos;{0}&apos; does not exist..
+        ///   Looks up a localized string similar to Directory &apos;{0}&apos; does not exist.
         /// </summary>
-        public static string RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_ {
+        public static string RealTimeControlModelXmlReader_ReadFromXml_Directory___0___does_not_exist {
             get {
-                return ResourceManager.GetString("RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_", resourceCulture);
+                return ResourceManager.GetString("RealTimeControlModelXmlReader_ReadFromXml_Directory___0___does_not_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import of the Real-Time Control Model.
+        /// </summary>
+        public static string RealTimeControlModelXmlReader_ReadFromXml_Import_of_the_Real_Time_Control_Model {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelXmlReader_ReadFromXml_Import_of_the_Real_Time_Control_Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading the Real-Time Control Model XML files failed..
+        /// </summary>
+        public static string RealTimeControlModelXmlReader_ThrowOnReportedError_Reading_the_Real_Time_Control_Model_XML_files_failed_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelXmlReader_ThrowOnReportedError_Reading_the_Real_Time_Control_" +
+                        "Model_XML_files_failed_", resourceCulture);
             }
         }
         

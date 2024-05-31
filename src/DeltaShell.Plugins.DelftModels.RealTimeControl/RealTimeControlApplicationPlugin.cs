@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using log4net;
@@ -84,13 +85,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
-            yield return new RealTimeControlModelExporter();
+            yield return new RealTimeControlModelExporter
+            {
+                XmlWriters =
+                {
+                    new RealTimeControlXmlWriter(),
+                    new RealTimeControlRestartXmlWriter()
+                }
+            };
             yield return new RealTimeControlRestartFileExporter();
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new RealTimeControlModelImporter();
+            yield return new RealTimeControlModelImporter
+            {
+                XmlReaders =
+                {
+                    new RealTimeControlModelXmlReader()
+                }
+            };
             yield return new RealTimeControlRestartFileImporter(GetRealTimeControlModels);
         }
 

@@ -11,6 +11,7 @@ using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -233,7 +234,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
         {
             var fileExportService = new FileExportService();
             fileExportService.RegisterFileExporter(new WaterFlowFMFileExporter());
-            fileExportService.RegisterFileExporter(new RealTimeControlModelExporter());
+            fileExportService.RegisterFileExporter(new RealTimeControlModelExporter
+            {
+                XmlWriters =
+                {
+                    new RealTimeControlXmlWriter(),
+                    new RealTimeControlRestartXmlWriter()
+                }
+            });
 
             return new DHydroConfigXmlExporter(fileExportService) { ExportFilePath = exportPath };
         }

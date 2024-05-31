@@ -14,17 +14,54 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
     public class RealTimeControlModelExporterTest
     {
         [Test]
+        public void Export_RealTimeControlModelIsNull_ThrowsArgumentException()
+        {
+            RealTimeControlModelExporter rtcModelExporter = CreateExporter();
+
+            Assert.That(() => rtcModelExporter.Export(null, "dir"), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void Export_RealTimeControlModelIsInvalidObject_ThrowsArgumentException()
+        {
+            RealTimeControlModelExporter rtcModelExporter = CreateExporter();
+
+            Assert.That(() => rtcModelExporter.Export(new object(), "dir"), Throws.ArgumentException);
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void Export_PathIsNullOrEmpty_ThrowsArgumentException(string path)
+        {
+            RealTimeControlModelExporter rtcModelExporter = CreateExporter();
+
+            Assert.That(() => rtcModelExporter.Export(new RealTimeControlModel(), path), Throws.ArgumentException);
+        }
+        
+        [Test]
+        public void Export_XmlWritersIsEmpty_ThrowsInvalidOperationException()
+        {
+            RealTimeControlModelExporter rtcModelExporter = CreateExporter();
+            rtcModelExporter.XmlWriters.Clear();
+
+            Assert.That(() => rtcModelExporter.Export(new RealTimeControlModel(), "dir"), Throws.InvalidOperationException);
+        }
+
+        [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenRealTimeControlModelWithRestartInputAndUseRestartTrue_WhenExported_ThenRestartFileWrittenToPath()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Given
-                var model = new RealTimeControlModel {RestartInput = new RealTimeControlRestartFile("Restart File", "file content here")};
+                RealTimeControlModelExporter rtcModelExporter = CreateExporter();
+                var model = new RealTimeControlModel { RestartInput = new RealTimeControlRestartFile("Restart File", "file content here") };
+
                 AddControlGroupToModel(model);
 
                 // When
-                new RealTimeControlModelExporter().Export(model, tempDirectory.Path);
+                rtcModelExporter.Export(model, tempDirectory.Path);
 
                 // Then
                 Assert.That(File.ReadAllText(Path.Combine(tempDirectory.Path, RealTimeControlXmlFiles.XmlImportState)), Is.EqualTo("file content here"));
@@ -38,11 +75,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Given
+                RealTimeControlModelExporter rtcModelExporter = CreateExporter();
                 var model = new RealTimeControlModel();
+
                 AddControlGroupToModel(model);
 
                 // When
-                new RealTimeControlModelExporter().Export(model, tempDirectory.Path);
+                rtcModelExporter.Export(model, tempDirectory.Path);
 
                 string expectedFileContentPath = Path.Combine(tempDirectory.Path, "expected_state_import.xml");
                 RealTimeControlXmlWriter.GetStateVectorXml(tempDirectory.Path, model.ControlGroups).Save(expectedFileContentPath);
@@ -60,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Arrange
-                var rtcModelExporter = new RealTimeControlModelExporter();
+                RealTimeControlModelExporter rtcModelExporter = CreateExporter();
                 var rtcModel = new RealTimeControlModel();
 
                 // Act
@@ -74,16 +113,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 string[] allInputPaths = files.Concat(directories).ToArray();
 
                 Assert.AreEqual(allInputPaths.Length, rtcModel.LastExportedPaths.Length);
-                Assert.IsTrue(allInputPaths.Any(i=>rtcModel.LastExportedPaths.Contains(i)));
+                Assert.IsTrue(allInputPaths.Any(i => rtcModel.LastExportedPaths.Contains(i)));
                 Assert.IsTrue(result);
             }
+        }
+
+        private RealTimeControlModelExporter CreateExporter()
+        {
+            return new RealTimeControlModelExporter
+            {
+                XmlWriters =
+                {
+                    new RealTimeControlXmlWriter(),
+                    new RealTimeControlRestartXmlWriter()
+                }
+            };
         }
 
         private static void AddControlGroupToModel(IRealTimeControlModel model)
         {
             ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
-            var hydraulicRule1A = (HydraulicRule) controlGroup1.Rules[0];
-            var hydraulicCondition1A = (StandardCondition) controlGroup1.Conditions[0];
+            var hydraulicRule1A = (HydraulicRule)controlGroup1.Rules[0];
+            var hydraulicCondition1A = (StandardCondition)controlGroup1.Conditions[0];
             hydraulicRule1A.Function[0.0] = 1.0;
 
             var hydraulicRule1B = new HydraulicRule();

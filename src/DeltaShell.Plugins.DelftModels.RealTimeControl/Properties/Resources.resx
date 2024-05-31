@@ -316,9 +316,6 @@
   <data name="RealTimeControlDataConfigXmlReader_Read_Could_not_read_connection_points_from_file___0___" xml:space="preserve">
     <value>Could not read connection points from file '{0}'.</value>
   </data>
-  <data name="RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_" xml:space="preserve">
-    <value>Directory '{0}' does not exist.</value>
-  </data>
   <data name="RealTimeControlRuntimeConfigXmlReader_Read_File___0___does_not_exist_" xml:space="preserve">
     <value>File '{0}' does not exist.</value>
   </data>
@@ -445,7 +442,19 @@
   <data name="RtcLegacyLoader37_File_does_not_exist" xml:space="preserve">
     <value>File does not exist: {0}</value>
   </data>
-  <data name="RealTimeControlModelXmlReader_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory" xml:space="preserve">
-    <value>Could not import RTC model, the settings.json file should contain an xml directory.</value>
+  <data name="RealTimeControlModelImporter_GetXmlDirectory_Could_not_find_settings_json__importing_from_RTC_model_from__0__" xml:space="preserve">
+    <value>Could not find settings.json, importing from RTC model from {0}.</value>
+  </data>
+  <data name="RealTimeControlModelImporter_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory" xml:space="preserve">
+    <value>Could not import RTC model, the settings. json file should contain an xml directory.</value>
+  </data>
+  <data name="RealTimeControlModelXmlReader_ReadFromXml_Directory___0___does_not_exist" xml:space="preserve">
+    <value>Directory '{0}' does not exist</value>
+  </data>
+  <data name="RealTimeControlModelXmlReader_ReadFromXml_Import_of_the_Real_Time_Control_Model" xml:space="preserve">
+    <value>Import of the Real-Time Control Model</value>
+  </data>
+  <data name="RealTimeControlModelXmlReader_ThrowOnReportedError_Reading_the_Real_Time_Control_Model_XML_files_failed_" xml:space="preserve">
+    <value>Reading the Real-Time Control Model XML files failed.</value>
   </data>
 </root>
