@@ -16,7 +16,9 @@
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Newtonsoft.Json">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="PostSharp">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -49,6 +51,10 @@
     </Reference>
     <Reference Include="DelftTools.Units">
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Core">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\DeltaShell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">

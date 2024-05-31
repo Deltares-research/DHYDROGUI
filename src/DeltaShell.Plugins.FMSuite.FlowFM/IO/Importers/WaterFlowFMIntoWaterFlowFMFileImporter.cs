@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using DelftTools.Shell.Core;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
@@ -31,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override bool OpenViewAfterImport => true;
         
-        public string MasterFileExtension => "mdu";
+        public bool CanImportDimrFile(string path) => Path.GetExtension(path).EqualsCaseInsensitive(".mdu");
 
         public override IEnumerable<Type> SupportedItemTypes
         {

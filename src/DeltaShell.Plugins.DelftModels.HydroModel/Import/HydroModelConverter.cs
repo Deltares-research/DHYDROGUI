@@ -7,11 +7,11 @@ using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DHYDRO.Common.Logging;
 using log4net;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Services;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -23,23 +23,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
     /// </summary>
     public class HydroModelConverter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelConverter));
+        private static readonly ILog log = LogManager.GetLogger(typeof(HydroModelConverter));
 
         private readonly ILogHandler logHandler;
+        private readonly IFileImportService fileImportService;
 
-        public HydroModelConverter(ILogHandler logHandler)
+        public HydroModelConverter(ILogHandler logHandler, IFileImportService fileImportService)
         {
             this.logHandler = logHandler;
+            this.fileImportService = fileImportService;
         }
 
         /// <summary>
-        /// Converts <see cref="dimrObject"/> to a <see cref="HydroModel"/> using the
-        /// <param name="fileImporters"/>
-        /// for importing sub-models
+        /// Converts <see cref="dimrObject"/> to a <see cref="HydroModel"/> using the file importers.
         /// </summary>
         /// <param name="dimrObject">Parsed <see cref="dimrXML"/> object</param>
         /// <param name="path">Path to dimr.xml (used for finding sub-model folders)</param>
-        /// <param name="fileImporters">List of file importers for importing sub-models</param>
         /// <param name="reportProgress">String to feedback to importer what importers are working on.</param>
         /// <returns>Converted <see cref="HydroModel"/></returns>
         /// <exception cref="ArgumentException">
@@ -47,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <param name="dimrObject"/>
         /// is null
         /// </exception>
-        public HydroModel Convert(dimrXML dimrObject, string path, IList<IDimrModelFileImporter> fileImporters, Action<string> reportProgress = null)
+        public HydroModel Convert(dimrXML dimrObject, string path, Action<string> reportProgress = null)
         {
             if (dimrObject == null)
             {
@@ -62,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 reportProgress?.Invoke(Resources.HydroModelConverter_Convert_importing_on_hydromodel);
                 hydroModel.DoWithPropertySet(nameof(hydroModel.SuspendClearOutputOnInputChange), true, () =>
                 {
-                    AddModels(hydroModel, fileImporters, dimrObject, rootFolder, reportProgress);
+                    AddModels(hydroModel, dimrObject, rootFolder, reportProgress);
 
                     if (dimrObject.coupler == null)
                     {
@@ -77,23 +76,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return hydroModel;
         }
 
-        private void AddModels(HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder, Action<string> progressChanged = null)
+        private void AddModels(HydroModel hydroModel, dimrXML dimrObject, string rootFolder, Action<string> progressChanged = null)
         {
             foreach (dimrComponentXML component in dimrObject.component)
             {
                 ValidateComponent(component);
             }
 
-            IEnumerable<IGrouping<string, dimrComponentXML>> componentGroups = dimrObject.component
-                                                                                         .GroupBy(component => Path.GetExtension(component.inputFile)?.TrimStart('.'));
+            IEnumerable<IGrouping<string, dimrComponentXML>> componentGroups = dimrObject.component.GroupBy(component => component.inputFile);
 
             foreach (IGrouping<string, dimrComponentXML> componentGroup in componentGroups)
             {
-                string extension = GetExtension(componentGroup);
-                IDimrModelFileImporter importer = fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
+                IDimrModelFileImporter importer = GetFileImporterFor(componentGroup.Key);
                 if (importer == null)
                 {
-                    LogUnknownImporter(extension);
+                    logHandler.ReportError($"No importer found for input file: {componentGroup.Key}");
                     continue;
                 }
 
@@ -101,14 +98,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 foreach (dimrComponentXML component in componentGroup)
                 {
-                    string filePath = GetFilePath(rootFolder, component.workingDir.Trim(), component.inputFile.Trim(), importer);
+                    string workDir = component.workingDir.Trim();
+                    string inputFile = component.inputFile.Trim();
+                    string filePath = Path.Combine(rootFolder, workDir, inputFile);
 
-                    if (filePath == null)
-                    {
-                        continue;
-                    }
-
-                    object importedItem = importer.ImportItem(Path.GetFullPath(filePath));
+                    object importedItem = importer.ImportItem(filePath);
 
                     if (!(importedItem is IActivity subModel))
                     {
@@ -121,89 +115,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 }
             }
         }
+        
+        private IDimrModelFileImporter GetFileImporterFor(string inputFile)
+        {
+            return fileImportService.FileImporters
+                                    .OfType<IDimrModelFileImporter>()
+                                    .FirstOrDefault(importer => importer.CanImportDimrFile(inputFile));
+        }
 
         private static void ValidateComponent(dimrComponentXML component)
         {
             if (string.IsNullOrEmpty(component.workingDir))
             {
-                throw new ArgumentException(string.Format("The working directory is missing for component {0} in the dimr xml.",
-                                                          component.name));
+                throw new ArgumentException($"The working directory is missing for component {component.name} in the dimr xml.");
             }
 
             if (component.inputFile == null)
             {
-                throw new ArgumentException(string.Format("The input file is missing for component {0} in the dimr xml.",
-                                                          component.name));
+                throw new ArgumentException($"The input file is missing for component {component.name} in the dimr xml.");
             }
-        }
-
-        private string GetExtension(IGrouping<string, dimrComponentXML> componentGroup)
-        {
-            string extension = componentGroup.Key;
-
-            if (string.IsNullOrEmpty(extension))
-            {
-                extension = "json";
-            }
-
-            return extension;
-        }
-
-        private void LogUnknownImporter(string extension)
-        {
-            logHandler.ReportInfo($"No importer found for extension: {extension}");
-        }
-
-        private string GetFilePath(string rootFolder, string workingDirectory, string inputFileName,
-                                   IDimrModelFileImporter importer)
-        {
-            string fileName = GetFileName(inputFileName);
-            string filePath = ComposeFilePath(rootFolder, workingDirectory, fileName, importer);
-            return filePath;
-        }
-
-        private string GetFileName(string fileName)
-        {
-            return fileName.Equals(".")
-                       ? "settings.json"
-                       : fileName;
-        }
-
-        private string ComposeFilePath(string rootFolder, string workingDirectory, string fileName, IDimrModelFileImporter importer)
-        {
-            string[] pathParts;
-
-            if (importer.MasterFileExtension.Equals("json"))
-            {
-                string pathToFile = Path.Combine(rootFolder, workingDirectory, fileName);
-                string file = File.ReadAllText(pathToFile);
-                var fileObject = JsonConvert.DeserializeObject<RtcXmlDirectoryLookup>(file);
-                string xmlDirectory = fileObject.XmlDirectory;
-
-                if (xmlDirectory == null)
-                {
-                    logHandler.ReportError("Could not import RTC model, the settings.json file should contain an xml directory.");
-                    return null;
-                }
-
-                pathParts = new[]
-                {
-                    rootFolder,
-                    workingDirectory,
-                    xmlDirectory
-                };
-            }
-            else
-            {
-                pathParts = new[]
-                {
-                    rootFolder,
-                    workingDirectory,
-                    fileName
-                };
-            }
-
-            return Path.Combine(pathParts);
         }
 
         private void RenameSubModelWhenNeeded(IActivity subModel, string componentName)
@@ -213,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 return;
             }
 
-            Log.DebugFormat("Renamed model {0} to {1}.", subModel.Name, componentName);
+            log.DebugFormat("Renamed model {0} to {1}.", subModel.Name, componentName);
             subModel.Name = componentName;
         }
 

@@ -24,6 +24,7 @@ using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -51,6 +52,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     {
         private static readonly MockRepository Mocks = new MockRepository();
 
+        [Test]
+        public void GetFileExporters_ContainsExpectedExporterForShapes()
+        {
+            // Arrange
+            var plugin = new NetworkEditorGuiPlugin();
+            
+            // Act
+            IEnumerable<IFileExporter> exporters = plugin.GetFileExporters();
+
+            // Assert
+            Assert.That(exporters, Has.Exactly(1).TypeOf<HydroRegionShapeFileExporter>());
+        }
+        
         [Test]
         [Category(TestCategory.Integration)]
         public void PluginGuiUpdatesCoverageViewViewContextsOnNetworkCoverageNetworkPropertyChanged()

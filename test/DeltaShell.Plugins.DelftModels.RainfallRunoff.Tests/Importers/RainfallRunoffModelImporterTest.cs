@@ -31,7 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
             Assert.That(importer.FileFilter, Is.EqualTo("RR Sobek_3b.fnm file model import|Sobek_3b.fnm"));
             Assert.That(importer.CanImportOnRootLevel, Is.True);
             Assert.That(importer.OpenViewAfterImport, Is.True);
-            Assert.That(importer.MasterFileExtension, Is.EqualTo("fnm"));
         }
 
         public static IEnumerable<TestCaseData> CanImportOnData()
@@ -48,6 +47,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
         {
             var importer = new RainfallRunoffModelImporter();
             Assert.That(importer.CanImportOn(targetObject), Is.EqualTo(expectedResult));
+        }
+        
+        [Test]
+        [TestCase(null, ExpectedResult = false)]
+        [TestCase("", ExpectedResult = false)]
+        [TestCase(".", ExpectedResult = false)]
+        [TestCase("settings.json", ExpectedResult = false)]
+        [TestCase("settings.xml", ExpectedResult = false)]
+        [TestCase("flowfm.mdu", ExpectedResult = false)]
+        [TestCase("Sobek_3b.fnm", ExpectedResult = true)]
+        [TestCase("SOBEK_3B.FNM", ExpectedResult = true)]
+        public bool CanImportDimrFile_WithInputFile_ThenExpectedIsReturned(string path)
+        {
+            // Setup
+            var importer = new RainfallRunoffModelImporter();
+
+            // Call
+            return importer.CanImportDimrFile(path);
         }
 
         [Test]

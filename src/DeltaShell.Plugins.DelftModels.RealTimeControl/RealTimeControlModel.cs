@@ -56,7 +56,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public const string OutputPostFix = ".output";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModel));
-        private readonly DimrRunner runner;
 
         private readonly IList<IDataItem> linkedDataItemsOriginalValues;
 
@@ -78,7 +77,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private RealTimeControlRestartFile restartInput = new RealTimeControlRestartFile();
 
-        public RealTimeControlModel() : this("RTC Model") {}
+        public RealTimeControlModel()
+            : this("RTC Model")
+        {
+        }
 
         public RealTimeControlModel(string name)
             : base(name)
@@ -99,7 +101,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             InitializeOutputData();
 
-            runner = new DimrRunner(this, new DimrApiFactory());
+            DimrRunner = new DimrRunner(this);
+            DimrRunner.FileExportService.RegisterFileExporter(new RealTimeControlModelExporter());
+
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
 
             if (outputFileFunctionStore != null)
@@ -541,7 +545,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     fileStore.Close();
                 }
 
-                runner?.Dispose();
+                DimrRunner?.Dispose();
             }
 
             disposed = true;
@@ -861,7 +865,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #region Overrides of TimeDependentModelBase
 
-        public override IBasicModelInterface BMIEngine => runner.Api;
+        public override IBasicModelInterface BMIEngine => DimrRunner.Api;
 
         #endregion
 
@@ -1109,6 +1113,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         public virtual bool RunsInIntegratedModel { get; set; }
+        
+        /// <inheritdoc/>
+        public virtual DimrRunner DimrRunner { get; }
 
         /// <summary>
         /// DimrExportDirectoryPath should only be used if the
@@ -1142,12 +1149,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {
-            return runner.GetVar($"{Name}/{category}/{itemName}/{parameter}");
+            return DimrRunner.GetVar($"{Name}/{category}/{itemName}/{parameter}");
         }
 
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
-            runner.SetVar($"{Name}/{category}/{itemName}/{parameter}", values);
+            DimrRunner.SetVar($"{Name}/{category}/{itemName}/{parameter}", values);
         }
 
         public virtual bool IsActivityOfEnumType(ModelType type)
@@ -1546,12 +1553,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected override void OnProgressChanged()
         {
-            runner.OnProgressChanged();
+            DimrRunner.OnProgressChanged();
         }
 
         protected override void OnFinish()
         {
-            runner.OnFinish();
+            DimrRunner.OnFinish();
         }
 
         protected override void OnInitialize()
@@ -1576,7 +1583,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             OutputOutOfSync = false;
-            runner.OnExecute();
+            DimrRunner.OnExecute();
         }
 
         protected override void OnCleanup()
@@ -1604,7 +1611,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             explicitValueConverterLookupItems?.Clear();
 
             base.OnCleanup();
-            runner.OnCleanup();
+            DimrRunner.OnCleanup();
         }
 
         #endregion

@@ -37,5 +37,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Assert
             guiCommandHandler.Received().OpenView(realTimeControlModel, Arg.Is<Type>(t => t.Implements(typeof(IView))));
         }
+        
+        [Test]
+        public void CanExport_ReturnsFalseForRealTimeControlModel()
+        {
+            // Given
+            var guiPlugin = new RealTimeControlGuiPlugin();
+            var model = new RealTimeControlModel();
+            
+            // When
+            bool canExport = guiPlugin.CanExport(model);
+            
+            // Then
+            Assert.That(canExport, Is.False);
+        }
+        
+        [Test]
+        public void CanExport_ReturnsFalseForOtherThanRealTimeControlModel()
+        {
+            // Given
+            var guiPlugin = new RealTimeControlGuiPlugin();
+            var model = Substitute.For<IProjectItem>();
+            
+            // When
+            bool canExport = guiPlugin.CanExport(model);
+            
+            // Then
+            Assert.That(canExport, Is.True);
+        }
     }
 }

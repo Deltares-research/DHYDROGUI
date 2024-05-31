@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using NUnit.Framework;
 
@@ -20,11 +19,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             int preconditionExpectedCatchmentsCount,
             IApplication app)
         {
-            string inputDataDirectory = Path.Combine(acceptanceModelsDirectory, acceptanceModelName);
-            
-            var dimrImporter = new DHydroConfigXmlImporter(() => app.FileImporters.OfType<IDimrModelFileImporter>().ToList(),
-                                                           () => app.WorkDirectory);
+            DHydroConfigXmlImporter dimrImporter = app.FileImporters.OfType<DHydroConfigXmlImporter>().First();
 
+            string inputDataDirectory = Path.Combine(acceptanceModelsDirectory, acceptanceModelName);
             string xmlFilePath = Path.Combine(inputDataDirectory, xmlFileName + ".xml");
 
             HydroModel hydroModel = null;

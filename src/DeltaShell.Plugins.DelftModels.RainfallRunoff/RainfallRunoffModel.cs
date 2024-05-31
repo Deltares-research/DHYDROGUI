@@ -54,7 +54,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public const string BoundarySuffix = "_boundary";
 
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModel));
-        private readonly DimrRunner runner;
         private readonly IMeteoDataSourceSelector meteoDataSourceSelector;
 
         private readonly RainfallRunoffBasinSynchronizer basinSynchronizer;
@@ -168,7 +167,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.Add(new RainfallRunoffInWorkFlowTypeValidatorProvider());
             }
-            runner = new DimrRunner(this, new DimrApiFactory());
+            
+            DimrRunner = new DimrRunner(this);
+            DimrRunner.FileExportService.RegisterFileExporter(new RainfallRunoffModelExporter());
+            
             OutputFiles = new RainfallRunoffOutputFiles();
             RunLogFiles = new RainfallRunoffRunLogFiles(new ReadFileInTwoMegaBytesChunks(), this);
 
@@ -1123,6 +1125,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         public virtual bool RunsInIntegratedModel { get; set; }
+        
+        /// <inheritdoc />
+        public virtual DimrRunner DimrRunner { get; }
 
         public string DimrExportDirectoryPath => WorkingDirectory;
 
@@ -1138,11 +1143,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {
-            return runner.GetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter));
+            return DimrRunner.GetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter));
         }
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
-            runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+            DimrRunner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
         }
         public virtual bool CanRunParallel { get { return false; } }
         public virtual string MpiCommunicatorString { get { return null; } }
@@ -1260,25 +1265,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             if (RunsInIntegratedModel) return;
 
             BuildInputWaterLevelCoverage();
-            runner.OnInitialize();
+            DimrRunner.OnInitialize();
             RunLogFiles.Clear();
         }
         protected override void OnProgressChanged()
         {
-            runner.OnProgressChanged();
+            DimrRunner.OnProgressChanged();
         }
         protected override void OnExecute()
         {
-            runner.OnExecute();
+            DimrRunner.OnExecute();
         }
         protected override void OnFinish()
         {
-            runner.OnFinish();
+            DimrRunner.OnFinish();
         }
         protected override void OnCleanup()
         {
             InputWaterLevel.Clear(); 
-            runner.OnCleanup();
+            DimrRunner.OnCleanup();
         }
         protected override void OnClearOutput()
         {

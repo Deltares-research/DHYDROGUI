@@ -4,6 +4,7 @@ using System.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DHYDRO.Common.Logging;
+using Newtonsoft.Json;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
@@ -27,6 +28,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             {
                 logHandler.ReportErrorFormat(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_,
                                              directoryPath);
+                logHandler.LogReport();
+                return null;
+            }
+            
+            string xmlDir = GetXmlDirectory(directoryPath, logHandler);
+
+            if (xmlDir is null)
+            {
                 logHandler.LogReport();
                 return null;
             }
@@ -54,6 +63,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             logHandler.LogReport();
 
             return rtcModel;
+        }
+        
+        /// <summary>
+        /// Composes the XML directory of the RTC plugin. The location of the XML directory is provided by the settings.json file
+        /// </summary>
+        /// <param name="workDir">The path of the directory where the settings.json and XML files are located.</param>
+        /// <param name="logHandler">The log handler that is used in this class</param>
+        /// <returns>The directory of the XML files</returns>
+        /// <remarks>Note that in most cases, settings.json and the XML files are located in the same directory. However,
+        /// It may be possible that the settings.json specifies a different location for the XML files</remarks>
+        private static string GetXmlDirectory(string workDir, ILogHandler logHandler)
+        {
+            string settingsJsonPath = Path.Combine(workDir, "settings.json");
+
+            if (!File.Exists(settingsJsonPath))
+            {
+                logHandler.ReportErrorFormat(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_, 
+                                             settingsJsonPath);
+                return workDir; // no settings.json? return the workDir, as this will be the location of the XML files 
+            }
+            
+            string settingsJsonFile = File.ReadAllText(settingsJsonPath);
+            var deserializedFile = JsonConvert.DeserializeObject<RealTimeControlXmlDirectoryLookup>(settingsJsonFile);
+            string xmlLocation = deserializedFile?.XmlDirectory;
+            
+            if (xmlLocation is null) // check if the settings.json contains a "xmlDir" key
+            {
+                logHandler.ReportError(Resources.RealTimeControlModelXmlReader_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory);
+                return null;
+            }
+            
+            string xmlDirPath = Path.Combine(workDir, xmlLocation);
+            return xmlDirPath;
         }
 
         private static void AddControlGroupsToRtcModel(IList<IControlGroup> controlGroups, RealTimeControlModel rtcModel)

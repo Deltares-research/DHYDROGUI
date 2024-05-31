@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Gui
@@ -50,7 +52,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Gui
             {
                 Id = "DimrProjectTemplateId"
             };
-            var four = new DHydroConfigXmlImporter(null, null,() => null);
+            var four = new DHydroConfigXmlImporter(
+                Substitute.For<IFileImportService>(), 
+                Substitute.For<IHydroModelReader>(),
+                () => string.Empty);
 
             yield return new TestCaseData(one);
             yield return new TestCaseData(two);

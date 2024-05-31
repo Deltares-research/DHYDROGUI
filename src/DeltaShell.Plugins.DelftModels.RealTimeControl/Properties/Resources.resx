@@ -445,4 +445,7 @@
   <data name="RtcLegacyLoader37_File_does_not_exist" xml:space="preserve">
     <value>File does not exist: {0}</value>
   </data>
+  <data name="RealTimeControlModelXmlReader_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory" xml:space="preserve">
+    <value>Could not import RTC model, the settings.json file should contain an xml directory.</value>
+  </data>
 </root>

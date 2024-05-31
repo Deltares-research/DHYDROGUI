@@ -16,15 +16,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views
         public DimrTemplateView()
         {
             InitializeComponent();
-            var importer = new DHydroConfigXmlImporter(() => null, () => String.Empty);
+            
             ViewModel.GetFilePath = () =>
             {
                 var dialog = new OpenFileDialog
                 {
                     Multiselect = false,
                     CheckPathExists = true,
-                    Title = importer.Name,
-                    Filter = importer.FileFilter
+                    Title = DHydroConfigXmlImporter.Name,
+                    Filter = DHydroConfigXmlImporter.FileFilter
                 };
 
                 var result = dialog.ShowDialog();
@@ -45,6 +45,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views
 
         public ViewInfo ViewInfo { get; set; }
 
+        public DHydroConfigXmlImporter DHydroConfigXmlImporter { get; set; }
+
         public Action<object> ExecuteProjectTemplate
         {
             get { return ViewModel.ExecuteProjectTemplate; }
@@ -56,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views
             get { return ViewModel.Cancel; }
             set { ViewModel.Cancel = value; }
         }
-
+        
         public void EnsureVisible(object item)
         {
             // nothing to focus

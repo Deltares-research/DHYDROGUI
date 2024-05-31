@@ -11,6 +11,7 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 {
@@ -59,8 +60,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
         public override bool CanImportOnRootLevel => true;
 
         public override bool OpenViewAfterImport => true;
-
-        public string MasterFileExtension => "fnm";
+        
+        public bool CanImportDimrFile(string path) => Path.GetExtension(path).EqualsCaseInsensitive(".fnm");
 
         public override bool CanImportOn(object targetObject) => 
             targetObject is ICompositeActivity || targetObject is RainfallRunoffModel;

@@ -207,4 +207,10 @@
   <data name="HydroModelReader_Read_Set_hydromodel_coordinate_system" xml:space="preserve">
     <value>Set hydromodel coordinate system</value>
   </data>
+  <data name="No_file_exporter_found_for_model" xml:space="preserve">
+    <value>No file exporter found for model '{0}'.</value>
+  </data>
+  <data name="Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored" xml:space="preserve">
+    <value>Activity of type {0} cannot be exported to DIMR file tree and shall be ignored</value>
+  </data>
 </root>

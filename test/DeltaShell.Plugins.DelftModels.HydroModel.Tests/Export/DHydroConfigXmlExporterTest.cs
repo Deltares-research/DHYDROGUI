@@ -6,13 +6,17 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Core.Services;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -20,16 +24,49 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
     public class DHydroConfigXmlExporterTest
     {
         [Test]
+        public void Constructor_FileExportServiceIsNull_ThrowsArgumentNullException()
+        {
+            Assert.That(() => new DHydroConfigXmlExporter(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void FileExportService_SetToNull_ThrowsArgumentNullException()
+        {
+            DHydroConfigXmlExporter exporter = CreateExporter(string.Empty);
+
+            Assert.That(() => exporter.FileExportService = null, Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Export_NoFileExporterFound_LogsErrorMessage()
+        {
+            string dirPath = Path.GetFullPath("fmdimr");
+            if (Directory.Exists(dirPath))
+            {
+                Directory.Delete(dirPath, true);
+            }
+
+            DirectoryInfo dirInfo = Directory.CreateDirectory("fmdimr");
+            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
+            exporter.FileExportService = new FileExportService();
+
+            WaterFlowFMModel waterFlowFmModel = SetupWaterFlowFmModel();
+
+            var expectedMessage = $"Export failed: No file exporter found for model '{waterFlowFmModel.Name}'.";
+            TestHelper.AssertLogMessageIsGenerated(() => exporter.Export(waterFlowFmModel, null), expectedMessage, Level.Error);
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
+        [Category(TestCategory.DataAccess)]
         public void ExportCoupledFmModelToRtc()
         {
             var hydroModelBuilder = new HydroModelBuilder();
             HydroModel hydroModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels);
-            hydroModel.CurrentWorkflow =
-                hydroModel.Workflows.First(w => w.Activities.Count == 2);
+            hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 2);
             WaterFlowFMModel fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
             Assert.NotNull(fmModel);
             var vertices = new[]
@@ -40,46 +77,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
                 new Coordinate(10, 0)
             };
 
-            var edges = new int[,]
+            var edges = new[,]
             {
-                {
-                    1,
-                    2
-                },
-                {
-                    2,
-                    3
-                },
-                {
-                    3,
-                    4
-                },
-                {
-                    4,
-                    1
-                },
-                {
-                    1,
-                    3
-                }
+                { 1, 2 },
+                { 2, 3 },
+                { 3, 4 },
+                { 4, 1 },
+                { 1, 3 }
             };
+
             var cells = new[,]
             {
-                {
-                    1,
-                    2,
-                    3
-                },
-                {
-                    1,
-                    3,
-                    4
-                }
+                { 1, 2, 3 }, 
+                { 1, 3, 4 }
             };
 
             fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cells);
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
+            
             var observationPointFm = new GroupableFeature2DPoint {Name = "ObservationFM"};
             var weirFm = new Weir2D
             {
@@ -108,14 +124,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var rule = new PIDRule
             {
                 Name = "noot",
-                Inputs = {input},
-                Outputs = {output}
+                Inputs = { input },
+                Outputs = { output }
             };
             /*  Control groups  */
             var controlGroup = new ControlGroup
             {
                 Name = "test",
-                Rules = {rule},
+                Rules = { rule }
             };
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
@@ -138,17 +154,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmrtc");
-            var exporter = new DHydroConfigXmlExporter {ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml")};
+            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
             exporter.Export(hydroModel, null);
 
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dimr.xml")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "dflowfm")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "rtc")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "rtc/rtcToolsConfig.xml")));
+            Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "rtc"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "rtc/rtcToolsConfig.xml"), Does.Exist);
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ExportStandAloneFm()
         {
             string dirPath = Path.GetFullPath("fmdimr");
@@ -158,9 +175,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmdimr");
-            var exporter = new DHydroConfigXmlExporter {ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml")};
+            DHydroConfigXmlExporter exporter = CreateExporter(Path.Combine(dirInfo.FullName, "dimr.xml"));
+
+            WaterFlowFMModel waterFlowFmModel = SetupWaterFlowFmModel();
+            exporter.Export(waterFlowFmModel, null);
+
+            Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu"), Does.Exist);
+        }
+
+        private WaterFlowFMModel SetupWaterFlowFmModel()
+        {
             var waterFlowFmModel = new WaterFlowFMModel();
-            Assert.NotNull(waterFlowFmModel);
 
             var vertices = new[]
             {
@@ -170,49 +197,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
                 new Coordinate(10, 0)
             };
 
-            var edges = new int[,]
+            var edges = new[,]
             {
-                {
-                    1,
-                    2
-                },
-                {
-                    2,
-                    3
-                },
-                {
-                    3,
-                    4
-                },
-                {
-                    4,
-                    1
-                },
-                {
-                    1,
-                    3
-                }
+                { 1, 2 },
+                { 2, 3 },
+                { 3, 4 },
+                { 4, 1 },
+                { 1, 3 }
             };
+            
             var cells = new[,]
             {
-                {
-                    1,
-                    2,
-                    3
-                },
-                {
-                    1,
-                    3,
-                    4
-                }
+                { 1, 2, 3 }, 
+                { 1, 3, 4 }
             };
 
             waterFlowFmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cells);
-            exporter.Export(waterFlowFmModel, null);
 
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dimr.xml")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "dflowfm")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu")));
+            return waterFlowFmModel;
         }
 
         [Test]
@@ -223,8 +225,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var rtcModel = new RealTimeControlModel("rtcModel");
             hydroModel.Activities.Add(rtcModel);
 
-            var dimrModels = (IEnumerable<IDimrModel>) TypeUtils.CallPrivateStaticMethod(typeof(DHydroConfigXmlExporter), "GetDimrModelsFromItem", hydroModel);
+            var dimrModels = (IEnumerable<IDimrModel>)TypeUtils.CallPrivateStaticMethod(typeof(DHydroConfigXmlExporter), "GetDimrModelsFromItem", hydroModel);
             Assert.IsEmpty(dimrModels);
+        }
+
+        private static DHydroConfigXmlExporter CreateExporter(string exportPath)
+        {
+            var fileExportService = new FileExportService();
+            fileExportService.RegisterFileExporter(new WaterFlowFMFileExporter());
+            fileExportService.RegisterFileExporter(new RealTimeControlModelExporter());
+
+            return new DHydroConfigXmlExporter(fileExportService) { ExportFilePath = exportPath };
         }
     }
 }

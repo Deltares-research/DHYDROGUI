@@ -2,10 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using log4net.Core;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
@@ -13,13 +14,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
     [TestFixture]
     public class HydroModelReaderTest
     {
+        private IFileImportService fileImportService;
+
+        [SetUp]
+        public void SetUp()
+        {
+            fileImportService = Substitute.For<IFileImportService>();
+        }
+
         [Test]
         public void ConstructEmptyHydroModel()
         {
             string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
-            var list = new List<IDimrModelFileImporter>();
 
-            HydroModel hydroModel = HydroModelReader.Read(dimrPath, list);
+            HydroModelReader reader = CreateReader();
+
+            HydroModel hydroModel = reader.Read(dimrPath);
 
             Assert.NotNull(hydroModel);
             Assert.That(hydroModel.Activities.Count, Is.EqualTo(0));
@@ -29,12 +39,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         [TestCaseSource(nameof(DimrXmlData))]
         public void GivenIncorrectDimrXml_WhenHydroModelReaderRead_ThenReturnExpectedLoggingMessage(string fileContent, string validationLoggingMessage)
         {
+            HydroModelReader reader = CreateReader();
+
             using (var temp = new TemporaryDirectory())
             {
                 string filePath = temp.CreateFile("dimr.xml", fileContent);
 
-                var list = new List<IDimrModelFileImporter>();
-                void Call() => HydroModelReader.Read(filePath, list);
+                void Call() => reader.Read(filePath);
 
                 IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(Call, Level.Error);
                 string firstErrorMessage = errorMessages.First();
@@ -46,14 +57,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         [TestCaseSource(nameof(DimrXmlData))]
         public void GivenIncorrectDimrXml_WhenHydroModelReaderRead_ThenReturnNull(string fileContent, string validationLoggingMessage)
         {
+            HydroModelReader reader = CreateReader();
+
             using (var temp = new TemporaryDirectory())
             {
                 string filePath = temp.CreateFile("dimr.xml", fileContent);
-                var list = new List<IDimrModelFileImporter>();
-                HydroModel Call() => HydroModelReader.Read(filePath, list);
+                HydroModel Call() => reader.Read(filePath);
 
                 Assert.That(Call, Is.Null);
             }
+        }
+
+        private HydroModelReader CreateReader()
+        {
+            return new HydroModelReader(fileImportService);
         }
 
         private static IEnumerable<TestCaseData> DimrXmlData()
@@ -106,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             XDocument xDocument = XDocument.Parse(fileContent);
             RemoveElement(xDocument, "coupler");
-            string logMessage = "It is missing the following element(s): Coupler";
+            var logMessage = "It is missing the following element(s): Coupler";
             yield return new TestCaseData(xDocument.ToString(), logMessage).SetName("Coupler missing");
 
             xDocument = XDocument.Parse(fileContent);

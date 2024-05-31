@@ -148,13 +148,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     gui.Application.ProjectClosing += ApplicationProjectClosed;
                     gui.Application.ProjectOpened += ApplicationProjectOpened;
-                    
                     gui.SelectionChanged += GuiSelectionChanged;
-
-                    if (!gui.Application.FileExporters.Any(e => e is HydroRegionShapeFileExporter))
-                    {
-                        ((List<IFileExporter>)gui.Application.FileExporters).Add(new HydroRegionShapeFileExporter(Gui));
-                    }
                 }
             }
         }
@@ -491,6 +485,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             yield return tableViewInfoCreator.Create(new RunoffBoundaryTableViewCreationContext());
             yield return tableViewInfoCreator.Create(new WasteWaterTreatmentPlantTableViewCreationContext());
+        }
+        
+        public override IEnumerable<IFileExporter> GetFileExporters()
+        {
+            yield return new HydroRegionShapeFileExporter(Gui);
         }
 
         public override IMapLayerProvider MapLayerProvider

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
@@ -25,31 +26,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class HydroModelApplicationPluginTest
     {
-        private static IApplication CreateApplication(ApplicationPlugin appPlugin)
-        {
-            var pluginsToAdd = new List<IPlugin>
-            {
-                new CommonToolsApplicationPlugin(),
-                new NHibernateDaoApplicationPlugin(),
-                new NetCdfApplicationPlugin(),
-                new NetworkEditorApplicationPlugin(),
-                new ScriptingApplicationPlugin(),
-                new SharpMapGisApplicationPlugin(),
-                new ToolboxApplicationPlugin(),
-                appPlugin
-            };
-            var application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
-            application.Run();
-            application.CreateNewProject();
-            return application;
-        }
-
         [Test]
+        [Category(TestCategory.Integration)]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
             var appPlugin = new HydroModelApplicationPlugin();
+            
             using (var app = CreateApplication(appPlugin))
             {
+                app.Run();
+                app.CreateNewProject();
+                
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -61,11 +48,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void AdditionalOwnerCheckTest_RainfallRunoff()
         {
             var appPlugin = new RainfallRunoffApplicationPlugin();
+            
             using (var app = CreateApplication(appPlugin))
             {
+                app.Run();
+                app.CreateNewProject();
+                
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -77,11 +69,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void AdditionalOwnerCheckTest_RealTimeControl()
         {
             var appPlugin = new RealTimeControlApplicationPlugin();
+            
             using (var app = CreateApplication(appPlugin))
             {
+                app.Run();
+                app.CreateNewProject();
+                
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -94,11 +91,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
             var appPlugin = new FlowFMApplicationPlugin();
+            
             using (var app = CreateApplication(appPlugin))
             {
+                app.Run();
+                app.CreateNewProject();
+                
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -112,8 +114,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void Constructor_DefaultsCorrectlyInitialized()
         {
-            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
-            
+            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin { Application = Substitute.For<IApplication>() };
+
             StringAssert.AreEqualIgnoringCase("Hydro Model",hydroModelApplicationPlugin.Name);
             StringAssert.AreEqualIgnoringCase("Hydro Model Plugin",hydroModelApplicationPlugin.DisplayName);
             StringAssert.AreEqualIgnoringCase(hydroModelApplicationPlugin.Description,"Provides functionality to create and run integrated models.");
@@ -143,6 +145,55 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.IsInstanceOf<DHydroConfigXmlImporter>(hydroModelApplicationPlugin.GetFileImporters().First());
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAnApplicationWithHydroModelPluginLoaded_WhenAHydroModelIsAdded_ThenTheRegisteredFileExportersShouldBeSet()
+        {
+            // Setup
+            var appPlugin = new HydroModelApplicationPlugin();
+            using (var app = CreateApplication(appPlugin))
+            {
+                // Given
+                var model = new HydroModel();
+
+                app.Run();
+                app.CreateNewProject();
+
+                // Call
+                app.Project.RootFolder.Add(model);
+
+                // Assert
+                IFileExportService fileExportService = model.HydroModelExporter.FileExportService;
+                Assert.That(fileExportService.FileExporters, Has.One.InstanceOf<DHydroConfigXmlExporter>());
+            }
+        }
+        
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAnApplicationWithHydroModelAndFlowFmPluginLoaded_WhenGettingFileImporters_ThenADimrImporterShouldBeReturnedThatCanImportOnWaterFlowFMModel()
+        {
+            // Given
+            var hydroModelAppPlugin = new HydroModelApplicationPlugin();
+            var flowFMApplicationPlugin = new FlowFMApplicationPlugin();
+            
+            using (var app = CreateApplication(hydroModelAppPlugin, flowFMApplicationPlugin))
+            {
+                app.Run();
+                app.CreateNewProject();
+
+                // When 
+                IEnumerable<IFileImporter> applicationFileImporters = hydroModelAppPlugin.GetFileImporters().ToArray();
+                int fileImportersCounter = applicationFileImporters.Count();
+
+                // Then
+                Assert.AreEqual(1, fileImportersCounter, $"Expected only 1 Dimr Importer, but {fileImportersCounter} importers were found");
+                var dimrImporter = applicationFileImporters.First() as DHydroConfigXmlImporter;
+                Assert.IsNotNull(dimrImporter, "The retrieved importer is not a Dimr Importer");
+                Assert.IsTrue(dimrImporter.CanImportOn(new WaterFlowFMModel()), "The Dimr importer is missing the WaterFlowFMFileImporter");
+            }
+        }
+        
         [Test]
         public void GivenHydroModelApplicationPlugin_HydroModelInitialize_ShouldLogPluginVersion()
         {
@@ -218,6 +269,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             Assert.AreEqual(modelSettings.ModelName,model.Name);
             Assert.AreEqual(projectName, project.Name);
+        }
+        
+        private static IApplication CreateApplication(params IPlugin[] pluginsToAdd)
+        {
+            var plugins = new List<IPlugin>
+            {
+                new CommonToolsApplicationPlugin(),
+                new NHibernateDaoApplicationPlugin(),
+                new NetCdfApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new ScriptingApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
+                new ToolboxApplicationPlugin()
+            };
+
+            plugins.AddRange(pluginsToAdd);
+            
+            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(plugins).Build();
+            
+            return application;
         }
     }
 }

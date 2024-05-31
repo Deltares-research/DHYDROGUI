@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
-using DeltaShell.Dimr;
+using DelftTools.Shell.Core.Services;
 using DeltaShell.Dimr.dimr_xsd;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -15,24 +14,29 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
     /// <summary>
     /// Reader for the Integrated model
     /// </summary>
-    public static class HydroModelReader
+    public sealed class HydroModelReader : IHydroModelReader
     {
+        private readonly IFileImportService fileImportService;
+
         /// <summary>
-        /// Reads an <see cref="HydroModel"/> (Integrated model) from
-        /// <param name="path"/>
-        /// using the
-        /// supplied
-        /// <param name="fileImporters"/>
-        /// for importing sub-models
+        /// Initializes a new instance of the <see cref="HydroModelReader"/> class.
+        /// </summary>
+        /// <param name="fileImportService">Provides file importers for importing sub-models</param>
+        public HydroModelReader(IFileImportService fileImportService)
+        {
+            this.fileImportService = fileImportService;
+        }
+        
+        /// <summary>
+        /// Reads a <see cref="HydroModel"/> (Integrated model) from the specified path.
         /// </summary>
         /// <param name="path">Path to the Dimr.xml</param>
-        /// <param name="fileImporters">File importers for importing sub-models</param>
         /// <param name="reportProgress">String to feedback to importer what importers are working on.</param>
         /// <returns>
         /// The read <see cref="HydroModel"/>,
-        /// in the case <paramref name="path"/> is <c>Null</c> or the Dimr.xml from <paramref name="path"/> is invalid <c>Null</c> is returned.
+        /// in the case <paramref name="path"/> is <c>null</c> or the Dimr.xml from <paramref name="path"/> is invalid, <c>null</c> is returned.
         /// </returns>
-        public static HydroModel Read(string path, IList<IDimrModelFileImporter> fileImporters, Action<string> reportProgress = null)
+        public HydroModel Read(string path, Action<string> reportProgress = null)
         {
             var logHandler = new LogHandler("import of the Hydro Model");
 
@@ -43,6 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
             var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
             reportProgress?.Invoke(Resources.HydroModelReader_Read_Parsing_Dimr_xml_file);
+            
             var dataObject = delftConfigXmlParser.Read<dimrXML>(path);
 
             var dimrXmlValidator = new DimrXmlValidator(logHandler);
@@ -52,8 +57,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 return null;
             }
             
-            var hydroModelConverter = new HydroModelConverter(logHandler);
-            HydroModel hydroModel = hydroModelConverter.Convert(dataObject, path, fileImporters, reportProgress);
+            var hydroModelConverter = new HydroModelConverter(logHandler, fileImportService);
+            HydroModel hydroModel = hydroModelConverter.Convert(dataObject, path, reportProgress);
+            
             var allActivitiesRecursive = hydroModel.GetAllActivitiesRecursive<IHydroModel>().OfType<IHasCoordinateSystem>();
             var hasCoordinateSystem = allActivitiesRecursive.FirstOrDefault(a => a.CoordinateSystem != null);
             if (hasCoordinateSystem != null)
@@ -61,6 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 reportProgress?.Invoke(Resources.HydroModelReader_Read_Set_hydromodel_coordinate_system);
                 hydroModel.CoordinateSystem = hasCoordinateSystem.CoordinateSystem;
             }
+            
             logHandler.LogReport();
 
             return hydroModel;

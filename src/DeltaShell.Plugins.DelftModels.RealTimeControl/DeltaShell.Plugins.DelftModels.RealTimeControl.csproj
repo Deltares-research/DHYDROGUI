@@ -24,6 +24,9 @@
     <PackageReference Include="MathematicalExpressionParser.Core">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="PostSharp">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

@@ -69,18 +69,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override IApplication Application
         {
-            get { return application; }
+            get => application;
             set
             {
-                application = value;
-                application.ProjectOpened += ApplicationOnProjectOpened;
-            }
-        }
+                if (application != null)
+                {
+                    application.ProjectOpened -= Application_ProjectOpened;
+                    Application.ProjectClosing -= Application_ProjectClosing;
+                }
 
-        private void ApplicationOnProjectOpened(Project project)
-        {
-            project?.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().ForEach(
-                m => m.WorkingDirectoryPathFunc = () => application.WorkDirectory);
+                application = value;
+
+                if (application != null)
+                {
+                    application.ProjectOpened += Application_ProjectOpened;
+                    Application.ProjectClosing += Application_ProjectClosing;
+                }
+            }
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
@@ -204,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     fixedWeir.UpdateGroupName(GetModelFor(featureList, a => a.FixedWeirs));
                     
-                    var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
+                    var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
                     var scheme = GetModelFor(featureList, a => a.FixedWeirs).ModelDefinition
                         .GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
                     modelFeatureCoordinateData.UpdateDataColumns(scheme);
@@ -272,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                     bridgePillar.UpdateGroupName(waterFlowFmModel);
 
-                    var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = bridgePillar };
+                    var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar> { Feature = bridgePillar };
                     modelFeatureCoordinateData.UpdateDataColumns();
                     MduFile.SetBridgePillarDataModel(waterFlowFmModel.BridgePillarsDataModel,modelFeatureCoordinateData,bridgePillar);
 
@@ -316,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 Mode = Feature2DImportExportMode.Import,
                 CreateFromFeature = f => new Pump2D(f.Name, true) { Geometry = f.Geometry },
-                GetFeature = w => new Pump2D() { Name = w.Name, Geometry = w.Geometry },
+                GetFeature = w => new Pump2D { Name = w.Name, Geometry = w.Geometry },
                 EqualityComparer = new GroupableFeatureComparer<Pump2D>(),
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Pumps)),
                 GetEditableObject = target => GetModelFor(target, a => a.Pumps).Area
@@ -326,7 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 Mode = Feature2DImportExportMode.Import,
                 CreateFromFeature = f => new Gate2D(f.Name) { Geometry = f.Geometry },
-                GetFeature = w => new Gate2D() { Name = w.Name, Geometry = w.Geometry },
+                GetFeature = w => new Gate2D { Name = w.Name, Geometry = w.Geometry },
                 EqualityComparer = new GroupableFeatureComparer<Gate2D>(),
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Gates)),
                 GetEditableObject = target => GetModelFor(target, a => a.Gates).Area
@@ -376,12 +381,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new LdbFileImporterExporter
             {
                 Mode = Feature2DImportExportMode.Import,
-                EqualityComparer = new GroupableFeatureComparer<DelftTools.Hydro.LandBoundary2D>(),
+                EqualityComparer = new GroupableFeatureComparer<LandBoundary2D>(),
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.LandBoundaries)),
                 GetEditableObject = target => GetModelFor(target, a => a.LandBoundaries).Area
             };
 
-            yield return new GisToFeature2DImporter<ILineString, DelftTools.Hydro.LandBoundary2D>();
+            yield return new GisToFeature2DImporter<ILineString, LandBoundary2D>();
 
             yield return new FlowFMNetFileImporter {GetModelForGrid = GetModelForGrid};
 
@@ -411,7 +416,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 GetEditableObject = target => GetModelFor(target, a => a.LeveeBreaches).Area
             };
 
-            yield return new GisToFeature2DImporter<ILineString, Feature2D>()
+            yield return new GisToFeature2DImporter<ILineString, Feature2D>
             {
                 CreateInstanceOfFeature2D = () => new LeveeBreach()
             };
@@ -449,7 +454,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                     foreach (var fixedWeir in fixedWeirs)
                     {
-                    fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
+                        fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
                         var correspondingModelFeatureCoordinateData = waterFlowFmModel?.FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
 
                     if (correspondingModelFeatureCoordinateData == null) return;
@@ -505,16 +510,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 },
             };
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> { Mode = Feature2DImportExportMode.Export };
-            yield return
-                new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>
-                {
-                    Mode = Feature2DImportExportMode.Export
-                };
+            yield return new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D> { Mode = Feature2DImportExportMode.Export };
             yield return new PliFileImporterExporter<IWeir, Feature2D>
             {
                 Mode = Feature2DImportExportMode.Export,
                 CreateFromFeature = f => new Weir(f.Name, true) { Geometry = f.Geometry },
-                GetFeature = w => new Feature2D { Name = w.Name, Geometry = w.Geometry }
+                GetFeature = w => new Feature2D
+                {
+                    Name = w.Name,
+                    Geometry = w.Geometry
+                }
             };
             yield return new PliFileImporterExporter<IPump, Feature2D>
             {
@@ -545,22 +550,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PolFileImporterExporter {Mode = Feature2DImportExportMode.Export};
             yield return new LdbFileImporterExporter {Mode = Feature2DImportExportMode.Export};
             yield return new FlowFMNetFileExporter {GetModelForGrid = GetModelForGrid};
-            yield return
-                new FMModelPartitionExporter
-                {
-                    PolygonFile = null,
-                    IsContiguous = true,
-                    NumDomains = 1,
-                    SolverType = 7
-                };
-            yield return
-                new FMGridPartitionExporter
-                {
-                    GetModelForGrid = GetModelForGrid,
-                    PolygonFile = null,
-                    IsContiguous = true,
-                    NumDomains = 1
-                };
+            yield return new FMModelPartitionExporter
+            {
+                PolygonFile = null,
+                IsContiguous = true,
+                NumDomains = 1,
+                SolverType = 7
+            };
+            yield return new FMGridPartitionExporter
+            {
+                GetModelForGrid = GetModelForGrid,
+                PolygonFile = null,
+                IsContiguous = true,
+                NumDomains = 1
+            };
             yield return new GeometryZipExporter {GetModelForGrid = GetModelForGrid};
             yield return new TimFileExporter
             {
@@ -611,7 +614,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var waterFlowFMModel = FlowModels.FirstOrDefault();
             return waterFlowFMModel == null ? (DateTime?) null : waterFlowFMModel.ReferenceTime;
-
         }
 
         private WaterFlowFMModel GetModelForGrid(UnstructuredGrid grid)
@@ -634,10 +636,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return false;
         }
 
-
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             yield return new WaterFlowFMDataAccessListener(null);
+        }
+        
+        private void Application_ProjectOpened(Project project)
+        {
+            Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().ForEach(m =>
+            {
+                m.WorkingDirectoryPathFunc = () => application.WorkDirectory;
+                m.DimrRunner.FileExportService = Application.FileExportService;
+            });
+            
+            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+        }
+
+        private void Application_ProjectClosing(Project project)
+        {
+            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+        }
+        
+        private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add && e.Item is WaterFlowFMModel model)
+            {
+                model.DimrRunner.FileExportService = Application.FileExportService;
+            }
         }
     }
 }

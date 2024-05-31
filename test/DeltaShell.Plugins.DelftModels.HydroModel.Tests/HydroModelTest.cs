@@ -11,12 +11,13 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Dimr;
+using DeltaShell.Core.Services;
 using DeltaShell.Dimr.Export;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.IO.Helpers;
@@ -35,6 +36,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.NetworkEditor;
@@ -45,6 +47,7 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
@@ -806,10 +809,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 string dimrPath = tempDir.CopyTestDataFileAndDirectoryToTempDirectory(originalDimrPath);
 
-                DHydroConfigXmlImporter dimrImporter = GetDimrImporter(dimrPath);
-
                 // Call
-                object importedModel = dimrImporter.ImportItem(dimrPath);
+                object importedModel = ImportFromDimrXml(dimrPath);
 
                 // Assert
                 Assert.That(importedModel, Is.TypeOf<HydroModel>());
@@ -841,11 +842,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var tempDir = new TemporaryDirectory())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
-                string dimrPath = ExportToDimrXml(tempDir, integratedModel);
-                DHydroConfigXmlImporter dimrImporter = GetDimrImporter(dimrPath);
+                string dimrPath = Path.Combine(tempDir.Path, "dimr.xml");
 
                 // Call
-                object importedModel = dimrImporter.ImportItem(dimrPath);
+                ExportToDimrXml(integratedModel, dimrPath);
+                object importedModel = ImportFromDimrXml(dimrPath);
                 
                 // Assert
                 Assert.That(importedModel, Is.TypeOf<HydroModel>());
@@ -874,7 +875,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var tempDir = new TemporaryDirectory())
             using (HydroModel integratedModel = CreateIntegratedModel())
             {
-                string _ = ExportToDimrXml(tempDir, integratedModel);
+                string dimrPath = Path.Combine(tempDir.Path, "dimr.xml");
+                
+                ExportToDimrXml(integratedModel, dimrPath);
                 string rainfallRunoffPath = Path.Combine(tempDir.Path, @"rr\Sobek_3b.fnm");
                 
                 var rainfallRunoffImporter = new SobekHydroModelImporter(true, false, false);
@@ -1068,37 +1071,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
             return new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
         }
-       
-        private static string ExportToDimrXml(TemporaryDirectory tempDir, HydroModel integratedModel)
-        {
-            string exportFilePath = Path.Combine(tempDir.Path, "dimr.xml");
-            var exporter = new DHydroConfigXmlExporter { ExportFilePath = exportFilePath };
-
-            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
-            exporter.Export(integratedModel, null);
-            return exportFilePath;
-        }
 
         private static void SetRequiredSettingsForDimrImport()
         {
             Sobek2ModelImporters.RegisterSobek2Importer(() => new SobekModelToRainfallRunoffModelImporter());
             Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
         }
-
-        private static DHydroConfigXmlImporter GetDimrImporter(string dimrPath)
+        
+        private static object ImportFromDimrXml(string dimrPath)
         {
-            var dimrImporter = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>()
-            {
-                new WaterFlowFMFileImporter(null),
-                new RainfallRunoffModelImporter()
-            }, GetWorkDir);
+            var hybridProjectRepository = Substitute.For<IHybridProjectRepository>();
+            var fileImportService = new FileImportService(hybridProjectRepository);
+            var hydroModelReader = new HydroModelReader(fileImportService);
 
-            return dimrImporter;
+            fileImportService.RegisterFileImporter(new WaterFlowFMFileImporter(null));
+            fileImportService.RegisterFileImporter(new RainfallRunoffModelImporter());
+            
+            var importer = new DHydroConfigXmlImporter(fileImportService, hydroModelReader, () => dimrPath);
 
-            string GetWorkDir()
-            {
-                return dimrPath;
-            }
+            return importer.ImportItem(dimrPath);
+        }
+        
+        private static void ExportToDimrXml(HydroModel integratedModel, string dimrPath)
+        {
+            var fileExportService = new FileExportService();
+            fileExportService.RegisterFileExporter(new WaterFlowFMFileExporter());
+            fileExportService.RegisterFileExporter(new RainfallRunoffModelExporter());
+            
+            var exporter = new DHydroConfigXmlExporter(fileExportService) { ExportFilePath = dimrPath };
+
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
+            exporter.Export(integratedModel, null);
         }
     }
 }

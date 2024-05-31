@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Controls.Swf;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
@@ -27,27 +27,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             InitializeComponent();
         }
 
-        public string Title { get; set; }
-
         public IGui Gui { get; set; }
 
-        IModel SelectedModel
-        {
-            get
-            {
-                if (Gui == null) return null;
-                return Gui.SelectedModel;
-            }
-        }
+        [ExcludeFromCodeCoverage]
+        public string Title { get; set; }
+
+        [ExcludeFromCodeCoverage]
+        public object Data { get; set; }
+
+        [ExcludeFromCodeCoverage]
+        public Image Image { get; set; }
+
+        [ExcludeFromCodeCoverage]
+        public ViewInfo ViewInfo { get; set; }
+
+        private IModel SelectedModel => Gui?.SelectedModel;
+
+        private IFileExportService FileExportService
+            => Gui.Application.FileExportService;
 
         private DHydroConfigXmlExporter Exporter
-        {
-            get { return Gui == null ? null : Gui.Application.FileExporters.OfType<DHydroConfigXmlExporter>().First(); }
-        }
+            => FileExportService.FileExporters.OfType<DHydroConfigXmlExporter>().FirstOrDefault();
+
+        private IDimrModelFileExporter GetDimrModelExporter(IDimrModel dimrModel)
+            => FileExportService.GetFileExportersFor(dimrModel).OfType<IDimrModelFileExporter>().FirstOrDefault();
 
         public DelftDialogResult ShowModal()
         {
-            var model = SelectedModel;
+            IModel model = SelectedModel;
             if (!(model is HydroModel || model is IDimrModel))
             {
                 return DelftDialogResult.Cancel;
@@ -57,123 +64,49 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             {
                 return DelftDialogResult.Cancel;
             }
-            
-            var saveFileDialog = new SaveFileDialog {Filter = "DIMR config files (*.xml)|*.xml"};
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+
+            DialogResult dialogResult = ShowSaveFileDialog();
+            if (dialogResult != DialogResult.OK)
             {
                 return DelftDialogResult.Cancel;
             }
-
-            Exporter.ExportFilePath = saveFileDialog.FileName;
+            
             if (Exporter.CoreCountDictionary == null)
             {
                 Exporter.CoreCountDictionary = new ConcurrentDictionary<IDimrModel, int>();
             }
+
             var hydroModel = model as HydroModel;
-            if ( hydroModel != null )
+            if (hydroModel != null)
             {
-                var dimrModels = hydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
-                    .Plus(hydroModel.CurrentWorkflow as IDimrModel).Where(dm => dm != null).ToList();
+                List<IDimrModel> dimrModels = hydroModel.CurrentWorkflow.Activities
+                                                        .GetActivitiesOfType<IDimrModel>()
+                                                        .Plus(hydroModel.CurrentWorkflow as IDimrModel)
+                                                        .Where(dm => dm != null)
+                                                        .ToList();
 
-                WarnForModelsWhichCannotBeExportedbyDimr(hydroModel, dimrModels);
+                WarnForModelsWhichCannotBeExportedByDimr(hydroModel, dimrModels);
 
-                foreach (var dimrModel in dimrModels)
+                foreach (IDimrModel dimrModel in dimrModels)
                 {
-                    var dimrModelExporter = (IFileExporter)Activator.CreateInstance(dimrModel.ExporterType);
-                    var resultOfSubModelExportDialog = DimrSubModelsExportDialogResult(dimrModelExporter, dimrModel);
+                    IDimrModelFileExporter dimrModelExporter = GetDimrModelExporter(dimrModel);
+                    DelftDialogResult resultOfSubModelExportDialog = DimrSubModelsExportDialogResult(dimrModelExporter, dimrModel);
                     if (resultOfSubModelExportDialog == DelftDialogResult.Cancel)
                     {
                         return resultOfSubModelExportDialog;
                     }
                 }
+
                 return DelftDialogResult.OK;
             }
-            var singleDimrModel = model as IDimrModel;
-            if (singleDimrModel != null)
+
+            if (model is IDimrModel singleDimrModel)
             {
-                var dimrModelExporter = (IFileExporter)Activator.CreateInstance(singleDimrModel.ExporterType);
+                IDimrModelFileExporter dimrModelExporter = GetDimrModelExporter(singleDimrModel);
                 return DimrSubModelsExportDialogResult(dimrModelExporter, singleDimrModel);
             }
 
             return DelftDialogResult.OK;
-        }
-
-        private static void WarnForModelsWhichCannotBeExportedbyDimr(HydroModel hydroModel, List<IDimrModel> dimrModels)
-        {
-            var remainingActivities =
-                hydroModel.GetAllActivitiesRecursive<IActivity>()
-                    .Select(UnwrapActivity)
-                    .Except(dimrModels.Cast<IActivity>());
-
-            foreach (var remainingActivity in remainingActivities)
-            {
-                Log.WarnFormat("Activity of type {0} cannot be exported to DIMR file tree and shall be ignored",
-                    remainingActivity.GetType());
-            }
-        }
-
-        private DelftDialogResult DimrSubModelsExportDialogResult(IFileExporter dimrModelExporter, IDimrModel dimrModel)
-        {
-            var configureDialog = Gui.DocumentViewsResolver.CreateViewForData(dimrModelExporter) as IPartitionDialog;
-            if (configureDialog != null)
-            {
-                if (configureDialog.ShowPartitionModal() == DelftDialogResult.OK)
-                {
-                    configureDialog.ConfigurePartition(dimrModelExporter);
-                    Exporter.CoreCountDictionary[dimrModel] = configureDialog.CoreCount;
-                    return DelftDialogResult.OK;
-                }
-                return DelftDialogResult.Cancel;
-            }
-            /*  Sobek3-641
-            *  Disabled until it's clear what to do.
-            */
-            Exporter.CoreCountDictionary[dimrModel] = 0;
-            return DelftDialogResult.OK;
-            if (dimrModel.CanRunParallel)
-            {
-                var dialog = new InputTextDialog
-                {
-                    InitialText = "1",
-                    Text = dimrModel.ShortName + " nr. of cores",
-                    ValidationMethod = ValidateCoreCount,
-                    ValidationErrorMsg = "Enter a valid number of cores",
-                    CausesValidation = true,
-                    StartPosition = FormStartPosition.CenterScreen
-                };
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    int cores;
-                    if (int.TryParse(dialog.EnteredText, out cores))
-                    {
-                        Exporter.CoreCountDictionary[dimrModel] = cores;
-                    }
-                }
-                else
-                {
-                    return DelftTools.Controls.DelftDialogResult.Cancel;
-                }
-            }
-        }
-
-        private static IActivity UnwrapActivity(IActivity activity)
-        {
-            var result = activity;
-            while (result is ActivityWrapper)
-            {
-                result = ((ActivityWrapper)result).Activity;
-            }
-
-            return result;
-        }
-        private static bool ValidateCoreCount(string text)
-        {
-            int coreCount;
-            if (int.TryParse(text, out coreCount))
-            {
-                return coreCount > 0;
-            }
-            return false;
         }
 
         public DelftDialogResult ShowModal(object owner)
@@ -186,14 +119,64 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             //Everything already done in ShowModal
         }
 
-        public object Data { get; set; }
-        
-        public Image Image { get; set; }
-        
         public void EnsureVisible(object item)
-        {    
+        {
+            // Nothing to be done, enforced through IView.
+        }
+        
+        protected virtual DialogResult ShowSaveFileDialog()
+        {
+            var saveFileDialog = new SaveFileDialog {Filter = "DIMR config files (*.xml)|*.xml"};
+            DialogResult dialogResult = saveFileDialog.ShowDialog();
+
+            Exporter.ExportFilePath = saveFileDialog.FileName;
+            return dialogResult;
         }
 
-        public ViewInfo ViewInfo { get; set; }
+        private static void WarnForModelsWhichCannotBeExportedByDimr(HydroModel hydroModel, List<IDimrModel> dimrModels)
+        {
+            IEnumerable<IActivity> remainingActivities = hydroModel.Activities.Select(UnwrapActivity).Except(dimrModels);
+
+            foreach (IActivity remainingActivity in remainingActivities)
+            {
+                Log.WarnFormat(Resources.Activity_of_type__0__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored,
+                               remainingActivity.GetType());
+            }
+        }
+
+        private DelftDialogResult DimrSubModelsExportDialogResult(IFileExporter dimrModelExporter, IDimrModel dimrModel)
+        {
+            if (dimrModelExporter == null)
+            {
+                Log.WarnFormat(Resources.No_file_exporter_found_for_model, dimrModel.Name);
+                return DelftDialogResult.Cancel;
+            }
+
+            if (Gui.DocumentViewsResolver.CreateViewForData(dimrModelExporter) is IPartitionDialog configureDialog)
+            {
+                if (configureDialog.ShowPartitionModal() == DelftDialogResult.OK)
+                {
+                    configureDialog.ConfigurePartition(dimrModelExporter);
+                    Exporter.CoreCountDictionary[dimrModel] = configureDialog.CoreCount;
+                    return DelftDialogResult.OK;
+                }
+
+                return DelftDialogResult.Cancel;
+            }
+
+            Exporter.CoreCountDictionary[dimrModel] = 0;
+            return DelftDialogResult.OK;
+        }
+
+        private static IActivity UnwrapActivity(IActivity activity)
+        {
+            IActivity result = activity;
+            while (result is ActivityWrapper wrapper)
+            {
+                result = wrapper.Activity;
+            }
+
+            return result;
+        }
     }
 }

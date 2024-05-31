@@ -65,6 +65,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public virtual bool ReadOnly { get; set; }
 
         public virtual bool CopyFromWorkingDirectory { get; } = false;
+        
+        /// <summary>
+        /// Gets the configuration exporter used for this model.
+        /// </summary>
+        public virtual DHydroConfigXmlExporter HydroModelExporter { get; }
 
         public virtual ICoordinateSystem CoordinateSystem
         {
@@ -142,6 +147,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             dimrRunHelper = new DimrRunHelper(new ReadFileInTwoMegaBytesChunks());
             Workflows = new EventedList<ICompositeActivity>();
+
+            HydroModelExporter = new DHydroConfigXmlExporter();
 
             Activities = new EventedList<IActivity>();
             RefreshDefaultModelWorkflows();
@@ -897,7 +904,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         private bool ExportHydroModel() =>
-            new DHydroConfigXmlExporter().Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml"));
+            HydroModelExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml"));
 
         private void PrepareWorkingDirectory(IEnumerable<string> fileExceptions)
         {

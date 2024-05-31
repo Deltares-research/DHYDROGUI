@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.IO.Abstractions;
-using DelftTools.Shell.Core;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
@@ -16,7 +16,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.FileWriters;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 {
-    public class RainfallRunoffModelExporter : IFileExporter
+    public class RainfallRunoffModelExporter : IDimrModelFileExporter
     {
         private readonly IBasinGeometrySerializer serializer;
         private readonly IEvaporationExporter evaporationExporter;

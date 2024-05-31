@@ -149,31 +149,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 Description = "Output",
                 AdditionalDataCheck = o => GetModelForFeatureCoverage(o) != null,
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => GetModelForFeatureCoverage(o)
+                GetCompositeViewData = GetModelForFeatureCoverage
             };
         }
 
         public override bool CanCopy(IProjectItem item)
-        {
-            // disable copy of RTC model by the user
-            if (item is RealTimeControlModel)
-            {
-                return false;
-            }
-
-            return true;
-        }
+            => IsActionEnabledFor(item);
 
         public override bool CanCut(IProjectItem item)
-        {
-            // disable cut of RTC model by the user
-            if (item is RealTimeControlModel)
-            {
-                return false;
-            }
+            => IsActionEnabledFor(item);
 
-            return true;
-        }
+        public override bool CanExport(IProjectItem item)
+            => IsActionEnabledFor(item);
+        
+        private static bool IsActionEnabledFor(IProjectItem item)
+            => !(item is RealTimeControlModel);
 
         public override void Activate()
         {

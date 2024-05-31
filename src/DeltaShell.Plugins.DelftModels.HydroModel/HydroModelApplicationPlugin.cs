@@ -53,6 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaved -= ApplicationProjectSavedOrFailed;
                     Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened -= ApplicationProjectOpened;
+                    Application.ProjectClosing -= ApplicationProjectClosing;
                 }
                 
                 base.Application = value;
@@ -64,6 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaveFailed += ApplicationProjectSavedOrFailed;
                     Application.ProjectSaved += ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened += ApplicationProjectOpened;
+                    Application.ProjectClosing += ApplicationProjectClosing;
                 }
             }
         }
@@ -165,16 +167,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return null;
                     }
 
-                    var importer = new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(),
-                                                               () => Application.WorkDirectory);
-
-                    var fileImportActivity = new FileImportActivity(importer, project)
-                    {
-                        Files = new[]
-                        {
-                            path
-                        }
-                    };
+                    var importer = Application.FileImporters.OfType<DHydroConfigXmlImporter>().First();
+                    var fileImportActivity = new FileImportActivity(importer, project) { Files = new[] { path } };
 
                     fileImportActivity.OnImportFinished += (activity, importedObject, fileImporter) =>
                     {
@@ -189,12 +183,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
-            yield return new DHydroConfigXmlExporter();
+            yield return new DHydroConfigXmlExporter(Application.FileExportService);
         }
+        
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(),
-                                                     () => Application.WorkDirectory);
+            yield return new DHydroConfigXmlImporter(Application.FileImportService, new HydroModelReader(Application.FileImportService), () => Application.WorkDirectory);
         }
         private void InitializeModelBuilder()
         {
@@ -222,9 +216,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
             {
                 hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
+                hm.HydroModelExporter.FileExportService = Application.FileExportService;
             });
 
+            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+
             DoWithHydroModels(project, Properties.Resources.Linking_items_in_the_integrated_model_after_loading_the_project, RelinkHydroModelItems);
+        }
+        
+        private void ApplicationProjectClosing(Project project)
+        {
+            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+        }
+        
+        private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add && e.Item is HydroModel hydroModel)
+            {
+                hydroModel.HydroModelExporter.FileExportService = Application.FileExportService;
+            }
         }
 
         private static void RelinkHydroModelItems(HydroModel hydroModel)

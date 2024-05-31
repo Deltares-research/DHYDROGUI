@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Collections;
 using DeltaShell.Dimr.Export;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
@@ -64,7 +65,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     base.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerOnActivityStatusChanged;
                     base.Application.ProjectSaving -= SynchronizeDataBeforeSaving;
                     base.Application.ProjectSaved -= SaveToFile;
-                    base.Application.ProjectOpened -= ApplicationOnProjectOpened;
+                    base.Application.ProjectOpened -= Application_ProjectOpened;
+                    base.Application.ProjectClosing -= Application_ProjectClosing;
                 }
 
                 base.Application = value;
@@ -74,7 +76,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     base.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerOnActivityStatusChanged;
                     base.Application.ProjectSaving += SynchronizeDataBeforeSaving;
                     base.Application.ProjectSaved += SaveToFile;
-                    base.Application.ProjectOpened += ApplicationOnProjectOpened;
+                    base.Application.ProjectOpened += Application_ProjectOpened;
+                    base.Application.ProjectClosing += Application_ProjectClosing;
                 }
             }
         }
@@ -84,12 +87,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
         }
 
-        private void ApplicationOnProjectOpened(Project project)
+        private void Application_ProjectOpened(Project project)
         {
             foreach (var rainfallRunoffModel in GetModels(project))
             {
                 rainfallRunoffModel.WorkingDirectoryPathFunc = () => Application?.WorkDirectory;
+                rainfallRunoffModel.DimrRunner.FileExportService = Application.FileExportService;
+
                 UpdateDataAfterOpened(rainfallRunoffModel);
+            }
+            
+            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+        }
+        
+        private void Application_ProjectClosing(Project project)
+        {
+            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+        }
+        
+        private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add && e.Item is RainfallRunoffModel model)
+            {
+                model.DimrRunner.FileExportService = Application.FileExportService;
             }
         }
         

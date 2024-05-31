@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using NSubstitute;
@@ -13,21 +12,74 @@ namespace DeltaShell.Dimr.Tests
     [TestFixture]
     public class DimrRunnerTest
     {
-        private static readonly IDimrApiFactory dimrApiFactory = Substitute.For<IDimrApiFactory>();
+        private IDimrApi dimrApi;
+        private IDimrModel dimrModel;
+        private IDimrApiFactory dimrApiFactory;
+        private IFileExportService fileExportService;
 
+        [SetUp]
+        public void SetUp()
+        {
+            dimrApi = Substitute.For<IDimrApi>();
+            dimrModel = Substitute.For<IDimrModel>();
+            dimrApiFactory = Substitute.For<IDimrApiFactory>();
+            fileExportService = Substitute.For<IFileExportService>();
+            
+            dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
+        }
+
+        [Test]
+        public void Constructor_ModelIsNull_ThrowsArgumentNullException()
+        {
+            Assert.That(() => new DimrRunner(null, dimrApiFactory, fileExportService), Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        public void Constructor_DimrApiFactoryIsNull_ThrowsArgumentNullException()
+        {
+            Assert.That(() => new DimrRunner(dimrModel, null, fileExportService), Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        public void Constructor_FileExportServiceIsNull_ThrowsArgumentNullException()
+        {
+            Assert.That(() => new DimrRunner(dimrModel, dimrApiFactory, null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void FileExportService_SetToNull_ThrowsArgumentNullException()
+        {
+            DimrRunner dimrRunner = CreateDimrRunner();
+            
+            Assert.That(() => dimrRunner.FileExportService = null, Throws.ArgumentNullException);
+        }
+        
+        [Test]
+        public void GivenDimrRunnerWithNoFileExporterFound_WhenOnInitializeCalled_ThenInvalidOperationExceptionThrown()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                SetupDimrExportDir(tempDir);
+
+                DimrRunner dimrRunner = CreateDimrRunner();
+                
+                Assert.That(() => dimrRunner.OnInitialize(), Throws.InvalidOperationException);
+            }
+        }
+        
         [Test]
         public void GivenDimrRunnerThatFailsUpdate_WhenOnExecuteCalled_ThenDimrErrorCodeExceptionThrown()
         {
             using (var tempDir = new TemporaryDirectory())
             {
-                var dimrApi = Substitute.For<IDimrApi>();
                 dimrApi.Update(Arg.Any<double>()).Returns(-1);
-                dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
 
-                IDimrModel dimrModel = CreateDimrModel(tempDir);
-                var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
+                SetupDimrExportDir(tempDir);
+                SetupFileExportService(CreateFileExporter());
                 
+                DimrRunner dimrRunner = CreateDimrRunner();
                 dimrRunner.OnInitialize();
+                
                 Assert.That(() => dimrRunner.OnExecute(), Throws.InstanceOf<DimrErrorCodeException>());
             }
         }
@@ -37,12 +89,12 @@ namespace DeltaShell.Dimr.Tests
         {
             using (var tempDir = new TemporaryDirectory())
             {
-                var dimrApi = Substitute.For<IDimrApi>();
                 dimrApi.Initialize(Arg.Any<string>()).Returns(-1);
-                dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
 
-                IDimrModel dimrModel = CreateDimrModel(tempDir);
-                var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
+                SetupDimrExportDir(tempDir);
+                SetupFileExportService(CreateFileExporter());
+                
+                DimrRunner dimrRunner = CreateDimrRunner();
 
                 Assert.That(() => dimrRunner.OnInitialize(), Throws.InstanceOf<DimrErrorCodeException>());
             }
@@ -53,14 +105,14 @@ namespace DeltaShell.Dimr.Tests
         {
             using (var tempDir = new TemporaryDirectory())
             {
-                var dimrApi = Substitute.For<IDimrApi>();
                 dimrApi.Finish().Returns(-1);
-                dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
 
-                IDimrModel dimrModel = CreateDimrModel(tempDir);
-                var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
-
+                SetupDimrExportDir(tempDir);
+                SetupFileExportService(CreateFileExporter());
+                
+                DimrRunner dimrRunner = CreateDimrRunner();
                 dimrRunner.OnInitialize();
+
                 Assert.That(() => dimrRunner.OnFinish(), Throws.InstanceOf<DimrErrorCodeException>());
             }
         }
@@ -72,18 +124,21 @@ namespace DeltaShell.Dimr.Tests
             // Arrange
             using (var tempDir = new TemporaryDirectory())
             {
-                var dimrApi = Substitute.For<IDimrApi>();
                 dimrApi.Finish().Returns(-1);
-                dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
 
-                IDimrModel dimrModel = CreateDimrModel(tempDir);
+                SetupDimrExportDir(tempDir);
+                SetupFileExportService(CreateFileExporter());
+
                 string exceptionFilePath = Path.Combine(tempDir.Path, "test.txt");
                 File.WriteAllText(exceptionFilePath, "test");
+                
                 string shouldBeRemovedFilePath = Path.Combine(tempDir.Path, "test2.txt");
                 File.WriteAllText(shouldBeRemovedFilePath, "test");
+                
                 dimrModel.IgnoredFilePathsWhenCleaningWorkingDirectory.Returns(new HashSet<string> {exceptionFilePath});
                 dimrModel.Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
-                var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
+                
+                DimrRunner dimrRunner = CreateDimrRunner();
 
                 // Act
                 dimrRunner.OnInitialize();
@@ -93,38 +148,27 @@ namespace DeltaShell.Dimr.Tests
                 Assert.IsTrue(File.Exists(exceptionFilePath));
             }
         }
-        
-        private static IDimrModel CreateDimrModel(TemporaryDirectory tempDir)
+
+        private DimrRunner CreateDimrRunner()
         {
-            var dimrModel = Substitute.For<IDimrModel>();
-            dimrModel.ExporterType.Returns(typeof(TestExporter));
+            return new DimrRunner(dimrModel, dimrApiFactory, fileExportService);
+        }
+        
+        private IDimrModelFileExporter CreateFileExporter()
+        {
+            var fileExporter = Substitute.For<IDimrModelFileExporter>();
+            fileExporter.Export(Arg.Any<object>(), Arg.Any<string>()).Returns(true);
+            return fileExporter;
+        }
+        
+        private void SetupDimrExportDir(TemporaryDirectory tempDir)
+        {
             dimrModel.DimrExportDirectoryPath.Returns(tempDir.Path);
-            return dimrModel;
         }
 
-        private class TestExporter : IFileExporter
+        private void SetupFileExportService(IFileExporter fileExporter)
         {
-            public string Name { get; }
-            public string Category { get; }
-            public string Description { get; }
-
-            public string FileFilter { get; }
-            public Bitmap Icon { get; }
-
-            public bool Export(object item, string path)
-            {
-                return true;
-            }
-
-            public IEnumerable<Type> SourceTypes()
-            {
-                throw new InvalidOperationException();
-            }
-
-            public bool CanExportFor(object item)
-            {
-                throw new InvalidOperationException();
-            }
+            fileExportService.GetFileExportersFor(Arg.Any<IDimrModel>()).Returns(new[] { fileExporter });
         }
     }
 }

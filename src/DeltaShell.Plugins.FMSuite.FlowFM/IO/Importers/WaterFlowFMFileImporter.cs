@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
@@ -8,6 +9,7 @@ using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
@@ -55,6 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return true; }
         }
 
+        public bool CanImportDimrFile(string path) => Path.GetExtension(path).EqualsCaseInsensitive(".mdu");
+
         public override bool CanImportOnRootLevel
         {
             get { return true; }
@@ -70,8 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public override bool ShouldCancel { get; set; }
 
         public override ImportProgressChangedDelegate ProgressChanged { get; set; }
-
-        public string MasterFileExtension => "mdu";
 
         public override bool CanImportOn(object targetObject)
         {

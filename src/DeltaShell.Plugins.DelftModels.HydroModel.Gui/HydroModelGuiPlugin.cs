@@ -21,6 +21,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Coverages;
@@ -173,7 +174,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             };
             yield return new ViewInfo<ProjectTemplate, DimrTemplateView>
             {
-                AdditionalDataCheck = t => t.Id == HydroModelApplicationPlugin.DimrProjectTemplateId
+                AdditionalDataCheck = t => t.Id == HydroModelApplicationPlugin.DimrProjectTemplateId,
+                AfterCreate = (view, _) => view.DHydroConfigXmlImporter = Gui.Application.FileImporters.OfType<DHydroConfigXmlImporter>().First()
             };
             
             yield return new ViewInfo<HydroModel, HydroModelSettings>

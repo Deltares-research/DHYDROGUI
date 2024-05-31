@@ -88,11 +88,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                             ICoupledModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
-        private readonly DimrRunner runner;
-        public const string CellsToFeaturesName = "CellsToFeatures";
         
+        public const string CellsToFeaturesName = "CellsToFeatures";
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
         public const string GridPropertyName = "Grid";
+        
         private DepthLayerDefinition depthLayerDefinition;
         private WaterFlowFMModelDefinition modelDefinition;
         private bool disposing;
@@ -123,8 +123,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         public WaterFlowFMModel(string mduFilePath, ImportProgressChangedDelegate progressChanged = null) : base("FlowFM")
         {
-            runner = new DimrRunner(this, new DimrApiFactory());
-            
             InitializeModelProperties();
             
             AddNetworkToModel();
@@ -137,6 +135,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             Area.Parent = hydroAreaParent;
             Network.Parent = hydroNetworkParent;
+            
+            DimrRunner = new DimrRunner(this);
+            DimrRunner.FileExportService.RegisterFileExporter(new WaterFlowFMFileExporter());
 
             ((INotifyCollectionChanged) this).CollectionChanged += OnFMModelCollectionChanged;
             ((INotifyPropertyChanged) this).PropertyChanged += OnFMModelPropertyChanged;
@@ -295,7 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         public override IBasicModelInterface BMIEngine
         {
-            get { return runner.Api; }
+            get { return DimrRunner.Api; }
         }
 
         public DepthLayerDefinition DepthLayerDefinition
@@ -2544,7 +2545,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            if (runner.Api == null)
+            if (DimrRunner.Api == null)
             {
                 return Double.NaN;
             }
@@ -2983,6 +2984,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
+        
+        /// <inheritdoc/>
+        public virtual DimrRunner DimrRunner { get; }
 
         public virtual string DimrExportDirectoryPath => WorkingDirectory;
 
@@ -3016,12 +3020,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return new[] { grid };
             }
 
-            if (runner.CanCommunicateWithDimrApi)
+            if (DimrRunner.CanCommunicateWithDimrApi)
             {
                 var itemText = string.IsNullOrEmpty(itemName) ? "" : $"/{itemName}";
                 var parameterText = string.IsNullOrEmpty(itemName) || string.IsNullOrEmpty(parameter) ? "" : $"/{parameter}";
                 
-                return runner.GetVar($"{Name}/{category}{itemText}{parameterText}");
+                return DimrRunner.GetVar($"{Name}/{category}{itemText}{parameterText}");
             }
 
             IFeature feature = null;
@@ -3056,13 +3060,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (!string.IsNullOrEmpty(parameter))
                 {
-                    runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+                    DimrRunner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
                     return;
                 }
-                runner.SetVar(string.Format("{0}/{1}/{2}", Name, category, itemName), values);
+                DimrRunner.SetVar(string.Format("{0}/{1}/{2}", Name, category, itemName), values);
                 return;
             }
-            runner.SetVar(string.Format("{0}/{1}", Name, category), values);
+            DimrRunner.SetVar(string.Format("{0}/{1}", Name, category), values);
         }
         public bool DisableFlowNodeRenumbering { get; set; }
         
@@ -3087,7 +3091,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
             }
 
-            runner.OnInitialize();
+            DimrRunner.OnInitialize();
             
             ReportProgressText();
         }
@@ -3108,7 +3112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             snapApiInErrorMode = false;
             base.OnCleanup();
-            runner.OnCleanup();
+            DimrRunner.OnCleanup();
             
             ReportProgressText();
             previousProgress = 0;
@@ -3117,12 +3121,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         protected override void OnExecute()
         {
-            runner.OnExecute();
+            DimrRunner.OnExecute();
         }
 
         protected override void OnFinish()
         {
-            runner.OnFinish();
+            DimrRunner.OnFinish();
             currentOutputDirectoryPath = WorkingOutputDirectoryPath;
 
             // We know the cache file will either exist at the runMduPath because it 
@@ -3143,7 +3147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (percentage - previousProgress < 0.01) return;
 
             previousProgress = percentage;
-            runner.OnProgressChanged();
+            DimrRunner.OnProgressChanged();
             base.OnProgressChanged();
         }
 
@@ -3351,7 +3355,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
                 Grid = null;
                 DisposeSnapApi();
-                runner?.Dispose();
+                DimrRunner?.Dispose();
                 syncers.ForEach(s => s.Dispose());
                 syncers.Clear();
 

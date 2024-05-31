@@ -41,11 +41,6 @@ namespace DeltaShell.Dimr
         string ShortName { get; }
 
         /// <summary>
-        /// Gets the type of the exporter.
-        /// </summary>
-        Type ExporterType { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this <see cref="IDimrModel"/> can run parallel.
         /// </summary>
         bool CanRunParallel { get; }
@@ -76,6 +71,11 @@ namespace DeltaShell.Dimr
         new ActivityStatus Status { get; set; }
         
         bool RunsInIntegratedModel { get; set; }
+        
+        /// <summary>
+        /// Gets the runner for this model.
+        /// </summary>
+        DimrRunner DimrRunner { get; }
 
         /// <summary>
         /// Gets the dimr export directory path.

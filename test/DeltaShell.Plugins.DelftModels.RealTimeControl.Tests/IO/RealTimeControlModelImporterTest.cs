@@ -47,11 +47,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         {
             Assert.AreEqual("xml files|*.xml", importer.FileFilter);
         }
-
+        
         [Test]
-        public void GivenARealTimeControlModelImporter_WhenMasterFileExtensionIsCalled_ThenExpectedIsReturned()
+        [TestCase(null, ExpectedResult = false)]
+        [TestCase("", ExpectedResult = false)]
+        [TestCase(".", ExpectedResult = true)]
+        [TestCase("settings.json", ExpectedResult = true)]
+        [TestCase("SETTINGS.JSON", ExpectedResult = true)]
+        [TestCase("settings.xml", ExpectedResult = false)]
+        [TestCase("flowfm.mdu", ExpectedResult = false)]
+        [TestCase("Sobek_3b.fnm", ExpectedResult = false)]
+        public bool GivenARealTimeControlModelImporter_WithInputFile_ThenExpectedIsReturned(string path)
         {
-            Assert.AreEqual("json", importer.MasterFileExtension);
+            return importer.CanImportDimrFile(path);
         }
 
         [Test]
