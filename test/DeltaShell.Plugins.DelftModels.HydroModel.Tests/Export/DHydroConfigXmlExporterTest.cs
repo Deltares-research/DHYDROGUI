@@ -132,11 +132,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml") };
             exporter.Export(hydroModel, null);
 
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dimr.xml")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "dflowfm")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "rtc")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "rtc/rtcToolsConfig.xml")));
+            Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "rtc"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "rtc/rtcToolsConfig.xml"), Does.Exist);
         }
 
         [Test]
@@ -288,13 +288,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml") };
             exporter.Export(hydroModel, null);
 
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dimr.xml")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "dflowfm")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "rtc")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "rtc/rtcToolsConfig.xml")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "wave")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "wave/Waves.mdw")));
+            Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "rtc"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "rtc/rtcToolsConfig.xml"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "wave"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "wave/Waves.mdw"), Does.Exist);
         }
 
         [Test]
@@ -345,9 +345,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             waterFlowFmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
             exporter.Export(waterFlowFmModel, null);
 
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dimr.xml")));
-            Assert.IsTrue(Directory.Exists(Path.Combine(dirInfo.FullName, "dflowfm")));
-            Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu")));
+            Assert.That(Path.Combine(dirInfo.FullName, "dimr.xml"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm"), Does.Exist);
+            Assert.That(Path.Combine(dirInfo.FullName, "dflowfm/FlowFM.mdu"), Does.Exist);
         }
 
         [Test]

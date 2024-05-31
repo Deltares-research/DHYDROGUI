@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TimeSeries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.wldelft.nl/fews/PI" xsi:schemaLocation="http://www.wldelft.nl/fews/PI C:\D-HYDRO-test\_SimpleModel\export\rtc\pi_timeseries.xsd" version="1.2">
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>[TimeRule]Maeslantkering/ts_Maeslant_GateOpeningWidth</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2050-01-01" time="00:00:00" />
+      <endDate date="2050-01-05" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2050-01-01" time="00:00:00" value="360" />
+    <event date="2050-01-05" time="00:00:00" value="360" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>[TimeRule]Maeslantkering/ts_Maeslant_GateLowerEdgeLevel</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2050-01-01" time="00:00:00" />
+      <endDate date="2050-01-05" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2050-01-01" time="00:00:00" value="-6.7" />
+    <event date="2050-01-05" time="00:00:00" value="-6.7" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>[TimeRule]Hartelkering/ts_HartelkeringZ_GateLowerEdgeLevel</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2050-01-01" time="00:00:00" />
+      <endDate date="2050-01-05" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2050-01-01" time="00:00:00" value="3.5" />
+    <event date="2050-01-05" time="00:00:00" value="3.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>[TimeRule]Hartelkering/ts_HartelkeringN_GateLowerEdgeLevel</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2050-01-01" time="00:00:00" />
+      <endDate date="2050-01-05" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2050-01-01" time="00:00:00" value="3.5" />
+    <event date="2050-01-05" time="00:00:00" value="3.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>[TimeRule]Volkerakdam/ts_Volkerak1_GateLowerEdgeLevel</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2050-01-01" time="00:00:00" />
+      <endDate date="2050-01-05" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2050-01-01" time="00:00:00" value="-4.25" />
+    <event date="2050-01-05" time="00:00:00" value="-4.25" />
+  </series>
+</TimeSeries>

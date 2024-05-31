@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr https://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
+  <documentation>
+    <fileVersion>1.2</fileVersion>
+    <createdBy>Deltares, Coupling Team</createdBy>
+    <creationDate>2024-02-22T14:18:33.9396908Z</creationDate>
+  </documentation>
+  <!--<control>
+          The <control> specifies the workflow of the deltaresHydro executable.
+          It indicates which components are started in which order. If the data
+          transfer is to be arranged by the main program "d_hydro", then a coupler
+          should be included.
+          The main <control> block is a sequential block; this means that each
+          component is initialized, time stepped, and finalized before the next
+          component starts.
+      <parallel>
+          Within a <parallel> tag the components are started
+          concurrently (if the mpi process ids listed per component don't overlap)
+          or executed synchronously in sequence (first all initialize, then time
+          stepping, and to conclude all finalization calls).
+      <start>
+          A <parallel> block contains exactly one <start/> component, defining the
+          start and end time of the simulation. This is the component inside
+          the <parallel> block with the smallest time step. All other
+          components must be defined with a <startGroup>.
+      <startGroup>
+          A <startGroup> should be used if a component (possibly including couplers)
+          should only be executed at a subset of simulation time steps.
+
+      For each component/coupler there will be a corresponding component/coupler
+      specification block defined below.-->
+  <control>
+    <parallel>
+      <startGroup>
+        <time>0 600 99999999</time>
+        <start name="real-time control" />
+        <coupler name="rtc_to_flow" />
+      </startGroup>
+      <start name="RMM-simple" />
+    </parallel>
+  </control>
+  <component name="real-time control">
+    <library>FBCTools_BMI</library>
+    <workingDir>../rtc</workingDir>
+    <inputFile>.</inputFile>
+  </component>
+  <component name="RMM-simple">
+    <library>dflowfm</library>
+    <workingDir>.</workingDir>
+    <inputFile>RMM-simple.mdu</inputFile>
+  </component>
+  <coupler name="rtc_to_flow">
+    <sourceComponent>real-time control</sourceComponent>
+    <targetComponent>RMM-simple</targetComponent>
+    <item>
+      <sourceName>[Output]NW_1026.34_C_SK_Maeslantkering/GateOpeningWidth</sourceName>
+      <targetName>generalstructures/NW_1026.34_C_SK_Maeslantkering/GateOpeningWidth</targetName>
+    </item>
+    <item>
+      <sourceName>[Output]NW_1026.34_C_SK_Maeslantkering/GateLowerEdgeLevel</sourceName>
+      <targetName>generalstructures/NW_1026.34_C_SK_Maeslantkering/GateLowerEdgeLevel</targetName>
+    </item>
+    <item>
+      <sourceName>[Output]HK_1.67_C_SK_HartelkeringZ/GateLowerEdgeLevel</sourceName>
+      <targetName>generalstructures/HK_1.67_C_SK_HartelkeringZ/GateLowerEdgeLevel</targetName>
+    </item>
+    <item>
+      <sourceName>[Output]HK_1.67_R_SK_HartelkeringN/GateLowerEdgeLevel</sourceName>
+      <targetName>generalstructures/HK_1.67_R_SK_HartelkeringN/GateLowerEdgeLevel</targetName>
+    </item>
+    <item>
+      <sourceName>[Output]HD_998.75_L_US_Volkeraksluizen/GateLowerEdgeLevel</sourceName>
+      <targetName>generalstructures/HD_998.75_L_US_Volkeraksluizen/GateLowerEdgeLevel</targetName>
+    </item>
+    <logger>
+      <workingDir>.</workingDir>
+      <outputFile>rtc_to_flow.nc</outputFile>
+    </logger>
+  </coupler>
+</dimrConfig>

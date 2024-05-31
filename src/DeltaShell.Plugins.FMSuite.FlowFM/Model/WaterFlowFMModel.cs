@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
@@ -59,7 +60,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     {
         private const string HydroAreaTag = "hydro_area_tag";
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
+
+        private readonly FileSystem fileSystem;
         private readonly DimrRunner runner;
+        
         private WaterFlowFMModelDefinition modelDefinition;
 
         /// <summary>
@@ -67,6 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// </summary>
         public WaterFlowFMModel() : base("FlowFM")
         {
+            fileSystem = new FileSystem();
             runner = new DimrRunner(this, new DimrApiFactory());
 
             // Create sediment model data item

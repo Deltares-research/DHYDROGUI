@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             string sourceOutputDirectoryPath = sourceOutputDirectory.FullName;
             string targetOutputDirectoryPath = targetOutputDirectory.FullName;
 
-            bool sourceIsWorkingDir = sourceOutputDirectoryPath == WorkingOutputDirectoryPath;
+            bool sourceIsWorkingDir = fileSystem.ArePathsEqual(sourceOutputDirectoryPath, WorkingOutputDirectoryPath);
 
             if (OutputIsEmpty && !HasOpenFunctionStores)
             {
