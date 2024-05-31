@@ -32,5 +32,6 @@
     <PackageReference Include="PostSharp.Redist" />
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="System.Threading.Tasks.Extensions" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
   </ItemGroup>
 </Project>

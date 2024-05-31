@@ -118,6 +118,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
   
   <ItemGroup>
@@ -140,6 +141,7 @@
     <PackageReference Include="RhinoMocks" />
     <PackageReference Include="SharpTestsEx" />
     <PackageReference Include="System.Threading.Tasks.Extensions" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     <PackageReference Include="ValidationAspects.dll" />
   </ItemGroup>
 

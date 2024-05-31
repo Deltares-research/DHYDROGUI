@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
@@ -12,16 +13,18 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
 using log4net;
+using static DeltaShell.Plugins.DelftModels.RealTimeControl.RealTimeControlXmlFiles;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
-    public static class RealTimeControlXmlWriter
+    public class RealTimeControlXmlWriter : IRealTimeControlXmlWriter
     {
         public const string RtcToolsConfigXsd = "rtcToolsConfig.xsd";
         public const string RtcRuntimeConfigxsd = "rtcRuntimeConfig.xsd";
         public const string PiTimeseriesxsd = "pi_timeseries.xsd";
         public const string RtcDataConfigXsd = "rtcDataConfig.xsd";
         public const string TreeVectorxsd = "treeVector.xsd";
+        
         private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
         private static readonly XNamespace Pi = "http://www.wldelft.nl/fews/PI";
         private static readonly XNamespace Xsi = "http://www.w3.org/2001/XMLSchema-instance";
@@ -29,7 +32,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         private static ILog Log = LogManager.GetLogger(typeof(RealTimeControlXmlWriter));
 
-        public static void CopyXsds(string copyToDirectory)
+        /// <inheritdoc />
+        public void WriteToXml(RealTimeControlModel model, string directory)
+        {
+            Ensure.NotNull(model, nameof(model));
+            Ensure.NotNullOrEmpty(directory, nameof(directory));
+            
+            if (!Directory.Exists(directory))
+            {
+                throw new DirectoryNotFoundException($@"Directory '{directory}' does not exist.");
+            }
+            
+            model.RefreshInitialState();
+            model.SetTimeLagHydraulicRulesToTimeSteps(model.ControlGroups, model.TimeStep);
+
+            CopyXsds(directory);
+
+            WriteRuntimeConfigXml(model, directory);
+            WriteToolsConfigXml(model, directory);
+            WriteTimeSeriesXml(model, directory);
+            WriteDataConfigXml(model, directory);
+            WriteStateVectorXml(model, directory);
+        }
+
+        private static void CopyXsds(string copyToDirectory)
         {
             foreach (string xsdFile in Directory.GetFiles(DimrApiDataSet.RtcXsdDirectory).Where(f => f.EndsWith("xsd")))
             {
@@ -37,6 +63,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             }
         }
 
+        private static void WriteRuntimeConfigXml(RealTimeControlModel model, string directory)
+        {
+            GetRuntimeConfigXml(directory, model, model.LimitMemory, model.LogLevel).Save(Path.Combine(directory, XmlRuntime));
+        }
+        
         public static XDocument GetRuntimeConfigXml(string xsdPath, RealTimeControlModel realTimeControlModel, bool limitMemory, int logLevel)
         {
             var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcRuntimeConfigxsd });
@@ -63,6 +94,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             xmlValidator.Validate(xDocument);
             return xDocument;
         }
+        
+        private static void WriteToolsConfigXml(RealTimeControlModel model, string directory)
+        {
+            GetToolsConfigXml(directory, model.ControlGroups, model.WriteRestart || model.UseRestart).Save(Path.Combine(directory, XmlTools));
+        }
 
         public static XDocument GetToolsConfigXml(string xsdPath, IList<ControlGroup> controlGroups, bool includeExtraStatesForRestart = false)
         {
@@ -84,6 +120,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
             xmlValidator.Validate(xDocument);
             return xDocument;
+        }
+        
+        private static void WriteDataConfigXml(RealTimeControlModel model, string directory)
+        {
+            string timeSeriesPathFileName = File.Exists(Path.Combine(directory, RealTimeControlXmlFiles.XmlTimeSeries)) ? RealTimeControlXmlFiles.XmlTimeSeries : null;
+            GetDataConfigXml(directory, model, model.ControlGroups, timeSeriesPathFileName).Save(Path.Combine(directory, XmlData));
         }
 
         public static XDocument GetDataConfigXml(string xsdPath, ITimeDependentModel timeDependentModel, IList<ControlGroup> controlGroups, string timeSeriesPathFileName)
@@ -109,6 +151,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return xDocument;
         }
 
+        private static void WriteTimeSeriesXml(RealTimeControlModel model, string directory)
+        {
+            GetTimeSeriesXml(directory, model, model.ControlGroups)?.Save(Path.Combine(directory, RealTimeControlXmlFiles.XmlTimeSeries));
+        }
+        
         public static XDocument GetTimeSeriesXml(string xsdPath, ITimeDependentModel timeDependentModel, IList<ControlGroup> controlGroups)
         {
             var xmlValidator =
@@ -126,6 +173,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             }
 
             return null;
+        }
+        
+        private static void WriteStateVectorXml(RealTimeControlModel model, string directory)
+        {
+            if (!model.UseRestart)
+            {
+                GetStateVectorXml(directory, model.ControlGroups).Save(Path.Combine(directory, XmlImportState));
+            }
         }
 
         public static XDocument GetStateVectorXml(string xsdPath, IList<ControlGroup> controlGroups)

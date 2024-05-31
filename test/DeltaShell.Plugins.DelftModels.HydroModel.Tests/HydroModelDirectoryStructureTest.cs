@@ -1,11 +1,16 @@
-using System.Collections.Generic;
 using System.IO;
+using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr;
+using DeltaShell.Core.Services;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -24,10 +29,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string modelDirectory = temp.CopyDirectoryToTempDirectory(testDataDirectory);
                 string exportModelDirectory = temp.CreateDirectory("SimpleModel_export");
 
-                List<IDimrModelFileImporter> dimrModelImporters = GetDimrModelFileImporters();
-
-                var importer = new DHydroConfigXmlImporter(() => dimrModelImporters, () => null);
-                var exporter = new DHydroConfigXmlExporter();
+                DHydroConfigXmlImporter importer = CreateImporter();
+                DHydroConfigXmlExporter exporter = CreateExporter();
 
                 string importDimrFilePath = Path.Combine(modelDirectory, "computation", "dimr.xml");
                 var hydroModel = (HydroModel)importer.ImportItem(importDimrFilePath);
@@ -43,13 +46,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static List<IDimrModelFileImporter> GetDimrModelFileImporters()
+        private static DHydroConfigXmlImporter CreateImporter()
         {
-            return new List<IDimrModelFileImporter>
+            var fileImportService = new FileImportService(Substitute.For<IHybridProjectRepository>());
+            var hydroModelReader = new HydroModelReader(fileImportService);
+
+            fileImportService.RegisterFileImporter(new WaterFlowFMFileImporter(() => null));
+            fileImportService.RegisterFileImporter(new RealTimeControlModelImporter
             {
-                new WaterFlowFMFileImporter(() => null),
-                new RealTimeControlModelImporter()
-            };
+                XmlReaders =
+                {
+                    new RealTimeControlModelXmlReader()
+                }
+            });
+
+            return new DHydroConfigXmlImporter(fileImportService, hydroModelReader, () => null);
+        }
+
+        private static DHydroConfigXmlExporter CreateExporter()
+        {
+            var fileExportService = new FileExportService();
+
+            fileExportService.RegisterFileExporter(new FMModelFileExporter());
+            fileExportService.RegisterFileExporter(new WaveModelFileExporter());
+            fileExportService.RegisterFileExporter(new RealTimeControlModelExporter
+            {
+                XmlWriters =
+                {
+                    new RealTimeControlXmlWriter(),
+                    new RealTimeControlRestartXmlWriter()
+                }
+            });
+
+            return new DHydroConfigXmlExporter(fileExportService);
         }
 
         private static void AssertPathExists(string root, string relativePath)

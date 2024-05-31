@@ -4,6 +4,19 @@
   <PropertyGroup>
     <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\DeltaShell.Plugins.DelftModels.RealTimeControl</OutputPath>
   </PropertyGroup>
+
+  <Target Name="PreBuild" BeforeTargets="CoreCompile" Condition="!Exists('$(ProjectDir)\Xsd\rtcShapesConfig.cs')">
+    <Exec Command="cd &quot;$(ProjectDir)\Xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS rtcShapesConfig.xsd /namespace:DeltaShell.Plugins.DelftModels.RTCShapes.Xsd&#xD;&#xA;" />
+    <ItemGroup>
+      <Compile Include="Xsd\rtcShapesConfig.cs" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <None Update="Xsd\rtcShapesConfig.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
   <ItemGroup>
     <Reference Include="DelftTools.Shell.Core">
@@ -19,6 +32,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
   
   <ItemGroup>
@@ -38,5 +55,10 @@
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.IO.Abstractions">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
+  
 </Project>

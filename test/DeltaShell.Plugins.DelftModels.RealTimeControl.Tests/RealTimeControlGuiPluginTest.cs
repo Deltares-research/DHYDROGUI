@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Controls;
@@ -10,19 +11,30 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
+using DeltaShell.Plugins.DelftModels.RTCShapes.IO;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
-using Rhino.Mocks.Interfaces;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 {
     [TestFixture]
     public class RealTimeControlGuiPluginTest
     {
-        private static readonly MockRepository mocks = new MockRepository();
+        private IGui gui;
+        private IApplication application;
+
+        [SetUp]
+        public void SetUp()
+        {
+            gui = Substitute.For<IGui>();
+            application = Substitute.For<IApplication>();
+
+            gui.Application.Returns(application);
+        }
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -39,42 +51,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.That(helper.IsDataSet, Is.False);
             Assert.That(helper.CopiedShapes, Is.Empty);
 
-            var gui = mocks.DynamicMock<IGui>();
-            var documentViews = mocks.DynamicMock<IViewList>();
+            var documentViews = Substitute.For<IViewList>();
             using (var clipboardMock = new ClipboardMock())
             using (var mapView = new MapView())
             {
                 clipboardMock.GetData_Returns_SetData();
 
-                var activityRunner = mocks.DynamicMock<IActivityRunner>();
-                var application = mocks.DynamicMock<IApplication>();
+                var activityRunner = Substitute.For<IActivityRunner>();
                 var project = new Project();
 
-                Expect.Call(documentViews.ActiveView).Return(mapView);
-                Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
-                Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
-                Expect.Call(application.ActivityRunner).Return(activityRunner).Repeat.Any();
-                Expect.Call(gui.Application).Return(application).Repeat.Any();
-                Expect.Call(application.Project).Return(project).Repeat.Any();
+                documentViews.ActiveView.Returns(mapView);
+                gui.DocumentViews.Returns(documentViews);
+                gui.ToolWindowViews.Returns(documentViews);
+                application.ActivityRunner.Returns(activityRunner);
+                application.Project.Returns(project);
 
-                application.ProjectClosing += null;
-                IEventRaiser projectClosingRaiser = LastCall.IgnoreArguments().GetEventRaiser();
-
-                mocks.ReplayAll();
-
-                var pluginGui = new RealTimeControlGuiPlugin {Gui = gui};
+                RealTimeControlGuiPlugin pluginGui = CreatePlugin();
                 pluginGui.Activate();
 
                 // Precondition
-                helper.SetCopiedData(new ShapeBase[]
-                {
-                    new RuleShape()
-                });
+                helper.SetCopiedData(new ShapeBase[] { new RuleShape() });
                 Assert.IsTrue(helper.IsDataSet);
                 CollectionAssert.IsNotEmpty(helper.CopiedShapes);
 
                 // Call
-                projectClosingRaiser.Raise(project);
+                application.ProjectClosing += Raise.Event<Action<Project>>(project);
 
                 // Assert
                 Assert.IsFalse(helper.IsDataSet);
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Test]
         public void TestGetObjectProperties()
         {
-            var guiPlugin = new RealTimeControlGuiPlugin();
+            RealTimeControlGuiPlugin guiPlugin = CreatePlugin();
             List<PropertyInfo> propertyInfos = guiPlugin.GetPropertyInfos().ToList();
 
             PropertyInfo propertyInfo = propertyInfos.First(pi => pi.ObjectType == typeof(StandardCondition));
@@ -120,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void GetProjectTreeViewNodePresenters_ContainsCorrectNodePresenters()
         {
             // Given
-            var guiPlugin = new RealTimeControlGuiPlugin();
+            RealTimeControlGuiPlugin guiPlugin = CreatePlugin();
 
             // When
             ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
@@ -142,28 +143,78 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void CanExport_ReturnsFalseForRealTimeControlModel()
         {
             // Given
-            var guiPlugin = new RealTimeControlGuiPlugin();
+            RealTimeControlGuiPlugin guiPlugin = CreatePlugin();
             var model = new RealTimeControlModel();
-            
+
             // When
             bool canExport = guiPlugin.CanExport(model);
-            
+
             // Then
             Assert.That(canExport, Is.False);
         }
-        
+
         [Test]
         public void CanExport_ReturnsFalseForOtherThanRealTimeControlModel()
         {
             // Given
-            var guiPlugin = new RealTimeControlGuiPlugin();
+            RealTimeControlGuiPlugin guiPlugin = CreatePlugin();
             var model = Substitute.For<IProjectItem>();
-            
+
             // When
             bool canExport = guiPlugin.CanExport(model);
-            
+
             // Then
             Assert.That(canExport, Is.True);
+        }
+
+        [Test]
+        public void OnApplicationOpened_RegistersShapesXmlReaderWriter()
+        {
+            // Given
+            using (CreatePlugin())
+            {
+                var project = new Project();
+                var importer = new RealTimeControlModelImporter();
+                var exporter = new RealTimeControlModelExporter();
+
+                application.FileImporters.Returns(new[] { importer });
+                application.FileExporters.Returns(new[] { exporter });
+
+                // When
+                application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+                // Then
+                Assert.That(importer.XmlReaders, Has.One.InstanceOf<ShapesXmlReader>());
+                Assert.That(exporter.XmlWriters, Has.One.InstanceOf<ShapesXmlWriter>());
+            }
+        }
+        
+        [Test]
+        public void OnApplicationOpened_EventRaisedTwice_RegistersSingleShapesXmlReaderWriter()
+        {
+            // Given
+            using (CreatePlugin())
+            {
+                var project = new Project();
+                var importer = new RealTimeControlModelImporter();
+                var exporter = new RealTimeControlModelExporter();
+
+                application.FileImporters.Returns(new[] { importer });
+                application.FileExporters.Returns(new[] { exporter });
+
+                // When
+                application.ProjectOpened += Raise.Event<Action<Project>>(project);
+                application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+                // Then
+                Assert.That(importer.XmlReaders, Has.One.InstanceOf<ShapesXmlReader>());
+                Assert.That(exporter.XmlWriters, Has.One.InstanceOf<ShapesXmlWriter>());
+            }
+        }
+
+        private RealTimeControlGuiPlugin CreatePlugin()
+        {
+            return new RealTimeControlGuiPlugin { Gui = gui };
         }
     }
 }

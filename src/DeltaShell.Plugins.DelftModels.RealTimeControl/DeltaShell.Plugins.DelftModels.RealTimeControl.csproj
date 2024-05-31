@@ -100,11 +100,17 @@
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Newtonsoft.Json">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="PostSharp">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="PostSharp.Redist">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.IO.Abstractions">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

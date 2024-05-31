@@ -62,6 +62,7 @@ AcceptanceModelsRTCFMDimrXmlBased
 # Automatically generated
 src/DeltaShell.Dimr/drtc_xsd/rtcRuntimeConfig.cs
 src/DeltaShell.Dimr/dimr_xsd/dimr.cs
+src/DeltaShell.Plugins.DelftModels.RTCShapes/Xsd/rtcShapesConfig.cs
 .idea/
 
 # Ranorex
