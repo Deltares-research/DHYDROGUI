@@ -93,15 +93,15 @@ mode="Desktop">
 					name="appicon"
 					type="System.Drawing.Icon, System.Drawing, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
 						iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
-jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGkSURBVDhPlZJLKERRGMfvPMwVo/FovDMszGKK
-lNSYWbCYiFIUsqKwISWmJCwkJAtRkkdmZSMRCzYz2crKwpBHxNiRpmSjxh2/Y2Yh8zD+9ev7zvc4
-9zv3HCmKskAOuf+XUaVSrWPLQR0mE0rBBPE3pnlao9HcYI/gWKvVPrW0d37se7yKIT3DT2xFlIWq
-o6uXDS7gXq1Wn2CvTCXmd68vGGR9Tr4HNN+VMSRGzA9jhAmmeNg69Co5eQVvbHjNFAfEWyCuUimc
-pPmxqNj8ztfPwuP3QSOUiKJYEs0umn3YPdZtUAHNrGdhA38IoouCBfDgdoENf4bR7+zjLsU+tqno
-dLoXYsvkkkT9bzWQ3MXWggPfbWkaCdhGVxVjed0HRzkl3gEZECHqVWvYakjBX5Flvd/qXFKsTnfQ
-Uj8ckOXkV+L75MWRIqQFK6SCuKphRr+tGpxXfkLskpwD/lQaVEE/X/VU1kx9cv5nMRkxvShIVIU0
-LYorxc6xzg2FY0s8VfGIyqCbph3Yxm8FA/ypbBBXOAEDUBOOiX+UsESxuOe4716SJOkLiYdcjfOV
-Q6gAAAAASUVORK5CYII=
+jwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAGkSURBVDhPlZJLKERRGMfvPMwt463RNHkWGzVS
+mhpmwWJSpFCUhVLYkNKYlJgFhdjIQiPPjZXkVbIZ2crKYpBH5LEjTclmatzxO+YuZB7Gv3593/ke
+537nniPFUC7IEff/Mmk0mmVsBWhVcqAMiiDxxjRP6nS6G+whHOv1+ufmts7grs+vZGRmBYh5RVmk
+OrZ62eAC7rVa7Qn2qrC49OP8KRxm7SffA7rvyjgSI1pUTOBhioeNA7+SZ7a8s+E1U+wTb4WEMlI4
+TvNjQVHpB18/U8fvg0YoEUXxJJrXaX7C7rBuh0poYT0NK/guiC0K5uAItwtq8KcY/c4xtqY4RlcV
+g8HwSmyBXIqo/60GktvYOnDi+8qbhkM1I4uKyeoMcpRT4h2QDVGiXrOErYZUfK8sGwN297xid/vC
+5fWukCzLb8T3yIsjRUkPdjCCuKohRr+1Dc4qPyF2Sc4JfyodbNDPV4+qaic+Of+LmIxYmihIVvk0
+zYsrxc6wNkfC8SWeqnhEVuimaQs28dsgE/5UHogr9MAA1Kox8Y+SligW95zw3UuSJH0BGc5cYekx
+u4UAAAAASUVORK5CYII=
 					</attribute>
 					<attribute
 					name="state"
@@ -923,6 +923,32 @@ AgICAgICI/DvWO3/D06Z0UIfuCRLHgs=
 				</robustPath>
 			</info>
 		</WaitForRecordItem>
+		<mouseitem
+		action="Click"
+		button="Left"
+		duration="300ms"
+		enabled="True"
+		loc="Center"
+		movetime="300ms"
+		optional="False"
+		searchpropertyid="e69b9315-8205-41e6-9b18-2164f54748f4"
+		sx="0"
+		sy="0"
+		warnoutofbounds="False">
+			<comment>
+			</comment>
+			<bindings>
+			</bindings>
+			<info
+			id="938a7dc3-c4ba-420f-91e0-f332c923eba3"
+			sourcename="RepositoryEditor">
+				<path>
+					//list[@automationid='StartScreenTabControl']/container[@automationid='PART_LeftContentGrid']/button[1]
+				</path>
+				<robustPath>
+				</robustPath>
+			</info>
+		</mouseitem>
 		<explicitdelayitem
 		duration="300ms"
 		enabled="True"

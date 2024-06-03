@@ -1859,6 +1859,28 @@ rqiif5OuenBnklpw12oZm+SVPBLqIQwMgvxQNbgBt7iSGK+CabyAkmUNn4x+DguPiD1QVAwoxQJR
 QRwAKQbFM950z8DAwAAAO9jvoqXXdEAAAAAASUVORK5CYII=
 			</icon>
 		</appfolder>
+		<folder
+		capname="list"
+		id="e4ccab27-b381-4c73-8926-25868eeac74b"
+		isrooted="True"
+		name="StartScreenTabControl"
+		refimgid="b1495b95-e16d-4bb1-818e-c637535a8383"
+		searchtimeout="30000ms"
+		usecache="False">
+			<item
+			addcaps="button,wpfelement,wpfgroupelement"
+			capname="button"
+			id="938a7dc3-c4ba-420f-91e0-f332c923eba3"
+			name="BackButton"
+			refimgid="6f4079be-ab94-4c37-8197-253a65add19f"
+			robustPath=""
+			searchtimeout="30000ms">
+				//list[@automationid='StartScreenTabControl']/container[@automationid='PART_LeftContentGrid']/button[1]
+			</item>
+			<basepath>
+				//list[@automationid='StartScreenTabControl']
+			</basepath>
+		</folder>
 		<appfolder
 		addcaps="contextmenu,nativewindow,wpfwin32element,wpfelement,wpfgroupelement"
 		capname="contextmenu"

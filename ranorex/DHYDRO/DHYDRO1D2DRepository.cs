@@ -28,6 +28,7 @@ namespace DHYDRO
     {
         static DHYDRO1D2DRepository instance = new DHYDRO1D2DRepository();
         DHYDRO1D2DRepositoryFolders.DSWindowAppFolder _dswindow;
+        DHYDRO1D2DRepositoryFolders.StartScreenTabControlFolder _startscreentabcontrol;
         DHYDRO1D2DRepositoryFolders.ContextMenuAppFolder _contextmenu;
         DHYDRO1D2DRepositoryFolders.DialogSelectItemAppFolder _dialogselectitem;
         DHYDRO1D2DRepositoryFolders.DialogCoordinateConversionAppFolder _dialogcoordinateconversion;
@@ -70,6 +71,7 @@ namespace DHYDRO
             : base("DHYDRO1D2DRepository", "/", null, 0, false, "fe79b221-ceb8-4c0d-a388-04ca7c0e64d9", ".\\RepositoryImages\\DHYDRO1D2DRepositoryfe79b221.rximgres")
         {
             _dswindow = new DHYDRO1D2DRepositoryFolders.DSWindowAppFolder(this);
+            _startscreentabcontrol = new DHYDRO1D2DRepositoryFolders.StartScreenTabControlFolder(this);
             _contextmenu = new DHYDRO1D2DRepositoryFolders.ContextMenuAppFolder(this);
             _dialogselectitem = new DHYDRO1D2DRepositoryFolders.DialogSelectItemAppFolder(this);
             _dialogcoordinateconversion = new DHYDRO1D2DRepositoryFolders.DialogCoordinateConversionAppFolder(this);
@@ -840,6 +842,15 @@ namespace DHYDRO
         public virtual DHYDRO1D2DRepositoryFolders.DSWindowAppFolder DSWindow
         {
             get { return _dswindow; }
+        }
+
+        /// <summary>
+        /// The StartScreenTabControl folder.
+        /// </summary>
+        [RepositoryFolder("e4ccab27-b381-4c73-8926-25868eeac74b")]
+        public virtual DHYDRO1D2DRepositoryFolders.StartScreenTabControlFolder StartScreenTabControl
+        {
+            get { return _startscreentabcontrol; }
         }
 
         /// <summary>
@@ -7344,6 +7355,72 @@ namespace DHYDRO
                 get
                 {
                     return _maptabbuttonInfo;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The StartScreenTabControlFolder folder.
+        /// </summary>
+        [RepositoryFolder("e4ccab27-b381-4c73-8926-25868eeac74b")]
+        public partial class StartScreenTabControlFolder : RepoGenBaseFolder
+        {
+            RepoItemInfo _backbuttonInfo;
+
+            /// <summary>
+            /// Creates a new StartScreenTabControl  folder.
+            /// </summary>
+            public StartScreenTabControlFolder(RepoGenBaseFolder parentFolder) :
+                    base("StartScreenTabControl", "//list[@automationid='StartScreenTabControl']", parentFolder, 30000, null, false, "e4ccab27-b381-4c73-8926-25868eeac74b", "")
+            {
+                _backbuttonInfo = new RepoItemInfo(this, "BackButton", "container[@automationid='PART_LeftContentGrid']/button[1]", "", 30000, null, "938a7dc3-c4ba-420f-91e0-f332c923eba3");
+            }
+
+            /// <summary>
+            /// The Self item.
+            /// </summary>
+            [RepositoryItem("e4ccab27-b381-4c73-8926-25868eeac74b")]
+            public virtual Ranorex.List Self
+            {
+                get
+                {
+                    return _selfInfo.CreateAdapter<Ranorex.List>(true);
+                }
+            }
+
+            /// <summary>
+            /// The Self item info.
+            /// </summary>
+            [RepositoryItemInfo("e4ccab27-b381-4c73-8926-25868eeac74b")]
+            public virtual RepoItemInfo SelfInfo
+            {
+                get
+                {
+                    return _selfInfo;
+                }
+            }
+
+            /// <summary>
+            /// The BackButton item.
+            /// </summary>
+            [RepositoryItem("938a7dc3-c4ba-420f-91e0-f332c923eba3")]
+            public virtual Ranorex.Button BackButton
+            {
+                get
+                {
+                    return _backbuttonInfo.CreateAdapter<Ranorex.Button>(true);
+                }
+            }
+
+            /// <summary>
+            /// The BackButton item info.
+            /// </summary>
+            [RepositoryItemInfo("938a7dc3-c4ba-420f-91e0-f332c923eba3")]
+            public virtual RepoItemInfo BackButtonInfo
+            {
+                get
+                {
+                    return _backbuttonInfo;
                 }
             }
         }

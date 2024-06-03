@@ -54,12 +54,11 @@ namespace DHYDRO.Modules.Application
             {
                 Report.Info("Attempt #" + i.ToString() + " to start up and automate the application.");
                 StartAutProcessIDVar = ValueConverter.ToString(Host.Local.RunApplication(ExecutablePath, "", "", false));
-                repo.DSWindow.SelfInfo.WaitForExists(new Duration(new TimeSpan(0,10,0)));
                 
                 try 
                 {
+                	repo.DSWindow.SelfInfo.WaitForExists(new Duration(new TimeSpan(0,10,0)));
                     Delay.Duration(300, false);
-                    repo.DSWindow.ListView.Self.PressKeys("{Escape}");
                     Report.Info("Application started up and can be automated properly!");
                     break;
                 }
