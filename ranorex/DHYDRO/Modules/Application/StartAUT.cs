@@ -114,7 +114,11 @@ namespace DHYDRO.Modules.Application
             Report.Log(ReportLevel.Info, "Wait", "Waiting 5m to exist. Associated repository item: 'DSWindow'", repo.DSWindow.SelfInfo, new ActionTimeout(300000), new RecordItemIndex(2));
             repo.DSWindow.SelfInfo.WaitForExists(300000);
             
-            Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(3));
+            Report.Log(ReportLevel.Info, "Mouse", "Mouse Left Click item 'StartScreenTabControl.BackButton' at Center.", repo.StartScreenTabControl.BackButtonInfo, new RecordItemIndex(3));
+            repo.StartScreenTabControl.BackButton.Click();
+            Delay.Milliseconds(0);
+            
+            Report.Log(ReportLevel.Info, "Delay", "Waiting for 300ms.", new RecordItemIndex(4));
             Delay.Duration(300, false);
             
         }
