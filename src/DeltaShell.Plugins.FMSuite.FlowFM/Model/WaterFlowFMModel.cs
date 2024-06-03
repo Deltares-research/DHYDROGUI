@@ -63,6 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
 
         private readonly FileSystem fileSystem;
+        private readonly FileHierarchyResolver fileHierarchyResolver;
         
         private WaterFlowFMModelDefinition modelDefinition;
 
@@ -72,6 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public WaterFlowFMModel() : base("FlowFM")
         {
             fileSystem = new FileSystem();
+            fileHierarchyResolver = new FileHierarchyResolver(fileSystem);
 
             // Create sediment model data item
             SedimentModelDataItem = new SedimentModelDataItem();

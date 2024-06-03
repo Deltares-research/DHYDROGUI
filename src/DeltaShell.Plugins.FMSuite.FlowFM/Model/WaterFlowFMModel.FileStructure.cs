@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
-using System.Text.RegularExpressions;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -340,21 +340,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             IEnumerable<string> fileLocations = modelDefinition.FileProperties.SelectMany(x => x.GetFileLocationValues());
 
-            int maxLevelsUp = fileLocations.Max(x => Regex.Matches(x, @"\.{2,}").Count);
-            if (maxLevelsUp == 0)
+            IDirectoryInfo modelDir = fileHierarchyResolver.GetBaseDirectoryFromFileReferences(MduFilePath, fileLocations);
+            if (fileSystem.ArePathsEqual(modelDir.FullName, fileSystem.Path.GetDirectoryName(MduFilePath)))
             {
                 return null;
             }
 
-            string mduDir = GetMduDirectory();
-            var modelDir = new DirectoryInfo(mduDir);
-
-            for (var i = 0; i < maxLevelsUp; i++)
-            {
-                modelDir = modelDir?.Parent;
-            }
-
-            if (modelDir?.Name == DirectoryNameConstants.InputDirectoryName)
+            if (modelDir.Name == DirectoryNameConstants.InputDirectoryName)
             {
                 modelDir = modelDir.Parent;
             }

@@ -759,31 +759,6 @@
 				</databinding>
 			</testmodule>
 			<testmodule
-			id="41ab4ee7-e3f7-4891-bfcd-7e84c06794af"
-			name="SelectContextMenuItem"
-			ref="fa859b34-a160-4f2c-95ba-14fbb46bee3d"
-			type="Recording">
-				<description>
-					<![CDATA[Select Run option in context menu]]>
-				</description>
-				<databinding>
-					<var
-					dataname="ContextMenuOptionToExportDimr"
-					datasourceid="f8fd2949-9688-46ac-a536-4fdd054dd32d"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="RunOptionName"
-					datasourceid="fde9344d-a8cd-4597-a9f7-063d7aedb95a"
-					variableid="2e016fd9-9a12-4758-b017-fc804fc9c2b7"
-					variablename="SubstringInOptionName">
-					</var>
-				</missingdatabinding>
-			</testmodule>
-			<testmodule
 			id="423dd79e-8430-4f2c-89fd-4707921b8a92"
 			name="QueryTimeSeries"
 			ref="22840b78-eb71-4a50-a3fb-3fe29024e64e"
@@ -1247,28 +1222,6 @@
 					</var>
 				</databinding>
 			</testmodule>
-			<testmodule
-			id="6093a795-7a62-42c2-b1ce-778372a80737"
-			name="WaitForMessageInPanel"
-			ref="32ec47a0-3149-4df2-af94-407b6ab2fd70"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="FinishedExportingMessage"
-					datasourceid="f8fd2949-9688-46ac-a536-4fdd054dd32d"
-					variableid="8e5500c4-b59b-4c0c-9417-425c3691ddd3"
-					variablename="expectedMessage1stRow">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="messageWhenFinishedExporting"
-					datasourceid="18ae2be0-54da-440c-b5bc-75ae7103a3bd"
-					variableid="8e5500c4-b59b-4c0c-9417-425c3691ddd3"
-					variablename="expectedMessage1stRow">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 			<smartfoldernode
 			errorbehavior="ContinueParent"
 			id="60a77b37-4ca8-4501-b4de-e5d796d0e44f"
@@ -1683,12 +1636,6 @@
 					variablename="variableName">
 					</var>
 				</databinding>
-			</testmodule>
-			<testmodule
-			id="7d2e5c2b-b0ae-4f77-a098-85970dcab91e"
-			name="CloseOkDialog"
-			ref="d4da8175-ae96-47dc-9cd3-d7301667ef12"
-			type="Recording">
 			</testmodule>
 			<smartfoldernode
 			id="7fce368c-4a47-474a-bb4f-4598ac490171"
@@ -2666,20 +2613,6 @@
 					</var>
 				</missingdatabinding>
 			</testmodule>
-			<testmodule
-			id="d4c1a61f-bb9f-4841-846c-5c8e2ff40752"
-			name="SaveAsFile"
-			ref="e2e07b1f-fc3f-47b6-bff3-f79aadf7f36d"
-			type="Recording">
-				<databinding>
-					<var
-					dataname="ExportDimrFilePath"
-					datasourceid="f8fd2949-9688-46ac-a536-4fdd054dd32d"
-					variableid="badbcc3f-d50d-4e11-9cfe-3b802abe7811"
-					variablename="FilePath">
-					</var>
-				</databinding>
-			</testmodule>
 			<teardown
 			id="d618ba8f-5d66-4199-9dd4-7a6cdb275521"
 			name="teardown">
@@ -2886,6 +2819,19 @@
 					</param>
 				</parameters>
 			</testcase>
+			<modulegroup
+			id="e1e25bae-1eeb-42d1-9c73-b83172597962"
+			name="ExportDimrModel"
+			ref="ae57245a-f450-4c2b-a380-39f288b3b304">
+				<databinding>
+					<var
+					dataname="ExportDimrFilePath"
+					datasourceid="f8fd2949-9688-46ac-a536-4fdd054dd32d"
+					variableid="e98f476c-ea03-457e-97cc-d802fd33a56c"
+					variablename="ExportDimrFilePath">
+					</var>
+				</databinding>
+			</modulegroup>
 			<testmodule
 			id="e3fa5eee-261a-4fc3-8ca2-a05b5ea2ed4a"
 			name="CloseAUT"
@@ -3109,7 +3055,7 @@
 					<param
 					mask="False"
 					name="ExportDimrFilePath"
-					value="dimr_config.xml">
+					value="exercise_10\dimr_export">
 					</param>
 					<param
 					mask="False"
@@ -3154,37 +3100,6 @@
 			id="ff045470-91c8-472a-8e04-30eec565773d"
 			name="teardown">
 			</teardown>
-			<testmodule
-			id="ff0bae0a-372d-4cf2-a6f6-74c43bdb1e31"
-			name="ContextMenuModel"
-			ref="c526fc83-e32f-45bd-bc9e-40aecb24aad6"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="ff94f158-4fca-4461-8b71-b8d1ff46bf45"
-			name="SelectTypeInDialog"
-			ref="5845c792-4a69-4693-b578-b022b9740f8f"
-			type="Recording">
-				<description>
-					<![CDATA[Select type DIMR]]>
-				</description>
-				<databinding>
-					<var
-					dataname="SubstringTypeItemDIMR"
-					datasourceid="f8fd2949-9688-46ac-a536-4fdd054dd32d"
-					variableid="96fe739d-eb41-4d6c-a1b9-862eebde8bde"
-					variablename="StringInTextItemSelectDialog">
-					</var>
-				</databinding>
-				<missingdatabinding>
-					<var
-					dataname="SubstringExportTypeItem"
-					datasourceid="77159ef6-aaad-4474-b7f4-39ee2987325e"
-					variableid="96fe739d-eb41-4d6c-a1b9-862eebde8bde"
-					variablename="StringInTextItemSelectDialog">
-					</var>
-				</missingdatabinding>
-			</testmodule>
 		</flatlistofchildren>
 		<childhierarchy>
 			<testsuite
@@ -4163,30 +4078,10 @@
 						<smartfoldernode
 						id="f8fd2949-9688-46ac-a536-4fdd054dd32d"
 						name="ExportDimrModel">
-							<testmodule
-							id="ff0bae0a-372d-4cf2-a6f6-74c43bdb1e31"
-							name="ContextMenuModel">
-							</testmodule>
-							<testmodule
-							id="41ab4ee7-e3f7-4891-bfcd-7e84c06794af"
-							name="SelectContextMenuItem">
-							</testmodule>
-							<testmodule
-							id="ff94f158-4fca-4461-8b71-b8d1ff46bf45"
-							name="SelectTypeInDialog">
-							</testmodule>
-							<testmodule
-							id="7d2e5c2b-b0ae-4f77-a098-85970dcab91e"
-							name="CloseOkDialog">
-							</testmodule>
-							<testmodule
-							id="d4c1a61f-bb9f-4841-846c-5c8e2ff40752"
-							name="SaveAsFile">
-							</testmodule>
-							<testmodule
-							id="6093a795-7a62-42c2-b1ce-778372a80737"
-							name="WaitForMessageInPanel">
-							</testmodule>
+							<modulegroup
+							id="e1e25bae-1eeb-42d1-9c73-b83172597962"
+							name="ExportDimrModel">
+							</modulegroup>
 						</smartfoldernode>
 						<teardown
 						id="ff045470-91c8-472a-8e04-30eec565773d"

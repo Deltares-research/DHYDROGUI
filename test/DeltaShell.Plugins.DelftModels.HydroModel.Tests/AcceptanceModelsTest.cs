@@ -532,12 +532,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void ExportDimrConfiguration(string dimrExportPath, IApplication app, IModel model)
         {
-            var exporter = new DHydroConfigXmlExporter(app.FileExportService)
-            {
-                ExportFilePath = dimrExportPath
-            };
-
-            if (!exporter.Export(model, null))
+            var exporter = new DHydroConfigXmlExporter(app.FileExportService);
+            if (!exporter.Export(model, dimrExportPath))
             {
                 throw new AssertionException($"Dimr export failed for model: '{model.Name}'.");
             }

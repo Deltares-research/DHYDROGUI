@@ -34,6 +34,42 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     public class HydroModelTest
     {
         [Test]
+        public void Constructor_InitializesImportContext()
+        {
+            using (var model = new HydroModel())
+            {
+                Assert.That(model.FileContext, Is.Not.Null);
+                Assert.That(model.FileContext.IsInitialized, Is.False);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RemoveDimrModelFromHydroModelActivities_ModelIsRemovedFromFileContext()
+        {
+            using (var hydroModel = new HydroModel())
+            {
+                IDimrModel dimrModel1 = CreateDimrModel("directoryName_dimrModel1");
+                IDimrModel dimrModel2 = CreateDimrModel("directoryName_dimrModel2");
+
+                hydroModel.Activities.Add(dimrModel1);
+                hydroModel.Activities.Add(dimrModel2);
+
+                hydroModel.FileContext.DimrFilePath = @"C:\dir\dimr.xml";
+                hydroModel.FileContext.AddRelativeModelDirectory(dimrModel1, "storedModelDir_dimrModel1");
+                hydroModel.FileContext.AddRelativeModelDirectory(dimrModel2, "storedModelDir_dimrModel2");
+
+                hydroModel.Activities.Remove(dimrModel1);
+
+                string dimrModelDir1 = hydroModel.FileContext.GetRelativeModelDirectory(dimrModel1);
+                string dimrModelDir2 = hydroModel.FileContext.GetRelativeModelDirectory(dimrModel2);
+
+                Assert.That(dimrModelDir1, Is.EqualTo("directoryName_dimrModel1"));
+                Assert.That(dimrModelDir2, Is.EqualTo("storedModelDir_dimrModel2"));
+            }
+        }
+        
+        [Test]
         public void CreateCoupler_WhenSourceIsRtcModel_ShouldCreateNewCouplerAndSetCommunicationRtcToFmFileName()
         {
             // Arrange
@@ -971,6 +1007,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Activities.Add(activity);
             hydroModel.CurrentWorkflow = workflow;
             hydroModel.HydroModelExporter.FileExportService = fileExportService;
+        }
+
+        private static IDimrModel CreateDimrModel(string directoryName = null)
+        {
+            var model = Substitute.For<IDimrModel>();
+            model.DirectoryName.Returns(directoryName);
+
+            return model;
         }
 
         private class SimpleFileExporter : IDimrModelFileExporter

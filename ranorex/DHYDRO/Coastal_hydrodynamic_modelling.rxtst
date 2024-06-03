@@ -1667,7 +1667,7 @@
 					<param
 					mask="False"
 					name="ExportDimrFilePath"
-					value="work\exercise06.xml">
+					value="work\exercise06">
 					</param>
 				</parameters>
 			</smartfoldernode>

@@ -1,7 +1,10 @@
 using System.IO;
+using System.Linq;
 using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
 using DeltaShell.Core.Services;
+using DeltaShell.Dimr.DimrXsd;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
@@ -10,6 +13,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
+using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -32,17 +36,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 DHydroConfigXmlImporter importer = CreateImporter();
                 DHydroConfigXmlExporter exporter = CreateExporter();
 
+                exporter.ExportDirectoryPath = exportModelDirectory;
+
                 string importDimrFilePath = Path.Combine(modelDirectory, "computation", "dimr.xml");
                 var hydroModel = (HydroModel)importer.ImportItem(importDimrFilePath);
 
-                string exportDimrFilePath = Path.Combine(exportModelDirectory, "dimr.xml");
-                exporter.Export(hydroModel, exportDimrFilePath);
+                exporter.Export(hydroModel, null);
 
-                AssertPathExists(exportModelDirectory, "dimr.xml");
                 AssertPathExists(exportModelDirectory, "computation");
+                AssertPathExists(exportModelDirectory, "computation/dimr.xml");
+                AssertPathExists(exportModelDirectory, "computation/RMM-simple.mdu");
                 AssertPathExists(exportModelDirectory, "geometry");
                 AssertPathExists(exportModelDirectory, "initial_conditions");
                 AssertPathExists(exportModelDirectory, "rtc");
+
+                dimrXML dimrXml = GetDimrXML(Path.Combine(exportModelDirectory, "computation/dimr.xml"));
+                AssertCorrectComponent(dimrXml, "real-time control", "../rtc", ".");
+                AssertCorrectComponent(dimrXml, "RMM-simple", ".", "RMM-simple.mdu");
             }
         }
 
@@ -84,6 +94,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void AssertPathExists(string root, string relativePath)
         {
             Assert.That(Path.Combine(root, relativePath), Does.Exist);
+        }
+
+        private static dimrXML GetDimrXML(string dimrFilePath)
+        {
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(Substitute.For<ILogHandler>());
+            return delftConfigXmlParser.Read<dimrXML>(dimrFilePath);
+        }
+
+        private static void AssertCorrectComponent(dimrXML dimrXml, string name, string expWorkingDir, string expInputFile)
+        {
+            dimrComponentXML component = dimrXml.component.SingleOrDefault(c => c.name == name);
+            Assert.That(component, Is.Not.Null);
+            Assert.That(component.workingDir, Is.EqualTo(expWorkingDir));
+            Assert.That(component.inputFile, Is.EqualTo(expInputFile));
         }
     }
 }

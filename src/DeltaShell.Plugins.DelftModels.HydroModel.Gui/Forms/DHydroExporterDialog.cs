@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -21,6 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
     public partial class DHydroExporterDialog : Form, IConfigureDialog, IView
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DHydroExporterDialog));
+        private IFolderDialogService folderDialogService;
 
         public DHydroExporterDialog()
         {
@@ -28,6 +30,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         }
 
         public IGui Gui { get; set; }
+
+        /// <summary>
+        /// The folder dialog service for selecting the DIMR export folder.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public IFolderDialogService FolderDialogService
+        {
+            get => folderDialogService;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                folderDialogService = value;
+            }
+        }
 
         [ExcludeFromCodeCoverage]
         public string Title { get; set; }
@@ -48,11 +66,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 return DelftDialogResult.Cancel;
             }
 
-            DialogResult dialogResult = ShowSaveFileDialog();
-            if (dialogResult != DialogResult.OK)
+            var folderDialogOptions = new FolderDialogOptions();
+            string selectedPath = FolderDialogService.ShowSelectFolderDialog(folderDialogOptions);
+            
+            if (string.IsNullOrEmpty(selectedPath))
             {
                 return DelftDialogResult.Cancel;
             }
+
+            Exporter.ExportDirectoryPath = selectedPath;
 
             if (Exporter.CoreCountDictionary == null)
             {
@@ -86,15 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         public void EnsureVisible(object item)
         {
             // Nothing to be done, enforced through IView.
-        }
-
-        protected virtual DialogResult ShowSaveFileDialog()
-        {
-            var saveFileDialog = new SaveFileDialog {Filter = "DIMR config files (*.xml)|*.xml"};
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
-
-            Exporter.ExportFilePath = saveFileDialog.FileName;
-            return dialogResult;
         }
 
         private IModel SelectedModel => Gui?.SelectedModel;

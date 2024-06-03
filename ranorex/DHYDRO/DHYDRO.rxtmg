@@ -213,6 +213,12 @@ rxversion="10.7">
 				</groupvariables>
 			</modulegroupdef>
 			<testmodule
+			id="325e039e-8d7e-4f29-9409-34f28bcc15cc"
+			name="SpecifyDirectoryToExportTo"
+			ref="f0954594-df29-426f-929a-855967176c56"
+			type="Recording">
+			</testmodule>
+			<testmodule
 			id="3f46229d-4de5-4f41-ba15-f00b55c8e060"
 			name="SelectBoundaryConditionQuantity"
 			ref="4cb70866-10ba-4e04-ac99-bd07283b4da8"
@@ -318,12 +324,6 @@ rxversion="10.7">
 			id="65afd680-8cd2-448a-891d-64384f21e2a1"
 			name="CloseOkDialog"
 			ref="d4da8175-ae96-47dc-9cd3-d7301667ef12"
-			type="Recording">
-			</testmodule>
-			<testmodule
-			id="66a0113b-21bd-4efc-9b34-03615d19c8c3"
-			name="SaveAsFile"
-			ref="e2e07b1f-fc3f-47b6-bff3-f79aadf7f36d"
 			type="Recording">
 			</testmodule>
 			<testmodule
@@ -512,9 +512,9 @@ rxversion="10.7">
 					id="e98f476c-ea03-457e-97cc-d802fd33a56c"
 					name="ExportDimrFilePath">
 						<modulevariable
-						moduleref="66a0113b-21bd-4efc-9b34-03615d19c8c3"
-						name="FilePath"
-						variableref="badbcc3f-d50d-4e11-9cfe-3b802abe7811">
+						moduleref="325e039e-8d7e-4f29-9409-34f28bcc15cc"
+						name="DirectoryName"
+						variableref="62e22cf6-ae61-4f96-a7e1-7c5a7cadd8d2">
 						</modulevariable>
 					</groupvariable>
 				</groupvariables>
@@ -1134,8 +1134,8 @@ rxversion="10.7">
 					name="CloseOkDialog">
 					</testmodule>
 					<testmodule
-					id="66a0113b-21bd-4efc-9b34-03615d19c8c3"
-					name="SaveAsFile">
+					id="325e039e-8d7e-4f29-9409-34f28bcc15cc"
+					name="SpecifyDirectoryToExportTo">
 					</testmodule>
 					<testmodule
 					id="fcf959df-bff6-4e64-9e1e-d87ab01fec2b"

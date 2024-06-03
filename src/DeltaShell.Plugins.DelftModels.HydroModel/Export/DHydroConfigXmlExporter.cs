@@ -64,7 +64,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
         public IDictionary<IDimrModel, int> CoreCountDictionary { get; set; }
 
-        public string ExportFilePath { get; set; }
+        /// <summary>
+        /// The directory to which the DIMR model is exported.
+        /// </summary>
+        public string ExportDirectoryPath { get; set; }
 
         public string Name
         {
@@ -109,8 +112,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         public bool Export(object item, string path)
         {
             ICompositeActivity workflow = GetWorkflow(item);
+            HydroModelFileContext fileContext = (item as HydroModel)?.FileContext;
 
-            string exportPath = ExportFilePath ?? path;
+            string exportPath = GetExportDimrFilePath(fileContext, path);
+
             if (exportPath == null)
             {
                 Log.ErrorFormat("Invalid export file path");
@@ -123,6 +128,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 Log.ErrorFormat("Invalid export directory");
                 return false;
             }
+
+            FileUtils.CreateDirectoryIfNotExists(exportDirectory);
 
             var errorLog = new StringBuilder();
             XDocument configDocument;
@@ -140,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
                 foreach (IDimrModel dimrModel in dimrModels)
                 {
-                    string exportSubDirectory = Path.Combine(exportDirectory, dimrModel.DirectoryName);
+                    string exportSubDirectory = Path.Combine(exportDirectory, GetRelativeModelDir(item, dimrModel));
                     FileUtils.CreateDirectoryIfNotExists(exportSubDirectory);
 
                     var dimrModelExporter = GetDimrModelFileExporter(dimrModel);
@@ -158,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 }
 
                 var writer = new DHydroConfigWriter {CoreCountDictionary = new Dictionary<IDimrModel, int>()};
-                configDocument = writer.CreateConfigDocument(workflow);
+                configDocument = writer.CreateConfigDocument(workflow, fileContext);
             }
             catch (Exception e)
             {
@@ -184,6 +191,36 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         private IDimrModelFileExporter GetDimrModelFileExporter(IDimrModel dimrModel) 
             => FileExportService.GetFileExportersFor(dimrModel).OfType<IDimrModelFileExporter>().FirstOrDefault();
 
+        private static string GetRelativeModelDir(object item, IDimrModel dimrModel)
+        {
+            if (item is HydroModel hydroModel)
+            {
+                return hydroModel.FileContext.GetRelativeModelDirectory(dimrModel);
+            }
+
+            return dimrModel.DirectoryName;
+        }
+
+        private string GetExportDimrFilePath(HydroModelFileContext fileContext, string path)
+        {
+            if (string.IsNullOrEmpty(ExportDirectoryPath))
+            {
+                return path;
+            }
+
+            return Path.Combine(ExportDirectoryPath, GetRelativeExportDimrFilePath(fileContext));
+        }
+
+        private static string GetRelativeExportDimrFilePath(HydroModelFileContext fileContext)
+        {
+            if (fileContext != null && fileContext.IsInitialized)
+            {
+                return fileContext.GetRelativeDimrFilePath();
+            }
+
+            return "dimr.xml";
+        }
+
         public IEnumerable<Type> SourceTypes()
         {
             yield return typeof(HydroModel);
@@ -199,7 +236,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         private void UnInitialize()
         {
             CoreCountDictionary = null;
-            ExportFilePath = null;
+            ExportDirectoryPath = null;
         }
 
         private static string ValidateDimrModels(List<IDimrModel> dimrModels)

@@ -11,6 +11,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui.Forms.ViewManager;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
@@ -102,6 +103,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 // Assert
                 Assert.That(compositeViewData, Is.SameAs(model));
+            }
+        }
+
+        [Test]
+        public void GetViewInfoOBject_ForDHydroConfigXmlExporter_IsCorrectlyConfiguredWhenAfterCreateIsInvoked()
+        {
+            using (var plugin = new HydroModelGuiPlugin())
+            {
+                plugin.Gui = Substitute.For<IGui>();
+                ViewInfo viewInfo = plugin.GetViewInfoObjects()
+                                          .Single(vi => vi.DataType == typeof(DHydroConfigXmlExporter));
+                var exporter = new DHydroConfigXmlExporter();
+                var exportedDialog = new DHydroExporterDialog();
+
+                Assert.That(exportedDialog.Gui, Is.Null);
+                Assert.That(exportedDialog.FolderDialogService, Is.Null);
+
+                viewInfo.AfterCreate.Invoke(exportedDialog, exporter);
+
+                Assert.That(exportedDialog.Gui, Is.SameAs(plugin.Gui));
+                Assert.That(exportedDialog.FolderDialogService, Is.Not.Null);
             }
         }
 
