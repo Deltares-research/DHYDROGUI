@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Validation.Common;
+using Deltares.Infrastructure.API.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using NSubstitute;
 using NUnit.Framework;

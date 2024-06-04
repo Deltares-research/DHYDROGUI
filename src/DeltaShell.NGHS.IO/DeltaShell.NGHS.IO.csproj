@@ -4,6 +4,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Deltares.NET.Infrastructure">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Deltares.UGrid">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

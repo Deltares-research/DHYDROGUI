@@ -2,7 +2,7 @@ using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
-using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation;
 using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;

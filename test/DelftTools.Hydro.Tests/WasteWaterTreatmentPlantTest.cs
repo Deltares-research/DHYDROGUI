@@ -1,9 +1,5 @@
-using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Validation.Common;
-using log4net.Core;
 using NetTopologySuite.Geometries;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests

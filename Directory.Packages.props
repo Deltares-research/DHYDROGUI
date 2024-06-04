@@ -5,11 +5,13 @@
   <ItemGroup>
     <PackageVersion Include="AutoFixture.AutoNSubstitute" Version="4.18.0" />
     <PackageVersion Include="AutoFixture.NUnit3" Version="4.18.0" />
+    <PackageVersion Include="Deltares.NET.Infrastructure" Version="0.1.0.153-development" />
+    <PackageVersion Include="Deltares.NET.Infrastructure.API" Version="0.1.0.153-development" />
     <PackageVersion Include="Deltares.UGrid" Version="1.0.142792" />
-    <PackageVersion Include="DeltaShell.Framework" Version="3.0.0.3494" />
-    <PackageVersion Include="DeltaShell.TestProject" Version="3.0.0.3494" />
+    <PackageVersion Include="DeltaShell.Framework" Version="3.0.0.3495-development" />
+    <PackageVersion Include="DeltaShell.TestProject" Version="3.0.0.3495-development" />
     <PackageVersion Include="DeltaShell.Plugins.GridEditor" Version="1.1.0.143-beta" />
-    <PackageVersion Include="DHYDRO.Common" Version="1.2.0.249"/>
+    <PackageVersion Include="DHYDRO.Common" Version="1.2.0.256-development" />
     <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.30" />
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="4.0.0.8" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="4.0.0.8" />

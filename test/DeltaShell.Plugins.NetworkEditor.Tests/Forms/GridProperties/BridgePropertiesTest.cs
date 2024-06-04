@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DelftTools.Utils.Validation.Common;
+using Deltares.Infrastructure.API.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using NSubstitute;

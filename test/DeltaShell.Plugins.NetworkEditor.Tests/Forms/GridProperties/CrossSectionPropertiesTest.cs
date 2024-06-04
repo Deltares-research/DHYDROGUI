@@ -1,6 +1,6 @@
 ﻿using DelftTools.Hydro.CrossSections;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Validation.Common;
+using Deltares.Infrastructure.API.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using NSubstitute;
 using NUnit.Framework;

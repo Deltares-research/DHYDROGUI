@@ -9,7 +9,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Guards;
-using DelftTools.Utils.Validation.Common;
+using DelftTools.Utils.Validation;
 using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;

@@ -5,7 +5,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using DelftTools.Utils.Guards;
-using DelftTools.Utils.IO;
+using Deltares.Infrastructure.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DHYDRO.Common.IO.Ini;

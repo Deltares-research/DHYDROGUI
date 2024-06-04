@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Utils.Validation.Common;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;

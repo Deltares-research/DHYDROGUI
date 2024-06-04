@@ -38,6 +38,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class GwswFileImporterTest : GwswFileImporterTestHelper
     {
         [Test]
@@ -1613,6 +1614,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void TestImportSewerConnectionFromFileAssignsNodesWhenTheyExist()
         {
             string filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");

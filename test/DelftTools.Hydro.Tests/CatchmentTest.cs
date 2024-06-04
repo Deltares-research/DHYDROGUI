@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using DelftTools.TestUtils;
-using DelftTools.Utils.Validation.Common;
 using GeoAPI.Geometries;
-using log4net.Core;
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;

@@ -1,5 +1,5 @@
-using DelftTools.Utils.Validation.Common;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;

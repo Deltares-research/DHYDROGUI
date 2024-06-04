@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Validation.Common;
-using DelftTools.Utils.Validation.NameValidation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses;
 using GeoAPI.Geometries;
