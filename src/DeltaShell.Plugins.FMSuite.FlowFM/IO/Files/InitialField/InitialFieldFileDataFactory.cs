@@ -6,9 +6,9 @@ using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DHYDRO.Common.Extensions;
+using DHYDRO.Common.IO.InitialField;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 

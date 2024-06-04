@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Data;
+using DHYDRO.Common.IO.InitialField;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField
 {

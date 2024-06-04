@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using DelftTools.Utils.Guards;
-using DelftTools.Utils.Reflection;
-using DelftTools.Utils.Validation.Common;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Data;
+using Deltares.Infrastructure.API.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.Extensions;
+using DHYDRO.Common.IO.InitialField;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Validation
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField
 {
     /// <summary>
     /// Custom validator for GUI specific validation.
@@ -28,30 +28,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Validation
             if (!supportedQuantities.Contains(value.Quantity))
             {
                 string message = GetUnsupportedValueMessage(InitialFieldFileConstants.Keys.Quantity,
-                                                            value.Quantity.GetDescription());
+                                                            value.Quantity.GetDescription(),
+                                                            value.LineNumber);
                 return ValidationResult.Fail(message);
             }
 
             if (value.DataFileType == InitialFieldDataFileType.OneDField)
             {
-                string message = GetUnsupportedValueMessage(InitialFieldFileConstants.Keys.DataFileType,
-                                                            value.DataFileType.GetDescription());
+                string message = GetUnsupportedValueMessage(InitialFieldFileConstants.Keys.DataFileType,    
+                                                            value.DataFileType.GetDescription(),
+                                                            value.LineNumber);
                 return ValidationResult.Fail(message);
             }
 
             if (value.AveragingType == InitialFieldAveragingType.Median)
             {
                 string message = GetUnsupportedValueMessage(InitialFieldFileConstants.Keys.AveragingType,
-                                                            value.AveragingType.GetDescription());
+                                                            value.AveragingType.GetDescription(),
+                                                            value.LineNumber);
                 return ValidationResult.Fail(message);
             }
 
             return ValidationResult.Success;
         }
 
-        private static string GetUnsupportedValueMessage(string propertyName, string value)
+        private static string GetUnsupportedValueMessage(string propertyName, string value, int lineNumber)
         {
-            return string.Format(Resources.Property_0_contains_unsupported_value_1_, propertyName, value);
+            return string.Format(Resources.Property_0_contains_unsupported_value_1_Line_2_, propertyName, value, lineNumber);
         }
     }
 }

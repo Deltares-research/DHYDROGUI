@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Reflection;
-using DelftTools.Utils.Validation.Common;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Data;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Validation;
+using Deltares.Infrastructure.API.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField;
+using DHYDRO.Common.Extensions;
+using DHYDRO.Common.IO.InitialField;
+using DHYDRO.Common.TestUtils.IO.InitialField;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField.Validation
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
 {
     [TestFixture]
     public class SupportedInitialFieldDataValidatorTest
@@ -19,10 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField.Validati
             var validator = new SupportedInitialFieldDataValidator();
 
             // Act
-            void Call()
-            {
-                validator.Validate(null);
-            }
+            void Call() => validator.Validate(null);
 
             // Assert
             Assert.That(Call, Throws.ArgumentNullException);
@@ -42,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField.Validati
 
             // Assert
             Assert.That(result.Valid, Is.False);
-            Assert.That(result.Message, Is.EqualTo($"Property 'quantity' contains unsupported value: {unsupportedQuantity.GetDescription()}"));
+            Assert.That(result.Message, Is.EqualTo($"Property 'quantity' contains unsupported value: {unsupportedQuantity.GetDescription()}. Line: 1"));
         }
 
         [Test]
@@ -59,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField.Validati
 
             // Assert
             Assert.That(result.Valid, Is.False);
-            Assert.That(result.Message, Is.EqualTo($"Property 'dataFileType' contains unsupported value: {unsupportedDataFileType.GetDescription()}"));
+            Assert.That(result.Message, Is.EqualTo($"Property 'dataFileType' contains unsupported value: {unsupportedDataFileType.GetDescription()}. Line: 1"));
         }
 
         [Test]
@@ -76,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField.Validati
 
             // Assert
             Assert.That(result.Valid, Is.False);
-            Assert.That(result.Message, Is.EqualTo($"Property 'averagingType' contains unsupported value: {unsupportedAveragingType.GetDescription()}"));
+            Assert.That(result.Message, Is.EqualTo($"Property 'averagingType' contains unsupported value: {unsupportedAveragingType.GetDescription()}. Line: 1"));
         }
 
         [Test]

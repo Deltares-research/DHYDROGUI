@@ -785,15 +785,6 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="MduFileReferencePathContainsInvalidCharacters" xml:space="preserve">
     <value>File path '{0}' contains invalid characters. MDU file '{1}' property '{2}'. Information might have been lost while loading model '{3}'.</value>
   </data>
-  <data name="Property_0_must_be_1_or_higher" xml:space="preserve">
-    <value>Property '{0}' must be 1 or higher.</value>
-  </data>
-  <data name="Property_0_must_be_provided" xml:space="preserve">
-    <value>Property '{0}' must be provided.</value>
-  </data>
-  <data name="Property_0_contains_unsupported_value_1_" xml:space="preserve">
-    <value>Property '{0}' contains unsupported value: {1}</value>
-  </data>
   <data name="reading_the_initial_field_file" xml:space="preserve">
     <value>reading the initial field file</value>
   </data>
@@ -803,19 +794,13 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="Reading_initial_field_data_from_0_" xml:space="preserve">
     <value>Reading initial field data from {0}</value>
   </data>
-  <data name="Initial_field_data_file_does_not_exist_0_" xml:space="preserve">
-    <value>Initial field data file does not exist: {0}.</value>
-  </data>
   <data name="writing_the_initial_field_file" xml:space="preserve">
     <value>writing the initial field file</value>
   </data>
   <data name="Writing_initial_field_data_to_0_" xml:space="preserve">
     <value>Writing initial field data to {0}</value>
   </data>
-  <data name="Property_0_should_be_1_when_2_is_3_" xml:space="preserve">
-    <value>Property '{0}' should be {1} when '{2}' is {3}.</value>
-  </data>
-  <data name="Property_0_can_only_be_1_when_2_is_3_" xml:space="preserve">
-    <value>Property '{0}' can only be {1} when '{2}' is {3}.</value>
+  <data name="SupportedInitialFieldDataValidator_GetUnsupportedValueMessage_Property___0___contains_unsupported_value___1___Line___2_" xml:space="preserve">
+    <value>Property '{0}' contains unsupported value: {1}. Line: {2}</value>
   </data>
 </root>

@@ -1,5 +1,6 @@
 ﻿using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField.Data;
+using DHYDRO.Common.IO.InitialField;
+using DHYDRO.Common.TestUtils.IO.InitialField;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
