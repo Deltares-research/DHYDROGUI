@@ -10,6 +10,7 @@
         <PackageReference Include="NUnit"/>
         <PackageReference Include="NUnit.ConsoleRunner"/>
         <PackageReference Include="NUnit3TestAdapter"/>
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     </ItemGroup>
 
     <ItemGroup>

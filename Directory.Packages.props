@@ -1,15 +1,18 @@
 ﻿<Project>
     <PropertyGroup>
-      <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
-    
     <ItemGroup>
-      <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.30" />
-      <PackageVersion Include="log4net" Version="2.0.15" />
-      <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
-      <PackageVersion Include="NSubstitute" Version="5.0.0" />
-      <PackageVersion Include="NUnit" Version="3.13.3" />
-      <PackageVersion Include="NUnit.ConsoleRunner" Version="3.16.3" />
-      <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
+        <PackageVersion Include="Deltares.NET.Infrastructure" Version="0.1.0.153-development"/>
+        <PackageVersion Include="Deltares.NET.Infrastructure.API" Version="0.1.0.153-development"/>
+        <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.30"/>
+        <PackageVersion Include="log4net" Version="2.0.15"/>
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0"/>
+        <PackageVersion Include="NSubstitute" Version="5.0.0"/>
+        <PackageVersion Include="NUnit" Version="3.13.3"/>
+        <PackageVersion Include="NUnit.ConsoleRunner" Version="3.16.3"/>
+        <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0"/>
+        <PackageVersion Include="System.IO.Abstractions" Version="19.2.69" />
+        <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="19.2.69" />
     </ItemGroup>
-  </Project>
+</Project>

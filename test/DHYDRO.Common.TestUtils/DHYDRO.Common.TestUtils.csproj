@@ -8,4 +8,8 @@
         <PackageReference Include="log4net"/>
         <PackageReference Include="NUnit"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\DHYDRO.Common\DHYDRO.Common.csproj" />
+    </ItemGroup>
 </Project>

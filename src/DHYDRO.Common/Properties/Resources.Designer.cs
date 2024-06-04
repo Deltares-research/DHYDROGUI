@@ -60,11 +60,29 @@ namespace DHYDRO.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Line: {1}.
+        /// </summary>
+        public static string _0_Line_1_ {
+            get {
+                return ResourceManager.GetString("_0_Line_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
         /// </summary>
         public static string Backwards_Compatibility_0_has_been_updated_to_1_ {
             get {
                 return ResourceManager.GetString("Backwards_Compatibility_0_has_been_updated_to_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial field data file does not exist: {0}..
+        /// </summary>
+        public static string Initial_field_data_file_does_not_exist_0_ {
+            get {
+                return ResourceManager.GetString("Initial_field_data_file_does_not_exist_0_", resourceCulture);
             }
         }
         
@@ -78,11 +96,56 @@ namespace DHYDRO.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; can only be {1} when &apos;{2}&apos; is {3}..
+        /// </summary>
+        public static string Property_0_can_only_be_1_when_2_is_3_ {
+            get {
+                return ResourceManager.GetString("Property_0_can_only_be_1_when_2_is_3_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; cannot be converted to a {1} for value: {2}. Line: {3}.
         /// </summary>
         public static string Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_ {
             get {
                 return ResourceManager.GetString("Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; must be 1 or higher..
+        /// </summary>
+        public static string Property_0_must_be_1_or_higher {
+            get {
+                return ResourceManager.GetString("Property_0_must_be_1_or_higher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; must be provided..
+        /// </summary>
+        public static string Property_0_must_be_provided {
+            get {
+                return ResourceManager.GetString("Property_0_must_be_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; should be {1} when &apos;{2}&apos; is {3}..
+        /// </summary>
+        public static string Property_0_should_be_1_when_2_is_3_ {
+            get {
+                return ResourceManager.GetString("Property_0_should_be_1_when_2_is_3_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Section &apos;{0}&apos; has an unknown header and cannot be parsed. Line: {1}.
+        /// </summary>
+        public static string Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_ {
+            get {
+                return ResourceManager.GetString("Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_", resourceCulture);
             }
         }
     }

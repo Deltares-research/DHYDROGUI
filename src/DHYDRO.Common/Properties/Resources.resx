@@ -33,4 +33,25 @@
     <data name="Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_" xml:space="preserve">
         <value>Property '{0}' cannot be converted to a {1} for value: {2}. Line: {3}</value>
     </data>
+    <data name="Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_" xml:space="preserve">
+        <value>Section '{0}' has an unknown header and cannot be parsed. Line: {1}</value>
+    </data>
+    <data name="Initial_field_data_file_does_not_exist_0_" xml:space="preserve">
+        <value>Initial field data file does not exist: {0}.</value>
+    </data>
+    <data name="Property_0_should_be_1_when_2_is_3_" xml:space="preserve">
+        <value>Property '{0}' should be {1} when '{2}' is {3}.</value>
+    </data>
+    <data name="Property_0_can_only_be_1_when_2_is_3_" xml:space="preserve">
+        <value>Property '{0}' can only be {1} when '{2}' is {3}.</value>
+    </data>
+    <data name="Property_0_must_be_1_or_higher" xml:space="preserve">
+        <value>Property '{0}' must be 1 or higher.</value>
+    </data>
+    <data name="Property_0_must_be_provided" xml:space="preserve">
+        <value>Property '{0}' must be provided.</value>
+    </data>
+    <data name="_0_Line_1_" xml:space="preserve">
+        <value>{0} Line: {1}</value>
+    </data>
 </root>
