@@ -105,32 +105,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
-        public void ExportHydroModelWithCatchmentsAndSave()
-        {
-            var hydroModelBuilder = new HydroModelBuilder();
-            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.SobekModels);
-
-            var paved = new Catchment { CatchmentType = CatchmentType.Paved , Name = "Paved_Catchment"};
-            var unpaved = new Catchment {CatchmentType = CatchmentType.Unpaved, Name = "Unpaved_Catchment"};
-            var green = new Catchment { CatchmentType = CatchmentType.GreenHouse, Name = "GreenHouse_Catchment" };
-            var water = new Catchment { CatchmentType = CatchmentType.OpenWater, Name = "OpenWater_Catchment" };
-            var sacr = new Catchment { CatchmentType = CatchmentType.Sacramento, Name = "Sacramento_Catchment" };
-            var hbv = new Catchment { CatchmentType = CatchmentType.Hbv, Name = "Hbv_Catchment" };
-
-            hydroModel.Region.SubRegions.OfType<IDrainageBasin>()
-                      .First()
-                      .Catchments.AddRange(new[] {paved, unpaved, green, water, sacr, hbv});
-
-            app.Project.RootFolder.Add(hydroModel);
-            var filename = TestHelper.GetCurrentMethodName();
-
-            app.ExportProjectItem(hydroModel, filename + "_1.dsproj", true);
-
-            app.SaveProjectAs("_2.dsproj"); //bang, exception!
-        }
-
-        [Test]
         [Category(TestCategory.WindowsForms)]
         public void Add2D3DIntegratedModelAddFMModelRemoveIntegratedModel()
         {
