@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
+using GeoAPI.Extensions.Feature;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
@@ -16,12 +19,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
     [TestFixture]
     public class ControlGroupValidatorTest
     {
+        private IRealTimeControlModel realTimeControlModel;
+        private IModel controlledModel;
+        private ControlGroupValidator validator;
+
+        [SetUp]
+        public void SetUp()
+        {
+            realTimeControlModel = Substitute.For<IRealTimeControlModel>();
+            controlledModel = Substitute.For<IModel>();
+            realTimeControlModel.ControlledModels.Returns(new[] { controlledModel });
+            validator = new ControlGroupValidator();
+        }
+
+        [Test]
+        public void Constructor_RootObjectIsNull_ThrowsArgumentNullException()
+        {
+            Assert.That(() => validator.Validate(null, Substitute.For<IControlGroup>()), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_TargetIsNull_ThrowsArgumentNullException()
+        {
+            Assert.That(() => validator.Validate(realTimeControlModel, null), Throws.ArgumentNullException);
+        }
+        
         [Test]
         public void ValidControlGroup()
         {
-            ControlGroup controlGroup = CreateValidControlGroup();
+            IControlGroup controlGroup = CreateValidControlGroup(controlledModel);
 
-            ValidationReport validationResult = new ControlGroupValidator().Validate(null, controlGroup);
+            ValidationReport validationResult = validator.Validate(realTimeControlModel, controlGroup);
             Assert.AreEqual(0, validationResult.ErrorCount);
             Assert.AreEqual(0, validationResult.WarningCount);
             Assert.AreEqual(0, validationResult.InfoCount);
@@ -30,12 +58,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         [Test]
         public void RulesMustHaveUniqueNames()
         {
-            ControlGroup controlGroup = CreateValidControlGroup();
-            controlGroup.Rules.Add(CreateValidHydraulicRule());
+            IControlGroup controlGroup = CreateValidControlGroup(controlledModel);
 
-            ValidationReport validationResult = new ControlGroupValidator().Validate(null, controlGroup);
+            string existingRuleName = controlGroup.Rules.First().Name;
+            RuleBase rule = CreateRule(existingRuleName);
+            controlGroup.Rules.Add(rule);
+
+            ValidationReport validationResult = validator.Validate(realTimeControlModel, controlGroup);
             Assert.AreEqual(1, validationResult.ErrorCount);
-            Assert.AreEqual("The name 'Rule 1' is used by 2 Rules.", validationResult.AllErrors.First().Message);
+            Assert.AreEqual($"The name '{existingRuleName}' is used by 2 Rules.", validationResult.AllErrors.First().Message);
             Assert.AreEqual(0, validationResult.WarningCount);
             Assert.AreEqual(0, validationResult.InfoCount);
         }
@@ -43,10 +74,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         [Test]
         public void ControlGroupMustHaveAtLeastOneRule()
         {
-            ControlGroup controlGroup = CreateValidControlGroup();
+            IControlGroup controlGroup = CreateValidControlGroup(controlledModel);
+            
+            controlGroup.Inputs.Clear();
             controlGroup.Rules.Clear();
 
-            ValidationReport validationResult = new ControlGroupValidator().Validate(null, controlGroup);
+            ValidationReport validationResult = validator.Validate(realTimeControlModel, controlGroup);
             Assert.AreEqual(1, validationResult.ErrorCount);
             Assert.AreEqual("Control Group requires at least 1 rule", validationResult.AllErrors.First().Message);
             Assert.AreEqual(0, validationResult.WarningCount);
@@ -56,10 +89,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         [Test]
         public void ControlGroupMustHaveAtLeastOneOutput()
         {
-            ControlGroup controlGroup = CreateValidControlGroup();
+            IControlGroup controlGroup = CreateValidControlGroup(controlledModel);
+            
             controlGroup.Outputs.Clear();
 
-            ValidationReport validationResult = new ControlGroupValidator().Validate(null, controlGroup);
+            ValidationReport validationResult = validator.Validate(realTimeControlModel, controlGroup);
             Assert.AreEqual(1, validationResult.ErrorCount);
             Assert.AreEqual("Control Group requires at least 1 output", validationResult.AllErrors.First().Message);
             Assert.AreEqual(0, validationResult.WarningCount);
@@ -69,15 +103,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         [Test]
         public void ConditionsMustHaveUniqueNames()
         {
-            ControlGroup controlGroup = CreateValidControlGroup();
-            var timeCondition = new TimeCondition {Name = "Test"};
-            timeCondition.TrueOutputs.Add(controlGroup.Rules.First());
-            controlGroup.Conditions.Add(timeCondition);
-            controlGroup.Conditions.Add(timeCondition);
+            IControlGroup controlGroup = CreateValidControlGroup(controlledModel);
 
-            ValidationReport validationResult = new ControlGroupValidator().Validate(null, controlGroup);
+            const string duplicateName = "Test";
+            controlGroup.Conditions.Add(CreateCondition(name: duplicateName));
+            controlGroup.Conditions.Add(CreateCondition(name: duplicateName));
+
+            ValidationReport validationResult = validator.Validate(realTimeControlModel, controlGroup);
             Assert.AreEqual(1, validationResult.ErrorCount);
-            Assert.AreEqual("The name 'Test' is used by 2 Conditions.", validationResult.AllErrors.First().Message);
+            Assert.AreEqual($"The name '{duplicateName}' is used by 2 Conditions.", validationResult.AllErrors.First().Message);
             Assert.AreEqual(0, validationResult.WarningCount);
             Assert.AreEqual(0, validationResult.InfoCount);
         }
@@ -102,7 +136,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             controlGroup.Rules.Add(pidRule);
             controlGroup.Outputs.Add(new Output());
 
-            var validator = new ControlGroupValidator();
             List<ValidationIssue> allPidIssues = validator.Validate(model, controlGroup).GetAllIssuesRecursive()
                                                           .Where(i => ReferenceEquals(i.Subject, pidRule)).ToList();
             Assert.AreEqual(1, allPidIssues.Count,
@@ -135,7 +168,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             controlGroup.Rules.Add(pidRule);
             controlGroup.Outputs.Add(new Output());
 
-            var validator = new ControlGroupValidator();
             Assert.AreEqual(0, validator.Validate(model, controlGroup).GetAllIssuesRecursive().Count(
                                 i => ReferenceEquals(i.Subject, pidRule)), "The number of validation issues for the PID rule");
         }
@@ -158,7 +190,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             controlGroup.Rules.Add(pidRule);
             model.ControlGroups.Add(controlGroup);
 
-            var validator = new ControlGroupValidator();
             ValidationReport report = validator.Validate(model, controlGroup);
             IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
             List<ValidationIssue> foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, pidRule)).ToList();
@@ -181,7 +212,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             controlGroup.Rules.Add(timeRule);
             model.ControlGroups.Add(controlGroup);
 
-            var validator = new ControlGroupValidator();
             ValidationReport report = validator.Validate(model, controlGroup);
             IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
             List<ValidationIssue> foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, timeRule)).ToList();
@@ -208,7 +238,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             controlGroup.Rules.Add(intervalRule);
             model.ControlGroups.Add(controlGroup);
 
-            var validator = new ControlGroupValidator();
             ValidationReport report = validator.Validate(model, controlGroup);
             IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
             List<ValidationIssue> foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, intervalRule)).ToList();
@@ -229,7 +258,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             timeSeries[model.StartTime.AddDays(1)] = 1.0;
             timeSeries[model.StopTime.AddDays(-1)] = 31.0;
 
-            var validator = new ControlGroupValidator();
             ControlGroup controlGroup = model.ControlGroups.First();
 
             // check PID rule
@@ -291,8 +319,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             ControlGroup controlGroup = model.ControlGroups.First();
 
-            var validator = new ControlGroupValidator();
-
             // check PID rule
             var pidRule = new PIDRule()
             {
@@ -345,51 +371,46 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             };
             controlGroup.Rules.Add(pidRule);
 
-            var controlGroupValidator = new ControlGroupValidator();
-            ValidationReport result = controlGroupValidator.Validate(rtcModel, controlGroup);
+            ValidationReport result = validator.Validate(rtcModel, controlGroup);
 
             // If we reach this statement validation did not throw errors
             Assert.GreaterOrEqual(result.ErrorCount, 0);
         }
-
-        public static ControlGroup CreateValidControlGroup()
+        
+        [Test]
+        public void Validate_WhenInputHasInvalidCoupling_ReportContainsError()
         {
-            var validControlGroup = new ControlGroup();
+            // Arrange
+            IControlGroup controlGroup = CreateValidControlGroup(controlledModel);
 
-            HydraulicRule validHydraulicRule = CreateValidHydraulicRule();
-            validControlGroup.Rules.Add(validHydraulicRule);
+            var invalidFeature = Substitute.For<IFeature>();
+            controlGroup.Inputs.First().Feature = invalidFeature;
 
-            validControlGroup.Outputs.Add(validHydraulicRule.Outputs.First());
+            // Act
+            ValidationReport report = validator.Validate(realTimeControlModel, controlGroup);
 
-            return validControlGroup;
+            // Assert
+            Assert.That(report.IsEmpty, Is.False);
+            Assert.That(report.ErrorCount, Is.EqualTo(1));
+            Assert.That(report.AllErrors.ElementAt(0).Message, Is.EqualTo(string.Format(Resources.Feature_0_cannot_be_used_as_input_for_control_group_1_, invalidFeature, controlGroup.Name)));
         }
-
-        private static HydraulicRule CreateValidHydraulicRule()
+        
+        [Test]
+        public void Validate_WhenOutputHasInvalidCoupling_ReportContainsError()
         {
-            Function tableFunction = HydraulicRule.DefineFunction();
-            tableFunction[0.0] = 123.6;
+            // Arrange
+            IControlGroup controlGroup = CreateValidControlGroup(controlledModel);
 
-            var input = new Input
-            {
-                ParameterName = "In",
-                Feature = new RtcTestFeature {Name = "InFeat"}
-            };
+            var invalidFeature = Substitute.For<IFeature>();
+            controlGroup.Outputs.First().Feature = invalidFeature;
 
-            var output = new Output
-            {
-                ParameterName = "Out",
-                Feature = new RtcTestFeature {Name = "OutFeat"}
-            };
+            // Act
+            ValidationReport report = validator.Validate(realTimeControlModel, controlGroup);
 
-            var validHydraulicRule = new HydraulicRule
-            {
-                Name = "Rule 1",
-                Inputs = new EventedList<IInput> {input},
-                Outputs = new EventedList<Output> {output},
-                Function = tableFunction,
-                Interpolation = InterpolationType.Linear
-            };
-            return validHydraulicRule;
+            // Assert
+            Assert.That(report.IsEmpty, Is.False);
+            Assert.That(report.ErrorCount, Is.EqualTo(1));
+            Assert.That(report.AllErrors.ElementAt(0).Message, Is.EqualTo(string.Format(Resources.Feature_0_cannot_be_used_as_output_for_control_group_1_, invalidFeature, controlGroup.Name)));
         }
 
         private Tuple<RealTimeControlModel, TimeSeries> SetUpRtcModelWithTimeSeriesAndEmptyControlGroup()
@@ -436,6 +457,82 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             timeSeries[irregularTimeStep] = 3.5; //Irregular time series, time step not multiple.
             
             return setup;
+        }
+
+        private static void ConfigureControlledModel(IModel controlledModel, IControlGroup controlGroup)
+        {
+            IEnumerable<IFeature> controlledInputs = controlGroup.Inputs.Select(i => i.Feature).ToArray();
+            controlledModel.GetChildDataItemLocations(DataItemRole.Output).Returns(controlledInputs);
+
+            IEnumerable<IFeature> controlledOutputs = controlGroup.Outputs.Select(i => i.Feature).ToArray();
+            controlledModel.GetChildDataItemLocations(DataItemRole.Input).Returns(controlledOutputs);
+        }
+
+        private static IControlGroup CreateValidControlGroup(IModel controlledModel)
+        {
+            Input input = CreateInput();
+            Output output = CreateOutput();
+
+            RuleBase rule = CreateRule(output: output);
+            rule.Inputs.Add(input);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Rules.Add(rule);
+            controlGroup.Inputs.Add(input);
+            controlGroup.Outputs.Add(output);
+
+            ConfigureControlledModel(controlledModel, controlGroup);
+
+            return controlGroup;
+        }
+
+        private static Input CreateInput()
+        {
+            var feature = Substitute.For<IFeature>();
+            return new Input
+            {
+                Feature = feature,
+                ParameterName = "some_input"
+            };
+        }
+
+        private static Output CreateOutput()
+        {
+            var feature = Substitute.For<IFeature>();
+            return new Output
+            {
+                Feature = feature,
+                ParameterName = "some_output"
+            };
+        }
+
+        private static RuleBase CreateRule(string name = "some_rule_name", Output output = null)
+        {
+            if (output == null)
+            {
+                output = CreateOutput();
+            }
+
+            var rule = Substitute.For<RuleBase>();
+            rule.Name = name;
+            rule.Inputs = new EventedList<IInput>();
+            rule.Outputs = new EventedList<Output> { output };
+
+            return rule;
+        }
+
+        private static ConditionBase CreateCondition(string name = "some_condition_name", RtcBaseObject trueOutput = null)
+        {
+            if (trueOutput == null)
+            {
+                trueOutput = Substitute.For<RtcBaseObject>();
+            }
+
+            var condition = Substitute.For<ConditionBase>();
+            condition.Name = name;
+            condition.TrueOutputs.Add(trueOutput);
+
+            return condition;
         }
     }
 }

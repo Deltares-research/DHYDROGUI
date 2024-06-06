@@ -19,11 +19,15 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
+using DeltaShell.Plugins.DelftModels.RealTimeControl;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -1366,6 +1370,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             WaterFlowFMModel model, DataItemRole role)
         {
             return model.GetChildDataItemLocations(role);
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void ValidateControlGroup_WhenModelIsCoupledToRtcModel_AndNoInputLinkIssuesOnFMModel_NoValidationIssue()
+        {
+            // Arrange
+            var input1 = Substitute.For<Input>();
+            var input2 = Substitute.For<Input>();
+            var output1 = Substitute.For<Output>();
+
+            IControlGroup controlGroup = CreateControlGroup(input1, input2, output1);
+            WaterFlowFMModel model = CreateWaterFlowFMModel(input1, input2, output1);
+            IRealTimeControlModel realTimeControlModel = CreateRealTimeControlModel(model);
+
+            // Act
+            var validator = new ControlGroupValidator();
+            ValidationReport report = validator.Validate(realTimeControlModel, controlGroup);
+
+            // Assert
+            Assert.IsEmpty(report.Issues);
+            Assert.That(report.ErrorCount, Is.EqualTo(0));
+        }
+
+        private static IControlGroup CreateControlGroup(Input input1, Input input2, Output output1)
+        {
+            var controlGroup = Substitute.For<IControlGroup>();
+            var inputs = new EventedList<Input>
+            {
+                input1,
+                input2
+            };
+            controlGroup.Inputs.Returns(inputs);
+
+            var outputs = new EventedList<Output> { output1 };
+            controlGroup.Outputs.Returns(outputs);
+
+            var rules = new EventedList<RuleBase> { Substitute.For<RuleBase>() };
+            controlGroup.Rules.Returns(rules);
+
+            return controlGroup;
+        }
+
+        private static IRealTimeControlModel CreateRealTimeControlModel(WaterFlowFMModel model)
+        {
+            var realTimeControlModel = Substitute.For<IRealTimeControlModel>();
+            realTimeControlModel.ControlledModels.Returns(new List<IModel> { model });
+            return realTimeControlModel;
+        }
+
+        private static WaterFlowFMModel CreateWaterFlowFMModel(Input input1, Input input2, Output output1)
+        {
+            var model = new WaterFlowFMModel();
+
+            var pump = new Pump();
+            var weir = new Structure();
+
+            model.Area.Pumps.Add(pump);
+            model.Area.Structures.Add(weir);
+
+            input1.Feature = pump;
+            input2.Feature = weir;
+            output1.Feature = pump;
+            return model;
         }
 
         private static IEnumerable<TestCaseData> CreateRetrieveChildDataItemLocationTestCases()

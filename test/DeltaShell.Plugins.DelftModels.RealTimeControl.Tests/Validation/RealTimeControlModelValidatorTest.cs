@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
+using GeoAPI.Extensions.Feature;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
@@ -17,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         public void ValidRealTimeControlModel()
         {
             RealTimeControlModel model = CreateValidRealTimeControlModel();
+            ConfigureControlledModel(model);
 
             ValidationReport validationResult = new RealTimeControlModelValidator().Validate(model);
             Assert.AreEqual(0, validationResult.ErrorCount);
@@ -77,6 +87,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             hydraulicCondition1A.Name = "condition1";
             hydraulicRule2A.Name = "rule12";
             hydraulicCondition2A.Name = "condition2";
+
+            ConfigureControlledModel(realTimeControlModel);
+
             ValidationReport result = realTimeControlModel.Validate();
             Assert.AreEqual(0, result.ErrorCount);
             Assert.AreEqual(0, result.WarningCount);
@@ -123,6 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         public void ValidateRealTimeControlModelRestartStateWithIntermediateRestartFiles()
         {
             RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
+            ConfigureControlledModel(model);
 
             model.WriteRestart = true;
             model.SaveStateStartTime = model.StartTime;
@@ -165,7 +179,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         private RealTimeControlModel CreateValidRealTimeControlModel()
         {
             var validRealTimeControlModel = new RealTimeControlModel();
-            validRealTimeControlModel.ControlGroups.Add(ControlGroupValidatorTest.CreateValidControlGroup());
+            validRealTimeControlModel.ControlGroups.Add(CreateValidControlGroup());
             return validRealTimeControlModel;
         }
 
@@ -204,6 +218,65 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             hydraulicRule2A.Name = "rule12";
             hydraulicCondition2A.Name = "condition2";
             return model;
+        }
+
+        private static void ConfigureControlledModel(IRealTimeControlModel realTimeControlModel)
+        {
+            var controlledModel = Substitute.For<ITimeDependentModel>();
+            controlledModel.StartTime = realTimeControlModel.StartTime;
+            controlledModel.StopTime = realTimeControlModel.StopTime;
+            controlledModel.TimeStep = realTimeControlModel.TimeStep;
+
+            IEnumerable<IFeature> controlledInputs = realTimeControlModel.ControlGroups.SelectMany(c => c.Inputs).Select(i => i.Feature);
+            controlledModel.GetChildDataItemLocations(DataItemRole.Output).Returns(controlledInputs);
+
+            IEnumerable<IFeature> controlledOutputs = realTimeControlModel.ControlGroups.SelectMany(c => c.Outputs).Select(i => i.Feature);
+            controlledModel.GetChildDataItemLocations(DataItemRole.Input).Returns(controlledOutputs);
+
+            var integratedModel = Substitute.For<ICompositeActivity>();
+            integratedModel.Activities.Returns(new EventedList<IActivity> { controlledModel });
+
+            realTimeControlModel.Owner = integratedModel;
+        }
+        
+        private static ControlGroup CreateValidControlGroup()
+        {
+            var validControlGroup = new ControlGroup();
+
+            HydraulicRule validHydraulicRule = CreateValidHydraulicRule();
+            validControlGroup.Rules.Add(validHydraulicRule);
+
+            validControlGroup.Outputs.Add(validHydraulicRule.Outputs.First());
+
+            return validControlGroup;
+        }
+        
+        private static HydraulicRule CreateValidHydraulicRule()
+        {
+            Function tableFunction = HydraulicRule.DefineFunction();
+            tableFunction[0.0] = 123.6;
+
+            var input = new Input
+            {
+                ParameterName = "In",
+                Feature = new RtcTestFeature {Name = "InFeat"}
+            };
+
+            var output = new Output
+            {
+                ParameterName = "Out",
+                Feature = new RtcTestFeature {Name = "OutFeat"}
+            };
+
+            var validHydraulicRule = new HydraulicRule
+            {
+                Name = "Rule 1",
+                Inputs = new EventedList<IInput> {input},
+                Outputs = new EventedList<Output> {output},
+                Function = tableFunction,
+                Interpolation = InterpolationType.Linear
+            };
+            return validHydraulicRule;
         }
     }
 }

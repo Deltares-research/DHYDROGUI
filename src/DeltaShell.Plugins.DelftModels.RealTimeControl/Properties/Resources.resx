@@ -442,6 +442,12 @@
   <data name="RealTimeControlModelImporter_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory" xml:space="preserve">
     <value>Could not import RTC model, the settings.json file should contain an xml directory.</value>
   </data>
+  <data name="Feature_0_cannot_be_used_as_input_for_control_group_1_" xml:space="preserve">
+    <value>Feature '{0}' cannot be used as input for control group '{1}'</value>
+  </data>
+  <data name="Feature_0_cannot_be_used_as_output_for_control_group_1_" xml:space="preserve">
+    <value>Feature '{0}' cannot be used as output for control group '{1}'</value>
+  </data>
   <data name="RealTimeControlModelXmlReader_ThrowOnReportedError_Failed_to_import_Real_Time_Control_model_" xml:space="preserve">
     <value>Failed to import Real-Time Control model.</value>
   </data>

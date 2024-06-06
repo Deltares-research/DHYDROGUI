@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -201,6 +201,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
             get {
                 object obj = ResourceManager.GetObject("ExclamationOverlay", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature &apos;{0}&apos; cannot be used as input for control group &apos;{1}&apos;.
+        /// </summary>
+        public static string Feature_0_cannot_be_used_as_input_for_control_group_1_ {
+            get {
+                return ResourceManager.GetString("Feature_0_cannot_be_used_as_input_for_control_group_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature &apos;{0}&apos; cannot be used as output for control group &apos;{1}&apos;.
+        /// </summary>
+        public static string Feature_0_cannot_be_used_as_output_for_control_group_1_ {
+            get {
+                return ResourceManager.GetString("Feature_0_cannot_be_used_as_output_for_control_group_1_", resourceCulture);
             }
         }
         

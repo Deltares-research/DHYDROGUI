@@ -3,36 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using GeoAPI.Extensions.Feature;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 {
-    public class ControlGroupValidator : IValidator<RealTimeControlModel, ControlGroup>
+    public class ControlGroupValidator : IValidator<IRealTimeControlModel, IControlGroup>
     {
-        public ValidationReport Validate(RealTimeControlModel rootObject, ControlGroup target)
+        /// <summary>
+        /// Validate the provided control group.
+        /// </summary>
+        /// <param name="rootObject"> The real-time control model to which the control group belongs. </param>
+        /// <param name="target"> The control group to validate. </param>
+        /// <returns>
+        /// A new <see cref="ValidationResult"/> containing the validation results.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="rootObject"/> or <paramref name="target"/> is <c>null</c>.
+        /// </exception>
+        public ValidationReport Validate(IRealTimeControlModel rootObject, IControlGroup target)
         {
+            Ensure.NotNull(rootObject, nameof(rootObject));
+            Ensure.NotNull(target, nameof(target));
+
             return new ValidationReport(target.Name + " (Control Group)", new[]
             {
-                ValidateControlGroup(target),
+                ValidateControlGroup(rootObject, target),
                 ValidateRules(rootObject, target),
                 ValidateConditions(rootObject, target),
                 ValidateSignals(target)
             });
         }
 
-        private static ValidationReport ValidateRules(RealTimeControlModel model, ControlGroup controlGroup)
+        private static ValidationReport ValidateRules(IRealTimeControlModel model, IControlGroup controlGroup)
         {
             var issues = new List<ValidationIssue>();
 
             RtcBaseObjectCheckForUniqueness(controlGroup.Rules, issues, "Rule");
-            if (model != null)
-            {
-                issues.AddRange(ValidateTimeSeriesInRules(model, controlGroup));
-            }
+
+            issues.AddRange(ValidateTimeSeriesInRules(model, controlGroup));
 
             foreach (RuleBase rule in controlGroup.Rules.Where(r => r.IsLinkedFromSignal()))
             {
@@ -45,20 +60,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             return new ValidationReport("Rules", issues);
         }
 
-        private static ValidationReport ValidateConditions(RealTimeControlModel model, ControlGroup controlGroup)
+        private static ValidationReport ValidateConditions(IRealTimeControlModel model, IControlGroup controlGroup)
         {
             var issues = new List<ValidationIssue>();
 
             RtcBaseObjectCheckForUniqueness(controlGroup.Conditions, issues, "Condition");
-            if (model != null)
-            {
-                issues.AddRange(ValidateTimeSeriesInConditions(model, controlGroup));
-            }
+
+            issues.AddRange(ValidateTimeSeriesInConditions(model, controlGroup));
 
             return new ValidationReport("Conditions", issues);
         }
 
-        private static ValidationReport ValidateSignals(ControlGroup controlGroup)
+        private static ValidationReport ValidateSignals(IControlGroup controlGroup)
         {
             var issues = new List<ValidationIssue>();
 
@@ -78,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             return new ValidationReport("Signals", issues);
         }
 
-        private static ValidationReport ValidateControlGroup(ControlGroup controlGroup)
+        private static ValidationReport ValidateControlGroup(IRealTimeControlModel realTimeControlModel, IControlGroup controlGroup)
         {
             var issues = new List<ValidationIssue>();
 
@@ -99,7 +112,53 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                 issues.AddRange(result.Messages.Select(m => new ValidationIssue(controlGroup, ValidationSeverity.Error, m)));
             }
 
+            ValidateConnectionPointsWithControlledModels(realTimeControlModel, controlGroup, issues);
+
             return new ValidationReport("Control group configuration", issues);
+        }
+
+        private static void ValidateConnectionPointsWithControlledModels(IRealTimeControlModel realTimeControlModel, IControlGroup controlGroup, List<ValidationIssue> issues)
+        {
+            ValidateUncontrollableInputs(realTimeControlModel, controlGroup, issues);
+            ValidateUncontrollableOutputs(realTimeControlModel, controlGroup, issues);
+        }
+
+        private static void ValidateUncontrollableOutputs(IRealTimeControlModel realTimeControlModel, IControlGroup controlGroup, List<ValidationIssue> issues)
+        {
+            foreach (IFeature uncontrollableOutput in GetUncontrollableFeatures(realTimeControlModel, controlGroup.Outputs, DataItemRole.Input))
+            {
+                string message = string.Format(Resources.Feature_0_cannot_be_used_as_output_for_control_group_1_, uncontrollableOutput, controlGroup.Name);
+                issues.Add(new ValidationIssue(controlGroup, ValidationSeverity.Error, message));
+            }
+        }
+
+        private static void ValidateUncontrollableInputs(IRealTimeControlModel realTimeControlModel, IControlGroup controlGroup, List<ValidationIssue> issues)
+        {
+            foreach (IFeature uncontrollableInput in GetUncontrollableFeatures(realTimeControlModel, controlGroup.Inputs, DataItemRole.Output))
+            {
+                string message = string.Format(Resources.Feature_0_cannot_be_used_as_input_for_control_group_1_, uncontrollableInput, controlGroup.Name);
+                issues.Add(new ValidationIssue(controlGroup, ValidationSeverity.Error, message));
+            }
+        }
+
+        private static IEnumerable<IFeature> GetUncontrollableFeatures(IRealTimeControlModel realTimeControlModel, IEnumerable<ConnectionPoint> connectionPoints, DataItemRole dataItemRole)
+        {
+            if (!connectionPoints.Any())
+            {
+                yield break;
+            }
+
+            HashSet<IFeature> controllableFeatures = realTimeControlModel.ControlledModels
+                                                                         .SelectMany(model => model.GetChildDataItemLocations(dataItemRole))
+                                                                         .ToHashSet();
+            
+            foreach (IFeature feature in connectionPoints.Select(p=> p.Feature))
+            {
+                if (!controllableFeatures.Contains(feature))
+                {
+                    yield return feature;
+                }
+            }
         }
 
         private static void RtcBaseObjectCheckForUniqueness(IEnumerable<INameable> nameables,
@@ -117,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateTimeSeriesInConditions(RealTimeControlModel rootObject, IControlGroup controlGroup)
+        private static IEnumerable<ValidationIssue> ValidateTimeSeriesInConditions(IRealTimeControlModel rootObject, IControlGroup controlGroup)
         {
             IEnumerable<TimeCondition> invalidTimeConditions = controlGroup.Conditions
                                                                            .OfType<TimeCondition>()
@@ -126,7 +185,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             return invalidTimeConditions.Select(tc => new ValidationIssue(tc, ValidationSeverity.Error, Resources.ControlGroupValidator_TimeSeriesNotAMultipleOfModelTimeStep, tc.TimeSeries));
         }
 
-        private static IEnumerable<ValidationIssue> ValidateTimeSeriesInRules(RealTimeControlModel rootObject, IControlGroup controlGroup)
+        private static IEnumerable<ValidationIssue> ValidateTimeSeriesInRules(IRealTimeControlModel rootObject, IControlGroup controlGroup)
         {
             List<ITimeDependentRtcObject> timeDependentRules = controlGroup.Rules
                                                                            .OfType<ITimeDependentRtcObject>()
