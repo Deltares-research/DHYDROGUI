@@ -793,6 +793,37 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
             }
         }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)] 
+        [Category(TestCategory.Integration)] 
+        public void GivenRRModelWithStartTimeAfterStopTime_WhenSaveAndLoad_ThenNoExceptionIsThrown()
+        {
+            string path = null;
+            try
+            {
+                RainfallRunoffModel rrModel = GetRRModel();
+                rrModel.StopTime = new DateTime(2024, 5, 8, 10, 0, 0);
+                rrModel.StartTime = new DateTime(2024, 5, 8, 12, 0, 0); // Start time after stop time
+                rrModel.OutputTimeStep = TimeSpan.FromHours(1); 
+
+                using (IApplication application = CreateRunningApplication())
+                {
+                    application.Project.RootFolder.Items.Add(rrModel);
+                    Assert.DoesNotThrow(() => path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application));
+                
+                    application.OpenProject(path);
+                    Project retrievedProject = application.Project;
+                    RainfallRunoffModel retrievedModel = retrievedProject.RootFolder.GetAllModelsRecursive()
+                                                                         .OfType<RainfallRunoffModel>().FirstOrDefault();
+                    Assert.NotNull(retrievedModel);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
+            }
+        }
 
 
 
