@@ -383,7 +383,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        AddAreaItem(feature, inputSender);
+                        AddAreaItem(feature);
                         break;
                     case NotifyCollectionChangedAction.Remove:
                         RemoveAreaFeature(feature);
@@ -398,7 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     case NotifyCollectionChangedAction.Replace:
                         var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
                         RemoveAreaFeature(oldFeature);
-                        AddAreaItem(feature, inputSender);
+                        AddAreaItem(feature);
                         break;
                     default:
                         throw new NotImplementedException(
@@ -517,9 +517,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
+            
             if (!isLoading)
             {
-                var fixedWeir = e.GetRemovedOrAddedItem() as FixedWeir;
+                var fixedWeir = removedOrAddedItem as FixedWeir;
                 if (fixedWeir != null)
                 {
                     switch (e.Action)
@@ -558,7 +560,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
 
-                var bridgePillar = e.GetRemovedOrAddedItem() as BridgePillar;
+                var bridgePillar = removedOrAddedItem as BridgePillar;
                 if (bridgePillar != null)
                 {
                     switch (e.Action)
@@ -596,8 +598,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-
-            if (e.GetRemovedOrAddedItem() is ILeveeBreach leveeBreach)
+            if (removedOrAddedItem is ILeveeBreach leveeBreach)
             {
                 switch (e.Action)
                 {
@@ -697,22 +698,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            var groupableFeature = e.GetRemovedOrAddedItem() as IGroupableFeature;
+            var groupableFeature = removedOrAddedItem as IGroupableFeature;
             if (groupableFeature != null && e.Action != NotifyCollectionChangedAction.Remove && !Area.IsEditing)
             {
                 groupableFeature.UpdateGroupName(this);
             }
 
-            var inputSender = InputFeatureCollectionsContains(e.GetRemovedOrAddedItem());
-            var outputSender = OutputFeatureCollectionsContains(e.GetRemovedOrAddedItem());
-
-            if (inputSender || outputSender)
+            if (removedOrAddedItem is IFeature feature && GetDataItemRole(feature) != DataItemRole.None)
             {
-                var feature = (IFeature)e.GetRemovedOrAddedItem();
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        AddAreaItem(feature, inputSender);
+                        AddAreaItem(feature);
                         break;
                     case NotifyCollectionChangedAction.Remove:
                         RemoveAreaFeature(feature);
@@ -727,7 +724,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     case NotifyCollectionChangedAction.Replace:
                         var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
                         RemoveAreaFeature(oldFeature);
-                        AddAreaItem(feature, inputSender);
+                        AddAreaItem(feature);
                         break;
                     default:
                         throw new NotImplementedException(
@@ -742,8 +739,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 case IWeir weir when e.PropertyName == nameof(weir.WeirFormula):
                     {
-                        var isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
-                        UpdateAreaDataItems(weir, isInputSender);
+                        UpdateAreaDataItems(weir);
                         break;
                     }
                 case ILeveeBreach leveeBreach when e.PropertyName == nameof(leveeBreach.WaterLevelFlowLocationsActive):

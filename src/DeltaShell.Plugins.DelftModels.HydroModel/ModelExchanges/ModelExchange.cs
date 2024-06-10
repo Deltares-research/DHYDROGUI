@@ -40,20 +40,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges
                 if (parent == null) return result;
                 
                 string id = null;
-                if ((role & DataItemRole.Input) == DataItemRole.Input)
+                if (role.HasFlag(DataItemRole.Input))
                 {
-                    var index =
-                        parent.Children.Where(c => (c.Role & DataItemRole.Input) == DataItemRole.Input)
+                    int index =
+                        parent.Children.Where(c => c.Role.HasFlag(DataItemRole.Input))
                             .ToList()
                             .IndexOf(dataItem);
                     id = "input" + index;
                 }
-                if ((role & DataItemRole.Output) == DataItemRole.Output)
+                if (role.HasFlag(DataItemRole.Output))
                 {
-                    var index =
-                        parent.Children.Where(c => (c.Role & DataItemRole.Output) == DataItemRole.Output)
-                            .ToList()
-                            .IndexOf(dataItem);
+                    int index =
+                        parent.Children.Where(c => c.Role.HasFlag(DataItemRole.Output))
+                              .ToList()
+                              .IndexOf(dataItem);
                     id = "output" + index;
                 }
                 if (id != null)

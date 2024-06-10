@@ -5,7 +5,6 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using GeoAPI.CoordinateSystems.Transformations;
@@ -145,7 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            foreach (IDataItem child in controlGroupDataItem.Children.Where(di => (di.Role & DataItemRole.Input) == DataItemRole.Input))
+            foreach (IDataItem child in controlGroupDataItem.Children.Where(di => di.Role.HasFlag(DataItemRole.Input)))
             {
                 int postfixIndex = child.Name.IndexOf(RealTimeControlModel.InputPostFix, StringComparison.InvariantCulture);
                 if (postfixIndex < 1)
@@ -157,7 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 child.Name = child.Name.Replace(oldControlGroupName, controlGroup.Name);
             }
 
-            foreach (IDataItem child in controlGroupDataItem.Children.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output))
+            foreach (IDataItem child in controlGroupDataItem.Children.Where(di => di.Role.HasFlag(DataItemRole.Output)))
             {
                 int postfixIndex = child.Name.IndexOf(RealTimeControlModel.OutputPostFix, StringComparison.InvariantCulture);
                 if (postfixIndex < 1)
@@ -184,14 +183,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             if (controlGroupDataItem.Children
-                                    .Where(di => (di.Role & DataItemRole.Input) == DataItemRole.Input)
+                                    .Where(di => di.Role.HasFlag(DataItemRole.Input))
                                     .Any(child => !child.Name.StartsWith(controlGroup.Name + RealTimeControlModel.InputPostFix)))
             {
                 return false;
             }
 
             if (controlGroupDataItem.Children
-                                    .Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output)
+                                    .Where(di => di.Role.HasFlag(DataItemRole.Output))
                                     .Any(child => !child.Name.StartsWith(controlGroup.Name + RealTimeControlModel.OutputPostFix)))
             {
                 return false;

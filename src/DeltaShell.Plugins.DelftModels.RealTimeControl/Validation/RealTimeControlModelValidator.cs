@@ -95,12 +95,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
             foreach (IDataItem item in model.AllDataItems)
             {
-                IEnumerable<IDataItem> relatedDataItems = item.LinkedBy.Concat(item.LinkedTo != null
-                                                                                   ? new[]
-                                                                                   {
-                                                                                       item.LinkedTo
-                                                                                   }
-                                                                                   : new IDataItem[0]);
+                IEnumerable<IDataItem> linkedTo = item.LinkedTo != null ? new[] { item.LinkedTo } : Enumerable.Empty<IDataItem>();
+                IEnumerable<IDataItem> relatedDataItems = item.LinkedBy.Concat(linkedTo);
                 foreach (IDataItem consumer in relatedDataItems)
                 {
                     IActivity linkedModel = GetOwner(consumer);

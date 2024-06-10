@@ -33,6 +33,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -489,7 +490,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.That(dataItems[0].Name, Is.EqualTo(weir.Name));
             Assert.That(dataItems[0].Tag, Is.EqualTo("CrestLevel"));
-            Assert.That(dataItems[0].Role, Is.EqualTo(DataItemRole.Input));
+            Assert.That(dataItems[0].Role, Is.EqualTo(DataItemRole.Input | DataItemRole.Output));
 
             var valueConverter = (WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter;
             Assert.That(valueConverter.Location, Is.EqualTo(weir));
@@ -510,7 +511,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 Assert.That(dataItems[i].Name, Is.EqualTo(weir.Name));
                 Assert.That(dataItems[i].Tag, Is.EqualTo(generalStructureDataItems[i]));
-                Assert.That(dataItems[i].Role, Is.EqualTo(DataItemRole.Input));
+                Assert.That(dataItems[i].Role, Is.EqualTo(DataItemRole.Input | DataItemRole.Output));
 
                 valueConverter = (WaterFlowFMFeatureValueConverter)dataItems[i].ValueConverter;
                 Assert.That(valueConverter.Location, Is.EqualTo(weir));
@@ -2134,6 +2135,136 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             return pipe;
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(CreateRetrieveChildDataItemLocationTestCases))]
+        public IEnumerable<IFeature> GivenAModel_WhenRetrievingChildDataItemLocations_ReturnsItemsWithSpecifiedRole(
+            WaterFlowFMModel model, DataItemRole role)
+        {
+            return model.GetChildDataItemLocations(role);
+        }
+
+        private static IEnumerable<TestCaseData> CreateRetrieveChildDataItemLocationTestCases()
+        {
+            var model = new WaterFlowFMModel();
+
+            var pump = new Pump2D();
+            var weir = new Weir2D();
+            var observationPoint = new GroupableFeature2DPoint();
+            var observationCrossSection = new ObservationCrossSection2D();
+
+            model.Area.Pumps.Add(pump);
+            model.Area.Weirs.Add(weir);
+            model.Area.ObservationPoints.Add(observationPoint);
+            model.Area.ObservationCrossSections.Add(observationCrossSection);
+
+            var empty = new IFeature[] {};
+            var inputs = new IFeature[] { pump, weir };
+            var outputs = new IFeature[] { pump, weir, observationPoint, observationCrossSection };
+
+            yield return GenerateTestCaseData(DataItemRole.None, empty);
+            yield return GenerateTestCaseData(DataItemRole.Input, inputs);
+            yield return GenerateTestCaseData(DataItemRole.Output, outputs);
+            yield break;
+
+            TestCaseData GenerateTestCaseData(DataItemRole role, IEnumerable<IFeature> expected)
+            {
+                return new TestCaseData(model, role)
+                       .Returns(expected)
+                       .SetName(role.ToString());
+            }
+        }
+
+        [Test]
+        public void GivenAModel_WhenRetrievingChildDataItemsForPump_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var pump = new Pump2D();
+
+            model.Area.Pumps.Add(pump);
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(pump).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, pump)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Input) && x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "capacity" }));
+        }
+
+        [Test]
+        public void GivenAModel_WhenRetrievingChildDataItemsForSimpleWeir_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var weir = new Weir2D { WeirFormula = new SimpleWeirFormula() };
+
+            model.Area.Weirs.Add(weir);
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(weir).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, weir)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Input) && x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "CrestLevel" }));
+        }
+
+        [Test]
+        public void GivenAModel_WhenRetrievingChildDataItemsForGeneralStructureWeir_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var weir = new Weir2D { WeirFormula = new GeneralStructureWeirFormula() };
+
+            model.Area.Weirs.Add(weir);
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(weir).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, weir)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Input) && x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "CrestLevel", "GateHeight", "GateLowerEdgeLevel", "GateOpeningWidth", "GateOpeningHorizontalDirection" }));
+        }
+
+        [Test]
+        public void GivenAModel_WhenRetrievingChildDataItemsForGeneralGatedWeir_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var weir = new Weir2D { WeirFormula  = new GatedWeirFormula() };
+
+            model.Area.Weirs.Add(weir);
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(weir).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, weir)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Input) && x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "CrestLevel", "GateHeight", "GateLowerEdgeLevel", "GateOpeningWidth", "GateOpeningHorizontalDirection" }));
+        }
+
+        [Test]
+        public void GivenAModel_WhenRetrievingChildDataItemsForObservationPoint_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var observationPoint = new GroupableFeature2DPoint();
+
+            model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
+            model.Area.ObservationPoints.Add(observationPoint);
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationPoint).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationPoint)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "water_level", "salinity", "water_depth" }));
+        }
+
+        [Test]
+        public void GivenAModel_WhenRetrievingChildDataItemsForObservationCrossSection_ReturnsDataItems()
+        {
+            var model = new WaterFlowFMModel();
+            var observationCrossSection = new ObservationCrossSection2D();
+
+            model.Area.ObservationCrossSections.Add(observationCrossSection);
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationCrossSection).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationCrossSection)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "discharge", "velocity", "water_level", "water_depth" }));
         }
     }
 

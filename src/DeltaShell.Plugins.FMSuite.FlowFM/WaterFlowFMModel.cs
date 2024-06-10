@@ -796,6 +796,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region TimedependentModelBase
 
+        /// <inheritdoc />
         public override IEnumerable<object> GetDirectChildren()
         {
             foreach (var item in base.GetDirectChildren())
@@ -878,9 +879,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
         {
-            if ((role & DataItemRole.Input) == DataItemRole.Input)
+            if (role.HasFlag(DataItemRole.Input))
             {
                 foreach (var inputFeature2D in InputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>()).ToArray())
                 {
@@ -888,7 +890,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            if ((role & DataItemRole.Output) == DataItemRole.Output)
+            if (role.HasFlag(DataItemRole.Output))
             {
                 foreach (var outputFeature2D in OutputFeatureCollections.OfType<IList>()
                     .SelectMany(l => l.OfType<IFeature>()))
@@ -946,6 +948,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
         {
             if (location == null) yield break;
@@ -1048,6 +1051,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         [NoNotifyPropertyChange]
+        /// <inheritdoc />
         public override DateTime StartTime
         {
             get
@@ -1069,6 +1073,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         [NoNotifyPropertyChange]
+        /// <inheritdoc />
         public override DateTime StopTime
         {
             get
@@ -1088,6 +1093,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        /// <inheritdoc />
         public override TimeSpan TimeStep
         {
             get { return (TimeSpan) ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value; }
@@ -2284,6 +2290,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Coupling
 
+        /// <summary>
+        /// Gets the input data item feature collections.
+        /// </summary>
         private IEnumerable<object> InputFeatureCollections
         {
             get
@@ -2296,10 +2305,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        /// <summary>
+        /// Gets the output data item feature collections.
+        /// </summary>
         private IEnumerable<object> OutputFeatureCollections
         {
             get
             {
+                yield return Area.Pumps;
+                yield return Area.Weirs;
                 yield return Area.ObservationPoints;
                 yield return Area.ObservationCrossSections;
                 
@@ -2405,31 +2419,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             areaDataItems.Remove(feature);
         }
 
-        private void AddAreaItem(IFeature feature, bool isInputSender)
+        private void AddAreaItem(IFeature feature)
         {
-            var listToAdd = GetDataItemListForFeature(feature, isInputSender);
+            List<IDataItem> listToAdd = GetDataItemListForFeature(feature);
             areaDataItems.Add(feature, listToAdd);
         }
 
-        private void UpdateAreaDataItems(IFeature feature, bool isInputSender)
+        private void UpdateAreaDataItems(IFeature feature)
         {
             if(areaDataItems.ContainsKey(feature))
             {
-                var listToReplace = GetDataItemListForFeature(feature, isInputSender);               
+                var listToReplace = GetDataItemListForFeature(feature);
                 areaDataItems[feature] = listToReplace;
             }
         }
 
-        private List<IDataItem> GetDataItemListForFeature(IFeature feature, bool isInputSender)
+        private List<IDataItem> GetDataItemListForFeature(IFeature feature)
         {
             return GetQuantitiesForLocation(feature).Select(quantity => new DataItem(feature)
             {
                 Name = feature.ToString(),
                 Tag = quantity,
-                Role = isInputSender ? DataItemRole.Input : DataItemRole.Output,
+                Role = GetDataItemRole(feature),
                 ValueType = typeof(double),
                 ValueConverter = new WaterFlowFMFeatureValueConverter(this, feature, quantity, String.Empty)
             }).OfType<IDataItem>().ToList();
+        }
+        
+        private DataItemRole GetDataItemRole(IFeature feature)
+        {
+            if (feature is Pump2D || feature is Weir2D)
+            {
+                return DataItemRole.Input | DataItemRole.Output;
+            }
+
+            if (feature is ObservationCrossSection2D || feature is GroupableFeature2DPoint)
+            {
+                return DataItemRole.Output;
+            }
+
+            if (feature is Gate2D || feature is LeveeBreach || IsSourcesAndSinksFeature(feature))
+            {
+                return DataItemRole.Input;
+            }
+
+            return DataItemRole.None;
+        }
+
+        private bool IsSourcesAndSinksFeature(IFeature feature)
+        {
+            return SourcesAndSinks?.Any(ss => ss.Feature.Equals(feature)) ?? false;
         }
 
         private IEnumerable<string> GetQuantitiesForLocation(IFeature location)
