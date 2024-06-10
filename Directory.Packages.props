@@ -3,8 +3,8 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Deltares.NET.Infrastructure" Version="0.2.0.154"/>
-        <PackageVersion Include="Deltares.NET.Infrastructure.API" Version="0.2.0.154"/>
+        <PackageVersion Include="Deltares.NET.Infrastructure" Version="0.2.0.155"/>
+        <PackageVersion Include="Deltares.NET.Infrastructure.API" Version="0.2.0.155"/>
         <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.33"/>
         <PackageVersion Include="log4net" Version="2.0.15"/>
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.0.0"/>
