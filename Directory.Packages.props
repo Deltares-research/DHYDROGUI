@@ -13,7 +13,7 @@
     <PackageVersion Include="DeltaShell.TestProject" Version="3.0.0.3497" />
     <PackageVersion Include="DHYDRO.Common" Version="1.2.0.260" />
     <PackageVersion Include="DHYDRO.Common.TestUtils" Version="1.2.0.260" />
-    <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.30" />
+    <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.33" />
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="4.0.0.8" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="4.0.0.8" />
     <PackageVersion Include="DIDO" Version="7.0.0.74073" />
