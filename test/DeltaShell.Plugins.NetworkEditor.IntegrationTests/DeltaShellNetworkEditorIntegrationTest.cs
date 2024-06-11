@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using DelftTools.Hydro;
@@ -148,6 +149,18 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             network.Branches.Remove(network.Branches[0]);
             NetworkHelper.RemoveUnusedNodes(network);
             Assert.AreEqual(2, network.HydroNodes.Count(n => !n.IsConnectedToMultipleBranches));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GridEditorPluginDeployment()
+        {
+            string pluginsDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "plugins");
+            string gridEditorDllPath = Path.Combine(pluginsDir, "DeltaShell.Plugins.GridEditor", "DeltaShell.Plugins.GridEditor.dll");
+            string gridEditorGuiDllPath = Path.Combine(pluginsDir, "DeltaShell.Plugins.GridEditor.Gui", "DeltaShell.Plugins.GridEditor.Gui.dll");
+            
+            Assert.That(gridEditorDllPath, Does.Exist);
+            Assert.That(gridEditorGuiDllPath, Does.Exist);
         }
     }
 }

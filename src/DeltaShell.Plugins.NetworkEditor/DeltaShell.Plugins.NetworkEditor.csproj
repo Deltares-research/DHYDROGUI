@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
     <PackageReference Include="Mono.Addins" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="DeltaShell.Plugins.GridEditor" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="DeltaShell.Plugins.GridEditor" PrivateAssets="all" />
     <PackageReference Include="log4net">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
