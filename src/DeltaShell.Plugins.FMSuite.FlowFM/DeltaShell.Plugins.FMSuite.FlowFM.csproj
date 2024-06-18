@@ -14,6 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Deltares.NET.Infrastructure" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="Deltares.NET.Infrastructure.API" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
     <PackageReference Include="DHYDRO.Common">
       <PrivateAssets>all</PrivateAssets>

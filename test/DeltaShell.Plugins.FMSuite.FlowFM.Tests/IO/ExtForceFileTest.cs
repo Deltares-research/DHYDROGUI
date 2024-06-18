@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
@@ -535,23 +536,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             //is not done via external forcing file
             var def = new WaterFlowFMModelDefinition();
-            var validInitial2DWaterLevelIniSectionsFile = TestHelper.GetTestFilePath(@"IO\Initial2DWaterLevel_expected.ini");
-            InitialConditionInitialFieldsFileReader.ReadFile(validInitial2DWaterLevelIniSectionsFile, def);
-            
+            var initialFieldFile = new InitialFieldFile();
+
+            string validInitial2DWaterLevelIniSectionsFile = TestHelper.GetTestFilePath(@"IO\Initial2DWaterLevel_expected.ini");
+            initialFieldFile.Read(validInitial2DWaterLevelIniSectionsFile, validInitial2DWaterLevelIniSectionsFile, def);
+
             Assert.AreEqual(1, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
 
             // add polygon
-            var geometry = new Polygon(new LinearRing(new []
-                {
-                    new Coordinate(-135, -105), new Coordinate(-85, -100),
-                    new Coordinate(-75, -205), new Coordinate(-125, -200),
-                    new Coordinate(-135, -105)
-                }));
+            var geometry = new Polygon(new LinearRing(new[]
+            {
+                new Coordinate(-135, -105),
+                new Coordinate(-85, -100),
+                new Coordinate(-75, -205),
+                new Coordinate(-125, -200),
+                new Coordinate(-135, -105)
+            }));
             var f = new Feature
             {
-                    Geometry = geometry,
-                };
-            var maskCollection = new FeatureCollection(new[] {f}, typeof (Feature));
+                Geometry = geometry,
+            };
+            var maskCollection = new FeatureCollection(new[] { f }, typeof(Feature));
             var operation = new SetValueOperation
             {
                 Name = "poly",
@@ -563,30 +568,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var samples = new AddSamplesOperation(false);
             samples.SetInputData(AddSamplesOperation.SamplesInputName, new PointCloudFeatureProvider
             {
-                    PointCloud = new PointCloud
+                PointCloud = new PointCloud
+                {
+                    PointValues = new List<IPointValue>
                     {
-                            PointValues = new List<IPointValue>
-                            {
-                                    new PointValue { X = 5, Y = 5, Value = 12},
-                                    new PointValue { X = 10, Y = 10, Value = 30},
-                                    new PointValue { X = 20, Y = 10, Value = 31},
-                                },
+                        new PointValue
+                        {
+                            X = 5,
+                            Y = 5,
+                            Value = 12
                         },
-                });
-            
+                        new PointValue
+                        {
+                            X = 10,
+                            Y = 10,
+                            Value = 30
+                        },
+                        new PointValue
+                        {
+                            X = 20,
+                            Y = 10,
+                            Value = 31
+                        },
+                    },
+                },
+            });
+
             def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Add(samples);
 
-            const string newExtPath = "test.ini";
-            InitialConditionInitialFieldsFileWriter.WriteFile(newExtPath, def, true);
-
             var newDef = new WaterFlowFMModelDefinition();
-            InitialConditionInitialFieldsFileReader.ReadFile(newExtPath, newDef);
 
-            Assert.AreEqual(3, newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
-            Assert.AreEqual(3,
-                ((ImportSamplesOperation)
-                    newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)[2]).GetPoints()
-                    .Count());
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string newExtPath = Path.Combine(tempDir.Path, "test.ini");
+
+                initialFieldFile.Write(newExtPath, newExtPath, true, def);
+                initialFieldFile.Read(newExtPath, newExtPath, newDef);
+
+                Assert.AreEqual(3, newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
+                Assert.AreEqual(3, ((ImportSamplesOperation)newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)[2]).GetPoints().Count());
+            }
         }
 
         [Test]

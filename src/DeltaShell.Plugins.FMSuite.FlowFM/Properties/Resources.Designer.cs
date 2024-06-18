@@ -460,6 +460,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Friction type does not match the expected uniform model friction type..
+        /// </summary>
+        public static string Friction_type_does_not_match_the_expected_uniform_model_friction_type_ {
+            get {
+                return ResourceManager.GetString("Friction_type_does_not_match_the_expected_uniform_model_friction_type_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap FunctionGrid2D {
@@ -506,6 +515,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_t" +
                         "he_first_and_ignoring_all_others", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial field file does not exist: {0}.
+        /// </summary>
+        public static string Initial_field_file_does_not_exist_0_ {
+            get {
+                return ResourceManager.GetString("Initial_field_file_does_not_exist_0_", resourceCulture);
             }
         }
         
@@ -896,6 +914,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; contains unsupported value: {1}..
+        /// </summary>
+        public static string Property_0_contains_unsupported_value_1_ {
+            get {
+                return ResourceManager.GetString("Property_0_contains_unsupported_value_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap PumpSmall {
@@ -967,6 +994,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string ReadFile_Could_not_read_file__0__properly_no_global_property_was_found {
             get {
                 return ResourceManager.GetString("ReadFile_Could_not_read_file__0__properly_no_global_property_was_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading initial field data from {0}.
+        /// </summary>
+        public static string Reading_initial_field_data_from_0_ {
+            get {
+                return ResourceManager.GetString("Reading_initial_field_data_from_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to reading the initial field file.
+        /// </summary>
+        public static string reading_the_initial_field_file {
+            get {
+                return ResourceManager.GetString("reading_the_initial_field_file", resourceCulture);
             }
         }
         
@@ -1906,6 +1951,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("WeirSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing initial field data to {0}.
+        /// </summary>
+        public static string Writing_initial_field_data_to_0_ {
+            get {
+                return ResourceManager.GetString("Writing_initial_field_data_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to writing the initial field file.
+        /// </summary>
+        public static string writing_the_initial_field_file {
+            get {
+                return ResourceManager.GetString("writing_the_initial_field_file", resourceCulture);
             }
         }
     }

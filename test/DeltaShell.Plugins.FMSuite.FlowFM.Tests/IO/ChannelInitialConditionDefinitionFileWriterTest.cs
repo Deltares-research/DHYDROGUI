@@ -66,46 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        // [Test]
-        // [Category("Build.Integration")]
-        // //todo: Make sure the original quantity file is deleted when a new one is created
-        // public void GivenASavedModel_WhenSavingWithADifferentGlobalInitialConditionQuantity_ThenOriginalQuantityFileIsDeleted()
-        // {
-        //     var tempFolder = FileUtils.CreateTempDirectory();
-        //     try
-        //     {
-        //         var initialConditionWaterLevelFile = Path.Combine(tempFolder, "InitialWaterLevel.ini");
-        //         var initialConditionWaterDepthFile = Path.Combine(tempFolder, "InitialWaterDepth.ini");
-        //
-        //         var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-        //
-        //         using (var fmModel = new WaterFlowFMModel() {MduFilePath = mduFilePath})
-        //         {
-        //             fmModel.Network.Branches.Add(new Channel());
-        //             var modelDefinition = fmModel.ModelDefinition;
-        //
-        //             var globalInitialConditionQuantity = (InitialConditionQuantity)(int)modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D).Value;
-        //             Assert.That(globalInitialConditionQuantity, Is.EqualTo(InitialConditionQuantity.WaterLevel));
-        //
-        //             fmModel.ExportTo(mduFilePath, true, false, false);
-        //             Assert.That(File.Exists(initialConditionWaterLevelFile), Is.True);
-        //             Assert.That(File.Exists(initialConditionWaterDepthFile), Is.False);
-        //
-        //             // change globalQuantity to WaterDepth
-        //             modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, $"{(int)InitialConditionQuantity.WaterDepth}");
-        //
-        //             // resave
-        //             fmModel.ExportTo(mduFilePath, true, false, false);
-        //             Assert.That(File.Exists(initialConditionWaterLevelFile), Is.False);
-        //             Assert.That(File.Exists(initialConditionWaterDepthFile), Is.True);
-        //         }
-        //     }
-        //     finally
-        //     {
-        //         FileUtils.DeleteIfExists(tempFolder);
-        //     }
-        // }
-
         private static void SetGlobalValue(WaterFlowFMModelDefinition modelDefinition, double globalValue)
         {
             modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalValue1D, globalValue.ToString(CultureInfo.InvariantCulture));

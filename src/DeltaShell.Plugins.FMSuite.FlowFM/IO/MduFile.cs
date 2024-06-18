@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                network != null &&
                hydroArea != null &&
                roughnessSections != null)
-                FeatureFile1D2DWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, network, hydroArea, roughnessSections, channelFrictionDefinitions, channelInitialConditionDefinitions);
+                FeatureFile1D2DWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, network, hydroArea, roughnessSections, channelFrictionDefinitions, channelInitialConditionDefinitions, switchTo);
 
             // write at the end in case of updated file paths
             WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:false, disableFlowNodeRenumbering:disableFlowNodeRenumbering);

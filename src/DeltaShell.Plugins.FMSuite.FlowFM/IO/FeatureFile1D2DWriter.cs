@@ -15,6 +15,7 @@ using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
@@ -38,7 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             HydroArea area, 
             IEnumerable<RoughnessSection> roughnessSections, 
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
-            IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
+            IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
+            bool switchTo = true)
         {
             WriteNodeFile(targetMduFilePath, modelDefinition, network);
             WriteBranchFile(targetMduFilePath, modelDefinition, network.Branches);
@@ -47,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             WriteStructuresFiles(targetMduFilePath, modelDefinition, network, area);
             WriteRoughnessFiles(targetMduFilePath, modelDefinition, roughnessSections, channelFrictionDefinitions);
-            WriteInitialConditionFiles(targetMduFilePath, modelDefinition, channelInitialConditionDefinitions, network);
+            WriteInitialConditionFiles(targetMduFilePath, modelDefinition, channelInitialConditionDefinitions, network, switchTo);
         }
 
         private static void WriteObservationPointsFiles(string targetMduFilePath,
@@ -245,15 +247,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteInitialConditionFiles(string targetMduFilePath,
             WaterFlowFMModelDefinition modelDefinition,
-            IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions, IHydroNetwork network)
+            IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
+            IHydroNetwork network,
+            bool switchTo)
         {
-            var networkIsEmpty = network == null
-                                         || network.IsEdgesEmpty
-                                         || network.IsVerticesEmpty;
-
             var directoryName = Path.GetDirectoryName(targetMduFilePath);
-            if (directoryName == null) return;
+            if (directoryName == null)
+            {
+                return;
+            }
 
+            var initialFieldFile = new InitialFieldFile();
+            if (!initialFieldFile.ShouldWrite(modelDefinition, network))
+            {
+                return;
+            }
+            
             modelDefinition.SetModelProperty(KnownProperties.IniFieldFile, INITIAL_CONDITIONS_FILE_NAME);
 
             var globalInitialConditionQuantity1D = (InitialConditionQuantity)(int)modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D).Value;
@@ -261,13 +270,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             // write initialFields.ini
             var initialConditionFilePath = Path.Combine(directoryName, INITIAL_CONDITIONS_FILE_NAME);
-            FileWritingUtils.ThrowIfFileNotExists(initialConditionFilePath, directoryName,
-                filename => InitialConditionInitialFieldsFileWriter.WriteFile(filename, modelDefinition, networkIsEmpty));
 
-            if (networkIsEmpty) return;
+            initialFieldFile.Write(initialConditionFilePath, initialConditionFilePath, switchTo, modelDefinition);
+            
             // write Initial<quantity>.ini
-            var intialConditionDefinitionFilename =
-                Path.Combine(directoryName, GetInitialConditionDefinitionFilename(globalInitialConditionQuantity1D));
+            var intialConditionDefinitionFilename = Path.Combine(directoryName, GetInitialConditionDefinitionFilename(globalInitialConditionQuantity1D));
             FileWritingUtils.ThrowIfFileNotExists(intialConditionDefinitionFilename, directoryName,
                 filename => ChannelInitialConditionDefinitionFileWriter.WriteFile(
                     filename, channelInitialConditionDefinitions, globalInitialConditionQuantity1D, globalInitialConditionValue1D));

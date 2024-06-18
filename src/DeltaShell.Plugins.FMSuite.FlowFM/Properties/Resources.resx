@@ -697,4 +697,25 @@ File import of structures file '{1}' has failed.</value>
   <data name="MduFileReferencePathContainsInvalidCharacters" xml:space="preserve">
     <value>File path '{0}' contains invalid characters. MDU file '{1}' property '{2}'. Information might have been lost while loading model '{3}'.</value>
   </data>
+  <data name="Initial_field_file_does_not_exist_0_" xml:space="preserve">
+    <value>Initial field file does not exist: {0}</value>
+  </data>
+  <data name="Reading_initial_field_data_from_0_" xml:space="preserve">
+    <value>Reading initial field data from {0}</value>
+  </data>
+  <data name="reading_the_initial_field_file" xml:space="preserve">
+    <value>reading the initial field file</value>
+  </data>
+  <data name="writing_the_initial_field_file" xml:space="preserve">
+    <value>writing the initial field file</value>
+  </data>
+  <data name="Writing_initial_field_data_to_0_" xml:space="preserve">
+    <value>Writing initial field data to {0}</value>
+  </data>
+  <data name="Property_0_contains_unsupported_value_1_" xml:space="preserve">
+    <value>Property '{0}' contains unsupported value: {1}.</value>
+  </data>
+  <data name="Friction_type_does_not_match_the_expected_uniform_model_friction_type_" xml:space="preserve">
+    <value>Friction type does not match the expected uniform model friction type.</value>
+  </data>
 </root>

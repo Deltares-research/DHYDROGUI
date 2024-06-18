@@ -19,8 +19,10 @@ using DeltaShell.NGHS.IO.FileReaders.Structure;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils.Extensions;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DHYDRO.Common.IO.InitialField;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -221,11 +223,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var initialConditionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionFilename);
 
             // read initialFields.ini
-            (InitialConditionQuantity quantity, string filename) initialConditionTuple =
-                InitialConditionInitialFieldsFileReader.ReadFile(initialConditionFilePath, modelDefinition);
+            var initialFieldFile = new InitialFieldFile();
+            var initialFieldFileData = initialFieldFile.Read(initialConditionFilePath, targetMduFilePath, modelDefinition);
 
             // read Initial<quantity>.ini
-            string initialConditionQuantityFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionTuple.filename);
+            string initialConditionQuantityFileName = GetChannelInitialConditionDefinitionFileName(initialFieldFileData);
+            if (string.IsNullOrEmpty(initialConditionQuantityFileName))
+            {
+                return;
+            }
+            
+            string initialConditionQuantityFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionQuantityFileName);
 
             IEventedList<IBranch> branches = network.Branches;
             Dictionary<string, IBranch> branchDictionary = branches.ToDictionary(b => b.Name, b => b, StringComparer.InvariantCultureIgnoreCase);
@@ -235,6 +243,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDefinition,
                 branchDictionary,
                 channelInitialConditionDefinitions);
+        }
+        
+        private static string GetChannelInitialConditionDefinitionFileName(InitialFieldFileData initialFieldFileData)
+        {
+            var initialConditionIniSections = initialFieldFileData.AllFields.Where(x => x.LocationType == InitialFieldLocationType.OneD &&
+                                                                                        x.DataFileType == InitialFieldDataFileType.OneDField)
+                                                                  .ToArray();
+            if (!initialConditionIniSections.Any())
+            {
+                return string.Empty;
+            }
+            if (initialConditionIniSections.Length > 1)
+            {
+                log.Warn(Resources.Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others);
+            }
+
+            InitialFieldData initialConditionIniSection = initialConditionIniSections.First();
+            return initialConditionIniSection.DataFile;
         }
     }
 }
