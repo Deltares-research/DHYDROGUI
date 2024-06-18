@@ -210,6 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
     operand               = O                   
     extrapolationMethod   = no                  
     locationType          = 2d                  
+    ifrctyp               = 1                   
 
 ";
 
@@ -285,6 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
     operand               = O                   
     extrapolationMethod   = no                  
     locationType          = 2d                  
+    ifrctyp               = 1                   
 
 ";
 

@@ -923,6 +923,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; contains unsupported value: {1}..
+        /// </summary>
+        public static string Property_0_contains_unsupported_value_1_ {
+            get {
+                return ResourceManager.GetString("Property_0_contains_unsupported_value_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; must be provided..
         /// </summary>
         public static string Property_0_must_be_provided {
@@ -1298,16 +1307,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("StructureFeatureSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Property &apos;{0}&apos; contains unsupported value: {1}. Line: {2}.
-        /// </summary>
-        public static string Property_0_contains_unsupported_value_1_Line_2_ {
-            get {
-                return ResourceManager.GetString("SupportedInitialFieldDataValidator_GetUnsupportedValueMessage_Property___0___cont" +
-                        "ains_unsupported_value___1___Line___2_", resourceCulture);
             }
         }
         

@@ -5,6 +5,7 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DHYDRO.Common.IO.InitialField;
 using log4net.Core;
 using NUnit.Framework;
 using SharpMap.Api.SpatialOperations;

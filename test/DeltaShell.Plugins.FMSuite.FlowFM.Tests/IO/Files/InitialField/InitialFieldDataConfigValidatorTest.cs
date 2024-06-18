@@ -11,13 +11,13 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
 {
     [TestFixture]
-    public class SupportedInitialFieldDataValidatorTest
+    public class InitialFieldDataConfigValidatorTest
     {
         [Test]
         public void Validate_InitialFieldDataNull_ThrowsArgumentNullException()
         {
             // Arrange
-            var validator = new SupportedInitialFieldDataValidator();
+            var validator = new InitialFieldDataConfigValidator();
 
             // Act
             void Call() => validator.Validate(null);
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
         public void Validate_InitialFieldDataWithUnsupportedQuantity_ReturnsFailResult(InitialFieldQuantity unsupportedQuantity)
         {
             // Arrange
-            var validator = new SupportedInitialFieldDataValidator();
+            var validator = new InitialFieldDataConfigValidator();
             InitialFieldData initialFieldData = InitialFieldDataBuilder.Start().AddRequiredValues().Build();
             initialFieldData.Quantity = unsupportedQuantity;
 
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
 
             // Assert
             Assert.That(result.Valid, Is.False);
-            Assert.That(result.Message, Is.EqualTo($"Property 'quantity' contains unsupported value: {unsupportedQuantity.GetDescription()}. Line: 1"));
+            Assert.That(result.Message, Is.EqualTo($"Property 'quantity' contains unsupported value: {unsupportedQuantity.GetDescription()}."));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
         public void Validate_InitialFieldDataWithUnsupportedDataFileType_ReturnsFailResult(InitialFieldDataFileType unsupportedDataFileType)
         {
             // Arrange
-            var validator = new SupportedInitialFieldDataValidator();
+            var validator = new InitialFieldDataConfigValidator();
             InitialFieldData initialFieldData = InitialFieldDataBuilder.Start().AddRequiredValues().Build();
             initialFieldData.DataFileType = unsupportedDataFileType;
 
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
 
             // Assert
             Assert.That(result.Valid, Is.False);
-            Assert.That(result.Message, Is.EqualTo($"Property 'dataFileType' contains unsupported value: {unsupportedDataFileType.GetDescription()}. Line: 1"));
+            Assert.That(result.Message, Is.EqualTo($"Property 'dataFileType' contains unsupported value: {unsupportedDataFileType.GetDescription()}."));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
         public void Validate_InitialFieldDataWithUnsupportedAveragingType_ReturnsFailResult(InitialFieldAveragingType unsupportedAveragingType)
         {
             // Arrange
-            var validator = new SupportedInitialFieldDataValidator();
+            var validator = new InitialFieldDataConfigValidator();
             InitialFieldData initialFieldData = InitialFieldDataBuilder.Start().AddRequiredValues().Build();
             initialFieldData.AveragingType = unsupportedAveragingType;
 
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
 
             // Assert
             Assert.That(result.Valid, Is.False);
-            Assert.That(result.Message, Is.EqualTo($"Property 'averagingType' contains unsupported value: {unsupportedAveragingType.GetDescription()}. Line: 1"));
+            Assert.That(result.Message, Is.EqualTo($"Property 'averagingType' contains unsupported value: {unsupportedAveragingType.GetDescription()}."));
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
             InitialFieldAveragingType averagingType)
         {
             // Arrange
-            var validator = new SupportedInitialFieldDataValidator();
+            var validator = new InitialFieldDataConfigValidator();
             InitialFieldData initialFieldData = InitialFieldDataBuilder.Start().AddRequiredValues().Build();
             initialFieldData.Quantity = quantity;
             initialFieldData.DataFileType = dataFileType;

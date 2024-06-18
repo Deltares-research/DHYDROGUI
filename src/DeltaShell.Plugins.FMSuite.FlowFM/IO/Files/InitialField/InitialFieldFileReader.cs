@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField
 
             logHandler = new LogHandler(Resources.reading_the_initial_field_file, log);
 
-            initialFieldDataValidator = new InitialFieldDataValidator(logHandler, fileSystem) { FieldValidator = new SupportedInitialFieldDataValidator() };
+            initialFieldDataValidator = new InitialFieldDataValidator(logHandler, fileSystem) { FieldValidator = new InitialFieldDataConfigValidator() };
             initialFieldFileParser = new InitialFieldFileParser(logHandler);
             spatialOperationFactory = new SpatialOperationFactory(fileSystem);
         }
@@ -134,13 +134,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField
 
         private void AddSpatialOperationToModel(InitialFieldData initialFieldData, WaterFlowFMModelDefinition modelDefinition)
         {
-            string quantity = quantities[initialFieldData.Quantity];
+            string spatialOperationQuantity = quantities[initialFieldData.Quantity];
 
             ISpatialOperation spatialOperation = spatialOperationFactory.CreateFromInitialFieldData(initialFieldData);
-            IList<ISpatialOperation> spatialOperations = GetSpatialOperations(quantity, modelDefinition);
+            IList<ISpatialOperation> spatialOperations = GetSpatialOperations(spatialOperationQuantity, modelDefinition);
 
             initialFieldData.SpatialOperationName = spatialOperation.Name;
-            initialFieldData.SpatialOperationQuantity = quantity;
+            initialFieldData.SpatialOperationQuantity = spatialOperationQuantity;
 
             spatialOperations.Add(spatialOperation);
         }

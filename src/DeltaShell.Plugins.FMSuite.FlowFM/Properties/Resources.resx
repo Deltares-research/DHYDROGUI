@@ -797,7 +797,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="Writing_initial_field_data_to_0_" xml:space="preserve">
     <value>Writing initial field data to {0}</value>
   </data>
-  <data name="SupportedInitialFieldDataValidator_GetUnsupportedValueMessage_Property___0___contains_unsupported_value___1___Line___2_" xml:space="preserve">
-    <value>Property '{0}' contains unsupported value: {1}. Line: {2}</value>
+  <data name="Property_0_contains_unsupported_value_1_" xml:space="preserve">
+    <value>Property '{0}' contains unsupported value: {1}.</value>
   </data>
 </root>

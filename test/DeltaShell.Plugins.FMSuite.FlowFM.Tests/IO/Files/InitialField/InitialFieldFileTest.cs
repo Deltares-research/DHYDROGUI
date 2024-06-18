@@ -83,6 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
     averagingPercentile   = 0.0000000e+000      
     extrapolationMethod   = no                  
     locationType          = 2d                  
+    ifrctyp               = 1                   
 
 [Parameter]
     quantity              = frictioncoefficient 
@@ -93,6 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
     extrapolationMethod   = no                  
     locationType          = 2d                  
     value                 = 5.0000000e+000      
+    ifrctyp               = 1                   
 
 ";
         }
