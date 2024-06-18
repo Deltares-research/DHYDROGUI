@@ -54,4 +54,7 @@
     <data name="_0_Line_1_" xml:space="preserve">
         <value>{0} Line: {1}</value>
     </data>
+    <data name="Property_0_contains_value_1_but_this_is_not_supported_for_quantity_2_" xml:space="preserve">
+        <value>Property '{0}' contains value '{1}', but this is not supported for quantity '{2}'.</value>
+    </data>
 </root>

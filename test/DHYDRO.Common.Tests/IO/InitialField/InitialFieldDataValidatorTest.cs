@@ -229,6 +229,26 @@ namespace DHYDRO.Common.Tests.IO.InitialField
         }
 
         [Test]
+        public void Validate_WithFrictionCoefficientQuantityAndLocationTypeOneD_ReturnsFalseAndReportsError()
+        {
+            // Arrange
+            InitialFieldDataValidator validator = CreateValidator();
+            InitialFieldData initialFieldData = InitialFieldDataBuilder.Start()
+                                                                       .AddRequiredValues()
+                                                                       .Build();
+
+            initialFieldData.Quantity = InitialFieldQuantity.FrictionCoefficient;
+            initialFieldData.LocationType = InitialFieldLocationType.OneD;
+
+            // Act
+            bool result = validator.Validate(initialFieldData);
+
+            // Assert
+            Assert.That(result, Is.False);
+            logHandler.Received(1).ReportError("Property 'locationType' contains value '1d', but this is not supported for quantity 'frictioncoefficient'. Line: 1");
+        }
+
+        [Test]
         public void Validate_WithoutInterpolationMethod_ReturnsFalseAndReportsError()
         {
             // Arrange

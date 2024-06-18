@@ -114,6 +114,15 @@ namespace DHYDRO.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; contains value &apos;{1}&apos;, but this is not supported for quantity &apos;{2}&apos;..
+        /// </summary>
+        public static string Property_0_contains_value_1_but_this_is_not_supported_for_quantity_2_ {
+            get {
+                return ResourceManager.GetString("Property_0_contains_value_1_but_this_is_not_supported_for_quantity_2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; must be 1 or higher..
         /// </summary>
         public static string Property_0_must_be_1_or_higher {

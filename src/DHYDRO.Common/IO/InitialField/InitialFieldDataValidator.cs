@@ -46,6 +46,7 @@ namespace DHYDRO.Common.IO.InitialField
         /// - data file must be provided.
         /// - data file must be a valid path.
         /// - data file type must be provided.
+        /// - location type 1d must not be used for quantity Friction Coefficient.
         /// - interpolation method must be provided, if data file type is not 1dField.
         /// - constant interpolation can and must only be used for polygon data file type.
         /// - value must be provided for polygon data file type.
@@ -64,25 +65,25 @@ namespace DHYDRO.Common.IO.InitialField
 
             var hasErrors = false;
 
+            ValidateCustom(initialFieldData, ref hasErrors);
+            ValidateQuantity(initialFieldData, ref hasErrors);
+            ValidateDataFile(initialFieldData, ref hasErrors);
+            ValidateDataFileType(initialFieldData, ref hasErrors);
+            ValidateLocationType(initialFieldData, ref hasErrors);
+            ValidateInterpolationMethod(initialFieldData, ref hasErrors);
+
+            return !hasErrors;
+        }
+
+        private void ValidateCustom(InitialFieldData initialFieldData, ref bool hasErrors)
+        {
             ValidationResult fieldValidationResult = FieldValidator?.Validate(initialFieldData);
+            
             if (fieldValidationResult != null && !fieldValidationResult.Valid)
             {
                 ReportError(fieldValidationResult.Message, initialFieldData.LineNumber);
                 hasErrors = true;
             }
-
-            ValidateQuantity(initialFieldData, ref hasErrors);
-            ValidateDataFile(initialFieldData, ref hasErrors);
-            ValidateDataFileType(initialFieldData, ref hasErrors);
-
-            if (initialFieldData.DataFileType == InitialFieldDataFileType.OneDField)
-            {
-                return !hasErrors;
-            }
-
-            ValidateInterpolationMethod(initialFieldData, ref hasErrors);
-
-            return !hasErrors;
         }
 
         private void ValidateQuantity(InitialFieldData initialFieldData, ref bool hasErrors)
@@ -151,8 +152,26 @@ namespace DHYDRO.Common.IO.InitialField
             }
         }
 
+        private void ValidateLocationType(InitialFieldData initialFieldData, ref bool hasErrors)
+        {
+            if (initialFieldData.Quantity == InitialFieldQuantity.FrictionCoefficient &&
+                initialFieldData.LocationType == InitialFieldLocationType.OneD)
+            {
+                ReportError(string.Format(Resources.Property_0_contains_value_1_but_this_is_not_supported_for_quantity_2_,
+                                          InitialFieldFileConstants.Keys.LocationType,
+                                          initialFieldData.LocationType.GetDescription(),
+                                          InitialFieldQuantity.FrictionCoefficient.GetDescription()), initialFieldData.LineNumber);
+                hasErrors = true;
+            }
+        }
+
         private void ValidateInterpolationMethod(InitialFieldData initialFieldData, ref bool hasErrors)
         {
+            if (initialFieldData.DataFileType == InitialFieldDataFileType.OneDField)
+            {
+                return;
+            }
+            
             if (initialFieldData.InterpolationMethod == InitialFieldInterpolationMethod.None)
             {
                 ReportErrorMissingPropertyValue(InitialFieldFileConstants.Keys.InterpolationMethod, initialFieldData.LineNumber);
