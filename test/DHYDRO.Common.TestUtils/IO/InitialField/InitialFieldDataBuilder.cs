@@ -47,6 +47,14 @@ namespace DHYDRO.Common.TestUtils.IO.InitialField
             return this;
         }
 
+        public InitialFieldDataBuilder AddWhiteColebrookFrictionType()
+        {
+            initialFieldData.Quantity = InitialFieldQuantity.FrictionCoefficient;
+            initialFieldData.FrictionType = InitialFieldFrictionType.WhiteColebrook;
+
+            return this;
+        }
+
         public InitialFieldDataBuilder Add1DFieldDataFileType()
         {
             initialFieldData.DataFileType = InitialFieldDataFileType.OneDField;

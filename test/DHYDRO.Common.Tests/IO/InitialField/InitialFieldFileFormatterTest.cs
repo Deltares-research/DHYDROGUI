@@ -240,6 +240,41 @@ namespace DHYDRO.Common.Tests.IO.InitialField
 
             Assert.That(ini, Is.EqualTo(expected));
         }
+        
+        [Test]
+        public void ConvertInitialCondition_WithWhiteColebrookFrictionType_ReturnsCorrectIniSection()
+        {
+            // Arrange
+            var initialFieldFileData = new InitialFieldFileData();
+            initialFieldFileData.AddInitialCondition(InitialFieldDataBuilder.Start()
+                                                                            .AddRequiredValues()
+                                                                            .AddPolygonDataFileType()
+                                                                            .AddWhiteColebrookFrictionType()
+                                                                            .Build());
+
+            // Act
+            string ini = formatter.Format(initialFieldFileData);
+
+            // Assert
+            const string expected = @"[General]
+    fileVersion           = 2.00                
+    fileType              = iniField            
+
+[Initial]
+    quantity              = frictioncoefficient 
+    dataFile              = water_level.xyz     
+    dataFileType          = polygon             
+    interpolationMethod   = constant            
+    operand               = O                   
+    extrapolationMethod   = no                  
+    locationType          = all                 
+    value                 = 7.0000000e+000      
+    ifrctyp               = 3                   
+
+";
+
+            Assert.That(ini, Is.EqualTo(expected));
+        }
 
         [Test]
         public void Format_InitialFieldFileDataToStream_FormatsCorrectIniData()

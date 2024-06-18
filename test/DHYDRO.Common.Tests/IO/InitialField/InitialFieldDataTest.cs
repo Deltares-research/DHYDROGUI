@@ -19,6 +19,7 @@ namespace DHYDRO.Common.Tests.IO.InitialField
             Assert.That(initialField.InterpolationMethod, Is.EqualTo(InitialFieldInterpolationMethod.None));
             Assert.That(initialField.Operand, Is.EqualTo(InitialFieldOperand.Override));
             Assert.That(initialField.AveragingType, Is.EqualTo(InitialFieldAveragingType.Mean));
+            Assert.That(initialField.FrictionType, Is.EqualTo(InitialFieldFrictionType.Manning));
             Assert.That(initialField.AveragingRelSize, Is.EqualTo(1.01));
             Assert.That(initialField.AveragingNumMin, Is.EqualTo(1));
             Assert.That(initialField.AveragingPercentile, Is.EqualTo(0.0));

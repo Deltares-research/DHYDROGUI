@@ -114,6 +114,7 @@ namespace DHYDRO.Common.IO.InitialField
                 InterpolationMethod = section.GetPropertyValue(InitialFieldFileConstants.Keys.InterpolationMethod, InitialFieldInterpolationMethod.None),
                 Operand = section.GetPropertyValue(InitialFieldFileConstants.Keys.Operand, InitialFieldOperand.Override),
                 AveragingType = section.GetPropertyValue(InitialFieldFileConstants.Keys.AveragingType, InitialFieldAveragingType.Mean),
+                FrictionType = section.GetPropertyValue(InitialFieldFileConstants.Keys.FrictionType, InitialFieldFrictionType.Manning),
                 AveragingRelSize = section.GetPropertyValue(InitialFieldFileConstants.Keys.AveragingRelSize, 1.01),
                 AveragingNumMin = section.GetPropertyValue(InitialFieldFileConstants.Keys.AveragingNumMin, 1),
                 AveragingPercentile = section.GetPropertyValue(InitialFieldFileConstants.Keys.AveragingPercentile, 0.0),

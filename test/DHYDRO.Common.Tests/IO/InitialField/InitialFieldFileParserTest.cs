@@ -289,6 +289,35 @@ namespace DHYDRO.Common.Tests.IO.InitialField
             Assert.That(fieldData, Is.Not.Null);
             Assert.That(fieldData.AveragingType, Is.EqualTo(expResult));
         }
+        
+        [Test]
+        [TestCase("0", InitialFieldFrictionType.Chezy)]
+        [TestCase("1", InitialFieldFrictionType.Manning)]
+        [TestCase("2", InitialFieldFrictionType.WallLawNikuradse)]
+        [TestCase("3", InitialFieldFrictionType.WhiteColebrook)]
+        [TestCase("4", InitialFieldFrictionType.Manning)]
+        [TestCase("-1", InitialFieldFrictionType.Manning)]
+        [TestCase(" ", InitialFieldFrictionType.Manning)]
+        [TestCase("", InitialFieldFrictionType.Manning)]
+        [TestCase(null, InitialFieldFrictionType.Manning)]
+        public void Parse_ParsesFrictionTypeProperty(string propertyValue, InitialFieldFrictionType expResult)
+        {
+            // Arrange
+            var iniData = new IniData();
+            var iniSection = new IniSection("Initial");
+            iniSection.AddProperty(InitialFieldFileConstants.Keys.FrictionType, propertyValue);
+            iniData.AddSection(iniSection);
+
+            Stream stream = CreateIniDataStream(iniData);
+
+            // Act
+            InitialFieldFileData result = parser.Parse(stream);
+            InitialFieldData fieldData = result.InitialConditions.SingleOrDefault();
+
+            // Assert
+            Assert.That(fieldData, Is.Not.Null);
+            Assert.That(fieldData.FrictionType, Is.EqualTo(expResult));
+        }
 
         [Test]
         [TestCase("1.23", 1.23)]

@@ -33,6 +33,7 @@ namespace DHYDRO.Common.IO.InitialField
             public const string InterpolationMethod = "interpolationMethod";
             public const string Operand = "operand";
             public const string AveragingType = "averagingType";
+            public const string FrictionType = "ifrctyp";
             public const string AveragingRelSize = "averagingRelSize";
             public const string AveragingNumMin = "averagingNumMin";
             public const string AveragingPercentile = "averagingPercentile";

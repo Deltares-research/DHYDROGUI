@@ -137,6 +137,11 @@ namespace DHYDRO.Common.IO.InitialField
             {
                 iniSection.AddProperty(InitialFieldFileConstants.Keys.Value, initialFieldData.Value);
             }
+            
+            if (initialFieldData.Quantity == InitialFieldQuantity.FrictionCoefficient)
+            {
+                iniSection.AddProperty(InitialFieldFileConstants.Keys.FrictionType, (int) initialFieldData.FrictionType);
+            }
         }
 
         private static IniProperty CreateBooleanProperty(string key, bool value)

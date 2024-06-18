@@ -9,12 +9,12 @@ namespace DHYDRO.Common.IO.InitialField
         /// The line number where the initial field is located. The default value is 0.
         /// </summary>
         public int LineNumber { get; set; }
-        
+
         /// <summary>
         /// The quantity.
         /// </summary>
         public InitialFieldQuantity Quantity { get; set; } = InitialFieldQuantity.None;
-        
+
         /// <summary>
         /// The parent directory of the data file.
         /// </summary>
@@ -48,6 +48,14 @@ namespace DHYDRO.Common.IO.InitialField
         /// Defaults to <see cref="InitialFieldAveragingType.Mean"/>.
         /// </summary>
         public InitialFieldAveragingType AveragingType { get; set; } = InitialFieldAveragingType.Mean;
+
+        /// <summary>
+        /// Type of friction.
+        /// This is an optional setting and only relevant when <see cref="Quantity"/> is
+        /// <see cref="InitialFieldQuantity.FrictionCoefficient"/>.
+        /// Defaults to <see cref="InitialFieldFrictionType.Manning"/>.
+        /// </summary>
+        public InitialFieldFrictionType FrictionType { get; set; } = InitialFieldFrictionType.Manning;
 
         /// <summary>
         /// Relative search cell size for averaging.
