@@ -14,6 +14,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.IniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -33,6 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public void Read(string filePath, string referenceFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
+            var validator = new BndExtForceFileUpdater(referenceFilePath, filePath, parserLogHandler);
             bndExtFilePath = filePath;
             bndExtSubFilesReferenceFilePath = referenceFilePath;
 
@@ -46,6 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
+            validator.Update(bndExtForceFileDTO);
 
             ReadPolyLines(bndExtForceFileDTO, modelDefinition);
             List<BcBlockData> dataBlocks = GetBcBlockDataFromForcingFiles(bndExtForceFileDTO);

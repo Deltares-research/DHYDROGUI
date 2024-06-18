@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Action call = () => importer.ImportItem(iniPath, targetArea);
 
             // Assert
-            TestHelper.AssertLogMessageIsGenerated(call, "Read: 11 structures (Weirs: 7 Gates : 3 General structures: 1)");
+            TestHelper.AssertLogMessageIsGenerated(call, "Read: 6 structures (Weirs: 3 Gates : 2 General structures: 1)");
         }
     }
 }

@@ -6,7 +6,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
-using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -1222,11 +1221,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(propertyKey);
             IList<string> featuresFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
             
-            if (propertyKey == KnownProperties.StructuresFile)
-            {
-                RemoveAllStructuresFilesWithBadReferences(modelDefinition, modelProperty, featuresFilePaths);
-            }
-            
             if (featuresFilePaths == null || featuresFilePaths.Count == 0)
             {
                 return;
@@ -1390,63 +1384,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     hydroArea.DryAreas.AddRange(dryAreasToAdd);
                 }
             }
-        }
-
-        /// <summary>
-        /// Removes all structures files that contain references to feature files that do not exist.
-        /// </summary>
-        /// <param name="modelDefinition"> The model definition of the FM Model. </param>
-        /// <param name="structureFileProperty"> The structures file property. </param>
-        /// <param name="featureFilePaths"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
-        private void RemoveAllStructuresFilesWithBadReferences(WaterFlowFMModelDefinition modelDefinition, 
-                                                               WaterFlowFMProperty structureFileProperty,
-                                                               ICollection<string> featureFilePaths)
-        {
-            var pathsRelativeToParent =
-                (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
-
-            var structureFilesWithBadReferences = new List<string>();
-            foreach (string filePath in featureFilePaths)
-            {
-                var logHandler = new LogHandler("import of the structure file: " + filePath);
-
-                string structureFilePath = Path.GetFullPath(filePath);
-
-                string structuresSubFilesReferenceFilePath = pathsRelativeToParent ? filePath : FilePath;
-
-                var fileReader = new StructuresFile
-                {
-                    StructureSchema = modelDefinition.StructureSchema,
-                    ReferenceDate = modelDefinition.GetReferenceDateAsDateTime()
-                };
-
-                List<StructureDAO> featuresToAdd = fileReader.ReadStructuresFromFile(structureFilePath).ToList();
-                var hasBadFileReferences = false;
-
-                foreach (StructureDAO f in featuresToAdd)
-                {
-                    string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
-                    string featureFilePath =
-                        Path.Combine(Path.GetDirectoryName(structuresSubFilesReferenceFilePath), featureFileName);
-
-                    if (!File.Exists(featureFilePath))
-                    {
-                        hasBadFileReferences = true;
-                        logHandler.ReportErrorFormat(Resources.MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist, featureFilePath,
-                                                     structureFilePath);
-                    }
-                }
-
-                if (hasBadFileReferences)
-                {
-                    structureFilesWithBadReferences.Add(structureFilePath);
-                    logHandler.LogReport();
-                }
-            }
-
-            featureFilePaths.RemoveAllWhere(gn => structureFilesWithBadReferences.Contains(gn));
-            
-            structureFileProperty.SetValueFromString(string.Join(" ", featureFilePaths));
         }
 
         #endregion

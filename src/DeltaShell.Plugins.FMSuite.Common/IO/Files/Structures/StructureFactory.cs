@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns> Returns the constructed structure. </returns>
         public static IStructureObject CreateStructure(StructureDAO structureDataAccessObject, string structuresSubFilesReferenceFilePath, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structureDataAccessObject, StructureFactoryValidator.SupportedTypes);
+            StructureFileValidator.ThrowIfInvalidType(structureDataAccessObject, StructureFileValidator.SupportedTypes);
 
             IStructureObject structure = null;
             structure = createStructureType[structureDataAccessObject.StructureType](structureDataAccessObject, structuresSubFilesReferenceFilePath, refDate);
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns> The created pump. </returns>
         public static IPump CreatePump(StructureDAO structure, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure, new[]
+            StructureFileValidator.ThrowIfInvalidType(structure, new[]
             {
                 StructureType.Pump
             });
@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns> The created weir. </returns>
         public static IStructure CreateWeir(StructureDAO structureDao, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structureDao, new[]
+            StructureFileValidator.ThrowIfInvalidType(structureDao, new[]
             {
                 StructureType.Weir
             });
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public static IStructure CreateGate(StructureDAO structureDataAccessObject, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structureDataAccessObject, new[]
+            StructureFileValidator.ThrowIfInvalidType(structureDataAccessObject, new[]
             {
                 StructureType.Gate
             });

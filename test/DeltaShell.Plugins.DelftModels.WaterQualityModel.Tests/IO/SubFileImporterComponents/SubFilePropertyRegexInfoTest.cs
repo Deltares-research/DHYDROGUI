@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporterComponents;
 using NUnit.Framework;
 
@@ -8,9 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.SubFileImpor
     public class SubFilePropertyRegexInfoTest
     {
         [Test]
-        [TestCase(null)]
-        [TestCase("    ")]
-        [TestCase("")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void Constructor_InvalidPropertyName_ThrowsArgumentException(string invalidPropertyName)
         {
             // Call
@@ -23,9 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.SubFileImpor
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("    ")]
-        [TestCase("")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void Constructor_InvalidCaptureGroupName_ThrowsArgumentException(string invalidGroupName)
         {
             // Call

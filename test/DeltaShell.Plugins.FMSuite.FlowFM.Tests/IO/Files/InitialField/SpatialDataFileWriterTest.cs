@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -25,9 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase(" ")]
-        [TestCase(null)]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void Write_DirectoryIsNullOrEmptyOrWhiteSpace_ThrowsArgumentException(string directory)
         {
             SpatialDataFileWriter writer = CreateWriter();

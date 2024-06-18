@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Coverages;
@@ -13,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     public class SamplesImporterTest
     {
         [Test]
-        [TestCaseSource(nameof(GetNullOrWhiteSpaceTestCases))]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void ImportItem_FilePathNullOrWhiteSpace_ThrowsException(string filePath)
         {
             // Setup
@@ -67,14 +68,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
                 AssertThatPointCloudValuesAreAsExpected(importedSamples.PointValues);
             }
-        }
-
-        private static IEnumerable<TestCaseData> GetNullOrWhiteSpaceTestCases()
-        {
-            yield return new TestCaseData(null);
-            yield return new TestCaseData("");
-            yield return new TestCaseData("   ");
-            yield return new TestCaseData(Environment.NewLine);
         }
 
         private static string GetSamplesFileContent()

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using Deltares.Infrastructure.API.Validation;
+using DeltaShell.Plugins.FMSuite.Common.IO.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
@@ -72,28 +72,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void ValidateInvalidCharsInFileReferencePaths(WaterFlowFMProperty property)
         {
-            IReadOnlyList<string> filePaths = property.GetFileLocationValues().ToArray();
-            IReadOnlyList<string> invalidFilePaths = filePaths.Where(ContainsInvalidCharacters).ToArray();
-
-            if (invalidFilePaths.Any())
-            {
-                LogInvalidCharsInFileReferencePaths(property, invalidFilePaths);
-                
-                property.SetValueFromStrings(filePaths.Except(invalidFilePaths));
-            }
+            var validator = new FilePathCharactersValidator(mduFilePath, FileSystem);
+            ValidateFileReferences(property, validator);
         }
 
         private void ValidateNotExistingFileReferences(WaterFlowFMProperty property)
         {
+            var validator = new FilePathExistenceValidator(mduFilePath, mduFilePath, FileSystem);
+            ValidateFileReferences(property, validator);
+        }
+
+        private static void ValidateFileReferences(WaterFlowFMProperty property, IValidator<FilePathInfo> validator)
+        {
             IReadOnlyList<string> filePaths = property.GetFileLocationValues().ToArray();
-            IReadOnlyList<string> existingFilePaths = filePaths.Where(IsExistingFileReference).ToArray();
-            IReadOnlyList<string> invalidFilePaths = filePaths.Except(existingFilePaths).ToArray();
+            IList<string> invalidFilePaths = new List<string>();
+
+            foreach (string filePath in filePaths)
+            {
+                var filePathInfo = new FilePathInfo(filePath, property.PropertyDefinition.FilePropertyKey, property.LineNumber);
+                ValidationResult result = validator.Validate(filePathInfo);
+
+                if (!result.Valid)
+                {
+                    invalidFilePaths.Add(filePath);
+                    log.Error(result.Message);
+                }
+            }
 
             if (invalidFilePaths.Any())
             {
-                LogNotExistingFileReferences(property, invalidFilePaths);
-                
-                property.SetValueFromStrings(existingFilePaths);
+                property.SetValueFromStrings(filePaths.Except(invalidFilePaths));
             }
         }
 
@@ -102,47 +110,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return path.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         }
 
-        private bool ContainsInvalidCharacters(string path)
-        {
-            char[] invalidPathChars = Path.GetInvalidPathChars()
-                                          .Concat(new[] { '*', '?' })
-                                          .ToArray();
-
-            return path.IndexOfAny(invalidPathChars) >= 0;
-        }
-
         private bool IsOutputFileProperty(WaterFlowFMProperty property)
         {
             return outputFileProperties.Contains(
                 property.PropertyDefinition.MduPropertyName, StringComparer.OrdinalIgnoreCase);
-        }
-
-        private bool IsExistingFileReference(string path)
-        {
-            string fullPath = MduFileHelper.GetCombinedPath(mduFilePath, path);
-            return FileSystem.File.Exists(fullPath);
-        }
-
-        private void LogInvalidCharsInFileReferencePaths(WaterFlowFMProperty property, IEnumerable<string> invalidFilePaths)
-        {
-            foreach (string path in invalidFilePaths)
-            {
-                string propertyName = property.PropertyDefinition.MduPropertyName;
-                string modelName = modelDefinition.ModelName;
-
-                log.ErrorFormat(Resources.MduFileReferencePathContainsInvalidCharacters, path, mduFilePath, propertyName, modelName);
-            }
-        }
-
-        private void LogNotExistingFileReferences(WaterFlowFMProperty property, IEnumerable<string> invalidFilePaths)
-        {
-            foreach (string path in invalidFilePaths)
-            {
-                string propertyName = property.PropertyDefinition.MduPropertyName;
-                string modelName = modelDefinition.ModelName;
-
-                log.ErrorFormat(Resources.MduFileReferenceDoesNotExist, path, mduFilePath, propertyName, modelName);
-            }
         }
     }
 }

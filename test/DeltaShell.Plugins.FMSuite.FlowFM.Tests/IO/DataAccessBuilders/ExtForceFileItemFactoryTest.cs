@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -109,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
         }
         
         [Test]
-        [TestCaseSource(nameof(GetNullOrWhiteSpaceTestCases))]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void Constructor_QuantityNullOrWhitespace_ThrowsException(string quantity)
         {
             // Setup
@@ -184,14 +185,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             Assert.That(samplesItem.Method, Is.EqualTo(5)); // Triangulation => 5
             Assert.That(samplesItem.Operand, Is.EqualTo("O"));
             Assert.That(samplesItem.ExtraPolTol, Is.EqualTo(extraPolTol));
-        }
-        
-        private static IEnumerable<TestCaseData> GetNullOrWhiteSpaceTestCases()
-        {
-            yield return new TestCaseData(null);
-            yield return new TestCaseData("");
-            yield return new TestCaseData("   ");
-            yield return new TestCaseData(Environment.NewLine);
         }
 
         private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()

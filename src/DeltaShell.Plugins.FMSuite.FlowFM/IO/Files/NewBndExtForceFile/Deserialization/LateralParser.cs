@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             IEnumerable<double> yCoordinates = ParseYCoordinates(section);
             Steerable discharge = ParseDischarge(section);
 
-            return new LateralDTO(id, name, type, locationType, numCoordinates, xCoordinates, yCoordinates, discharge);
+            return new LateralDTO(id, name, type, locationType, numCoordinates, xCoordinates, yCoordinates, discharge) { LineNumber = section.LineNumber };
         }
 
         private Steerable ParseDischarge(IniSection section)

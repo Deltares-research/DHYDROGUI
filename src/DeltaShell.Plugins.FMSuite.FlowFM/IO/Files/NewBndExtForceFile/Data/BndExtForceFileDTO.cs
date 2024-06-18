@@ -12,8 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
     {
         private readonly IList<BoundaryDTO> boundaries = new List<BoundaryDTO>();
         private readonly IList<LateralDTO> laterals = new List<LateralDTO>();
-        private readonly HashSet<string> locationFiles = new HashSet<string>();
-        private readonly HashSet<string> forcingFiles = new HashSet<string>();
 
         /// <summary>
         /// The boundary data access objects.
@@ -28,12 +26,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
         /// <summary>
         /// A set of unique location files collected from all the boundaries.
         /// </summary>
-        public IEnumerable<string> LocationFiles => locationFiles;
+        public IEnumerable<string> LocationFiles => GetLocationFilesFromBoundaries().Distinct();
 
         /// <summary>
-        /// A set of unique forcing files collected from all the boundaries.
+        /// A set of unique forcing files collected from all the boundaries and laterals.
         /// </summary>
-        public IEnumerable<string> ForcingFiles => forcingFiles;
+        public IEnumerable<string> ForcingFiles => GetForcingFilesFromBoundaries().Concat(GetForcingFilesFromLaterals()).Distinct();
 
         /// <summary>
         /// Add a boundary data access data object to this instance.
@@ -46,18 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
         public void AddBoundary(BoundaryDTO boundaryDTO)
         {
             Ensure.NotNull(boundaryDTO, nameof(boundaryDTO));
-
             boundaries.Add(boundaryDTO);
-
-            if (IsEmbankment(boundaryDTO) && HasValue(boundaryDTO.LocationFile))
-            {
-                locationFiles.Add(boundaryDTO.LocationFile);
-            }
-
-            foreach (string forcingFile in boundaryDTO.ForcingFiles.Where(HasValue))
-            {
-                forcingFiles.Add(forcingFile);
-            }
         }
 
         /// <summary>
@@ -71,18 +58,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
         public void AddLateral(LateralDTO lateralDTO)
         {
             Ensure.NotNull(lateralDTO, nameof(lateralDTO));
-
             laterals.Add(lateralDTO);
-
-            if (lateralDTO.Discharge?.Mode == SteerableMode.TimeSeries)
-            {
-                forcingFiles.Add(lateralDTO.Discharge.TimeSeriesFilename);
-            }
         }
 
-        private static bool IsEmbankment(BoundaryDTO boundaryDTO) =>
-            boundaryDTO.Quantity != ExtForceQuantNames.EmbankmentBnd;
+        /// <summary>
+        /// Remove a boundary data access data object from this instance.
+        /// </summary>
+        /// <param name="boundaryDTO">The boundary data access object.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="boundaryDTO"/> is <c>null</c>.
+        /// </exception>
+        public void RemoveBoundary(BoundaryDTO boundaryDTO)
+        {
+            Ensure.NotNull(boundaryDTO, nameof(boundaryDTO));
+            boundaries.Remove(boundaryDTO);
+        }
 
-        private static bool HasValue(string value) => !string.IsNullOrWhiteSpace(value);
+        /// <summary>
+        /// Remove a lateral data access data object from this instance.
+        /// </summary>
+        /// <param name="lateralDTO">The lateral data access object.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="lateralDTO"/> is <c>null</c>.
+        /// </exception>
+        public void RemoveLateral(LateralDTO lateralDTO)
+        {
+            Ensure.NotNull(lateralDTO, nameof(lateralDTO));
+            laterals.Remove(lateralDTO);
+        }
+
+        private IEnumerable<string> GetLocationFilesFromBoundaries()
+        {
+            return boundaries.Where(b => IsEmbankment(b) && HasValue(b.LocationFile)).Select(b => b.LocationFile);
+        }
+
+        private IEnumerable<string> GetForcingFilesFromBoundaries()
+        {
+            return boundaries.SelectMany(b => b.ForcingFiles.Where(HasValue));
+        }
+
+        private IEnumerable<string> GetForcingFilesFromLaterals()
+        {
+            return laterals.Where(HasTimeSeriesDischarge).Select(l => l.Discharge.TimeSeriesFilename);
+        }
+
+        private static bool HasTimeSeriesDischarge(LateralDTO lateralDTO)
+        {
+            return lateralDTO.Discharge?.Mode == SteerableMode.TimeSeries;
+        }
+
+        private static bool IsEmbankment(BoundaryDTO boundaryDTO)
+        {
+            return boundaryDTO.Quantity != ExtForceQuantNames.EmbankmentBnd;
+        }
+
+        private static bool HasValue(string value)
+        {
+            return !string.IsNullOrWhiteSpace(value);
+        }
     }
 }

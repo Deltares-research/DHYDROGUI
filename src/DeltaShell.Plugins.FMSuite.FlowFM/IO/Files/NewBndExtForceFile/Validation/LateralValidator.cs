@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
@@ -7,26 +8,42 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DHYDRO.Common.Logging;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Validation
 {
     /// <summary>
     /// Validator class for a <see cref="LateralDTO"/> that checks for correct user input.
     /// </summary>
     public sealed class LateralValidator
     {
+        private readonly LateralFileValidator fileValidator;
         private readonly ILogHandler logHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LateralValidator"/> class.
         /// </summary>
         /// <param name="logHandler"> The log handler to report user messages with. </param>
+        /// <param name="fileSystem"> Provides access to the file system. </param>
+        /// <param name="referencePath">
+        /// The reference path, which is the external forcing file or MDU file dependent on the
+        /// PathsRelativeToParent option in the MDU.
+        /// </param>
+        /// <param name="parentFilePath"> The external forcing file path. </param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="logHandler"/> is <c>null</c>.
         /// </exception>
-        public LateralValidator(ILogHandler logHandler)
+        /// <exception cref="System.ArgumentException">
+        /// Thrown when <paramref name="referencePath"/> or <paramref name="parentFilePath"/> is <c>null</c>.
+        /// </exception>
+        public LateralValidator(ILogHandler logHandler, IFileSystem fileSystem, string referencePath, string parentFilePath)
         {
             Ensure.NotNull(logHandler, nameof(logHandler));
+            Ensure.NotNull(fileSystem, nameof(fileSystem));
+            Ensure.NotNullOrWhiteSpace(referencePath, nameof(referencePath));
+            Ensure.NotNullOrWhiteSpace(parentFilePath, nameof(parentFilePath));
+
             this.logHandler = logHandler;
+
+            fileValidator = new LateralFileValidator(referencePath, parentFilePath, logHandler, fileSystem);
         }
 
         /// <summary>
@@ -39,50 +56,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
         /// - the number of coordinates, the x-coordinates and y-coordinates are provided.
         /// - the correct number of coordinates is either 1 or >2.
         /// - the number of coordinates should correspond with the x-coordinates and y-coordinates.
+        /// - if discharge is specified as time series, the time series file must exist.
         /// </summary>
         /// <param name="lateralDTO"> The object to validate. </param>
-        /// <param name="lineNumber"> The corresponding file line number. </param>
         /// <returns>
         /// A boolean indication whether or not the validation was successful.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="lateralDTO"/> is <c>null</c>.
         /// </exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown when <paramref name="lineNumber"/> is a negative number.
-        /// </exception>
-        public bool Validate(LateralDTO lateralDTO, int lineNumber)
+        public bool Validate(LateralDTO lateralDTO)
         {
             Ensure.NotNull(lateralDTO, nameof(lateralDTO));
-            Ensure.NotNegative(lineNumber, nameof(lineNumber));
 
             var hasErrors = false;
 
             if (string.IsNullOrWhiteSpace(lateralDTO.Id))
             {
-                ReportError(Resources.Property_id_must_be_provided, lineNumber);
+                ReportError(Resources.Property_id_must_be_provided, lateralDTO.LineNumber);
                 hasErrors = true;
             }
 
             if (lateralDTO.Type == LateralForcingType.Unsupported)
             {
-                ReportErrorUnsupportedValue<LateralForcingType>(BndExtForceFileConstants.TypeKey, lineNumber);
+                ReportErrorUnsupportedValue<LateralForcingType>(BndExtForceFileConstants.TypeKey, lateralDTO.LineNumber);
                 hasErrors = true;
             }
 
             if (lateralDTO.LocationType == LateralLocationType.Unsupported)
             {
-                ReportErrorUnsupportedValue<LateralLocationType>(BndExtForceFileConstants.LocationTypeKey, lineNumber);
+                ReportErrorUnsupportedValue<LateralLocationType>(BndExtForceFileConstants.LocationTypeKey, lateralDTO.LineNumber);
                 hasErrors = true;
             }
 
             if (!HasCompleteLocationSpecification(lateralDTO))
             {
-                ReportError(Resources.Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided, lineNumber);
+                ReportError(Resources.Properties_numCoordinates_xCoordinates_yCoordinates_must_be_provided, lateralDTO.LineNumber);
                 hasErrors = true;
             }
 
-            else if (!ValidateCoordinates(lateralDTO, lineNumber))
+            else if (!ValidateCoordinates(lateralDTO, lateralDTO.LineNumber))
+            {
+                hasErrors = true;
+            }
+
+            if (!fileValidator.Validate(lateralDTO))
             {
                 hasErrors = true;
             }

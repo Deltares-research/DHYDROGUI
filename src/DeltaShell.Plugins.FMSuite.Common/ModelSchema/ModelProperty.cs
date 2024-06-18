@@ -89,6 +89,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public ModelPropertyDefinition PropertyDefinition => propertyDefinition;
         
         /// <summary>
+        /// Line number of the property in the MDU file.
+        /// </summary>
+        public int LineNumber { get; set; }
+        
+        /// <summary>
         /// Returns <see cref="Value"/> in string representation.
         /// </summary>
         public virtual string GetValueAsString()

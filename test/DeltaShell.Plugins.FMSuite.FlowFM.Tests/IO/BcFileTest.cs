@@ -6,6 +6,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Units;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.Laterals;
@@ -370,9 +371,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
         
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void WriteLateralData_FilePathNullOrWhiteSpace_ThrowsArgumentException(string filePath)
         {
             // Setup

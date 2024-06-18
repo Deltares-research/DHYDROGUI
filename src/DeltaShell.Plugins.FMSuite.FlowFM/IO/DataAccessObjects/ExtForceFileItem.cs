@@ -39,6 +39,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
         public double Value { get; set; }
         public double Factor { get; set; }
         public double Offset { get; set; }
+        
+        /// <summary>
+        /// Start line number of the ext force file section.
+        /// </summary>
+        public int LineNumber { get; set; }
 
         // optional additional data, e.g. for friction type
         public Dictionary<string, object> ModelData { get; set; }

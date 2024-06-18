@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             IEnumerable<string> forcingFiles = ParseForcingFiles(section);
             double? returnTime = ParseReturnTime(section);
 
-            return new BoundaryDTO(quantity, locationFile, forcingFiles, returnTime);
+            return new BoundaryDTO(quantity, locationFile, forcingFiles, returnTime) { LineNumber = section.LineNumber };
         }
 
         private static string ParseQuantity(IniSection section)

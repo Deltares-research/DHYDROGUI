@@ -60,6 +60,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data for this item is dropped..
+        /// </summary>
+        public static string Data_for_this_item_is_dropped {
+            get {
+                return ResourceManager.GetString("Data_for_this_item_is_dropped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stream is not readable..
         /// </summary>
         public static string DiaFileReader_GetAllMessages_Stream_is_not_readable_ {
@@ -89,6 +98,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File at location &apos;{0}&apos; does not exist, but is defined in &apos;{1}&apos;..
+        /// </summary>
+        public static string File_at_location_0_does_not_exist_but_is_defined_in_1_ {
+            get {
+                return ResourceManager.GetString("File_at_location_0_does_not_exist_but_is_defined_in_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File reference &apos;{0}&apos; contains invalid characters, but is defined in &apos;{1}&apos;.
+        /// </summary>
+        public static string File_reference_0_contains_invalid_characters_but_is_defined_in_1_ {
+            get {
+                return ResourceManager.GetString("File_reference_0_contains_invalid_characters_but_is_defined_in_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not parse time reference.
         /// </summary>
         public static string FMNetCdfFileFunctionStore_Could_not_parse_time_reference {
@@ -104,6 +131,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
             get {
                 return ResourceManager.GetString("Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from" +
                         "_your_input_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See property &apos;{0}&apos;, line: {1}..
+        /// </summary>
+        public static string See_property_0_line_1_ {
+            get {
+                return ResourceManager.GetString("See_property_0_line_1_", resourceCulture);
             }
         }
         

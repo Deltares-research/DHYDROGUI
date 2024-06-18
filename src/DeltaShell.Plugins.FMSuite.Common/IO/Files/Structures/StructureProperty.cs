@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         public override object Clone()
         {
-            return new StructureProperty(PropertyDefinition, GetValueAsString());
+            return new StructureProperty(PropertyDefinition, GetValueAsString()) { LineNumber = LineNumber };
         }
     }
 }

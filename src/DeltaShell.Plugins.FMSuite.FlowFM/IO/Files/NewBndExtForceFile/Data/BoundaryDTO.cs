@@ -9,6 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
     public sealed class BoundaryDTO
     {
         private readonly HashSet<string> forcingFiles;
+        private int lineNumber;
 
         /// <summary>
         /// Initialize a new instance of the <see cref="BoundaryDTO"/> class.
@@ -22,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
             Quantity = quantity;
             LocationFile = locationFile;
             ReturnTime = returnTime;
-            
+
             this.forcingFiles = new HashSet<string>(forcingFiles);
         }
 
@@ -45,6 +46,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
         /// The Thatcher-Harleman return time.
         /// </summary>
         public double? ReturnTime { get; set; }
+
+        /// <summary>
+        /// The line number of the corresponding section in the file.
+        /// </summary>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="value"/> is a negative number.
+        /// </exception>
+        public int LineNumber
+        {
+            get => lineNumber;
+            set
+            {
+                Ensure.NotNegative(value, nameof(value));
+                lineNumber = value;
+            }
+        }
 
         /// <summary>
         /// Add a forcing file to this instance.

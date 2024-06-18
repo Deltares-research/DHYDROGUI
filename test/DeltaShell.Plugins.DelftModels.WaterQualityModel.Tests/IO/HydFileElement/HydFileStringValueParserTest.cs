@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement;
 using NUnit.Framework;
@@ -9,9 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
     public class HydFileStringValueParserTest
     {
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("     ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void ParseValueFromEmptyStringSetsValueToMinDateTime(string textToParse)
         {
             Assert.AreEqual(DateTime.MinValue, HydFileStringValueParser.Parse<DateTime>(textToParse));
@@ -64,9 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("     ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void ParseValueFromEmptyStringSetsEmptyCollection(string textToParse)
         {
             Assert.IsEmpty(HydFileStringValueParser.Parse<double[]>(textToParse));
@@ -163,9 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("     ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void ParseModelTypeValueFromEmptyStringSetsValueToUndefined(string textToParse)
         {
             Assert.AreEqual(HydroDynamicModelType.Undefined, HydFileStringValueParser.Parse<HydroDynamicModelType>(textToParse));
@@ -325,9 +320,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("     ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void ParseValueFromEmptyStringSetsValueToNewTimeSpan(string textToParse)
         {
             Assert.AreEqual(new TimeSpan(), HydFileStringValueParser.Parse<TimeSpan>(textToParse));

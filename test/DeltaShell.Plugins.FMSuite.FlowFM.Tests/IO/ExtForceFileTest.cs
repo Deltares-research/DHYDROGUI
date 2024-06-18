@@ -20,6 +20,7 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
@@ -47,8 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var extForceFile = new ExtForceFile();
             extForceFile.Read(extPath, extSubFilesReferenceFilePath, def);
-
-            //extForceFile.ImportSpatialOperations(extPath, def);
 
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName));
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName));
@@ -243,8 +242,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(extPath), def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
 
-            string newPath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewExtFile");
-            string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewMduFile");
+            string newPath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewExtFile.ext");
+            string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewMduFile.mdu");
 
             extForceFile.Write(newPath, newExtSubFilesReferenceFilePath, def, true, true); // write loaded definition to new location
 
@@ -323,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //given
                
                 var quantity = "solarradiation";
-                var filename = @"/p/1204257-dcsmzuno/data/meteo/ERA5/nc/ERA5_2005-2021_dfm_ssr_strd.nc";
+                var filename = @"ERA5_2005-2021_dfm_ssr_strd.nc";
                 var varname = "ssr";
                 var filetype = 11;
                 var method = 3;
@@ -340,9 +339,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 
                 //setup model
                 var writeExtPath = Path.Combine(temporaryDirectory.Path, Path.GetFileName("with_varname_written.ext"));
+                string dataFilePath = temporaryDirectory.CreateFile(extForceFileItem.FileName);
                 var modelDefinition = new WaterFlowFMModelDefinition();
                 var extForceFile = new ExtForceFile();
-                modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(new UnsupportedFileBasedExtForceFileItem(writeExtPath,extForceFileItem));
+                modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(new UnsupportedFileBasedExtForceFileItem(dataFilePath,extForceFileItem));
 
                 //write
                 extForceFile.Write(writeExtPath, writeExtPath, modelDefinition, false, false);
@@ -1342,7 +1342,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(File.Exists(expectedVelocityPath), Is.True);
             }
         }
-        
+
+        [Test]
+        public void Read_FileReferenceMissing_DropsItemWithError()
+        {
+            var extForceFile = new ExtForceFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            const string fileReference = "ECMWF_P_u10n_v10n_C_2013-2017.nc";
+            string extFileContent =
+                "QUANTITY     =airpressure_windx_windy_charnock\n" +
+                $"FILENAME     ={fileReference}\n" +
+                "FILETYPE     =11\n" +
+                "METHOD       =3\n" +
+                "OPERAND      =O";
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string extForceFilePath = temp.CreateFile("forcings.ext", extFileContent);
+
+                string[] errors = TestHelper.GetAllRenderedMessages(() => extForceFile.Read(extForceFilePath, extForceFilePath, modelDefinition), Level.Error).ToArray();
+
+                string expError = GetExpectedMessageMissingFile(Path.Combine(temp.Path, fileReference), extForceFilePath, 1);
+                Assert.That(errors, Does.Contain(expError));
+                Assert.That(modelDefinition.UnsupportedFileBasedExtForceFileItems, Is.Empty);
+            }
+        }
+
         private static void CheckIfSubFilesMentionedInExtForceFileAreWrittenRelativeToThisFile(string line, string referenceFilePath)
         {
             string[] parts = line.Split('=');
@@ -1356,8 +1382,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void ValidateUnknownQuantities(WaterFlowFMModelDefinition def)
         {
-            Assert.AreEqual(2, def.UnsupportedFileBasedExtForceFileItems.Count,
-                            "Two unknown quantities were expected to be stored on the model definition.");
+            Assert.AreEqual(1, def.UnsupportedFileBasedExtForceFileItems.Count,
+                            "One unknown quantity was expected to be stored on the model definition.");
 
             ExtForceFileItem unsupportedQuantity1 = def.UnsupportedFileBasedExtForceFileItems.First().UnsupportedExtForceFileItem;
 
@@ -1373,19 +1399,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                             "Operand of quantity was not as expected.");
             Assert.AreEqual(0.0125, unsupportedQuantity1.Value,
                             "Value of quantity was not as expected.");
-
-            ExtForceFileItem unsupportedQuantity2 = def.UnsupportedFileBasedExtForceFileItems.Last().UnsupportedExtForceFileItem;
-
-            Assert.AreEqual("rainfall_rate", unsupportedQuantity2.Quantity,
-                            "Quantity name was not as expected.");
-            Assert.AreEqual("RAD_NL25_RAC_MFBS_5min.nc", unsupportedQuantity2.FileName,
-                            "File name of quantity was not as expected.");
-            Assert.AreEqual(11, unsupportedQuantity2.FileType,
-                            "File type of quantity was not as expected.");
-            Assert.AreEqual(3, unsupportedQuantity2.Method,
-                            "Method type of quantity was not as expected.");
-            Assert.AreEqual("O", unsupportedQuantity2.Operand,
-                            "Operand of quantity was not as expected.");
         }
 
         private static void AddBoundaryCondition(WaterFlowFMModel model, FlowBoundaryCondition bc)
@@ -1406,6 +1419,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
                 });
             }
+        }
+        
+        private static string GetExpectedMessageMissingFile(string filePath, string extFilePath, int lineNumber)
+        {
+            string propertyName = ExtForceFileConstants.FileNameKey;
+            return string.Format(Common.Properties.Resources.File_at_location_0_does_not_exist_but_is_defined_in_1_, filePath, extFilePath) + "\r\n" +
+                   string.Format(Common.Properties.Resources.See_property_0_line_1_, propertyName, lineNumber) + " " + Common.Properties.Resources.Data_for_this_item_is_dropped;
         }
     }
 }

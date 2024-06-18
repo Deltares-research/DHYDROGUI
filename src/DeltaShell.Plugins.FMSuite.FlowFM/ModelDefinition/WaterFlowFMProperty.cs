@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public override object Clone()
         {
-            return new WaterFlowFMProperty(PropertyDefinition, GetValueAsString());
+            return new WaterFlowFMProperty(PropertyDefinition, GetValueAsString()) { LineNumber = LineNumber };
         }
     }
 

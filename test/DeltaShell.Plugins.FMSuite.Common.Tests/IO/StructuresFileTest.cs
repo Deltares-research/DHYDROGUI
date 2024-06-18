@@ -12,10 +12,10 @@ using DeltaShell.NGHS.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             string path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
 
-            var structureFile = new StructuresFile {StructureSchema = schema};
+            var structureFile = CreateStructuresFile();
             List<StructureDAO> structureDataAccessObjects = structureFile.ReadStructuresFromFile(path).ToList();
 
             Assert.AreEqual(7, structureDataAccessObjects.Count);
@@ -70,8 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual("1", weirDown.GetProperty(KnownStructureProperties.LateralContractionCoefficient).GetValueAsString());
 
             StructureDAO generalStructure = structureDataAccessObjects.First(s => s.Name == "gs_01");
-            Assert.That(generalStructure.Properties.Count, Is.EqualTo(4));
-            Assert.That(generalStructure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Is.EqualTo("gs_01.pli"));
+            Assert.That(generalStructure.Properties.Count, Is.EqualTo(5));
+            Assert.That(generalStructure.GetProperty(KnownStructureProperties.X).GetValueAsString(), Is.EqualTo("400"));
+            Assert.That(generalStructure.GetProperty(KnownStructureProperties.Y).GetValueAsString(), Is.EqualTo("260"));
             Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.CrestWidth).GetValueAsString(), Is.EqualTo("2.3"));
         }
 
@@ -80,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadStructuresInvalidFileFormat()
         {
             string path = TestHelper.GetTestFilePath(@"structures\invalidFormat.imp");
-            var structuresFile = new StructuresFile {StructureSchema = schema};
+            var structuresFile = CreateStructuresFile();
             IEnumerable<StructureDAO> structures = structuresFile.ReadStructuresFromFile(path);
             Assert.AreEqual(0, structures.Count(), "Nothing should have been read.");
         }
@@ -97,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 string path = copiesInTempFilePaths[0];
 
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
 
                 var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
                 logHandlerMock.Expect(l => l.ReportErrorFormat(
@@ -131,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 string path = copiesInTempFilePaths[0];
 
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
 
                 var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
                 logHandlerMock.Expect(l => l.ReportWarningFormat(
@@ -164,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 string path = copiesInTempFilePaths[0];
 
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
 
                 var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
                 logHandlerMock.Expect(l => l.ReportWarningFormat(
@@ -205,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 string path = copiesInTempFilePaths[0];
 
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
 
                 var logHandlerMock = MockRepository.GenerateStrictMock<ILogHandler>();
                 logHandlerMock.Expect(l => l.ReportWarningFormat(
@@ -270,11 +271,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             string path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
 
-            var structureFile = new StructuresFile {StructureSchema = schema};
+            var structureFile = CreateStructuresFile();
             List<StructureDAO> structures = structureFile.ReadStructuresFromFile(path).ToList();
 
             string exportFilePath = TestHelper.GetCurrentMethodName() + ".imp";
-            var newStructuresFile = new StructuresFile {StructureSchema = schema};
+            var newStructuresFile = CreateStructuresFile();
             StructuresFile.WriteStructuresDataAccessObjects(exportFilePath, structures);
 
             CompareStructureIniFiles(path, exportFilePath); // Note: Comments in user file can differ from schema!
@@ -346,11 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             {
                 initialGeneralStructure
             };
-            var structuresFile = new StructuresFile
-            {
-                StructureSchema = schema,
-                ReferenceDate = new DateTime(2013, 1, 1, 0, 0, 0)
-            };
+            var structuresFile = CreateStructuresFile(referenceDate: new DateTime(2013, 1, 1, 0, 0, 0));
 
             structuresFile.Write(iniFilePath, structures);
             IList<IStructureObject> readResult = structuresFile.Read(iniFilePath);
@@ -410,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void ReadThrowsForInvalidFilePath()
         {
-            var structureFile = new StructuresFile {StructureSchema = new StructureSchema<ModelPropertyDefinition>()};
+            var structureFile = CreateStructuresFile();
             Assert.Throws<FileNotFoundException>(() => structureFile.ReadStructuresFromFile("I do not exist").ToList());
         }
 
@@ -420,7 +417,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 // Given
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
                 var pump = new Pump
@@ -458,7 +455,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     CreateOldGateSection(),
                     CreateOldGeneralStructureSection());
 
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
 
                 // When
                 IList<IStructureObject> structures = structuresFile.Read(structuresFilePath);
@@ -479,7 +476,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     tempDirectory,
                     CreateOldWeirSection());
 
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
 
                 // When
                 IList<IStructureObject> structures = structuresFile.Read(structuresFilePath);
@@ -500,7 +497,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     tempDirectory,
                     CreateOldGateSection());
 
-                var structuresFile = new StructuresFile {StructureSchema = new WaterFlowFMModelDefinition().StructureSchema};
+                var structuresFile = CreateStructuresFile();
 
                 // When
                 IList<IStructureObject> structures = structuresFile.Read(structuresFilePath);
@@ -521,7 +518,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     tempDirectory,
                     CreateOldGeneralStructureSection());
 
-                var structuresFile = new StructuresFile {StructureSchema = new WaterFlowFMModelDefinition().StructureSchema};
+                var structuresFile = CreateStructuresFile();
 
                 // When
                 IList<IStructureObject> structures = structuresFile.Read(structuresFilePath);
@@ -549,7 +546,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 List<string> copiesInTempFilePaths =
                     temp.CopyAllTestDataToTempDirectory(filesList);
 
-                var structureFile = new StructuresFile {StructureSchema = new WaterFlowFMModelDefinition().StructureSchema};
+                var structureFile = CreateStructuresFile();
 
                 string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
 
@@ -595,7 +592,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     temp.CopyAllTestDataToTempDirectory(@"structures\FlowFM2KeysNotInScheme_structures.ini",
                                                         @"structures\structure01.pli");
 
-                var structureFile = new StructuresFile {StructureSchema = schema};
+                var structureFile = CreateStructuresFile();
 
                 string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
 
@@ -621,7 +618,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     temp.CopyAllTestDataToTempDirectory(@"structures\FlowFM2KeysNotInScheme_structures.ini",
                                                         @"structures\structure01.pli");
 
-                var structureFile = new StructuresFile {StructureSchema = schema};
+                var structureFile = CreateStructuresFile();
 
                 string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
 
@@ -642,7 +639,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void GivenAStructuresFileWithFileReferencesInDifferentFolders_WhenReadingAndWriting_WritesToStructuresFileFolder()
         {
-            var structuresFile = new StructuresFile { StructureSchema = schema };
+            var structuresFile = CreateStructuresFile();
 
             using (var sourceDir = new TemporaryDirectory())
             using (var targetDir = new TemporaryDirectory())
@@ -678,7 +675,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 // Given
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
                 var weir = new Structure()
@@ -743,7 +740,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 // Given
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
                 var weir = new Structure()
@@ -820,7 +817,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 // Given
-                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var structuresFile = CreateStructuresFile();
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
                 var weir = new Structure()
@@ -900,6 +897,69 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 Assert.That(fileContents, Is.EqualTo(expectedFileContents));
             });
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_PolylineFileReferenceMissing_DropsItemWithError()
+        {
+            StructuresFile structuresFile = CreateStructuresFile();
+
+            const string pliFileReference = "Pump01.pli";
+
+            string structuresFileContent =
+                "[structure]\n" +
+                "type                  = pump\n" +
+                "id                    = Pump01\n" +
+                $"polylinefile          = {pliFileReference}\n" +
+                "capacity              = 1.23";
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string structuresFilePath = temp.CreateFile("structures.ini", structuresFileContent);
+
+                string error = TestHelper.GetAllRenderedMessages(() => structuresFile.Read(structuresFilePath), Level.Error).Single();
+
+                string expPliFilePath = Path.Combine(temp.Path, pliFileReference);
+                string expError = GetExpectedMessageMissingFile(expPliFilePath, structuresFilePath, "polylinefile", 4);
+                Assert.That(error, Does.Contain(expError));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_TimeSeriesFileReferenceMissing_DropsItemWithError()
+        {
+            StructuresFile structuresFile = CreateStructuresFile();
+
+            const string pliFileReference = "Pump01.pli";
+            const string timFileReference = "Pump01_capacity.tim";
+
+            string structuresFileContent =
+                "[structure]\n" +
+                "type                  = pump\n" +
+                "id                    = Pump01\n" +
+                $"polylinefile          = {pliFileReference}\n" +
+                $"capacity              = {timFileReference}";
+
+            string polylineFileContent =
+                "Pump01\n" +
+                "  3 2\n" +
+                "1 2\n" +
+                "3 4\n" +
+                "5 6";
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string structuresFilePath = temp.CreateFile("structures.ini", structuresFileContent);
+                temp.CreateFile(pliFileReference, polylineFileContent);
+
+                string error = TestHelper.GetAllRenderedMessages(() => structuresFile.Read(structuresFilePath), Level.Error).Single();
+
+                string expTimFilePath = Path.Combine(temp.Path, timFileReference);
+                string expError = GetExpectedMessageMissingFile(expTimFilePath, structuresFilePath, "capacity", 5);
+                Assert.That(error, Does.Contain(expError));
+            }
         }
 
         private static void CheckMessages(IReadOnlyList<string> messages, string copyOfIniInTempFilePath)
@@ -1169,6 +1229,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             return section;
         }
 
+        private StructuresFile CreateStructuresFile(DateTime referenceDate = default)
+        {
+            return new StructuresFile
+            {
+                StructureSchema = schema,
+                ReferenceDate = referenceDate
+            };
+        }
+
+        private static string GetExpectedMessageMissingFile(string filePath, string parentFilePath, string propertyName, int lineNumber)
+        {
+            return string.Format(Resources.File_at_location_0_does_not_exist_but_is_defined_in_1_, filePath, parentFilePath) + "\r\n" +
+                   string.Format(Resources.See_property_0_line_1_, propertyName, lineNumber) + " " + Resources.Data_for_this_item_is_dropped;
+        }
+
         #region Sobek Structures
 
         [Test]
@@ -1177,11 +1252,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             string path = TestHelper.GetTestFilePath(@"structures\example-structures-sobek.imp");
 
-            var structureFile = new StructuresFile
-            {
-                StructureSchema = schema,
-                ReferenceDate = new DateTime()
-            };
+            var structureFile = CreateStructuresFile();
 
             List<IStructureObject> structures = structureFile.Read(path).ToList();
 
@@ -1201,11 +1272,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             string path = TestHelper.GetTestFilePath(@"structures\time_dependent_structures.ini");
 
-            var structureFile = new StructuresFile
-            {
-                StructureSchema = schema,
-                ReferenceDate = new DateTime(2013, 1, 1)
-            };
+            var structureFile = CreateStructuresFile(referenceDate: new DateTime(2013, 1, 1));
 
             List<IStructureObject> structures = structureFile.Read(path).ToList();
 

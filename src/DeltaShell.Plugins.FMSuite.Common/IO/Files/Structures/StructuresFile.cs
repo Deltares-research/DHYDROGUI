@@ -79,11 +79,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         {
             var logHandler = new LogHandler($"reading the structures file ({filePath}),", log);
 
-            if (string.IsNullOrEmpty(ReferencePath))
-            {
-                ReferencePath = filePath;
-            }
-
             try
             {
                 List<IStructureObject> structures =
@@ -118,6 +113,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns>List with structure data access objects. </returns>
         public IEnumerable<StructureDAO> ReadStructuresFromFile(string filePath, ILogHandler logHandler = null)
         {
+            if (string.IsNullOrEmpty(ReferencePath))
+            {
+                ReferencePath = filePath;
+            }
+
             originalDataObjects.Clear();
             
             IniData iniData;
@@ -128,6 +128,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             iniData.Sections.ToList()
                    .ForEach(RenameBackwardsCompatibleProperties);
+
+            var structureValidator = new StructureFileValidator(filePath, ReferencePath);
             
             foreach (IniSection section in iniData.Sections)
             {
@@ -153,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
                 StructureDAO structureDataAccessObject =
                     CreateStructureDao(StructureSchema, structureTypeProperty.Value, section, filePath, logHandler);
-                string errorMessage = StructureFactoryValidator.Validate(structureDataAccessObject);
+                string errorMessage = structureValidator.Validate(structureDataAccessObject);
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
                     logHandler?.ReportErrorFormat(Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__,
@@ -315,7 +317,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
                 try
                 {
-                    var structureProperty = new StructureProperty(modelPropertyDefinition, property.Value);
+                    var structureProperty = new StructureProperty(modelPropertyDefinition, property.Value) { LineNumber = property.LineNumber };
                     newStructureDataAccessObject.Properties.Add(structureProperty);
                 }
                 catch (FormatException e)

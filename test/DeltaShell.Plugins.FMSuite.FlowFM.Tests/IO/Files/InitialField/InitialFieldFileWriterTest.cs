@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -103,9 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void Write_FilePathNullOrEmpty_ThrowsArgumentException(string filePath)
         {
             // Arrange
@@ -119,9 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.InitialField
         }
         
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void Write_ParentPathNullOrEmpty_ThrowsArgumentException(string filePath)
         {
             // Arrange

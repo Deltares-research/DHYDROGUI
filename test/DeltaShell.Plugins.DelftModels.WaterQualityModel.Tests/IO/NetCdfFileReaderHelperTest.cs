@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NSubstitute;
 using NUnit.Framework;
@@ -94,9 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void TryGetVariableByStandardName_StandardNameNullOrWhiteSpace_ThrownArgumentNullException(string standardName)
         {
             // Setup

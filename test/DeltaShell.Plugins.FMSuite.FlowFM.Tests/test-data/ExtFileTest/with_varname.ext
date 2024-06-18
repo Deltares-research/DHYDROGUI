@@ -1,5 +1,5 @@
 QUANTITY     =solarradiation
-FILENAME     =/p/1204257-dcsmzuno/data/meteo/ERA5/nc/ERA5_2005-2021_dfm_ssr_strd.nc
+FILENAME     =surroundingDomain.pol
 VARNAME      = ssr
 FILETYPE     =11
 METHOD       =3

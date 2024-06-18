@@ -14,7 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
     {
         private readonly BoundaryParser boundaryParser;
         private readonly LateralParser lateralParser;
-        private readonly LateralValidator lateralValidator;
         private readonly ILogHandler logHandler;
 
         /// <summary>
@@ -27,21 +26,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
         public BndExtForceFileParser(ILogHandler logHandler)
         {
             Ensure.NotNull(logHandler, nameof(logHandler));
-            
+
             this.logHandler = logHandler;
             boundaryParser = new BoundaryParser();
             lateralParser = new LateralParser(logHandler);
-            lateralValidator = new LateralValidator(logHandler);
         }
 
         /// <summary>
         /// Parse the INI data from the boundary external forcing file to a data access object.
-        /// INI sections with the header "boundary" can be parsed.
+        /// INI sections with the header "boundary" and "lateral" can be parsed.
         /// Other sections cannot be parsed and for these a warning message is reported to the user.
         /// </summary>
         /// <param name="iniData"> The INI data from the boundary external forcing file.</param>
+        /// <param name="lateralValidator"> The validator for lateral data. </param>
+        /// <param name="boundaryValidator"> The validator for boundary data. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="iniData"/> is <c>null</c>.
+        /// Thrown when <paramref name="iniData"/>, <paramref name="lateralValidator"/> or
+        /// <paramref name="boundaryValidator"/> is <c>null</c>.
         /// </exception>
         /// <returns>
         /// A <see cref="BndExtForceFileDTO"/> data access object that contains the parsed data of the boundary external forcing
@@ -61,7 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             return bndExtForceFileDTO;
         }
 
-        private void ParseSection(IniSection section, BndExtForceFileDTO bndExtForceFileDTO)
+        private void ParseSection(IniSection section,
+                                  BndExtForceFileDTO bndExtForceFileDTO)
         {
             string header = section.Name;
             if (IsBoundarySection(header))
@@ -72,10 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
             else if (IsLateralSection(header))
             {
                 LateralDTO lateralDTO = lateralParser.Parse(section);
-                if (lateralValidator.Validate(lateralDTO, section.LineNumber))
-                {
-                    bndExtForceFileDTO.AddLateral(lateralDTO);
-                }
+                bndExtForceFileDTO.AddLateral(lateralDTO);
             }
             else
             {
@@ -83,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserial
                 {
                     return;
                 }
-                
+
                 logHandler.ReportWarningFormat(Resources.Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_, header, section.LineNumber);
             }
         }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.TestUtils;
 using GeoAPI.Extensions.CoordinateSystems;
 using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
@@ -16,9 +17,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     public class UnstructuredGridFileOperationsTest
     {
         [Test]
-        [TestCase("")]
-        [TestCase(null)]
-        [TestCase("    ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void Constructor_FilePathNullOrEmpty_ThrowsArgumentException(string invalidFilePath)
         {
             // Call

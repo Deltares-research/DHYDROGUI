@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
@@ -167,9 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("    ")]
+        [TestCaseSource(typeof(CommonTestCaseSource), nameof(CommonTestCaseSource.NullOrWhiteSpace))]
         public void Validate_WaveModelWithBoundaryDefinitionPerFileUsedButFilePathNullOrWhitespace_ThenAnErrorShouldBeGiven(string filePath)
         {
             // Arrange

@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using Deltares.Infrastructure.API.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -65,12 +66,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IList<ExtForceFileItem> forceFileItems =
                 extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
 
+            DropInvalidItems(forceFileItems);
+
             ReadPolyLineData(forceFileItems);
             ReadWindItems(forceFileItems);
             ReadHeatFluxModelData(forceFileItems);
             ReadSpatialData(forceFileItems);
             ReadInitialVelocityData(forceFileItems);
             StoreUnknownQuantities(forceFileItems);
+        }
+
+        private void DropInvalidItems(ICollection<ExtForceFileItem> extForceFileItems)
+        {
+            var validator = new ExtForceFileItemValidator(extSubFilesReferenceFilePath, extFilePath);
+            foreach (ExtForceFileItem extForceFileItem in extForceFileItems.ToArray())
+            {
+                ValidationResult result = validator.Validate(extForceFileItem);
+                if (!result.Valid)
+                {
+                    log.Error(result.Message);
+                    extForceFileItems.Remove(extForceFileItem);
+                }
+            }
         }
 
         private void ReadInitialVelocityData(IEnumerable<ExtForceFileItem> forceFileItems)
@@ -190,6 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string propertyName = GetKeyPart(currentLine);
             var extForceFileItem = new ExtForceFileItem(GetValuePart(currentLine));
+            extForceFileItem.LineNumber = startLineNumber;
 
             if (propertyName.ToUpper() != ExtForceFileConstants.QuantityKey)
             {
@@ -730,11 +748,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     string windFile = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
                     
                     IWindField windField = ExtForceFileHelper.CreateWindField(extForceFileItem, windFile);
-
-                    if (!File.Exists(windFile))
-                    {
-                        throw new FileNotFoundException($"Wind file {windFile} could not be found");
-                    }
 
                     if (windField is UniformWindField)
                     {

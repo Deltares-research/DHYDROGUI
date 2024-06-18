@@ -117,12 +117,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WaterFlowFMPropertyDefinition newPropertyDefinition =
                 WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(sectionName, property.Key, property.Comment);
 
-            return new WaterFlowFMProperty(newPropertyDefinition, property.Value);
+            return new WaterFlowFMProperty(newPropertyDefinition, property.Value) { LineNumber = property.LineNumber };
         }
 
         private static void SetPropertyValue(WaterFlowFMModelDefinition definition,IniProperty property, ILogHandler logHandler)
         {
             WaterFlowFMProperty modelProperty = definition.GetModelProperty(property.Key);
+            modelProperty.LineNumber = property.LineNumber;
+
             try
             {
                 modelProperty.SetValueFromString(property.Value);

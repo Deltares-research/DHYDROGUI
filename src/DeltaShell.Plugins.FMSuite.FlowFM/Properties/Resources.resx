@@ -779,11 +779,8 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMLateralValidator_Validate_Water_flow_FM_model_Laterals" xml:space="preserve">
     <value>Water flow FM model Laterals</value>
   </data>
-  <data name="MduFileReferenceDoesNotExist" xml:space="preserve">
-    <value>File at location '{0}' does not exist, but is defined in MDU file '{1}' property '{2}'. Information might have been lost while loading model '{3}'.</value>
-  </data>
-  <data name="MduFileReferencePathContainsInvalidCharacters" xml:space="preserve">
-    <value>File path '{0}' contains invalid characters. MDU file '{1}' property '{2}'. Information might have been lost while loading model '{3}'.</value>
+  <data name="Property_0_must_be_provided" xml:space="preserve">
+    <value>Property '{0}' must be provided.</value>
   </data>
   <data name="reading_the_initial_field_file" xml:space="preserve">
     <value>reading the initial field file</value>

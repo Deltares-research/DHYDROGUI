@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
@@ -9,6 +10,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
     /// </summary>
     public sealed class LateralDTO
     {
+        private int lineNumber;
+
         /// <summary>
         /// Initialize a new instance of the <see cref="LateralDTO"/> class.
         /// </summary>
@@ -72,8 +75,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data
 
         /// <summary>
         /// The prescribed discharge for the lateral.
-        /// Can contain a constant value or a reference to a time series file or it can be "realtime".
+        /// Can contain a constant value or a reference to a time series file, or it can be "realtime".
         /// </summary>
         public Steerable Discharge { get; }
+
+        /// <summary>
+        /// The line number of the corresponding section in the file.
+        /// </summary>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="value"/> is a negative number.
+        /// </exception>
+        public int LineNumber
+        {
+            get => lineNumber;
+            set
+            {
+                Ensure.NotNegative(value, nameof(value));
+                lineNumber = value;
+            }
+        }
     }
 }

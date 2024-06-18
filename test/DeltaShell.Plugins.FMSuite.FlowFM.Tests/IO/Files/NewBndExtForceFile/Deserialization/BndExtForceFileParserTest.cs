@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Deserialization;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Data;
 using DHYDRO.Common.IO.Ini;
 using DHYDRO.Common.Logging;
@@ -13,8 +13,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
     [TestFixture]
     public class BndExtForceFileParserTest
     {
+        private ILogHandler logHandler;
+
+        [SetUp]
+        public void SetUp()
+        {
+            logHandler = Substitute.For<ILogHandler>();
+        }
+
         [Test]
-        public void Constructor_ArgNull_ThrowsArgumentNullException()
+        public void Constructor_LogHandlerNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => new BndExtForceFileParser(null);
@@ -24,11 +32,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ArgNull_ThrowsArgumentNullException()
+        public void Parse_IniDataIsNull_ThrowsArgumentNullException()
         {
             // Setup
-            var logHandler = Substitute.For<ILogHandler>();
-            var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
+            BndExtForceFileParser bndExtForceFileParser = CreateParser();
 
             // Call
             void Call() => bndExtForceFileParser.Parse(null);
@@ -38,11 +45,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsedBoundarySectionWithValuesIsAdded()
+        public void Parse_ParsedBoundarySectionIsAdded()
         {
             // Setup
-            var logHandler = Substitute.For<ILogHandler>();
-            var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
+            BndExtForceFileParser bndExtForceFileParser = CreateParser();
 
             var section = new IniSection("boundary");
             section.AddProperty("quantity", "some_quantity");
@@ -67,33 +73,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_ParsedBoundarySectionWithoutValuesIsAdded()
+        public void Parse_ParsedLateralSectionIsAdded()
         {
             // Setup
-            var logHandler = Substitute.For<ILogHandler>();
-            var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
-
-            var section = new IniSection("boundary");
-            var iniData = new IniData();
-            iniData.AddSection(section);
-            
-            // Call
-            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
-
-            // Assert
-            Assert.That(bndExtForceFileDTO.LocationFiles, Is.Empty);
-            Assert.That(bndExtForceFileDTO.ForcingFiles, Is.Empty);
-            var expBoundaryDTO = new BoundaryDTO(null, null, Enumerable.Empty<string>(), null);
-            Assert.That(bndExtForceFileDTO.Boundaries.Single(), Is.EqualTo(expBoundaryDTO).Using(new BoundaryDTOEqualityComparer()));
-            Assert.That(bndExtForceFileDTO.Laterals, Is.Empty);
-        }
-
-        [Test]
-        public void Parse_ValidParsedLateralSectionIsAdded()
-        {
-            // Setup
-            var logHandler = Substitute.For<ILogHandler>();
-            var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
+            BndExtForceFileParser bndExtForceFileParser = CreateParser();
 
             var section = new IniSection("lateral");
             section.AddProperty("id", "some_id");
@@ -128,34 +111,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
         }
 
         [Test]
-        public void Parse_InvalidParsedLateralSectionIsNotAdded()
-        {
-            // Setup
-            var logHandler = Substitute.For<ILogHandler>();
-            var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
-
-            var section = new IniSection("lateral");
-            var iniData = new IniData();
-            iniData.AddSection(section);
-
-            // Call
-            BndExtForceFileDTO bndExtForceFileDTO = bndExtForceFileParser.Parse(iniData);
-
-            // Assert
-            Assert.That(bndExtForceFileDTO.LocationFiles, Is.Empty);
-            Assert.That(bndExtForceFileDTO.ForcingFiles, Is.Empty);
-            Assert.That(bndExtForceFileDTO.Boundaries, Is.Empty);
-            Assert.That(bndExtForceFileDTO.Laterals, Is.Empty);
-        }
-
-        [Test]
         public void Parse_DoesNotParseUnknownSectionsAndLogsAWarning()
         {
             // Setup
-            var logHandler = Substitute.For<ILogHandler>();
-            var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
+            BndExtForceFileParser bndExtForceFileParser = CreateParser();
 
-            var section = new IniSection("unknown") {LineNumber = 5};
+            var section = new IniSection("unknown") { LineNumber = 5 };
             var iniData = new IniData();
             iniData.AddSection(section);
 
@@ -169,15 +130,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
             Assert.That(bndExtForceFileDTO.Laterals, Is.Empty);
             logHandler.Received(1).ReportWarningFormat("Section '{0}' has an unknown header and cannot be parsed. Line: {1}", "unknown", 5);
         }
-        
+
         [Test]
         public void Parse_GeneralSections_NothingHappens()
         {
             // Setup
-            var logHandler = Substitute.For<ILogHandler>();
-            var bndExtForceFileParser = new BndExtForceFileParser(logHandler);
+            BndExtForceFileParser bndExtForceFileParser = CreateParser();
 
-            var section = new IniSection("general") {LineNumber = 5};
+            var section = new IniSection("general") { LineNumber = 5 };
             var iniData = new IniData();
             iniData.AddSection(section);
 
@@ -190,6 +150,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.De
             Assert.That(bndExtForceFileDTO.Boundaries, Is.Empty);
             Assert.That(bndExtForceFileDTO.Laterals, Is.Empty);
             Assert.That(logHandler.ReceivedCalls(), Is.Empty);
+        }
+
+        private BndExtForceFileParser CreateParser()
+        {
+            return new BndExtForceFileParser(logHandler);
         }
     }
 }

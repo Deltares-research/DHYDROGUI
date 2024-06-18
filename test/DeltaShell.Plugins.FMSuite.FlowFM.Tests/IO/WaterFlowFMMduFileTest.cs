@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
@@ -9,6 +10,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -16,7 +18,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net.Core;
 using NetTopologySuite.Geometries;
@@ -678,8 +679,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             string[] expectedErrorMessages = new []
             {
-                string.Format(Resources.MduFileReferenceDoesNotExist, "FlowFM_net.nc", mduFilePath, "NetFile", modelName),
-                string.Format(Resources.MduFileReferenceDoesNotExist, "MyObservationPoints_obs.xyn", mduFilePath, "ObsFile", modelName)
+                GetNotExistingFileReferenceMessage("FlowFM_net.nc", mduFilePath, "NetFile", lineNumber: 12),
+                GetNotExistingFileReferenceMessage("MyObservationPoints_obs.xyn", mduFilePath, "ObsFile", lineNumber: 173)
             };
             
             Assert.That(messages, Is.EqualTo(expectedErrorMessages));
@@ -1147,24 +1148,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenStructuresFileWithReferenceToNonExsistentFile_WhenReadingMdu_ThenStructuresFileIsIgnoredAndDeltaShellGivesWarning()
-        {
-            // Preparations
-            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection\MduFileProjects"));
-            string mduFilePath = Path.Combine(localPath, @"StructuresFileWithoutReferences\FlowFM\FlowFM.mdu");
-            string mduDir = Path.GetDirectoryName(mduFilePath);
-
-            var area = new HydroArea();
-            var modelDefinition = new WaterFlowFMModelDefinition(Path.GetFileNameWithoutExtension(mduFilePath));
-            var mduFile = new MduFile();
-            var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties), "' is referenced in structures file '");
-            Assert.IsFalse(File.Exists(Path.Combine(mduDir, "FlowFM_structures.ini")));
-            Assert.That(modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString(), Is.EqualTo(""));
-        }
-
-        [Test]
         public void GivenMduFileWithReferencesThatIsSituatedInAFolderWithSpacesInItsName_WhenReadingMduFile_ThenNoProblemsOccur()
         {
             // Preparations
@@ -1347,6 +1330,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 Assert.That(toFolderFileNames.Contains(fileName), Is.False);
             }
+        }
+
+        private static string GetNotExistingFileReferenceMessage(string filePath, string mduFilePath, string property, int lineNumber)
+        {
+            string fullFilePath = new FileSystem().GetAbsolutePath(mduFilePath, filePath);
+            return string.Format(Common.Properties.Resources.File_at_location_0_does_not_exist_but_is_defined_in_1_, fullFilePath, mduFilePath) + "\r\n" +
+                   string.Format(Common.Properties.Resources.See_property_0_line_1_, property, lineNumber) + " " + Common.Properties.Resources.Data_for_this_item_is_dropped;
         }
 
         #endregion

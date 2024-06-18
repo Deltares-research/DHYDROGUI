@@ -55,7 +55,7 @@
 *
 **************************************************************************************************************
 QUANTITY                 =generalstructure
-FILENAME                 =schaar.pli
+FILENAME                 =surroundingDomain.pol
 FILETYPE                 =9
 METHOD                   =3
 OPERAND                  =O

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DHYDRO.Common.Extensions;
 using NUnit.Framework;
 
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             string propertyName = fileProperty.PropertyDefinition.MduPropertyName;
             string propertyValue = fileSystem.Path.GetFileName(removedFile);
-            string message = GetNotExistingFileReferenceMessage(propertyName, propertyValue);
+            string message = GetNotExistingFileReferenceMessage(propertyName, propertyValue, fileProperty.LineNumber);
 
             Assert.That(messages, Is.EqualTo(new[] { message }));
         }
@@ -306,25 +306,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private string GetInvalidCharactersInPathMessage(WaterFlowFMProperty property)
         {
-            string message = Resources.MduFileReferencePathContainsInvalidCharacters;
             string propertyName = property.PropertyDefinition.MduPropertyName;
             string propertyValue = property.GetValueAsString();
-            string modelName = modelDefinition.ModelName;
 
-            return string.Format(message, propertyValue, mduFilePath, propertyName, modelName);
+            return string.Format(Common.Properties.Resources.File_reference_0_contains_invalid_characters_but_is_defined_in_1_, propertyValue, mduFilePath) + "\r\n" +
+                   string.Format(Common.Properties.Resources.See_property_0_line_1_, propertyName, property.LineNumber) + " " + Common.Properties.Resources.Data_for_this_item_is_dropped;
         }
 
-        private string GetNotExistingFileReferenceMessage(WaterFlowFMProperty property)
+        private static string GetNotExistingFileReferenceMessage(WaterFlowFMProperty property)
         {
-            return GetNotExistingFileReferenceMessage(property.PropertyDefinition.MduPropertyName, property.GetValueAsString());
+            return GetNotExistingFileReferenceMessage(property.PropertyDefinition.MduPropertyName, property.GetValueAsString(), property.LineNumber);
         }
 
-        private string GetNotExistingFileReferenceMessage(string propertyName, string propertyValue)
+        private static string GetNotExistingFileReferenceMessage(string propertyName, string propertyValue, int lineNumber)
         {
-            string message = Resources.MduFileReferenceDoesNotExist;
-            string modelName = modelDefinition.ModelName;
-
-            return string.Format(message, propertyValue, mduFilePath, propertyName, modelName);
+            string filePath = Path.Combine(mduDir, propertyValue);
+            return string.Format(Common.Properties.Resources.File_at_location_0_does_not_exist_but_is_defined_in_1_, filePath, mduFilePath) + "\r\n" +
+                   string.Format(Common.Properties.Resources.See_property_0_line_1_, propertyName, lineNumber) + " " + Common.Properties.Resources.Data_for_this_item_is_dropped;
         }
     }
 }

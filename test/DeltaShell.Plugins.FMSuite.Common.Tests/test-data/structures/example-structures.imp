@@ -51,5 +51,6 @@ GateOpeningHorizontalDirection= symmetric
 [structure]
 type             = generalstructure
 id               = gs_01
-polylinefile     = gs_01.pli
+x                = 400
+y                = 260
 CrestWidth       = 2.3

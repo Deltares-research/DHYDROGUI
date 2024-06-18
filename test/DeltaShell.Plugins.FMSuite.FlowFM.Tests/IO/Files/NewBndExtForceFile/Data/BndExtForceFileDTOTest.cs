@@ -41,6 +41,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Da
         }
 
         [Test]
+        public void RemoveBoundary_BoundaryDTOIsNull_ThrowsArgumentNullException()
+        {
+            var bndExtForceFileDTO = new BndExtForceFileDTO();
+            Assert.That(() => bndExtForceFileDTO.RemoveBoundary(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void RemoveBoundary_RemovesBoundaryAndFiles()
+        {
+            // Setup
+            var bndExtForceFileDTO = new BndExtForceFileDTO();
+            var forcingFiles = new[] { "some_forcing_file1", "some_forcing_file2" };
+            const string locationFile = "some_location_file1";
+            var boundaryDTO = new BoundaryDTO("some_quantity", locationFile, forcingFiles, 123);
+
+            bndExtForceFileDTO.AddBoundary(boundaryDTO);
+
+            // Call
+            bndExtForceFileDTO.RemoveBoundary(boundaryDTO);
+
+            // Assert
+            Assert.That(bndExtForceFileDTO.Boundaries, Is.Empty);
+            Assert.That(bndExtForceFileDTO.LocationFiles, Is.Empty);
+            Assert.That(bndExtForceFileDTO.ForcingFiles, Is.Empty);
+        }
+
+        [Test]
         public void AddBoundary_ForMultipleBoundaries_AddsTheBoundariesAndTheirLocationFilesAndForcingFiles()
         {
             // Setup
@@ -107,6 +134,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Da
             CollectionContainsOnlyAssert.AssertContainsOnly(bndExtForceFileDTO.Laterals, lateralDTO);
             Assert.That(bndExtForceFileDTO.LocationFiles, Is.Empty);
             CollectionContainsOnlyAssert.AssertContainsOnly(bndExtForceFileDTO.ForcingFiles, forcingFile);
+        }
+
+        [Test]
+        public void RemoveLateral_LateralDTOIsNull_ThrowsArgumentNullException()
+        {
+            var bndExtForceFileDTO = new BndExtForceFileDTO();
+            Assert.That(() => bndExtForceFileDTO.RemoveLateral(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void RemoveLateral_RemovesLateralAndFiles()
+        {
+            // Setup
+            var bndExtForceFileDTO = new BndExtForceFileDTO();
+            const string forcingFile = "some_forcing_file";
+            var discharge = new Steerable
+            {
+                Mode = SteerableMode.TimeSeries,
+                TimeSeriesFilename = forcingFile
+            };
+
+            var lateralDTO = new LateralDTO("some_id", "some_name", LateralForcingType.Discharge, LateralLocationType.TwoD,
+                                            null, null, null, discharge);
+
+            bndExtForceFileDTO.AddLateral(lateralDTO);
+
+            // Call
+            bndExtForceFileDTO.RemoveLateral(lateralDTO);
+
+            // Assert
+            Assert.That(bndExtForceFileDTO.Laterals, Is.Empty);
+            Assert.That(bndExtForceFileDTO.ForcingFiles, Is.Empty);
         }
 
         [Test]

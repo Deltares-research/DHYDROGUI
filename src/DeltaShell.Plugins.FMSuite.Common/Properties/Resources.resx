@@ -159,4 +159,16 @@
   <data name="Feature2DImportExportBase_AddOrReplace_Import_failed_Current_project_does_not_contain_unique_names_for_features" xml:space="preserve">
     <value>Import failed. Current project does not contain unique names for features.</value>
   </data>
+  <data name="File_at_location_0_does_not_exist_but_is_defined_in_1_" xml:space="preserve">
+    <value>File at location '{0}' does not exist, but is defined in '{1}'.</value>
+  </data>
+  <data name="See_property_0_line_1_" xml:space="preserve">
+    <value>See property '{0}', line: {1}.</value>
+  </data>
+  <data name="Data_for_this_item_is_dropped" xml:space="preserve">
+    <value>Data for this item is dropped.</value>
+  </data>
+  <data name="File_reference_0_contains_invalid_characters_but_is_defined_in_1_" xml:space="preserve">
+    <value>File reference '{0}' contains invalid characters, but is defined in '{1}'</value>
+  </data>
 </root>

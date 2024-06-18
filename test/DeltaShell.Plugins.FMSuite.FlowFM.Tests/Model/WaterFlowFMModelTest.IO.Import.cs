@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Restart;
 using DHYDRO.TestModels.DFlowFM;
 using log4net.Core;
@@ -96,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Assert
                 List<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Error).ToList();
 
-                string expectedErrorMessage = string.Format(Resources.MduFileReferenceDoesNotExist, restartFile, mduFilePath, "RestartFile", model.ModelDefinition.ModelName);
+                string expectedErrorMessage = GetNotExistingFileReferenceMessage(restartFile, mduFilePath, "RestartFile", 153);
                 
                 Assert.That(messages, Does.Contain(expectedErrorMessage));
                 Assert.That(model.UseRestart, Is.False);
@@ -177,6 +178,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     Assert.That(restartFile.StartTime, Is.EqualTo(startTime));
                 }
             }
+        }
+
+        private static string GetNotExistingFileReferenceMessage(string filePath, string mduFilePath, string property, int lineNumber)
+        {
+            string fullFilePath = new FileSystem().GetAbsolutePath(mduFilePath, filePath);
+            return string.Format(Common.Properties.Resources.File_at_location_0_does_not_exist_but_is_defined_in_1_, fullFilePath, mduFilePath) + "\r\n" +
+                   string.Format(Common.Properties.Resources.See_property_0_line_1_, property, lineNumber) + " " + Common.Properties.Resources.Data_for_this_item_is_dropped;
         }
     }
 }

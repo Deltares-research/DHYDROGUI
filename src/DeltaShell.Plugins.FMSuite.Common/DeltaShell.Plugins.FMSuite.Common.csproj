@@ -66,6 +66,12 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net48\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <PackageReference Include="Deltares.NET.Infrastructure" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="Deltares.NET.Infrastructure.API" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="System.IO.Abstractions">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

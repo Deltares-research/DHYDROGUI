@@ -1,3 +1,4 @@
+using System;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.NewBndExtForceFile.Data;
 using NUnit.Framework;
@@ -33,6 +34,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.NewBndExtForceFile.Da
             Assert.That(lateralDTO.XCoordinates, Is.EquivalentTo(xCoordinates));
             Assert.That(lateralDTO.YCoordinates, Is.EquivalentTo(yCoordinates));
             Assert.That(lateralDTO.Discharge, Is.SameAs(discharge));
+            Assert.That(lateralDTO.LineNumber, Is.Zero);
+        }
+
+        [Test]
+        public void SetLineNumber_ValueIsNegative_ThrowsArgumentOutOfRangeException()
+        {
+            // Setup
+            LateralDTO lateralDTO = CreateLateralDto();
+
+            // Assert
+            Assert.That(() => lateralDTO.LineNumber = -1, Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        [TestCase(0)]
+        [TestCase(1)]
+        public void SetLineNumber_CanSetZeroOrPositiveValue(int lineNumber)
+        {
+            // Setup
+            LateralDTO lateralDTO = CreateLateralDto();
+
+            // Call
+            lateralDTO.LineNumber = lineNumber;
+
+            // Assert
+            Assert.That(lateralDTO.LineNumber, Is.EqualTo(lineNumber));
+        }
+
+        private LateralDTO CreateLateralDto()
+        {
+            var xCoordinates = new[] { 1.23, 3.45, 4.56 };
+            var yCoordinates = new[] { 5.67, 6.78, 7.89 };
+            var discharge = new Steerable();
+
+            return new LateralDTO("some_id", "some_name", LateralForcingType.Discharge, LateralLocationType.TwoD,
+                                  3, xCoordinates, yCoordinates, discharge);
         }
     }
 }

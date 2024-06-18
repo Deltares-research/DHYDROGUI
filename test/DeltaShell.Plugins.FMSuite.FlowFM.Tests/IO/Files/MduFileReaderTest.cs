@@ -7,8 +7,8 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using NUnit.Framework;
 using log4net.Core;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 {
@@ -539,6 +539,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                 WaterFlowFMProperty tStop = definition.GetModelProperty(KnownLegacyProperties.TStop);
                 Assert.That(tStop, Is.Null);
 
+            });
+        }
+
+        [Test]
+        public void Read_AssignsCorrectLineNumbersToProperties()
+        {
+            string fileContent =
+                "[geometry]" + Environment.NewLine +
+                "netFile = FlowFM_net.nc " + Environment.NewLine +
+                "structureFile = structures.ini" + Environment.NewLine +
+                Environment.NewLine +
+                "property_a = 1.23" + Environment.NewLine +
+                "property_b = true";
+
+            ReadWithAssert(fileContent, definition =>
+            {
+                WaterFlowFMProperty property1 = definition.GetModelProperty(KnownProperties.NetFile);
+                Assert.That(property1.LineNumber, Is.EqualTo(2));
+
+                WaterFlowFMProperty property2 = definition.GetModelProperty(KnownProperties.StructuresFile);
+                Assert.That(property2.LineNumber, Is.EqualTo(3));
+
+                WaterFlowFMProperty property3 = definition.GetModelProperty("property_a");
+                Assert.That(property3.LineNumber, Is.EqualTo(5));
+
+                WaterFlowFMProperty property4 = definition.GetModelProperty("property_b");
+                Assert.That(property4.LineNumber, Is.EqualTo(6));
             });
         }
 

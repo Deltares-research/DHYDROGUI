@@ -839,24 +839,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File at location &apos;{0}&apos; does not exist, but is defined in MDU file &apos;{1}&apos; property &apos;{2}&apos;. Information might have been lost while loading model &apos;{3}&apos;..
-        /// </summary>
-        public static string MduFileReferenceDoesNotExist {
-            get {
-                return ResourceManager.GetString("MduFileReferenceDoesNotExist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File path &apos;{0}&apos; contains invalid characters. MDU file &apos;{1}&apos; property &apos;{2}&apos;. Information might have been lost while loading model &apos;{3}&apos;..
-        /// </summary>
-        public static string MduFileReferencePathContainsInvalidCharacters {
-            get {
-                return ResourceManager.GetString("MduFileReferencePathContainsInvalidCharacters", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Sediment model numbers 1, 2 &amp; 3 are not supported..
         /// </summary>
         public static string MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_ {
@@ -937,6 +919,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string Property_0_contains_an_unsupported_value_Supported_values_1_ {
             get {
                 return ResourceManager.GetString("Property_0_contains_an_unsupported_value_Supported_values_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; must be provided..
+        /// </summary>
+        public static string Property_0_must_be_provided {
+            get {
+                return ResourceManager.GetString("Property_0_must_be_provided", resourceCulture);
             }
         }
         
