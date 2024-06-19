@@ -17,6 +17,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net.Core;
@@ -32,14 +33,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class BndExtForceFileTest
     {
+        private IHydroNetwork network;
+        private HydroArea hydroArea;
+        private IList<Model1DBoundaryNodeData> boundaryData;
+        private IList<Model1DLateralSourceData> lateralSourcesData;
+        private BndExtForceFile bndExtForceFile;
+
         [SetUp]
         public void Setup()
         {
             Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            network = CreateHydroNetwork();
+            hydroArea = new HydroArea();
+            boundaryData = new List<Model1DBoundaryNodeData>();
+            lateralSourcesData = new List<Model1DLateralSourceData>();
+            bndExtForceFile = new BndExtForceFile();
         }
         private static WaterFlowFMModelDefinition CreateModelDefinitionWithTwoBoundaries()
         {
-            var modelDefinition = new WaterFlowFMModelDefinition();
+            WaterFlowFMModelDefinition modelDefinition = CreateModelDefinition();
 
             var firstBoundary = new Feature2D
             {
@@ -122,8 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var testFilePath = TestHelper.GetTestFilePath("BcFiles\\MixedQuantities.ext");
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read(testFilePath, modelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(),new EventedList<Model1DLateralSourceData>() );
+            bndExtForceFile.Read(testFilePath, modelDefinition, network, hydroArea, boundaryData, lateralSourcesData);
 
             Assert.AreEqual(1,modelDefinition.BoundaryConditionSets.Count);
             Assert.AreEqual(2, modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Count);
@@ -174,13 +185,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data = secondBoundaryCondition.GetDataAtPoint(9);
             FillTimeSeries(data, i => 0.75 * Math.Sin(0.6 * Math.PI * i), startTime, stopTime, 10);
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition, Enumerable.Empty<Model1DBoundaryNodeData>(),Enumerable.Empty<Model1DLateralSourceData>());
+            bndExtForceFile.Write("testbnd.ext", modelDefinition, boundaryData, lateralSourcesData);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(),new EventedList<Model1DLateralSourceData>());
+            bndExtForceFile.Read("testbnd.ext", newModelDefinition, network, hydroArea, boundaryData, lateralSourcesData);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -225,13 +234,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data = secondBoundaryCondition.GetDataAtPoint(9);
             FillTimeSeries(data, i => 0.75 * Math.Sin(0.6 * Math.PI * i), startTime, stopTime, 10);
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            bndExtForceFile.Write("testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
+            bndExtForceFile.Read("testbnd.ext", newModelDefinition, network, hydroArea, boundaryData, lateralSourcesData);
 
             Assert.AreEqual(thatcherHarlemanTimeLag,
                 ((FlowBoundaryCondition)newModelDefinition.BoundaryConditionSets[0].BoundaryConditions[0])
@@ -277,13 +284,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data[20.0] = new[] {1.25};
             data[25.0] = new[] {2.5};
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            bndExtForceFile.Write("testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
+            bndExtForceFile.Read("testbnd.ext", newModelDefinition, network, hydroArea, boundaryData, lateralSourcesData);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -340,13 +345,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data = thirdBoundaryCondition.GetDataAtPoint(9);
             FillTimeSeries(data, i => 0.45 * Math.Sin(0.4 * Math.PI * i), startTime, stopTime, 12);
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            bndExtForceFile.Write("testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
+            bndExtForceFile.Read("testbnd.ext", newModelDefinition, network);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -400,13 +403,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data["M1"] = new[] { 0.16, 130 };
             data["P1"] = new[] { 0.61, 260 };
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            bndExtForceFile.Write("testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
+            bndExtForceFile.Read("testbnd.ext", newModelDefinition, network);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -480,13 +481,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data["M1"] = new[] { 0.16, 130 };
             data["P1"] = new[] { 0.61, 260 };
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            bndExtForceFile.Write("testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
+            bndExtForceFile.Read("testbnd.ext", newModelDefinition, network);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -542,13 +541,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data["M1"] = new[] { 0.16, 130, 1.22, 11 };
             data["P1"] = new[] { 0.61, 260, 0.89, 34 };
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            bndExtForceFile.Write("testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
+            bndExtForceFile.Read("testbnd.ext", newModelDefinition, network);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -638,13 +635,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             modelDefinition.BoundaryConditionSets[1].BoundaryConditions.AddRange(new[] { bc5, bc6 });
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            bndExtForceFile.Write("testbnd.ext", modelDefinition);
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
-            var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
+            bndExtForceFile.Read("testbnd.ext", newModelDefinition, network);
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -669,20 +664,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadWriteReadEmbankmentForcingsTest()
         {
-            var def = new WaterFlowFMModelDefinition();
+            WaterFlowFMModelDefinition def = CreateModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"banks\flooding1d2d_bnd.ext");
 
-            new BndExtForceFile().Read(extPath, def, new HydroNetwork());
+            bndExtForceFile.Read(extPath, def, network);
 
             Assert.AreEqual(0, def.Boundaries.Count);
             Assert.AreEqual(0, def.BoundaryConditionSets.Count);
             Assert.AreEqual(1, def.Embankments.Count);
 
             const string newExtPath = "test_bnd.ext";
-            new BndExtForceFile().Write(newExtPath, def);
+            bndExtForceFile.Write(newExtPath, def);
 
             var newDef = new WaterFlowFMModelDefinition();
-            new BndExtForceFile().Read(newExtPath, newDef, new HydroNetwork());
+            bndExtForceFile.Read(newExtPath, newDef, network);
 
             Assert.AreEqual(0, newDef.Boundaries.Count);
             Assert.AreEqual(0, newDef.BoundaryConditionSets.Count);
@@ -702,8 +697,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morbc1 });
 
-            var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            bndExtForceFile.Write("testbnd.ext", modelDefinition);
             Assert.IsTrue(File.Exists(modelDefinition.ModelName + BcmFile.Extension));
         }
 
@@ -742,7 +736,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             dataAtZero[model.StartTime] = new[] { 36.0 };
             dataAtZero[model.StartTime.AddMinutes(2)] = new[] { 18.0 };
 
-            var bndExtForceFile = new BndExtForceFile();
             var extFileName = model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
             if (string.IsNullOrEmpty(extFileName))
                 extFileName = model.ModelDefinition.ModelName + ExtForceFile.Extension;
@@ -804,21 +797,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             dataAtZero[model.StartTime] = new[] { 36.0 };
             dataAtZero[model.StartTime.AddMinutes(2)] = new[] { 18.0 };
 
-            var bndExtForceFile = new BndExtForceFile();
             var extFileName = model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
             if (string.IsNullOrEmpty(extFileName))
                 extFileName = model.ModelDefinition.ModelName + ExtForceFile.Extension;
 
             bndExtForceFile.Write(extFileName, model.ModelDefinition);
             var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(),"myModel");
-            bndExtForceFile = new BndExtForceFile();
-            bndExtForceFile.Read(extFileName, modelDefinition, new HydroNetwork());
+            bndExtForceFile.Read(extFileName, modelDefinition, network);
         }
 
         [Test]
         public void WriteBndExtForceFileSubFilesReturnsNoItemsIfMissingName()
         {
-            var bndExtForceFile = new BndExtForceFile();
             var firstBoundary = new Feature2D
             {
                 Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
@@ -869,12 +859,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
                 temp.CreateFile("FlowFM_meteo.bc", bcFileContent);
 
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                var hydroArea = new HydroArea();
                 
                 // Call
-                bndExtForceFile.Read(extFile, modelDefinition, new HydroNetwork(), hydroArea);
+                bndExtForceFile.Read(extFile, modelDefinition, network, hydroArea);
 
                 // Assert
                 IFmMeteoField meteoData = modelDefinition.FmMeteoFields.Single();
@@ -951,12 +939,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 temp.CreateFile("FlowFM_meteo.bc", bcFileContent);
                 temp.CreateFile("FlowFM_roofs.pol", roofFileContent);
 
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                var hydroArea = new HydroArea();
                 
                 // Call
-                bndExtForceFile.Read(extFile, modelDefinition, new HydroNetwork(), hydroArea);
+                bndExtForceFile.Read(extFile, modelDefinition, network, hydroArea);
 
                 // Assert
                 IFmMeteoField meteoData = modelDefinition.FmMeteoFields.Single();
@@ -1027,12 +1013,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
                 temp.CreateFile("FlowFM_roofs.pol", roofFileContent);
 
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                var hydroArea = new HydroArea();
                 
                 // Call
-                bndExtForceFile.Read(extFile, modelDefinition, new HydroNetwork(), hydroArea);
+                bndExtForceFile.Read(extFile, modelDefinition, network, hydroArea);
 
                 // Assert
                 Assert.That(modelDefinition.FmMeteoFields, Is.Empty);
@@ -1076,12 +1060,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
 
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                var hydroArea = new HydroArea();
                 
                 // Call
-                void Call ()=> bndExtForceFile.Read(extFile, modelDefinition, new HydroNetwork(), hydroArea);
+                void Call ()=> bndExtForceFile.Read(extFile, modelDefinition, network, hydroArea);
 
                 // Assert
                 string[] warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
@@ -1128,8 +1110,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Geometry = geometry,
                     Name = "some_roof"
                 };
-                
-                var bndExtForceFile = new BndExtForceFile();
                 
                 // Call
                 bndExtForceFile.Write(extFilePath, modelDefinition, roofAreas: new[]{roofArea});
@@ -1193,8 +1173,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 modelDefinition.FmMeteoFields.Add(meteoField);
                 modelDefinition.SetModelProperty(KnownProperties.RefDate, DateOnly.FromDateTime(referenceDate));
                 
-                var bndExtForceFile = new BndExtForceFile();
-                
                 // Call
                 bndExtForceFile.Write(extFilePath, modelDefinition);
                 
@@ -1231,7 +1209,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var temp = new TemporaryDirectory())
             {
                 string extFilePath = Path.Combine(temp.Path, "FlowFM_bnd.ext");
-                string bcFilePath = Path.Combine(temp.Path, "FlowFM_meteo.bc");
                 string polFilePath = Path.Combine(temp.Path, "FlowFM_roofs.pol");
                 
                 var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
@@ -1252,14 +1229,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Name = "some_roof"
                 };
                 
-                var bndExtForceFile = new BndExtForceFile();
-                
                 // Call
                 bndExtForceFile.Write(extFilePath, modelDefinition, roofAreas: new[]{roofArea});
                 
                 // Assert
                 Assert.That(extFilePath, Does.Exist);
-                Assert.That(bcFilePath, Does.Exist);
                 Assert.That(polFilePath, Does.Exist);
                 
                 string[][] extData = ReadData(extFilePath).ToArray();
@@ -1299,8 +1273,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    discharge   = realtime           ";
                 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
                 
                 var branch = Substitute.For<IBranch>();
@@ -1312,10 +1284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     new Coordinate(200, 0)
                 });
                 
-                var network = Substitute.For<IHydroNetwork>();
                 network.Branches = new EventedList<IBranch> {branch};
-                
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
                 
                 // Call
                 bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1359,13 +1328,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    discharge     = 10                 ";
                 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                
-                var network = Substitute.For<IHydroNetwork>();
-                
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
 
                 // Call
                 void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1399,13 +1362,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    discharge     = 10                 ";
                 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                
-                var network = Substitute.For<IHydroNetwork>();
-                
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
 
                 // Call
                 void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1439,13 +1396,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    discharge     = 10                 ";
                 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                
-                var network = Substitute.For<IHydroNetwork>();
-                
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
 
                 // Call
                 void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1479,13 +1430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    discharge     = 10                 ";
                 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                
-                var network = Substitute.For<IHydroNetwork>();
-                
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
 
                 // Call
                 void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1527,13 +1472,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
                 temp.CreateFile("FlowFM_lateralPolygon.pol", lateralPolygonFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                
-                var network = Substitute.For<IHydroNetwork>();
-                
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
 
                 // Call
                 void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1575,13 +1514,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
                 temp.CreateFile("FlowFM_lateralPolygon.pol", lateralPolygonFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                
-                var network = Substitute.For<IHydroNetwork>();
-                
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
 
                 // Call
                 void Call() => bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1623,13 +1556,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
                 temp.CreateFile("FlowFM_lateralPolygon.pol", lateralPolygonFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                
-                var network = Substitute.For<IHydroNetwork>();
-                
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
 
                 // Call
                 bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1660,15 +1587,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    discharge   = realtime           ";
 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
-
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
 
-                var network = new HydroNetwork();
                 network.Branches.Add(pipe1);
                 network.Branches.Add(pipe2);
-
-                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
 
                 // Call
                 bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
@@ -1727,8 +1649,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "3.456                               ";
                 
                 temp.CreateFile("some_file.bc", bcFileContent);
-                
-                var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
                 
                 var compartment = Substitute.For<ICompartment>();
@@ -1736,10 +1656,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var manHole = new Manhole {Name = "some_manhole"};
                 manHole.Compartments.Add(compartment);
 
-                var network = Substitute.For<IHydroNetwork>();
                 network.Nodes = new EventedList<INode> {manHole};
-
-                var boundaryData = new EventedList<Model1DBoundaryNodeData>();
 
                 // Call
                 bndExtForceFile.Read(extFile, modelDefinition, network, boundaryConditions1D: boundaryData);
@@ -1778,8 +1695,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
                 var modelBoundaryData = new List<Model1DBoundaryNodeData> {boundaryData};
 
-                var bndExtForceFile = new BndExtForceFile();
-
                 // Call
                 bndExtForceFile.Write(extFilePath, modelDefinition, modelBoundaryData);
 
@@ -1804,6 +1719,83 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 AssertLine(bcData[7], "quantity", "waterlevelbnd");
                 AssertLine(bcData[8], "unit", "m");
                 AssertLine(bcData[9], "3.456");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_AfterRead_PreservesAllFilesPaths()
+        {
+            WaterFlowFMModelDefinition modelDefinition = CreateModelDefinition();
+
+            using (var temp = new TemporaryDirectory())
+            {
+                const string filePath = "bndextforcefile\\file_references\\FlowFM_bnd.ext";
+                string readFilePath = temp.CopyTestDataFileAndDirectoryToTempDirectory(filePath);
+                string writeFolder = temp.CreateDirectory("write");
+                string writeFilePath = Path.Combine(writeFolder, "FlowFM_bnd.ext");
+
+                IniData readIniData = GetIniData(readFilePath);
+                AddNodes(readIniData);
+                AddBranches(readIniData);
+
+                bndExtForceFile.Read(readFilePath, modelDefinition, network, hydroArea, boundaryData, lateralSourcesData);
+                bndExtForceFile.Write(writeFilePath, modelDefinition, boundaryData, lateralSourcesData, hydroArea.RoofAreas);
+
+                IniData writeIniData = GetIniData(writeFilePath);
+
+                IniSection boundary2dSection = writeIniData.Sections.Single(s => s.GetPropertyValue("quantity") == "waterlevelbnd" && !s.ContainsProperty("nodeId"));
+                AssertFileReference("f1/Test_Boundary01.pli", "locationfile", boundary2dSection, writeFolder);
+                AssertFileReference("f2/Test_WaterLevel.bc", "forcingfile", boundary2dSection, writeFolder);
+
+                IniSection embankmentSection = writeIniData.Sections.Single(s => s.GetPropertyValue("quantity") == "1d2dbnd");
+                AssertFileReference("f3/Test_Embankment_2D_01_bnk.pliz", "locationfile", embankmentSection, writeFolder);
+
+                IniSection boundary1dSection = writeIniData.Sections.Single(s => s.GetPropertyValue("quantity") == "waterlevelbnd" && s.ContainsProperty("nodeId"));
+                AssertFileReference("f4/Test_FlowFM_boundaryconditions1d.bc", "forcingfile", boundary1dSection, writeFolder);
+
+                IniSection lateralSection = writeIniData.FindSection("Lateral");
+                AssertFileReference("f5/Test_FlowFM_lateral_sources.bc", "discharge", lateralSection, writeFolder);
+
+                IniSection meteoSection = writeIniData.FindSection("meteo");
+                AssertFileReference("f6/Test_FlowFM_meteo.bc", "forcingfile", meteoSection, writeFolder);
+                AssertFileReference("f7/Test_FlowFM_roofs.pol", "targetMaskFile", meteoSection, writeFolder);
+            }
+        }
+
+        private void AddBranches(IniData iniData)
+        {
+            foreach (string propertyValue in GetPropertyValues(iniData, "branchId"))
+            {
+                network.Branches.Add(CreateBranch(propertyValue));
+            }
+        }
+
+        private void AddNodes(IniData iniData)
+        {
+            foreach (string propertyValue in GetPropertyValues(iniData, "nodeId"))
+            {
+                network.Nodes.Add(CreateNode(propertyValue));
+            }
+        }
+
+        private static IEnumerable<string> GetPropertyValues(IniData iniData, string key)
+        {
+            return iniData.Sections.SelectMany(s => s.Properties).Where(p => p.IsKeyEqualTo(key)).Select(p => p.Value).Distinct();
+        }
+
+        private static void AssertFileReference(string fileName, string propertyName, IniSection section, string rootFolder)
+        {
+            Assert.That(section.GetPropertyValue(propertyName), Is.EqualTo(fileName));
+            Assert.That(Path.Combine(rootFolder, fileName), Does.Exist);
+        }
+
+        private static IniData GetIniData(string filePath)
+        {
+            var iniParser = new IniParser();
+            using (FileStream iniStream = File.OpenRead(filePath))
+            {
+                return iniParser.Parse(iniStream);
             }
         }
 
@@ -1868,6 +1860,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 Assert.That(data[i], Is.EqualTo(values[i]));
             }
+        }
+
+        private static WaterFlowFMModelDefinition CreateModelDefinition() => 
+            new WaterFlowFMModelDefinition { ModelName = "some_model_name" };
+
+        private static IHydroNetwork CreateHydroNetwork()
+        {
+            var network = Substitute.For<IHydroNetwork>();
+            network.Branches = new EventedList<IBranch>();
+            network.Nodes = new EventedList<INode>();
+
+            return network;
+        }
+
+        private static INode CreateNode(string name)
+        {
+            INode node = Substitute.For<INode, INotifyPropertyChange>();
+            node.Name = name;
+
+            return node;
+        }
+
+        private static IBranch CreateBranch(string name)
+        {
+            IBranch branch = Substitute.For<IBranch, INotifyPropertyChange>();
+            branch.Name = name;
+            branch.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) });
+
+            return branch;
         }
     }
 }

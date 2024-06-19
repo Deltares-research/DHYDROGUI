@@ -38,13 +38,13 @@ namespace DeltaShell.NGHS.IO.FileWriters
         /// <inheritdoc/>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="iniSections"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="iniFile"/> is <c>null</c> or white space.</exception>
-        public void WriteBcFile(IEnumerable<BcIniSection> iniSections, string iniFile)
+        public void WriteBcFile(IEnumerable<BcIniSection> iniSections, string iniFile, bool appendToFile = false)
         {
             Ensure.NotNull(iniSections, nameof(iniSections));
             Ensure.NotNullOrWhiteSpace(iniFile, nameof(iniFile));
 
             IEnumerable<IniSection> iniSectionsToWrite = CreateIniSections(iniSections);
-            WriteIniFile(iniFile, iniSectionsToWrite);
+            WriteIniFile(iniFile, iniSectionsToWrite, appendToFile);
         }
 
         private static IEnumerable<IniSection> CreateIniSections(IEnumerable<BcIniSection> bcIniSections)
@@ -116,7 +116,7 @@ namespace DeltaShell.NGHS.IO.FileWriters
             }
         }
 
-        private void WriteIniFile(string targetFile, IEnumerable<IniSection> iniSections)
+        private void WriteIniFile(string targetFile, IEnumerable<IniSection> iniSections, bool appendToFile)
         {
             var iniFormatter = new IniFormatter()
             {
@@ -133,7 +133,8 @@ namespace DeltaShell.NGHS.IO.FileWriters
             CreateDirectoryIfNotExists(targetFile);
 
             log.InfoFormat(Resources.BcWriter_WriteIniFile_Writing_boundary_conditions_to__0__, targetFile);
-            using (Stream iniStream = fileSystem.File.Open(targetFile, FileMode.Create))
+            FileMode fileMode = appendToFile ? FileMode.Append : FileMode.Create;
+            using (Stream iniStream = fileSystem.File.Open(targetFile,fileMode))
             {
                 iniFormatter.Format(iniData, iniStream);
             }

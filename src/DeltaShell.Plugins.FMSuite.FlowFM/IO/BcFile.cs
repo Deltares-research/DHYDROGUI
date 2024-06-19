@@ -6,7 +6,6 @@ using System.IO.Abstractions;
 using System.Linq;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters;
-using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils.Extensions;
@@ -153,12 +152,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         public virtual void Write(IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
-            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
+            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null, bool appendToFile = false)
         {
-            var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
-                GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
-                GeneralRegion.FileTypeName.BoundaryConditions);
-            new IniFileWriter().WriteIniFile(new[] { generalRegion }, filePath);
+            if (!appendToFile)
+            {
+                var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+                    GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
+                    GeneralRegion.FileTypeName.BoundaryConditions);
+                new IniFileWriter().WriteIniFile(new[] { generalRegion }, filePath);
+            }
+
             OpenOutputFile(filePath, true);
             try
             {
@@ -196,22 +199,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        public virtual void Write(IEnumerable<IFmMeteoField> fmMeteoFields, string filePath, BcMeteoFileDataBuilder bcMeteoFileDataBuilder, DateTime? refDate = null)
+        public virtual void Write(IFmMeteoField fmMeteoField, string filePath, BcMeteoFileDataBuilder bcMeteoFileDataBuilder, DateTime refDate, bool appendToFile)
         {
-            var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
-                GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
-                GeneralRegion.FileTypeName.BoundaryConditions);
-            new IniFileWriter().WriteIniFile(new[] { generalRegion }, filePath);
+            if (!appendToFile)
+            {
+                var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+                    GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
+                    GeneralRegion.FileTypeName.BoundaryConditions);
+                new IniFileWriter().WriteIniFile(new[] { generalRegion }, filePath);
+            }
+
             OpenOutputFile(filePath, true);
             try
             {
-                foreach (var fmMeteoField in fmMeteoFields)
-                {
-                    var blockData = bcMeteoFileDataBuilder.CreateBlockData(fmMeteoField, refDate);
+                var blockData = bcMeteoFileDataBuilder.CreateBlockData(fmMeteoField, refDate);
 
-                    WriteBlock(blockData);
-                    WriteLine("");
-                }
+                WriteBlock(blockData);
+                WriteLine("");
             }
             finally
             {
@@ -466,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return line[0] == '[' && line.Length >= BlockKey.Length && line.Substring(0, BlockKey.Length).Equals(BlockKey, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public void Write(IEnumerable<BcIniSection> generateModel1DNodeBoundaryBcSections, string file, string path)
+        public void Write(BcIniSection boundaryBcSection, string file, string path, bool appendToFile)
         {
             var bcWriter = new BcWriter(new FileSystem());
             switch (MultiFileMode)
@@ -474,23 +478,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 case WriteMode.SingleFile:
                 {
                     var filename = Path.Combine(path, file);
-                    WriteBc1DFile(generateModel1DNodeBoundaryBcSections, filename, bcWriter);
-                    break;
-                }
-                case WriteMode.FilePerQuantity:
-                {
-                    //werkt nog niet!
-                    var model1DNodeBoundaryBcSections = generateModel1DNodeBoundaryBcSections as BcIniSection[] ?? generateModel1DNodeBoundaryBcSections.ToArray();
-                    var quantityNameWithBoundaryDataDictionary = model1DNodeBoundaryBcSections
-                            .GroupBy(GetQuantityNameFromBcSections).ToDictionary(grp => grp.Key,
-                                grp => { return GetSubListOfItemsOfThisQuantity(grp.FirstOrDefault(), model1DNodeBoundaryBcSections).ToList(); });
-
-                    foreach (var quantityNameWithBoundaryData in quantityNameWithBoundaryDataDictionary)
-                    {
-                        var filename = Path.Combine(path, Path.GetFileNameWithoutExtension(file) + "_" + quantityNameWithBoundaryData.Key + Path.GetExtension(file));
-                        WriteBc1DFile(quantityNameWithBoundaryData.Value,filename, bcWriter);
-                    }
-
+                    WriteBc1DFile(boundaryBcSection, filename, bcWriter, appendToFile);
                     break;
                 }
                 default:
@@ -500,23 +488,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
         }
 
-        private static void WriteBc1DFile(IEnumerable<BcIniSection> generateModel1DNodeBoundaryBcSections, string filename, BcWriter bcWriter)
+        private static void WriteBc1DFile(BcIniSection bcSection, string filename, BcWriter bcWriter, bool appendToFile)
         {
             BcIniSection generalRegionBcSection = CreateGeneralBcIniSection();
-            
-            IEnumerable<BcIniSection> model1DNodeBoundaryBcSections = 
-                CreateModel1DNodeBoundaryBcSections(generateModel1DNodeBoundaryBcSections, generalRegionBcSection);
 
-            bcWriter.WriteBcFile(model1DNodeBoundaryBcSections, filename);
-        }
+            var model1DNodeBoundaryBcSections = new List<BcIniSection>();
+            if (!appendToFile)
+            {
+                model1DNodeBoundaryBcSections.Add(generalRegionBcSection);
+            }
+            model1DNodeBoundaryBcSections.Add(bcSection);
 
-        private static IEnumerable<BcIniSection> CreateModel1DNodeBoundaryBcSections(IEnumerable<BcIniSection> generateModel1DNodeBoundaryBcSections, BcIniSection generalRegionBcSection)
-        {
-            List<BcIniSection> model1DNodeBoundaryBcSections = generateModel1DNodeBoundaryBcSections.ToList();
-            model1DNodeBoundaryBcSections = model1DNodeBoundaryBcSections.Except(model1DNodeBoundaryBcSections.OfType<BcIniSection>().Where(bc => bc.Table.Count == 0)).ToList();
-            model1DNodeBoundaryBcSections.Insert(0, generalRegionBcSection);
-
-            return model1DNodeBoundaryBcSections;
+            bcWriter.WriteBcFile(model1DNodeBoundaryBcSections, filename, appendToFile);
         }
 
         private static BcIniSection CreateGeneralBcIniSection()
@@ -526,29 +509,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 GeneralRegion.FileTypeName.BoundaryConditions);
             
             return new BcIniSection(generalRegion);
-        }
-
-        private IEnumerable<BcIniSection> GetSubListOfItemsOfThisQuantity(BcIniSection dic, IEnumerable<BcIniSection> generateModel1DNodeBoundaryBcSections)
-        {
-            var q = GetQuantityNameFromBcSections(dic);
-            var subListOfItemsOfThisQuantity = generateModel1DNodeBoundaryBcSections.Where( d => GetQuantityNameFromBcSections(dic) != q).ToList();
-            return subListOfItemsOfThisQuantity;
-        }
-
-
-        private string GetQuantityNameFromBcSections(BcIniSection bcIniSection)
-        {
-            var quantityName = string.Empty;
-            var function = bcIniSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Function.Key);
-            if (function == BoundaryRegion.FunctionStrings.QhTable)
-                quantityName = BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency;
-            else
-            {
-                var bcQuantityData = bcIniSection.Table.LastOrDefault();
-                quantityName = bcQuantityData?.Quantity?.Value;
-            }
-
-            return quantityName;
         }
     }
 }

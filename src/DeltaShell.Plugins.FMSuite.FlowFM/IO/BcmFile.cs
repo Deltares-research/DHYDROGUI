@@ -75,10 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public override void Write(
             IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
-            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
+            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null, bool appendToFile = false)
         {
             blocknr = 0;
-            base.Write(boundaryConditions, filePath, boundaryDataBuilder, refDate);
+            base.Write(boundaryConditions, filePath, boundaryDataBuilder, refDate, appendToFile);
         }
         
 

@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -28,6 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BndExtForceFile : FMSuiteFileBase
     {
+        private readonly BndExtForceFileContext fileContext;
+        private readonly HashSet<string> writtenFiles = new HashSet<string>();
         private readonly PolFile<GroupableFeature2DPolygon> roofPolFile = new PolFile<GroupableFeature2DPolygon> {IncludeClosingCoordinate = true};
         public const string MeteoBlockKey = "[meteo]";
         public const string LocationTypeKey = "locationType";
@@ -141,9 +142,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const BcFile.WriteMode BcFileWriteMode = BcFile.WriteMode.FilePerQuantity;
         private const BcFile.WriteMode BcmFileWriteMode = BcFile.WriteMode.SingleFile; 
 
-        // items that existed in the file when the file was read
-        private readonly IDictionary<Feature2D, string> existingPolylineFiles; 
-        private readonly IDictionary<IBoundaryCondition, IniSection> existingBndForceFileItems;
         private string filePath;
 
         public bool WriteToDisk { get; set; }
@@ -161,15 +159,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public BndExtForceFile()
         {
-            existingPolylineFiles = new Dictionary<Feature2D, string>();
-            existingBndForceFileItems = new Dictionary<IBoundaryCondition, IniSection>();
             WriteToDisk = true;
+            fileContext = new BndExtForceFileContext();
         }
 
         #region write logic
 
         public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D = null, IEnumerable<Model1DLateralSourceData> lateralSourcesData = null, ICollection<GroupableFeature2DPolygon> roofAreas = null)
         {
+            writtenFiles.Clear();
             var refDate = modelDefinition.GetReferenceDateAsDateTime();
 
             Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, boundaryConditions1D, lateralSourcesData, roofAreas?? new GroupableFeature2DPolygon[0] , modelDefinition.Embankments, modelDefinition.FmMeteoFields,
@@ -180,15 +178,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             IList<BoundaryConditionSet> boundaryConditionSets,
             IEnumerable<Model1DBoundaryNodeData> modelDefinitionBoundaryConditions1D,
             IEnumerable<Model1DLateralSourceData> modelDefinitionLateralSourcesData, ICollection<GroupableFeature2DPolygon> roofAreas, IList<Embankment> embankments,
-            IEventedList<IFmMeteoField> fmMeteoFields, WaterFlowFMProperty modelProperty, DateTime refDate)
+            IList<IFmMeteoField> fmMeteoFields, WaterFlowFMProperty modelProperty, DateTime refDate)
         {
             FilePath = filePath;
+            fileContext.ModelName = modelDefinitionModelName;
             var bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinitionModelName, boundaryConditionSets, refDate);
-            var bnd1DExtForceFileItems = Write1DBndExtForceFileSubFiles(modelDefinitionModelName, modelDefinitionBoundaryConditions1D, refDate).ToList();
-            var lateralSourcesDataExtForceFileItems = WriteLateralSourcesDataExtForceFileSubFiles(modelDefinitionModelName, modelDefinitionLateralSourcesData, refDate).ToList();
+            var bnd1DExtForceFileItems = Write1DBndExtForceFileSubFiles(modelDefinitionBoundaryConditions1D, refDate).ToList();
+            var lateralSourcesDataExtForceFileItems = WriteLateralSourcesDataExtForceFileSubFiles(modelDefinitionLateralSourcesData, refDate).ToList();
             var embankmentForceFileItems = WriteEmbankmentFiles(embankments);
-            var meteoExtForceFileItems = WriteMeteoExtForceFileSubFiles(modelDefinitionModelName, fmMeteoFields, refDate, roofAreas.Any());
-            WriteRoofAreasPolFiles(modelDefinitionModelName, roofAreas);
+            var meteoExtForceFileItems = WriteMeteoExtForceFileSubFiles(fmMeteoFields, refDate, roofAreas.Any());
+            WriteRoofAreasPolFiles(roofAreas);
 
             var allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).Concat(bnd1DExtForceFileItems).Concat(lateralSourcesDataExtForceFileItems).ToList();
             FileUtils.DeleteIfExists(FilePath);
@@ -211,38 +210,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private IEnumerable<IniSection> WriteLateralSourcesDataExtForceFileSubFiles(string modelDefinitionModelName, IEnumerable<Model1DLateralSourceData> modelDefinitionLateralSourcesData, DateTime refDate)
+        private IEnumerable<IniSection> WriteLateralSourcesDataExtForceFileSubFiles(IEnumerable<Model1DLateralSourceData> modelDefinitionLateralSourcesData, DateTime refDate)
         {
             if (modelDefinitionLateralSourcesData == null)
             {
                 yield break;
             }
 
-            var model1DLateralSourceDatas = modelDefinitionLateralSourcesData as Model1DLateralSourceData[] ?? modelDefinitionLateralSourcesData.ToArray();
-            var lateralSourceDataLookup = model1DLateralSourceDatas
-                                      .Where(d => d?.Feature != null)
-                                      .ToDictionary(d => d.Feature.Name, StringComparer.InvariantCultureIgnoreCase);
-            var generateModel1DLateralSourceDataBcSections = new Model1DBoundaryFileWriter().GenerateModel1DLateralSourceDataBcSections(refDate, model1DLateralSourceDatas, false, false, BoundaryRegion.BcForcingHeader);
-            var filename = AddExtension(modelDefinitionModelName + "_lateral_sources", BcFile.Extension);
-
-            // now generate bc files with the data
-            var model1DLateralSourceDataBcSections = generateModel1DLateralSourceDataBcSections as BcIniSection[] ?? generateModel1DLateralSourceDataBcSections.ToArray();
-            foreach (var model1DNodeBoundaryBcSection in model1DLateralSourceDataBcSections.OfType<BcIniSection>())
+            foreach (Model1DLateralSourceData lateralData in modelDefinitionLateralSourcesData)
             {
-                var lateralName = model1DNodeBoundaryBcSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Name.Key);
-                if (!lateralSourceDataLookup.TryGetValue(lateralName, out var lateralData))
+                if (lateralData.Feature == null)
                 {
                     continue;
                 }
-                
-                var lateral = lateralData.Feature;
+                BcIniSection bcSection = Model1DBoundaryFileWriter.GenerateLateralDischargeDefinition(refDate, lateralData, BoundaryRegion.BcForcingHeader);
+                bool writeBc = bcSection.Table.Any();
+
+                LateralSource lateral = lateralData.Feature;
                 if (lateral?.Branch == null)
                 {
                     // we don't support 2d lateral sources types yet
                     continue;
                 }
 
-                var lateralDef = new LateralSourceForcingDefinition {Name = lateral.Name, LongName = lateral.LongName ?? lateral.Name};
+                var lateralDef = new LateralSourceForcingDefinition
+                {
+                    Name = lateral.Name,
+                    LongName = lateral.LongName ?? lateral.Name
+                };
                 if (Math.Abs(lateral.Chainage) < double.Epsilon)
                 {
                     lateralDef.NodeId = lateral.Branch.Source.Name;
@@ -263,11 +258,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     lateralDef.NodeId = lateralCompartment.Name;
                 }
 
-                lateralDef.DischargeForcingFile = filename;
-                yield return CreateBoundaryBlock(null, null, null, null, TimeSpan.Zero, lateralSourceForcingDefinition:lateralDef);
+                if (writeBc)
+                {
+                    string bcFileName = fileContext.GetForcingFileName(lateralData);
+                    lateralDef.DischargeForcingFile = bcFileName;
+                    WriteBoundarySection(bcSection, bcFileName);
+                }
+
+                yield return CreateBoundaryBlock(null, null, null, null, TimeSpan.Zero, lateralSourceForcingDefinition: lateralDef);
             }
-            var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile }; //single file want ff niet anders
-            bcFile.Write(model1DLateralSourceDataBcSections, filename, Path.GetDirectoryName(FilePath));
+        }
+
+        private void WriteBoundarySection(BcIniSection bcSection, string bcFileName)
+        {
+            var bcFile = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile }; //single file want ff niet anders
+            bool appendToFile = !writtenFiles.Add(bcFileName);
+            bcFile.Write(bcSection, bcFileName, Path.GetDirectoryName(FilePath), appendToFile);
         }
 
         private void WriteMeteoExtForceFile(IEnumerable<IniSection> meteoExtForceFileItems)
@@ -382,8 +388,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 boundaryConditionSets.Where(bcs => !bcs.BoundaryConditions.Any())
                     .Select(boundaryConditionSet =>
                     {
-                        string pliFileName;
-                        return existingPolylineFiles.TryGetValue(boundaryConditionSet.Feature, out pliFileName) ? CreateBoundaryBlock(null, pliFileName, null, null, TimeSpan.Zero) : null;
+                        string pliFileName = fileContext.GetPolylineFileName(boundaryConditionSet.Feature);
+                        return pliFileName != null ? CreateBoundaryBlock(null, pliFileName, null, null, TimeSpan.Zero) : null;
                     }).Where( it => it != null)
                     .ToList();
 
@@ -400,38 +406,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return resultingItems;
         }
-        public IEnumerable<IniSection> Write1DBndExtForceFileSubFiles(string modelDefinitionModelName, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, DateTime refDate)
+        
+        private IEnumerable<IniSection> Write1DBndExtForceFileSubFiles(IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, DateTime refDate)
         {
-            var generateModel1DNodeBoundaryBcSections = new Model1DBoundaryFileWriter().GenerateModel1DNodeBoundaryBcSections(refDate, boundaryConditions1D, false, false, BoundaryRegion.BcForcingHeader);
-            var filename = AddExtension(modelDefinitionModelName+"_boundaryconditions1d", BcFile.Extension);
-            // now generate bc files with the data
-            var model1DNodeBoundaryBcSections = generateModel1DNodeBoundaryBcSections as BcIniSection[] ?? generateModel1DNodeBoundaryBcSections.ToArray();
-            foreach (var generateModel1DNodeBoundaryIniSection in model1DNodeBoundaryBcSections.OfType<BcIniSection>())
+            if (boundaryConditions1D == null)
             {
+                yield break;
+            }
+
+            foreach (var boundaryCondition1D in boundaryConditions1D.Where(b=> b.Data != null))
+            {
+                BcIniSection bcSection = new Model1DBoundaryFileWriter().GenerateBoundaryConditionDefinition(refDate, boundaryCondition1D, BoundaryRegion.BcForcingHeader);
+
                 var quantityName = string.Empty;
-                var function = generateModel1DNodeBoundaryIniSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Function.Key);
+                var function = bcSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Function.Key);
                 if (function == BoundaryRegion.FunctionStrings.QhTable)
                     quantityName = BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency;
                 else
                 {
-                    var bcQuantityData = generateModel1DNodeBoundaryIniSection.Table.LastOrDefault();
+                    var bcQuantityData = bcSection.Table.LastOrDefault();
                     quantityName = bcQuantityData?.Quantity?.Value;
                 }
-                var nodeId = generateModel1DNodeBoundaryIniSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Name.Key);
-                var manHoleName = generateModel1DNodeBoundaryIniSection.Section.ReadProperty<string>("manHoleName", true);
 
-                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc => bc.Feature.Name.EqualsCaseInsensitive(manHoleName ?? nodeId));
+                var nodeId = bcSection.Section.GetPropertyValueWithOptionalDefaultValue(BoundaryRegion.Name.Key);
 
-                if (m1dbnd?.OutletCompartment != null)
+                if (boundaryCondition1D?.OutletCompartment != null)
                 {
-                    nodeId = m1dbnd.OutletCompartment.Name;
+                    nodeId = boundaryCondition1D.OutletCompartment.Name;
                 }
-                var thatcherHarlemanTimeLag =  m1dbnd != null && m1dbnd.UseSalt ? new TimeSpan(0,0, (int)m1dbnd.ThatcherHarlemannCoefficient) : TimeSpan.Zero;
-                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, thatcherHarlemanTimeLag, isOnOutletCompartment: m1dbnd?.OutletCompartment != null, 
-                                                 boundaryWidth: m1dbnd?.BoundaryWidth, boundaryDepth: m1dbnd?.BoundaryDepth);
+
+                var thatcherHarlemanTimeLag = boundaryCondition1D != null && boundaryCondition1D.UseSalt ? new TimeSpan(0, 0, (int)boundaryCondition1D.ThatcherHarlemannCoefficient) : TimeSpan.Zero;
+                
+                string bcFileName = fileContext.GetForcingFileName(boundaryCondition1D);
+                WriteBoundarySection(bcSection, bcFileName);
+                    
+                yield return CreateBoundaryBlock(quantityName, null, nodeId, bcFileName, thatcherHarlemanTimeLag, isOnOutletCompartment: boundaryCondition1D?.OutletCompartment != null,
+                                                     boundaryWidth: boundaryCondition1D?.BoundaryWidth, boundaryDepth: boundaryCondition1D?.BoundaryDepth);
+                
             }
-            var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile };//single file want ff niet anders
-            bcFile.Write(model1DNodeBoundaryBcSections, filename, Path.GetDirectoryName(FilePath));
         }
 
         private IList<IniSection> WriteEmbankmentFiles(IList<Embankment> embankments)
@@ -440,93 +452,96 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (var embankment in embankments)
             {
-                string existingFile;
-                if (!existingPolylineFiles.TryGetValue(embankment, out existingFile))
-                {
-                    existingFile = embankment.Name + "_bnk.pliz"; 
-                    existingPolylineFiles[embankment] = existingFile;
-                }
+                string fileName = fileContext.GetPolylineFileName(embankment);
+                fileContext.AddPolylineFileName(embankment, fileName);
+
                 if (WriteToDisk)
                 {
-                    new PlizFile<Embankment>().Write(GetFullPath(existingFile), new[] { embankment });
+                    new PlizFile<Embankment>().Write(GetFullPath(fileName), new[] { embankment });
                 }
 
-                iniSections.Add(CreateBoundaryBlock(ExtForceQuantNames.EmbankmentBnd, existingFile, null, ExtForceQuantNames.EmbankmentForcingFile, TimeSpan.Zero, true));
+                iniSections.Add(CreateBoundaryBlock(ExtForceQuantNames.EmbankmentBnd, fileName, null, ExtForceQuantNames.EmbankmentForcingFile, TimeSpan.Zero, true));
             }
 
             return iniSections;
         }
 
-        private IEnumerable<IniSection> WriteMeteoExtForceFileSubFiles(string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, DateTime refDate, bool hasRoofs)
+        private IEnumerable<IniSection> WriteMeteoExtForceFileSubFiles(IList<IFmMeteoField> fmMeteoFields, DateTime refDate, bool hasRoofs)
         {
+            var iniSections = new List<IniSection>();
+            
             WritePolyLinesMeteo(fmMeteoFields);
             var bcFile = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
             
-            string bcFileName = AddExtension(modelDefinitionModelName + "_meteo", BcFile.Extension);
-            
-            if (WriteToDisk)
+            if (hasRoofs && !fmMeteoFields.Any())
             {
-                string bcFilePath = GetFullPath(bcFileName);
-                bcFile.Write(fmMeteoFields, bcFilePath, new BcMeteoFileDataBuilder(), refDate);
+                IniSection roofIniSection = CreateRoofIniSection();
+                iniSections.Add(roofIniSection);
             }
 
-            return CreateMeteoIniSections(fmMeteoFields, bcFileName, hasRoofs, modelDefinitionModelName);
-        }
-
-        private static IEnumerable<IniSection> CreateMeteoIniSections(IList<IFmMeteoField> fmMeteoFields, string bcFileName, bool hasRoofs, string modelName)
-        {
-            IniSection roofIniSection = null;
-            if (hasRoofs)
+            foreach (var fmMeteoField in fmMeteoFields)
             {
-                roofIniSection = CreateRoofIniSection(modelName);
-                
-                if (!fmMeteoFields.Any())
+                string bcFileName = fileContext.GetForcingFileName(fmMeteoField);
+
+                if (WriteToDisk)
                 {
-                    yield return roofIniSection;
+                    string bcFilePath = GetFullPath(bcFileName);
+                    bool appendToFile = !writtenFiles.Add(bcFileName);
+                    bcFile.Write(fmMeteoField, bcFilePath, new BcMeteoFileDataBuilder(), refDate, appendToFile);
                 }
+
+                iniSections.Add(CreateMeteoIniSections(fmMeteoField, bcFileName, hasRoofs));
             }
-            
-            foreach (IFmMeteoField fmMeteoField in fmMeteoFields)
-            {
-                string quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity];
-                yield return CreateMeteoIniSection(quantityName, bcFileName, roofIniSection);
-            }
+
+            return iniSections;
         }
 
-        private static IniSection CreateMeteoIniSection(string quantity,
-                                                            string forcingFilePath, IniSection roofIniSection)
+        private IniSection CreateMeteoIniSections(IFmMeteoField fmMeteoField, string bcFileName, bool hasRoofs)
+        {
+            string quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity]; 
+            return CreateMeteoIniSection(quantityName, bcFileName, hasRoofs);
+            
+        }
+
+        private IniSection CreateMeteoIniSection(string quantity,
+                                                            string forcingFilePath, bool hasRoofs)
         {
             var iniSection = new IniSection(MeteoBlockKey);
             iniSection.AddPropertyWithOptionalComment(QuantityKey, quantity);
             iniSection.AddPropertyWithOptionalComment(ForcingFileKey, forcingFilePath);
             iniSection.AddPropertyWithOptionalComment(ForcingFileTypeKey, "bcAscii");
 
-            if (roofIniSection != null)
+            if (hasRoofs)
             {
-                iniSection.AddMultipleProperties(roofIniSection.Properties);
+                AddRoofMeteoProperties(iniSection);
             }
             
             return iniSection;
         }
 
-        private static IniSection CreateRoofIniSection(string modelName)
+        private IniSection CreateRoofIniSection()
         {
             var iniSection = new IniSection(MeteoBlockKey);
-            iniSection.AddPropertyWithOptionalComment(TargetMaskFileKey, modelName + FileConstants.RoofAreaFileExtension);
-            iniSection.AddPropertyWithOptionalComment(TargetMaskInvertKey, "true");
-            iniSection.AddPropertyWithOptionalComment(InterpolationMethodKey, "nearestNb");
+            AddRoofMeteoProperties(iniSection);
 
             return iniSection;
         }
 
-        private void WriteRoofAreasPolFiles(string modelName, ICollection<GroupableFeature2DPolygon> roofAreas)
+        private void AddRoofMeteoProperties( IniSection iniSection)
+        {
+            iniSection.AddPropertyWithOptionalComment(TargetMaskFileKey, fileContext.RoofAreaFileName);
+            iniSection.AddPropertyWithOptionalComment(TargetMaskInvertKey, "true");
+            iniSection.AddPropertyWithOptionalComment(InterpolationMethodKey, "nearestNb");
+        }
+
+        private void WriteRoofAreasPolFiles(ICollection<GroupableFeature2DPolygon> roofAreas)
         {
             if (!roofAreas.Any())
             {
                 return;
             }
             
-            string roofFilePath = GetFullPath(modelName + FileConstants.RoofAreaFileExtension);
+            string roofFilePath = GetFullPath(fileContext.RoofAreaFileName);
             roofPolFile.Write(roofFilePath, roofAreas);
         }
 
@@ -534,16 +549,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             foreach (var boundaryConditionSet in boundaryConditionSets)
             {
-                string existingFile;
-                if (!existingPolylineFiles.TryGetValue(boundaryConditionSet.Feature, out existingFile))
-                {
-                    existingFile = ExtForceFileHelper.GetPliFileName(boundaryConditionSet);
-                    if (string.IsNullOrEmpty(existingFile)) return;
-                    existingPolylineFiles[boundaryConditionSet.Feature] = existingFile;
-                }
+                string fileName = fileContext.GetPolylineFileName(boundaryConditionSet);
+                if (string.IsNullOrEmpty(fileName)) return;
+
+                fileContext.AddPolylineFileName(boundaryConditionSet.Feature, fileName);
+
                 if (WriteToDisk)
                 {
-                    new PliFile<Feature2D>().Write(GetFullPath(existingFile), new[] {boundaryConditionSet.Feature});
+                    new PliFile<Feature2D>().Write(GetFullPath(fileName), new[] {boundaryConditionSet.Feature});
                 }
             }
         }
@@ -551,16 +564,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             foreach (var fmMeteoField in fmMeteoFields.Where(fmMeteoField => fmMeteoField.FeatureData?.Feature is Feature2D && fmMeteoField.FmMeteoLocationType == FmMeteoLocationType.Polygon))
             {
-                string existingFile;
-                if (!existingPolylineFiles.TryGetValue((Feature2D)fmMeteoField.FeatureData.Feature, out existingFile))
-                {
-                    existingFile = ExtForceFileHelper.GetPliFileName(fmMeteoField.FeatureData);
-                    if (string.IsNullOrEmpty(existingFile)) return;
-                    existingPolylineFiles[(Feature2D)fmMeteoField.FeatureData.Feature] = existingFile;
-                }
+                string fileName = fileContext.GetPolylineFileName(fmMeteoField);
+                if (string.IsNullOrEmpty(fileName)) return;
+
+                fileContext.AddPolylineFileName(fmMeteoField.FeatureData.Feature, fileName);
+
                 if (WriteToDisk)
                 {
-                    new PliFile<Feature2D>().Write(GetFullPath(existingFile), new[] { (Feature2D)fmMeteoField.FeatureData.Feature });
+                    new PliFile<Feature2D>().Write(GetFullPath(fileName), new[] { (Feature2D)fmMeteoField.FeatureData.Feature });
                 }
             }
         }
@@ -584,8 +595,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 foreach (var tuple in group.Where(t => t.Item1 is FlowBoundaryCondition))
                 {
-                    IniSection existingBlock;
-                    existingBndForceFileItems.TryGetValue(tuple.Item1, out existingBlock);
+                    IniSection existingBlock = fileContext.GetIniSection(tuple.Item1);
 
                     var existingPaths = existingBlock != null
                         ? existingBlock.GetPropertyValuesByName(ForcingFileKey).ToList()
@@ -652,7 +662,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var quantityName =
                             ExtForceQuantNames.GetQuantityString((FlowBoundaryCondition) tuple.Item1);
 
-                        var pliFileName = existingPolylineFiles[tuple.Item2.Feature];
+                        var pliFileName = fileContext.GetPolylineFileName(tuple.Item2.Feature);
 
                         var bndBlock = CreateBoundaryBlock(quantityName, pliFileName, null, path, ((FlowBoundaryCondition)tuple.Item1).ThatcherHarlemanTimeLag);
 
@@ -674,13 +684,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 foreach (var fileNamesToBoundaryCondition in fileNamesToBoundaryConditions)
                 {
-                    var fullPath = GetFullPath(fileNamesToBoundaryCondition.Key);
+                    var bcFileName = fileNamesToBoundaryCondition.Key;
+                    var fullPath = GetFullPath(bcFileName);
 
                     bcFile.CorrectionFile = fullPath.EndsWith("_corr.bc");
 
+                    bool appendToFile = !writtenFiles.Add(bcFileName);
                     bcFile.Write(fileNamesToBoundaryCondition.Value.ToDictionary(t => t.Item1, t => t.Item2),
-                        fullPath, boundaryDataBuilder, refDate);
-
+                        fullPath, boundaryDataBuilder, refDate, appendToFile);
                     bcFile.CorrectionFile = false;
                 }
             }
@@ -705,8 +716,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area = null, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D=null, IEventedList<Model1DLateralSourceData> lateralSourcesData=null)
+        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area = null, IList<Model1DBoundaryNodeData> boundaryConditions1D=null, IList<Model1DLateralSourceData> lateralSourcesData=null)
         {
+            fileContext.Clear();
             FilePath = bndExtForceFilePath;
 
             IEnumerable<IniSection> bndBlocks = ReadIniFile(bndExtForceFilePath).Sections;
@@ -719,8 +731,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         
         private void ReadPolyLines(IEnumerable<IniSection> bndBlocks, WaterFlowFMModelDefinition modelDefinition, HydroArea area)
         {
-            modelDefinition.Boundaries.ForEach(b => { existingPolylineFiles[b] = b.Name + ".pli"; });
-
             foreach (var iniSection in bndBlocks)
             {
                 string roofFile = iniSection.GetPropertyValueWithOptionalDefaultValue(TargetMaskFileKey);
@@ -732,10 +742,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 
                 var locationFile = iniSection.GetPropertyValueWithOptionalDefaultValue(LocationFileKey);
                 var isEmbankment = iniSection.GetPropertyValueWithOptionalDefaultValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
-          
-                if (existingPolylineFiles.Values.Contains(locationFile)) continue;
 
                 if (locationFile == null) continue;
+
+                if (fileContext.PolylineFileNames.Contains(locationFile)) continue;
 
                 if (string.IsNullOrEmpty(locationFile))
                 {
@@ -757,6 +767,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var features = reader.Read(pliFilePath);
                     if (!features.Any()) continue;
                     modelDefinition.Embankments.Add(features.First());
+                    fileContext.AddPolylineFileName(features.First(), locationFile);
                 }
                 else
                 {                
@@ -764,7 +775,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var features = reader.Read(pliFilePath);
                     foreach (var feature in features)
                     {
-                        existingPolylineFiles[feature] = locationFile;
+                        fileContext.AddPolylineFileName(feature, locationFile);
                         modelDefinition.Boundaries.Add(feature);
                         modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet {Feature = feature});
                     }
@@ -782,6 +793,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             IList<GroupableFeature2DPolygon> roofAreas = roofPolFile.Read(roofFilePath);
+            fileContext.RoofAreaFileName = relativeFilePath;
             area.RoofAreas.AddRange(roofAreas);
         }
 
@@ -789,7 +801,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             {FmMeteoQuantity.Precipitation, FmMeteoField.CreateMeteoPrecipitationSeries }
         };
-        private void ReadBoundaryConditions(IEnumerable<IniSection> bndBlocks, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData)
+        private void ReadBoundaryConditions(IEnumerable<IniSection> bndBlocks, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IList<Model1DBoundaryNodeData> boundaryConditions1D, IList<Model1DLateralSourceData> lateralSourcesData)
         {
             var correctionFunctionTypes = BcFileFlowBoundaryDataBuilder.CorrectionFunctionTypes.ToList();
 
@@ -837,7 +849,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     if (iniSection.Name.EqualsCaseInsensitive(LateralHeaderKey) && Is1DLateral(iniSection, logHandler))
                     {
-                        lateralSourcesData.Add(lateralSourceParser.Parse(new LateralSourceExtSection(iniSection)));
+                        var lateralSourceExtSection = new LateralSourceExtSection(iniSection);
+                        Model1DLateralSourceData lateralSourceData = lateralSourceParser.Parse(lateralSourceExtSection);
+                        lateralSourcesData.Add(lateralSourceData);
+                        if (!string.IsNullOrEmpty(lateralSourceExtSection.DischargeFile))
+                        {
+                            fileContext.AddForcingFileName(lateralSourceData, lateralSourceExtSection.DischargeFile);
+                        }
                     }
                     
                     continue;
@@ -846,7 +864,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (quantityKey == ExtForceQuantNames.Precipitation)
                 {
                     List<BcBlockData> meteoDataBlocks = dataBlocks.Where(b => IsCorrespondingMeteoBlock(b, iniSection)).ToList();
-                    ParseMeteoRainFallBoundaryExtForceSection(modelDefinition, quantityKey, meteoDataBlocks);
+                    IFmMeteoField fmMeteoField = CreateMeteoField(quantityKey, meteoDataBlocks);
+                    AddMeteoField(modelDefinition, fmMeteoField);
+                    fileContext.AddForcingFileName(fmMeteoField, iniSection.GetPropertyValue(ForcingFileKey));
+
                     continue;
                 }
 
@@ -875,7 +896,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 
 
                 var pliFile = iniSection.GetPropertyValueWithOptionalDefaultValue(LocationFileKey);
-                var feature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == pliFile).Key;
+                var feature = fileContext.GetFeatureForPolylineFileName(pliFile);
                 if (feature == null) continue;
 
                 BcFileFlowBoundaryDataBuilder builder;
@@ -925,7 +946,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (newBoundaryCondition != null)
                 {
-                    existingBndForceFileItems[newBoundaryCondition] = iniSection;
+                    fileContext.AddIniSection(newBoundaryCondition, iniSection);
                 }
 
                 usedDataBlocks.ForEach(b =>
@@ -965,7 +986,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                    b.Quantities.Any(q => q.Quantity == quantity);
         }
 
-        private bool CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D,  IEnumerable<IniSection> modelBoundary1DBlocks)
+        private bool CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(IHydroNetwork network, IList<Model1DBoundaryNodeData> boundaryConditions1D,  IEnumerable<IniSection> modelBoundary1DBlocks)
         {
             network.Nodes.Except(boundaryConditions1D.Select(bc1d => bc1d.Node)).ForEach(node => boundaryConditions1D.Add(Helper1D.CreateDefaultBoundaryCondition(node, false, false)));
             var forcingFiles = new HashSet<string>();
@@ -998,6 +1019,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (id != null) continue; // make sure we are nog reading a lateral
                 var forcingFile = iniSection.GetPropertyValueWithOptionalDefaultValue(ForcingFileKey);
                 if (forcingFile == null) continue;
+                fileContext.AddForcingFileName(boundaryData, forcingFile);
                 forcingFiles.Add(forcingFile);
             }
 
@@ -1046,7 +1068,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return bndByNodeName;
         }
 
-        private void ParseMeteoRainFallBoundaryExtForceSection(WaterFlowFMModelDefinition modelDefinition, string quantityKey, List<BcBlockData> dataBlocks)
+        private IFmMeteoField CreateMeteoField(string quantityKey, List<BcBlockData> dataBlocks)
         {
             FmMeteoQuantity meteoQuantity = ExtForceQuantNames.MeteoQuantityNames.FirstOrDefault(pair => pair.Value == quantityKey).Key;
 
@@ -1062,7 +1084,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             
             meteobuilder.InsertBoundaryData(fmMeteoField, dataBlocks);
+            return fmMeteoField;
+        }
 
+        private static void AddMeteoField(WaterFlowFMModelDefinition modelDefinition, IFmMeteoField fmMeteoField)
+        {
             if (modelDefinition.FmMeteoFields.Contains(fmMeteoField))
             {
                 Log.WarnFormat(
