@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         
         private static string GetChannelInitialConditionDefinitionFileName(InitialFieldFileData initialFieldFileData)
         {
-            var initialConditionIniSections = initialFieldFileData.AllFields.Where(x => x.LocationType == InitialFieldLocationType.OneD &&
+            var initialConditionIniSections = initialFieldFileData.AllFields.Where(x => x.LocationType == InitialFieldLocationType.OneD ||
                                                                                         x.DataFileType == InitialFieldDataFileType.OneDField)
                                                                   .ToArray();
             if (!initialConditionIniSections.Any())
