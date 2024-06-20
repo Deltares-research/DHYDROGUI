@@ -63,24 +63,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         public string SubFilePath => UsingStandardSubFile ? GetStandardSubFile() : GetCustomFile();
 
-        public WaterQualityProcessType SubFileProcessType
-        {
-            get
-            {
-                if (tabControl1.SelectedTab == customProcessTypeTab)
-                {
-                    return WaterQualityProcessType.Custom;
-                }
-
-                ListViewItem selectedListViewItem = listView2.SelectedItems
-                                                             .OfType<ListViewItem>()
-                                                             .FirstOrDefault();
-
-                return selectedListViewItem != null && selectedListViewItem.Group == listView2.Groups[1]
-                           ? WaterQualityProcessType.Duflow
-                           : WaterQualityProcessType.Sobek;
-            }
-        }
+        public WaterQualityProcessType SubFileProcessType => tabControl1.SelectedTab == customProcessTypeTab ? 
+                                                                 WaterQualityProcessType.Custom : 
+                                                                 WaterQualityProcessType.Sobek;
 
         public bool UsingCustomProcessFiles => !UsingStandardSubFile && radioButtonCustomProcesses.Checked;
 
@@ -114,11 +99,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
         {
             IEnumerable<ListViewItem> sobekListItems =
                 CreateListViewItems(dataDirectory + "\\Sobek", listView2.Groups[0]);
-            IEnumerable<ListViewItem> duflowListItems =
-                CreateListViewItems(dataDirectory + "\\Duflow", listView2.Groups[1]);
 
             listView2.Items.Clear();
-            listView2.Items.AddRange(sobekListItems.Concat(duflowListItems).ToArray());
+            listView2.Items.AddRange(sobekListItems.ToArray());
 
             UpdateProcessTypeControls();
         }

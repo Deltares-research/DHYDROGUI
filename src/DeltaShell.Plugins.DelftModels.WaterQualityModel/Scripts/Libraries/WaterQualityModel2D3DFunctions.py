@@ -11,7 +11,6 @@ from DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils import FunctionTypeC
 
 class SubstanceProcessLibraryFolder:
     Sobek = 1
-    Duflow = 2
     
 class OutputTimeType:
     MonitoringLocations = 1
@@ -44,10 +43,7 @@ def GetDefaultSubstanceProcessLibraryPath(folder, libraryName):
         Adds the .sub at the end of the library name"""
     folderPath = None
     if folder == SubstanceProcessLibraryFolder.Sobek:
-        folderPath = DelwaqFileStructureHelper.GetDelwaqDataFolderPath() + os.sep + "Sobek"
-    if folder == SubstanceProcessLibraryFolder.Duflow:
-        folderPath = DelwaqFileStructureHelper.GetDelwaqDataFolderPath() + os.sep + "Duflow"
-    
+        folderPath = DelwaqFileStructureHelper.GetDelwaqDataFolderPath() + os.sep + "Sobek"    
     if not folderPath == None:
         return folderPath + os.sep + libraryName + ".sub"
 

@@ -21,13 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
                     break;
                 }
-                case WaterQualityProcessType.Duflow:
-                {
-                    substanceProcessLibrary.ProcessDllFilePath = WaterQualityApiDataSet.WaqDuflowDllPath;
-                    substanceProcessLibrary.ProcessDefinitionFilesPath = WaterQualityApiDataSet.WaqDuflowProcessDefinitionFilesDirectory;
-
-                    break;
-                }
                 case WaterQualityProcessType.Custom:
                 {
                     if (substanceProcessLibraryWizardPage.UsingCustomProcessFiles)

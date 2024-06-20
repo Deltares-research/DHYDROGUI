@@ -96,10 +96,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="waq_kernel\**" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="plct\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

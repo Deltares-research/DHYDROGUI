@@ -27,14 +27,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             var errorMessages = "";
             DateTime startTime = DateTime.Now;
 
-            string optionalDuflowSwitch =
+            string optionalCustomProcessDllSwitch =
                 !string.IsNullOrEmpty(initializationSettings.SubstanceProcessLibrary.ProcessDllFilePath)
                     ? "-openpb \"" + initializationSettings.SubstanceProcessLibrary.ProcessDllFilePath + "\""
                     : string.Empty;
 
             Log.Debug("Started delwaq2.exe.");
             WaterQualityUtils.RunProcess(WaterQualityApiDataSet.DelWaq2ExePath,
-                                         string.Format(FileConstants.InputFileName + " " + optionalDuflowSwitch),
+                                         string.Format(FileConstants.InputFileName + " " + optionalCustomProcessDllSwitch),
                                          initializationSettings.Settings.WorkingOutputDirectory, () => TryToCancel, false, 3000,
                                          (s, e) =>
                                          {

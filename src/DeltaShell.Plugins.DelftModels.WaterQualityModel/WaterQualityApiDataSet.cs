@@ -30,16 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// Gets the directory of the water quality substances and process data.
         /// </summary>
         public static string WaqDataDirectory { get; } = Path.Combine(WaqKernelDirectory, "Data");
-        
-        /// <summary>
-        /// Gets the directory that contains the default duflow process definition files.
-        /// </summary>
-        public static string WaqDuflowProcessDefinitionFilesDirectory { get; } = Path.Combine(WaqDataDirectory, "Default", "proc_def_duflow");
-        
-        /// <summary>
-        /// Gets the full path of the duflow process library.
-        /// </summary>
-        public static string WaqDuflowDllPath { get; } = Path.Combine(WaqPluginDirectory, "x64", "duflow.dll");
 
         /// <summary>
         /// Gets the full path of the delwaq1 executable.

@@ -7,9 +7,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
         [Description("Sobek process definition")]
         Sobek = 1,
 
-        [Description("Duflow process definition")]
-        Duflow,
-
         [Description("Custom process definition")]
         Custom
     }
