@@ -1,7 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -12,19 +13,16 @@ namespace DeltaShell.NGHS.TestUtils
         public static void TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(ApplicationPlugin applicationPlugin)
         {
             //Given
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var pluginsToAdd = new List<IPlugin> { applicationPlugin };
+            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build() )
             {
-                ApplicationPlugin appPlugin = applicationPlugin;
-
-                appPlugin.Application = app;
-
                 app.Run();
                 app.CreateNewProject();
 
                 var compositeActivity = MockRepository.GenerateStub<ICompositeActivity>();
 
                 // When
-                ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
+                ModelInfo modelInfos = applicationPlugin.GetModelInfos().FirstOrDefault();
 
                 // Then
                 Assert.NotNull(modelInfos);
@@ -35,17 +33,14 @@ namespace DeltaShell.NGHS.TestUtils
         public static void TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(ApplicationPlugin applicationPlugin)
         {
             // Given
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var pluginsToAdd = new List<IPlugin> { applicationPlugin };
+            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                ApplicationPlugin appPlugin = applicationPlugin;
-
-                appPlugin.Application = app;
-                
                 app.Run();
                 app.CreateNewProject();
                 
                 // When
-                ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
+                ModelInfo modelInfos = applicationPlugin.GetModelInfos().FirstOrDefault();
 
                 // Then
                 Assert.NotNull(modelInfos);

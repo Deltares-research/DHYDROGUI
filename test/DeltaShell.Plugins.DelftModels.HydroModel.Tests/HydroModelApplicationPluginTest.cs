@@ -55,11 +55,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new HydroModelApplicationPlugin();
+            using (var app = CreateAndStartApplication(appPlugin))
             {
-                var appPlugin = new HydroModelApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -73,11 +71,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_RealTimeControl()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new RealTimeControlApplicationPlugin();
+            using (IApplication app = CreateAndStartApplication(appPlugin))
             {
-                var appPlugin = new RealTimeControlApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -91,11 +87,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_WaterQuality()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new HydroModelApplicationPlugin();
+            using (IApplication app = CreateAndStartApplication(appPlugin))
             {
-                var appPlugin = new WaterQualityModelApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -110,10 +104,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new FlowFMApplicationPlugin();
+            var pluginsToAdd = new List<IPlugin>() { appPlugin };
+            using (var app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build())
             {
-                var appPlugin = new FlowFMApplicationPlugin();
-                SetUpApplication(app, appPlugin);
+                app.Run();
+                app.CreateNewProject();
 
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
@@ -128,11 +124,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void AdditionalOwnerCheckTest_Wave()
         {
-            using (var app = DeltaShellCoreFactory.CreateApplication())
+            var appPlugin = new WaveApplicationPlugin();
+            using (IApplication app = CreateAndStartApplication(appPlugin))
             {
-                var appPlugin = new WaveApplicationPlugin();
-                SetUpApplication(app, appPlugin);
-
                 ModelInfo modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
@@ -378,11 +372,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
         }
 
-        private static void SetUpApplication(IApplication app, ApplicationPlugin appPlugin)
+        private IApplication CreateAndStartApplication(IPlugin applicationPlugin)
         {
+            var pluginsToAdd = new List<IPlugin> { applicationPlugin };
+            IApplication app = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
+            
             app.Run();
             app.CreateNewProject();
-            appPlugin.Application = app;
+            
+            return app;
         }
 
         [TestCase("Unique", "Unique (1)")]
@@ -488,13 +486,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IApplication CreateApplication()
         {
-            var plugin = new HydroModelApplicationPlugin();
-            var application = DeltaShellCoreFactory.CreateApplication();
-            plugin.Application = application;
+            var pluginsToAdd = new List<IPlugin> { new HydroModelApplicationPlugin() };
+            IApplication application = new DeltaShellApplicationBuilder().WithPlugins(pluginsToAdd).Build();
 
             application.Run();
-
             application.CreateNewProject();
+            
             return application;
         }
     }

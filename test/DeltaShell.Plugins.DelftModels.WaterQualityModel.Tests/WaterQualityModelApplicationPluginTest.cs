@@ -12,7 +12,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.TestUtils;
@@ -451,7 +450,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         private static WaterQualityModelApplicationPlugin SetupWaterQualityApplicationPlugin(
             string workingDirectoryPath)
         {
-            var app = DeltaShellCoreFactory.CreateApplication();
+            var app = new DeltaShellApplicationBuilder().Build();
             app.UserSettings =  ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             
             return new WaterQualityModelApplicationPlugin

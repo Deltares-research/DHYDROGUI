@@ -15,6 +15,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
+using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
@@ -103,6 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var guiPlugin = new WaveGuiPlugin();
             var pluginsToAdd = new List<IPlugin>()
             {
+                new SharpMapGisApplicationPlugin(),
                 new SharpMapGisGuiPlugin(),
                 guiPlugin
             };

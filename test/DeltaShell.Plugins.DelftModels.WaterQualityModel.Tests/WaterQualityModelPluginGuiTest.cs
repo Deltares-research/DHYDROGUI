@@ -17,6 +17,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProc
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -162,6 +163,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var pluginsToAdd = new List<IPlugin>
             {
                 new WaterQualityModelApplicationPlugin(),
+                new SharpMapGisApplicationPlugin(),
                 new SharpMapGisGuiPlugin(),
                 waterQualityModel1DGuiPlugin
             };
