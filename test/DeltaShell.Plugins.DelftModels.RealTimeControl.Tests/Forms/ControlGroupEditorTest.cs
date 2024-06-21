@@ -19,6 +19,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.Builders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
@@ -464,7 +465,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void LayoutOfShapesIsRestoredOnViewOpen()
         {
-            using (var gui = DeltaShellCoreFactory.CreateGui())
+            using (var gui = new DeltaShellGuiBuilder().Build())
             {
                 gui.Run();
 
