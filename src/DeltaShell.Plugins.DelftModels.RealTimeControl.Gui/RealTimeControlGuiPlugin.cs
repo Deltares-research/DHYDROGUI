@@ -173,14 +173,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         
         public override void Activate()
         {
-            IsActive = true;
             gui.Application.ProjectClosing += Application_ProjectClosing;
+            base.Activate();
         }
 
         public override void Deactivate()
         {
+            if (!IsActive)
+            {
+                return;
+            }
+
             gui.Application.ProjectClosing -= Application_ProjectClosing;
-            IsActive = false;
+            base.Deactivate();
         }
 
         public override IMenuItem GetContextMenu(object sender, object data)

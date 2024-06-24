@@ -47,6 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private const string SeparatorToolStripMenuKey = "Separator";
         private ContextMenuStrip hydroRegionContextMenu;
         private IGui gui;
+        private bool disposed;
 
         public NetworkEditorGuiPlugin()
         {
@@ -169,22 +170,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override void Deactivate()
         {
-            base.Deactivate();
+            if (!IsActive)
+            {
+                return;
+            }
 
             if (Gui != null)
             {
                 Gui.SelectionChanged -= GuiSelectionChanged;
             }
+
+            base.Deactivate();
         }
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
+            if (disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {
                 Instance = null;
             }
+
+            base.Dispose(disposing);
+            disposed = true;
         }
 
         public override IMenuItem GetContextMenu(object sender, object data)
