@@ -93,6 +93,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private IGui gui;
         private IGraphicsProvider graphicsProvider;
         private readonly PropertyInfoCreator propertyInfoCreator;
+        private bool disposed;
 
         public NetworkEditorGuiPlugin()
         {
@@ -569,7 +570,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override void Deactivate()
         {
-            base.Deactivate();
+            if (!IsActive)
+            {
+                return;
+            }
 
             if (hydroRegionTreeView != null)
             {
@@ -577,24 +581,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 hydroRegionTreeView.TreeView.SelectedNodeChanged -= TreeViewSelectedNodeChanged;
                 hydroRegionTreeView.Dispose();
             }
+            
+            base.Deactivate();
         }
 
         protected override void Dispose(bool disposing)
         {
-            
-            if (disposing && hydroRegionTreeView != null)
+            if (disposed)
             {
-                ((IView)hydroRegionTreeView).Data = null;
-                hydroRegionTreeView.Dispose();
-                hydroRegionTreeView = null;
+                return;
             }
-
-            base.Dispose(disposing);
 
             if (disposing)
             {
+                if (hydroRegionTreeView != null)
+                {
+                    ((IView)hydroRegionTreeView).Data = null;
+                    hydroRegionTreeView.Dispose();
+                    hydroRegionTreeView = null;
+                }
+
                 Instance = null;
             }
+
+            base.Dispose(disposing);
+            disposed = true;
         }
 
         public override IMenuItem GetContextMenu(object sender, object data)

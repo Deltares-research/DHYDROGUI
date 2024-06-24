@@ -16,6 +16,8 @@ namespace DeltaShell.Dimr.Gui
     [Extension(typeof(IPlugin))]
     public class DimrGuiPlugin : GuiPlugin
     {
+        private bool disposed;
+
         public DimrGuiPlugin()
         {
             Instance = this;
@@ -86,12 +88,18 @@ namespace DeltaShell.Dimr.Gui
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
+            if (disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {
                 Instance = null;
             }
+
+            base.Dispose(disposing);
+            disposed = true;
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
