@@ -16,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
+using DHYDRO.Common.Extensions;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
@@ -145,7 +146,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
             {
                 var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
-                return parameterValueConverter?.ParameterName == parameterName;
+                return parameterValueConverter != null &&
+                       parameterValueConverter.ParameterName.EqualsCaseInsensitive(parameterName);
             });
 
             if (dataItem == null)

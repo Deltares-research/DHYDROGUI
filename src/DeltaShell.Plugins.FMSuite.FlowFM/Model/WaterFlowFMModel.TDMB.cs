@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <inheritdoc />
         public override DateTime StartTime
         {
-            get => (DateTime) ModelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
+            get => (DateTime)ModelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value;
             set
             {
                 ModelDefinition.GetModelProperty(KnownProperties.StartDateTime).Value = value;
@@ -33,16 +34,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <inheritdoc />
         public override IEnumerable<IDataItem> AllDataItems
         {
-            get
-            {
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(SpatialData.DataItems);
-            }
+            get { return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(SpatialData.DataItems); }
         }
 
         /// <inheritdoc />
         public override DateTime StopTime
         {
-            get => (DateTime) ModelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
+            get => (DateTime)ModelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value;
             set
             {
                 ModelDefinition.GetModelProperty(KnownProperties.StopDateTime).Value = value;
@@ -54,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <inheritdoc />
         public override TimeSpan TimeStep
         {
-            get => (TimeSpan) ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value;
+            get => (TimeSpan)ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value;
             set
             {
                 ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value = value;
@@ -62,28 +60,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 base.TimeStep = value;
             }
         }
-        
+
         /// <summary>
-        /// Gets the input data item feature collections.
+        /// Gets the input and output data item feature collections.
         /// </summary>
-        private IEnumerable<IEnumerable<IFeature>> InputFeatureCollections
+        private IEnumerable<IEnumerable<IFeature>> FeatureCollections
         {
             get
             {
                 yield return Area.Pumps;
                 yield return Area.Structures;
+                yield return SourcesAndSinks.Select(ss => ss.Feature).ToList();
             }
         }
 
         /// <summary>
-        /// Gets the output data item feature collections.
+        /// Gets the output-only data item feature collections.
         /// </summary>
         private IEnumerable<IEnumerable<IFeature>> OutputFeatureCollections
         {
             get
             {
-                yield return Area.Pumps;
-                yield return Area.Structures;
                 yield return Area.ObservationPoints;
                 yield return Area.ObservationCrossSections;
             }
@@ -192,20 +189,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <inheritdoc />
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
         {
-            if (role.HasFlag(DataItemRole.Input))
+            if (role.HasFlag(DataItemRole.Input) || role.HasFlag(DataItemRole.Output))
             {
-                return InputFeatureCollections.SelectMany(x => x);
+                foreach (IFeature feature in GetFeatures())
+                {
+                    yield return feature;
+                }
             }
 
             if (role.HasFlag(DataItemRole.Output))
             {
-                return OutputFeatureCollections.SelectMany(x => x);
+                foreach (IFeature outputFeature in GetOutputSpecificFeatures())
+                {
+                    yield return outputFeature;
+                }
             }
-
-            return Enumerable.Empty<IFeature>();
         }
 
-        /// <inheritdoc />
+        private IEnumerable<IFeature> GetFeatures()
+        {
+            return FeatureCollections.OfType<IEnumerable>()
+                                     .SelectMany(l => l.OfType<IFeature>());
+        }
+
+        private IEnumerable<IFeature> GetOutputSpecificFeatures()
+        {
+            return OutputFeatureCollections.OfType<IEnumerable>()
+                                           .SelectMany(l => l.OfType<IFeature>());
+        }
+
+    /// <inheritdoc />
         public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
         {
             if (location == null)

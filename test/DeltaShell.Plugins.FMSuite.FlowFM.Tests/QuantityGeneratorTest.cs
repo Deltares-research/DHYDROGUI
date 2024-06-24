@@ -1,128 +1,113 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
-using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
+using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
     public class QuantityGeneratorTest
     {
-        private readonly MockRepository mocks = new MockRepository();
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void GivenPump_WhenGettingQuantitiesForPump_ThenExpectedQuantitiesAreReturned(bool useSalinity)
+        [Test]
+        [TestCaseSource(nameof(GetArgumentNullCases))]
+        public void ArgumentsNull_ThrowsArgumentNullException(
+            IFeature feature, IEnumerable<string> tracerDefinitions, IEnumerable<SourceAndSink> sourceAndSinks)
         {
-            // Given
-            var pump = mocks.Stub<IPump>();
+            void Call() => _ = QuantityGenerator.GetQuantitiesForFeature(feature, true, true, tracerDefinitions, sourceAndSinks)
+                                                .ToArray();
 
-            // When
-            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(pump, useSalinity).ToArray();
-
-            // Then
-            Assert.That(quantities.Length, Is.EqualTo(1));
-            Assert.That(quantities.Contains(KnownStructureProperties.Capacity));
+            Assert.That(Call, Throws.ArgumentNullException);
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void GivenSimpleWeir_WhenGettingQuantitiesForSimpleWeir_ThenExpectedQuantitiesAreReturned(bool useSalinity)
+        private static IEnumerable<TestCaseData> GetArgumentNullCases()
         {
-            // Given
-            IStructure weir = GetWeirStubWithWeirFormulaType<SimpleWeirFormula>();
+            var feature = Substitute.For<IFeature>();
+            IEnumerable<string> emptyTracers = Enumerable.Empty<string>();
+            IEnumerable<SourceAndSink> emptySourcesAndSinks = Enumerable.Empty<SourceAndSink>();
 
-            // When
-            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(weir, useSalinity).ToArray();
-
-            // Then
-            Assert.That(quantities.Length, Is.EqualTo(1));
-            Assert.That(quantities.Contains(KnownStructureProperties.CrestLevel));
+            yield return new TestCaseData(null, emptyTracers, emptySourcesAndSinks);
+            yield return new TestCaseData(feature, null, emptySourcesAndSinks);
+            yield return new TestCaseData(feature, emptyTracers, null);
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void GivenGeneralStructure_WhenGettingQuantitiesForGeneralStructure_ThenExpectedQuantitiesAreReturned(bool useSalinity)
+        [Test]
+        [TestCaseSource(nameof(GetTestCases))]
+        public void ReturnExpectedQuantitiesForGivenFeature(IFeature feature, IEnumerable<string> expectedQuantities)
         {
-            // Given
-            IStructure generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureFormula>();
+            IEnumerable<string> quantities = QuantityGenerator.GetQuantitiesForFeature(
+                feature, true, true, Enumerable.Empty<string>(), Enumerable.Empty<SourceAndSink>());
 
-            // When
-            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(generalStructure, useSalinity).ToArray();
-
-            // Then
-            Assert.That(quantities.Length, Is.EqualTo(3));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.CrestLevel.GetDescription()));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription()));
-            Assert.That(quantities.Contains(KnownGeneralStructureProperties.GateOpeningWidth.GetDescription()));
+            Assert.That(quantities, Is.EqualTo(expectedQuantities));
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void GivenGate_WhenGettingQuantitiesForGate_ThenExpectedQuantitiesAreReturned(bool useSalinity)
+        private static IEnumerable<TestCaseData> GetTestCases()
         {
-            // Given
-            IStructure gate = GetWeirStubWithWeirFormulaType<SimpleGateFormula>();
+            yield return new TestCaseData(new Pump(), new[] { "Capacity" });
 
-            // When
-            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(gate, useSalinity).ToArray();
+            var simpleWeir2D = new Structure { Formula = new SimpleWeirFormula() };
+            yield return new TestCaseData(simpleWeir2D, new[] { "CrestLevel" });
 
-            // Then
-            Assert.That(quantities.Length, Is.EqualTo(3));
-            Assert.That(quantities.Contains(KnownStructureProperties.CrestLevel));
-            Assert.That(quantities.Contains(KnownStructureProperties.GateLowerEdgeLevel));
-            Assert.That(quantities.Contains(KnownStructureProperties.GateOpeningWidth));
+            var gate = new Structure { Formula = new SimpleGateFormula() };
+            yield return new TestCaseData(gate, new[] { "CrestLevel", "GateHeight", "GateLowerEdgeLevel", "GateOpeningWidth" });
+
+            var generalStructure2D = new Structure { Formula = new GeneralStructureFormula() };
+            yield return new TestCaseData(generalStructure2D, new[] { "CrestLevel", "GateHeight", "GateLowerEdgeLevel", "GateOpeningWidth" });
+
+            yield return new TestCaseData(new ObservationCrossSection2D(), new[] { "discharge", "velocity", "water_level", "water_depth" });
         }
 
-        [TestCase(false, "water_level", "water_depth")]
-        [TestCase(true, "water_level", "water_depth", "salinity")]
-        public void GivenGroupableFeature2DPoint_WhenGettingQuantitiesForGroupableFeature2DPoint_ThenExpectedQuantitiesAreReturned
-            (bool useSalinity, params string[] expectedQuantities)
+        [Test]
+        [TestCaseSource(nameof(GetObservationPoint2DCases))]
+        public void ReturnExpectedQuantitiesForObservationPoint2D(
+            GroupableFeature2DPoint observationPoint,
+            bool useSalinity,
+            bool useTemperature,
+            IEnumerable<string> tracerDefinitions,
+            IEnumerable<string> expectedQuantities
+        )
         {
-            // Given
-            var groupableFeature2DPoint = new GroupableFeature2DPoint();
+            IEnumerable<string> quantities = QuantityGenerator.GetQuantitiesForFeature(
+                observationPoint, useSalinity, useTemperature, tracerDefinitions, Enumerable.Empty<SourceAndSink>());
 
-            // When
-            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(groupableFeature2DPoint, useSalinity).ToArray();
-
-            // Then
-            Assert.That(quantities.Length, Is.EqualTo(expectedQuantities.Length));
-            foreach (string quantity in expectedQuantities)
-            {
-                Assert.That(quantities.Contains(quantity));
-            }
+            Assert.That(quantities, Is.EqualTo(expectedQuantities));
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void GivenObservationCrossSection2D_WhenGettingQuantitiesForObservationCrossSection2D_ThenExpectedQuantitiesAreReturned(bool useSalinity)
+        private static IEnumerable<TestCaseData> GetObservationPoint2DCases()
         {
-            // Given
-            var observationCrossSection2D = new ObservationCrossSection2D();
+            var observationPoint = new GroupableFeature2DPoint();
+            var tracers = new[] { "tracer1", "tracer2" };
+            IEnumerable<string> noTracers = Enumerable.Empty<string>();
 
-            // When
-            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(observationCrossSection2D, useSalinity).ToArray();
-
-            // Then
-            Assert.That(quantities.Length, Is.EqualTo(4));
-            Assert.That(quantities.Contains("water_level"));
-            Assert.That(quantities.Contains("water_depth"));
-            Assert.That(quantities.Contains("discharge"));
-            Assert.That(quantities.Contains("velocity"));
+            yield return new TestCaseData(observationPoint, false, false, noTracers, new[] { "water_level", "water_depth" });
+            yield return new TestCaseData(observationPoint, true, false, noTracers, new[] { "water_level", "salinity", "water_depth" });
+            yield return new TestCaseData(observationPoint, false, true, noTracers, new[] { "water_level", "temperature", "water_depth" });
+            yield return new TestCaseData(observationPoint, false, false, tracers, new[] { "water_level", "water_depth", "tracer1", "tracer2" });
+            yield return new TestCaseData(observationPoint, true, true, tracers, new[] { "water_level", "salinity", "temperature", "water_depth", "tracer1", "tracer2" });
         }
 
-        private IStructure GetWeirStubWithWeirFormulaType<TWeirFormulaType>()
-            where TWeirFormulaType : IStructureFormula, new()
+        [Test]
+        public void ReturnExpectedQuantitiesForSourceAndSinksFeatures()
         {
-            var weir = mocks.Stub<IStructure>();
-            weir.Formula = new TWeirFormulaType();
-            return weir;
+            // Setup
+            var feature = new Feature2D();
+            var sourceAndSink = new SourceAndSink() { Feature = feature };
+            SourceAndSink[] sourceAndSinks = { sourceAndSink };
+
+            // Call
+            IEnumerable<string> quantities = QuantityGenerator.GetQuantitiesForFeature(
+                feature, false, false, Enumerable.Empty<string>(), sourceAndSinks);
+
+            // Assert
+            var expectedQuantities = new[] { "discharge", "change_in_salinity", "change_in_temperature" };
+            Assert.That(quantities, Is.EqualTo(expectedQuantities));
         }
     }
 }

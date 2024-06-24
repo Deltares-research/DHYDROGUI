@@ -59,6 +59,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 SyncFractionsAndTracers(sourceAndSink);
             }
+
+            var feature = (IFeature)sourceAndSink.Feature;
+            if (feature != null && HasValidDataItemRole(feature))
+            {
+                HandleFeatureCollectionChanged(e, feature);
+            }
+        }
+
+        private void HandleFeatureCollectionChanged(NotifyCollectionChangedEventArgs e, IFeature feature)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    AddDataItem(feature);
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    RemoveDataItem(feature);
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    foreach (var areaAsDataItem in areaDataItems)
+                    {
+                        RemoveDataItem(areaAsDataItem.Key);
+                    }
+                    areaDataItems.Clear();
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
+                    RemoveDataItem(oldFeature);
+                    AddDataItem(feature);
+                    break;
+                default:
+                    throw new NotImplementedException(
+                        String.Format("Action {0} on feature collection not supported", e.Action));
+            }
         }
 
         private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -677,32 +711,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 groupableFeature.UpdateGroupName(this);
             }
 
-            if (removedOrAddedItem is IFeature feature && GetDataItemRole(feature) != DataItemRole.None)
+            if (removedOrAddedItem is IFeature feature && HasValidDataItemRole(feature))
             {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        AddDataItem(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        RemoveDataItem(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        foreach (KeyValuePair<IFeature, List<IDataItem>> item in areaDataItems)
-                        {
-                            RemoveDataItem(item.Key);
-                        }
-                        areaDataItems.Clear();
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        var oldFeature = (IFeature)e.OldItems[0];
-                        RemoveDataItem(oldFeature);
-                        AddDataItem(feature);
-                        break;
-                    default:
-                        throw new NotImplementedException($"Action {e.Action} on feature collection not supported");
-                }
+                HandleFeatureCollectionChanged(e, feature);
             }
+        }
+        
+        private bool HasValidDataItemRole(IFeature feature)
+        {
+            return GetDataItemRole(feature) != DataItemRole.None;
         }
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -790,7 +807,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private List<IDataItem> GetDataItemListForFeature(IFeature feature)
         {
-            IEnumerable<string> quantities = QuantityGenerator.GetQuantitiesForFeature(feature, UseSalinity);
+            IEnumerable<string> quantities = QuantityGenerator.GetQuantitiesForFeature(
+                feature, UseSalinity, UseTemperature, TracerDefinitions, SourcesAndSinks);
             return quantities.Select(quantity => new DataItem(feature)
             {
                 Name = feature.ToString(),
@@ -801,19 +819,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }).OfType<IDataItem>().ToList();
         }
 
-        private static DataItemRole GetDataItemRole(IFeature feature)
+        private DataItemRole GetDataItemRole(IFeature feature)
         {
-            if (feature is IPump || feature is IStructure)
+            if (IsInputAndOutputFeature(feature))
             {
                 return DataItemRole.Input | DataItemRole.Output;
             }
 
-            if (feature is ObservationCrossSection2D || feature is GroupableFeature2DPoint)
+            if (IsOutputFeature(feature))
             {
                 return DataItemRole.Output;
             }
 
             return DataItemRole.None;
+        }
+
+        private bool IsInputAndOutputFeature(IFeature feature)
+        {
+            return feature is IPump || feature is IStructure || IsSourcesAndSinksFeature(feature);
+        }
+
+        private static bool IsOutputFeature(IFeature feature)
+        {
+            return feature is ObservationCrossSection2D || feature is GroupableFeature2DPoint;
+        }
+        
+        private bool IsSourcesAndSinksFeature(IFeature feature)
+        {
+            return SourcesAndSinks?.Any(ss => ss.Feature.Equals(feature)) ?? false;
         }
 
         #endregion

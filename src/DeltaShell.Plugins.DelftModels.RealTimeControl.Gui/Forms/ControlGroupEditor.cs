@@ -425,7 +425,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 Features = Model.GetChildDataItemLocationsFromControlledModels(role).ToList(),
                 GetDataItemsForFeature = location =>
                     Model.GetChildDataItemsFromControlledModelsForLocation(location)
-                         .Where(di => (di.Role & role) == role)
+                         .Where(di => di.Role.HasFlag(role))
                          .ToList()
             };
 

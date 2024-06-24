@@ -83,6 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ValidateBeforeRun = true;
             DisableFlowNodeRenumbering = false;
             TracerDefinitions = new EventedList<string>();
+            SourcesAndSinks = new EventedList<SourceAndSink>();
             SedimentFractions = new EventedList<ISedimentFraction>();
 
             BridgePillarsDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();

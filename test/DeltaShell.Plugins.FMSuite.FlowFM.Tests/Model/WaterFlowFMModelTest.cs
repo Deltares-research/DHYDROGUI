@@ -69,6 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             Assert.AreEqual(0, model.SnapVersion);
             Assert.IsTrue(model.ValidateBeforeRun);
+            Assert.That(model.SourcesAndSinks, Is.Not.Null);
         }
 
         [Test]
@@ -213,13 +214,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // change weir formula
             weir.Formula = new GeneralStructureFormula();
             dataItems = model.GetChildDataItems(weir).ToList();
-            Assert.AreEqual(3, dataItems.Count);
+            Assert.AreEqual(4, dataItems.Count);
 
             var generalStructureDataItems = new List<string>
             {
                 KnownGeneralStructureProperties.CrestLevel.GetDescription(),
+                KnownGeneralStructureProperties.GateHeight.GetDescription(),
                 KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
-                KnownGeneralStructureProperties.GateOpeningWidth.GetDescription()
+                KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
             };
 
             for (var i = 0; i < dataItems.Count; ++i)
@@ -1363,14 +1365,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Then         
             Assert.AreEqual(null, resultedPath);
         }
-        
-        [Test]
-        [TestCaseSource(nameof(CreateRetrieveChildDataItemLocationTestCases))]
-        public IEnumerable<IFeature> GivenAModel_WhenRetrievingChildDataItemLocations_ReturnsItemsWithSpecifiedRole(
-            WaterFlowFMModel model, DataItemRole role)
-        {
-            return model.GetChildDataItemLocations(role);
-        }
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
@@ -1436,23 +1430,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             return model;
         }
 
+        [Test]
+        [TestCaseSource(nameof(CreateRetrieveChildDataItemLocationTestCases))]
+        public IEnumerable<IFeature> GivenAModel_WhenRetrievingChildDataItemLocations_ReturnsItemsWithSpecifiedRole(
+            WaterFlowFMModel model, DataItemRole role)
+        {
+            return model.GetChildDataItemLocations(role);
+        }
+
         private static IEnumerable<TestCaseData> CreateRetrieveChildDataItemLocationTestCases()
         {
             var model = new WaterFlowFMModel();
 
             var pump = new Pump();
             var weir = new Structure();
+            var gate = new Structure { Formula = new SimpleGateFormula() };
+            var generalStructure = new Structure { Formula = new GeneralStructureFormula() };
+            var sourceAndSinkFeature = new Feature2D();
+            var sourceAndSink = new SourceAndSink() { Feature = sourceAndSinkFeature };
             var observationPoint = new GroupableFeature2DPoint();
             var observationCrossSection = new ObservationCrossSection2D();
 
             model.Area.Pumps.Add(pump);
             model.Area.Structures.Add(weir);
+            model.Area.Structures.Add(gate);
+            model.Area.Structures.Add(generalStructure);
+            model.SourcesAndSinks.Add(sourceAndSink);
             model.Area.ObservationPoints.Add(observationPoint);
             model.Area.ObservationCrossSections.Add(observationCrossSection);
 
             var empty = new IFeature[] {};
-            var inputs = new IFeature[] { pump, weir };
-            var outputs = new IFeature[] { pump, weir, observationPoint, observationCrossSection };
+            var inputs = new IFeature[] { pump, weir, gate, generalStructure, sourceAndSinkFeature };
+            var outputs = new IFeature[] { pump, weir, gate, generalStructure, sourceAndSinkFeature, observationPoint, observationCrossSection };
 
             yield return GenerateTestCaseData(DataItemRole.None, empty);
             yield return GenerateTestCaseData(DataItemRole.Input, inputs);
@@ -1479,7 +1488,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, pump)));
             Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Input) && x.Role.HasFlag(DataItemRole.Output)));
-            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "capacity" }));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "Capacity" }));
         }
         
         [Test]
@@ -1509,7 +1518,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, weir)));
             Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Input) && x.Role.HasFlag(DataItemRole.Output)));
-            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "CrestLevel", "GateLowerEdgeLevel", "GateOpeningWidth" }));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "CrestLevel", "GateHeight", "GateLowerEdgeLevel", "GateOpeningWidth" }));
         }
         
         [Test]
@@ -1524,7 +1533,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, weir)));
             Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Input) && x.Role.HasFlag(DataItemRole.Output)));
-            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "CrestLevel", "GateLowerEdgeLevel", "GateOpeningWidth" }));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "CrestLevel", "GateHeight", "GateLowerEdgeLevel", "GateOpeningWidth" }));
         }
         
         [Test]
