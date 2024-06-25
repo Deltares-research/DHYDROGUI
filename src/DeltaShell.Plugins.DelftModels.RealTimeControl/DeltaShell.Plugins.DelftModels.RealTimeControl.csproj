@@ -2,6 +2,7 @@
   <Import Project="$(TargetsPath)DeltaShell.Plugins.targets" />
 
   <ItemGroup>
+    <PackageReference Include="Deltares.NET.Infrastructure.API" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile;build" PrivateAssets="all" />
     <PackageReference Include="DHYDRO.Common">
       <IncludeAssets>compile</IncludeAssets>

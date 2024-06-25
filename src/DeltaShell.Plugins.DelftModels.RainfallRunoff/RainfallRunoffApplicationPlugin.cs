@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.Dimr.Export;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
@@ -15,13 +16,14 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Files.Evaporation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.FileWriters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.NHibernate;
 using log4net;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
     [Extension(typeof(IPlugin))]
-    public class RainfallRunoffApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class RainfallRunoffApplicationPlugin : ApplicationPlugin
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RainfallRunoffApplicationPlugin));
 
@@ -213,11 +215,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             yield return GetType().Assembly;
         }
 
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new RainfallRunoffDataAccessListener(new BasinGeometryShapeFileSerializer(), null);
-        }
-        
         private static IEnumerable<RainfallRunoffModel> GetModels(Project project)
         {
             if (project != null)
@@ -225,6 +222,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 return project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
             }
             return Enumerable.Empty<RainfallRunoffModel>();
+        }
+
+        /// <inheritdoc/>
+        public override void AddRegistrations(IDependencyInjectionContainer container)
+        {
+            container.Register<IDataAccessListenersProvider, RainfallRunoffDataAccessListenersProvider>(LifeCycle.Transient);
         }
     }
 }

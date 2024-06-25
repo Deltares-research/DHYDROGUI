@@ -18,8 +18,8 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
@@ -50,12 +50,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            // register data types to be serialized
-            factory = new NHibernateProjectRepositoryFactory();
-            factory.AddPlugin(new NetCdfApplicationPlugin());
-            factory.AddPlugin(new SharpMapGisApplicationPlugin());
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
-            factory.AddPlugin(new CommonToolsApplicationPlugin());
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin(),
+            };
+            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
         }
 
         [OneTimeTearDown]

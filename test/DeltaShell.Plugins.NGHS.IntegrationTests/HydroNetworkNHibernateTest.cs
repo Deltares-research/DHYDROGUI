@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -8,7 +9,8 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.NHibernate;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -20,13 +22,18 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
     [TestFixture]
     [Category(TestCategory.DataAccess)]
     [Category(TestCategory.Slow)]
-    class HydroNetworkNHibernateTest : NHibernateIntegrationTestBase
+    class HydroNetworkNHibernateTest
     {
+        private NHibernateProjectRepositoryFactory factory;
+        
         [OneTimeSetUp]
-        public override void OneTimeSetUp()
+        public void OneTimeSetUp()
         {
-            base.OneTimeSetUp();
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin()
+            };
+            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
         }
 
         [Test]

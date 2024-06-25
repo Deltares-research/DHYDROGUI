@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
-using DeltaShell.Plugins.CommonTools;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
@@ -28,11 +28,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [OneTimeSetUp]
         public override void OneTimeSetUp()
         {
-            base.OneTimeSetUp();
-            factory.AddPlugin(new RealTimeControlGuiPlugin());
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
-            factory.AddPlugin(new RealTimeControlApplicationPlugin());
-            factory.AddPlugin(new CommonToolsApplicationPlugin());
+            var additionalPlugins = new List<IPlugin>
+            {
+                new RealTimeControlGuiPlugin(),
+                new NetworkEditorApplicationPlugin(),
+                new RealTimeControlApplicationPlugin()
+            };
+            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
         }
 
         [Test]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -8,14 +9,12 @@ using DelftTools.Shell.Core.Settings;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Core.Services;
-using DeltaShell.Plugins.CommonTools;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
-using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -35,13 +34,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            factory = new NHibernateProjectRepositoryFactory();
-            factory.AddPlugin(new RainfallRunoffApplicationPlugin());
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
-            factory.AddPlugin(new SharpMapGisApplicationPlugin());
-            factory.AddPlugin(new CommonToolsApplicationPlugin());
-            factory.AddPlugin(new NetCdfApplicationPlugin());
-
+            var additionalPlugins = new List<IPlugin>
+            {
+                new RainfallRunoffApplicationPlugin(),
+                new NetworkEditorApplicationPlugin(),
+            };
+            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
             settingsManager = Substitute.For<ISettingsManager>();
         }
 
@@ -109,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             model.StartTime = new DateTime(2011, 2, 2);
             model.Basin = new DrainageBasin {Name = ""};
 
-            _hybridProjectRepository = new HybridProjectRepository(factory.CreateNew(), settingsManager, Substitute.For<IProjectFileBasedItemRepository>(), Substitute.For<IPluginsManager>());
+            _hybridProjectRepository = new HybridProjectRepository(factory, settingsManager, Substitute.For<IProjectFileBasedItemRepository>(), Substitute.For<IPluginsManager>());
             project = new Project();
 
             var dataItem = new DataItem(model);

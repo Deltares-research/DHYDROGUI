@@ -2,25 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.NHibernate;
 using NSubstitute;
 using NUnit.Framework;
+using LifeCycle = Deltares.Infrastructure.API.DependencyInjection.LifeCycle;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 {
     [TestFixture]
     public class RainfallRunoffApplicationPluginTest
     {
+        private RainfallRunoffApplicationPlugin plugin;
+
+        [SetUp]
+        public void SetUp()
+        {
+            plugin = new RainfallRunoffApplicationPlugin();
+        }
+        
         [Test]
         public void GivenRainfallRunoffApplicationPlugin_RainfallRunoffModelInitialize_ShouldLogPluginVersion()
         {
             //Arrange
-            var plugin = new RainfallRunoffApplicationPlugin();
             var app = Substitute.For<IApplication>();
             var activityRunner = Substitute.For<IActivityRunner>();
 
@@ -42,9 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         public void GetFileExporters_ContainsExpectedExporters()
         {
-            // Setup
-            var plugin = new RainfallRunoffApplicationPlugin();
-
             // Call
             IEnumerable<IFileExporter> exporters = plugin.GetFileExporters();
 
@@ -56,9 +64,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         public void GetFileImporters_ContainsExpectedImporters()
         {
-            // Setup
-            var plugin = new RainfallRunoffApplicationPlugin();
-
             // Call
             IEnumerable<IFileImporter> exporters = plugin.GetFileImporters();
 
@@ -72,7 +77,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         public void OnProjectCollectionChangingEventIsRaised_FileExportersIsSetOnDimrRunner()
         {
             // Setup
-            var plugin = new RainfallRunoffApplicationPlugin();
             var model = new RainfallRunoffModel();
             var project = new Project();
 
@@ -95,7 +99,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         public void OnProjectOpenedEventIsRaised_FileExportersIsSetOnDimrRunner()
         {
             // Setup
-            var plugin = new RainfallRunoffApplicationPlugin();
             var model = new RainfallRunoffModel();
 
             Project project = GetProject(model);
@@ -111,6 +114,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             IFileExportService fileExportService = model.DimrRunner.FileExportService;
             Assert.That(fileExportService.FileExporters, Has.One.InstanceOf<MeteoDataExporter>().And
                                                             .One.InstanceOf<RainfallRunoffModelExporter>());
+        }
+
+        [Test]
+        public void AddRegistrations_RegistersServicesCorrectly()
+        {
+            var container = Substitute.For<IDependencyInjectionContainer>();
+
+            plugin.AddRegistrations(container);
+
+            container.Received(1).Register<IDataAccessListenersProvider, RainfallRunoffDataAccessListenersProvider>(LifeCycle.Transient);
         }
 
         private static IApplication GetApplication(Project project)

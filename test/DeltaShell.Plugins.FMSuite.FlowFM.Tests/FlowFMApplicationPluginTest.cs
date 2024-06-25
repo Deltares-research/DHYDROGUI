@@ -4,17 +4,21 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.NHibernate;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NSubstitute;
 using NUnit.Framework;
+using LifeCycle = Deltares.Infrastructure.API.DependencyInjection.LifeCycle;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -241,6 +245,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Assert
             IFileExportService fileExportService = model.DimrRunner.FileExportService;
             AssertContainsExpectedFileExporters(fileExportService.FileExporters.ToArray());
+        }
+
+        [Test]
+        public void AddRegistrations_RegistersServicesCorrectly()
+        {
+            var container = Substitute.For<IDependencyInjectionContainer>();
+
+            applicationPlugin.AddRegistrations(container);
+
+            container.Received(1).Register<IDataAccessListenersProvider, FlowFMDataAccessListenersProvider>(LifeCycle.Transient);
         }
 
         private static IApplication GetApplication(Project project)

@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -20,6 +21,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.NHibernate;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -33,7 +35,7 @@ using NetTopologySuite.Geometries;
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     [Extension(typeof(IPlugin))]
-    public class FlowFMApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class FlowFMApplicationPlugin : ApplicationPlugin
     {
         public const string FlowFlexibleMeshModelModelInfoName = "Flow Flexible Mesh Model";
         public const string FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID = "FMModel";
@@ -635,11 +637,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return false;
         }
-
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new WaterFlowFMDataAccessListener(null);
-        }
         
         private void Application_ProjectOpened(Project project)
         {
@@ -663,6 +660,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 model.DimrRunner.FileExportService = Application.FileExportService;
             }
+        }
+        
+        /// <inheritdoc/>
+        public override void AddRegistrations(IDependencyInjectionContainer container)
+        {
+            container.Register<IDataAccessListenersProvider, FlowFMDataAccessListenersProvider>(LifeCycle.Transient);
         }
     }
 }

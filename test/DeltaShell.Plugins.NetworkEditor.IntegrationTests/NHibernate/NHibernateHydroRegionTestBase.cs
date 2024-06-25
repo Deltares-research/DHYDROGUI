@@ -2,8 +2,9 @@
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.SharpMapGis.Gui;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -16,9 +17,13 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [OneTimeSetUp]
         public override void OneTimeSetUp()
         {
-            base.OneTimeSetUp();
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
-            factory.AddPlugin(new NetworkEditorGuiPlugin());
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin(),
+                new NetworkEditorGuiPlugin(),
+                new SharpMapGisGuiPlugin()
+            };
+            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
         }
 
         /// <summary>

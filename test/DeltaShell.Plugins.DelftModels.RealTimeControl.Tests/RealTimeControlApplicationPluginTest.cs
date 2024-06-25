@@ -2,23 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.NHibernate;
 using NSubstitute;
 using NUnit.Framework;
+using LifeCycle = Deltares.Infrastructure.API.DependencyInjection.LifeCycle;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 {
     [TestFixture]
     public class RealTimeControlApplicationPluginTest
     {
+        private RealTimeControlApplicationPlugin plugin;
+
+        [SetUp]
+        public void SetUp()
+        {
+            plugin = new RealTimeControlApplicationPlugin();
+        }
+
         [Test]
         public void FileFormatVersion_ShouldReturnCurrentVersionNumber()
         {
-            var applicationPlugin = new RealTimeControlApplicationPlugin();
-            Assert.AreEqual("3.8.0.0", applicationPlugin.FileFormatVersion);
+            Assert.AreEqual("3.8.0.0", plugin.FileFormatVersion);
         }
 
         [Test]
@@ -26,9 +37,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [TestCase(typeof(RealTimeControlRestartFileExporter))]
         public void GetFileExporters_ContainsExpectedExporter(Type exporterType)
         {
-            // Setup
-            var plugin = new RealTimeControlApplicationPlugin();
-
             // Call
             IEnumerable<IFileExporter> exporters = plugin.GetFileExporters();
 
@@ -41,9 +49,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [TestCase(typeof(RealTimeControlRestartFileImporter))]
         public void GetFileImporters_ContainsExpectedExporter(Type exporterType)
         {
-            // Setup
-            var plugin = new RealTimeControlApplicationPlugin();
-
             // Call
             IEnumerable<IFileImporter> exporters = plugin.GetFileImporters();
 
@@ -55,7 +60,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void OnProjectCollectionChangingEventIsRaised_FileExportersIsSetOnDimrRunner()
         {
             // Setup
-            var plugin = new RealTimeControlApplicationPlugin();
             var model = new RealTimeControlModel();
             var project = new Project();
 
@@ -78,7 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void OnProjectOpenedEventIsRaised_FileExportersIsSetOnDimrRunner()
         {
             // Setup
-            var plugin = new RealTimeControlApplicationPlugin();
             var model = new RealTimeControlModel();
 
             Project project = GetProject(model);
@@ -94,6 +97,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             IFileExportService fileExportService = model.DimrRunner.FileExportService;
             Assert.That(fileExportService.FileExporters, Has.One.InstanceOf<RealTimeControlModelExporter>().And
                                                             .One.InstanceOf<RealTimeControlRestartFileExporter>());
+        }
+
+        [Test]
+        public void AddRegistrations_RegistersServicesCorrectly()
+        {
+            var container = Substitute.For<IDependencyInjectionContainer>();
+
+            plugin.AddRegistrations(container);
+
+            container.Received(1).Register<IDataAccessListenersProvider, RealTimeControlDataAccessListenersProvider>(LifeCycle.Transient);
         }
 
         private static IApplication GetApplication(Project project)

@@ -6,8 +6,8 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -28,12 +28,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [OneTimeSetUp]
         public override void OneTimeSetUp()
         {
-            base.OneTimeSetUp();
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
-            factory.AddPlugin(new HydroModelApplicationPlugin());
-            factory.AddPlugin(new RainfallRunoffApplicationPlugin());
-            factory.AddPlugin(new RealTimeControlApplicationPlugin());
-            factory.AddPlugin(new FlowFMApplicationPlugin());
+            var additionalPlugins = new List<IPlugin>
+            {
+                new NetworkEditorApplicationPlugin(),
+                new HydroModelApplicationPlugin(),
+                new RainfallRunoffApplicationPlugin(),
+                new RealTimeControlApplicationPlugin(),
+                new FlowFMApplicationPlugin()
+            };
+            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
         }
 
         [Test]

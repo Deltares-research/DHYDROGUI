@@ -2,7 +2,7 @@
 using BruTile.Wmts;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
 using NSubstitute;
 using NUnit.Framework;
