@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.IntegrationTestUtils;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
-using DeltaShell.Plugins.NetworkEditor;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
@@ -25,16 +24,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [OneTimeSetUp]
         public override void OneTimeSetUp()
         {
-            base.OneTimeSetUp();
-
-            var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
-            factory.AddPlugin(waterQualityModelApplicationPlugin);
-            foreach (IDataAccessListener dataAccessListener in waterQualityModelApplicationPlugin.CreateDataAccessListeners())
+            var additionalPlugins = new List<IPlugin>
             {
-                factory.AddDataAccessListener(dataAccessListener);
-            }
-
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
+                new WaterQualityModelApplicationPlugin()
+            };
+            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
         }
 
         # endregion

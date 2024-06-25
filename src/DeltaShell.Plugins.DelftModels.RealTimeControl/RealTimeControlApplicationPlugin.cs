@@ -9,17 +9,19 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.NHibernate;
 using log4net;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
     [Extension(typeof(IPlugin))]
-    public class RealTimeControlApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class RealTimeControlApplicationPlugin : ApplicationPlugin
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlApplicationPlugin));
 
@@ -106,11 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             };
             yield return new RealTimeControlRestartFileImporter(GetRealTimeControlModels);
-        }
-
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new RtcDataAccessListener(null);
         }
 
         private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => 
@@ -235,6 +232,12 @@ PRAGMA foreign_keys = on;
             {
                 model.DimrRunner.FileExportService = Application.FileExportService;
             }
+        }
+
+        /// <inheritdoc/>
+        public override void AddRegistrations(IDependencyInjectionContainer container)
+        {
+            container.Register<IDataAccessListenersProvider, RealTimeControlDataAccessListenersProvider>(LifeCycle.Transient);
         }
     }
 }

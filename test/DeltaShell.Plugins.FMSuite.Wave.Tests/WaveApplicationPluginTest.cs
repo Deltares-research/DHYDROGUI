@@ -4,36 +4,46 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.NHibernate;
 using NSubstitute;
 using NUnit.Framework;
+using LifeCycle = Deltares.Infrastructure.API.DependencyInjection.LifeCycle;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {
     [TestFixture]
     public class WaveApplicationPluginTest
     {
+        private WaveApplicationPlugin plugin;
+
+        [SetUp]
+        public void SetUp()
+        {
+            plugin = new WaveApplicationPlugin();
+        }
+
         [Test]
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
         {
-            var waveApplicationPlugin = new WaveApplicationPlugin();
-            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(waveApplicationPlugin);
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNotNull(plugin);
         }
 
         [Test]
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsNull_ThenHelperMethodReturnsNullAndRootFolderWillBeUsed()
         {
-            var waveApplicationPlugin = new WaveApplicationPlugin();
-            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(waveApplicationPlugin);
+            ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(plugin);
         }
 
         [Test]
@@ -41,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             // Setup
             var application = Substitute.For<IApplication>();
-            var plugin = new WaveApplicationPlugin {Application = application};
+            plugin.Application = application;
 
             // Call
             List<ModelInfo> modelInfos = plugin.GetModelInfos().ToList();
@@ -75,7 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void SetApplication_SubscribesApplication()
         {
             // Setup
-            var plugin = new WaveApplicationPlugin();
             var model = new WaveModel();
             Project project = GetProject(model);
             IApplication application = GetApplication(project, "application_working_directory");
@@ -95,7 +104,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GivenWaveApplicationPluginWithAnApplication_WhenProjectOpenedEventIsRaised_WorkingDirectoryPathFuncIsSetOnWaveModel()
         {
             // Setup
-            var plugin = new WaveApplicationPlugin();
             var model = new WaveModel();
             
             Project project = GetProject(model);
@@ -119,7 +127,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GivenWaveApplicationPluginWithAnApplication_WhenProjectCollectionChangingEventIsRaised_FileExportersIsSetOnDimrRunner()
         {
             // Setup
-            var plugin = new WaveApplicationPlugin();
             var project = new Project();
             var model = new WaveModel();
 
@@ -144,7 +151,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GivenWaveApplicationPluginWithAnApplication_WhenProjectOpenedEventIsRaised_FileExportersIsSetOnDimrRunner()
         {
             // Setup
-            var plugin = new WaveApplicationPlugin();
             var model = new WaveModel();
             
             Project project = GetProject(model);
@@ -168,7 +174,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void SetApplication_UnsubscribesOriginalApplication()
         {
             // Setup
-            var plugin = new WaveApplicationPlugin();
             var model = new WaveModel();
             Project project = GetProject(model);
             IApplication application1 = GetApplication(project, "application1_working_directory");
@@ -192,7 +197,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GivenWaveApplicationPluginWithAnApplication_WhenApplicationIsSetWithNewApplication_AndProjectOpenedEventIsRaised_WorkingDirectoryPathFuncNotSetOnOriginalWaveModel()
         {
             // Setup
-            var plugin = new WaveApplicationPlugin();
             var model = new WaveModel();
             Project project = GetProject(model);
             IApplication application1 = GetApplication(project, "application1_working_directory");
@@ -213,9 +217,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void GetFileImporters_ReturnsCorrectCollection()
         {
-            // Setup
-            var plugin = new WaveApplicationPlugin();
-
             // Call
             List<IFileImporter> importers = plugin.GetFileImporters().ToList();
 
@@ -233,7 +234,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GetFileImporters_ReturnsCorrectWaveModelFileImporter()
         {
             // Given
-            var plugin = new WaveApplicationPlugin();
             IApplication application = GetApplication(new Project(), "application_working_directory");
 
             plugin.Application = application;
@@ -251,15 +251,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void Constructor_InitializesInstanceCorrectly()
         {
-            // Call
-            var plugin = new WaveApplicationPlugin();
-
             // Assert
             Assert.That(plugin.Name, Is.EqualTo("Delft3D Wave"));
             Assert.That(plugin.DisplayName, Is.EqualTo("D-Waves Plugin"));
             Assert.That(plugin.Description, Is.EqualTo("A 2D/3D Wave module"));
             Assert.That(plugin.Version, Is.Not.Null.Or.Empty);
             Assert.That(plugin.FileFormatVersion, Is.EqualTo("1.3.0.0"));
+        }
+
+        [Test]
+        public void AddRegistrations_RegistersServicesCorrectly()
+        {
+            var container = Substitute.For<IDependencyInjectionContainer>();
+
+            plugin.AddRegistrations(container);
+
+            container.Received(1).Register<IDataAccessListenersProvider, WaveDataAccessListenersProvider>(LifeCycle.Transient);
         }
 
         private static void AssertCorrectWaveModelFileImporter(WaveModelFileImporter importer, string expectedWorkingDirectory)

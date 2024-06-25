@@ -70,6 +70,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Deltares.NET.Infrastructure.API" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="DeltaShell.Framework" GeneratePathProperty="true" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="DIDO" />
     <PackageReference Include="log4net">

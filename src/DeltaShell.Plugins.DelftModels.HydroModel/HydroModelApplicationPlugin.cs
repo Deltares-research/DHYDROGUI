@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -19,7 +18,7 @@ using Mono.Addins;
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
     [Extension(typeof(IPlugin))]
-    public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class HydroModelApplicationPlugin : ApplicationPlugin
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
 
@@ -125,11 +124,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new DHydroConfigXmlImporter(Application.FileImportService, new HydroModelReader(Application.FileImportService), () => Application.WorkDirectory);
-        }
-
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            return Enumerable.Empty<IDataAccessListener>();
         }
 
         private void ApplicationProjectClosing(Project project)

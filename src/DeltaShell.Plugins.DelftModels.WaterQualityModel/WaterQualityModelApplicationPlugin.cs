@@ -14,6 +14,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -27,7 +28,7 @@ using Mono.Addins;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 {
     [Extension(typeof(IPlugin))]
-    public class WaterQualityModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class WaterQualityModelApplicationPlugin : ApplicationPlugin
     {
         private IEnumerable<IFileImporter> _getFileImporters;
 
@@ -149,11 +150,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             yield return GetType().Assembly;
             yield return typeof(FileBasedFolder).Assembly;
-        }
-
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new WaterQualityModelDataAccessListener(null);
         }
 
         private void Application_ProjectSaveFinished(Project obj)
@@ -366,6 +362,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 model.SetupModelDataFolderStructure(Application.ProjectDataDirectory);
             }
+        }
+
+        /// <inheritdoc/>
+        public override void AddRegistrations(IDependencyInjectionContainer container)
+        {
+            container.Register<IDataAccessListenersProvider, WaterQualityDataAccessListenersProvider>(LifeCycle.Transient);
         }
     }
 }

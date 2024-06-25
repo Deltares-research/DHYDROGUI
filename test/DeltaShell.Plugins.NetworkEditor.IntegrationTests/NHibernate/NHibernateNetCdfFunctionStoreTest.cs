@@ -12,11 +12,10 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
@@ -32,10 +31,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
     [TestFixture]
     [Category(TestCategory.DataAccess)]
     [Category(TestCategory.Slow)]
-    public class NHibernateNetCdfFunctionStoreTest
+    public class NHibernateNetCdfFunctionStoreTest : NHibernateIntegrationTestBase
     {
         private IProjectRepository projectRepository;
-        private NHibernateProjectRepositoryFactory factory;
 
         [SetUp]
         public void SetUp()
@@ -47,17 +45,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void TearDown()
         {
             projectRepository.Dispose();
-        }
-
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            // register data types to be serialized
-            factory = new NHibernateProjectRepositoryFactory();
-            factory.AddPlugin(new NetCdfApplicationPlugin());
-            factory.AddPlugin(new SharpMapGisApplicationPlugin());
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
-            factory.AddPlugin(new CommonToolsApplicationPlugin());
         }
 
         [Test]

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.IntegrationTestUtils;
 using DeltaShell.IntegrationTestUtils.Builders;
+using DeltaShell.IntegrationTestUtils.NHibernate;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -45,16 +44,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         #region SetUp / TearDown
 
+        [OneTimeSetUp]
         public override void OneTimeSetUp()
         {
-            base.OneTimeSetUp();
-
-            var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
-            factory.AddPlugin(waterQualityModelApplicationPlugin);
-            foreach (IDataAccessListener dataAccessListener in waterQualityModelApplicationPlugin.CreateDataAccessListeners())
+            var additionalPlugins = new List<IPlugin>
             {
-                factory.AddDataAccessListener(dataAccessListener);
-            }
+                new WaterQualityModelApplicationPlugin()
+            };
+            factory = new NHibernateProjectRepositoryFactoryBuilder().AddPlugins(additionalPlugins).Build();
         }
 
         #endregion

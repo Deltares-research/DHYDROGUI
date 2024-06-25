@@ -9,17 +9,19 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations;
+using DeltaShell.Plugins.FMSuite.Wave.NHibernate;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
     [Extension(typeof(IPlugin))]
-    public class WaveApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class WaveApplicationPlugin : ApplicationPlugin
     {
         public override string Name => "Delft3D Wave";
 
@@ -100,11 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             yield return typeof(WaveModel).Assembly;
         }
 
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new WaveDataAccessListener();
-        }
-
         private void Application_ProjectOpening(string projectFilePath)
         {
             Version projectVersion = Application.GetPluginFileFormatVersions(projectFilePath)[Name];
@@ -133,6 +130,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 model.DimrRunner.FileExportService = Application.FileExportService;
             }
+        }
+
+        /// <inheritdoc/>
+        public override void AddRegistrations(IDependencyInjectionContainer container)
+        {
+            container.Register<IDataAccessListenersProvider, WaveDataAccessListenersProvider>(LifeCycle.Transient);
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
@@ -15,10 +16,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.NHibernate;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NSubstitute;
 using NUnit.Framework;
+using LifeCycle = Deltares.Infrastructure.API.DependencyInjection.LifeCycle;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -182,6 +185,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Assert
             IFileExportService fileExportService = model.DimrRunner.FileExportService;
             AssertContainsExpectedFileExporters(fileExportService.FileExporters.ToArray());
+        }
+
+        [Test]
+        public void AddRegistrations_RegistersServicesCorrectly()
+        {
+            var container = Substitute.For<IDependencyInjectionContainer>();
+
+            plugin.AddRegistrations(container);
+
+            container.Received(1).Register<IDataAccessListenersProvider, FlowFMDataAccessListenersProvider>(LifeCycle.Transient);
         }
         
         private static IApplication GetApplication(Project project)

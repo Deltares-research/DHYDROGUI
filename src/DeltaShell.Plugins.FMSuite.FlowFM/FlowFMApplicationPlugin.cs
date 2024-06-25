@@ -14,6 +14,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.DependencyInjection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -27,6 +28,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.NHibernate;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -40,7 +42,7 @@ using NetTopologySuite.Geometries;
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     [Extension(typeof(IPlugin))]
-    public class FlowFMApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class FlowFMApplicationPlugin : ApplicationPlugin
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
         private IApplication application;
@@ -545,11 +547,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return typeof(WaterFlowFMModel).Assembly;
         }
 
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new WaterFlowFMDataAccessListener();
-        }
-
         private IEnumerable<WaterFlowFMModel> FlowModels =>
             Application != null
                 ? GetWaterFlowFMModels()
@@ -639,6 +636,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 model.DimrRunner.FileExportService = Application.FileExportService;
             }
+        }
+
+        /// <inheritdoc/>
+        public override void AddRegistrations(IDependencyInjectionContainer container)
+        {
+            container.Register<IDataAccessListenersProvider, FlowFMDataAccessListenersProvider>(LifeCycle.Transient);
         }
     }
 }
