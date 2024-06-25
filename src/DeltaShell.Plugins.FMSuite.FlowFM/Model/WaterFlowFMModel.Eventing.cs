@@ -278,6 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 {
                     TriggerPropertyChanged("Switching salinity process", KnownProperties.UseSalinity,
                                            o => UseSalinity = (bool)o);
+                    UpdateDataItemsForObservationPoints();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseMorSed,
                                                                         StringComparison.InvariantCultureIgnoreCase))
@@ -321,6 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     BeginEdit("Switching heat flux model");
                     HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
                     EndEdit();
+                    UpdateDataItemsForObservationPoints();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SecondaryFlow,
                                                                         StringComparison.InvariantCultureIgnoreCase))
@@ -424,6 +426,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 BeginEdit("");
                 MarkOutputOutOfSync();
                 EndEdit();
+            }
+        }
+
+        private void UpdateDataItemsForObservationPoints()
+        {
+            GroupableFeature2DPoint[] observationPointsToUpdate = 
+                areaDataItems.Keys.OfType<GroupableFeature2DPoint>().ToArray();
+
+            foreach (IFeature feature in observationPointsToUpdate)
+            {
+                RemoveDataItem(feature);
+                AddDataItem(feature);
             }
         }
 
@@ -821,7 +835,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private DataItemRole GetDataItemRole(IFeature feature)
         {
-            if (IsInputAndOutputFeature(feature))
+            if (IsInputOrOutputFeature(feature))
             {
                 return DataItemRole.Input | DataItemRole.Output;
             }
@@ -834,7 +848,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             return DataItemRole.None;
         }
 
-        private bool IsInputAndOutputFeature(IFeature feature)
+        private bool IsInputOrOutputFeature(IFeature feature)
         {
             return feature is IPump || feature is IStructure || IsSourcesAndSinksFeature(feature);
         }

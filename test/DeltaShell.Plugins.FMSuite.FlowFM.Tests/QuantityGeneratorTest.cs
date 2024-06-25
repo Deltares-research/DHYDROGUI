@@ -86,11 +86,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var tracers = new[] { "tracer1", "tracer2" };
             IEnumerable<string> noTracers = Enumerable.Empty<string>();
 
-            yield return new TestCaseData(observationPoint, false, false, noTracers, new[] { "water_level", "water_depth" });
-            yield return new TestCaseData(observationPoint, true, false, noTracers, new[] { "water_level", "salinity", "water_depth" });
-            yield return new TestCaseData(observationPoint, false, true, noTracers, new[] { "water_level", "temperature", "water_depth" });
-            yield return new TestCaseData(observationPoint, false, false, tracers, new[] { "water_level", "water_depth", "tracer1", "tracer2" });
-            yield return new TestCaseData(observationPoint, true, true, tracers, new[] { "water_level", "salinity", "temperature", "water_depth", "tracer1", "tracer2" });
+            yield return new TestCaseData(observationPoint, false, false, noTracers, new[] { "water_level", "water_depth", "velocity", "discharge" });
+            yield return new TestCaseData(observationPoint, true, false, noTracers, new[] { "water_level", "salinity", "water_depth", "velocity", "discharge" });
+            yield return new TestCaseData(observationPoint, false, true, noTracers, new[] { "water_level", "temperature", "water_depth", "velocity", "discharge" });
+            yield return new TestCaseData(observationPoint, false, false, tracers, new[] { "water_level", "water_depth", "velocity", "discharge", "tracer1", "tracer2" });
+            yield return new TestCaseData(observationPoint, true, true, tracers, new[] { "water_level", "salinity", "temperature", "water_depth", "velocity", "discharge", "tracer1", "tracer2" });
         }
 
         [Test]

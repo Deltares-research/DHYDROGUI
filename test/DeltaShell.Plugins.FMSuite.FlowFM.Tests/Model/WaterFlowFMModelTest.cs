@@ -1549,9 +1549,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationPoint)));
             Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
-            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "water_level", "salinity", "water_depth" }));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "water_level", "salinity", "water_depth", "velocity", "discharge" }));
         }
-        
+
         [Test]
         public void GivenAModel_WhenRetrievingChildDataItemsForObservationCrossSection_ReturnsDataItems()
         {
@@ -1565,6 +1565,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationCrossSection)));
             Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
             Assert.That(items.Select(x => x.Tag), Is.EqualTo(new[] { "discharge", "velocity", "water_level", "water_depth" }));
+        }
+
+        [Test]
+        [TestCase(HeatFluxModelType.None, true, new[] { "water_level", "salinity", "water_depth", "velocity", "discharge" })]
+        [TestCase(HeatFluxModelType.None, false, new[] { "water_level", "water_depth", "velocity", "discharge" })]
+        [TestCase(HeatFluxModelType.TransportOnly, true, new[] { "water_level", "salinity", "temperature", "water_depth", "velocity", "discharge" })]
+        [TestCase(HeatFluxModelType.TransportOnly, false, new[] { "water_level", "temperature", "water_depth", "velocity", "discharge" })]
+        public void GivenAModel_WhenRetrievingChildDataItemsForObservationPoint_ReturnsDataItems(
+            HeatFluxModelType temperature,
+            bool useSalinity,
+            string[] expectedTags)
+        {
+            var model = new WaterFlowFMModel();
+            var observationPoint = new GroupableFeature2DPoint();
+
+            model.Area.ObservationPoints.Add(observationPoint);
+
+            // set after adding the observation point, to test the model property eventing
+            model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = useSalinity;
+            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueFromString(((int)temperature).ToString());
+
+            IReadOnlyList<IDataItem> items = model.GetChildDataItems(observationPoint).ToArray();
+
+            Assert.That(items, Is.All.Matches<IDataItem>(x => ReferenceEquals(x.ComposedValue, observationPoint)));
+            Assert.That(items, Is.All.Matches<IDataItem>(x => x.Role.HasFlag(DataItemRole.Output)));
+            Assert.That(items.Select(x => x.Tag), Is.EqualTo(expectedTags));
         }
 
         [Test]
@@ -2164,7 +2190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             IList<IDataItem> couplingDataItems = ((ICoupledModel) fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Output).ToList();
 
             // Assert
-            Assert.AreEqual(2, couplingDataItems.Count);
+            Assert.AreEqual(4, couplingDataItems.Count);
         }
 
         [Test]
@@ -2751,5 +2777,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(dataItems[1].Tag, Is.EqualTo(tag));
             }
         }
+
     }
 }
