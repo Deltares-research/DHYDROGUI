@@ -69,15 +69,6 @@ namespace DHYDRO.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
-        /// </summary>
-        public static string Backwards_Compatibility_0_has_been_updated_to_1_ {
-            get {
-                return ResourceManager.GetString("Backwards_Compatibility_0_has_been_updated_to_1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Initial field data file does not exist: {0}..
         /// </summary>
         public static string Initial_field_data_file_does_not_exist_0_ {
@@ -87,29 +78,11 @@ namespace DHYDRO.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Key {0} is deprecated and automatically removed from model..
-        /// </summary>
-        public static string Key__0__is_deprecated_and_automatically_removed_from_model_ {
-            get {
-                return ResourceManager.GetString("Key__0__is_deprecated_and_automatically_removed_from_model_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; can only be {1} when &apos;{2}&apos; is {3}..
         /// </summary>
         public static string Property_0_can_only_be_1_when_2_is_3_ {
             get {
                 return ResourceManager.GetString("Property_0_can_only_be_1_when_2_is_3_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Property &apos;{0}&apos; cannot be converted to a {1} for value: {2}. Line: {3}.
-        /// </summary>
-        public static string Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_ {
-            get {
-                return ResourceManager.GetString("Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_", resourceCulture);
             }
         }
         

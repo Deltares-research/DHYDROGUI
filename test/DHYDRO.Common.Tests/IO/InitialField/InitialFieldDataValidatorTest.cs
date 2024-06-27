@@ -1,7 +1,7 @@
 using System.IO.Abstractions.TestingHelpers;
+using Deltares.Infrastructure.API.Logging;
 using Deltares.Infrastructure.API.Validation;
 using DHYDRO.Common.IO.InitialField;
-using DHYDRO.Common.Logging;
 using DHYDRO.Common.TestUtils.IO.InitialField;
 using NSubstitute;
 using NUnit.Framework;

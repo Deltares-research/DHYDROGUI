@@ -13,10 +13,7 @@ namespace DHYDRO.Common.Tests.IO.InitialField
         public void Constructor_FileVersionNullOrWhitespace_ThrowsArgumentException(string fileVersion)
         {
             // Call
-            void Call()
-            {
-                new InitialFieldFileInfo(fileVersion, "some_file_type");
-            }
+            void Call() => _ = new InitialFieldFileInfo(fileVersion, "some_file_type");
 
             // Assert
             Assert.That(Call, Throws.ArgumentException);
@@ -29,10 +26,7 @@ namespace DHYDRO.Common.Tests.IO.InitialField
         public void Constructor_FileTypeNullOrWhitespace_ThrowsArgumentException(string fileType)
         {
             // Call
-            void Call()
-            {
-                new InitialFieldFileInfo("1.2.3", fileType);
-            }
+            void Call() => _ = new InitialFieldFileInfo("1.2.3", fileType);
 
             // Assert
             Assert.That(Call, Throws.ArgumentException);

@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
-using DHYDRO.Common.Extensions;
-using DHYDRO.Common.IO.Ini;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.Extensions;
+using Deltares.Infrastructure.IO.Ini;
 using DHYDRO.Common.IO.InitialField;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -58,8 +58,8 @@ namespace DHYDRO.Common.Tests.IO.InitialField
             InitialFieldFileData result = parser.Parse(stream);
 
             // Assert
-            Assert.That(result.InitialConditions, Has.Count.EqualTo(1));
-            Assert.That(result.Parameters, Has.Count.EqualTo(1));
+            Assert.That(result.InitialConditions.Count(), Is.EqualTo(1));
+            Assert.That(result.Parameters.Count(), Is.EqualTo(1));
             AssertInitialField(result.InitialConditions.Single());
             AssertInitialField(result.Parameters.Single());
         }

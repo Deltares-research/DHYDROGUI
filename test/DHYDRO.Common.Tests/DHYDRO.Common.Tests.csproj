@@ -5,10 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Deltares.NET.Infrastructure.TestUtils"/>
         <PackageReference Include="log4net"/>
         <PackageReference Include="NSubstitute"/>
         <PackageReference Include="NUnit"/>
-        <PackageReference Include="NUnit.ConsoleRunner"/>
+        <PackageReference Include="NUnit.Analyzers"/>
         <PackageReference Include="NUnit3TestAdapter"/>
         <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     </ItemGroup>

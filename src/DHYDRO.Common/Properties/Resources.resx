@@ -24,15 +24,6 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="Backwards_Compatibility_0_has_been_updated_to_1_" xml:space="preserve">
-        <value>Backwards Compatibility: '{0}' has been updated to '{1}'</value>
-    </data>
-    <data name="Key__0__is_deprecated_and_automatically_removed_from_model_" xml:space="preserve">
-        <value>Key {0} is deprecated and automatically removed from model.</value>
-    </data>
-    <data name="Property_0_cannot_be_converted_to_a_1_for_value_2_Line_3_" xml:space="preserve">
-        <value>Property '{0}' cannot be converted to a {1} for value: {2}. Line: {3}</value>
-    </data>
     <data name="Section_0_has_an_unknown_header_and_cannot_be_parsed_Line_1_" xml:space="preserve">
         <value>Section '{0}' has an unknown header and cannot be parsed. Line: {1}</value>
     </data>

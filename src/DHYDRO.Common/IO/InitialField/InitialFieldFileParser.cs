@@ -1,7 +1,7 @@
 using System.IO;
-using DHYDRO.Common.Guards;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
 using DHYDRO.Common.Properties;
 
 namespace DHYDRO.Common.IO.InitialField
