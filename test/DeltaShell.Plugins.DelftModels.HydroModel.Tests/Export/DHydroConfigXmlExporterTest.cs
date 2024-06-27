@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
             
-            var observationPointFm = new GroupableFeature2DPoint {Name = "ObservationFM"};
+            var observationPointFm = new ObservationPoint2D{ Name = "ObservationFM" };
             var weirFm = new Weir2D
             {
                 Name = "Weir1",

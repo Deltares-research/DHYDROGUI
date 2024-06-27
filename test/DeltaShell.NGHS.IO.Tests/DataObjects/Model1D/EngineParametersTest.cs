@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
@@ -12,22 +13,56 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Model1D
     public class EngineParametersTest
     {
         [Test]
-        public void AllowedAsQuantityTypeForFeature_FeatureIsWeir_ReturnsCorrectValue([Values] QuantityType quantityType, 
-                                                                                      [Values]bool isGated)
+        public void AllowedAsQuantityTypeForFeature_FeatureIsSimpleWeir_ReturnsCorrectValue([Values] QuantityType quantityType)
         {
             // Setup
             EngineParameter engineParameter = CreateEngineParameter(quantityType);
 
             var weir = Substitute.For<IWeir>();
-            weir.IsGated.Returns(isGated);
+            weir.WeirFormula = new SimpleWeirFormula();
 
             // Call
             bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter);
 
             // Assert
-            bool isAllowed = weir.IsGated && quantityType == QuantityType.GateLowerEdgeLevel ||
-                             !weir.IsGated && (quantityType == QuantityType.CrestLevel ||
-                                               quantityType == QuantityType.CrestWidth);
+            bool isAllowed = quantityType == QuantityType.CrestLevel;
+            Assert.That(result, Is.EqualTo(isAllowed));
+        }
+        
+        [Test]
+        public void AllowedAsQuantityTypeForFeature_FeatureIsGatedWeir_ReturnsCorrectValue([Values] QuantityType quantityType)
+        {
+            // Setup
+            EngineParameter engineParameter = CreateEngineParameter(quantityType);
+
+            var weir = Substitute.For<IWeir>();
+            weir.WeirFormula = new GatedWeirFormula();
+
+            // Call
+            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter);
+
+            // Assert
+            bool isAllowed = quantityType == QuantityType.GateLowerEdgeLevel;
+            Assert.That(result, Is.EqualTo(isAllowed));
+        }
+        
+        [Test]
+        public void AllowedAsQuantityTypeForFeature_FeatureIsGeneralStructure_ReturnsCorrectValue([Values] QuantityType quantityType)
+        {
+            // Setup
+            EngineParameter engineParameter = CreateEngineParameter(quantityType);
+
+            var weir = Substitute.For<IWeir>();
+            weir.WeirFormula = new GeneralStructureWeirFormula();
+
+            // Call
+            bool result = EngineParameters.AllowedAsQuantityTypeForFeature(weir, engineParameter);
+
+            // Assert
+            bool isAllowed = engineParameter.QuantityType == QuantityType.CrestLevel
+                             || engineParameter.QuantityType == QuantityType.GateOpeningHeight
+                             || engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel
+                             || engineParameter.QuantityType == QuantityType.GateOpeningWidth;
             Assert.That(result, Is.EqualTo(isAllowed));
         }
         

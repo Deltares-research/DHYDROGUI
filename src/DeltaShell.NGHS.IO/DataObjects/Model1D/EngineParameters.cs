@@ -391,62 +391,63 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         }
 
         /// <summary>
-        /// Extra filter for EngineMapping
+        /// Checks whether the given engine parameter is allowed for the given feature.
         /// </summary>
-        /// <param name="feature"></param>
-        /// <param name="engineParameter"></param>
-        /// <returns></returns>
+        /// <param name="feature">The feature to check.</param>
+        /// <param name="engineParameter">The engine parameter to check.</param>
+        /// <returns>Whether or not the engine parameter is allowed for the feature.</returns>
         public static bool AllowedAsQuantityTypeForFeature(IFeature feature, EngineParameter engineParameter)
         {
-            bool isAllowed = false;
-            if (feature is IWeir weir)
+            switch (feature)
             {
-
-                if (weir.IsGated)
-                {
-                    if (engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel)
-                    {
-                        isAllowed = true;
-                    }
-                }
-                else
-                {
-                    if (engineParameter.QuantityType == QuantityType.CrestLevel ||
-                        engineParameter.QuantityType == QuantityType.CrestWidth)
-                    {
-                        isAllowed = true;
-                    }
-                }
+                case IPump _:
+                    return IsAllowedForPump(engineParameter);
+                case ICulvert culvert:
+                    return IsAllowedForCulvert(engineParameter, culvert);
+                case IWeir weir:
+                    return IsAllowedForWeir(weir.WeirFormula, engineParameter);
+                case IObservationPoint _:
+                    return IsAllowedForObservationPoint(engineParameter);
             }
 
-            if (feature is ICulvert culvert)
-            {
-                if (culvert.IsGated && engineParameter.QuantityType == QuantityType.ValveOpening)
-                {
-                    isAllowed = true;
-                }
-            }
+            return false;
 
-            if (feature is IPump)
-            {
-                if (engineParameter.QuantityType == QuantityType.PumpCapacity)
-                {
-                    isAllowed = true;
-                }
-            }
+        }
 
-            if (feature is IObservationPoint)
-            {
-                if (engineParameter.QuantityType == QuantityType.WaterLevel ||
-                    engineParameter.QuantityType == QuantityType.WaterDepth ||
-                    engineParameter.QuantityType == QuantityType.Discharge  ||
-                    engineParameter.QuantityType == QuantityType.Velocity)
-                {
-                    isAllowed = true;
-                }
-            }
+        private static bool IsAllowedForPump(EngineParameter engineParameter)
+        {
+            return engineParameter.QuantityType == QuantityType.PumpCapacity;
+        }
 
-            return isAllowed;
+        private static bool IsAllowedForCulvert(EngineParameter engineParameter, ICulvert culvert)
+        {
+            return culvert.IsGated && engineParameter.QuantityType == QuantityType.ValveOpening;
+        }
+
+        private static bool IsAllowedForWeir(IWeirFormula weirFormula, EngineParameter engineParameter)
+        {
+            switch (weirFormula)
+            {
+                case SimpleWeirFormula _:
+                    return engineParameter.QuantityType == QuantityType.CrestLevel;
+                case GatedWeirFormula _:
+                    return engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel;
+                case GeneralStructureWeirFormula _:
+                    return engineParameter.QuantityType == QuantityType.CrestLevel
+                           || engineParameter.QuantityType == QuantityType.GateOpeningHeight
+                           || engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel
+                           || engineParameter.QuantityType == QuantityType.GateOpeningWidth;
+                default:
+                    return false;
+            }
+        }
+        
+        private static bool IsAllowedForObservationPoint(EngineParameter engineParameter)
+        {
+            return engineParameter.QuantityType == QuantityType.WaterLevel
+                   || engineParameter.QuantityType == QuantityType.WaterDepth
+                   || engineParameter.QuantityType == QuantityType.Discharge
+                   || engineParameter.QuantityType == QuantityType.Velocity;
         }
 
         public static ElementSet? GetElementSet(IFeature feature)

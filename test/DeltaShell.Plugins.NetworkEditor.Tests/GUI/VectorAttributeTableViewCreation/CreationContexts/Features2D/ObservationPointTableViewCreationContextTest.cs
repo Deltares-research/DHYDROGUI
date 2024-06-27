@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Arrange
             var creationContext = new ObservationPointTableViewCreationContext();
             var region = new HydroArea();
-            region.ObservationPoints.AddRange(new GroupableFeature2DPoint[3]);
+            region.ObservationPoints.AddRange(new ObservationPoint2D[3]);
 
             // Act
             bool result = creationContext.IsRegionData(region, new List<GroupableFeature2DPoint>());
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.GUI.VectorAttributeTableViewCre
             // Arrange
             var creationContext = new ObservationPointTableViewCreationContext();
             var region = new HydroArea();
-            region.ObservationPoints.AddRange(new GroupableFeature2DPoint[3]);
+            region.ObservationPoints.AddRange(new ObservationPoint2D[3]);
 
             // Act
             bool result = creationContext.IsRegionData(region, region.ObservationPoints);

@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Geometry = new LineString(new[] { new Coordinate(99, 90), new Coordinate(99, 110) }),
                 CrestLevel = 2.5
             });
-            flow.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "obs", Geometry = new Point(50, 50) });
+            flow.Area.ObservationPoints.Add(new ObservationPoint2D { Name = "obs", Geometry = new Point(50, 50) });
             
             var controlGroup = RealTimeControlModelHelper.CreateGroupRelativeTimeRule();
             rtc.ControlGroups.Add(controlGroup);

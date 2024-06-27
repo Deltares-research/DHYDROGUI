@@ -374,37 +374,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 SyncFractionsAndTracers(sourceAndSink);
             }
-            var inputSender = InputFeatureCollectionsContains(sourceAndSink.Feature);
-            var outputSender = OutputFeatureCollectionsContains(sourceAndSink.Feature);
 
-            if (inputSender || outputSender)
+            var feature = (IFeature)sourceAndSink.Feature;
+            if (feature != null && HasValidDataItemRole(feature))
             {
-                var feature = (IFeature)sourceAndSink.Feature;
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        AddAreaItem(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        RemoveAreaFeature(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        foreach (var areaDataItem in areaDataItems)
-                        {
-                            RemoveAreaFeature(areaDataItem.Key);
-                        }
-                        areaDataItems.Clear();
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
-                        RemoveAreaFeature(oldFeature);
-                        AddAreaItem(feature);
-                        break;
-                    default:
-                        throw new NotImplementedException(
-                            String.Format("Action {0} on feature collection not supported", e.Action));
-                }
+                HandleFeatureCollectionChanged(e, feature);
             }
+        }
+
+        private void HandleFeatureCollectionChanged(NotifyCollectionChangedEventArgs e, IFeature feature)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    AddAreaItem(feature);
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    RemoveAreaFeature(feature);
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    foreach (var areaAsDataItem in areaDataItems)
+                    {
+                        RemoveAreaFeature(areaAsDataItem.Key);
+                    }
+                    areaDataItems.Clear();
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
+                    RemoveAreaFeature(oldFeature);
+                    AddAreaItem(feature);
+                    break;
+                default:
+                    throw new NotImplementedException(
+                        String.Format("Action {0} on feature collection not supported", e.Action));
+            }
+        }
+
+        private bool HasValidDataItemRole(IFeature feature)
+        {
+            return GetDataItemRole(feature) != DataItemRole.None;
         }
 
         private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -704,32 +712,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 groupableFeature.UpdateGroupName(this);
             }
 
-            if (removedOrAddedItem is IFeature feature && GetDataItemRole(feature) != DataItemRole.None)
+            if (removedOrAddedItem is IFeature feature && HasValidDataItemRole(feature))
             {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        AddAreaItem(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        RemoveAreaFeature(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        foreach (var areaDataItem in areaDataItems)
-                        {
-                            RemoveAreaFeature(areaDataItem.Key);
-                        }
-                        areaDataItems.Clear();
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
-                        RemoveAreaFeature(oldFeature);
-                        AddAreaItem(feature);
-                        break;
-                    default:
-                        throw new NotImplementedException(
-                            String.Format("Action {0} on feature collection not supported", e.Action));
-                }
+                HandleFeatureCollectionChanged(e, feature);
             }
         }
 

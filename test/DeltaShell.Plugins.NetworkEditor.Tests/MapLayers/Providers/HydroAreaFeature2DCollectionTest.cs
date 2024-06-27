@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         public void IsFeature2DCollectionCoordinateSystemUpdatedWhenAreaCoordinateSystemIsUpdated()
         {
             var hydroArea = new HydroArea();
-            hydroArea.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "ob1" });
+            hydroArea.ObservationPoints.Add(new ObservationPoint2D { Name = "ob1" });
             var feature2DCollection = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.ObservationPoints, "ObservationPoint", "Not important", hydroArea.CoordinateSystem);
             Assert.That(hydroArea.CoordinateSystem, Is.Null);
             Assert.That(feature2DCollection.CoordinateSystem, Is.Null);

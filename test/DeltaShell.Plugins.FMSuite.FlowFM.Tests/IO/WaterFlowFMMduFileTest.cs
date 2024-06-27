@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 area.ObservationPoints.AddRange(
                     new[]
                     {
-                        WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(string.Empty, "Feature1"), /*Default group expected*/
+                        WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(string.Empty, "Feature1"), /*Default group expected*/
                     }
                 );
                 var defaultFeature = area.ObservationPoints.FirstOrDefault(o => o.Name == "Feature1");
@@ -333,7 +333,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 area.ObservationPoints.AddRange(
                     new[]
                     {
-                        WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint("", "Feature1"), /*Default group expected*/ WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint("Group1", "Feature2"), WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint("Group1", "Feature3"), WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint("Group2", "Feature4")
+                        WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D("", "Feature1"), /*Default group expected*/
+                        WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D("Group1", "Feature2"),
+                        WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D("Group1", "Feature3"),
+                        WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D("Group2", "Feature4")
                     }
                 );
                 var defaultFeature = area.ObservationPoints.FirstOrDefault(o => o.Name == "Feature1");
@@ -754,7 +757,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.ObservationPoints.AddRange(
                 new[]
                 {
-                    WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(groupName1, name1), WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(groupName2, name2)
+                    WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(groupName1, name1),
+                    WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(groupName2, name2)
                 }
             );
 
@@ -881,7 +885,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.ObservationPoints.AddRange(
                 new[]
                     {
-                        WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(pointGroupName, "ObsPoint01"), WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(pointGroupName, "ObsPoint02")
+                        WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(pointGroupName, "ObsPoint01"),
+                        WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(pointGroupName, "ObsPoint02")
                     }
                 );
 
@@ -962,7 +967,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.ObservationPoints.AddRange(
                 new[]
                 {
-                    WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(pointGroupName, "ObsPoint01"), WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(pointGroupName, "ObsPoint02")
+                    WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(pointGroupName, "ObsPoint01"),
+                    WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(pointGroupName, "ObsPoint02")
                 }
             );
 
@@ -1061,7 +1067,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             area.ObservationPoints.AddRange(
                 new[]
                 {
-                    WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(absolutePathPointGroupName, "ObsPoint01"), WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(absolutePathPointGroupName, "ObsPoint02")
+                    WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(absolutePathPointGroupName, "ObsPoint01"),
+                    WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D(absolutePathPointGroupName, "ObsPoint02")
                 }
             );
             
@@ -1186,7 +1193,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var area = new HydroArea();
 
-            area.ObservationPoints.Add(WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint("MyObsPoints.xyn", "ObsPoint01"));
+            area.ObservationPoints.Add(WaterFlowFMMduFileTestHelper.GetNewObservationPoint2D("MyObsPoints.xyn", "ObsPoint01"));
             area.DryPoints.Add(WaterFlowFMMduFileTestHelper.GetNewGroupablePointFeature("MyDryPoints.xyz"));
             area.ObservationCrossSections.Add(new ObservationCrossSection2D
             {

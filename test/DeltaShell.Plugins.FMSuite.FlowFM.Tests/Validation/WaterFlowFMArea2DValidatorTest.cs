@@ -156,8 +156,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = new WaterFlowFMModel();
 
-            model.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = nameof(GroupableFeature2DPoint) });
-            model.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = nameof(GroupableFeature2DPoint) });
+            model.Area.ObservationPoints.Add(new ObservationPoint2D { Name = nameof(GroupableFeature2DPoint) });
+            model.Area.ObservationPoints.Add(new ObservationPoint2D { Name = nameof(GroupableFeature2DPoint) });
 
             const string expectedMessage = "Several observation points (2D) with the same id exist";
 
@@ -325,7 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = new WaterFlowFMModel();
 
-            model.Area.ObservationPoints.Add(new GroupableFeature2DPoint());
+            model.Area.ObservationPoints.Add(new ObservationPoint2D());
             model.Area.ObservationPoints[0].Name = string.Empty;
 
             const string expectedMessage = "Name of a observation point (2D) is not set (it is empty or consists of only white-space characters).";

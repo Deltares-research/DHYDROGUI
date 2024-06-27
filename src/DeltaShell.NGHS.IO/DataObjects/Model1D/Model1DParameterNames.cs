@@ -68,7 +68,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         public const string StructureGateLevel = "Gate lower edge level (s)";
         public const string StructureGateOpeningWidth = "Gate opening width (s)";
         public const string StructureGateOpeningHorizontalDirection = "Gate horizontal direction (s)";
-        public const string StructureOpeningHeight = "Opening height (s)";
+        public const string StructureOpeningHeight = "Gate height (s)";
         public const string StructureValveOpening = "Valve opening (s)";
         public const string StructureWaterlevelUp = "Water level up (s)";
         public const string StructureWaterlevelDown = "Water level down (s)";

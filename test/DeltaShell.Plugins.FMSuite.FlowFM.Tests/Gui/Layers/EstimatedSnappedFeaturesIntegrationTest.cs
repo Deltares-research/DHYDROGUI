@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                     .Ignore(reason);
 
             void ObservationPoint(WaterFlowFMModel model, Coordinate center) =>
-                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint()
+                model.Area.ObservationPoints.Add(new ObservationPoint2D
                 {
                     Geometry = new Point(center)
                 });

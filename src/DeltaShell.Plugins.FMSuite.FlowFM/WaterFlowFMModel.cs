@@ -212,6 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ValidateBeforeRun = true;
             DisableFlowNodeRenumbering = false;
             TracerDefinitions = new EventedList<string>();
+            SourcesAndSinks = new EventedList<SourceAndSink>();
             SedimentFractions = new EventedList<ISedimentFraction>();
 
             allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
@@ -879,73 +880,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets all 1D and 2D data items for a given role.
+        /// </summary>
+        /// <param name="role">The role to get the data items for.</param>
+        /// <returns>The collection of data items.</returns>
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
         {
-            if (role.HasFlag(DataItemRole.Input))
+            if (role.HasFlag(DataItemRole.Input) || role.HasFlag(DataItemRole.Output))
             {
-                foreach (var inputFeature2D in InputFeatureCollections.OfType<IList>().SelectMany(l => l.OfType<IFeature>()).ToArray())
+                foreach (IFeature feature in GetFeatures())
                 {
-                    yield return inputFeature2D;
+                    yield return feature;
                 }
             }
 
             if (role.HasFlag(DataItemRole.Output))
             {
-                foreach (var outputFeature2D in OutputFeatureCollections.OfType<IList>()
-                    .SelectMany(l => l.OfType<IFeature>()))
+                foreach (IFeature outputFeature in GetOutputSpecificFeatures())
                 {
-                    yield return outputFeature2D;
+                    yield return outputFeature;
                 }
             }
-
-            foreach (var feature1D in Get1DChildDataItemLocations(role).ToArray())
-            {
-                yield return feature1D;
-            }
-                        
         }
 
-        private IEnumerable<IFeature> Get1DChildDataItemLocations(DataItemRole role)
+        private IEnumerable<IFeature> GetOutputSpecificFeatures()
         {
-            if ((role & DataItemRole.Input) == DataItemRole.Input)
-            {
-                foreach (var weir in Network.Weirs)
-                {
-                    yield return weir;
-                }
-                foreach (var gate in Network.Gates)
-                {
-                    yield return gate;
-                }
-                foreach (var culvert in Network.Culverts)
-                {
-                    yield return culvert;
-                }
-                foreach (var pump in Network.Pumps)
-                {
-                    yield return pump;
-                }
-                foreach (var lateralSource in Network.LateralSources)
-                {
-                    yield return lateralSource;
-                }
-                foreach (var hydroNode in Network.HydroNodes.Where(hn => !hn.IsConnectedToMultipleBranches))
-                {
-                    yield return hydroNode;
-                }
-            }
-            if ((role & DataItemRole.Output) == DataItemRole.Output)
-            {
-                foreach (var location in Network.ObservationPoints)
-                {
-                    yield return location;
-                }
-                foreach (var location in Network.Retentions)
-                {
-                    yield return location;
-                }
-            }
+            return OutputFeatureCollections.OfType<IEnumerable>()
+                                           .SelectMany(l => l.OfType<IFeature>());
+        }
+
+        private IEnumerable<IFeature> GetFeatures()
+        {
+            return FeatureCollections.OfType<IEnumerable>()
+                                     .SelectMany(l => l.OfType<IFeature>());
         }
 
         /// <inheritdoc />
@@ -965,15 +933,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (location.Geometry is Point)
             {
-                var networkDataItem = GetDataItemByValue(Network);
+                IDataItem networkAsDataItem = GetDataItemByValue(Network);
                 // Engine parameters that can be set by RTC
-                foreach (var engineParameter in GetEngineParametersForLocation(location))
+                foreach (EngineParameter engineParameter in GetEngineParametersForLocation(location))
                 {
                     // search it first in existing data items
-                    var existingDataItem = networkDataItem.Children
-                                                          .FirstOrDefault(di => di.ValueType == typeof(double)
-                                                                                && di.ValueConverter is Model1DBranchFeatureValueConverter valueConverter
-                                                                                && IsValueConverterForEngineParameter(location, valueConverter, engineParameter));
+                    IDataItem existingDataItem = networkAsDataItem.Children
+                                                                .FirstOrDefault(di => di.ValueType == typeof(double)
+                                                                                      && di.ValueConverter is Model1DBranchFeatureValueConverter valueConverter
+                                                                                      && IsValueConverterForEngineParameter(location, valueConverter, engineParameter));
 
                     if (existingDataItem != null)
                     {
@@ -981,12 +949,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     else
                     {
-                        yield return new DataItem
+                        yield return new DataItem(location)
                         {
-                            Name = location + " - " + engineParameter.Name,
+                            Name = location.ToString(),
                             Role = engineParameter.Role,
+                            Tag = engineParameter.Name,
                             ValueType = typeof(double),
-                            Parent = networkDataItem,
+                            Parent = networkAsDataItem,
                             ShouldBeRemovedAfterUnlink = true,
                             ValueConverter =
                                 new Model1DBranchFeatureValueConverter(
@@ -2290,18 +2259,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Coupling
 
-        /// <summary>
-        /// Gets the input data item feature collections.
-        /// </summary>
-        private IEnumerable<object> InputFeatureCollections
+        private IEnumerable<object> FeatureCollections
         {
             get
             {
                 yield return Area.Pumps;
                 yield return Area.Weirs;
                 yield return Area.Gates;
-                yield return Area.LeveeBreaches.OfType<LeveeBreach>().ToList();
                 yield return SourcesAndSinks.Select(ss => ss.Feature).ToList();
+                yield return Network.Pumps;
+                yield return Network.Weirs;
+                yield return Network.Orifices;
+                yield return Network.Gates;
+                yield return Network.Culverts;
+                yield return Network.LateralSources;
             }
         }
 
@@ -2312,56 +2283,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                yield return Area.Pumps;
-                yield return Area.Weirs;
+                yield return Area.LeveeBreaches.OfType<LeveeBreach>().ToList();
                 yield return Area.ObservationPoints;
                 yield return Area.ObservationCrossSections;
-                
+                yield return Network.ObservationPoints;
             }
-        }
-
-        private bool OutputFeatureCollectionsContains(object item)
-        {
-            if (item is GroupableFeature2DPoint)
-            {
-                return Area.ObservationPoints.Contains(item);
-            }
-
-            if (item is ObservationCrossSection2D)
-            {
-                return Area.ObservationCrossSections.Contains(item);
-            }
-            return false;
-        }
-
-        private bool InputFeatureCollectionsContains(object item)
-        {
-            if (item is Pump2D)
-            {
-                return Area.Pumps.Contains(item);
-            }
-            
-            if (item is Weir2D)
-            {
-                return Area.Weirs.Contains(item);
-            }
-
-            if (item is Gate2D)
-            {
-                return Area.Gates.Contains(item);
-            }
-
-            if (item is LeveeBreach)
-            {
-                return Area.LeveeBreaches.Contains(item);
-            }
-
-            if (item is Feature2D sourceAndSinkFeature)
-            {
-                return SourcesAndSinks?.Any(ss => ss.Feature.Equals(sourceAndSinkFeature)) ?? false;
-            }
-
-            return false;
         }
 
         private void CreatePointFeatureOfThisLeveeBreach(ILeveeBreach leveeFeature, LeveeBreachPointLocationType leveeBreachPointLocationType, IGeometry leveeFeatureBreachLocation)
@@ -2436,7 +2362,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private List<IDataItem> GetDataItemListForFeature(IFeature feature)
         {
-            return GetQuantitiesForLocation(feature).Select(quantity => new DataItem(feature)
+            IEnumerable<string> quantities = QuantityGenerator.GetQuantitiesForFeature(
+                feature, UseSalinity, UseTemperature, TracerDefinitions, SourcesAndSinks);
+            return quantities.Select(quantity => new DataItem(feature)
             {
                 Name = feature.ToString(),
                 Tag = quantity,
@@ -2448,117 +2376,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private DataItemRole GetDataItemRole(IFeature feature)
         {
-            if (feature is Pump2D || feature is Weir2D)
+            if (IsInputAndOutputFeature(feature))
             {
                 return DataItemRole.Input | DataItemRole.Output;
             }
 
-            if (feature is ObservationCrossSection2D || feature is GroupableFeature2DPoint)
+            if (IsOutputFeature(feature))
             {
                 return DataItemRole.Output;
-            }
-
-            if (feature is Gate2D || feature is LeveeBreach || IsSourcesAndSinksFeature(feature))
-            {
-                return DataItemRole.Input;
             }
 
             return DataItemRole.None;
         }
 
+        private bool IsInputAndOutputFeature(IFeature feature)
+        {
+            return feature is Pump2D || feature is Weir2D || feature is Gate2D || IsSourcesAndSinksFeature(feature);
+        }
+
+        private static bool IsOutputFeature(IFeature feature)
+        {
+            return feature is ObservationCrossSection2D || feature is ObservationPoint2D || feature is LeveeBreach;
+        }
+
         private bool IsSourcesAndSinksFeature(IFeature feature)
         {
             return SourcesAndSinks?.Any(ss => ss.Feature.Equals(feature)) ?? false;
-        }
-
-        private IEnumerable<string> GetQuantitiesForLocation(IFeature location)
-        {
-            var pump = location as IPump;
-            if (pump != null)
-            {
-                yield return KnownStructureProperties.Capacity;
-            }
-
-            var gate = location as IGate;
-            if (gate != null)
-            {
-                yield return "GateHeight";
-                yield return "GateLowerEdgeLevel";
-                yield return "GateOpeningWidth";
-                yield return "GateOpeningHorizontalDirection";
-            }
-            var orifice = location as IOrifice;
-            if (orifice != null)
-            {
-                yield return "gateLowerEdgeLevel";
-            }
-
-            var weir = location as IWeir;
-            if (weir != null)
-            {
-                yield return "CrestLevel";
-                var generalStructureWeirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureWeirFormula != null)
-                {
-                    yield return "GateHeight";
-                    yield return "GateLowerEdgeLevel";
-                    yield return "GateOpeningWidth";
-                    yield return "GateOpeningHorizontalDirection";
-                }
-                var gatedWeirFormula = weir.WeirFormula as GatedWeirFormula;
-                if (gatedWeirFormula != null)
-                {
-                    yield return "GateHeight";
-                    yield return "GateLowerEdgeLevel";
-                    yield return "GateOpeningWidth";
-                    yield return "GateOpeningHorizontalDirection";
-                }
-
-            }
-
-            if (Area.ObservationPoints.Contains(location))
-            {
-                yield return "water_level";
-                if (UseSalinity)
-                {
-                    yield return "salinity";
-                }
-
-                if (UseTemperature)
-                {
-                    yield return "temperature";
-                }
-
-                yield return "water_depth";
-                foreach (var tracerDefinition in TracerDefinitions)
-                {
-                    yield return tracerDefinition;
-                }
-            }
-
-            if (Area.ObservationCrossSections.Contains(location))
-            {
-                yield return "discharge";
-                yield return "velocity";
-                yield return "water_level";
-                yield return "water_depth";
-            }
-            if (Area.LeveeBreaches.Contains(location))
-            {
-                yield return "dambreak_s1up";
-                yield return "dambreak_s1dn";
-                yield return "dambreak_breach_depth";
-                yield return "dambreak_breach_width";
-                yield return "dambreak_instantaneous_discharge";
-                yield return "dambreak_cumulative_discharge";
-            }
-
-            if (SourcesAndSinks?.Any(ss => ss.Feature.Equals(location)) ?? false)
-            {
-                yield return "discharge";
-                yield return "change_in_salinity";
-                yield return "change_in_temperature";
-            }
         }
 
         public double GetValueFromModelApi(IFeature feature, string parameterName)
@@ -3240,20 +3083,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return GetChildDataItemLocations(role).SelectMany(GetChildDataItems);
         }
 
-        public string GetUpToDateDataItemName(string oldDataItemName)
-        {
-            string[] partsTargetName = oldDataItemName.Split('.');
-
-            if (partsTargetName.Length <= 1 || 
-                !backwardsCompatibilityMapping.TryGetValue(partsTargetName.Last(), out string newName))
-            {
-                return oldDataItemName;
-            }
-
-            partsTargetName[partsTargetName.Length - 1] = newName;
-            return string.Join(".", partsTargetName);
-        }
-
         private static readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
         {
             {"levelcenter", KnownStructureProperties.CrestLevel},
@@ -3306,8 +3135,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
             {
                 var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
-                return parameterValueConverter?.ParameterName == parameterName || 
-                       parameterValueConverter?.ParameterName == parameterName2;
+                return parameterValueConverter != null &&
+                       (parameterValueConverter.ParameterName.EqualsCaseInsensitive(parameterName) || 
+                       parameterValueConverter.ParameterName.EqualsCaseInsensitive(parameterName2));
             });
             
             if (dataItem == null)

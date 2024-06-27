@@ -207,6 +207,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetHydroAreaLayerCreator<Embankment>();
             yield return GetHydroAreaLayerCreator<BridgePillar>();
             yield return GetHydroAreaLayerCreator<Gully>();
+            yield return GetHydroAreaLayerCreator<ObservationPoint2D>();
         }
 
         /// <summary>

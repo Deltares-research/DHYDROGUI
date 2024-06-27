@@ -123,8 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {Model1DParameterNames.StructureCrestLevel, "CrestLevel"},
                 {Model1DParameterNames.StructureOpeningHeight, "GateHeight"},
                 {Model1DParameterNames.StructureGateLevel, "GateLowerEdgeLevel"},
-                {Model1DParameterNames.StructureGateOpeningWidth, "GateOpeningWidth"},
-                {Model1DParameterNames.StructureGateOpeningHorizontalDirection, "GateOpeningHorizontalDirection"},
+                {Model1DParameterNames.StructureGateOpeningWidth, "GateOpeningWidth"}
             };
         }
 
@@ -135,8 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {Model1DParameterNames.StructureCrestLevel, "CrestLevel"},
                 {Model1DParameterNames.StructureOpeningHeight, "GateHeight"},
                 {Model1DParameterNames.StructureGateLevel, "GateLowerEdgeLevel"},
-                {Model1DParameterNames.StructureGateOpeningWidth, "GateOpeningWidth"},
-                {Model1DParameterNames.StructureGateOpeningHorizontalDirection, "GateOpeningHorizontalDirection"},
+                {Model1DParameterNames.StructureGateOpeningWidth, "GateOpeningWidth"}
             };
         }
         private static Dictionary<string, string> CreateCulvertsNames()

@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     new Coordinate(50, 100)
                 })
             };
-            var obserVationPoint = new GroupableFeature2DPoint
+            var obserVationPoint = new ObservationPoint2D()
             {
                 Name = "station",
                 Geometry = new Point(0, 0)

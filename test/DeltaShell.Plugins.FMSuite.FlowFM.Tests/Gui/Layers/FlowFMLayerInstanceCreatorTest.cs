@@ -538,7 +538,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
                 return ToCase(model, featureType, layerName);
             }
 
-            yield return GetCase<GroupableFeature2DPoint>(
+            yield return GetCase<ObservationPoint2D>(
                     (model, data) => model.Area.ObservationPoints.AddRange(data),
                     EstimatedSnappedFeatureType.ObservationPoints, 
                     FlowFMLayerNames.EstimatedSnappedObservationPoints);

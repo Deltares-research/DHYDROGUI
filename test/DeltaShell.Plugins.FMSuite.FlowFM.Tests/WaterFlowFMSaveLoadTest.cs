@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Project.RootFolder.Add(model);
 
                 // add obs point
-                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "obs1", Geometry = new Point(15, 15) });
+                model.Area.ObservationPoints.Add(new ObservationPoint2D { Name = "obs1", Geometry = new Point(15, 15) });
 
                 // save & reload
                 app.SaveProjectAs(path);
@@ -445,7 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.SaveProjectAs(path); // save
 
                 // add obs point
-                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "obs1", Geometry = new Point(15, 15) });
+                model.Area.ObservationPoints.Add(new ObservationPoint2D { Name = "obs1", Geometry = new Point(15, 15) });
 
                 // save & reload
                 app.SaveProject(); //this only works if nhibernate is aware that something changed and actually does something

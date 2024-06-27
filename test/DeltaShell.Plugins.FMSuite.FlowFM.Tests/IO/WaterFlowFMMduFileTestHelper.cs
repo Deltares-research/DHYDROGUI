@@ -18,6 +18,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
         }
 
+        public static ObservationPoint2D GetNewObservationPoint2D(string groupName, string featureName)
+        {
+            return new ObservationPoint2D
+            {
+                GroupName = groupName,
+                Name = featureName,
+                Geometry = new Point(new Coordinate(0, 100)),
+                IsDefaultGroup = true
+            };
+        }
+
         public static GroupablePointFeature GetNewGroupablePointFeature(string groupName)
         {
             return new GroupablePointFeature
