@@ -13,7 +13,7 @@
     <PackageVersion Include="DeltaShell.Plugins.GridEditor" Version="1.1.0.143-beta" />
     <PackageVersion Include="DHYDRO.Common" Version="1.2.0.284-development" />
     <PackageVersion Include="DHYDRO.Common.TestUtils" Version="1.2.0.284-development" />
-    <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.33" />
+    <PackageVersion Include="DHYDRO.SharedConfigurations" Version="1.0.0.35" />
     <PackageVersion Include="DHYDRO.TestModels.Common" Version="4.0.0.8" />
     <PackageVersion Include="DHYDRO.TestModels.DFlowFM" Version="4.0.0.8" />
     <PackageVersion Include="Dimr.Libs" Version="2.27.5" />
