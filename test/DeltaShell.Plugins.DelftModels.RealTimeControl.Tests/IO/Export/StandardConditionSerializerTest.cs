@@ -165,14 +165,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 "</condition>" +
                 "<true>" +
                 "<trigger>" +
-                "<expression id=\"Group1/expression\">" +
-                "<x1Series ref=\"IMPLICIT\">expression/([Input]ObservationPoint2/WaterLevel2 + 1)</x1Series>" +
-                "<mathematicalOperator>+</mathematicalOperator>" +
-                "<x2Value>2</x2Value>" +
-                "<y>expression</y>" +
-                "</expression>" +
-                "</trigger>" +
-                "<trigger>" +
                 "<expression id=\"Group1/expression/([Input]ObservationPoint2/WaterLevel2 + 1)\">" +
                 "<x1Series ref=\"IMPLICIT\">[Input]ObservationPoint2/WaterLevel2</x1Series>" +
                 "<mathematicalOperator>+</mathematicalOperator>" +
@@ -180,22 +172,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 "<y>expression/([Input]ObservationPoint2/WaterLevel2 + 1)</y>" +
                 "</expression>" +
                 "</trigger>" +
-                "</true>" +
-                "<false>" +
                 "<trigger>" +
-                "<expression id=\"Group1/expression2\">" +
-                "<x1Series ref=\"IMPLICIT\">expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</x1Series>" +
+                "<expression id=\"Group1/expression\">" +
+                "<x1Series ref=\"IMPLICIT\">expression/([Input]ObservationPoint2/WaterLevel2 + 1)</x1Series>" +
                 "<mathematicalOperator>+</mathematicalOperator>" +
                 "<x2Value>2</x2Value>" +
-                "<y>expression2</y>" +
+                "<y>expression</y>" +
                 "</expression>" +
                 "</trigger>" +
+                "</true>" +
+                "<false>" +
                 "<trigger>" +
                 "<expression id=\"Group1/expression2/([Input]ObservationPoint3/WaterLevel3 + 1)\">" +
                 "<x1Series ref=\"IMPLICIT\">[Input]ObservationPoint3/WaterLevel3</x1Series>" +
                 "<mathematicalOperator>+</mathematicalOperator>" +
                 "<x2Value>1</x2Value>" +
                 "<y>expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</y>" +
+                "</expression>" +
+                "</trigger>" +
+                "<trigger>" +
+                "<expression id=\"Group1/expression2\">" +
+                "<x1Series ref=\"IMPLICIT\">expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</x1Series>" +
+                "<mathematicalOperator>+</mathematicalOperator>" +
+                "<x2Value>2</x2Value>" +
+                "<y>expression2</y>" +
                 "</expression>" +
                 "</trigger>" +
                 "</false>" +

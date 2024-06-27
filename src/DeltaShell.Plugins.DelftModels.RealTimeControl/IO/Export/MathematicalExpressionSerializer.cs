@@ -68,13 +68,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes);
 
             string idRootNode = GetXmlNameWithoutTag(prefix);
-            yield return CreateTriggerForExpression(xNamespace, rootNode, idRootNode);
 
             foreach (IBranchNode subBranchNode in subBranchNodes)
             {
                 string idSubBranchNodes = prefix + subBranchNode.YName;
                 yield return CreateTriggerForExpression(xNamespace, subBranchNode, idSubBranchNodes);
             }
+
+            yield return CreateTriggerForExpression(xNamespace, rootNode, idRootNode);
         }
 
         /// <summary>

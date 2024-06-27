@@ -103,20 +103,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
             // Assert
             string expectedXmlCode1 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                                      "<expression id=\"Control Group 1/f1\">" +
-                                      "<x1Series ref=\"IMPLICIT\">f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)</x1Series>" +
-                                      "<mathematicalOperator>+</mathematicalOperator>" +
-                                      "<x2Series ref=\"IMPLICIT\">[Input]feature3/waterlevel</x2Series>" +
-                                      "<y>f1</y>" +
-                                      "</expression>" +
-                                      "</trigger>";
-
-            string expectedXmlCode2 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                                       "<expression id=\"Control Group 1/f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)\">" +
                                       "<x1Series ref=\"IMPLICIT\">[Input]feature1/waterlevel</x1Series>" +
                                       "<mathematicalOperator>+</mathematicalOperator>" +
                                       "<x2Series ref=\"IMPLICIT\">[Input]feature2/waterlevel</x2Series>" +
                                       "<y>f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)</y>" +
+                                      "</expression>" +
+                                      "</trigger>";
+
+            string expectedXmlCode2 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
+                                      "<expression id=\"Control Group 1/f1\">" +
+                                      "<x1Series ref=\"IMPLICIT\">f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)</x1Series>" +
+                                      "<mathematicalOperator>+</mathematicalOperator>" +
+                                      "<x2Series ref=\"IMPLICIT\">[Input]feature3/waterlevel</x2Series>" +
+                                      "<y>f1</y>" +
                                       "</expression>" +
                                       "</trigger>";
 
@@ -198,20 +198,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
             // Assert
             string expectedXmlCode1 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                                      "<expression id=\"Control Group 1/f1\">" +
-                                      "<x1Series ref=\"IMPLICIT\">f1/(f2 + [Input]feature2/waterlevel)</x1Series>" +
-                                      "<mathematicalOperator>+</mathematicalOperator>" +
-                                      "<x2Series ref=\"IMPLICIT\">[Input]feature3/waterlevel</x2Series>" +
-                                      "<y>f1</y>" +
-                                      "</expression>" +
-                                      "</trigger>";
-
-            string expectedXmlCode2 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                                       "<expression id=\"Control Group 1/f1/(f2 + [Input]feature2/waterlevel)\">" +
                                       "<x1Series ref=\"IMPLICIT\">f2</x1Series>" +
                                       "<mathematicalOperator>+</mathematicalOperator>" +
                                       "<x2Series ref=\"IMPLICIT\">[Input]feature2/waterlevel</x2Series>" +
                                       "<y>f1/(f2 + [Input]feature2/waterlevel)</y>" +
+                                      "</expression>" +
+                                      "</trigger>";
+
+            string expectedXmlCode2 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
+                                      "<expression id=\"Control Group 1/f1\">" +
+                                      "<x1Series ref=\"IMPLICIT\">f1/(f2 + [Input]feature2/waterlevel)</x1Series>" +
+                                      "<mathematicalOperator>+</mathematicalOperator>" +
+                                      "<x2Series ref=\"IMPLICIT\">[Input]feature3/waterlevel</x2Series>" +
+                                      "<y>f1</y>" +
                                       "</expression>" +
                                       "</trigger>";
 
