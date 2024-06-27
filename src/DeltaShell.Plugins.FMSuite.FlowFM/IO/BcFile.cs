@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -11,7 +12,6 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO

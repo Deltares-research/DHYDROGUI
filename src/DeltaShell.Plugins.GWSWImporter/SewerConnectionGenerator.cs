@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW

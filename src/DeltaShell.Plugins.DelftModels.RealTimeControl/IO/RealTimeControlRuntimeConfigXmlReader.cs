@@ -1,7 +1,7 @@
 ﻿using System.IO;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.IO.FileReaders;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {

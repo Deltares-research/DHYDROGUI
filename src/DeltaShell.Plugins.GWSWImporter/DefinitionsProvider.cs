@@ -8,8 +8,9 @@ using System.Reflection;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {

@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FixedFiles;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw

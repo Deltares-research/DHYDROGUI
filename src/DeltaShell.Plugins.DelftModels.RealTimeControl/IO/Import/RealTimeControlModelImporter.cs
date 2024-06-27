@@ -7,8 +7,8 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.IO;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DHYDRO.Common.Extensions;
 using log4net;
 using Newtonsoft.Json;
 

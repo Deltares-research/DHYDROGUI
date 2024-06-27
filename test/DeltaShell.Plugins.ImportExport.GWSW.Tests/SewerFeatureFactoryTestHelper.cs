@@ -7,7 +7,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Reflection;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

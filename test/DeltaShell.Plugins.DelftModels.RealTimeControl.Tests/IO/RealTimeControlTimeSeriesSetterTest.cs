@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DHYDRO.Common.Logging;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO

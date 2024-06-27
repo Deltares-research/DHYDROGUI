@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Properties;
-using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 

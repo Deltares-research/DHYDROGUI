@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui.MapLayers.Providers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.ProvidersInput2D.SnappedFeatures;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;

@@ -10,7 +10,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;

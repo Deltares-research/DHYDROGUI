@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro;
-using DHYDRO.Common.IO.Ini;
+using Deltares.Infrastructure.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {

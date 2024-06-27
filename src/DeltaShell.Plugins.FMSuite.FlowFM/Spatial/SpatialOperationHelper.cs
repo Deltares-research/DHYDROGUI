@@ -1,6 +1,6 @@
 using System.Linq;
 using DelftTools.Utils;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using SharpMap.Api.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Spatial

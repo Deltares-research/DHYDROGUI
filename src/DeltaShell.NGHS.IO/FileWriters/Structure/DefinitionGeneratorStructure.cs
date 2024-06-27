@@ -1,6 +1,6 @@
 ﻿using DelftTools.Hydro;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     public abstract class DefinitionGeneratorStructure : IDefinitionGeneratorStructure
     {
         /// <summary>
-        /// Gets the <see cref="DHYDRO.Common.IO.Ini.IniSection"/> which is being constructed.
+        /// Gets the <see cref="Deltares.Infrastructure.IO.Ini.IniSection"/> which is being constructed.
         /// </summary>
         protected IniSection IniSection { get; }
 

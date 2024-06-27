@@ -2,7 +2,7 @@
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 

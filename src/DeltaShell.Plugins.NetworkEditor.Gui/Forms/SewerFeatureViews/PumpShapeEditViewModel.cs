@@ -1,6 +1,6 @@
 ﻿using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews

@@ -7,8 +7,8 @@ using BruTile.Cache;
 using BruTile.Web;
 using BruTile.Wmts;
 using DelftTools.Utils;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.API.Guards;
 using SharpMap.Extensions.Layers;
 using FileCache = SharpMap.Extensions.Layers.FileCache;
 

@@ -1,6 +1,6 @@
 using DelftTools.Functions;
 using DelftTools.Hydro;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 {

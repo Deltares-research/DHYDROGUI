@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Aop;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DHYDRO.Common.IO.Ini;
 using SharpMap;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition

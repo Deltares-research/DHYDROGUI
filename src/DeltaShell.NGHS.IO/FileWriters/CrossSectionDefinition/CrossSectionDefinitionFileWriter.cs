@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Properties;
-using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition

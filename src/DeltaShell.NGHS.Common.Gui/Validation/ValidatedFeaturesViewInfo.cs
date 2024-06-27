@@ -5,7 +5,7 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Gui;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;

@@ -1,6 +1,6 @@
-﻿using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+﻿using Deltares.Infrastructure.API.Logging;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW

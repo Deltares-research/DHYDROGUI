@@ -10,7 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.ComponentModel;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 

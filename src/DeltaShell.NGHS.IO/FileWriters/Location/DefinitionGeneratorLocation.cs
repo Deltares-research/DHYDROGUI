@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Location

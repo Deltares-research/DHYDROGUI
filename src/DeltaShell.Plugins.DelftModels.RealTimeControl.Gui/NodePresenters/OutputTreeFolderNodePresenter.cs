@@ -3,7 +3,7 @@ using System.Drawing;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Drawing;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters

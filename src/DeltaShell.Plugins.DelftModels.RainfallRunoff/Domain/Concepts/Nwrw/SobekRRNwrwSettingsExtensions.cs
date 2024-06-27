@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {

@@ -1,12 +1,12 @@
 using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Is = NUnit.Framework.Is;

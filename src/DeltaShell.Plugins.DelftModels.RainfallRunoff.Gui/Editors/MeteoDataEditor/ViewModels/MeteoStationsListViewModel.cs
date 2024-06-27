@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Editors.MeteoDataEditor.ViewModels
 {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using DHYDRO.Common.Logging;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW

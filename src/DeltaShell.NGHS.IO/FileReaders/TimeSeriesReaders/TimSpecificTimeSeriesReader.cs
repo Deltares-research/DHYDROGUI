@@ -1,6 +1,6 @@
 using System;
 using DelftTools.Functions;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 
 namespace DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders

@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations
 {

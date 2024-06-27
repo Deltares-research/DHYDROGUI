@@ -6,8 +6,8 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

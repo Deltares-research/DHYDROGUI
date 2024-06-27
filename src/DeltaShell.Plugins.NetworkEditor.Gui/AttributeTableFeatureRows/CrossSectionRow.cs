@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 

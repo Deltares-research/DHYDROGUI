@@ -2,7 +2,7 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using FlowDirection = DelftTools.Hydro.FlowDirection;
 

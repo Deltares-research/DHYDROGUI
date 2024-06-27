@@ -6,10 +6,10 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.IO.Ini;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance

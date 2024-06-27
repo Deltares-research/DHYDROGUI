@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Logging
 {

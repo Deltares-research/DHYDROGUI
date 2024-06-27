@@ -5,7 +5,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Utils;
 using DelftTools.Utils.Globalization;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.NGHS.Common.Gui.WPF
 {

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

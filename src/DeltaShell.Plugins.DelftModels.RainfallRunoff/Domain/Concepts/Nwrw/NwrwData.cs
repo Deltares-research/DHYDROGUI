@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {

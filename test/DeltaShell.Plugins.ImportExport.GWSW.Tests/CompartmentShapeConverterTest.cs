@@ -1,6 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Utils.Extensions;
 using log4net;
 

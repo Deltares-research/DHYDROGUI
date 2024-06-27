@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 

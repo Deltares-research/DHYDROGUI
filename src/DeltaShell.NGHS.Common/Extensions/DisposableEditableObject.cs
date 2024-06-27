@@ -1,5 +1,5 @@
 ﻿using DelftTools.Utils.Editing;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Utils;
 
 namespace DeltaShell.NGHS.Common.Extensions

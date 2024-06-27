@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
-using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
@@ -40,7 +40,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         /// Initializes a new instance of <see cref="StructureParserBase"/>.
         /// </summary>
         /// <param name="structureType">The structure type.</param>
-        /// <param name="iniSection">The structure <see cref="DHYDRO.Common.IO.Ini.IniSection"/> to parse.</param>
+        /// <param name="iniSection">The structure <see cref="Deltares.Infrastructure.IO.Ini.IniSection"/> to parse.</param>
         /// <param name="branch">The branch the structure should be imported to.</param>
         /// <param name="structuresFilename">The structures filename.</param>
         /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
@@ -67,7 +67,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         }
 
         /// <summary>
-        /// Parses a structure from the structure <see cref="DHYDRO.Common.IO.Ini.IniSection"/>.
+        /// Parses a structure from the structure <see cref="Deltares.Infrastructure.IO.Ini.IniSection"/>.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="FileReadingException">Thrown when any property in the IniSection is missing a value.</exception>
@@ -84,7 +84,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
         }
 
         /// <summary>
-        /// Parses a structure from the <see cref="DHYDRO.Common.IO.Ini.IniSection"/>.
+        /// Parses a structure from the <see cref="Deltares.Infrastructure.IO.Ini.IniSection"/>.
         /// </summary>
         /// <returns>The parsed structure.</returns>
         protected abstract IStructure1D Parse();

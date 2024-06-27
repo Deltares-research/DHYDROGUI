@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers

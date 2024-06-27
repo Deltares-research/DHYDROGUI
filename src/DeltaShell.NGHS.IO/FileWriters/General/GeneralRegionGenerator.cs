@@ -1,5 +1,5 @@
-﻿using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.IO.Ini;
+﻿using Deltares.Infrastructure.IO.Ini;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.General
 {

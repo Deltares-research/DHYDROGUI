@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Guards;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.API.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Logging

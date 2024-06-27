@@ -1,8 +1,8 @@
 using System;
 using System.IO;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {

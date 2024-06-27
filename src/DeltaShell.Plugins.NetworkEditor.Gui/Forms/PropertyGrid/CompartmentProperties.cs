@@ -8,9 +8,9 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 

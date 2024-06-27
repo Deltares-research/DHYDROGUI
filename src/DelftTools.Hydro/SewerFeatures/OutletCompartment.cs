@@ -4,7 +4,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.ComponentModel;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro.SewerFeatures

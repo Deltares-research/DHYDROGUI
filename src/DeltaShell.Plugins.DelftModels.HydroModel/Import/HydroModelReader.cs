@@ -3,11 +3,11 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Services;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.Dimr.dimr_xsd;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {

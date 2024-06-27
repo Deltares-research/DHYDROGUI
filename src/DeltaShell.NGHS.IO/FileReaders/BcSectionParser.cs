@@ -4,11 +4,12 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.Utils.Extensions;
-using DHYDRO.Common.Logging;
+
 using TimeUnits = DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.UnitStrings;
 
 namespace DeltaShell.NGHS.IO.FileReaders

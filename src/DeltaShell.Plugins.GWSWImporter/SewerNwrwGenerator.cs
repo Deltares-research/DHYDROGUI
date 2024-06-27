@@ -1,7 +1,7 @@
 ﻿using System;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {

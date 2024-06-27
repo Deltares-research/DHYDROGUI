@@ -1,7 +1,7 @@
 ﻿using System;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

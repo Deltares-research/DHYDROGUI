@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using log4net;
 using log4net.Core;
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 

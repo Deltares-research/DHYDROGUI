@@ -2,8 +2,8 @@
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using DHYDRO.Common.Logging;
 using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;

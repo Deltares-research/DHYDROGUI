@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;

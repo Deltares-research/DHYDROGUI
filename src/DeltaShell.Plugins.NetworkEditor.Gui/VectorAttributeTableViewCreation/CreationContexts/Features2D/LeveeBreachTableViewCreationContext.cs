@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;

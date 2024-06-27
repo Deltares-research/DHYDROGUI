@@ -1,7 +1,7 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
-using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {

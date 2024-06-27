@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Utils.Guards;
-using DHYDRO.Common.IO.Ini;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers

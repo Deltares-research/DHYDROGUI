@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Properties;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Dimr.dimr_xsd
 {

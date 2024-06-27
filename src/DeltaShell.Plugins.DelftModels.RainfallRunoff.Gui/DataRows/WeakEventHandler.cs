@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="PR.utils.WeakEventHandler&lt;T,E&gt;"/> to <see cref="System.EventHandler&lt;E&gt;"/>.
+        /// Performs an implicit conversion from <see cref="WeakEventHandler{T,E}"/> to <see cref="System.EventHandler&lt;E&gt;"/>.
         /// </summary>
         /// <param name="weh">The weh.</param>
         /// <returns>The result of the conversion.</returns>

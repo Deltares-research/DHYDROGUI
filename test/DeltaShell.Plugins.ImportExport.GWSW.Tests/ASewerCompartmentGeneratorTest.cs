@@ -2,7 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

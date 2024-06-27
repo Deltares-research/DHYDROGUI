@@ -7,6 +7,8 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Extensions;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
@@ -16,7 +18,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.DataAccessObjects;
 using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter

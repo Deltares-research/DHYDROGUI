@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using BridgeType = DelftTools.Hydro.Structures.BridgeType;
 

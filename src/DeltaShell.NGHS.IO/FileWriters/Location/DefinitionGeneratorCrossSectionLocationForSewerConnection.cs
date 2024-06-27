@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using DelftTools.Hydro.SewerFeatures;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils;
-using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Location

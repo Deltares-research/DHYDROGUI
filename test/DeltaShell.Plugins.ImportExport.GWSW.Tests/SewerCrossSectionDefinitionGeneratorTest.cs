@@ -4,7 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;

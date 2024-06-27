@@ -1,7 +1,7 @@
 ﻿using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {

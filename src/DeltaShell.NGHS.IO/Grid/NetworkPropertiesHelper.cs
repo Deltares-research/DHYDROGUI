@@ -2,10 +2,10 @@
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.NGHS.IO.Grid
 {

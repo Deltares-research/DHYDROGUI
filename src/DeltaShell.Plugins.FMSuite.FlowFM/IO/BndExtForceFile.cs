@@ -6,6 +6,9 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.IO.Ini;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders.Boundary;
@@ -18,8 +21,6 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 

@@ -3,7 +3,7 @@ using DelftTools.Functions;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
 {

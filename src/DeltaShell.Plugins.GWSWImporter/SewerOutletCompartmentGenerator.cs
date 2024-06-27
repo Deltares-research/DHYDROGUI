@@ -1,6 +1,6 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {

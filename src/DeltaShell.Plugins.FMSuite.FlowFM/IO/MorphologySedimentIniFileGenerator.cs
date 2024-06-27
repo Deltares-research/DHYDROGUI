@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DHYDRO.Common.IO.Ini;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO

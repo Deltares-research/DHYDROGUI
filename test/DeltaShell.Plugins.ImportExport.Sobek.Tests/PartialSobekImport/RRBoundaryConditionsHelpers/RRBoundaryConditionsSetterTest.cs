@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Hydro;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryConditionsHelpers;
 using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

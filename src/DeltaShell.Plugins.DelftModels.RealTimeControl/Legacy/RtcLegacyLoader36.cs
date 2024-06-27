@@ -6,11 +6,12 @@ using System.Text.RegularExpressions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DHYDRO.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 {

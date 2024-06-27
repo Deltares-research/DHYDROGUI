@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DHYDRO.Common.IO.Ini;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 

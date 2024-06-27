@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Dimr.dimr_xsd;
 using DeltaShell.Dimr.DimrXsd;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;

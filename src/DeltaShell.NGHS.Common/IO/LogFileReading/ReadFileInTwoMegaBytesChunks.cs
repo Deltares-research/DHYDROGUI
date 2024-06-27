@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Text;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.NGHS.Common.IO.LogFileReading
 {

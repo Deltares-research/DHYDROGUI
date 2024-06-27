@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.NGHS.Common.Gui.MapLayers.Providers

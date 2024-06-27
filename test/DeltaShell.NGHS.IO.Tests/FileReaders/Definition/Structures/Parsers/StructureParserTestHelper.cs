@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using DelftTools.Utils.Guards;
-using DHYDRO.Common.IO.Ini;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
 {

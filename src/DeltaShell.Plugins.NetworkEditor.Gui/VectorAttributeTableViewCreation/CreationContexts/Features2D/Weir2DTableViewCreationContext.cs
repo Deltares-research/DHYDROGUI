@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.VectorAttributeTableViewCreation.CreationContexts.Features2D

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.Common.Gui.PropertyGrid.PropertyInfoCreation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;

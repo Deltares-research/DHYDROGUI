@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
-using DHYDRO.Common.IO.Ini;
+using Deltares.Infrastructure.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {

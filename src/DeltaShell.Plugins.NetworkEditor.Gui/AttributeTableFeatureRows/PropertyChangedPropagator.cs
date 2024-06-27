@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using DelftTools.Utils;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.AttributeTableFeatureRows
 {

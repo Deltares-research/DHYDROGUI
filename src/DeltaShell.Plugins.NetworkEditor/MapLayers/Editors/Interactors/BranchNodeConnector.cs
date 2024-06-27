@@ -1,7 +1,7 @@
 using System.Linq;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;

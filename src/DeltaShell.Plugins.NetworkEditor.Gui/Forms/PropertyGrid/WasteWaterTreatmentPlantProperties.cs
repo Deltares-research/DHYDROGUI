@@ -3,9 +3,9 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.CommonTools.Gui.Property;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 

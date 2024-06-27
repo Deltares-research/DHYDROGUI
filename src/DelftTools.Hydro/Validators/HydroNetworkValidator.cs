@@ -7,8 +7,8 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
+using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 

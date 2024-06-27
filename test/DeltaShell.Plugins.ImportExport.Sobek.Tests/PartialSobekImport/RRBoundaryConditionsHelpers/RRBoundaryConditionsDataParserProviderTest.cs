@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter.RRBoundaryConditionsHelpers;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

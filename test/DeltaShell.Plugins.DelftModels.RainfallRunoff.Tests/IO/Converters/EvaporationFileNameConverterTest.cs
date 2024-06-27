@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.DataAccessObjects;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

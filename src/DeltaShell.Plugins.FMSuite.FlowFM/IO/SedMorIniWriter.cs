@@ -1,7 +1,7 @@
 ﻿using System;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters;
-using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

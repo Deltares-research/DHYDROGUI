@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using DelftTools.Utils;
-using DHYDRO.Common.IO.Ini;
+using Deltares.Infrastructure.IO.Ini;
 using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders

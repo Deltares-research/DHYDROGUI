@@ -6,13 +6,14 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
+using Deltares.Infrastructure.API.Logging;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.Converters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.IO.DataAccessObjects;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using DHYDRO.Common.Logging;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using DelftTools.Utils;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw

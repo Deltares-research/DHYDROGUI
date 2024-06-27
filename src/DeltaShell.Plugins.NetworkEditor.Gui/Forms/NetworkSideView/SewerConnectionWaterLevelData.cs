@@ -1,5 +1,5 @@
 using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView

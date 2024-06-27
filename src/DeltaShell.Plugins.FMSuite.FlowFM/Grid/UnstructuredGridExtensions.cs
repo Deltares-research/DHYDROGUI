@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Extensions;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Grid

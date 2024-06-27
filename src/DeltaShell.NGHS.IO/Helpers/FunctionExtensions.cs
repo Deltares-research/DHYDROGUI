@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
-using DHYDRO.Common.IO.Ini;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {

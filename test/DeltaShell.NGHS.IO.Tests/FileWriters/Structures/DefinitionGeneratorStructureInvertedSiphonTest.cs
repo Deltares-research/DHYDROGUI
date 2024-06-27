@@ -1,8 +1,8 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
-using DHYDRO.Common.IO.Ini;
 using NSubstitute;
 using NUnit.Framework;
 

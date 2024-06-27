@@ -7,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
@@ -15,7 +16,6 @@ using DeltaShell.NGHS.IO.TestUtils.EqualityComparers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Builders;
-using DHYDRO.Common.IO.Ini;
 using NSubstitute;
 using NUnit.Framework;
 

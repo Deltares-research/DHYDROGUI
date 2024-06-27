@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Reflection;
-using DHYDRO.Common.Logging;
+using Deltares.Infrastructure.API.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

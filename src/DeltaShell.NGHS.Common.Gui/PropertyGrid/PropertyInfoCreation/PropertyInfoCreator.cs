@@ -1,5 +1,5 @@
 using DelftTools.Shell.Gui;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.NGHS.Common.Gui.PropertyGrid.PropertyInfoCreation
 {

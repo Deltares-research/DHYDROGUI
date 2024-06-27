@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.SteerableProperties;
 using DelftTools.Utils.Collections;
+using Deltares.Infrastructure.IO.Ini;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
@@ -17,7 +18,6 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.FileWriters.Structure.StructureFileNameGenerator;
 using DeltaShell.NGHS.IO.FileWriters.TimeSeriesWriters;
 using DeltaShell.NGHS.IO.Helpers;
-using DHYDRO.Common.IO.Ini;
 using WriteTimeSeriesAction = System.Action<string, System.DateTime, object>;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO

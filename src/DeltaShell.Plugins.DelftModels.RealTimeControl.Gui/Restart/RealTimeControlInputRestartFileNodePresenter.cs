@@ -4,7 +4,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui.NodePresenters;
 using DeltaShell.NGHS.Common.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;

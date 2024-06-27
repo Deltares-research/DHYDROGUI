@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
+using Deltares.Infrastructure.API.Logging;
 using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.IO.FileReaders;
-using DHYDRO.Common.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

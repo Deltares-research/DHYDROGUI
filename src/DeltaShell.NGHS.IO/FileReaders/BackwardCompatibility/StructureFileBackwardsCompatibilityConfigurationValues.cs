@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using DHYDRO.Common.IO.Ini.BackwardCompatibility;
+using Deltares.Infrastructure.IO.Ini.BackwardCompatibility;
 
 namespace DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility
 {

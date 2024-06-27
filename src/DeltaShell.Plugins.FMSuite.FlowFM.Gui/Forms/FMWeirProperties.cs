@@ -5,9 +5,9 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
 using DelftTools.Utils.Validation.NameValidation;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 

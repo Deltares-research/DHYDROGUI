@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using DHYDRO.Common.Extensions;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

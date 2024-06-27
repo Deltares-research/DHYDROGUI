@@ -1,6 +1,6 @@
 ﻿using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart
 {

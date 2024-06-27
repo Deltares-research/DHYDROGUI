@@ -1,7 +1,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors

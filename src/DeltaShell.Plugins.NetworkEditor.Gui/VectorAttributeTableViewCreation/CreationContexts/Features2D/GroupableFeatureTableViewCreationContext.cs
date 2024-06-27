@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;

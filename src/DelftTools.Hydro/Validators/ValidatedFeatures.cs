@@ -1,5 +1,5 @@
 ﻿using System;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 

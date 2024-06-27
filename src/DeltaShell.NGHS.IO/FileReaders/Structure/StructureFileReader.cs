@@ -8,16 +8,16 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
+using Deltares.Infrastructure.IO.Ini;
+using Deltares.Infrastructure.IO.Ini.BackwardCompatibility;
+using Deltares.Infrastructure.Logging;
 using DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileReaders.TimeSeriesReaders;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
-using DHYDRO.Common.IO.Ini.BackwardCompatibility;
-using DHYDRO.Common.IO.Ini;
-using DHYDRO.Common.Logging;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Structure

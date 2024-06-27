@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Guards;
+using Deltares.Infrastructure.API.Guards;
 using DeltaShell.NGHS.Common.Gui.MapLayers.Providers;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;

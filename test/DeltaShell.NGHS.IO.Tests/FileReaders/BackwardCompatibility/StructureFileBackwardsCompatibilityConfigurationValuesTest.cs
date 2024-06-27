@@ -1,6 +1,6 @@
 using System;
+using Deltares.Infrastructure.IO.Ini.BackwardCompatibility;
 using DeltaShell.NGHS.IO.FileReaders.BackwardCompatibility;
-using DHYDRO.Common.IO.Ini.BackwardCompatibility;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.BackwardCompatibility
