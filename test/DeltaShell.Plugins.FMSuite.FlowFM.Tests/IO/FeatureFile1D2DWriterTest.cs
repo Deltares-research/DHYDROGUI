@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 
@@ -24,6 +25,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private const string CrossSectionLocationFileName = FeatureFile1D2DWriter.CROSS_SECTION_LOCATION_FILE_NAME;
         private const string StructuresFileName = FeatureFile1D2DWriter.STRUCTURES_FILE_NAME;
         private const string NodeFileName = FeatureFile1D2DWriter.NODE_FILE_NAME;
+
+        private FeatureFile1D2DWriter featureFileWriter;
+
+        [SetUp]
+        public void SetUp()
+        {
+            featureFileWriter = new FeatureFile1D2DWriter(new InitialFieldFile());
+        }
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -44,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             fmModel.Network.Nodes.Add(manhole);
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             Assert.IsTrue(File.Exists(nodeFilePath));
 
@@ -69,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var fileStream = File.Create(nodeFilePath);
             fileStream.Close();
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             Assert.IsFalse(File.Exists(nodeFilePath));
         }
@@ -95,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Network = network
             };
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             Assert.IsTrue(File.Exists(crossSectionDefinitionFilePath), "Cross section definition file was not written");
             Assert.IsTrue(File.Exists(crossSectionLocationFilePath), "Cross section location file was not written");
@@ -124,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Network = network
             };
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             Assert.IsTrue(File.Exists(crossSectionDefinitionFilePath), "Cross section definition file was not written");
             Assert.IsTrue(File.Exists(crossSectionLocationFilePath), "Cross section location file was not written");
@@ -161,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             definitionFileStream.Close();
             locationFileStream.Close();
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             Assert.IsFalse(File.Exists(crossSectionDefinitionFilePath), "Cross section definition file was written, but should not have been written");
             Assert.IsFalse(File.Exists(crossSectionDefinitionFilePath), "Cross section location file was written, but should not have been written");
@@ -188,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Network = network
             };
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             Assert.IsTrue(File.Exists(structuresFilePath), "Structures file was not written");
 
@@ -212,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Network = network
             };
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             Assert.IsTrue(File.Exists(structuresFilePath), "Structures file was not written");
 
@@ -232,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, "someText");
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile);
             Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(string.Empty));
@@ -254,7 +263,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var sewerRoughnessSection = fmModel.RoughnessSections.FirstOrDefault(rs => rs.Name == roughnessSectionName);
             Assert.IsNotNull(sewerRoughnessSection);
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
             Assert.That(File.Exists(sewerRoughnessFilePath), $"{roughnessSectionName} roughness file was not written");
         }
 
@@ -273,7 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var sewerRoughnessSection = fmModel.RoughnessSections.FirstOrDefault(rs => rs.Name == roughnessSectionName);
             Assert.IsNotNull(sewerRoughnessSection);
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+            featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
             var frictionProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.FrictFile);
             Assert.Contains(sewerRoughnessFileName, frictionProperty.GetValueAsString().Split(';'));
@@ -293,7 +302,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     fmModel.Network.Branches.Add(channel);
                     Assert.That(fmModel.Network.Channels.Count(), Is.EqualTo(1));
 
-                    FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
+                    featureFileWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
                     var frictionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.FrictFile);
                     var actualFileNames = frictionFileProperty.GetValueAsString().Split(';');
                     Assert.Contains(expectedFileName, actualFileNames);

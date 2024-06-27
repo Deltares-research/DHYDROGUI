@@ -25,6 +25,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
@@ -74,8 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private PliFile<ObservationCrossSection2D> obsCrsFile;
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;
-        private Feature2DPointFile<Gully> gullyFile = new Feature2DPointFile<Gully>();
         
+        private readonly Feature2DPointFile<Gully> gullyFile;
+        private readonly FeatureFile1D2DReader featureFileReader;
+        private readonly FeatureFile1D2DWriter featureFileWriter;
 
         // the following mdu-referenced files are written by the UI, or at least should not be copied along blindly 
         // (please keep this list up-to-date!):
@@ -112,6 +115,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public MduFile(IFlexibleMeshModelApi api  =  null)
         {
+            var initialFieldFile = new InitialFieldFile();
+            featureFileReader = new FeatureFile1D2DReader(initialFieldFile);
+            featureFileWriter = new FeatureFile1D2DWriter(initialFieldFile);
+            gullyFile = new Feature2DPointFile<Gully>();
+
             if (FMDllVersion != null)
                 return; // do it once
             
@@ -239,11 +247,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 fouFileWriter.WriteToDirectory(targetDir);
             }
 
-            if(targetMduFilePath != null &&
-               network != null &&
-               hydroArea != null &&
-               roughnessSections != null)
-                FeatureFile1D2DWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, network, hydroArea, roughnessSections, channelFrictionDefinitions, channelInitialConditionDefinitions, switchTo);
+            if (targetMduFilePath != null && network != null && hydroArea != null && roughnessSections != null)
+            {
+                featureFileWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, network, hydroArea, roughnessSections, channelFrictionDefinitions, channelInitialConditionDefinitions, switchTo);
+            }
 
             // write at the end in case of updated file paths
             WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:false, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
@@ -890,37 +897,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, IConvertedFileObjectsForFMModel convertedFileObjectsForFMModel, Action<string> reportProgress = null)
+        public void Read(string mduFilePath, IConvertedFileObjectsForFMModel convertedFileObjectsForFMModel, Action<string> reportProgress = null)
         {
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_properties);
-            ReadProperties(filePath, convertedFileObjectsForFMModel.ModelDefinition);
+            ReadProperties(mduFilePath, convertedFileObjectsForFMModel.ModelDefinition);
             
             reportProgress?.Invoke(Resources.MduFile_Read_Validating_morphology_properties);
-            ValidateProperties(filePath, convertedFileObjectsForFMModel.ModelDefinition);
+            ValidateProperties(mduFilePath, convertedFileObjectsForFMModel.ModelDefinition);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_morphology_properties);
-            MorphologyFile.Read(filePath, convertedFileObjectsForFMModel.ModelDefinition);
+            MorphologyFile.Read(mduFilePath, convertedFileObjectsForFMModel.ModelDefinition);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_area_features);
-            ReadAreaFeatures(filePath, convertedFileObjectsForFMModel.ModelDefinition, convertedFileObjectsForFMModel.HydroArea);
+            ReadAreaFeatures(mduFilePath, convertedFileObjectsForFMModel.ModelDefinition, convertedFileObjectsForFMModel.HydroArea);
 
             FixFixedWeirs(convertedFileObjectsForFMModel);
 
             FixBridgePillars(convertedFileObjectsForFMModel);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_grid);
-            ReadNetFile(filePath, convertedFileObjectsForFMModel, reportProgress);
+            ReadNetFile(mduFilePath, convertedFileObjectsForFMModel, reportProgress);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_external_forcings_file);
-            ReadExternalForcings(filePath, convertedFileObjectsForFMModel);
+            ReadExternalForcings(mduFilePath, convertedFileObjectsForFMModel);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_boundary_external_forcings_file);
-            ReadBoundaryExternalForcings(filePath, convertedFileObjectsForFMModel);
+            ReadBoundaryExternalForcings(mduFilePath, convertedFileObjectsForFMModel);
 
             reportProgress?.Invoke(Resources.MduFile_Read_Reading_FouFile_if_used);
-            ReadFouFileIfUsed(filePath, convertedFileObjectsForFMModel);
+            ReadFouFileIfUsed(mduFilePath, convertedFileObjectsForFMModel);
 
             convertedFileObjectsForFMModel.HydroArea.Embankments.AddRange(convertedFileObjectsForFMModel.ModelDefinition.Embankments);
+            
+            reportProgress?.Invoke(Resources.MduFile_Read_Reading_1d2d_features);
+            featureFileReader.Read1D2DFeatures(mduFilePath, convertedFileObjectsForFMModel.ModelDefinition, convertedFileObjectsForFMModel.HydroNetwork, convertedFileObjectsForFMModel.RoughnessSections, convertedFileObjectsForFMModel.ChannelFrictionDefinitions, convertedFileObjectsForFMModel.ChannelInitialConditionDefinitions, text => reportProgress?.Invoke(text + Environment.NewLine + Resources.WaterFlowFMModel_OnLoad_Reading_1D2D_features));
+            reportProgress?.Invoke(Resources.MduFile_Read_done_reading_1d2d_features);
         }
 
         private static void FixFixedWeirs(IConvertedFileObjectsForFMModel convertedFileObjectsForFMModel)

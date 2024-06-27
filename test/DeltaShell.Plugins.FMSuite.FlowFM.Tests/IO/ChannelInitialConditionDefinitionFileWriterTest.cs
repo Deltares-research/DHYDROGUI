@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 
@@ -34,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+                var featureFileWriter = new FeatureFile1D2DWriter(new InitialFieldFile());
 
                 using (var fmModel = new WaterFlowFMModel() {MduFilePath = mduFilePath})
                 {
@@ -50,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     EditChannelInitialConditionDefinitions(channelInitialConditionDefinitions, globalQuantity);
 
                     // When
-                    FeatureFile1D2DWriter.Write1D2DFeatures(mduFilePath, fmModel.ModelDefinition,
+                    featureFileWriter.Write1D2DFeatures(mduFilePath, fmModel.ModelDefinition,
                         fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, channelInitialConditionDefinitions);
 
                     // Then

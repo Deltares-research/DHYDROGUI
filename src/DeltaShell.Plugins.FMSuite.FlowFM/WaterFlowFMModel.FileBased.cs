@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -258,10 +257,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ImportProgressChanged = progressChanged;
 
             LoadStateFromMdu(mduFilePath);
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReadFromMdu_Reading_1d2d_features);
-            FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, text => FireImportProgressChanged(text + Environment.NewLine + Resources.WaterFlowFMModel_ReadFromMdu_Reading_1d2d_features));
-            FireImportProgressChanged(Resources.WaterFlowFMModel_ReadFromMdu_done_reading_1d2d_features);
-            
 
             FireImportProgressChanged(Resources.WaterFlowFMModel_ReadFromMdu_Reading_spatial_operations);
             IEventedList<IDataItem> modelDataItems = AddSpatialDataItems();
@@ -361,7 +356,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     BoundaryConditions1D = BoundaryConditions1D,
                     LateralSourcesData = LateralSourcesData,
                     AllFixedWeirsAndCorrespondingProperties = allFixedWeirsAndCorrespondingProperties,
-                    AllBridgePillarsAndCorrespondingProperties = BridgePillarsDataModel
+                    AllBridgePillarsAndCorrespondingProperties = BridgePillarsDataModel,
+                    RoughnessSections = RoughnessSections,
+                    ChannelFrictionDefinitions = ChannelFrictionDefinitions, 
+                    ChannelInitialConditionDefinitions = ChannelInitialConditionDefinitions
                 };
                 mduFile.Read(mduFilePath, convertedFileObjectsForFMModel, (mduStepName) => FireImportProgressChanged(Resources.WaterFlowFMModel_LoadModelFromMdu_Reading_mdu_file + Environment.NewLine + mduStepName));
                 isLoading = false;
@@ -449,7 +447,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             CreateDataItemsNotAvailableInPreviousVersion();
             LoadStateFromMdu(mduPath);
 
-            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, text => FireImportProgressChanged(text + Environment.NewLine + Resources.WaterFlowFMModel_OnLoad_Reading_1D2D_features));
             SuspendClearOutputOnInputChange = false;
             UpdateDataItemsNotCreatedInPreviousVersion();
             

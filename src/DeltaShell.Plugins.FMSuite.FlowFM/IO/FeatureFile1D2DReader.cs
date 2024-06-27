@@ -31,9 +31,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     /// <summary>
     /// Reader for 1D2D features responsible for reading the feature files and setting the data on the models.
     /// </summary>
-    public static class FeatureFile1D2DReader
+    public sealed class FeatureFile1D2DReader
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(FeatureFile1D2DReader));
+        private readonly ILog log = LogManager.GetLogger(typeof(FeatureFile1D2DReader));
+        private readonly InitialFieldFile initialFieldFile;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeatureFile1D2DReader"/> class.
+        /// </summary>
+        /// <param name="initialFieldFile">Provides methods for reading and writing initial field files (*.ini).</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="initialFieldFile"/> is <c>null</c>.</exception>
+        public FeatureFile1D2DReader(InitialFieldFile initialFieldFile)
+        {
+            Ensure.NotNull(initialFieldFile, nameof(initialFieldFile));
+            this.initialFieldFile = initialFieldFile;
+        }
 
         /// <summary>
         /// Reads the features and sets the data on the given models.
@@ -48,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public static void Read1D2DFeatures(string mduFilePath,
+        public void Read1D2DFeatures(string mduFilePath,
                                             WaterFlowFMModelDefinition modelDefinition,
                                             IHydroNetwork network,
                                             IEventedList<RoughnessSection> roughnessSections,
@@ -89,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadInitialConditionFiles(mduFilePath, modelDefinition, network, channelInitialConditionDefinitions);
         }
 
-        private static IEnumerable<IRetention> ReadRetentionsFromFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        private IEnumerable<IRetention> ReadRetentionsFromFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
             string netFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
             if (!File.Exists(netFilePath))
@@ -113,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return RetentionSectionParser.ParseIniSections(iniSections, network);
         }
 
-        private static ICrossSectionDefinition[] ReadCrossSectionFiles(
+        private ICrossSectionDefinition[] ReadCrossSectionFiles(
             string targetMduFilePath,
             WaterFlowFMModelDefinition modelDefinition,
             IHydroNetwork network,
@@ -131,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return CrossSectionFileReader.ReadFile(crLocFile, crDefFile, network, channelFrictionDefinitions);
         }
-        private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        private void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
             var obsFiles = modelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
             foreach (var obsFile in obsFiles.SplitOnEmptySpace())
@@ -146,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         }
 
-        private static void ReadRoutesFile(string targetMduFilePath, IHydroNetwork network)
+        private void ReadRoutesFile(string targetMduFilePath, IHydroNetwork network)
         {
             var routesFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, RoutesFile.RoutesFileName);
             if (!File.Exists(routesFile))
@@ -157,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             RoutesFile.Read(routesFile, network);
         }
 
-        private static void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
+        private void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
             IHydroNetwork network, ICrossSectionDefinition[] crossSectionDefinitions)
         {
             string structureFile = modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
@@ -173,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             reader.ReadFile(structureFile, crossSectionDefinitions, network, referenceDateTime);
         }
 
-        private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
+        private void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             var roughnessFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(' ', ';');
             if (roughnessFileNames == null || roughnessFileNames.Length == 0)
@@ -209,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ChannelFrictionDefinitionFileReader.ReadFile(frictionFilePath, modelDefinition, network, channelFrictionDefinitions);
         }
 
-        private static void ReadInitialConditionFiles(string targetMduFilePath,
+        private void ReadInitialConditionFiles(string targetMduFilePath,
             WaterFlowFMModelDefinition modelDefinition,
             IHydroNetwork network,
             IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
@@ -223,7 +235,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var initialConditionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionFilename);
 
             // read initialFields.ini
-            var initialFieldFile = new InitialFieldFile();
             var initialFieldFileData = initialFieldFile.Read(initialConditionFilePath, targetMduFilePath, modelDefinition);
 
             // read Initial<quantity>.ini
@@ -245,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 channelInitialConditionDefinitions);
         }
         
-        private static string GetChannelInitialConditionDefinitionFileName(InitialFieldFileData initialFieldFileData)
+        private string GetChannelInitialConditionDefinitionFileName(InitialFieldFileData initialFieldFileData)
         {
             var initialConditionIniSections = initialFieldFileData.AllFields.Where(x => x.LocationType == InitialFieldLocationType.OneD ||
                                                                                         x.DataFileType == InitialFieldDataFileType.OneDField)

@@ -10,6 +10,7 @@ using Deltares.Infrastructure.Extensions;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Coverages;
 using NSubstitute;
@@ -59,8 +60,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                                                          IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
                                                                          string expParamName)
         {
+            // Arrange
+            var featureFileReader = new FeatureFile1D2DReader(new InitialFieldFile());
+
+            
             // Call
-            void Call() => FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions, channelInitialConditionDefinitions);
+            void Call() => featureFileReader.Read1D2DFeatures(mduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions, channelInitialConditionDefinitions);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);

@@ -1880,32 +1880,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenWaterFlowFMModel_WhenChangingRandomModelProperty_ThenAlwaysTriggersWaterFlowFMModelOnPropertyChanged()
+        [TestCaseSource(nameof(GetFlowFMPropertyChangedTestCases))]
+        public void GivenWaterFlowFMModel_WhenChangingRandomModelProperty_ThenAlwaysTriggersWaterFlowFMModelOnPropertyChanged(
+            WaterFlowFMModel model,
+            WaterFlowFMProperty property)
         {
-            // Setup
-            using (var model = new WaterFlowFMModel())
-            {
-                WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
+            WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
                 
-                int propertyChangedCounter = 0;
-                model.PropertyChanged += (sender, args) =>
-                {
-                    propertyChangedCounter++;
-                };
+            var propertyChangedCounter = 0;
+            model.PropertyChanged += (sender, args) => propertyChangedCounter++;
 
-                foreach (WaterFlowFMProperty property in modelDefinition.Properties)
-                {
-                    string propertyName = property.PropertyDefinition.MduPropertyName;
-                    string defaultValue = property.PropertyDefinition.DefaultValueAsString;
+            string propertyName = property.PropertyDefinition.MduPropertyName;
+            string defaultValue = property.PropertyDefinition.DefaultValueAsString;
                     
-                    // Call
-                    modelDefinition.SetModelProperty(propertyName, defaultValue);
+            // Call
+            modelDefinition.SetModelProperty(propertyName, defaultValue);
                     
-                    // Assert
-                    Assert.That(propertyChangedCounter, Is.GreaterThan(0)); // Apparently, the event can be fired multiple times
-                    propertyChangedCounter = 0; // Reset counter
-                }
-            }
+            // Assert
+            Assert.That(propertyChangedCounter, Is.GreaterThan(0)); // Apparently, the event can be fired multiple times
+        }
+
+        private static IEnumerable<TestCaseData> GetFlowFMPropertyChangedTestCases()
+        {
+            var model = new WaterFlowFMModel();
+            return model.ModelDefinition.Properties.Select(
+                p => new TestCaseData(model, p).SetName(p.ToString()));
         }
 
         [Test]

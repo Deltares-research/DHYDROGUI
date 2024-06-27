@@ -38,6 +38,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (IsParameter(GuiProperties.InitialConditionGlobalQuantity1D) ||
                 IsParameter(GuiProperties.InitialConditionGlobalQuantity2D))
             {
+                if (InitialWaterLevel == null)
+                {
+                    return;
+                }
+
                 if (IsParameter(GuiProperties.InitialConditionGlobalQuantity2D))
                 {
                     var type = (InitialConditionQuantity)(int)prop.Value;
@@ -52,8 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 allFixedWeirsAndCorrespondingProperties?.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));
             }
-
-            
             if (IsParameter(KnownProperties.BedlevType))
             {
                 BeginEdit("Updating Bathymetry coverage");

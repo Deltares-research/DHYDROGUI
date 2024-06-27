@@ -571,10 +571,10 @@ File import of structures file '{1}' has failed.</value>
   <data name="WaterFlowFMFileImporter_OnImportItem_Import_finished" xml:space="preserve">
     <value>Import finished</value>
   </data>
-  <data name="WaterFlowFMModel_ReadFromMdu_Reading_1d2d_features" xml:space="preserve">
+  <data name="MduFile_Read_Reading_1d2d_features" xml:space="preserve">
     <value>Reading 1d2d features</value>
   </data>
-  <data name="WaterFlowFMModel_ReadFromMdu_done_reading_1d2d_features" xml:space="preserve">
+  <data name="MduFile_Read_done_reading_1d2d_features" xml:space="preserve">
     <value>done reading 1d2d features</value>
   </data>
   <data name="WaterFlowFMModel_ReadFromMdu_Reading_spatial_operations" xml:space="preserve">

@@ -705,6 +705,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to done reading 1d2d features.
+        /// </summary>
+        public static string MduFile_Read_done_reading_1d2d_features {
+            get {
+                return ResourceManager.GetString("MduFile_Read_done_reading_1d2d_features", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading 1d2d features.
+        /// </summary>
+        public static string MduFile_Read_Reading_1d2d_features {
+            get {
+                return ResourceManager.GetString("MduFile_Read_Reading_1d2d_features", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reading area features.
         /// </summary>
         public static string MduFile_Read_Reading_area_features {
@@ -1593,24 +1611,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFMModel_ReadDiaFile_Reading_output_files___Reading_dia_file {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_ReadDiaFile_Reading_output_files___Reading_dia_file", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to done reading 1d2d features.
-        /// </summary>
-        public static string WaterFlowFMModel_ReadFromMdu_done_reading_1d2d_features {
-            get {
-                return ResourceManager.GetString("WaterFlowFMModel_ReadFromMdu_done_reading_1d2d_features", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Reading 1d2d features.
-        /// </summary>
-        public static string WaterFlowFMModel_ReadFromMdu_Reading_1d2d_features {
-            get {
-                return ResourceManager.GetString("WaterFlowFMModel_ReadFromMdu_Reading_1d2d_features", resourceCulture);
             }
         }
         

@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.InitialField;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NUnit.Framework;
 
@@ -25,6 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+                var featureFileWriter = new FeatureFile1D2DWriter(new InitialFieldFile());
+
                 using (var fmModel = new WaterFlowFMModel() { MduFilePath = mduFilePath })
                 {
                     // Setup
@@ -47,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     EditChannelFrictionDefinitions(channelFrictionDefinitions);
 
                     // Call
-                    FeatureFile1D2DWriter.Write1D2DFeatures(mduFilePath, fmModel.ModelDefinition,
+                    featureFileWriter.Write1D2DFeatures(mduFilePath, fmModel.ModelDefinition,
                         network, fmModel.Area, roughnessSections, channelFrictionDefinitions, fmModel.ChannelInitialConditionDefinitions);
 
                     // Assert

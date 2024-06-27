@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        public void ImportExportPreservesPropertyOrder()
+        public void ImportExportPreservesPropertyOrder([Values] bool switchTo)
         {
             using (var tempDir = new TemporaryDirectory())
             {
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 string mduExportPath = Path.Combine(tempDir.Path, "export.mdu");
                 
                 var model = new WaterFlowFMModel(mduImportPath);
-                model.ExportTo(mduExportPath);
+                model.ExportTo(mduExportPath, switchTo);
 
                 List<string> lines = File.ReadLines(mduExportPath).ToList();
 
@@ -68,7 +68,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsTrue(lines[wavesSectionLineNr + 1].ContainsCaseInsensitive("CustomWavesProperty"));
                 Assert.IsTrue(lines[timeSectionLineNr + 1].ContainsCaseInsensitive("CustomTimeProperty"));
                 Assert.IsTrue(lines[outputSectionLineNr + 1].ContainsCaseInsensitive("CustomOutputProperty"));
-            };
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportExportPreservesInitialFieldFileNames([Values] bool switchTo)
+        {
+            using (var sourceDir = new TemporaryDirectory())
+            using (var targetDir = new TemporaryDirectory())
+            {
+                string testFilesDir = TestHelper.GetTestFilePath(@"InitialFieldFileTest");
+                string sourceFilesDir = sourceDir.CopyDirectoryToTempDirectory(testFilesDir);
+                
+                string mduImportPath = Path.Combine(sourceFilesDir, "input", "flowfm.mdu");
+                string mduExportPath = Path.Combine(targetDir.Path, "input", "export.mdu");
+                string initialFieldsFilePath = Path.Combine(targetDir.Path, "input", "initialFields.ini");
+
+                var model = new WaterFlowFMModel(mduImportPath);
+                model.ExportTo(mduExportPath, switchTo);
+
+                Assert.That(initialFieldsFilePath, Does.Exist);
+                Assert.That(Path.Combine(targetDir.Path, "pol", "frictioncoefficient_friction.pol"), Does.Exist);
+                Assert.That(Path.Combine(targetDir.Path, "pol", "waterlevel_Set_value_1.pol"), Does.Exist);
+                Assert.That(Path.Combine(targetDir.Path, "xyz", "bedlevel.xyz"), Does.Exist);
+
+                string[] initialFieldFileContents = File.ReadAllLines(initialFieldsFilePath).Select(x => x.Trim()).ToArray();
+                Assert.That(initialFieldFileContents, Does.Contain("dataFile              = ../pol/waterlevel_Set_value_1.pol"));
+                Assert.That(initialFieldFileContents, Does.Contain("dataFile              = ../pol/frictioncoefficient_friction.pol"));
+                Assert.That(initialFieldFileContents, Does.Contain("dataFile              = ../xyz/bedlevel.xyz"));
+            }
         }
         
         [Test]

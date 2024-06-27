@@ -10,6 +10,9 @@ using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Grids;
 using System.Collections.Generic;
 using DelftTools.Hydro.Link1d2d;
+using DelftTools.Hydro.Roughness;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -21,6 +24,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         IEventedList<Model1DLateralSourceData> LateralSourcesData { get; set; }
         IList<ModelFeatureCoordinateData<FixedWeir>> AllFixedWeirsAndCorrespondingProperties { get; set; }
         IList<ModelFeatureCoordinateData<BridgePillar>> AllBridgePillarsAndCorrespondingProperties { get; set; }
+        IEventedList<RoughnessSection> RoughnessSections { get; set; }
+        IEventedList<ChannelFrictionDefinition> ChannelFrictionDefinitions { get; set; }
+        IEventedList<ChannelInitialConditionDefinition> ChannelInitialConditionDefinitions { get; set; }
     }
 
     public class ConvertedFileObjectsForFMModel : ConvertedUgridFileObjects, IConvertedFileObjectsForFMModel
@@ -31,5 +37,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public IEventedList<Model1DLateralSourceData> LateralSourcesData { get; set; }
         public IList<ModelFeatureCoordinateData<FixedWeir>> AllFixedWeirsAndCorrespondingProperties { get; set; }
         public IList<ModelFeatureCoordinateData<BridgePillar>> AllBridgePillarsAndCorrespondingProperties { get; set; }
+        public IEventedList<RoughnessSection> RoughnessSections { get; set; }
+        public IEventedList<ChannelFrictionDefinition> ChannelFrictionDefinitions { get; set; }
+        public IEventedList<ChannelInitialConditionDefinition> ChannelInitialConditionDefinitions { get; set; }
     }
 }
